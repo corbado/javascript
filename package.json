@@ -1,0 +1,17 @@
+{
+  "name": "@corbado/javascript",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "lerna": "^7.4.1",
+    "typescript": "^5.2.2",
+    "@typescript-eslint/eslint-plugin": "5.58.0",
+    "@typescript-eslint/parser": "5.58.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-simple-import-sort": "10.0.0"
+  }
+}

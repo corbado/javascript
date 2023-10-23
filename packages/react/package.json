@@ -1,0 +1,30 @@
+{
+  "name": "@corbado/react",
+  "version": "0.1.0",
+  "description": "This package provides all the functionalities and UI components needed by developers when integration Corbado's Authentication management system in their react application",
+  "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
+  "homepage": "https://github.com/corbado/javascript#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    ".": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corbado/javascript.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "bugs": {
+    "url": "https://github.com/corbado/javascript/issues"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
+  }
+}

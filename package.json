@@ -4,6 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "build": "lerna run build",
+    "lint": "lerna run lint"
+  },
   "devDependencies": {
     "@types/node": "^20.8.7",
     "lerna": "^7.4.1",

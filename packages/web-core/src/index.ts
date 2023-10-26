@@ -1,3 +1,1 @@
-export function webCore() {
-  return "Hello from webCore";
-}
+export * from "./utils";

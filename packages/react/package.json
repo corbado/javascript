@@ -24,6 +24,15 @@
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
   },
+  "devDependencies": {
+    "@types/react": "18.2.23",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "rimraf": "^5.0.5",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^3.3.5",
+    "typescript": "5.2.2"
+  },
   "peerDependencies": {
     "react": ">=16.8"
   }

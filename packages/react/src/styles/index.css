@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-color: #1953ff;
+    --primary-color-rgb: 25, 83, 255;
+    --primary-hover-color: #1145df;
+    --secondary-font-color: var(--primary-color, '#1953ff');
+    --secondary-background-color: transparent;
+    --secondary-background-hover-color: transparent;
+    --secondary-border-color: var(--primary-color, '#1953ff');
+    --secondary-border-hover-color: #59acff;
+    --secondary-font-hover-color: #59acff;
+    --heading-color: #090f1f;
+    --text-color: #535e80;
+    /* --light-color: #8f9bbf; */
+    --error-color: #FF4C51;
+    --primary-font: 'Space Grotesk', sans-serif;
+    --secondary-font: 'Inter', sans-serif;
+    --border-color: rgba(143, 155, 191, 0.5);
+    --email-provider-btn-color: #fff;
+    --box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+    --margin-top: 5rem;
+    --border-container-width: 0;
+    --input-margin: 2rem 0 1rem 0;
+  }
+
+.animate-cd-spin {
+    animation: cd-spin 1s ease infinite;
+  }
+}
+
+@layer components {
+  .primary-btn {
+    @apply border-none text-white bg-[--primary-color] hover:bg-[--primary-hover-color];
+  }
+
+  .secondary-btn {
+    @apply border border-solid border-[--secondary-border-color] bg-[--secondary-background-color] text-[--secondary-font-color];
+  }
+
+  .spinner {
+    @apply after:content-[""] after:block after:relative after:w-cd-11 after:h-cd-11 after:top-0 after:left-0 after:right-0 after:bottom-0 after:m-auto after:border-[0.25rem] after:border-t-white after:border-solid after:border-black/[.55] after:!rounded-[100%] after:animate-cd-spin;
+  }
+
+  .spinner-secondary {
+    @apply after:border-[0.25rem] after:border-solid after:border-black/[.55] after:border-t-[--primary-color];
+  }
+
+  .input-effect:focus {
+    outline: none;
+  }
+
+  h1 {
+    @apply mt-0 text-cd-5 mb-cd-8 font-bold;
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-family: var(--primary-font, sans-serif);
+    color: var(--heading-color, #090f1f);
+  }
+
+  button {
+    @apply my-cd-10;
+    font-family: var(--primary-font, sans-serif);
+    padding: 0.8rem 1.4rem;
+    font-size: 1rem;
+    border-radius: var(--border-radius, 1.5rem);
+    cursor: pointer;
+    position: relative;
+  }
+
+  button, input, optgroup, select, textarea {
+    @apply leading-none;
+  }
+
+  p {
+    @apply mx-0 my-cd-9;
+  }
+
+  p {
+    @apply mx-0 my-cd-9;
+  }
+
+  .text-center {
+    text-align: var(--text-align, center);
+  }
+
+  div, p {
+    font-family: var(--secondary-font, sans-serif);
+    color: var(--text-color, #535e80);
+  }
+
+  .container {
+    margin: 0 auto;
+    padding: 2.5rem 1.3rem;
+    border-radius: 0.5rem;
+    border-width: var(--border-container-width, 1px);
+    border-style: solid;
+    border-color: var(--border-color, rgba(143, 155, 191, 0.5));
+    max-width: 30rem;
+  }
+
+  .floating-label {
+    position: relative;
+    margin: var(--input-margin, 2rem 0 1rem 0);
+    width: 100%;
+  }
+
+  .floating-label input[disabled] {
+    color: var(--text-disabled-color, var(--text-color, #535e80));
+  }
+
+  .floating-label input:-webkit-autofill,
+  .floating-label input:-webkit-autofill:hover,
+  .floating-label input:-webkit-autofill:focus,
+  .floating-label input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--primary-background-color, '#ffffff') inset !important;
+    box-shadow: 0 0 0 1000px white inset;
+  }
+
+  /*Change text in autofill textbox*/
+  .floating-label input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-color, #535e80) !important;
+  }
+
+  .floating-label input:focus {
+    outline: none;
+  }
+
+  .floating-label input {
+    color: var(--text-color, #535e80);
+    font-size: 1rem;
+    padding: var(--input-padding, 0.8rem 1.4rem);
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--border-radius, 1.5rem);
+    border-color: var(--border-color, rgba(143, 155, 191, 0.5));
+    position: relative;
+    background: transparent;
+    z-index: 2;
+    box-sizing: border-box;
+    -webkit-text-fill-color: var(--text-color, #535e80);
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+  }
+
+  .floating-label label {
+    color: var(--light-color, #8f9bbf);
+    position: absolute;
+    left: 1.4rem;
+    top: 0.8rem;
+    transition: 0.3s;
+    z-index: 1;
+  }
+
+  .floating-label.has-content label,
+  .floating-label.has-focus label {
+    top: -1.1rem;
+    left: 1.4rem;
+    font-size: 0.75rem;
+    color: var(--text-color, #535e80);
+    transition: 0.3s;
+  }
+
+  a, .link {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--light-color, #1953ff);
+    cursor: pointer;
+  }
+
+  #corbado-auth {
+    max-width: 384px;
+    box-sizing: border-box;
+    box-shadow: var(--box-shadow, none);
+    margin-top: var(--margin-top, inherit);
+  }
+
+  #corbado-username:focus {
+    outline: none;
+  }
+
+  #corbado-username:-webkit-autofill,
+  #corbado-username:-webkit-autofill:hover,
+  #corbado-username:-webkit-autofill:focus,
+  #corbado-username:-webkit-autofill:active{
+      -webkit-box-shadow: 0 0 0 30px var(--primary-background-color, '#ffffff') inset !important;
+      border: 1px solid var(--border-color, rgba(143, 155, 191, 0.5));
+      font-size: 1rem;
+      -webkit-text-fill-color: var(--text-color, #535e80)!important;
+      box-shadow: 0 0 0 1000px white inset;
+  }
+
+  #corbado-username {
+      color: var(--text-color, #535e80);
+      font-size: 1rem;
+      padding: var(--input-padding, 0.8rem 1.4rem);
+      width: 100%;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: var(--border-radius, 1.5rem);
+      border-color: var(--border-color, rgba(143, 155, 191, 0.5));
+      position: relative;
+      background: transparent;
+      z-index: 2;
+      box-sizing: border-box;
+      -webkit-text-fill-color: var(--text-color, #535e80);
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+  }
+}

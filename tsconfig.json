@@ -5,6 +5,7 @@
     "declaration": true,
     "declarationMap": false,
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "lib": ["es6"],

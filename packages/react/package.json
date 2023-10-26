@@ -18,12 +18,22 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf ./dist",
+    "build:css": "npx tailwindcss -i ./src/styles/index.css -o ./dist/styles.css --minify",
+    "copy:assets": "cp -R ./src/assets ./dist",
+    "build": "npm run clean && tsc && npm run build:css && npm run copy:assets",
+    "publish:local": "npx yalc push --replace  --sig",
+    "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
   },
+  "dependencies": {
+    "i18next": "23.5.1",
+    "i18next-browser-languagedetector": "7.1.0",
+    "react-i18next": "13.2.2"
+},
   "devDependencies": {
     "@types/react": "18.2.23",
     "autoprefixer": "^10.4.16",

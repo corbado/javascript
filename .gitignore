@@ -2,3 +2,5 @@ node_modules/
 packages/*/node_modules/
 packages/*/dist/
 dist
+.DS_Store
+playground

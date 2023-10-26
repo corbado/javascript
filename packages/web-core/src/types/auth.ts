@@ -1,4 +1,4 @@
-import { CookiesDefinition } from './common';
+import type { CookiesDefinition } from "./common";
 
 export interface IAuthResponse {
   shortSession: CookiesDefinition;

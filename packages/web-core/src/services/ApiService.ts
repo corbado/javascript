@@ -20,7 +20,7 @@ export const ApiService = (() => {
 
   return (
     projectId: string,
-    timeout: number = 60 * 1000,
+    timeout: number = 30 * 1000,
     token: string = sessionToken
   ) => {
     if (apiServiceInstance) {

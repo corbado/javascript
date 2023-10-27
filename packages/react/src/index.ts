@@ -1,1 +1,1 @@
-export { default as CorbadoAuth } from './Auth';
+export * from './Auth';

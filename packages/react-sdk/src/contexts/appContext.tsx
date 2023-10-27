@@ -8,7 +8,7 @@ export interface IAppContext {
 
 export const AppContext = createContext<IAppContext | null>(null);
 
-export const ApiServiceProvider: FC<{
+export const AppProvider: FC<{
   projectId: string;
   apiTimeout: number;
 }> = ({ projectId, apiTimeout = defaultTimeout, children }) => {

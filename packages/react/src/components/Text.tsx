@@ -3,18 +3,19 @@ import React from 'react'
 type Variants = 'header' | 'sub-header' | 'body';
 
 interface Props {
-    variant: Variants;
+    variant?: Variants;
     children: React.ReactNode;
+    className?: string;
 }
 
-const Text: React.FunctionComponent<Props> = ({ variant = 'body', children }) => {
+const Text: React.FC<Props> = ({ variant = 'body', children, className = '' }) => {
     if (variant === 'header') {
-        return (<h1 className='header'>{children}</h1>);
+        return (<h1 className={`header ${className}`}>{children}</h1>);
     }
     if (variant === 'sub-header') {
-        return (<h2 className='sub-header'>{children}</h2>);
+        return (<h2 className={`sub-header ${className}`}>{children}</h2>);
     }
-    return (<p className='body'>{children}</p>);
+    return (<p className={`body ${className}`}>{children}</p>);
 };
 
 export default Text;

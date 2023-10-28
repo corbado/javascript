@@ -1,25 +1,38 @@
 import React from 'react';
+import { Spinner } from './Spinner';
 
 interface AdditionalProps {
     variant?: 'primary' | 'secondary' | 'tertiary';
+    fullWidth?: boolean;
+    isLoading?: boolean;
+}
+
+const variants = {
+    primary: 'btn-primary',
+    secondary: 'btn-secondary',
+    tertiary: 'btn-tertiary',
 }
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
 
 const Button: React.FunctionComponent<Props> = ({
-    variant = 'primary',
-    className,
+    variant = 'tertiary',
+    fullWidth = true,
+    isLoading = false,
+    className = '',
     disabled,
     children,
     ...rest
 }) => {
+
+    const classes = `${variants[variant]} ${className} ${fullWidth ? 'w-full' : ''}`;
     return (
         <button
-            className={`${className} btn-${variant}`}
+            className={classes}
             disabled={disabled}
             {...rest}
         >
-            {children}
+            {isLoading ? <Spinner /> : children}
         </button>
     );
 };

@@ -1,12 +1,7 @@
 import axios from "axios";
 
-import {
-  AssetsApi,
-  Configuration,
-  ProjectsApi,
-  SessionsApi,
-  UsersApi,
-} from "../api";
+import { AssetsApi, ProjectsApi, SessionsApi, UsersApi } from "../api";
+import { Configuration } from "../api";
 import { getLongSession } from "../utils/helpers/longSession";
 
 export const ApiService = (() => {
@@ -33,6 +28,7 @@ export const ApiService = (() => {
       basePath,
       accessToken: token,
     });
+
     const axiosInstance = axios.create({
       timeout: timeout,
       withCredentials: true,

@@ -4,6 +4,10 @@
     "@corbado/react-sdk": {
       "signature": "9fee85527beb930a6f1f47577c194ae8",
       "file": true
+    },
+    "@corbado/react": {
+      "signature": "54da0b7c7acc333c184e4c0465b98988",
+      "file": true
     }
   }
 }

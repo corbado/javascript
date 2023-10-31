@@ -1,9 +1,9 @@
 import React from 'react';
-import Signup from './pages/Signup';
 import './styles.css';
+import { PasskeySignup } from './screens/PasskeySignup';
 
 export const Auth = () => {
     return (
-        <Signup />
+        <PasskeySignup />
     );
 }

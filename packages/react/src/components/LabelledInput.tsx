@@ -5,13 +5,13 @@ interface Props extends InputProps {
   label: string;
 }
 
-const LabelledInput = ({ label, type, id, name, value, onChange }: Props) => {
+const LabelledInput = ({ label, type, id, name, value, onChange, error }: Props) => {
   const [focused, setFocused] = React.useState(false);
 
   const onFocus = () => setFocused(true);
   const onBlur = () => setFocused(false);
 
-  const classes = `floating-label ${focused ? 'has-focus' : ''} ${value ? 'has-content' : ''}`;
+  const classes = `floating-label ${focused ? 'has-focus' : ''} ${value ? 'has-content' : ''} ${error ? 'border-error-color' : ''}`;
 
   return (
     <div className={classes}>

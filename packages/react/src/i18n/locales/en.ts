@@ -11,6 +11,12 @@ const en =  {
       secondary_btn: 'Send email one time code',
       tertiary_btn: 'Back',
     },
+    create_passkey: {
+      header: 'Passkeys',
+      body: 'With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using <b>Face ID, Touch ID or screen lock code</b>.',
+      primary_btn: 'Create passkey',
+      secondary_btn: 'Maybe later',
+    },
     email_link: {
       header: 'Enter code to create account',
       body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.'

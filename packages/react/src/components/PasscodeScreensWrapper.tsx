@@ -7,7 +7,7 @@ export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
 interface Props {
     header: React.ReactNode;
-    subHeader: React.ReactNode;
+    subHeader?: React.ReactNode;
     primaryButton: string;
     secondaryButton: string;
     tertiaryButton?: string;

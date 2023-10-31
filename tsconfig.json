@@ -5,14 +5,10 @@
     "declaration": true,
     "declarationMap": false,
     "downlevelIteration": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "module": "commonjs",
+    "lib": ["es6", "DOM"],
+    "module": "ES2020",
     "moduleResolution": "node",
     "noEmitHelpers": true,
     "noFallthroughCasesInSwitch": true,
@@ -25,7 +21,8 @@
     "sourceMap": false,
     "strict": true,
     "target": "ES2019",
-    "noErrorTruncation": true
+    "noErrorTruncation": true,
+    "esModuleInterop": true,
   },
   "exclude": ["node_modules", "dist"],
   "include": ["packages/*/src"],

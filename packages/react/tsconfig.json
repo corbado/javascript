@@ -1,11 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "jsx": "react",
     "outDir": "./dist",
     "rootDir": "./src"
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "./custom.d.ts"
   ]
 }

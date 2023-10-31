@@ -1,3 +1,1 @@
-export function react() {
-  return "Hello from react";
-}
+export * from './Auth';

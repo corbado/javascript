@@ -50,7 +50,7 @@
   }
 
   .btn-tertiary {
-    @apply bg-[--secondary-background-color] text-[--secondary-color] font-secondary;
+    @apply bg-[--secondary-background-color] text-[--secondary-font-color];
   }
 
   .spinner-primary {

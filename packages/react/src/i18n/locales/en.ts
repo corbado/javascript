@@ -17,6 +17,13 @@ const en =  {
       primary_btn: 'Create passkey',
       secondary_btn: 'Maybe later',
     },
+    create_passkey_error: {
+      header: 'Let’s get you set up',
+      body: 'Creating your account with <1>passkeys</1> not possible. Try again or log in with email one time code.',
+      primary_btn: 'Try again',
+      secondary_btn: 'Send email one time code',
+      tertiary_btn: 'Back',
+    },
     email_link: {
       header: 'Enter code to create account',
       body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.'

@@ -8,6 +8,7 @@ export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 interface Props {
     header: React.ReactNode;
     subHeader?: React.ReactNode;
+    body?: React.ReactNode;
     primaryButton: string;
     secondaryButton: string;
     tertiaryButton?: string;
@@ -18,6 +19,7 @@ interface Props {
 export const PasscodeScreensWrapper: React.FC<Props> = ({
     header,
     subHeader,
+    body,
     primaryButton,
     secondaryButton,
     tertiaryButton,
@@ -29,6 +31,7 @@ export const PasscodeScreensWrapper: React.FC<Props> = ({
             <Text variant="header">{header}</Text>
             {subHeader && <Text variant="sub-header" className='mt-4'>{subHeader}</Text>}
             <div className="finger-print-icon mx-auto"></div>
+            {body && <Text variant="body" className='my-4'>{body}</Text>}
             {primaryButton && <Button variant='primary' onClick={() => onClick('primary')}>{primaryButton}</Button>}
             {showHorizontalRule && <HorizontalRule />}
             {secondaryButton && <Button variant='secondary' onClick={() => onClick('secondary')}>{secondaryButton}</Button>}

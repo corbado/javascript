@@ -24,6 +24,11 @@ const en =  {
       secondary_btn: 'Send email one time code',
       tertiary_btn: 'Back',
     },
+    create_passkey_success: {
+      header: 'Welcome!',
+      secondary_header: 'Passkey created',
+      body: 'You can now confirm your identity using your <b>passkey or via email one time code</b> when you log in.',
+    },
     email_link: {
       header: 'Enter code to create account',
       body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.'

@@ -29,6 +29,11 @@ const en =  {
       secondary_header: 'Passkey created',
       body: 'You can now confirm your identity using your <b>passkey or via email one time code</b> when you log in.',
     },
+    activate_passkey: {
+      header: 'Log in even faster with <1>Passkeys</1>',
+      primary_btn: 'Activate',
+      secondary_btn: 'Maybe later',
+    },
     email_link: {
       header: 'Enter code to create account',
       body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.'

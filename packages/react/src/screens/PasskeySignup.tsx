@@ -12,7 +12,7 @@ export const PasskeySignup = () => {
     </Trans>;
 
     const subHeader = <Trans i18nKey="passkey_signup.sub-header">
-        text <span className="text-secondary-font-color">{{ email_address } as any}</span> text
+        text <span className="text-secondary-font-color">{{email_address} as any}</span> text
     </Trans>;
 
     const primaryButton = t('passkey_signup.primary_btn');
@@ -38,6 +38,7 @@ export const PasskeySignup = () => {
         header,
         subHeader,
         primaryButton,
+        showHorizontalRule: true,
         secondaryButton,
         tertiaryButton,
         onClick: handleClick

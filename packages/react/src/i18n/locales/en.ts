@@ -6,14 +6,14 @@ const en =  {
     },
     passkey_signup: {
       header: 'Let’s get you set up with Passkeys',
-      'sub-header': 'We’ll create an account for janina+test125@corbado.com.',
+      'sub-header': 'We’ll create an account for <1>{{email_address}}</1>.',
       primary_btn: 'Create your account',
       secondary_btn: 'Send email one time code',
       tertiary_btn: 'Back',
     },
     create_passkey: {
       header: 'Passkeys',
-      body: 'With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using <b>Face ID, Touch ID or screen lock code</b>.',
+      body: 'With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using <1>Face ID, Touch ID or screen lock code</1>.',
       primary_btn: 'Create passkey',
       secondary_btn: 'Maybe later',
     },
@@ -27,7 +27,7 @@ const en =  {
     create_passkey_success: {
       header: 'Welcome!',
       secondary_header: 'Passkey created',
-      body: 'You can now confirm your identity using your <b>passkey or via email one time code</b> when you log in.',
+      body: 'You can now confirm your identity using your <1>passkey or via email one time code</1> when you log in.',
     },
     activate_passkey: {
       header: 'Log in even faster with <1>Passkeys</1>',

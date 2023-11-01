@@ -5,7 +5,7 @@ const en =  {
       continue_email: 'Continue with email',
     },
     passkey_signup: {
-      header: 'Let’s get you set up with Passkeys',
+      header: 'Let’s get you set up with <1>Passkeys</1>',
       'sub-header': 'We’ll create an account for <1>{{email_address}}</1>.',
       primary_btn: 'Create your account',
       secondary_btn: 'Send email one time code',

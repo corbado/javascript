@@ -50,7 +50,7 @@
   }
 
   .btn-tertiary {
-    @apply bg-[--secondary-background-color] text-[--secondary-font-color];
+    @apply bg-[--secondary-background-color] text-[--secondary-font-color] font-secondary font-bold;
   }
 
   .spinner-primary {
@@ -68,14 +68,18 @@
     height: 121px;
   }
 
-  h1 {
-    @apply mt-0 text-cd-5 font-bold;
-  }
-
-  h1,
-  h2 {
+  .header,
+  .sub-header {
     font-family: var(--primary-font, sans-serif);
     color: var(--heading-color, #090f1f);
+  }
+
+  .header {
+    @apply mt-0 text-cd-5 mb-cd-8 font-bold;
+  }
+
+  .sub-header {
+    @apply font-bold;
   }
 
   button,
@@ -116,6 +120,9 @@
     border-style: solid;
     border-color: var(--border-color, rgba(143, 155, 191, 0.5));
     max-width: 30rem;
+    box-sizing: border-box;
+    box-shadow: var(--box-shadow, none);
+    margin-top: var(--margin-top, inherit);
   }
 
   .floating-label {
@@ -203,8 +210,5 @@
 
   #corbado-auth {
     max-width: 384px;
-    box-sizing: border-box;
-    box-shadow: var(--box-shadow, none);
-    margin-top: var(--margin-top, inherit);
   }
 }

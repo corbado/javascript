@@ -10,7 +10,7 @@ interface SignupForm {
     username: string;
 }
 
-const Signup = () => {
+export const InitiateSignup = () => {
     const { t } = useTranslation();
 
     const [signupData, setSignupData] = React.useState<SignupForm>({ name: '', username: '' });
@@ -46,5 +46,3 @@ const Signup = () => {
         </>
     )
 }
-
-export default Signup;

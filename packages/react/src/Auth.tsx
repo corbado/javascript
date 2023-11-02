@@ -26,6 +26,5 @@ export const Auth = () => {
                 <PasskeyLoginActivation />
             </div>
         </div>
-
     );
 }

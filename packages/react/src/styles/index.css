@@ -61,10 +61,6 @@
     @apply border-[0.25rem] border-solid border-black/[.55] border-t-[--primary-color];
   }
 
-  .input-effect:focus {
-    outline: none;
-  }
-
   .finger-print-icon {
     background-image: var(--fingerprint-icon);
     background-size: cover;
@@ -135,10 +131,6 @@
     width: 100%;
   }
 
-  input::placeholder {
-    opacity: var(--placeholder-opacity);
-  }
-
   input[disabled] {
     color: var(--text-disabled-color, var(--text-color, #535e80));
   }
@@ -178,8 +170,18 @@
     background-clip: text !important;
   }
 
+  input::-ms-input-placeholder {
+    /* Edge 12-18 */
+    opacity: var(--placeholder-opacity, 0);
+  }
+
+  input::placeholder {
+    opacity: var(--placeholder-opacity, 0);
+  }
+
   .floating-label label {
-    color: var(--light-color, #8f9bbf);
+    @apply font-bold;
+    color: var(--secondary-color, #8f9bbf);
     position: absolute;
     left: 1.4rem;
     top: 0.8rem;
@@ -190,10 +192,11 @@
 
   .floating-label.has-content label,
   .floating-label.has-focus label {
+    @apply font-normal;
     top: -1.1rem;
     left: 1.4rem;
     font-size: 0.75rem;
-    color: var(--text-color, #535e80);
+    color: var(--secondary-color, #535e80);
     transition: 0.3s;
   }
 

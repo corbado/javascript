@@ -1,7 +1,7 @@
 const en =  {
     signup: {
       header: 'Create your account',
-      'sub-header': 'You already have an account? <1>Log in<1>',
+      'sub-header': 'You already have an account? <1>Log in</1>',
       continue_email: 'Continue with email',
     },
     passkey_signup: {

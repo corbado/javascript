@@ -11,14 +11,14 @@ export function SignUpWithEmailOtpTest() {
   const handleSendOtp = async (event) => {
     event.preventDefault();
     try {
-      const resp = await sendEmailWithOTP(email, username);
-      console.log(resp);
+      setIsOtpSent(true);
+      await sendEmailWithOTP(email, username);
     } catch (error) {
       alert(error);
     }
   };
 
-  const hanleSubmitOtp = async (event) => {
+  const handleSubmitOtp = async (event) => {
     event.preventDefault();
     try {
       const resp = await verifyOTP(otp);
@@ -51,7 +51,7 @@ export function SignUpWithEmailOtpTest() {
           <input type="submit" value="Submit" />
         </form>
       ) : (
-        <form onSubmit={hanleSubmitOtp}>
+        <form onSubmit={handleSubmitOtp}>
           <label>
             OTP:
             <input

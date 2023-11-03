@@ -22,6 +22,7 @@ export const AppProvider: FC<{
     apiService.projectsApi
       .projectConfig()
       .then((config) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = (config.data as any).data as ProjectConfigRspAllOfData;
         setProjectConfig(response);
       })

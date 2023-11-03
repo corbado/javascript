@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
@@ -30,5 +30,5 @@
   "dependencies": {
     "@corbado/web-core": "^0.1.0"
   },
-  "yalcSig": "f8ecb42d217accf056751d5d92942a69"
+  "yalcSig": "0b162aae26b48d49fef617348adf3db8"
 }

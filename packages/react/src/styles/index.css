@@ -50,7 +50,7 @@
   }
 
   .btn-tertiary {
-    @apply bg-[--secondary-background-color] text-[--secondary-font-color];
+    @apply bg-[--secondary-background-color] text-[--secondary-font-color] font-secondary font-bold;
   }
 
   .spinner-primary {
@@ -61,10 +61,6 @@
     @apply border-[0.25rem] border-solid border-black/[.55] border-t-[--primary-color];
   }
 
-  .input-effect:focus {
-    outline: none;
-  }
-
   .finger-print-icon {
     background-image: var(--fingerprint-icon);
     background-size: cover;
@@ -72,14 +68,18 @@
     height: 121px;
   }
 
-  h1 {
+  .header,
+  .sub-header {
+    font-family: var(--primary-font, sans-serif);
+    color: var(--heading-color, #090f1f);
+  }
+
+  .header {
     @apply mt-0 text-cd-5 mb-cd-8 font-bold;
   }
 
-  h1,
-  h2 {
-    font-family: var(--primary-font, sans-serif);
-    color: var(--heading-color, #090f1f);
+  .sub-header {
+    @apply font-bold;
   }
 
   button,
@@ -120,16 +120,15 @@
     border-style: solid;
     border-color: var(--border-color, rgba(143, 155, 191, 0.5));
     max-width: 30rem;
+    box-sizing: border-box;
+    box-shadow: var(--box-shadow, none);
+    margin-top: var(--margin-top, inherit);
   }
 
   .floating-label {
     position: relative;
     margin: var(--input-margin, 2rem 0 1rem 0);
     width: 100%;
-  }
-
-  input::placeholder {
-    opacity: var(--placeholder-opacity);
   }
 
   input[disabled] {
@@ -171,8 +170,18 @@
     background-clip: text !important;
   }
 
+  input::-ms-input-placeholder {
+    /* Edge 12-18 */
+    opacity: var(--placeholder-opacity, 0);
+  }
+
+  input::placeholder {
+    opacity: var(--placeholder-opacity, 0);
+  }
+
   .floating-label label {
-    color: var(--light-color, #8f9bbf);
+    @apply font-bold;
+    color: var(--secondary-color, #8f9bbf);
     position: absolute;
     left: 1.4rem;
     top: 0.8rem;
@@ -183,10 +192,11 @@
 
   .floating-label.has-content label,
   .floating-label.has-focus label {
+    @apply font-normal;
     top: -1.1rem;
     left: 1.4rem;
     font-size: 0.75rem;
-    color: var(--text-color, #535e80);
+    color: var(--secondary-color, #535e80);
     transition: 0.3s;
   }
 
@@ -200,8 +210,5 @@
 
   #corbado-auth {
     max-width: 384px;
-    box-sizing: border-box;
-    box-shadow: var(--box-shadow, none);
-    margin-top: var(--margin-top, inherit);
   }
 }

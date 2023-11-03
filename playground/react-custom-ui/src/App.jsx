@@ -1,6 +1,11 @@
-import { ApiTest } from "./components/apiTest";
+//import { ApiTest } from "./components/ApiTest"
+import { SignUpWithEmailOtpTest } from "./components/SingUpWithEmailOtpTest";
 import { CorbadoProvider } from "@corbado/react-sdk";
 
 export function App() {
-  return <CorbadoProvider projectId="pro-503401103218055321"><ApiTest /></CorbadoProvider>
+  return (
+    <CorbadoProvider projectId="pro-503401103218055321">
+      <SignUpWithEmailOtpTest />
+    </CorbadoProvider>
+  );
 }

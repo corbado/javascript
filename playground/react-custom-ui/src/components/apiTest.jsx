@@ -1,5 +1,7 @@
+import { useAppContext } from "@corbado/react-sdk";
 import React from "react";
 
 export function ApiTest() {
-  return <div>ApiTest</div>;
+  const { projectConfig } = useAppContext();
+  return <div>{JSON.stringify(projectConfig)}</div>;
 }

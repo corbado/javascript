@@ -1,7 +1,8 @@
 import React from 'react';
-import Text from '../components/Text';
+
 import Button from '../components/Button';
 import { HorizontalRule } from '../components/HorizontalRule';
+import Text from '../components/Text';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 

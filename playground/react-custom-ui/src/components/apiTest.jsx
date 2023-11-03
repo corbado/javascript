@@ -1,6 +1,8 @@
+import { useAppContext } from "@corbado/react-sdk";
 import React from "react";
-import { Auth } from '@corbado/react';
+import { Auth } from "@corbado/react";
 
 export function ApiTest() {
-  return <Auth />;
+  const { projectConfig } = useAppContext();
+  return <div>{JSON.stringify(projectConfig)}</div>;
 }

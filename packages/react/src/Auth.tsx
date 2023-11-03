@@ -1,11 +1,13 @@
-import React from 'react';
 import './i18n';
 import './styles.css';
-import { PasskeySignup } from './screens/PasskeySignup';
+
+import React from 'react';
+
 import { CreatePasskey } from './screens/CreatePasskey';
-import { PasskeyCreationSuccess } from './screens/PasskeyCreationSuccess';
 import { PasskeyCreationError } from './screens/PasskeyCreationError';
+import { PasskeyCreationSuccess } from './screens/PasskeyCreationSuccess';
 import { PasskeyLoginActivation } from './screens/PasskeyLoginActivation';
+import { PasskeySignup } from './screens/PasskeySignup';
 
 export const Auth = () => {
     return (

@@ -1,7 +1,8 @@
 import React from 'react';
-import Text from '../components/Text';
-import LabelledInput from '../components/LabelledInput';
+
 import Button from '../components/Button';
+import LabelledInput from '../components/LabelledInput';
+import Text from '../components/Text';
 
 const Signup = () => {
     return (

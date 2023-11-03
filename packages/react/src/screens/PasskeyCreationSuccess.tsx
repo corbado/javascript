@@ -1,5 +1,6 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next';
+
 import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
 
 export const PasskeyCreationSuccess = () => {

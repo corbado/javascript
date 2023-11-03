@@ -1,10 +1,11 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import Text from '../components/Text';
+
 import Button from '../components/Button';
-import { Gmail, Yahoo, Outlook } from '../components/icons';
-import OTPInput from '../components/OTPInput';
+import { Gmail, Outlook,Yahoo } from '../components/icons';
 import Link from '../components/Link';
+import OTPInput from '../components/OTPInput';
+import Text from '../components/Text';
 
 export const EmailLink = () => {
     const { t } = useTranslation();

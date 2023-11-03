@@ -14,13 +14,17 @@ export const AppProvider: FC<{
   apiTimeout: number;
 }> = ({ projectId, apiTimeout = defaultTimeout, children }) => {
   const apiService = ApiService(projectId, apiTimeout);
-  const [projectConfig] = useState({} as ProjectConfigRspAllOfData);
+  const [projectConfig, setProjectConfig] = useState(
+    {} as ProjectConfigRspAllOfData
+  );
 
   useEffect(() => {
     apiService.projectsApi
       .projectConfig()
       .then((config) => {
-        console.log(config);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const response = (config.data as any).data as ProjectConfigRspAllOfData;
+        setProjectConfig(response);
       })
       .catch((error) => {
         console.error(error);

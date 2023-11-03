@@ -1,6 +1,8 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next';
-import { ButtonType, PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
+
+import type { ButtonType} from '../components/PasscodeScreensWrapper';
+import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
 
 export const CreatePasskey = () => {
     const { t } = useTranslation();

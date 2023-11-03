@@ -1,5 +1,10 @@
 import type { ProjectConfigRspAllOfData } from "../api/models";
-import type { StepFunction, StepFunctionParams } from "../types";
+import type {
+  FlowNames,
+  IFlowHandlerConfig,
+  StepFunction,
+  StepFunctionParams,
+} from "../types";
 import { flows } from "../utils/flows";
 
 export class FlowHandler {
@@ -8,13 +13,11 @@ export class FlowHandler {
   private screenHistory: string[];
 
   constructor(
-    flowName:
-      | "PasskeySignupWithEmailOTPFallback"
-      | "EmailOTPSignup"
-      | "PasskeyLoginWithEmailOTPFallback",
-    private projectConfig: ProjectConfigRspAllOfData
+    private flowName: FlowNames,
+    private projectConfig: ProjectConfigRspAllOfData,
+    private flowHandlerConfig: IFlowHandlerConfig
   ) {
-    this.currentFlow = flows[flowName];
+    this.currentFlow = flows[this.flowName];
     this.screenHistory = [];
     this.currentScreen = Object.keys(this.currentFlow)[0];
   }
@@ -22,7 +25,11 @@ export class FlowHandler {
   navigateToNextScreen(...userInputs: StepFunctionParams[]) {
     const stepFunction = this.currentFlow[this.currentScreen];
     if (stepFunction) {
-      const nextScreen = stepFunction(this.projectConfig, ...userInputs);
+      const nextScreen = stepFunction(
+        this.projectConfig,
+        this.flowHandlerConfig,
+        ...userInputs
+      );
       if (nextScreen) {
         this.screenHistory.push(this.currentScreen);
         this.currentScreen = nextScreen;

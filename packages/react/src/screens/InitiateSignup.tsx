@@ -1,9 +1,10 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import Text from '../components/Text';
-import LabelledInput from '../components/LabelledInput';
+
 import Button from '../components/Button';
+import LabelledInput from '../components/LabelledInput';
 import Link from '../components/Link';
+import Text from '../components/Text';
 
 interface SignupForm {
     name: string;

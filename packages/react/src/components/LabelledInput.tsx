@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Input, { type Props as InputProps } from './Input';
 
 interface Props extends InputProps {

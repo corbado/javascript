@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Input from './Input';
 
 interface Props {
@@ -27,12 +28,12 @@ const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = fa
   };
 
   const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    if (value.length > 2) return handlePaste(value);
+    if (value.length > 2) {return handlePaste(value);}
     const newOtp: string[] = [...otps];
     newOtp[currentOTPIndex] = value.substring(value.length - 1);
 
-    if (!value) setActiveOtpindex(currentOTPIndex - 1);
-    else setActiveOtpindex(currentOTPIndex + 1);
+    if (!value) {setActiveOtpindex(currentOTPIndex - 1);}
+    else {setActiveOtpindex(currentOTPIndex + 1);}
 
     setOtp(newOtp);
     emittedOTP(newOtp);
@@ -40,11 +41,11 @@ const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = fa
 
   const handleKeyDown = ({ key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     currentOTPIndex = index;
-    if (key === 'Backspace') setActiveOtpindex(currentOTPIndex - 1);
+    if (key === 'Backspace') {setActiveOtpindex(currentOTPIndex - 1);}
   };
 
   React.useEffect(() => {
-    if (value?.length) setOtp(value);
+    if (value?.length) {setOtp(value);}
   }, [value]);
 
   React.useEffect(() => {

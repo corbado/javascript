@@ -1,16 +1,17 @@
 import type { ProjectConfigRspAllOfData } from "../api/models";
 import type {
+  Flow,
   FlowNames,
   IFlowHandlerConfig,
-  StepFunction,
+  ScreenNames,
   StepFunctionParams,
 } from "../types";
 import { flows } from "../utils/flows";
 
 export class FlowHandlerService {
-  private currentFlow: Record<string, StepFunction>;
-  private currentScreen: string;
-  private screenHistory: string[];
+  private currentFlow: Flow;
+  private currentScreen: ScreenNames;
+  private screenHistory: ScreenNames[];
 
   constructor(
     private flowName: FlowNames,

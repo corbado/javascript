@@ -8,6 +8,7 @@ import type { FC } from "react";
 import React from "react";
 
 import { AppProvider } from "./appContext";
+import { AuthContextProvider } from "./authContext";
 
 export interface ICorbadoContextParams extends IFlowHandlerConfig {
   projectId: string;
@@ -20,13 +21,13 @@ export interface ICorbadoContextParams extends IFlowHandlerConfig {
 export const CorbadoProvider: FC<ICorbadoContextParams> = ({
   projectId,
   apiTimeout = defaultTimeout,
-  defaultToLogin,
-  signupFlowName,
-  loginFlowName,
-  passkeyAppend,
-  retryPasskeyOnError,
-  compulsoryEmailVerification,
-  shouldRedirect,
+  defaultToLogin = false,
+  signupFlowName = "EmailOTPSignup",
+  loginFlowName = "PasskeyLoginWithEmailOTPFallback",
+  passkeyAppend = false,
+  retryPasskeyOnError = false,
+  compulsoryEmailVerification = false,
+  shouldRedirect = true,
   children,
 }) => {
   return (
@@ -41,7 +42,7 @@ export const CorbadoProvider: FC<ICorbadoContextParams> = ({
       compulsoryEmailVerification={compulsoryEmailVerification}
       shouldRedirect={shouldRedirect}
     >
-      {children}
+      <AuthContextProvider>{children}</AuthContextProvider>
     </AppProvider>
   );
 };

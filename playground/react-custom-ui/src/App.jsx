@@ -1,5 +1,5 @@
 //import { ApiTest } from "./components/ApiTest"
-import { SignUpWithEmailOtpTest } from "./components/SingUpWithEmailOtpTest";
+import { SignUpWithEmailOtpTest } from "./pages/SingUpWithEmailOtpTest";
 import { CorbadoProvider } from "@corbado/react-sdk";
 
 export function App() {

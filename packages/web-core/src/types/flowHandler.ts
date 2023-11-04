@@ -4,12 +4,16 @@ export interface IFlowHandlerConfig {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
   compulsoryEmailVerification: boolean;
+  shouldRedirect: boolean;
 }
 
-export type FlowNames =
+export type SignUpFlowNames =
   | "PasskeySignupWithEmailOTPFallback"
-  | "EmailOTPSignup"
-  | "PasskeyLoginWithEmailOTPFallback";
+  | "EmailOTPSignup";
+
+export type LoginFlowNames = "PasskeyLoginWithEmailOTPFallback";
+
+export type FlowNames = SignUpFlowNames | LoginFlowNames;
 
 export type StepFunctionParams = number | string | boolean;
 

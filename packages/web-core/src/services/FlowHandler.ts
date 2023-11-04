@@ -7,7 +7,7 @@ import type {
 } from "../types";
 import { flows } from "../utils/flows";
 
-export class FlowHandler {
+export class FlowHandlerService {
   private currentFlow: Record<string, StepFunction>;
   private currentScreen: string;
   private screenHistory: string[];
@@ -19,28 +19,49 @@ export class FlowHandler {
   ) {
     this.currentFlow = flows[this.flowName];
     this.screenHistory = [];
-    this.currentScreen = Object.keys(this.currentFlow)[0];
+    this.currentScreen = "start";
+  }
+
+  get currentScreenName() {
+    return this.currentScreen;
+  }
+
+  get currentFlowName() {
+    return this.flowName;
+  }
+
+  redirect() {
+    //window.location.href = this.projectConfig.redirectUrl;
   }
 
   navigateToNextScreen(...userInputs: StepFunctionParams[]) {
     const stepFunction = this.currentFlow[this.currentScreen];
-    if (stepFunction) {
-      const nextScreen = stepFunction(
-        this.projectConfig,
-        this.flowHandlerConfig,
-        ...userInputs
-      );
-      if (nextScreen) {
-        this.screenHistory.push(this.currentScreen);
-        this.currentScreen = nextScreen;
-      }
+    if (!stepFunction) {
+      throw new Error("Invalid screen");
     }
+
+    const nextScreen = stepFunction(
+      this.projectConfig,
+      this.flowHandlerConfig,
+      ...userInputs
+    );
+
+    if (nextScreen === "end") {
+      void this.redirect();
+      return "end";
+    }
+
+    this.screenHistory.push(this.currentScreen);
+    this.currentScreen = nextScreen;
+    return nextScreen;
   }
 
   navigateBack() {
-    if (this.screenHistory.length > 0) {
-      this.currentScreen =
-        this.screenHistory.pop() ?? Object.keys(this.currentFlow)[0];
+    if (!this.screenHistory.length) {
+      return "start";
     }
+
+    this.currentScreen = this.screenHistory.pop() || "start";
+    return this.currentScreen;
   }
 }

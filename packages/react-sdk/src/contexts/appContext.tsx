@@ -1,9 +1,12 @@
 import type {
+  FlowNames,
   IApiService,
   IFlowHandlerConfig,
   LoginFlowNames,
   ProjectConfigRspAllOfData,
+  ScreenNames,
   SignUpFlowNames,
+  StepFunctionParams,
 } from "@corbado/web-core";
 import {
   ApiService,
@@ -20,8 +23,11 @@ import React, {
 
 export interface IAppContext {
   apiService: IApiService;
-  flowHandlerService: FlowHandlerService | null;
   projectConfig: ProjectConfigRspAllOfData;
+  currentScreenName: ScreenNames;
+  currentFlowName: FlowNames;
+  navigateToNextScreen: (...userInputs: StepFunctionParams[]) => void;
+  navigateBack: () => void;
 }
 
 export interface IAppProviderParams extends IFlowHandlerConfig {
@@ -57,8 +63,13 @@ export const AppProvider: FC<IAppProviderParams> = ({
   const [projectConfig, setProjectConfig] = useState(
     {} as ProjectConfigRspAllOfData
   );
-  const flowHandlerServiceRef = useRef<FlowHandlerService | null>(null);
-  const flowHandlerService = flowHandlerServiceRef.current;
+  const [flowHandlerService, setFlowHandlerService] =
+    useState<FlowHandlerService | null>(null);
+  const [currentScreenName, setCurrentScreenName] =
+    useState<ScreenNames>("start");
+  const currentFlowName = useRef<FlowNames>(
+    defaultToLogin ? loginFlowName : signupFlowName
+  );
 
   useEffect(() => {
     apiService.projectsApi
@@ -67,20 +78,47 @@ export const AppProvider: FC<IAppProviderParams> = ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = (config.data as any).data as ProjectConfigRspAllOfData;
         setProjectConfig(response);
-        flowHandlerServiceRef.current = new FlowHandlerService(
-          defaultToLogin ? loginFlowName : signupFlowName,
+        const newFlowHandlerServiceRef = new FlowHandlerService(
+          currentFlowName.current,
           projectConfig,
           flowHandlerConfig
         );
+        setFlowHandlerService(newFlowHandlerServiceRef);
+        setCurrentScreenName(newFlowHandlerServiceRef.currentScreenName);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
+  const navigateToNextScreen = (...userInputs: StepFunctionParams[]) => {
+    if (!flowHandlerService) {
+      return;
+    }
+
+    const nextScreen = flowHandlerService.navigateToNextScreen(...userInputs);
+    setCurrentScreenName(nextScreen);
+  };
+
+  const navigateBack = () => {
+    if (!flowHandlerService) {
+      return;
+    }
+
+    const prevScreen = flowHandlerService.navigateBack();
+    setCurrentScreenName(prevScreen);
+  };
+
   return (
     <AppContext.Provider
-      value={{ apiService, projectConfig, flowHandlerService }}
+      value={{
+        apiService,
+        projectConfig,
+        currentFlowName: currentFlowName.current,
+        currentScreenName,
+        navigateToNextScreen,
+        navigateBack,
+      }}
     >
       {children}
     </AppContext.Provider>

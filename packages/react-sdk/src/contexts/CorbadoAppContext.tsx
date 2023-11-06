@@ -1,17 +1,18 @@
 import type {
   FlowNames,
-  IApiService,
   IFlowHandlerConfig,
   LoginFlowNames,
   ProjectConfigRspAllOfData,
   ScreenNames,
   SignUpFlowNames,
-  StepFunctionParams,
 } from "@corbado/web-core";
 import {
   ApiService,
+  AuthService,
+  CommonScreens,
   defaultTimeout,
   FlowHandlerService,
+  ProjectService,
 } from "@corbado/web-core";
 import React, {
   createContext,
@@ -22,12 +23,12 @@ import React, {
 } from "react";
 
 export interface IAppContext {
-  apiService: IApiService;
   projectConfig: ProjectConfigRspAllOfData;
+  authService: AuthService;
+  flowHandlerService: FlowHandlerService | null;
   currentScreenName: ScreenNames;
   currentFlowName: FlowNames;
-  navigateToNextScreen: (...userInputs: StepFunctionParams[]) => void;
-  navigateBack: () => void;
+  setCurrentScreenName: React.Dispatch<React.SetStateAction<ScreenNames>>;
 }
 
 export interface IAppProviderParams extends IFlowHandlerConfig {
@@ -52,72 +53,61 @@ export const AppProvider: FC<IAppProviderParams> = ({
   shouldRedirect,
   children,
 }) => {
-  const flowHandlerConfig = {
-    passkeyAppend,
-    retryPasskeyOnError,
-    compulsoryEmailVerification,
-    shouldRedirect,
-  };
-  const apiServiceRef = useRef(ApiService(projectId, apiTimeout));
-  const apiService = apiServiceRef.current;
+  //Initializing API Service
+  const apiServiceRef = useRef(new ApiService(projectId, apiTimeout));
+
+  //Initializing Project Service
+  const projectServiceRef = useRef(new ProjectService(apiServiceRef.current));
   const [projectConfig, setProjectConfig] = useState(
     {} as ProjectConfigRspAllOfData
   );
+
+  //Initializing Flow Handler Service
   const [flowHandlerService, setFlowHandlerService] =
     useState<FlowHandlerService | null>(null);
-  const [currentScreenName, setCurrentScreenName] =
-    useState<ScreenNames>("start");
+  const [currentScreenName, setCurrentScreenName] = useState<ScreenNames>(
+    CommonScreens.Start
+  );
   const currentFlowName = useRef<FlowNames>(
     defaultToLogin ? loginFlowName : signupFlowName
   );
 
+  //Initializing Auth Service
+  const authServiceRef = useRef(new AuthService(apiServiceRef.current));
+
   useEffect(() => {
-    apiService.projectsApi
-      .projectConfig()
+    projectServiceRef.current
+      .getProjectConfig()
       .then((config) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const response = (config.data as any).data as ProjectConfigRspAllOfData;
-        setProjectConfig(response);
-        const newFlowHandlerServiceRef = new FlowHandlerService(
+        setProjectConfig(config);
+
+        const newFlowHandlerService = new FlowHandlerService(
           currentFlowName.current,
-          projectConfig,
-          flowHandlerConfig
+          config,
+          {
+            passkeyAppend,
+            retryPasskeyOnError,
+            compulsoryEmailVerification,
+            shouldRedirect,
+          }
         );
-        setFlowHandlerService(newFlowHandlerServiceRef);
-        setCurrentScreenName(newFlowHandlerServiceRef.currentScreenName);
+        setFlowHandlerService(newFlowHandlerService);
+        setCurrentScreenName(newFlowHandlerService.currentScreenName);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  const navigateToNextScreen = (...userInputs: StepFunctionParams[]) => {
-    if (!flowHandlerService) {
-      return;
-    }
-
-    const nextScreen = flowHandlerService.navigateToNextScreen(...userInputs);
-    setCurrentScreenName(nextScreen);
-  };
-
-  const navigateBack = () => {
-    if (!flowHandlerService) {
-      return;
-    }
-
-    const prevScreen = flowHandlerService.navigateBack();
-    setCurrentScreenName(prevScreen);
-  };
-
   return (
     <AppContext.Provider
       value={{
-        apiService,
         projectConfig,
+        flowHandlerService,
         currentFlowName: currentFlowName.current,
         currentScreenName,
-        navigateToNextScreen,
-        navigateBack,
+        setCurrentScreenName,
+        authService: authServiceRef.current,
       }}
     >
       {children}

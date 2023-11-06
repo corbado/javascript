@@ -1,10 +1,11 @@
 import type { ProjectConfigRspAllOfData } from "../api/models";
-import type {
-  Flow,
-  FlowNames,
-  IFlowHandlerConfig,
-  ScreenNames,
-  StepFunctionParams,
+import {
+  CommonScreens,
+  type Flow,
+  type FlowNames,
+  type IFlowHandlerConfig,
+  type ScreenNames,
+  type StepFunctionParams,
 } from "../types";
 import { flows } from "../utils/flows";
 
@@ -20,7 +21,7 @@ export class FlowHandlerService {
   ) {
     this.currentFlow = flows[this.flowName];
     this.screenHistory = [];
-    this.currentScreen = "start";
+    this.currentScreen = CommonScreens.Start;
   }
 
   get currentScreenName() {
@@ -47,9 +48,8 @@ export class FlowHandlerService {
       ...userInputs
     );
 
-    if (nextScreen === "end") {
+    if (nextScreen === CommonScreens.End) {
       void this.redirect();
-      return "end";
     }
 
     this.screenHistory.push(this.currentScreen);
@@ -59,10 +59,10 @@ export class FlowHandlerService {
 
   navigateBack() {
     if (!this.screenHistory.length) {
-      return "start";
+      return CommonScreens.Start;
     }
 
-    this.currentScreen = this.screenHistory.pop() || "start";
+    this.currentScreen = this.screenHistory.pop() || CommonScreens.Start;
     return this.currentScreen;
   }
 }

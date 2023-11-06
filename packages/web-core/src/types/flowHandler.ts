@@ -7,29 +7,44 @@ export interface IFlowHandlerConfig {
   shouldRedirect: boolean;
 }
 
-export type SignUpFlowNames =
-  | "PasskeySignupWithEmailOTPFallback"
-  | "EmailOTPSignup";
+export enum SignUpFlowNames {
+  PasskeySignupWithEmailOTPFallback = "PasskeySignupWithEmailOTPFallback",
+  EmailOTPSignup = "EmailOTPSignup",
+}
 
-export type LoginFlowNames = "PasskeyLoginWithEmailOTPFallback";
+export enum LoginFlowNames {
+  PasskeyLoginWithEmailOTPFallback = "PasskeyLoginWithEmailOTPFallback",
+}
 
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
 
-export type EmailOtpSignupScreens = "start" | "enter-otp" | "end";
+export enum CommonScreens {
+  Start = "start",
+  End = "end",
+}
 
-export type PasskeysSignupWithEmailOtpFallbackScreens =
-  | "start"
-  | "enter-otp"
-  | "end";
+export enum EmailOtpSignupScreens {
+  Start = "start",
+  EnterOtp = "enter-otp",
+  End = "end",
+}
 
-export type PasskeyLoginWithEmailOtpFallbackScreens =
-  | "start"
-  | "enter-otp"
-  | "end";
+export enum PasskeySignupWithEmailOtpFallbackScreens {
+  Start = "start",
+  EnterOtp = "enter-otp",
+  End = "end",
+}
+
+export enum PasskeyLoginWithEmailOtpFallbackScreens {
+  Start = "start",
+  EnterOtp = "enter-otp",
+  End = "end",
+}
 
 export type ScreenNames =
+  | CommonScreens
   | EmailOtpSignupScreens
-  | PasskeysSignupWithEmailOtpFallbackScreens
+  | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
 export type StepFunctionParams = number | string | boolean;

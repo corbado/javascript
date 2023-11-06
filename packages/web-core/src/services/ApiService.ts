@@ -1,27 +1,21 @@
+import type { AxiosInstance } from "axios";
 import axios from "axios";
 
 import { AssetsApi, ProjectsApi, SessionsApi, UsersApi } from "../api";
 import { Configuration } from "../api";
 import { getLongSession } from "../utils/helpers/longSession";
 
-export const ApiService = (() => {
-  const sessionToken = getLongSession();
-  let apiServiceInstance: {
-    usersApi: UsersApi;
-    assetsApi: AssetsApi;
-    projectsApi: ProjectsApi;
-    sessionsApi: SessionsApi;
-  } | null = null;
+export class ApiService {
+  private _usersApi: UsersApi;
+  private _assetsApi: AssetsApi;
+  private _projectsApi: ProjectsApi;
+  private _sessionsApi: SessionsApi;
 
-  return (
+  constructor(
     projectId: string,
     timeout: number = 30 * 1000,
-    token: string = sessionToken
-  ) => {
-    if (apiServiceInstance) {
-      return apiServiceInstance;
-    }
-
+    token: string = getLongSession()
+  ) {
     const basePath = `https://${projectId}.frontendapi.corbado.io`;
     const config = new Configuration({
       apiKey: projectId,
@@ -29,7 +23,7 @@ export const ApiService = (() => {
       accessToken: token,
     });
 
-    const axiosInstance = axios.create({
+    const axiosInstance: AxiosInstance = axios.create({
       timeout: timeout,
       withCredentials: true,
       headers: {
@@ -40,16 +34,26 @@ export const ApiService = (() => {
         },
       },
     });
-    const usersApi = new UsersApi(config, basePath, axiosInstance);
-    const assetsApi = new AssetsApi(config, basePath, axiosInstance);
-    const projectsApi = new ProjectsApi(config, basePath, axiosInstance);
-    const sessionsApi = new SessionsApi(config, basePath, axiosInstance);
 
-    return (apiServiceInstance = {
-      usersApi,
-      assetsApi,
-      projectsApi,
-      sessionsApi,
-    });
-  };
-})();
+    this._usersApi = new UsersApi(config, basePath, axiosInstance);
+    this._assetsApi = new AssetsApi(config, basePath, axiosInstance);
+    this._projectsApi = new ProjectsApi(config, basePath, axiosInstance);
+    this._sessionsApi = new SessionsApi(config, basePath, axiosInstance);
+  }
+
+  public get usersApi(): UsersApi {
+    return this._usersApi;
+  }
+
+  public get assetsApi(): AssetsApi {
+    return this._assetsApi;
+  }
+
+  public get projectsApi(): ProjectsApi {
+    return this._projectsApi;
+  }
+
+  public get sessionsApi(): SessionsApi {
+    return this._sessionsApi;
+  }
+}

@@ -1,9 +1,9 @@
-import { useCorbadoAuthContext, useAppContext } from "@corbado/react-sdk";
+import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function InitiateSignUp() {
-  const { sendEmailWithOTP } = useCorbadoAuthContext();
-  const { navigateToNextScreen } = useAppContext();
+  const { sendEmailWithOTP } = useCorbadoAuth();
+  const { navigateToNextScreen } = useCorbadoFlowHandler();
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
 

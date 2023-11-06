@@ -1,9 +1,9 @@
-import { useCorbadoAuthContext, useAppContext } from "@corbado/react-sdk";
+import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function VerifyOtp() {
-  const { verifyOTP } = useCorbadoAuthContext();
-  const { navigateBack } = useAppContext();
+  const { verifyOTP } = useCorbadoAuth();
+  const { navigateBack } = useCorbadoFlowHandler();
   const [otp, setOtp] = React.useState("");
 
   const handleSubmitOtp = async (event) => {

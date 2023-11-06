@@ -1,7 +1,7 @@
 import type {
   EmailOtpSignupScreens,
   PasskeyLoginWithEmailOtpFallbackScreens,
-  PasskeysSignupWithEmailOtpFallbackScreens,
+  PasskeySignupWithEmailOtpFallbackScreens,
 } from "@corbado/web-core";
 
 export type EmailOTPSignupScreensList = {
@@ -9,7 +9,7 @@ export type EmailOTPSignupScreensList = {
 };
 
 export type PasskeySignupWithEmailOtpFallbackScreensList = {
-  [K in PasskeysSignupWithEmailOtpFallbackScreens]?: React.ReactNode;
+  [K in PasskeySignupWithEmailOtpFallbackScreens]?: React.ReactNode;
 };
 
 export type PasskeyLoginWithEmailOtpFallbackScreensList = {

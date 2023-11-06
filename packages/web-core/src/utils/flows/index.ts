@@ -1,7 +1,7 @@
 import type { Flows } from "../../types";
-import { EmailOTPSignupFlow } from "./EmailOTPSignup";
-import { PasskeyLoginWithEmailOTPFallbackFlow } from "./PasskeyLoginWithEmailOTPFallback";
-import { PasskeySignupWithEmailOTPFallbackFlow } from "./PasskeySignupWithEmailOTPFallback";
+import { EmailOTPSignupFlow } from "./emailOtpSignupFlow";
+import { PasskeyLoginWithEmailOTPFallbackFlow } from "./passkeyLoginFlow";
+import { PasskeySignupWithEmailOTPFallbackFlow } from "./passkeySignupFlow";
 
 export const flows: Flows = {
   PasskeySignupWithEmailOTPFallback: PasskeySignupWithEmailOTPFallbackFlow,

@@ -1,12 +1,12 @@
-import type { ProjectConfigRspAllOfData } from "../api/models";
-import {
-  CommonScreens,
-  type Flow,
-  type FlowNames,
-  type IFlowHandlerConfig,
-  type ScreenNames,
-  type StepFunctionParams,
+import type {
+  Flow,
+  FlowNames,
+  IFlowHandlerConfig,
+  IProjectConfig,
+  ScreenNames,
+  StepFunctionParams,
 } from "../types";
+import { CommonScreens } from "../types";
 import { flows } from "../utils/flows";
 
 export class FlowHandlerService {
@@ -16,7 +16,7 @@ export class FlowHandlerService {
 
   constructor(
     private flowName: FlowNames,
-    private projectConfig: ProjectConfigRspAllOfData,
+    private projectConfig: IProjectConfig,
     private flowHandlerConfig: IFlowHandlerConfig
   ) {
     this.currentFlow = flows[this.flowName];

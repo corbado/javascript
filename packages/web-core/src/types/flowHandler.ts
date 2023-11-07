@@ -1,4 +1,4 @@
-import type { ProjectConfigRspAllOfData } from "../api/models";
+import type { IProjectConfig } from "./common";
 
 export interface IFlowHandlerConfig {
   passkeyAppend: boolean;
@@ -50,7 +50,7 @@ export type ScreenNames =
 export type StepFunctionParams = number | string | boolean;
 
 export type StepFunction = (
-  projectCOnfig: ProjectConfigRspAllOfData,
+  projectCOnfig: IProjectConfig,
   flowHandlerCOnfig: IFlowHandlerConfig,
   ...args: StepFunctionParams[]
 ) => ScreenNames;

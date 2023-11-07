@@ -16,3 +16,13 @@ export interface IApiService {
   projectsApi: ProjectsApi;
   sessionsApi: SessionsApi;
 }
+
+export interface IProjectConfig {
+  allowUserRegistration: boolean;
+  passkeyAppendInterval: string;
+  fallbackLanguage: string;
+  autoDetectLanguage: boolean;
+  userFullNameRequired: boolean;
+  webComponentDebug: boolean;
+  environment: string;
+}

@@ -1,8 +1,8 @@
-import type { ProjectConfigRspAllOfData } from "../api";
+import type { IProjectConfig } from "../types";
 import type { ApiService } from "./ApiService";
 
 export class ProjectService {
-  private _projConfig: ProjectConfigRspAllOfData | null = null;
+  private _projConfig: IProjectConfig | null = null;
   constructor(private readonly _apiService: ApiService) {}
 
   public get projConfig() {
@@ -12,10 +12,9 @@ export class ProjectService {
   public async getProjectConfig() {
     const resp = await this._apiService.projectsApi.projectConfig();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const config = (resp as any).data as ProjectConfigRspAllOfData;
+    const config = resp.data.data;
 
     this._projConfig = config;
-    return config;
+    return this._projConfig;
   }
 }

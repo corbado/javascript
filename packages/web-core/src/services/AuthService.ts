@@ -1,7 +1,3 @@
-import type {
-  EmailCodeConfirmRsp,
-  EmailCodeRegisterStartRspAllOfData,
-} from "../api";
 import type { ApiService } from "./ApiService";
 export class AuthService {
   private _isAuthenticated = false;
@@ -11,20 +7,19 @@ export class AuthService {
 
   constructor(private readonly _apiService: ApiService) {}
 
+  // returns true if email is sent
   public async sendEmailWithOTP(email: string, username = "") {
     const resp = await this._apiService.usersApi.emailCodeRegisterStart({
       email: email,
       username: username,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = (resp.data as any).data as EmailCodeRegisterStartRspAllOfData;
+    this.emailCodeIdRef = resp.data.data.emailCodeID;
 
-    this.emailCodeIdRef = data.emailCodeID;
-
-    return data;
+    return resp.status === 200;
   }
 
+  // returns true if otp is verified
   public async verifyOTP(otp: string) {
     if (this.emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
@@ -35,12 +30,11 @@ export class AuthService {
       emailCodeID: this.emailCodeIdRef,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = verifyResp.data as any as EmailCodeConfirmRsp;
+    //const sessionData = verifyResp.data.data;
     this._isAuthenticated = true;
     this._isEmailVerified = true;
 
-    return data;
+    return verifyResp.status === 200;
   }
 
   public get isAuthenticated() {

@@ -6,12 +6,12 @@ import React from "react";
 
 import { AppProvider } from "./CorbadoAppContext";
 
-export interface ICorbadoContextParams extends IFlowHandlerConfig {
+export interface ICorbadoContextParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
   apiTimeout?: number;
-  defaultToLogin: boolean;
-  signupFlowName: SignUpFlowNames;
-  loginFlowName: LoginFlowNames;
+  defaultToLogin?: boolean;
+  signupFlowName?: SignUpFlowNames;
+  loginFlowName?: LoginFlowNames;
 }
 
 export const CorbadoProvider: FC<ICorbadoContextParams> = ({

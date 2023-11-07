@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src --ext .ts --fix",
-    "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=withSeparateModelsAndApi=true,apiPackage=http,modelPackage=models,supportsES6=true"
+    "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

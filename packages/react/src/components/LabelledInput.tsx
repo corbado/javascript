@@ -6,7 +6,7 @@ interface Props extends InputProps {
   label: string;
 }
 
-const LabelledInput = ({ label, type, id, name, value, onChange, error }: Props) => {
+const LabelledInput = ({ label, type, id, name, value, onChange, error, ref, ...rest }: Props) => {
   const [focused, setFocused] = React.useState(false);
 
   const onFocus = () => setFocused(true);
@@ -26,6 +26,7 @@ const LabelledInput = ({ label, type, id, name, value, onChange, error }: Props)
           onFocus={onFocus}
           onBlur={onBlur}
           error={error}
+          {...rest}
         />
         <label
           htmlFor={id}

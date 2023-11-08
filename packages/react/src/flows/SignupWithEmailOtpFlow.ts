@@ -4,7 +4,7 @@ import { EmailLink } from '../screens/EmailLink';
 import { InitiateSignup } from '../screens/InitiateSignup';
 
 export type SignupWithEmailOTPScreens = {
-  [key in ScreenNames]?: () => React.ReactNode;
+  [key in ScreenNames]?: React.FC;
 }
 
 export const SignupWithEmailOtpFlow: SignupWithEmailOTPScreens = {

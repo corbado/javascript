@@ -1,4 +1,5 @@
 import { useCorbadoFlowHandler } from "@corbado/react-sdk";
+import React from "react";
 
 import { flows } from "./flows-screens-aggregator";
 
@@ -7,6 +8,6 @@ export const ScreensFlow = () => {
 
     if (!currentFlowName || !currentScreenName) { return null; }
 
-    const Screen = flows[currentFlowName]?.[currentScreenName]?.();
-    return(Screen)
+    const Screen = flows[currentFlowName]?.[currentScreenName] as React.FC;
+    return(<Screen />)
 }

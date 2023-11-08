@@ -59,7 +59,7 @@ export class AuthService {
       username,
     });
     const challenge = JSON.parse(respStart.data.data.challenge);
-    const signedChallenge = create(challenge);
+    const signedChallenge = await create(challenge);
     const respFinish = await this._apiService.usersApi.passKeyRegisterFinish({
       signedChallenge: JSON.stringify(signedChallenge),
     });
@@ -77,7 +77,7 @@ export class AuthService {
   public async passkeyAppend() {
     const respStart = await this._apiService.usersApi.passKeyAppendStart({});
     const challenge = JSON.parse(respStart.data.data.challenge);
-    const signedChallenge = create(challenge);
+    const signedChallenge = await create(challenge);
     const respFinish = await this._apiService.usersApi.passKeyAppendFinish({
       signedChallenge: JSON.stringify(signedChallenge),
     });

@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@corbado/react-sdk": {
+      "signature": "e6a0f941377c1aa9ebb6e86000c6a253",
+      "file": true
+    }
+  }
+}

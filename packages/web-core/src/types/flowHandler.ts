@@ -26,6 +26,10 @@ export enum CommonScreens {
 export enum EmailOtpSignupScreens {
   Start = "start",
   EnterOtp = "enter-otp",
+  PasskeyOption = "passkey-option",
+  PasskeyBenefits = "passkey-benefits",
+  PasskeyWelcome = "passkey-welcome",
+  PasskeyError = "passkey-error",
   End = "end",
 }
 
@@ -47,13 +51,16 @@ export type ScreenNames =
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
-export type StepFunctionParams = number | string | boolean;
+export type StepFunctionParams = Record<
+  string,
+  string | boolean | number | undefined
+>;
 
 export type StepFunction = (
   projectCOnfig: IProjectConfig,
   flowHandlerCOnfig: IFlowHandlerConfig,
-  ...args: StepFunctionParams[]
-) => ScreenNames;
+  userInput: StepFunctionParams
+) => ScreenNames | Promise<ScreenNames>;
 
 export type Flow = {
   [K in ScreenNames]?: StepFunction;

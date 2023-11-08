@@ -23,9 +23,23 @@ export const useCorbadoAuth = () => {
     return authService?.verifyOTP(otp);
   }
 
+  function passkeyRegister(username: string) {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyRegister(username);
+  }
+
+  function passkeyAppend() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyAppend();
+  }
+
   checkAuthServiceHealth();
   return {
     sendEmailWithOTP,
     verifyOTP,
+    passkeyRegister,
+    passkeyAppend,
   };
 };

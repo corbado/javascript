@@ -1,11 +1,25 @@
+import { create } from "@github/webauthn-json";
+
 import type { ApiService } from "./ApiService";
 export class AuthService {
   private _isAuthenticated = false;
   private _isEmailVerified = false;
-  //private isPasskeySet = false;
-  private emailCodeIdRef = "";
+  private _isPasskeySet = false;
+  private _emailCodeIdRef = "";
 
   constructor(private readonly _apiService: ApiService) {}
+
+  public get isAuthenticated() {
+    return this._isAuthenticated;
+  }
+
+  public get isEmailVerified() {
+    return this._isEmailVerified;
+  }
+
+  public get isPasskeySet() {
+    return this._isPasskeySet;
+  }
 
   // returns true if email is sent
   public async sendEmailWithOTP(email: string, username = "") {
@@ -14,34 +28,64 @@ export class AuthService {
       username: username,
     });
 
-    this.emailCodeIdRef = resp.data.data.emailCodeID;
+    this._emailCodeIdRef = resp.data.data.emailCodeID;
 
     return resp.status === 200;
   }
 
   // returns true if otp is verified
   public async verifyOTP(otp: string) {
-    if (this.emailCodeIdRef === "") {
+    if (this._emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
     }
 
     const verifyResp = await this._apiService.usersApi.emailCodeConfirm({
       code: otp,
-      emailCodeID: this.emailCodeIdRef,
+      emailCodeID: this._emailCodeIdRef,
     });
 
     //const sessionData = verifyResp.data.data;
+    this._apiService.setInstanceWithToken(
+      verifyResp.data.data.sessionToken ?? ""
+    );
     this._isAuthenticated = true;
     this._isEmailVerified = true;
 
     return verifyResp.status === 200;
   }
 
-  public get isAuthenticated() {
-    return this._isAuthenticated;
+  public async passkeyRegister(username: string) {
+    const respStart = await this._apiService.usersApi.passKeyRegisterStart({
+      username,
+    });
+    const challenge = JSON.parse(respStart.data.data.challenge);
+    const signedChallenge = create(challenge);
+    const respFinish = await this._apiService.usersApi.passKeyRegisterFinish({
+      signedChallenge: JSON.stringify(signedChallenge),
+    });
+
+    //const sessionData = respFinish.data.data;
+    this._apiService.setInstanceWithToken(
+      respFinish.data.data.sessionToken ?? ""
+    );
+
+    this._isPasskeySet = true;
+
+    return respFinish.status === 200;
   }
 
-  public get isEmailVerified() {
-    return this._isEmailVerified;
+  public async passkeyAppend() {
+    const respStart = await this._apiService.usersApi.passKeyAppendStart({});
+    const challenge = JSON.parse(respStart.data.data.challenge);
+    const signedChallenge = create(challenge);
+    const respFinish = await this._apiService.usersApi.passKeyAppendFinish({
+      signedChallenge: JSON.stringify(signedChallenge),
+    });
+
+    //const sessionData = respFinish.data.data;
+
+    this._isPasskeySet = true;
+
+    return respFinish.status === 200;
   }
 }

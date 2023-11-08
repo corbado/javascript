@@ -36,16 +36,16 @@ export class FlowHandlerService {
     //window.location.href = this.projectConfig.redirectUrl;
   }
 
-  navigateToNextScreen(...userInputs: StepFunctionParams[]) {
+  async navigateToNextScreen(userInput: StepFunctionParams) {
     const stepFunction = this.currentFlow[this.currentScreen];
     if (!stepFunction) {
       throw new Error("Invalid screen");
     }
 
-    const nextScreen = stepFunction(
+    const nextScreen = await stepFunction(
       this.projectConfig,
       this.flowHandlerConfig,
-      ...userInputs
+      userInput
     );
 
     if (nextScreen === CommonScreens.End) {

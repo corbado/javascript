@@ -67,7 +67,7 @@ export const InitiateSignup = () => {
             <Text variant="sub-header">
                 {/* "text" is a placeholder value for translations */}
                 <Trans i18nKey="signup.sub-header">
-                    text <Link route='' className="text-secondary-font-color">text</Link> text
+                    text <Link href='' className="text-secondary-font-color">text</Link> text
                 </Trans>
             </Text>
             <div className="form-wrapper">

@@ -24,7 +24,7 @@
     --box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
     --margin-top: 5rem;
     --border-container-width: 0;
-    --input-margin: 2rem 0 1rem 0;
+    --input-margin: 1rem 0 0 0;
     --placeholder-opacity: 0;
     --label-opacity: 1;
     --light-color: #d9d9d9;
@@ -75,11 +75,11 @@
   }
 
   .header {
-    @apply mt-0 text-cd-5 mb-cd-8 font-bold;
+    @apply mt-0 text-cd-5 mb-cd-5 font-bold;
   }
 
   .sub-header {
-    @apply font-bold;
+    @apply font-bold mb-8;
   }
 
   button,
@@ -127,7 +127,7 @@
 
   .floating-label {
     position: relative;
-    margin: var(--input-margin, 2rem 0 1rem 0);
+    margin: var(--input-margin);
     width: 100%;
   }
 
@@ -206,6 +206,10 @@
     font-weight: bold;
     color: var(--light-color, #1953ff);
     cursor: pointer;
+  }
+
+  .error-text {
+    @apply text-error-color m-0 mt-1 text-xs text-left ml-cd-14;
   }
 
   #corbado-auth {

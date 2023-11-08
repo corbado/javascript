@@ -1,6 +1,8 @@
 node_modules/
 packages/*/node_modules/
 packages/*/dist/
+packages/*/.yalc/
+packages/*/yalc.lock
 playground/*/node_modules/
 playground/*/.yalc/
 playground/*/yalc.lock

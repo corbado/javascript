@@ -7,13 +7,14 @@ export interface Props
 }
 
 const Input = React.forwardRef<HTMLInputElement, Props>(
-    ({ id, className, ...props }, ref) => {
+    ({ id, className, error, ...props }, ref) => {
+        const _classnames = `${className} ${error ? '!border-error-color' : ''}`
         return (
             <div className="input-wrapper">
                 <input
                     id={id}
                     {...props}
-                    className={className}
+                    className={_classnames}
                     autoComplete="off"
                     ref={ref}
                 />

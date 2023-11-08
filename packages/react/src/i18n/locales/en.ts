@@ -43,6 +43,10 @@ const en =  {
       email: 'Email address',
       continue: 'Continue',
       cancel: 'Cancel',
+    },
+    validation_errors: {
+      name: 'Please enter a name',
+      email: 'Please enter a valid email',
     }
   }
 

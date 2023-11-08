@@ -1,31 +1,31 @@
 import './i18n';
 import './styles.css';
 
+import { CorbadoProvider, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import type { FC } from 'react';
 import React from 'react';
 
-import { CreatePasskey } from './screens/CreatePasskey';
-import { PasskeyCreationError } from './screens/PasskeyCreationError';
-import { PasskeyCreationSuccess } from './screens/PasskeyCreationSuccess';
-import { PasskeyLoginActivation } from './screens/PasskeyLoginActivation';
-import { PasskeySignup } from './screens/PasskeySignup';
+import { flows } from './flows';
 
-export const Auth = () => {
+type Page = 'login' | 'register';
+
+interface Props {
+    projectId: string;
+    page?: Page;
+}
+
+export const CorbadoAuth: FC<Props> = ({ projectId }) => {
+
+    const { currentFlowName, currentScreenName } = useCorbadoFlowHandler();
+
     return (
         <div id="corbado-auth">
             <div className="container">
-                <PasskeySignup />
-            </div>
-            <div className="container">
-                <CreatePasskey />
-            </div>
-            <div className="container">
-                <PasskeyCreationSuccess />
-            </div>
-            <div className="container">
-                <PasskeyCreationError />
-            </div>
-            <div className="container">
-                <PasskeyLoginActivation />
+                <CorbadoProvider
+                    projectId={projectId}
+                >
+                    {flows[currentFlowName][currentScreenName]}
+                </CorbadoProvider>
             </div>
         </div>
     );

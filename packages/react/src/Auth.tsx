@@ -1,11 +1,11 @@
 import './i18n';
 import './styles.css';
 
-import { CorbadoProvider, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import { CorbadoProvider } from "@corbado/react-sdk";
 import type { FC } from 'react';
 import React from 'react';
 
-import { flows } from './flows';
+import { ScreensFlow } from './flows/ScreensFlow';
 
 type Page = 'login' | 'register';
 
@@ -15,16 +15,13 @@ interface Props {
 }
 
 export const CorbadoAuth: FC<Props> = ({ projectId }) => {
-
-    const { currentFlowName, currentScreenName } = useCorbadoFlowHandler();
-
     return (
         <div id="corbado-auth">
             <div className="container">
                 <CorbadoProvider
                     projectId={projectId}
                 >
-                    {flows[currentFlowName][currentScreenName]}
+                    <ScreensFlow />
                 </CorbadoProvider>
             </div>
         </div>

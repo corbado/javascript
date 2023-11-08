@@ -3,14 +3,14 @@ import React from "react";
 
 export function VerifyOtp() {
   const { verifyOTP } = useCorbadoAuth();
-  const { navigateBack } = useCorbadoFlowHandler();
+  const { navigateBack, navigateToNextScreen } = useCorbadoFlowHandler();
   const [otp, setOtp] = React.useState("");
 
   const handleSubmitOtp = async (event) => {
     event.preventDefault();
     try {
-      const resp = await verifyOTP(otp);
-      console.log(resp);
+      await verifyOTP(otp);
+      navigateToNextScreen();
     } catch (error) {
       console.log(error);
     }

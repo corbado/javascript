@@ -1,19 +1,19 @@
 import type { Flow, StepFunctionParams } from "../../types";
-import { EmailOtpSignupScreens } from "../../types";
+import { EmailOtpSignupScreens } from "../../utils/constants/flowHandler";
 import { canUsePasskeys } from "../helpers/webAuthUtils";
 
-export interface IPasskeyBenefitsScreen extends StepFunctionParams {
+export interface IEmailSignupPasskeyBenefitsScreen extends StepFunctionParams {
   maybeLater?: boolean;
   appendSuccessful?: boolean;
   appendFailed?: boolean;
 }
-export interface IPasskeyOptionScreen
+export interface IEmailSignupPasskeyOptionScreen
   extends StepFunctionParams,
-    IPasskeyBenefitsScreen {
+    IEmailSignupPasskeyBenefitsScreen {
   showBenefits?: boolean;
 }
 
-export interface IPasskeyErrorScreen extends StepFunctionParams {
+export interface IEmailSignupPasskeyErrorScreen extends StepFunctionParams {
   success?: boolean;
   cancel?: boolean;
 }
@@ -32,7 +32,7 @@ export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.PasskeyOption]: (
     _,
     flowConfig,
-    userInput: IPasskeyOptionScreen
+    userInput: IEmailSignupPasskeyOptionScreen
   ) => {
     let result = EmailOtpSignupScreens.End;
     if (userInput.showBenefits) {
@@ -51,7 +51,7 @@ export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.PasskeyBenefits]: (
     _,
     flowConfig,
-    userInput: IPasskeyBenefitsScreen
+    userInput: IEmailSignupPasskeyBenefitsScreen
   ) => {
     let result = EmailOtpSignupScreens.End;
 
@@ -70,7 +70,7 @@ export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.PasskeyError]: (
     _,
     __,
-    userInput: IPasskeyErrorScreen
+    userInput: IEmailSignupPasskeyErrorScreen
   ) => {
     return userInput.success
       ? EmailOtpSignupScreens.PasskeyWelcome

@@ -6,7 +6,7 @@ import type {
   ScreenNames,
   StepFunctionParams,
 } from "../types";
-import { CommonScreens } from "../types";
+import { CommonScreens } from "../utils/constants/flowHandler";
 import { flows } from "../utils/flows";
 
 export class FlowHandlerService {

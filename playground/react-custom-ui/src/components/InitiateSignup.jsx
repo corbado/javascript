@@ -2,15 +2,15 @@ import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function InitiateSignUp() {
-  const { sendEmailWithOTP } = useCorbadoAuth();
+  const { initiateAuth } = useCorbadoAuth();
   const { navigateToNextScreen } = useCorbadoFlowHandler();
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
 
-  const handleSendOtp = async (event) => {
+  const initiateAuthentication = async (event) => {
     event.preventDefault();
     try {
-      await sendEmailWithOTP(email, username);
+      initiateAuth(email, username);
       navigateToNextScreen();
     } catch (error) {
       console.log(error);
@@ -18,7 +18,7 @@ export function InitiateSignUp() {
   };
 
   return (
-    <form onSubmit={handleSendOtp}>
+    <form onSubmit={initiateAuthentication}>
       <label>
         Email:
         <input

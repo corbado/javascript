@@ -1,4 +1,5 @@
-import { type Flows, LoginFlowNames, SignUpFlowNames } from "../../types";
+import type { Flows } from "../../types";
+import { LoginFlowNames, SignUpFlowNames } from "../constants/flowHandler";
 import { EmailOTPSignupFlow } from "./emailOtpSignupFlow";
 import { PasskeyLoginWithEmailOTPFallbackFlow } from "./passkeyLoginFlow";
 import { PasskeySignupWithEmailOTPFallbackFlow } from "./passkeySignupFlow";

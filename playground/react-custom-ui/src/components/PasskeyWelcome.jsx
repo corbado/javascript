@@ -1,4 +1,4 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import { useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function PasskeyWelcome() {

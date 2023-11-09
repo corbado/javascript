@@ -1,3 +1,11 @@
+import type {
+  CommonScreens,
+  EmailOtpSignupScreens,
+  LoginFlowNames,
+  PasskeyLoginWithEmailOtpFallbackScreens,
+  PasskeySignupWithEmailOtpFallbackScreens,
+  SignUpFlowNames,
+} from "../utils/constants/flowHandler";
 import type { IProjectConfig } from "./common";
 
 export interface IFlowHandlerConfig {
@@ -7,43 +15,7 @@ export interface IFlowHandlerConfig {
   shouldRedirect: boolean;
 }
 
-export enum SignUpFlowNames {
-  PasskeySignupWithEmailOTPFallback = "PasskeySignupWithEmailOTPFallback",
-  EmailOTPSignup = "EmailOTPSignup",
-}
-
-export enum LoginFlowNames {
-  PasskeyLoginWithEmailOTPFallback = "PasskeyLoginWithEmailOTPFallback",
-}
-
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
-
-export enum CommonScreens {
-  Start = "start",
-  End = "end",
-}
-
-export enum EmailOtpSignupScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  PasskeyOption = "passkey-option",
-  PasskeyBenefits = "passkey-benefits",
-  PasskeyWelcome = "passkey-welcome",
-  PasskeyError = "passkey-error",
-  End = "end",
-}
-
-export enum PasskeySignupWithEmailOtpFallbackScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  End = "end",
-}
-
-export enum PasskeyLoginWithEmailOtpFallbackScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  End = "end",
-}
 
 export type ScreenNames =
   | CommonScreens

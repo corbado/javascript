@@ -6,6 +6,8 @@ export class AuthService {
   private _isEmailVerified = false;
   private _isPasskeySet = false;
   private _emailCodeIdRef = "";
+  private _email = "";
+  private _username = "";
 
   constructor(private readonly _apiService: ApiService) {}
 
@@ -21,8 +23,23 @@ export class AuthService {
     return this._isPasskeySet;
   }
 
+  public get email() {
+    return this._email;
+  }
+
+  public get username() {
+    return this._username;
+  }
+
+  public initiateAuth(email: string, username = "") {
+    this._email = email;
+    this._username = username;
+  }
+
   // returns true if email is sent
   public async sendEmailWithOTP(email: string, username = "") {
+    this.initiateAuth(email, username);
+
     const resp = await this._apiService.usersApi.emailCodeRegisterStart({
       email: email,
       username: username,
@@ -54,9 +71,10 @@ export class AuthService {
     return verifyResp.status === 200;
   }
 
-  public async passkeyRegister(username: string) {
+  public async passkeyRegister() {
     const respStart = await this._apiService.usersApi.passKeyRegisterStart({
-      username,
+      username: this._email,
+      fullName: this._username,
     });
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await create(challenge);
@@ -70,6 +88,7 @@ export class AuthService {
     );
 
     this._isPasskeySet = true;
+    this._isAuthenticated = true;
 
     return respFinish.status === 200;
   }

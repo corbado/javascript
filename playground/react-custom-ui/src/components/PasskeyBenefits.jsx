@@ -3,6 +3,8 @@ import React from "react";
 
 export function PasskeyBenefits() {
   const { navigateToNextScreen } = useCorbadoFlowHandler();
+  const { isAuthenticated, passkeyAppend, passkeyRegister } = useCorbadoAuth();
+
   return (
     <div>
       <h1>Passkey Benefits</h1>

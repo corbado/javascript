@@ -1,3 +1,4 @@
+import { useCorbadoAuth, useCorbadoFlowHandler } from '@corbado/react-sdk';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -5,6 +6,7 @@ import Button from '../components/Button';
 import LabelledInput from '../components/LabelledInput';
 import Link from '../components/Link';
 import Text from '../components/Text';
+import { emailRegex } from '../utils/validations';
 
 interface SignupForm {
     name: string;
@@ -14,7 +16,14 @@ interface SignupForm {
 export const InitiateSignup = () => {
     const { t } = useTranslation();
 
-    const [signupData, setSignupData] = React.useState<SignupForm>({ name: '', username: '' });
+    const { sendEmailWithOTP } = useCorbadoAuth();
+    const { navigateToNextScreen } = useCorbadoFlowHandler();
+
+    const formTemplate = { name: '', username: '' };
+
+    const [signupData, setSignupData] = React.useState<SignupForm>({ ...formTemplate });
+    const [errorData, setErrorData] = React.useState<SignupForm>({ ...formTemplate });
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         (event.target as HTMLInputElement).name;
@@ -22,10 +31,34 @@ export const InitiateSignup = () => {
         setSignupData(prevData => ({ ...prevData, [name]: value }));
     }
 
+    const handleSignup = async (): Promise<void> => {
+        setLoading(true);
+        try {
+            await sendEmailWithOTP(signupData.username, signupData.name);
+            navigateToNextScreen();
+        } catch (error) {
+            console.log({ error });
+            setLoading(false);
+        }
+    }
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
         e.preventDefault();
 
-        console.log({ signupData });
+        const errors: SignupForm = { ...formTemplate };
+
+        if (!signupData.name) { errors.name = t('validation_errors.name'); };
+        if (!signupData.username || !emailRegex.test(signupData.username)) { errors.username = t('validation_errors.email'); };
+
+        setErrorData(errors);
+
+        if (errors.name || errors.username) {
+            return;
+        }
+
+        setErrorData({ ...formTemplate });
+
+        void handleSignup();
     }
 
     return (
@@ -34,14 +67,16 @@ export const InitiateSignup = () => {
             <Text variant="sub-header">
                 {/* "text" is a placeholder value for translations */}
                 <Trans i18nKey="signup.sub-header">
-                    text <Link route='' className="text-secondary-font-color">text</Link> text
+                    text <Link href='' className="text-secondary-font-color">text</Link> text
                 </Trans>
             </Text>
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit}>
-                    <LabelledInput name='name' label={t('generic.name')} onChange={onChange} value={signupData.name} />
-                    <LabelledInput name='username' label={t('generic.email')} onChange={onChange} value={signupData.username} type='email' />
-                    <Button variant='primary'>{t('signup.continue_email')}</Button>
+                    <div className="mb-3">
+                        <LabelledInput name='name' label={t('generic.name')} onChange={onChange} value={signupData.name} error={errorData.name} />
+                        <LabelledInput name='username' label={t('generic.email')} onChange={onChange} value={signupData.username} error={errorData.username} />
+                    </div>
+                    <Button variant='primary' isLoading={loading}>{t('signup.continue_email')}</Button>
                 </form>
             </div>
         </>

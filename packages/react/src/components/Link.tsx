@@ -1,15 +1,15 @@
 import React from 'react';
 
 interface AdditionalProps {
-    route: string;
     className: string;
+    target?: string;
 }
 
 type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & React.PropsWithChildren<AdditionalProps>;
 
-const Link: React.FunctionComponent<Props> = ({ children, route, className }) => {
+const Link: React.FunctionComponent<Props> = ({ children, target = '_blank', className, ...rest }) => {
   return (
-    <a href={route} className={` ${className}`}>{children}</a>
+    <a target={target} className={` ${className}`} {...rest}>{children}</a>
   );
 }
 

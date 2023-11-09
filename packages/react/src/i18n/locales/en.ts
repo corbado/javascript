@@ -36,13 +36,18 @@ const en =  {
     },
     email_link: {
       header: 'Enter code to create account',
-      body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.'
+      body: 'We just sent a one time code to <1>email adress</1>. The code expires shortly, so please enter it soon.',
+      otp_required: 'Valid OTP required'
     },
     generic: {
       name: 'Name',
       email: 'Email address',
       continue: 'Continue',
       cancel: 'Cancel',
+    },
+    validation_errors: {
+      name: 'Please enter a name',
+      email: 'Please enter a valid email',
     }
   }
 

@@ -1,17 +1,14 @@
 import './i18n';
 import './styles.css';
 
-import { CorbadoProvider } from "@corbado/react-sdk";
-import type { FC } from 'react';
+import { CorbadoProvider, type ICorbadoContextParams } from "@corbado/react-sdk";
 import React from 'react';
 
 import { ScreensFlow } from './screens/ScreenFlow';
 
-interface Props {
-    projectId: string;
-}
+type Props = ICorbadoContextParams;
 
-export const CorbadoAuth: FC<Props> = ({ projectId }) => {
+export const CorbadoAuth: React.FC<Props> = ({ projectId }) => {
     return (
         <div id="corbado-auth">
             <div className="container">

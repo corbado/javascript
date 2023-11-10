@@ -20,11 +20,12 @@ export const useCorbadoFlowHandler = () => {
     }
   }
 
-  const navigateToNextScreen = (...userInputs: StepFunctionParams[]) => {
+  const navigateToNextScreen = async (userInput: StepFunctionParams) => {
     checkFlowHandlerHealth();
 
     const nextScreen =
-      flowHandlerService?.navigateToNextScreen(...userInputs) ??
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      (await flowHandlerService?.navigateToNextScreen(userInput)) ??
       CommonScreens.End;
     setCurrentScreenName && setCurrentScreenName(nextScreen);
   };

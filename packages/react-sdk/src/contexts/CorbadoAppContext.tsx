@@ -1,8 +1,8 @@
 import type {
   FlowNames,
   IFlowHandlerConfig,
+  IProjectConfig,
   LoginFlowNames,
-  ProjectConfigRspAllOfData,
   ScreenNames,
   SignUpFlowNames,
 } from "@corbado/web-core";
@@ -23,7 +23,7 @@ import React, {
 } from "react";
 
 export interface IAppContext {
-  projectConfig: ProjectConfigRspAllOfData;
+  projectConfig: IProjectConfig | null;
   authService: AuthService;
   flowHandlerService: FlowHandlerService | null;
   currentScreenName: ScreenNames;
@@ -58,8 +58,8 @@ export const AppProvider: FC<IAppProviderParams> = ({
 
   //Initializing Project Service
   const projectServiceRef = useRef(new ProjectService(apiServiceRef.current));
-  const [projectConfig, setProjectConfig] = useState(
-    {} as ProjectConfigRspAllOfData
+  const [projectConfig, setProjectConfig] = useState<IProjectConfig | null>(
+    null
   );
 
   //Initializing Flow Handler Service

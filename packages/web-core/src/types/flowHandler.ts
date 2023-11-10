@@ -1,3 +1,11 @@
+import type {
+  CommonScreens,
+  EmailOtpSignupScreens,
+  LoginFlowNames,
+  PasskeyLoginWithEmailOtpFallbackScreens,
+  PasskeySignupWithEmailOtpFallbackScreens,
+  SignUpFlowNames,
+} from "../utils/constants/flowHandler";
 import type { IProjectConfig } from "./common";
 
 export interface IFlowHandlerConfig {
@@ -7,39 +15,7 @@ export interface IFlowHandlerConfig {
   shouldRedirect: boolean;
 }
 
-export enum SignUpFlowNames {
-  PasskeySignupWithEmailOTPFallback = "PasskeySignupWithEmailOTPFallback",
-  EmailOTPSignup = "EmailOTPSignup",
-}
-
-export enum LoginFlowNames {
-  PasskeyLoginWithEmailOTPFallback = "PasskeyLoginWithEmailOTPFallback",
-}
-
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
-
-export enum CommonScreens {
-  Start = "start",
-  End = "end",
-}
-
-export enum EmailOtpSignupScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  End = "end",
-}
-
-export enum PasskeySignupWithEmailOtpFallbackScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  End = "end",
-}
-
-export enum PasskeyLoginWithEmailOtpFallbackScreens {
-  Start = "start",
-  EnterOtp = "enter-otp",
-  End = "end",
-}
 
 export type ScreenNames =
   | CommonScreens
@@ -47,13 +23,16 @@ export type ScreenNames =
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
-export type StepFunctionParams = number | string | boolean;
+export type StepFunctionParams = Record<
+  string,
+  string | boolean | number | undefined
+>;
 
 export type StepFunction = (
   projectCOnfig: IProjectConfig,
   flowHandlerCOnfig: IFlowHandlerConfig,
-  ...args: StepFunctionParams[]
-) => ScreenNames;
+  userInput: StepFunctionParams
+) => ScreenNames | Promise<ScreenNames>;
 
 export type Flow = {
   [K in ScreenNames]?: StepFunction;

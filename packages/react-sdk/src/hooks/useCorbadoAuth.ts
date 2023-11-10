@@ -11,6 +11,12 @@ export const useCorbadoAuth = () => {
     }
   }
 
+  function initiateAuth(email: string, username = "") {
+    checkAuthServiceHealth();
+
+    return authService?.initiateAuth(email, username);
+  }
+
   function sendEmailWithOTP(email: string, username = "") {
     checkAuthServiceHealth();
 
@@ -23,9 +29,59 @@ export const useCorbadoAuth = () => {
     return authService?.verifyOTP(otp);
   }
 
+  function passkeyRegister() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyRegister();
+  }
+
+  function passkeyAppend() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyAppend();
+  }
+
+  function isAuthenticated() {
+    checkAuthServiceHealth();
+
+    return authService?.isAuthenticated;
+  }
+
+  function isEmailVerified() {
+    checkAuthServiceHealth();
+
+    return authService?.isEmailVerified;
+  }
+
+  function isPasskeySet() {
+    checkAuthServiceHealth();
+
+    return authService?.isPasskeySet;
+  }
+
+  function getUsername() {
+    checkAuthServiceHealth();
+
+    return authService?.username;
+  }
+
+  function getEmail() {
+    checkAuthServiceHealth();
+
+    return authService?.email;
+  }
+
   checkAuthServiceHealth();
   return {
+    initiateAuth,
     sendEmailWithOTP,
     verifyOTP,
+    passkeyRegister,
+    passkeyAppend,
+    isPasskeySet,
+    isAuthenticated,
+    isEmailVerified,
+    getUsername,
+    getEmail,
   };
 };

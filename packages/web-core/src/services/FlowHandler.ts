@@ -6,7 +6,7 @@ import type {
   ScreenNames,
   StepFunctionParams,
 } from "../types";
-import { CommonScreens } from "../types";
+import { CommonScreens } from "../utils/constants/flowHandler";
 import { flows } from "../utils/flows";
 
 export class FlowHandlerService {
@@ -36,16 +36,16 @@ export class FlowHandlerService {
     //window.location.href = this.projectConfig.redirectUrl;
   }
 
-  navigateToNextScreen(...userInputs: StepFunctionParams[]) {
+  async navigateToNextScreen(userInput: StepFunctionParams) {
     const stepFunction = this.currentFlow[this.currentScreen];
     if (!stepFunction) {
       throw new Error("Invalid screen");
     }
 
-    const nextScreen = stepFunction(
+    const nextScreen = await stepFunction(
       this.projectConfig,
       this.flowHandlerConfig,
-      ...userInputs
+      userInput
     );
 
     if (nextScreen === CommonScreens.End) {

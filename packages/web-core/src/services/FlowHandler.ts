@@ -13,6 +13,8 @@ export class FlowHandlerService {
   private currentFlow: Flow;
   private currentScreen: ScreenNames;
   private screenHistory: ScreenNames[];
+  public onScreenUpdate: ((screen: ScreenNames) => void) | null = null;
+  public onFlowUpdate: ((flow: FlowNames) => void) | null = null;
 
   constructor(
     private flowName: FlowNames,
@@ -54,6 +56,11 @@ export class FlowHandlerService {
 
     this.screenHistory.push(this.currentScreen);
     this.currentScreen = nextScreen;
+
+    if (this.onScreenUpdate) {
+      this.onScreenUpdate(this.currentScreen);
+    }
+
     return nextScreen;
   }
 
@@ -63,6 +70,28 @@ export class FlowHandlerService {
     }
 
     this.currentScreen = this.screenHistory.pop() || CommonScreens.Start;
+
+    if (this.onScreenUpdate) {
+      this.onScreenUpdate(this.currentScreen);
+    }
+
+    return this.currentScreen;
+  }
+
+  changeFlow(flowName: FlowNames) {
+    this.flowName = flowName;
+    this.currentFlow = flows[this.flowName];
+    this.currentScreen = CommonScreens.Start;
+    this.screenHistory = [];
+
+    if (this.onFlowUpdate) {
+      this.onFlowUpdate(this.flowName);
+    }
+
+    if (this.onScreenUpdate) {
+      this.onScreenUpdate(this.currentScreen);
+    }
+
     return this.currentScreen;
   }
 }

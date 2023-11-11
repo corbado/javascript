@@ -1,4 +1,4 @@
-import { create } from "@github/webauthn-json";
+import { create, get } from "@github/webauthn-json";
 
 import type { ApiService } from "./ApiService";
 export class AuthService {
@@ -104,6 +104,41 @@ export class AuthService {
     //const sessionData = respFinish.data.data;
 
     this._isPasskeySet = true;
+
+    return respFinish.status === 200;
+  }
+
+  public async passkeyLogin(username: string) {
+    const respStart = await this._apiService.usersApi.passKeyLoginStart({
+      username,
+    });
+    const challenge = JSON.parse(respStart.data.data.challenge);
+    const signedChallenge = await get(challenge);
+    const respFinish = await this._apiService.usersApi.passKeyLoginFinish({
+      signedChallenge: JSON.stringify(signedChallenge),
+    });
+
+    const sessionData = respFinish.data.data;
+    this._apiService.setInstanceWithToken(sessionData.sessionToken ?? "");
+
+    this._isAuthenticated = true;
+
+    return respFinish.status === 200;
+  }
+
+  public async passkeyMediation(username?: string) {
+    const respStart = await this._apiService.usersApi.passKeyMediationStart(
+      username ? { username } : {}
+    );
+    const challenge = JSON.parse(respStart.data.data.challenge);
+    const signedChallenge = await get(challenge);
+    const respFinish = await this._apiService.usersApi.passKeyLoginFinish({
+      signedChallenge: JSON.stringify(signedChallenge),
+    });
+
+    //const sessionData = respFinish.data.data;
+
+    this._isAuthenticated = true;
 
     return respFinish.status === 200;
   }

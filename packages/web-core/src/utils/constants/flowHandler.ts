@@ -36,5 +36,7 @@ export enum PasskeySignupWithEmailOtpFallbackScreens {
 export enum PasskeyLoginWithEmailOtpFallbackScreens {
   Start = "start",
   EnterOtp = "enter-otp",
+  PasskeyError = "passkey-error",
+  PasskeyAppend = "passkey-append",
   End = "end",
 }

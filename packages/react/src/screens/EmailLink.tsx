@@ -11,11 +11,13 @@ import Text from '../components/Text';
 export const EmailLink = () => {
     const { t } = useTranslation();
     const { navigateBack } = useCorbadoFlowHandler();
-    const { verifyOTP } = useCorbadoAuth();
+    const { verifyOTP, getEmail } = useCorbadoAuth();
 
     const [otp, setOTP] = React.useState<string[]>([]);
     const [error, setError] = React.useState<string>('');
     const [loading, setLoading] = React.useState<boolean>(false);
+
+    const email = getEmail();
 
     const handleCancel = () => navigateBack();
 
@@ -48,7 +50,7 @@ export const EmailLink = () => {
             <Text className='font-medium'>
                 {/* "text" is a placeholder value for translations */}
                 <Trans i18nKey="email_link.body">
-                    text <span className='text-secondary-font-color'>email adress</span> text
+                    text <span className='text-secondary-font-color'>{email}</span> text
                 </Trans>
             </Text>
             <div className='grid grid-cols-3 gap-3 mt-4'>

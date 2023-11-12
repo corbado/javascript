@@ -1,6 +1,9 @@
 import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
+/**
+ * PasskeyBenefits is an informative screen for the user to explain passkeys.
+ */
 export function PasskeyBenefits() {
   const { navigateToNextScreen } = useCorbadoFlowHandler();
   const { isAuthenticated, passkeyAppend, passkeyRegister } = useCorbadoAuth();

@@ -3,17 +3,18 @@ import type { FlowNames } from "@corbado/web-core";
 import { SignUpFlowNames } from "@corbado/web-core";
 import React from "react";
 
-import { SignupWithEmailOtpFlow } from "../flows";
-import type { SignupWithEmailOTPScreens } from '../types';
+import { SignupWithEmailOtpFlow, PasskeySignupWithEmailOtpFallbackFlow } from "../flows";
+import type { ScreensList } from '../types';
 
-type FlowScreens = SignupWithEmailOTPScreens // Append other flow screens to this type.
+type FlowScreens = ScreensList // Append other flow screens to this type.
 
 type Flows = {
     [key in FlowNames]?: FlowScreens;
 };
 
 export const flows: Flows = {
-    [SignUpFlowNames.EmailOTPSignup]: SignupWithEmailOtpFlow
+    [SignUpFlowNames.EmailOTPSignup]: SignupWithEmailOtpFlow,
+    [SignUpFlowNames.PasskeySignupWithEmailOTPFallback]: PasskeySignupWithEmailOtpFallbackFlow,
 }
 
 export const ScreensFlow = () => {

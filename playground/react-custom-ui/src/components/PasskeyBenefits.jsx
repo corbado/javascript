@@ -1,21 +1,34 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import { useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function PasskeyBenefits() {
   const { navigateToNextScreen } = useCorbadoFlowHandler();
-  const { isAuthenticated, passkeyAppend, passkeyRegister } = useCorbadoAuth();
 
   return (
     <div>
       <h1>Passkey Benefits</h1>
       <button onClick={() => navigateToNextScreen({ maybeLater: true })}>
-        Maybe Later
+        Maybe Later for unauthenticated user
       </button>
-      <button onClick={() => navigateToNextScreen({ appendSuccessful: true })}>
-        Append Passkey
+      <button
+        onClick={() =>
+          navigateToNextScreen({ maybeLater: true, isUserAuthenticated: true })
+        }
+      >
+        Maybe Later for authenticated user
       </button>
-      <button onClick={() => navigateToNextScreen({ appendFailed: true })}>
-        Append Passkey Failure
+      <button onClick={() => navigateToNextScreen({ success: true })}>
+        Passkey Successful
+      </button>
+      <button onClick={() => navigateToNextScreen({ failure: true })}>
+        Passkey Failure
+      </button>
+      <button
+        onClick={() =>
+          navigateToNextScreen({ failure: true, isUserAuthenticated: true })
+        }
+      >
+        Passkey Failure for authenticated user
       </button>
     </div>
   );

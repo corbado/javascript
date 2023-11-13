@@ -10,7 +10,7 @@ export const PasskeySignupWithEmailOtpFallback = {
   start: <InitiateSignUp />,
   "create-passkey": <CreatePasskey />,
   "enter-otp": <VerifyOtp />,
-  "passkey-option": <PasskeyOption />,
+  "passkey-append": <PasskeyOption />,
   "passkey-benefits": <PasskeyBenefits />,
   "passkey-welcome": <PasskeyWelcome />,
   "passkey-error": <PasskeyError />,

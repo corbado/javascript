@@ -9,13 +9,13 @@ export function PasskeyOption() {
     try {
       const result = await passkeyAppend();
       if (result) {
-        navigateToNextScreen({ appendSuccessful: true });
+        navigateToNextScreen({ success: true });
       } else {
-        navigateToNextScreen({ appendFailed: true });
+        navigateToNextScreen({ failure: true });
       }
     } catch (error) {
       console.log(error);
-      navigateToNextScreen({ appendFailed: true });
+      navigateToNextScreen({ failure: true });
     }
   };
   return (
@@ -28,7 +28,7 @@ export function PasskeyOption() {
         Maybe Later
       </button>
       <button onClick={appendPasskey}>Append Passkey</button>
-      <button onClick={() => navigateToNextScreen({ appendFailed: true })}>
+      <button onClick={() => navigateToNextScreen({ failure: true })}>
         Append Passkey Failure
       </button>
     </div>

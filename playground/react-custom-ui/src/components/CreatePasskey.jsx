@@ -9,13 +9,13 @@ export function CreatePasskey() {
     try {
       const result = await passkeyRegister();
       if (result) {
-        navigateToNextScreen({ createSuccessful: true });
+        navigateToNextScreen({ success: true });
       } else {
-        navigateToNextScreen({ createFailed: true });
+        navigateToNextScreen({ failure: true });
       }
     } catch (error) {
       console.log(error);
-      navigateToNextScreen({ createFailed: true });
+      navigateToNextScreen({ failure: true });
     }
   };
   return (
@@ -25,10 +25,10 @@ export function CreatePasskey() {
       <button onClick={() => navigateToNextScreen({ showBenefits: true })}>
         Passkeys
       </button>
-      <button onClick={() => navigateToNextScreen({ enterOtp: true })}>
+      <button onClick={() => navigateToNextScreen({ sendOtpEmail: true })}>
         Enter OTP
       </button>
-      <button onClick={() => navigateToNextScreen({ createFailed: true })}>
+      <button onClick={() => navigateToNextScreen({ failure: true })}>
         Append Passkey Failure
       </button>
     </div>

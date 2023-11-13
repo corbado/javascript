@@ -1,4 +1,4 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import { useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
 export function PasskeyError() {
@@ -11,6 +11,16 @@ export function PasskeyError() {
       </button>
       <button onClick={() => navigateToNextScreen({ cancel: true })}>
         Cancel
+      </button>
+      <button onClick={() => navigateToNextScreen({ sendOtpEmail: true })}>
+        Send Email Otp
+      </button>
+      <button
+        onClick={() =>
+          navigateToNextScreen({ cancel: true, isUserAuthenticated: true })
+        }
+      >
+        Cancel for authenticated user
       </button>
     </div>
   );

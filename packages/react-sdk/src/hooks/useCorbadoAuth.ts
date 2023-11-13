@@ -11,36 +11,6 @@ export const useCorbadoAuth = () => {
     }
   }
 
-  function initiateAuth(email: string, username = "") {
-    checkAuthServiceHealth();
-
-    return authService?.initiateAuth(email, username);
-  }
-
-  function sendEmailWithOTP(email: string, username = "") {
-    checkAuthServiceHealth();
-
-    return authService?.sendEmailWithOTP(email, username);
-  }
-
-  function verifyOTP(otp: string) {
-    checkAuthServiceHealth();
-
-    return authService?.verifyOTP(otp);
-  }
-
-  function passkeyRegister() {
-    checkAuthServiceHealth();
-
-    return authService?.passkeyRegister();
-  }
-
-  function passkeyAppend() {
-    checkAuthServiceHealth();
-
-    return authService?.passkeyAppend();
-  }
-
   function isAuthenticated() {
     checkAuthServiceHealth();
 
@@ -71,13 +41,64 @@ export const useCorbadoAuth = () => {
     return authService?.email;
   }
 
+  function initiateAuth(email: string, username = "") {
+    checkAuthServiceHealth();
+
+    return authService?.initiateAuth(email, username);
+  }
+
+  function sendEmailWithOTP(email: string, username = "") {
+    checkAuthServiceHealth();
+
+    return authService?.sendEmailWithOTP(email, username);
+  }
+
+  function verifyOTP(otp: string) {
+    checkAuthServiceHealth();
+
+    return authService?.verifyOTP(otp);
+  }
+
+  function emailOtpLogin() {
+    checkAuthServiceHealth();
+
+    return authService?.emailOtpLogin();
+  }
+
+  function passkeyRegister() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyRegister();
+  }
+
+  function passkeyAppend() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyAppend();
+  }
+
+  function passkeyLogin() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyLogin();
+  }
+
+  function passkeyMediation() {
+    checkAuthServiceHealth();
+
+    return authService?.passkeyMediation();
+  }
+
   checkAuthServiceHealth();
   return {
     initiateAuth,
     sendEmailWithOTP,
     verifyOTP,
+    emailOtpLogin,
     passkeyRegister,
     passkeyAppend,
+    passkeyLogin,
+    passkeyMediation,
     isPasskeySet,
     isAuthenticated,
     isEmailVerified,

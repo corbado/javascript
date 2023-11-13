@@ -108,9 +108,9 @@ export class AuthService {
     return respFinish.status === 200;
   }
 
-  public async passkeyLogin(username: string) {
+  public async passkeyLogin() {
     const respStart = await this._apiService.usersApi.passKeyLoginStart({
-      username,
+      username: this._email,
     });
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await get(challenge);
@@ -141,5 +141,15 @@ export class AuthService {
     this._isAuthenticated = true;
 
     return respFinish.status === 200;
+  }
+
+  public async emailOtpLogin() {
+    const resp = await this._apiService.usersApi.emailCodeLoginStart({
+      username: this._email,
+    });
+
+    this._emailCodeIdRef = resp.data.data.emailCodeID;
+
+    return resp.status === 200;
   }
 }

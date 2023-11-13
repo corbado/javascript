@@ -1,3 +1,4 @@
+import type { FlowNames } from "@corbado/web-core";
 import { CommonScreens, type StepFunctionParams } from "@corbado/web-core";
 import { useContext } from "react";
 
@@ -38,11 +39,18 @@ export const useCorbadoFlowHandler = () => {
     setCurrentScreenName && setCurrentScreenName(prevScreen);
   };
 
+  function changeFlow(flowName: FlowNames) {
+    checkFlowHandlerHealth();
+
+    return flowHandlerService?.changeFlow(flowName);
+  }
+
   checkFlowHandlerHealth();
   return {
     currentFlowName,
     currentScreenName,
     navigateToNextScreen,
     navigateBack,
+    changeFlow,
   };
 };

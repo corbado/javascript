@@ -27,7 +27,7 @@ export class CorbadoApp {
   private _authService: AuthService;
   private _projectService: ProjectService;
   private _projectId: string;
-  public onInit: ((app: CorbadoApp) => void) | null = null;
+  private onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
   constructor(corbadoParams: ICorbadoAppParams) {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
@@ -59,6 +59,10 @@ export class CorbadoApp {
     return this._projectService;
   }
 
+  onFlowUpdate(cb: (app: CorbadoApp) => void) {
+    this.onInitCallbacks.push(cb);
+  }
+
   public async init(corbadoParams: ICorbadoAppParams) {
     const projConfig = await this._projectService.getProjectConfig();
 
@@ -79,20 +83,22 @@ export class CorbadoApp {
 
   public async initiateLogin() {
     if (
-      this._flowHandlerService?.currentFlowName ===
+      this._flowHandlerService?.currentFlowName !==
       LoginFlowNames.PasskeyLoginWithEmailOTPFallback
     ) {
-      const isConditionalUISupported = await mediationAvailable();
+      return;
+    }
 
-      if (isConditionalUISupported) {
-        void this._authService.passkeyMediation();
-      }
+    const isConditionalUISupported = await mediationAvailable();
+
+    if (isConditionalUISupported) {
+      void this._authService.passkeyMediation();
     }
   }
 
   public afterInit() {
-    if (this.onInit) {
-      this.onInit(this);
+    if (this.onInitCallbacks.length) {
+      this.onInitCallbacks.forEach((cb) => cb(this));
     }
 
     void this.initiateLogin();

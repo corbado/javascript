@@ -13,8 +13,8 @@ export class FlowHandlerService {
   private currentFlow: Flow;
   private currentScreen: ScreenNames;
   private screenHistory: ScreenNames[];
-  public onScreenUpdate: ((screen: ScreenNames) => void) | null = null;
-  public onFlowUpdate: ((flow: FlowNames) => void) | null = null;
+  private onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
+  private onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
 
   constructor(
     private flowName: FlowNames,
@@ -32,6 +32,14 @@ export class FlowHandlerService {
 
   get currentFlowName() {
     return this.flowName;
+  }
+
+  onScreenUpdate(cb: (screen: ScreenNames) => void) {
+    this.onScreenUpdateCallbacks.push(cb);
+  }
+
+  onFlowUpdate(cb: (flow: FlowNames) => void) {
+    this.onFlowUpdateCallbacks.push(cb);
   }
 
   redirect() {
@@ -57,8 +65,8 @@ export class FlowHandlerService {
     this.screenHistory.push(this.currentScreen);
     this.currentScreen = nextScreen;
 
-    if (this.onScreenUpdate) {
-      this.onScreenUpdate(this.currentScreen);
+    if (this.onScreenUpdateCallbacks.length) {
+      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
     }
 
     return nextScreen;
@@ -71,8 +79,8 @@ export class FlowHandlerService {
 
     this.currentScreen = this.screenHistory.pop() || CommonScreens.Start;
 
-    if (this.onScreenUpdate) {
-      this.onScreenUpdate(this.currentScreen);
+    if (this.onScreenUpdateCallbacks.length) {
+      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
     }
 
     return this.currentScreen;
@@ -84,12 +92,12 @@ export class FlowHandlerService {
     this.currentScreen = CommonScreens.Start;
     this.screenHistory = [];
 
-    if (this.onFlowUpdate) {
-      this.onFlowUpdate(this.flowName);
+    if (this.onFlowUpdateCallbacks.length) {
+      this.onFlowUpdateCallbacks.forEach((cb) => cb(this.flowName));
     }
 
-    if (this.onScreenUpdate) {
-      this.onScreenUpdate(this.currentScreen);
+    if (this.onScreenUpdateCallbacks.length) {
+      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
     }
 
     return this.currentScreen;

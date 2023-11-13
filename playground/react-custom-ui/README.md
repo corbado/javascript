@@ -10,7 +10,7 @@ It resembles the "Signup with OTP" and "Login with OTP" flows from [Figma](https
 
 ## How to run locally
 ```
-cd packages/web-core && npm i && npx yalc publish && cd ../..
+cd packages/web-core && npm i && cd ../..
 cd packages/react-sdk && npm i && npx yalc publish && cd ../..
 cd playground/react-custom-ui && yalc add @corbado/react-sdk && npm i && npm start
 ```

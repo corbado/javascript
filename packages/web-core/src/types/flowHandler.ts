@@ -39,3 +39,32 @@ export type Flow = {
 };
 
 export type Flows = Record<FlowNames, Flow>;
+
+export interface IPasskeyBaseScreen extends StepFunctionParams {
+  success?: boolean;
+  failure?: boolean;
+  cancel?: boolean;
+  sendOtpEmail?: boolean;
+  showBenefits?: boolean;
+  maybeLater?: boolean;
+  isUserAuthenticated?: boolean;
+}
+
+export type ISignupPasskeyErrorScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "cancel" | "sendOtpEmail" | "isUserAuthenticated"
+>;
+
+export type ISignupPasskeyBenefitsScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "maybeLater" | "isUserAuthenticated"
+>;
+export type ISignupPasskeyAppendScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "maybeLater" | "showBenefits"
+>;
+
+export type ISignupPasskeyCreateScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "sendOtpEmail" | "showBenefits"
+>;

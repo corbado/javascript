@@ -10,7 +10,6 @@ import { LoginFlowNames, mediationAvailable } from "./utils";
 import { defaultTimeout } from "./utils";
 
 export * from "./utils/constants";
-export * from "./utils/flows";
 export * from "./utils/helpers/webAuthUtils";
 export * from "./types";
 export * from "./services";

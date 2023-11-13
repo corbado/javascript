@@ -1,30 +1,12 @@
-import type { Flow, StepFunctionParams } from "../../types";
+import type {
+  Flow,
+  ISignupPasskeyAppendScreen,
+  ISignupPasskeyBenefitsScreen,
+  ISignupPasskeyCreateScreen,
+  ISignupPasskeyErrorScreen,
+} from "../../types";
 import { PasskeySignupWithEmailOtpFallbackScreens } from "../constants";
 import { canUsePasskeys } from "../helpers/webAuthUtils";
-
-export interface IPasskeySignupCreatePasskeyScreen extends StepFunctionParams {
-  showBenefits?: boolean;
-  createSuccessful?: boolean;
-  createFailed?: boolean;
-  enterOtp?: boolean;
-}
-
-export interface IPasskeySignupPasskeyBenefitsScreen
-  extends StepFunctionParams {
-  maybeLater?: boolean;
-  successful?: boolean;
-  failed?: boolean;
-}
-export interface IPasskeySignupPasskeyAppendScreen
-  extends StepFunctionParams,
-    IPasskeySignupPasskeyBenefitsScreen {
-  showBenefits?: boolean;
-}
-
-export interface IPasskeyErrorScreen extends StepFunctionParams {
-  success?: boolean;
-  cancel?: boolean;
-}
 
 export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   [PasskeySignupWithEmailOtpFallbackScreens.Start]: async () => {
@@ -36,20 +18,22 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   [PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey]: (
     _,
     flowConfig,
-    userInput: IPasskeySignupCreatePasskeyScreen
+    userInput: ISignupPasskeyCreateScreen
   ) => {
     let result = PasskeySignupWithEmailOtpFallbackScreens.End;
+
     if (userInput.showBenefits) {
       result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits;
-    } else if (userInput.createSuccessful) {
+    } else if (userInput.success) {
       result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome;
-    } else if (userInput.createFailed) {
+    } else if (userInput.failure) {
       result = flowConfig.retryPasskeyOnError
         ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyError
-        : PasskeySignupWithEmailOtpFallbackScreens.End;
-    } else if (userInput.enterOtp) {
+        : PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
+    } else if (userInput.sendOtpEmail) {
       result = PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
     }
+
     return result;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: async (
@@ -62,43 +46,49 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend
         : PasskeySignupWithEmailOtpFallbackScreens.End;
     }
+
     return PasskeySignupWithEmailOtpFallbackScreens.End;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend]: (
     _,
     flowConfig,
-    userInput: IPasskeySignupPasskeyAppendScreen
+    userInput: ISignupPasskeyAppendScreen
   ) => {
     let result = PasskeySignupWithEmailOtpFallbackScreens.End;
+
     if (userInput.showBenefits) {
       result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits;
-    } else if (userInput.maybeLater) {
-      result = PasskeySignupWithEmailOtpFallbackScreens.End;
-    } else if (userInput.successful) {
+    } else if (userInput.success) {
       result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome;
-    } else if (userInput.failed) {
+    } else if (userInput.failure) {
       result = flowConfig.retryPasskeyOnError
         ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyError
         : PasskeySignupWithEmailOtpFallbackScreens.End;
     }
+
     return result;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits]: (
     _,
     flowConfig,
-    userInput: IPasskeySignupPasskeyBenefitsScreen
+    userInput: ISignupPasskeyBenefitsScreen
   ) => {
     let result = PasskeySignupWithEmailOtpFallbackScreens.End;
 
     if (userInput.maybeLater) {
-      result = PasskeySignupWithEmailOtpFallbackScreens.End;
-    } else if (userInput.successful) {
+      result = userInput.isUserAuthenticated
+        ? PasskeySignupWithEmailOtpFallbackScreens.End
+        : PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
+    } else if (userInput.success) {
       result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome;
-    } else if (userInput.failed) {
+    } else if (userInput.failure) {
       result = flowConfig.retryPasskeyOnError
         ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyError
-        : PasskeySignupWithEmailOtpFallbackScreens.End;
+        : userInput.isUserAuthenticated
+        ? PasskeySignupWithEmailOtpFallbackScreens.End
+        : PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
     }
+
     return result;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: () =>
@@ -106,10 +96,19 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyError]: (
     _,
     __,
-    userInput: IPasskeyErrorScreen
+    userInput: ISignupPasskeyErrorScreen
   ) => {
-    return userInput.success
-      ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome
-      : PasskeySignupWithEmailOtpFallbackScreens.End;
+    let result = PasskeySignupWithEmailOtpFallbackScreens.End;
+
+    if (userInput.success) {
+      result = PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome;
+    } else if (
+      userInput.sendOtpEmail ||
+      (userInput.cancel && !userInput.isUserAuthenticated)
+    ) {
+      result = PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
+    }
+
+    return result;
   },
 };

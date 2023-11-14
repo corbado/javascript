@@ -13,6 +13,9 @@ export const PasskeySignup = () => {
 
     const email = getEmail();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emailPlaceholder = { email } as any;
+
     const showBenefit = () => void navigateToNextScreen({ showBenefit: true })
 
     const header = <Trans i18nKey="passkey_signup.header">
@@ -20,7 +23,7 @@ export const PasskeySignup = () => {
     </Trans>;
 
     const subHeader = <Trans i18nKey="passkey_signup.sub-header">
-        text <span className="text-secondary-font-color">{{ email } as any}</span> text
+        text <span className="text-secondary-font-color">{emailPlaceholder}</span> text
     </Trans>;
 
     const primaryButton = t('passkey_signup.primary_btn');

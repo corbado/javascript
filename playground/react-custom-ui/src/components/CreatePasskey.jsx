@@ -18,13 +18,13 @@ export function CreatePasskey() {
     try {
       const result = await passkeyRegister();
       if (result) {
-        await navigateToNextScreen({createSuccessful: true});
+        await navigateToNextScreen({success: true});
       } else {
-        await navigateToNextScreen({createFailed: true});
+        await navigateToNextScreen({failure: true});
       }
     } catch (error) {
       console.log(error);
-      await navigateToNextScreen({createFailed: true});
+      await navigateToNextScreen({failure: true});
     }
   };
   return (
@@ -36,7 +36,7 @@ export function CreatePasskey() {
         <button onClick={createPasskey}>Register with Passkey</button>
       </p>
       <p>
-        <button onClick={() => navigateToNextScreen({enterOtp: true})}>
+        <button onClick={() => navigateToNextScreen({sendOtpEmail: true})}>
           Enter OTP
         </button>
       </p>

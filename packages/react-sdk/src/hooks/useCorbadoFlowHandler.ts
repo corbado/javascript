@@ -20,7 +20,7 @@ export const useCorbadoFlowHandler = () => {
     }
   }
 
-  const navigateToNextScreen = async (userInput: StepFunctionParams) => {
+  const navigateToNextScreen = async (userInput: StepFunctionParams = {}) => {
     checkFlowHandlerHealth();
 
     const nextScreen =

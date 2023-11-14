@@ -1,22 +1,11 @@
-import type { Flow, StepFunctionParams } from "../../types";
+import type {
+  Flow,
+  ISignupPasskeyAppendScreen,
+  ISignupPasskeyBenefitsScreen,
+  ISignupPasskeyErrorScreen,
+} from "../../types";
 import { EmailOtpSignupScreens } from "../../utils/constants/flowHandler";
 import { canUsePasskeys } from "../helpers/webAuthUtils";
-
-export interface IEmailSignupPasskeyBenefitsScreen extends StepFunctionParams {
-  maybeLater?: boolean;
-  appendSuccessful?: boolean;
-  appendFailed?: boolean;
-}
-export interface IEmailSignupPasskeyOptionScreen
-  extends StepFunctionParams,
-    IEmailSignupPasskeyBenefitsScreen {
-  showBenefits?: boolean;
-}
-
-export interface IEmailSignupPasskeyErrorScreen extends StepFunctionParams {
-  success?: boolean;
-  cancel?: boolean;
-}
 
 export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.Start]: () => EmailOtpSignupScreens.EnterOtp,
@@ -32,45 +21,44 @@ export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.PasskeyOption]: (
     _,
     flowConfig,
-    userInput: IEmailSignupPasskeyOptionScreen
+    userInput: ISignupPasskeyAppendScreen
   ) => {
     let result = EmailOtpSignupScreens.End;
+
     if (userInput.showBenefits) {
       result = EmailOtpSignupScreens.PasskeyBenefits;
-    } else if (userInput.maybeLater) {
-      result = EmailOtpSignupScreens.End;
-    } else if (userInput.appendSuccessful) {
+    } else if (userInput.success) {
       result = EmailOtpSignupScreens.PasskeyWelcome;
-    } else if (userInput.appendFailed) {
+    } else if (userInput.failure) {
       result = flowConfig.retryPasskeyOnError
         ? EmailOtpSignupScreens.PasskeyError
         : EmailOtpSignupScreens.End;
     }
+
     return result;
   },
   [EmailOtpSignupScreens.PasskeyBenefits]: (
     _,
     flowConfig,
-    userInput: IEmailSignupPasskeyBenefitsScreen
+    userInput: ISignupPasskeyBenefitsScreen
   ) => {
     let result = EmailOtpSignupScreens.End;
 
-    if (userInput.maybeLater) {
-      result = EmailOtpSignupScreens.End;
-    } else if (userInput.appendSuccessful) {
+    if (userInput.success) {
       result = EmailOtpSignupScreens.PasskeyWelcome;
-    } else if (userInput.appendFailed) {
+    } else if (userInput.failure) {
       result = flowConfig.retryPasskeyOnError
         ? EmailOtpSignupScreens.PasskeyError
         : EmailOtpSignupScreens.End;
     }
+
     return result;
   },
   [EmailOtpSignupScreens.PasskeyWelcome]: () => EmailOtpSignupScreens.End,
   [EmailOtpSignupScreens.PasskeyError]: (
     _,
     __,
-    userInput: IEmailSignupPasskeyErrorScreen
+    userInput: ISignupPasskeyErrorScreen
   ) => {
     return userInput.success
       ? EmailOtpSignupScreens.PasskeyWelcome

@@ -1,84 +1,110 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from '@corbado/react-sdk';
-import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 
-import Button from '../components/Button';
-import LabelledInput from '../components/LabelledInput';
-import Link from '../components/Link';
-import Text from '../components/Text';
-import { emailRegex } from '../utils/validations';
+import Button from "../components/Button";
+import LabelledInput from "../components/LabelledInput";
+import Link from "../components/Link";
+import Text from "../components/Text";
+import { emailRegex } from "../utils/validations";
 
 interface SignupForm {
-    name: string;
-    username: string;
+  name: string;
+  username: string;
 }
 
 export const InitiateSignup = () => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    const { sendEmailWithOTP } = useCorbadoAuth();
-    const { navigateToNextScreen } = useCorbadoFlowHandler();
+  const { sendEmailWithOTP } = useCorbadoAuth();
+  const { navigateToNextScreen } = useCorbadoFlowHandler();
 
-    const formTemplate = { name: '', username: '' };
+  const formTemplate = { name: "", username: "" };
 
-    const [signupData, setSignupData] = React.useState<SignupForm>({ ...formTemplate });
-    const [errorData, setErrorData] = React.useState<SignupForm>({ ...formTemplate });
-    const [loading, setLoading] = React.useState<boolean>(false);
+  const [signupData, setSignupData] = React.useState<SignupForm>({
+    ...formTemplate,
+  });
+  const [errorData, setErrorData] = React.useState<SignupForm>({
+    ...formTemplate,
+  });
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        (event.target as HTMLInputElement).name;
-        const { value, name } = event.target;
-        setSignupData(prevData => ({ ...prevData, [name]: value }));
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event.target as HTMLInputElement).name;
+    const { value, name } = event.target;
+    setSignupData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSignup = async (): Promise<void> => {
+    setLoading(true);
+    try {
+      await sendEmailWithOTP(signupData.username, signupData.name);
+      void navigateToNextScreen();
+    } catch (error) {
+      console.log({ error });
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
+    e.preventDefault();
+
+    const errors: SignupForm = { ...formTemplate };
+
+    if (!signupData.name) {
+      errors.name = t("validation_errors.name");
+    }
+    if (!signupData.username || !emailRegex.test(signupData.username)) {
+      errors.username = t("validation_errors.email");
     }
 
-    const handleSignup = async (): Promise<void> => {
-        setLoading(true);
-        try {
-            await sendEmailWithOTP(signupData.username, signupData.name);
-            navigateToNextScreen();
-        } catch (error) {
-            console.log({ error });
-            setLoading(false);
-        }
+    setErrorData(errors);
+
+    if (errors.name || errors.username) {
+      return;
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
-        e.preventDefault();
+    setErrorData({ ...formTemplate });
 
-        const errors: SignupForm = { ...formTemplate };
+    void handleSignup();
+  };
 
-        if (!signupData.name) { errors.name = t('validation_errors.name'); };
-        if (!signupData.username || !emailRegex.test(signupData.username)) { errors.username = t('validation_errors.email'); };
-
-        setErrorData(errors);
-
-        if (errors.name || errors.username) {
-            return;
-        }
-
-        setErrorData({ ...formTemplate });
-
-        void handleSignup();
-    }
-
-    return (
-        <>
-            <Text variant="header">{t('signup.header')}</Text>
-            <Text variant="sub-header">
-                {/* "text" is a placeholder value for translations */}
-                <Trans i18nKey="signup.sub-header">
-                    text <Link href='' className="text-secondary-font-color">text</Link> text
-                </Trans>
-            </Text>
-            <div className="form-wrapper">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <LabelledInput name='name' label={t('generic.name')} onChange={onChange} value={signupData.name} error={errorData.name} />
-                        <LabelledInput name='username' label={t('generic.email')} onChange={onChange} value={signupData.username} error={errorData.username} />
-                    </div>
-                    <Button variant='primary' isLoading={loading}>{t('signup.continue_email')}</Button>
-                </form>
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <Text variant="header">{t("signup.header")}</Text>
+      <Text variant="sub-header">
+        {/* "text" is a placeholder value for translations */}
+        <Trans i18nKey="signup.sub-header">
+          text{" "}
+          <Link href="" className="text-secondary-font-color">
+            text
+          </Link>{" "}
+          text
+        </Trans>
+      </Text>
+      <div className="form-wrapper">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <LabelledInput
+              name="name"
+              label={t("generic.name")}
+              onChange={onChange}
+              value={signupData.name}
+              error={errorData.name}
+            />
+            <LabelledInput
+              name="username"
+              label={t("generic.email")}
+              onChange={onChange}
+              value={signupData.username}
+              error={errorData.username}
+            />
+          </div>
+          <Button variant="primary" isLoading={loading}>
+            {t("signup.continue_email")}
+          </Button>
+        </form>
+      </div>
+    </>
+  );
+};

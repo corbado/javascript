@@ -31,7 +31,6 @@
     "@corbado/web-core": "^0.1.4"
   },
   "devDependencies": {
-    "react": "^16.8.0",
-    "@types/react": "^16.8.0"
+    "@types/react": "^18.2.0"
   }
 }

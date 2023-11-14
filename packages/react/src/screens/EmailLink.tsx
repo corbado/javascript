@@ -11,13 +11,25 @@ import Text from '../components/Text';
 export const EmailLink = () => {
     const { t } = useTranslation();
     const { navigateBack } = useCorbadoFlowHandler();
-    const { verifyOTP, getEmail } = useCorbadoAuth();
+    const { verifyOTP, sendEmailWithOTP, getEmail, getUsername } = useCorbadoAuth();
 
     const [otp, setOTP] = React.useState<string[]>([]);
     const [error, setError] = React.useState<string>('');
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const email = getEmail();
+    const username = getUsername();
+
+    const handleSendOTP = async () => {
+        setLoading(true);
+        try {
+            await sendEmailWithOTP(email as string, username);
+            setLoading(false);
+        } catch (error) {
+            console.log({ error });
+            setLoading(false);
+        }
+    }
 
     const handleCancel = () => navigateBack();
 
@@ -35,7 +47,7 @@ export const EmailLink = () => {
 
     const handleSubmit = () => {
         setError('');
-            const mergedChars = otp.join('');
+        const mergedChars = otp.join('');
         if (mergedChars.length < 6) {
             setError(t('email_link.otp_required'));
             return;
@@ -43,6 +55,10 @@ export const EmailLink = () => {
 
         void handleOTPVerification(mergedChars);
     }
+
+    React.useEffect(() => {
+        void handleSendOTP();
+    }, []);
 
     return (
         <>

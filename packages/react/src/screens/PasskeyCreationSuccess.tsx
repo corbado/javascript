@@ -1,10 +1,12 @@
-import React from 'react'
+import { useCorbadoFlowHandler } from '@corbado/react-sdk';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
+import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
 
 export const PasskeyCreationSuccess = () => {
     const { t } = useTranslation();
+    const { navigateToNextScreen } = useCorbadoFlowHandler();
 
     const header = t('create_passkey_success.header');
     const secondaryHeader = t('create_passkey_success.secondary_header');
@@ -14,7 +16,7 @@ export const PasskeyCreationSuccess = () => {
 
     const primaryButton = t('generic.continue');
 
-    const handleContinue = () => console.log('Continue');
+    const handleContinue = () => void navigateToNextScreen();
 
     const handleClick = () => {
         handleContinue();
@@ -30,7 +32,7 @@ export const PasskeyCreationSuccess = () => {
 
     return (
         <>
-            <PasscodeScreensWrapper
+            <PasskeyScreensWrapper
                 {...props}
             />
         </>

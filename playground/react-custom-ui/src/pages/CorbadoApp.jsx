@@ -27,8 +27,8 @@ export function CorbadoAppTest() {
   const [currentFlow, setCurrentFlow] = useState(null);
   const { changeFlow } = useCorbadoFlowHandler();
 
-  function handleFlowChange(event) {
-    const flow = flows[event.target.value];
+  function handleFlowChange(flowKey) {
+    const flow = flows[flowKey];
     changeFlow(flow.flowName);
     setCurrentFlow(flow.component);
   }

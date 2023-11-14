@@ -127,10 +127,15 @@ export class AuthService {
   }
 
   public async passkeyMediation(username?: string) {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const respStart = await this._apiService.usersApi.passKeyMediationStart(
       username ? { username } : {}
     );
     const challenge = JSON.parse(respStart.data.data.challenge);
+    challenge.mediation = "conditional";
+    challenge.signal = signal;
+
     const signedChallenge = await get(challenge);
     const respFinish = await this._apiService.usersApi.passKeyLoginFinish({
       signedChallenge: JSON.stringify(signedChallenge),

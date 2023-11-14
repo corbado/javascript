@@ -18,14 +18,13 @@ export function InitiateLogin() {
 
   return (
     <form onSubmit={initiateAuthentication}>
-      <label>
-        Username:
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </label>
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        value={username}
+        autoComplete="username webauthn"
+        onChange={(e) => setUsername(e.target.value)}
+      />
       <input type="submit" value="Submit" />
     </form>
   );

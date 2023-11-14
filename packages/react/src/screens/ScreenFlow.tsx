@@ -2,10 +2,10 @@ import type { FlowNames } from "@corbado/react-sdk";
 import { SignUpFlowNames, useCorbadoFlowHandler } from "@corbado/react-sdk";
 import React from "react";
 
-import { SignupWithEmailOtpFlow, PasskeySignupWithEmailOtpFallbackFlow } from "../flows";
-import type { SignupWithEmailOTPScreens } from "../types";
+import { PasskeySignupWithEmailOtpFallbackFlow,SignupWithEmailOtpFlow } from "../flows";
+import type { ScreensList } from "../types";
 
-type FlowScreens = SignupWithEmailOTPScreens; // Append other flow screens to this type.
+type FlowScreens = ScreensList; // Append other flow screens to this type.
 
 type Flows = {
   [key in FlowNames]?: FlowScreens;

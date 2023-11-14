@@ -16,14 +16,13 @@ interface SignupForm {
 export const InitiateSignup = () => {
     const { t } = useTranslation();
 
-    const { sendEmailWithOTP } = useCorbadoAuth();
+    const { initiateAuth } = useCorbadoAuth();
     const { navigateToNextScreen } = useCorbadoFlowHandler();
 
     const formTemplate = { name: '', username: '' };
 
     const [signupData, setSignupData] = React.useState<SignupForm>({ ...formTemplate });
     const [errorData, setErrorData] = React.useState<SignupForm>({ ...formTemplate });
-    const [loading, setLoading] = React.useState<boolean>(false);
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         (event.target as HTMLInputElement).name;
@@ -31,15 +30,9 @@ export const InitiateSignup = () => {
         setSignupData(prevData => ({ ...prevData, [name]: value }));
     }
 
-    const handleSignup = async (): Promise<void> => {
-        setLoading(true);
-        try {
-            await sendEmailWithOTP(signupData.username, signupData.name);
-            navigateToNextScreen();
-        } catch (error) {
-            console.log({ error });
-            setLoading(false);
-        }
+    const handleSignup = () => {
+        initiateAuth(signupData.username, signupData.name);
+        void navigateToNextScreen();
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
@@ -76,7 +69,7 @@ export const InitiateSignup = () => {
                         <LabelledInput name='name' label={t('generic.name')} onChange={onChange} value={signupData.name} error={errorData.name} />
                         <LabelledInput name='username' label={t('generic.email')} onChange={onChange} value={signupData.username} error={errorData.username} />
                     </div>
-                    <Button variant='primary' isLoading={loading}>{t('signup.continue_email')}</Button>
+                    <Button variant='primary'>{t('signup.continue_email')}</Button>
                 </form>
             </div>
         </>

@@ -12,7 +12,6 @@ import { defaultTimeout } from "./utils";
 export * from "./utils/constants";
 export * from "./utils/helpers/webAuthUtils";
 export * from "./types";
-export * from "./services";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
@@ -59,11 +58,11 @@ export class CorbadoApp {
     return this._projectService;
   }
 
-  onFlowUpdate(cb: (app: CorbadoApp) => void) {
+  onInit(cb: (app: CorbadoApp) => void) {
     this.onInitCallbacks.push(cb);
   }
 
-  public async init(corbadoParams: ICorbadoAppParams) {
+  private async init(corbadoParams: ICorbadoAppParams) {
     const projConfig = await this._projectService.getProjectConfig();
 
     const flowName =
@@ -79,9 +78,11 @@ export class CorbadoApp {
         corbadoParams.compulsoryEmailVerification ?? false,
       shouldRedirect: corbadoParams.shouldRedirect ?? false,
     });
+
+    this.afterInit();
   }
 
-  public async initiateLogin() {
+  private async initiateLogin() {
     if (
       this._flowHandlerService?.currentFlowName !==
       LoginFlowNames.PasskeyLoginWithEmailOTPFallback
@@ -96,7 +97,7 @@ export class CorbadoApp {
     }
   }
 
-  public afterInit() {
+  private afterInit() {
     if (this.onInitCallbacks.length) {
       this.onInitCallbacks.forEach((cb) => cb(this));
     }
@@ -104,9 +105,9 @@ export class CorbadoApp {
     void this.initiateLogin();
 
     if (this._flowHandlerService) {
-      this._flowHandlerService.onFlowUpdate = () => {
+      this._flowHandlerService.onFlowChange(() => {
         return void this.initiateLogin();
-      };
+      });
     }
   }
 }

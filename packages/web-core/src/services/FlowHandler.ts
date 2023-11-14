@@ -34,11 +34,11 @@ export class FlowHandlerService {
     return this.flowName;
   }
 
-  onScreenUpdate(cb: (screen: ScreenNames) => void) {
+  onScreenChange(cb: (screen: ScreenNames) => void) {
     this.onScreenUpdateCallbacks.push(cb);
   }
 
-  onFlowUpdate(cb: (flow: FlowNames) => void) {
+  onFlowChange(cb: (flow: FlowNames) => void) {
     this.onFlowUpdateCallbacks.push(cb);
   }
 

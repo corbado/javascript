@@ -17,6 +17,7 @@ import {
 import React, {
   createContext,
   type FC,
+  type PropsWithChildren,
   useEffect,
   useRef,
   useState,
@@ -41,7 +42,7 @@ export interface IAppProviderParams extends IFlowHandlerConfig {
 
 export const AppContext = createContext<IAppContext | null>(null);
 
-export const AppProvider: FC<IAppProviderParams> = ({
+export const AppProvider: FC<PropsWithChildren<IAppProviderParams>> = ({
   projectId,
   apiTimeout = defaultTimeout,
   defaultToLogin,

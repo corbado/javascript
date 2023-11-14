@@ -28,6 +28,7 @@ const en =  {
       header: 'Welcome!',
       secondary_header: 'Passkey created',
       body: 'You can now confirm your identity using your <1>passkey or via email one time code</1> when you log in.',
+      tertiary_btn: 'Back',
     },
     activate_passkey: {
       header: 'Log in even faster with <1>Passkeys</1>',

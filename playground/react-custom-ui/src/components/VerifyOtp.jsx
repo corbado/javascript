@@ -7,6 +7,8 @@ export function VerifyOtp() {
   const { navigateBack, navigateToNextScreen } = useCorbadoFlowHandler();
   const [otp, setOtp] = React.useState("");
 
+  // TODO: fix error handling here (e.g. when user already exists, invalid email)
+  // TODO: effect fires twice (first with a 500 status code, only second emailcodes/register/start request is successful)
   useEffect(() => {
     try {
       const email = getEmail();
@@ -19,6 +21,7 @@ export function VerifyOtp() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TODO: error handling here
   const handleSubmitOtp = async (event) => {
     event.preventDefault();
     try {

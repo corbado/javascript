@@ -7,7 +7,8 @@ export const useAppContext = () => {
   if (!context) {
     throw new Error("useAppContext must be used within an AppProvider");
   }
+
   return {
-    projectConfig: context.projectConfig,
+    getProjectConfig: context.getProjectConfig,
   };
 };

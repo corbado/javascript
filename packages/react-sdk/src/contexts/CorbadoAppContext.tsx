@@ -1,34 +1,18 @@
 import type {
-  FlowNames,
+  AuthService,
+  FlowHandlerService,
   IFlowHandlerConfig,
   IProjectConfig,
   LoginFlowNames,
-  ScreenNames,
   SignUpFlowNames,
 } from "@corbado/web-core";
-import {
-  ApiService,
-  AuthService,
-  CommonScreens,
-  defaultTimeout,
-  FlowHandlerService,
-  ProjectService,
-} from "@corbado/web-core";
-import React, {
-  createContext,
-  type FC,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { CorbadoApp } from "@corbado/web-core";
+import React, { createContext, type FC, useRef, useState } from "react";
 
 export interface IAppContext {
-  projectConfig: IProjectConfig | null;
+  getProjectConfig: () => IProjectConfig | null;
   authService: AuthService;
   flowHandlerService: FlowHandlerService | null;
-  currentScreenName: ScreenNames;
-  currentFlowName: FlowNames;
-  setCurrentScreenName: React.Dispatch<React.SetStateAction<ScreenNames>>;
 }
 
 export interface IAppProviderParams extends IFlowHandlerConfig {
@@ -42,72 +26,33 @@ export interface IAppProviderParams extends IFlowHandlerConfig {
 export const AppContext = createContext<IAppContext | null>(null);
 
 export const AppProvider: FC<IAppProviderParams> = ({
-  projectId,
-  apiTimeout = defaultTimeout,
-  defaultToLogin,
-  signupFlowName,
-  loginFlowName,
-  passkeyAppend,
-  retryPasskeyOnError,
-  compulsoryEmailVerification,
-  shouldRedirect,
   children,
+  ...corbadoParams
 }) => {
-  //Initializing API Service
-  const apiServiceRef = useRef(new ApiService(projectId, apiTimeout));
-
-  //Initializing Project Service
-  const projectServiceRef = useRef(new ProjectService(apiServiceRef.current));
-  const [projectConfig, setProjectConfig] = useState<IProjectConfig | null>(
-    null
+  //Initializing Corbado Application
+  const corbadoApp = useRef(new CorbadoApp(corbadoParams));
+  const projectService = corbadoApp.current.projectService;
+  const [flowHandlerService, setFlowHandlerService] = useState(
+    corbadoApp.current.flowHandlerService
   );
+  const authService = corbadoApp.current.authService;
 
-  //Initializing Flow Handler Service
-  const [flowHandlerService, setFlowHandlerService] =
-    useState<FlowHandlerService | null>(null);
-  const [currentScreenName, setCurrentScreenName] = useState<ScreenNames>(
-    CommonScreens.Start
-  );
-  const currentFlowName = useRef<FlowNames>(
-    defaultToLogin ? loginFlowName : signupFlowName
-  );
+  //On init
+  corbadoApp.current.onInit((app) => {
+    setFlowHandlerService(app.flowHandlerService);
+  });
 
-  //Initializing Auth Service
-  const authServiceRef = useRef(new AuthService(apiServiceRef.current));
-
-  useEffect(() => {
-    projectServiceRef.current
-      .getProjectConfig()
-      .then((config) => {
-        setProjectConfig(config);
-
-        const newFlowHandlerService = new FlowHandlerService(
-          currentFlowName.current,
-          config,
-          {
-            passkeyAppend,
-            retryPasskeyOnError,
-            compulsoryEmailVerification,
-            shouldRedirect,
-          }
-        );
-        setFlowHandlerService(newFlowHandlerService);
-        setCurrentScreenName(newFlowHandlerService.currentScreenName);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  //Get project config
+  function getProjectConfig() {
+    return projectService.projConfig;
+  }
 
   return (
     <AppContext.Provider
       value={{
-        projectConfig,
+        getProjectConfig,
         flowHandlerService,
-        currentFlowName: currentFlowName.current,
-        currentScreenName,
-        setCurrentScreenName,
-        authService: authServiceRef.current,
+        authService,
       }}
     >
       {children}

@@ -1,17 +1,29 @@
-import type { FlowNames } from "@corbado/web-core";
+import type { FlowNames, ScreenNames } from "@corbado/web-core";
 import { CommonScreens, type StepFunctionParams } from "@corbado/web-core";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { AppContext } from "../contexts/CorbadoAppContext";
 
 export const useCorbadoFlowHandler = () => {
-  const appContext = useContext(AppContext);
-  const {
-    flowHandlerService,
-    currentFlowName,
-    currentScreenName,
-    setCurrentScreenName,
-  } = appContext ?? {};
+  const flowHandlerService = useContext(AppContext)?.flowHandlerService;
+  const [currentScreenName, setCurrentScreenName] = useState<ScreenNames>(
+    CommonScreens.Start
+  );
+  const [currentFlowName, setCurrentFlowName] = useState<FlowNames | null>();
+
+  useEffect(() => {
+    if (!flowHandlerService) {
+      return;
+    }
+
+    flowHandlerService.onFlowChange((flow) => {
+      setCurrentFlowName(flow);
+    });
+
+    flowHandlerService?.onScreenChange((screen) => {
+      setCurrentScreenName(screen);
+    });
+  }, [flowHandlerService]);
 
   function checkFlowHandlerHealth() {
     if (flowHandlerService === undefined) {

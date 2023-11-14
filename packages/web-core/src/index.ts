@@ -12,6 +12,12 @@ import { defaultTimeout } from "./utils";
 export * from "./utils/constants";
 export * from "./utils/helpers/webAuthUtils";
 export * from "./types";
+export type {
+  AuthService,
+  ApiService,
+  FlowHandlerService,
+  ProjectService,
+} from "./services";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
@@ -43,10 +49,6 @@ export class CorbadoApp {
   }
 
   public get flowHandlerService() {
-    if (this._flowHandlerService === null) {
-      throw new Error("Flow handler service is not initialized");
-    }
-
     return this._flowHandlerService;
   }
 

@@ -41,10 +41,28 @@ export const useCorbadoAuth = () => {
     return authService?.email;
   }
 
-  function initiateAuth(email: string, username = "") {
+  function getPossibleAuthMethods() {
     checkAuthServiceHealth();
 
-    return authService?.initiateAuth(email, username);
+    return authService?.possibleAuthMethods;
+  }
+
+  function getAuthMethod() {
+    checkAuthServiceHealth();
+
+    return authService?.authMethod;
+  }
+
+  function initiateSignup(email: string, username = "") {
+    checkAuthServiceHealth();
+
+    return authService?.initiateSignup(email, username);
+  }
+
+  function initiateLogin(email: string) {
+    checkAuthServiceHealth();
+
+    return authService?.initiateLogin(email);
   }
 
   function sendEmailWithOTP(email: string, username = "") {
@@ -91,7 +109,8 @@ export const useCorbadoAuth = () => {
 
   checkAuthServiceHealth();
   return {
-    initiateAuth,
+    initiateSignup,
+    initiateLogin,
     sendEmailWithOTP,
     verifyOTP,
     emailOtpLogin,
@@ -104,5 +123,7 @@ export const useCorbadoAuth = () => {
     isEmailVerified,
     getUsername,
     getEmail,
+    getPossibleAuthMethods,
+    getAuthMethod,
   };
 };

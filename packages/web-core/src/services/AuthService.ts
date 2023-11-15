@@ -1,5 +1,6 @@
 import { create, get } from "@github/webauthn-json";
 
+import type { AuthMethod } from "../api";
 import type { ApiService } from "./ApiService";
 export class AuthService {
   private _isAuthenticated = false;
@@ -8,6 +9,9 @@ export class AuthService {
   private _emailCodeIdRef = "";
   private _email = "";
   private _username = "";
+  private _mediationController: AbortController | null = null;
+  private _authMethod: Array<AuthMethod> = [];
+  private _possibleAuthMethods: Array<AuthMethod> = [];
 
   constructor(private readonly _apiService: ApiService) {}
 
@@ -31,14 +35,33 @@ export class AuthService {
     return this._username;
   }
 
-  public initiateAuth(email: string, username = "") {
+  public get authMethod() {
+    return this._authMethod;
+  }
+
+  public get possibleAuthMethods() {
+    return this._possibleAuthMethods;
+  }
+
+  public initiateSignup(email: string, username = "") {
     this._email = email;
     this._username = username;
   }
 
+  public async initiateLogin(email: string) {
+    this._email = email;
+
+    const resp = await this._apiService.usersApi.authMethodsList({
+      username: this._email,
+    });
+
+    this._authMethod = resp.data.data.selectedMethods;
+    this._possibleAuthMethods = resp.data.data.possibleMethods;
+  }
+
   // returns true if email is sent
   public async sendEmailWithOTP(email: string, username = "") {
-    this.initiateAuth(email, username);
+    this.initiateSignup(email, username);
 
     const resp = await this._apiService.usersApi.emailCodeRegisterStart({
       email: email,
@@ -129,6 +152,8 @@ export class AuthService {
   public async passkeyMediation(username?: string) {
     const controller = new AbortController();
     const signal = controller.signal;
+    this._mediationController = controller;
+
     const respStart = await this._apiService.usersApi.passKeyMediationStart(
       username ? { username } : {}
     );
@@ -156,5 +181,18 @@ export class AuthService {
     this._emailCodeIdRef = resp.data.data.emailCodeID;
 
     return resp.status === 200;
+  }
+
+  public destroy() {
+    console.log("Destroying auth service");
+    if (!this._mediationController) {
+      return;
+    }
+
+    try {
+      this._mediationController.abort("User chose to cancel");
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

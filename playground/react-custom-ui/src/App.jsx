@@ -8,7 +8,6 @@ export function App() {
       projectId="pro-503401103218055321"
       passkeyAppend={true}
       retryPasskeyOnError={true}
-      defaultToLogin={true}
       signupFlowName="PasskeySignupWithEmailOTPFallback"
     >
       <CorbadoAppTest />

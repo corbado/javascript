@@ -93,8 +93,9 @@ export class CorbadoApp {
     }
 
     const isConditionalUISupported = await mediationAvailable();
+    const alwaysTrue = true;
 
-    if (isConditionalUISupported) {
+    if (isConditionalUISupported || alwaysTrue) {
       void this._authService.passkeyMediation();
     }
   }
@@ -111,5 +112,10 @@ export class CorbadoApp {
         return void this.initiateLogin();
       });
     }
+  }
+
+  public destroy() {
+    console.log("Destroying CorbadoApp");
+    this._authService.destroy();
   }
 }

@@ -1,24 +1,45 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import {
+  useCorbadoAuth,
+  useCorbadoFlowHandler,
+  canUsePasskeys,
+} from "@corbado/react-sdk";
 import React from "react";
 
 export function InitiateLogin() {
-  const { initiateAuth } = useCorbadoAuth();
+  const { initiateLogin, passkeyLogin } = useCorbadoAuth();
   const { navigateToNextScreen } = useCorbadoFlowHandler();
   const [username, setUsername] = React.useState("");
 
   const initiateAuthentication = async (event) => {
     event.preventDefault();
     try {
-      initiateAuth(username);
-      void navigateToNextScreen();
+      initiateLogin(username);
+
+      debugger;
+      const hasPasskeySupport = await canUsePasskeys();
+
+      if (hasPasskeySupport) {
+        const success = await passkeyLogin();
+
+        if (success) {
+          void navigateToNextScreen({ success: true });
+          return;
+        } else {
+          void navigateToNextScreen({ failure: true });
+          return;
+        }
+      }
+
+      void navigateToNextScreen({ sendOtpEmail: true });
     } catch (error) {
       console.log(error);
+      void navigateToNextScreen({ failure: true });
     }
   };
 
   return (
     <form onSubmit={initiateAuthentication}>
-      <label for="username">Username:</label>
+      <label htmlFor="username">Username:</label>
       <input
         type="text"
         value={username}

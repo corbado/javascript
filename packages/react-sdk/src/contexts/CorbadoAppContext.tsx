@@ -1,61 +1,78 @@
 import type {
   AuthService,
   FlowHandlerService,
-  IFlowHandlerConfig,
+  ICorbadoAppParams,
   IProjectConfig,
-  LoginFlowNames,
-  SignUpFlowNames,
+  ProjectService,
 } from "@corbado/web-core";
 import { CorbadoApp } from "@corbado/web-core";
-import React, { createContext, type FC, useRef, useState } from "react";
+import React, {
+  createContext,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 
 export interface IAppContext {
   getProjectConfig: () => IProjectConfig | null;
-  authService: AuthService;
+  authService: AuthService | null;
   flowHandlerService: FlowHandlerService | null;
 }
 
-export interface IAppProviderParams extends IFlowHandlerConfig {
-  projectId: string;
-  apiTimeout?: number;
-  defaultToLogin: boolean;
-  signupFlowName: SignUpFlowNames;
-  loginFlowName: LoginFlowNames;
-}
+export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
 export const AppContext = createContext<IAppContext | null>(null);
 
-export const AppProvider: FC<IAppProviderParams> = ({
-  children,
-  ...corbadoParams
-}) => {
-  //Initializing Corbado Application
-  const corbadoApp = useRef(new CorbadoApp(corbadoParams));
-  const projectService = corbadoApp.current.projectService;
-  const [flowHandlerService, setFlowHandlerService] = useState(
-    corbadoApp.current.flowHandlerService
-  );
-  const authService = corbadoApp.current.authService;
+export const AppProvider: FC<IAppProviderParams> = React.memo(
+  ({ children, ...corbadoParams }) => {
+    //Initializing Corbado Application
+    const [corbadoApp, setCorbadoApp] = useState<CorbadoApp | null>(null);
+    const [projectService, setProjectService] = useState<ProjectService | null>(
+      null
+    );
+    const [flowHandlerService, setFlowHandlerService] =
+      useState<FlowHandlerService | null>(null);
+    const [authService, setAuthService] = useState<AuthService | null>(null);
 
-  //On init
-  corbadoApp.current.onInit((app) => {
-    setFlowHandlerService(app.flowHandlerService);
-  });
+    useEffect(() => {
+      setCorbadoApp(new CorbadoApp(corbadoParams));
 
-  //Get project config
-  function getProjectConfig() {
-    return projectService.projConfig;
-  }
+      return () => {
+        console.log("Destroying Corbado App - useEffect");
+        corbadoApp?.destroy();
+      };
+    }, []);
 
-  return (
-    <AppContext.Provider
-      value={{
-        getProjectConfig,
-        flowHandlerService,
-        authService,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
-  );
-};
+    useEffect(() => {
+      if (!corbadoApp) {
+        return;
+      }
+
+      setProjectService(corbadoApp.projectService);
+      setFlowHandlerService(corbadoApp.flowHandlerService);
+      setAuthService(corbadoApp.authService);
+
+      corbadoApp.onInit((app) => {
+        setFlowHandlerService(app.flowHandlerService);
+      });
+    }, [corbadoApp]);
+
+    function getProjectConfig() {
+      return projectService?.projConfig ?? null;
+    }
+
+    return (
+      <AppContext.Provider
+        value={{
+          getProjectConfig,
+          flowHandlerService,
+          authService,
+        }}
+      >
+        {children}
+      </AppContext.Provider>
+    );
+  },
+  (prevProps, nextProps) => prevProps.projectId === nextProps.projectId
+);

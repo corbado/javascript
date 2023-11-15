@@ -2,7 +2,9 @@ node_modules/
 packages/*/node_modules/
 packages/*/dist/
 playground/*/node_modules/
-playground/*/.yalc/
 playground/*/yalc.lock
 dist
+
 .DS_Store
+.idea
+.yalc

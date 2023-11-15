@@ -14,5 +14,7 @@ export const PasskeySignupWithEmailOtpFallback = {
   "passkey-benefits": <PasskeyBenefits />,
   "passkey-welcome": <PasskeyWelcome />,
   "passkey-error": <PasskeyError />,
+  // TODO: add a LoggedInScreen (should show a message "Hi XYZ, you are logged in." + the JWT token (decoded)
   end: <div>End of Journey</div>,
+  // TODO: add LoginScreens
 };

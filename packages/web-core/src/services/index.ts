@@ -29,47 +29,47 @@ export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
  * It also handles the initialization and destruction of the application.
  */
 export class CorbadoApp {
-  private _apiService: ApiService;
-  private _flowHandlerService: FlowHandlerService | null = null;
-  private _authService: AuthService;
-  private _projectService: ProjectService;
-  private _projectId: string;
-  private _onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
+  #apiService: ApiService;
+  #flowHandlerService: FlowHandlerService | null = null;
+  #authService: AuthService;
+  #projectService: ProjectService;
+  #projectId: string;
+  #onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
   /**
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: ICorbadoAppParams) {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
-    this._projectId = projectId;
-    this._apiService = new ApiService(this._projectId, apiTimeout);
-    this._authService = new AuthService(this._apiService);
-    this._projectService = new ProjectService(this._apiService);
+    this.#projectId = projectId;
+    this.#apiService = new ApiService(this.#projectId, apiTimeout);
+    this.#authService = new AuthService(this.#apiService);
+    this.#projectService = new ProjectService(this.#apiService);
 
     void this.init(corbadoParams);
   }
 
   public get apiService() {
-    return this._apiService;
+    return this.#apiService;
   }
 
   public get flowHandlerService() {
-    return this._flowHandlerService;
+    return this.#flowHandlerService;
   }
 
   public get authService() {
-    return this._authService;
+    return this.#authService;
   }
 
   public get projectService() {
-    return this._projectService;
+    return this.#projectService;
   }
 
   /**
    * Method to add a callback function to be called when the application is initialized.
    */
   public onInit(cb: (app: CorbadoApp) => void) {
-    this._onInitCallbacks.push(cb);
+    this.#onInitCallbacks.push(cb);
   }
 
   /**
@@ -77,7 +77,7 @@ export class CorbadoApp {
    * It fetches the project configuration and sets up the flow handler service.
    */
   private async init(corbadoParams: ICorbadoAppParams) {
-    const projConfig = await this._projectService.getProjectConfig();
+    const projConfig = await this.#projectService.getProjectConfig();
 
     const flowName =
       (corbadoParams.defaultToLogin
@@ -85,7 +85,7 @@ export class CorbadoApp {
         : corbadoParams.signupFlowName) ??
       LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
 
-    this._flowHandlerService = new FlowHandlerService(flowName, projConfig, {
+    this.#flowHandlerService = new FlowHandlerService(flowName, projConfig, {
       passkeyAppend: corbadoParams.passkeyAppend ?? false,
       retryPasskeyOnError: corbadoParams.retryPasskeyOnError ?? false,
       compulsoryEmailVerification:
@@ -102,7 +102,7 @@ export class CorbadoApp {
    */
   private async initiateLogin() {
     if (
-      this._flowHandlerService?.currentFlowName !==
+      this.#flowHandlerService?.currentFlowName !==
       LoginFlowNames.PasskeyLoginWithEmailOTPFallback
     ) {
       return;
@@ -111,7 +111,7 @@ export class CorbadoApp {
     const isConditionalUISupported = await mediationAvailable();
 
     if (isConditionalUISupported) {
-      void this._authService.passkeyMediation();
+      void this.#authService.passkeyMediation();
     }
   }
 
@@ -121,40 +121,40 @@ export class CorbadoApp {
    * It also sets up listeners for flow and screen changes, and mediation success and failure.
    */
   private afterInit() {
-    if (this._onInitCallbacks.length) {
-      this._onInitCallbacks.forEach((cb) => cb(this));
+    if (this.#onInitCallbacks.length) {
+      this.#onInitCallbacks.forEach((cb) => cb(this));
     }
 
     void this.initiateLogin();
 
-    if (this._flowHandlerService) {
-      this._flowHandlerService.onFlowChange(() => {
+    if (this.#flowHandlerService) {
+      this.#flowHandlerService.onFlowChange(() => {
         return void this.initiateLogin();
       });
 
-      this._flowHandlerService.onScreenChange(() => {
+      this.#flowHandlerService.onScreenChange(() => {
         if (
-          this._flowHandlerService?.currentScreenName === CommonScreens.EnterOtp
+          this.#flowHandlerService?.currentScreenName === CommonScreens.EnterOtp
         ) {
           if (
-            this._flowHandlerService?.currentFlowName ===
+            this.#flowHandlerService?.currentFlowName ===
             LoginFlowNames.PasskeyLoginWithEmailOTPFallback
           ) {
-            void this._authService.emailOtpLogin();
+            void this.#authService.emailOtpLogin();
           } else {
-            void this._authService.sendEmailWithOTP();
+            void this.#authService.sendEmailWithOTP();
           }
         }
       });
 
-      this._authService.onMediationSuccess(() => {
-        return void this._flowHandlerService?.navigateToNextScreen({
+      this.#authService.onMediationSuccess(() => {
+        return void this.#flowHandlerService?.navigateToNextScreen({
           success: true,
         });
       });
 
-      this._authService.onMediationFailure(() => {
-        return void this._flowHandlerService?.navigateToNextScreen({
+      this.#authService.onMediationFailure(() => {
+        return void this.#flowHandlerService?.navigateToNextScreen({
           failure: true,
         });
       });
@@ -166,6 +166,6 @@ export class CorbadoApp {
    * It calls the destroy method of the AuthService.
    */
   public destroy() {
-    this._authService.destroy();
+    this.#authService.destroy();
   }
 }

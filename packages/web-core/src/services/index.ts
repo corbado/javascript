@@ -23,14 +23,22 @@ export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   loginFlowName?: LoginFlowNames;
 }
 
+/**
+ * CorbadoApp is a class that represents the main application.
+ * It manages the services and the flow of the application.
+ * It also handles the initialization and destruction of the application.
+ */
 export class CorbadoApp {
   private _apiService: ApiService;
   private _flowHandlerService: FlowHandlerService | null = null;
   private _authService: AuthService;
   private _projectService: ProjectService;
   private _projectId: string;
-  private onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
+  private _onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
+  /**
+   * The constructor initializes the services and sets up the application.
+   */
   constructor(corbadoParams: ICorbadoAppParams) {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this._projectId = projectId;
@@ -57,10 +65,17 @@ export class CorbadoApp {
     return this._projectService;
   }
 
-  onInit(cb: (app: CorbadoApp) => void) {
-    this.onInitCallbacks.push(cb);
+  /**
+   * Method to add a callback function to be called when the application is initialized.
+   */
+  public onInit(cb: (app: CorbadoApp) => void) {
+    this._onInitCallbacks.push(cb);
   }
 
+  /**
+   * Method to initialize the application.
+   * It fetches the project configuration and sets up the flow handler service.
+   */
   private async init(corbadoParams: ICorbadoAppParams) {
     const projConfig = await this._projectService.getProjectConfig();
 
@@ -81,6 +96,10 @@ export class CorbadoApp {
     this.afterInit();
   }
 
+  /**
+   * Method to initiate the login process.
+   * It checks if the current flow belongs to login flow and if so, initiates the passkey mediation.
+   */
   private async initiateLogin() {
     if (
       this._flowHandlerService?.currentFlowName !==
@@ -96,9 +115,14 @@ export class CorbadoApp {
     }
   }
 
+  /**
+   * Method to be called after the application is initialized.
+   * It calls the onInit callbacks and initiates the login process.
+   * It also sets up listeners for flow and screen changes, and mediation success and failure.
+   */
   private afterInit() {
-    if (this.onInitCallbacks.length) {
-      this.onInitCallbacks.forEach((cb) => cb(this));
+    if (this._onInitCallbacks.length) {
+      this._onInitCallbacks.forEach((cb) => cb(this));
     }
 
     void this.initiateLogin();
@@ -137,6 +161,10 @@ export class CorbadoApp {
     }
   }
 
+  /**
+   * Method to destroy the application.
+   * It calls the destroy method of the AuthService.
+   */
   public destroy() {
     this._authService.destroy();
   }

@@ -5,6 +5,7 @@ export async function canUsePasskeys(): Promise<boolean> {
   );
 }
 
+//TODO: Currently this is returning false for windows chromium browsers.
 export const mediationAvailable = () => {
   return (
     window.PublicKeyCredential &&

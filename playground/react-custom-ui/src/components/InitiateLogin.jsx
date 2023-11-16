@@ -15,21 +15,28 @@ export function InitiateLogin() {
     try {
       initiateLogin(username);
 
-      debugger;
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
         const success = await passkeyLogin();
 
         if (success) {
-          void navigateToNextScreen({ success: true });
-          return;
+          return void navigateToNextScreen({ success: true });
         } else {
-          void navigateToNextScreen({ failure: true });
-          return;
+          return void navigateToNextScreen({ failure: true });
         }
       }
 
+      void navigateToNextScreen({ sendOtpEmail: true });
+    } catch (error) {
+      console.log(error);
+      void navigateToNextScreen({ failure: true });
+    }
+  };
+
+  const initiateAuthenticationWithEmailOtp = () => {
+    try {
+      initiateLogin(username);
       void navigateToNextScreen({ sendOtpEmail: true });
     } catch (error) {
       console.log(error);
@@ -47,6 +54,9 @@ export function InitiateLogin() {
         onChange={(e) => setUsername(e.target.value)}
       />
       <input type="submit" value="Submit" />
+      <button onClick={initiateAuthenticationWithEmailOtp}>
+        Login with Email OTP
+      </button>
     </form>
   );
 }

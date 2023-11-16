@@ -16,7 +16,7 @@ interface SignupForm {
 export const InitiateSignup = () => {
   const { t } = useTranslation();
 
-  const { sendEmailWithOTP } = useCorbadoAuth();
+  const { sendEmailWithOTP, initiateSignup } = useCorbadoAuth();
   const { navigateToNextScreen } = useCorbadoFlowHandler();
 
   const formTemplate = { name: "", username: "" };
@@ -38,7 +38,8 @@ export const InitiateSignup = () => {
   const handleSignup = async (): Promise<void> => {
     setLoading(true);
     try {
-      await sendEmailWithOTP(signupData.username, signupData.name);
+      initiateSignup(signupData.username, signupData.name);
+      await sendEmailWithOTP();
       void navigateToNextScreen();
     } catch (error) {
       console.log({ error });

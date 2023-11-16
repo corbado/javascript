@@ -10,6 +10,8 @@ export enum LoginFlowNames {
 export enum CommonScreens {
   Start = "start",
   End = "end",
+  EnterOtp = "enter-otp",
+  PasskeyError = "passkey-error",
 }
 
 export enum EmailOtpSignupScreens {

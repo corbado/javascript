@@ -10,51 +10,51 @@ import { CommonScreens } from "../utils/constants/flowHandler";
 import { flows } from "../utils/flows";
 
 export class FlowHandlerService {
-  private currentFlow: Flow;
-  private currentScreen: ScreenNames;
-  private screenHistory: ScreenNames[];
-  private onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
-  private onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
+  private _currentFlow: Flow;
+  private _currentScreen: ScreenNames;
+  private _screenHistory: ScreenNames[];
+  private _onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
+  private _onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
 
   constructor(
-    private flowName: FlowNames,
-    private projectConfig: IProjectConfig,
-    private flowHandlerConfig: IFlowHandlerConfig
+    private _flowName: FlowNames,
+    private _projectConfig: IProjectConfig,
+    private _flowHandlerConfig: IFlowHandlerConfig
   ) {
-    this.currentFlow = flows[this.flowName];
-    this.screenHistory = [];
-    this.currentScreen = CommonScreens.Start;
+    this._currentFlow = flows[this._flowName];
+    this._screenHistory = [];
+    this._currentScreen = CommonScreens.Start;
   }
 
   get currentScreenName() {
-    return this.currentScreen;
+    return this._currentScreen;
   }
 
   get currentFlowName() {
-    return this.flowName;
+    return this._flowName;
   }
 
   onScreenChange(cb: (screen: ScreenNames) => void) {
-    this.onScreenUpdateCallbacks.push(cb);
+    this._onScreenUpdateCallbacks.push(cb);
   }
 
   onFlowChange(cb: (flow: FlowNames) => void) {
-    this.onFlowUpdateCallbacks.push(cb);
+    this._onFlowUpdateCallbacks.push(cb);
   }
 
   redirect() {
-    //window.location.href = this.projectConfig.redirectUrl;
+    //window.location.href = this._projectConfig.redirectUrl;
   }
 
   async navigateToNextScreen(userInput: StepFunctionParams) {
-    const stepFunction = this.currentFlow[this.currentScreen];
+    const stepFunction = this._currentFlow[this._currentScreen];
     if (!stepFunction) {
       throw new Error("Invalid screen");
     }
 
     const nextScreen = await stepFunction(
-      this.projectConfig,
-      this.flowHandlerConfig,
+      this._projectConfig,
+      this._flowHandlerConfig,
       userInput
     );
 
@@ -62,44 +62,44 @@ export class FlowHandlerService {
       void this.redirect();
     }
 
-    this.screenHistory.push(this.currentScreen);
-    this.currentScreen = nextScreen;
+    this._screenHistory.push(this._currentScreen);
+    this._currentScreen = nextScreen;
 
-    if (this.onScreenUpdateCallbacks.length) {
-      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
+    if (this._onScreenUpdateCallbacks.length) {
+      this._onScreenUpdateCallbacks.forEach((cb) => cb(this._currentScreen));
     }
 
     return nextScreen;
   }
 
   navigateBack() {
-    if (!this.screenHistory.length) {
+    if (!this._screenHistory.length) {
       return CommonScreens.Start;
     }
 
-    this.currentScreen = this.screenHistory.pop() || CommonScreens.Start;
+    this._currentScreen = this._screenHistory.pop() || CommonScreens.Start;
 
-    if (this.onScreenUpdateCallbacks.length) {
-      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
+    if (this._onScreenUpdateCallbacks.length) {
+      this._onScreenUpdateCallbacks.forEach((cb) => cb(this._currentScreen));
     }
 
-    return this.currentScreen;
+    return this._currentScreen;
   }
 
   changeFlow(flowName: FlowNames) {
-    this.flowName = flowName;
-    this.currentFlow = flows[this.flowName];
-    this.currentScreen = CommonScreens.Start;
-    this.screenHistory = [];
+    this._flowName = flowName;
+    this._currentFlow = flows[this._flowName];
+    this._currentScreen = CommonScreens.Start;
+    this._screenHistory = [];
 
-    if (this.onFlowUpdateCallbacks.length) {
-      this.onFlowUpdateCallbacks.forEach((cb) => cb(this.flowName));
+    if (this._onFlowUpdateCallbacks.length) {
+      this._onFlowUpdateCallbacks.forEach((cb) => cb(this._flowName));
     }
 
-    if (this.onScreenUpdateCallbacks.length) {
-      this.onScreenUpdateCallbacks.forEach((cb) => cb(this.currentScreen));
+    if (this._onScreenUpdateCallbacks.length) {
+      this._onScreenUpdateCallbacks.forEach((cb) => cb(this._currentScreen));
     }
 
-    return this.currentScreen;
+    return this._currentScreen;
   }
 }

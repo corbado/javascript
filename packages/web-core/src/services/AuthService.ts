@@ -12,6 +12,8 @@ export class AuthService {
   private _mediationController: AbortController | null = null;
   private _authMethod: Array<AuthMethod> = [];
   private _possibleAuthMethods: Array<AuthMethod> = [];
+  private _onMediationSuccessCallbacks: Array<() => void> = [];
+  private _onMediationFailureCallbacks: Array<() => void> = [];
 
   constructor(private readonly _apiService: ApiService) {}
 
@@ -43,6 +45,14 @@ export class AuthService {
     return this._possibleAuthMethods;
   }
 
+  public onMediationSuccess(callback: () => void) {
+    this._onMediationSuccessCallbacks.push(callback);
+  }
+
+  public onMediationFailure(callback: () => void) {
+    this._onMediationFailureCallbacks.push(callback);
+  }
+
   public initiateSignup(email: string, username = "") {
     this._email = email;
     this._username = username;
@@ -60,12 +70,10 @@ export class AuthService {
   }
 
   // returns true if email is sent
-  public async sendEmailWithOTP(email: string, username = "") {
-    this.initiateSignup(email, username);
-
+  public async sendEmailWithOTP() {
     const resp = await this._apiService.usersApi.emailCodeRegisterStart({
-      email: email,
-      username: username,
+      email: this._email,
+      username: this._username,
     });
 
     this._emailCodeIdRef = resp.data.data.emailCodeID;
@@ -169,8 +177,15 @@ export class AuthService {
     //const sessionData = respFinish.data.data;
 
     this._isAuthenticated = true;
+    const successful = respFinish.status === 200;
 
-    return respFinish.status === 200;
+    if (successful) {
+      this._onMediationSuccessCallbacks.forEach((cb) => cb());
+    } else {
+      this._onMediationFailureCallbacks.forEach((cb) => cb());
+    }
+
+    return successful;
   }
 
   public async emailOtpLogin() {
@@ -184,7 +199,6 @@ export class AuthService {
   }
 
   public destroy() {
-    console.log("Destroying auth service");
     if (!this._mediationController) {
       return;
     }

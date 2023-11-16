@@ -65,10 +65,10 @@ export const useCorbadoAuth = () => {
     return authService?.initiateLogin(email);
   }
 
-  function sendEmailWithOTP(email: string, username = "") {
+  function sendEmailWithOTP() {
     checkAuthServiceHealth();
 
-    return authService?.sendEmailWithOTP(email, username);
+    return authService?.sendEmailWithOTP();
   }
 
   function verifyOTP(otp: string) {

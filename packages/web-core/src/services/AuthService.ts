@@ -1,6 +1,7 @@
 import { create, get } from "@github/webauthn-json";
 
-import type { AuthMethod } from "../api";
+import type { AuthMethod, ShortSession } from "../api";
+import type { ISessionResponse } from "../types";
 import type { ApiService } from "./ApiService";
 
 /**
@@ -20,6 +21,9 @@ export class AuthService {
   #possibleAuthMethods: Array<AuthMethod> = [];
   #onMediationSuccessCallbacks: Array<() => void> = [];
   #onMediationFailureCallbacks: Array<() => void> = [];
+  #onAuthenticationSuccessCallbacks: Array<
+    (sessionResponse: ISessionResponse) => void
+  > = [];
 
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
@@ -28,52 +32,81 @@ export class AuthService {
     this.#apiService = apiService;
   }
 
-  public get isAuthenticated() {
+  get isAuthenticated() {
     return this.#isAuthenticated;
   }
 
-  public get isEmailVerified() {
+  get isEmailVerified() {
     return this.#isEmailVerified;
   }
 
-  public get isPasskeySet() {
+  get isPasskeySet() {
     return this.#isPasskeySet;
   }
 
-  public get email() {
+  get email() {
     return this.#email;
   }
 
-  public get username() {
+  get username() {
     return this.#username;
   }
 
-  public get authMethod() {
+  get authMethod() {
     return this.#authMethod;
   }
 
-  public get possibleAuthMethods() {
+  get possibleAuthMethods() {
     return this.#possibleAuthMethods;
   }
 
   /**
    * Method to add a callback function to be called when mediation is successful.
    */
-  public onMediationSuccess(callback: () => void) {
+  onMediationSuccess(callback: () => void) {
     this.#onMediationSuccessCallbacks.push(callback);
   }
 
   /**
    * Method to add a callback function to be called when mediation fails.
    */
-  public onMediationFailure(callback: () => void) {
+  onMediationFailure(callback: () => void) {
     this.#onMediationFailureCallbacks.push(callback);
   }
 
   /**
+   * Method to add a callback function to be called when authentication is successful.
+   */
+  onAuthenticationSuccess(
+    callback: (sessionResponse: ISessionResponse) => void
+  ) {
+    this.#onAuthenticationSuccessCallbacks.push(callback);
+  }
+
+  /**
+   * Method to execute all the callbacks registered for authentication success.
+   */
+  #executeOnAuthenticationSuccessCallbacks = (sessionResponse: {
+    shortSession?: ShortSession;
+    longSession?: string;
+    redirectURL: string;
+  }) => {
+    const session: ISessionResponse = {
+      shortSession: sessionResponse.shortSession,
+      longSession: sessionResponse.longSession ?? "",
+      redirectUrl: sessionResponse.redirectURL,
+      user: this.#email ?? this.#username ?? "",
+    };
+
+    this.#isAuthenticated = true;
+
+    this.#onAuthenticationSuccessCallbacks.forEach((cb) => cb(session));
+  };
+
+  /**
    * Method to initiate the signup process.
    */
-  public initiateSignup(email: string, username = "") {
+  initiateSignup(email: string, username = "") {
     this.#email = email;
     this.#username = username;
   }
@@ -82,7 +115,7 @@ export class AuthService {
    * Method to initiate the login process.
    * This method fetches the authentication methods for the user as well based on the given email/username.
    */
-  public async initiateLogin(email: string) {
+  async initiateLogin(email: string) {
     this.#email = email;
 
     const resp = await this.#apiService.usersApi.authMethodsList({
@@ -96,7 +129,7 @@ export class AuthService {
   /**
    * Method to start registration of a user by sending an email with an OTP.
    */
-  public async sendEmailWithOTP() {
+  async sendEmailWithOTP() {
     const resp = await this.#apiService.usersApi.emailCodeRegisterStart({
       email: this.#email,
       username: this.#username,
@@ -113,7 +146,7 @@ export class AuthService {
    * This can be used to verify both registration and login OTPs.
    * @param otp The OTP to be verified
    */
-  public async verifyOTP(otp: string) {
+  async verifyOTP(otp: string) {
     if (this.#emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
     }
@@ -123,11 +156,8 @@ export class AuthService {
       emailCodeID: this.#emailCodeIdRef,
     });
 
-    //const sessionData = verifyResp.data.data;
-    this.#apiService.setInstanceWithToken(
-      verifyResp.data.data.sessionToken ?? ""
-    );
-    this.#isAuthenticated = true;
+    this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
+
     this.#isEmailVerified = true;
 
     return verifyResp.status === 200;
@@ -137,7 +167,7 @@ export class AuthService {
    * Method to register a passkey.
    * This is used in passkey creation flow.
    */
-  public async passkeyRegister() {
+  async passkeyRegister() {
     const respStart = await this.#apiService.usersApi.passKeyRegisterStart({
       username: this.#email,
       fullName: this.#username,
@@ -148,13 +178,9 @@ export class AuthService {
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
-    //const sessionData = respFinish.data.data;
-    this.#apiService.setInstanceWithToken(
-      respFinish.data.data.sessionToken ?? ""
-    );
+    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
 
     this.#isPasskeySet = true;
-    this.#isAuthenticated = true;
 
     return respFinish.status === 200;
   }
@@ -163,15 +189,13 @@ export class AuthService {
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
-  public async passkeyAppend() {
+  async passkeyAppend() {
     const respStart = await this.#apiService.usersApi.passKeyAppendStart({});
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await create(challenge);
     const respFinish = await this.#apiService.usersApi.passKeyAppendFinish({
       signedChallenge: JSON.stringify(signedChallenge),
     });
-
-    //const sessionData = respFinish.data.data;
 
     this.#isPasskeySet = true;
 
@@ -181,7 +205,7 @@ export class AuthService {
   /**
    * Method to login with a passkey.
    */
-  public async passkeyLogin() {
+  async passkeyLogin() {
     const respStart = await this.#apiService.usersApi.passKeyLoginStart({
       username: this.#email,
     });
@@ -191,10 +215,7 @@ export class AuthService {
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
-    const sessionData = respFinish.data.data;
-    this.#apiService.setInstanceWithToken(sessionData.sessionToken ?? "");
-
-    this.#isAuthenticated = true;
+    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
 
     return respFinish.status === 200;
   }
@@ -203,7 +224,7 @@ export class AuthService {
    * Method to mediate a passkey.
    * This is used in passkey mediation / conditional UI flow.
    */
-  public async passkeyMediation(username?: string) {
+  async passkeyMediation(username?: string) {
     const controller = new AbortController();
     const signal = controller.signal;
     this.#mediationController = controller;
@@ -220,9 +241,8 @@ export class AuthService {
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
-    //const sessionData = respFinish.data.data;
+    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
 
-    this.#isAuthenticated = true;
     const successful = respFinish.status === 200;
 
     if (successful) {
@@ -237,7 +257,7 @@ export class AuthService {
   /**
    * Method to login with an email OTP.
    */
-  public async emailOtpLogin() {
+  async emailOtpLogin() {
     const resp = await this.#apiService.usersApi.emailCodeLoginStart({
       username: this.#email,
     });
@@ -250,7 +270,7 @@ export class AuthService {
   /**
    * Method to destroy the AuthService.
    */
-  public destroy() {
+  destroy() {
     if (!this.#mediationController) {
       return;
     }

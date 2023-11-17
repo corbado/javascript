@@ -20,6 +20,7 @@ export class FlowHandlerService {
   #screenHistory: ScreenNames[];
   #flowName: FlowNames;
   #projectConfig: IProjectConfig;
+  #redirectUrl: string = window.location.href;
   #flowHandlerConfig: IFlowHandlerConfig;
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
@@ -49,6 +50,10 @@ export class FlowHandlerService {
     return this.#flowName;
   }
 
+  set redirectUrl(url: string | undefined) {
+    this.#redirectUrl = url || window.location.href;
+  }
+
   /**
    * Method to add a callback function to be called when the current screen changes.
    */
@@ -67,7 +72,7 @@ export class FlowHandlerService {
    * Method to redirect to a specified URL.
    */
   redirect() {
-    //window.location.href = this.#projectConfig.redirectUrl;
+    window.location.href = this.#redirectUrl;
   }
 
   /**

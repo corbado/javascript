@@ -23,7 +23,23 @@ export class ApiService {
     this.setInstanceWithToken(token);
   }
 
-  public setInstanceWithToken(token: string) {
+  get usersApi(): UsersApi {
+    return this.#usersApi;
+  }
+
+  get assetsApi(): AssetsApi {
+    return this.#assetsApi;
+  }
+
+  get projectsApi(): ProjectsApi {
+    return this.#projectsApi;
+  }
+
+  get sessionsApi(): SessionsApi {
+    return this.#sessionsApi;
+  }
+
+  setInstanceWithToken(token: string) {
     const basePath = `https://${this.#projectId}.frontendapi.corbado.io`;
     const config = new Configuration({
       apiKey: this.#projectId,
@@ -47,21 +63,5 @@ export class ApiService {
     this.#assetsApi = new AssetsApi(config, basePath, axiosInstance);
     this.#projectsApi = new ProjectsApi(config, basePath, axiosInstance);
     this.#sessionsApi = new SessionsApi(config, basePath, axiosInstance);
-  }
-
-  public get usersApi(): UsersApi {
-    return this.#usersApi;
-  }
-
-  public get assetsApi(): AssetsApi {
-    return this.#assetsApi;
-  }
-
-  public get projectsApi(): ProjectsApi {
-    return this.#projectsApi;
-  }
-
-  public get sessionsApi(): SessionsApi {
-    return this.#sessionsApi;
   }
 }

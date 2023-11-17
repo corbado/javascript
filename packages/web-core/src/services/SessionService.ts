@@ -110,12 +110,14 @@ export class SessionService {
    * It sets the short term session token, long term session token, and username for the Corbado Application.
    * @param shortSession The short term session token to be set.
    * @param longSession The long term session token to be set.
-   * @param username The username to be set.
+   * @param user The username to be set.
    */
-  setSession(shortSession: string, longSession: string, username: string) {
+  setSession(shortSession: string, longSession: string, user: string) {
     this.#setShortTermSessionToken(shortSession);
     this.#setLongTermSessionToken(longSession);
-    this.#setUser(username);
+    this.#setUser(user);
+
+    this.#apiService.setInstanceWithToken(shortSession ?? "");
   }
 
   /**

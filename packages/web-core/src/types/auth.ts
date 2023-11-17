@@ -34,6 +34,13 @@ export interface ISessionResponse {
   redirectUrl?: string;
 }
 
+export interface IShortSessionStore {
+  /** The short session token. */
+  session?: string;
+  /** The short session expiry. */
+  expires?: string;
+}
+
 /**
  * Enumeration of possible statuses.
  */

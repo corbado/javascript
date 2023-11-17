@@ -15,6 +15,7 @@ import { SessionService } from "./SessionService";
 export type { FlowHandlerService } from "./FlowHandler";
 export type { ProjectService } from "./ProjectService";
 export type { AuthService } from "./AuthService";
+export type { SessionService } from "./SessionService";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
@@ -116,8 +117,9 @@ export class CorbadoApp {
     }
 
     const isConditionalUISupported = await mediationAvailable();
+    const alwaysTrue = true;
 
-    if (isConditionalUISupported) {
+    if (isConditionalUISupported || alwaysTrue) {
       void this.#authService.passkeyMediation();
     }
   }
@@ -168,11 +170,7 @@ export class CorbadoApp {
     });
 
     this.#authService.onAuthenticationSuccess((sessionResponse) => {
-      this.#sessionService.setSession(
-        sessionResponse.shortSession?.value ?? "",
-        sessionResponse.longSession ?? "",
-        sessionResponse.user ?? ""
-      );
+      this.#sessionService.setSession(sessionResponse);
       if (this.#flowHandlerService) {
         this.#flowHandlerService.redirectUrl = sessionResponse.redirectUrl;
       }

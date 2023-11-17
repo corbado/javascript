@@ -4,6 +4,7 @@ import type {
   ICorbadoAppParams,
   IProjectConfig,
   ProjectService,
+  SessionService,
 } from "@corbado/web-core";
 import { CorbadoApp } from "@corbado/web-core";
 import React, {
@@ -18,6 +19,7 @@ export interface IAppContext {
   getProjectConfig: () => IProjectConfig | null;
   authService: AuthService | null;
   flowHandlerService: FlowHandlerService | null;
+  sessionService: SessionService | null;
 }
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
@@ -34,6 +36,9 @@ export const AppProvider: FC<IAppProviderParams> = React.memo(
     const [flowHandlerService, setFlowHandlerService] =
       useState<FlowHandlerService | null>(null);
     const [authService, setAuthService] = useState<AuthService | null>(null);
+    const [sessionService, setSessionService] = useState<SessionService | null>(
+      null
+    );
 
     useEffect(() => {
       setCorbadoApp(new CorbadoApp(corbadoParams));
@@ -52,6 +57,7 @@ export const AppProvider: FC<IAppProviderParams> = React.memo(
       setProjectService(corbadoApp.projectService);
       setFlowHandlerService(corbadoApp.flowHandlerService);
       setAuthService(corbadoApp.authService);
+      setSessionService(corbadoApp.sessionService);
 
       corbadoApp.onInit((app) => {
         setFlowHandlerService(app.flowHandlerService);
@@ -68,6 +74,7 @@ export const AppProvider: FC<IAppProviderParams> = React.memo(
           getProjectConfig,
           flowHandlerService,
           authService,
+          sessionService,
         }}
       >
         {children}

@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-core",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "This package contains core functionalities which are exported by all the SDKs and UI packages of our JavaScript library",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",

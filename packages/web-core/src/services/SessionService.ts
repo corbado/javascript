@@ -1,4 +1,9 @@
-import type { IFullUser } from "../types";
+import type {
+  IFullUser,
+  ISessionResponse,
+  IShortSession,
+  IShortSessionStore,
+} from "../types";
 import type { ApiService } from "./ApiService";
 
 const shortSessionKey = "cbo_short_session";
@@ -11,23 +16,49 @@ const userKey = "cbo_user";
  * as well as a method to fetch the full user object from the Corbado API.
  */
 export class SessionService {
-  #shortSession = "";
+  #shortSession: IShortSessionStore | null = null;
   #longSession = "";
   #user = "";
   #apiService: ApiService;
 
   constructor(apiService: ApiService) {
     this.#apiService = apiService;
-    this.#shortSession = this.getShortTermSessionToken();
-    this.#longSession = this.getLongTermSessionToken();
-    this.#user = this.getUser();
+    this.#shortSession = SessionService.getShortTermSessionToken();
+    this.#longSession = SessionService.getLongSessionToken();
+    this.#user = SessionService.getUser();
+
+    this.#apiService.setInstanceWithToken(this.#shortSession?.session ?? "");
+  }
+
+  /**
+   * Getter method for retrieving the short term session token.
+   * @returns The short term session token or null if it's not set.
+   */
+  get shortSession() {
+    return this.#shortSession;
+  }
+
+  /**
+   * Getter method for retrieving the long term session token.
+   * @returns The long term session token or null if it's not set.
+   */
+  get longSession() {
+    return this.#longSession;
+  }
+
+  /**
+   * Getter method for retrieving the username.
+   * @returns The username or null if it's not set.
+   */
+  get user() {
+    return this.#user;
   }
 
   /**
    * Sets a long term session token for dev environment in localStorage.
    * For production, it sets a cookie.
    */
-  #setLongTermSessionToken(longSessionToken: string): void {
+  #setLongSessionToken(longSessionToken: string): void {
     localStorage.setItem(longSessionKey, longSessionToken);
     this.#longSession = longSessionToken;
   }
@@ -35,7 +66,7 @@ export class SessionService {
   /**
    * Deletes the long term session token cookie for dev environment in localStorage.
    */
-  #deleteLongTermSessionToken(): void {
+  #deleteLongSessionToken(): void {
     localStorage.removeItem(longSessionKey);
     this.#longSession = "";
   }
@@ -43,16 +74,20 @@ export class SessionService {
   /**
    * Gets the long term session token.
    */
-  getLongTermSessionToken(): string {
-    return this.#longSession || (localStorage.getItem(longSessionKey) ?? "");
+  static getLongSessionToken() {
+    return (localStorage.getItem(longSessionKey) as string) ?? "";
   }
 
   /**
    * Sets a short term session token.
    * @param session The session token to be set.
    */
-  #setShortTermSessionToken(session: string): void {
-    localStorage.setItem(shortSessionKey, session);
+  #setShortTermSessionToken(session: IShortSession): void {
+    const store: IShortSessionStore = {
+      session: session.value ?? "",
+      expires: session.expires ?? "",
+    };
+    localStorage.setItem(shortSessionKey, JSON.stringify(store));
     this.#shortSession = session;
   }
 
@@ -61,14 +96,18 @@ export class SessionService {
    */
   #deleteShortTermSessionToken(): void {
     localStorage.removeItem(shortSessionKey);
-    this.#shortSession = "";
+    this.#shortSession = null;
   }
 
   /**
    * Gets the short term session token.
    */
-  getShortTermSessionToken(): string {
-    return this.#shortSession || (localStorage.getItem(shortSessionKey) ?? "");
+  static getShortTermSessionToken() {
+    const storedSessionStr = localStorage.getItem(shortSessionKey);
+
+    return storedSessionStr
+      ? (JSON.parse(storedSessionStr) as IShortSessionStore)
+      : null;
   }
 
   /**
@@ -91,8 +130,8 @@ export class SessionService {
   /**
    * Gets the username from localStorage.
    */
-  getUser(): string {
-    return this.#user || (localStorage.getItem(userKey) ?? "");
+  static getUser() {
+    return (localStorage.getItem(userKey) as string) ?? "";
   }
 
   /**
@@ -112,21 +151,25 @@ export class SessionService {
    * @param longSession The long term session token to be set.
    * @param user The username to be set.
    */
-  setSession(shortSession: string, longSession: string, user: string) {
-    this.#setShortTermSessionToken(shortSession);
-    this.#setLongTermSessionToken(longSession);
-    this.#setUser(user);
+  setSession(sessionResponse: ISessionResponse) {
+    if (sessionResponse.shortSession) {
+      this.#setShortTermSessionToken(sessionResponse.shortSession);
+      this.#apiService.setInstanceWithToken(
+        sessionResponse.shortSession.value ?? ""
+      );
+    }
 
-    this.#apiService.setInstanceWithToken(shortSession ?? "");
+    this.#setLongSessionToken(sessionResponse.longSession ?? "");
+    this.#setUser(sessionResponse.user ?? "");
   }
 
   /**
-   * Method to delete Session
+   * Method to delete Session.
    * It deletes the short term session token, long term session token, and username for the Corbado Application.
    */
   deleteSession() {
     this.#deleteShortTermSessionToken();
-    this.#deleteLongTermSessionToken();
+    this.#deleteLongSessionToken();
     this.#deleteUser();
   }
 }

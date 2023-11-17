@@ -22,7 +22,7 @@ export class ProjectService {
    * Getter method for retrieving the current project configuration.
    * @returns The current project configuration or null if it's not set.
    */
-  public get projConfig() {
+  get projConfig() {
     return this.#projConfig;
   }
 
@@ -30,7 +30,7 @@ export class ProjectService {
    * Asynchronously fetches the project configuration using the ApiService.
    * @returns A Promise that resolves to the fetched project configuration.
    */
-  public async getProjectConfig() {
+  async getProjectConfig() {
     const resp = await this.#apiService.projectsApi.projectConfig();
     const config = resp.data.data;
     this.#projConfig = config;

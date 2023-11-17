@@ -10,6 +10,7 @@ import { ApiService } from "./ApiService";
 import { AuthService } from "./AuthService";
 import { FlowHandlerService } from "./FlowHandler";
 import { ProjectService } from "./ProjectService";
+import { SessionService } from "./SessionService";
 
 export type { FlowHandlerService } from "./FlowHandler";
 export type { ProjectService } from "./ProjectService";
@@ -33,6 +34,7 @@ export class CorbadoApp {
   #flowHandlerService: FlowHandlerService | null = null;
   #authService: AuthService;
   #projectService: ProjectService;
+  #sessionService: SessionService;
   #projectId: string;
   #onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
@@ -45,6 +47,7 @@ export class CorbadoApp {
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
     this.#authService = new AuthService(this.#apiService);
     this.#projectService = new ProjectService(this.#apiService);
+    this.#sessionService = new SessionService(this.#apiService);
 
     void this.init(corbadoParams);
   }
@@ -63,6 +66,10 @@ export class CorbadoApp {
 
   public get projectService() {
     return this.#projectService;
+  }
+
+  public get sessionService() {
+    return this.#sessionService;
   }
 
   /**
@@ -146,19 +153,30 @@ export class CorbadoApp {
           }
         }
       });
-
-      this.#authService.onMediationSuccess(() => {
-        return void this.#flowHandlerService?.navigateToNextScreen({
-          success: true,
-        });
-      });
-
-      this.#authService.onMediationFailure(() => {
-        return void this.#flowHandlerService?.navigateToNextScreen({
-          failure: true,
-        });
-      });
     }
+
+    this.#authService.onMediationSuccess(() => {
+      return void this.#flowHandlerService?.navigateToNextScreen({
+        success: true,
+      });
+    });
+
+    this.#authService.onMediationFailure(() => {
+      return void this.#flowHandlerService?.navigateToNextScreen({
+        failure: true,
+      });
+    });
+
+    this.#authService.onAuthenticationSuccess((sessionResponse) => {
+      this.#sessionService.setSession(
+        sessionResponse.shortSession?.value ?? "",
+        sessionResponse.longSession ?? "",
+        sessionResponse.user ?? ""
+      );
+      if (this.#flowHandlerService) {
+        this.#flowHandlerService.redirectUrl = sessionResponse.redirectUrl;
+      }
+    });
   }
 
   /**

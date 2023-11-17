@@ -13,15 +13,31 @@ export interface IAuthResponse {
 /**
  * Represents the structure of a short session cookie, excluding the 'name' property from CookiesDefinition.
  */
-export interface IShortSession extends Omit<CookiesDefinition, "name"> {
+export interface IShortSession
+  extends Omit<CookiesDefinition, "name" | "expires" | "sameSite"> {
   /** The key name of the cookie, replacing the omitted 'name' property. */
   key: string;
+  /** The expiration date of the cookie in ISO 8601 format. */
+  expires: string;
+  /** The SameSite attribute of the cookie. */
+  sameSite: string;
+}
+
+export interface ISessionResponse {
+  /** The short session cookie. */
+  shortSession?: IShortSession;
+  /** The long session token. */
+  longSession?: string;
+  /** The user email. */
+  user?: string;
+  /** The redirect URL which can be used to redirect on successful authentication */
+  redirectUrl?: string;
 }
 
 /**
  * Enumeration of possible statuses.
  */
-export const Status = {
+export const StatusEnum = {
   Active: "active",
   Pending: "pending",
   Deleted: "deleted",
@@ -30,7 +46,7 @@ export const Status = {
 /**
  * Type representing the allowed values of the Status enumeration.
  */
-export type Status = (typeof Status)[keyof typeof Status]; // Type derived from the values of the Status object.
+export type Status = (typeof StatusEnum)[keyof typeof StatusEnum]; // Type derived from the values of the Status object.
 
 /**
  * Represents an email associated with a user.

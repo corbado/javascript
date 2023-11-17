@@ -1,7 +1,6 @@
-//import { ApiTest } from "./components/ApiTest"
-//import { SignUpWithEmailOtpTest } from "./pages/SingUpWithEmailOtpTest";
-import { PasskeySignupTest } from "./pages/PasskeySignupTest";
 import { CorbadoProvider } from "@corbado/react-sdk";
+import React from "react";
+import { CorbadoAppTest } from "./pages/CorbadoApp";
 
 export function App() {
   return (
@@ -11,8 +10,7 @@ export function App() {
       retryPasskeyOnError={true}
       signupFlowName="PasskeySignupWithEmailOTPFallback"
     >
-      {/* <SignUpWithEmailOtpTest /> */}
-      <PasskeySignupTest />
+      <CorbadoAppTest />
     </CorbadoProvider>
   );
 }

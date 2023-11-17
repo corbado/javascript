@@ -1,37 +1,62 @@
-import {useCorbadoAuth, useCorbadoFlowHandler} from "@corbado/react-sdk";
-import {useState} from "react";
+import {
+  useCorbadoAuth,
+  useCorbadoFlowHandler,
+  canUsePasskeys,
+} from "@corbado/react-sdk";
+import React from "react";
 
-// TODO: set up this screen + the rest of the login screens)
 export function InitiateLogin() {
-  const {initiateAuth} = useCorbadoAuth();
-  const {navigateToNextScreen} = useCorbadoFlowHandler();
-  const [email, setEmail] = useState("");
+  const { initiateLogin, passkeyLogin } = useCorbadoAuth();
+  const { navigateToNextScreen } = useCorbadoFlowHandler();
+  const [username, setUsername] = React.useState("");
 
   const initiateAuthentication = async (event) => {
     event.preventDefault();
     try {
-      initiateAuth(email, username);
-      navigateToNextScreen();
+      initiateLogin(username);
+
+      const hasPasskeySupport = await canUsePasskeys();
+
+      if (hasPasskeySupport) {
+        const success = await passkeyLogin();
+
+        if (success) {
+          return void navigateToNextScreen({ success: true });
+        } else {
+          return void navigateToNextScreen({ failure: true });
+        }
+      }
+
+      void navigateToNextScreen({ sendOtpEmail: true });
     } catch (error) {
       console.log(error);
+      void navigateToNextScreen({ failure: true });
+    }
+  };
+
+  const initiateAuthenticationWithEmailOtp = () => {
+    try {
+      initiateLogin(username);
+      void navigateToNextScreen({ sendOtpEmail: true });
+    } catch (error) {
+      console.log(error);
+      void navigateToNextScreen({ failure: true });
     }
   };
 
   return (
-    <>
-      <h1>Welcome back!</h1>
-      <p>Don’t have an account yet? <a href=''>Create account</a></p>
-      <form onSubmit={initiateAuthentication}>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <input type="submit" value="Submit"/>
-      </form>
-    </>
+    <form onSubmit={initiateAuthentication}>
+      <label htmlFor="username">Username:</label>
+      <input
+        type="text"
+        value={username}
+        autoComplete="username webauthn"
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input type="submit" value="Submit" />
+      <button onClick={initiateAuthenticationWithEmailOtp}>
+        Login with Email OTP
+      </button>
+    </form>
   );
 }

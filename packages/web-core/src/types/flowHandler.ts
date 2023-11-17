@@ -48,6 +48,7 @@ export interface IPasskeyBaseScreen extends StepFunctionParams {
   showBenefits?: boolean;
   maybeLater?: boolean;
   isUserAuthenticated?: boolean;
+  userHasPasskey?: boolean;
 }
 
 export type ISignupPasskeyErrorScreen = Pick<
@@ -67,4 +68,24 @@ export type ISignupPasskeyAppendScreen = Pick<
 export type ISignupPasskeyCreateScreen = Pick<
   IPasskeyBaseScreen,
   "success" | "failure" | "sendOtpEmail" | "showBenefits"
+>;
+
+export type ILoginInitScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "sendOtpEmail"
+>;
+
+export type ILoginPasskeyAppendScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "maybeLater"
+>;
+
+export type ILoginPasskeyErrorScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "cancel" | "sendOtpEmail" | "isUserAuthenticated"
+>;
+
+export type ILoginEmailOtpScreen = Pick<
+  IPasskeyBaseScreen,
+  "success" | "failure" | "userHasPasskey"
 >;

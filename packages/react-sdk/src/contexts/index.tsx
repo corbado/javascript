@@ -1,20 +1,17 @@
-import type { IFlowHandlerConfig } from "@corbado/web-core";
-import { LoginFlowNames, SignUpFlowNames } from "@corbado/web-core";
-import { defaultTimeout } from "@corbado/web-core";
+import {
+  defaultTimeout,
+  type ICorbadoAppParams,
+  LoginFlowNames,
+  SignUpFlowNames,
+} from "@corbado/web-core";
 import type { FC, PropsWithChildren } from "react";
 import React from "react";
 
 import { AppProvider } from "./CorbadoAppContext";
 
-export interface ICorbadoContextParams extends Partial<IFlowHandlerConfig> {
-  projectId: string;
-  apiTimeout?: number;
-  defaultToLogin?: boolean;
-  signupFlowName?: SignUpFlowNames;
-  loginFlowName?: LoginFlowNames;
-}
+export type ICorbadoContextParams = PropsWithChildren<ICorbadoAppParams>;
 
-export const CorbadoProvider: FC<PropsWithChildren<ICorbadoContextParams>> = ({
+export const CorbadoProvider: FC<ICorbadoContextParams> = ({
   projectId,
   apiTimeout = defaultTimeout,
   defaultToLogin = false,

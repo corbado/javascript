@@ -1,117 +1,78 @@
 import type {
-  FlowNames,
-  IFlowHandlerConfig,
-  IProjectConfig,
-  LoginFlowNames,
-  ScreenNames,
-  SignUpFlowNames,
-} from "@corbado/web-core";
-import {
-  ApiService,
   AuthService,
-  CommonScreens,
-  defaultTimeout,
   FlowHandlerService,
+  ICorbadoAppParams,
+  IProjectConfig,
   ProjectService,
 } from "@corbado/web-core";
+import { CorbadoApp } from "@corbado/web-core";
 import React, {
   createContext,
   type FC,
   type PropsWithChildren,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
 export interface IAppContext {
-  projectConfig: IProjectConfig | null;
-  authService: AuthService;
+  getProjectConfig: () => IProjectConfig | null;
+  authService: AuthService | null;
   flowHandlerService: FlowHandlerService | null;
-  currentScreenName: ScreenNames;
-  currentFlowName: FlowNames;
-  setCurrentScreenName: React.Dispatch<React.SetStateAction<ScreenNames>>;
 }
 
-export interface IAppProviderParams extends IFlowHandlerConfig {
-  projectId: string;
-  apiTimeout?: number;
-  defaultToLogin: boolean;
-  signupFlowName: SignUpFlowNames;
-  loginFlowName: LoginFlowNames;
-}
+export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
 export const AppContext = createContext<IAppContext | null>(null);
 
-export const AppProvider: FC<PropsWithChildren<IAppProviderParams>> = ({
-  projectId,
-  apiTimeout = defaultTimeout,
-  defaultToLogin,
-  signupFlowName,
-  loginFlowName,
-  passkeyAppend,
-  retryPasskeyOnError,
-  compulsoryEmailVerification,
-  shouldRedirect,
-  children,
-}) => {
-  //Initializing API Service
-  const apiServiceRef = useRef(new ApiService(projectId, apiTimeout));
+export const AppProvider: FC<IAppProviderParams> = React.memo(
+  ({ children, ...corbadoParams }) => {
+    //Initializing Corbado Application
+    const [corbadoApp, setCorbadoApp] = useState<CorbadoApp | null>(null);
+    const [projectService, setProjectService] = useState<ProjectService | null>(
+      null
+    );
+    const [flowHandlerService, setFlowHandlerService] =
+      useState<FlowHandlerService | null>(null);
+    const [authService, setAuthService] = useState<AuthService | null>(null);
 
-  //Initializing Project Service
-  const projectServiceRef = useRef(new ProjectService(apiServiceRef.current));
-  const [projectConfig, setProjectConfig] = useState<IProjectConfig | null>(
-    null
-  );
+    useEffect(() => {
+      setCorbadoApp(new CorbadoApp(corbadoParams));
 
-  //Initializing Flow Handler Service
-  const [flowHandlerService, setFlowHandlerService] =
-    useState<FlowHandlerService | null>(null);
-  const [currentScreenName, setCurrentScreenName] = useState<ScreenNames>(
-    CommonScreens.Start
-  );
-  const currentFlowName = useRef<FlowNames>(
-    defaultToLogin ? loginFlowName : signupFlowName
-  );
+      return () => {
+        console.log("Destroying Corbado App - useEffect");
+        corbadoApp?.destroy();
+      };
+    }, []);
 
-  //Initializing Auth Service
-  const authServiceRef = useRef(new AuthService(apiServiceRef.current));
+    useEffect(() => {
+      if (!corbadoApp) {
+        return;
+      }
 
-  useEffect(() => {
-    projectServiceRef.current
-      .getProjectConfig()
-      .then((config) => {
-        setProjectConfig(config);
+      setProjectService(corbadoApp.projectService);
+      setFlowHandlerService(corbadoApp.flowHandlerService);
+      setAuthService(corbadoApp.authService);
 
-        const newFlowHandlerService = new FlowHandlerService(
-          currentFlowName.current,
-          config,
-          {
-            passkeyAppend,
-            retryPasskeyOnError,
-            compulsoryEmailVerification,
-            shouldRedirect,
-          }
-        );
-        setFlowHandlerService(newFlowHandlerService);
-        setCurrentScreenName(newFlowHandlerService.currentScreenName);
-      })
-      .catch((error) => {
-        console.error(error);
+      corbadoApp.onInit((app) => {
+        setFlowHandlerService(app.flowHandlerService);
       });
-  }, []);
+    }, [corbadoApp]);
 
-  return (
-    <AppContext.Provider
-      value={{
-        projectConfig,
-        flowHandlerService,
-        currentFlowName: currentFlowName.current,
-        currentScreenName,
-        setCurrentScreenName,
-        authService: authServiceRef.current,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
-  );
-};
+    function getProjectConfig() {
+      return projectService?.projConfig ?? null;
+    }
+
+    return (
+      <AppContext.Provider
+        value={{
+          getProjectConfig,
+          flowHandlerService,
+          authService,
+        }}
+      >
+        {children}
+      </AppContext.Provider>
+    );
+  },
+  (prevProps, nextProps) => prevProps.projectId === nextProps.projectId
+);

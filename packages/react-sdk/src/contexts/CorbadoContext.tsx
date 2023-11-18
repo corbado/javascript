@@ -11,6 +11,8 @@ export interface CorbadoContextInterface {
     initLoginWithEmailOTP: (email: string) => Promise<void>
     completeLoginWithEmailOTP: (code: string) => Promise<void>
     logout: () => Promise<void>
+    initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>
+    completeSignUpWithEmailOTP: (code: string) => Promise<void>
 }
 
 const missingImplementation = (): never => {
@@ -25,6 +27,8 @@ export const initialContext = {
     initLoginWithEmailOTP: missingImplementation,
     completeLoginWithEmailOTP: missingImplementation,
     logout: missingImplementation,
+    initSignUpWithEmailOTP: missingImplementation,
+    completeSignUpWithEmailOTP: missingImplementation
 };
 
 const CorbadoContext = createContext<CorbadoContextInterface>(initialContext)

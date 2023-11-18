@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@corbado/react-sdk": {
-      "signature": "088895106f03860f7c39b8d735dcc616",
+      "signature": "a2c7d8ef53ea50caf800e3fb587f7caa",
       "file": true,
       "replaced": "^0.1.4"
     }

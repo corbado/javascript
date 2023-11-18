@@ -42,12 +42,20 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
         return corbadoApp.authService.initLoginWithEmailOTP(email)
     }, [corbadoApp])
 
-    const completeLoginWithEmailOTP = useCallback((email: string) => {
-        return corbadoApp.authService.completeLoginWithEmailOTP(email)
+    const completeLoginWithEmailOTP = useCallback((code: string) => {
+        return corbadoApp.authService.completeLoginWithEmailOTP(code)
     }, [corbadoApp])
 
     const logout = useCallback(() => {
         return corbadoApp.authService.logout()
+    }, [corbadoApp])
+
+    const initSignUpWithEmailOTP = useCallback((email: string, username: string) => {
+        return corbadoApp.authService.initSignUpWithEmailOTP(email, username)
+    }, [corbadoApp])
+
+    const completeSignUpWithEmailOTP = useCallback((code: string) => {
+        return corbadoApp.authService.completeSignupWithEmailOTP(code)
     }, [corbadoApp])
 
     const contextValue = useMemo<CorbadoContextInterface>(() => {
@@ -58,7 +66,9 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
             loginWithPasskey,
             initLoginWithEmailOTP,
             completeLoginWithEmailOTP,
-            logout
+            logout,
+            initSignUpWithEmailOTP,
+            completeSignUpWithEmailOTP
         }
     }, [
         shortSession,
@@ -67,7 +77,9 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
         loginWithPasskey,
         initLoginWithEmailOTP,
         completeLoginWithEmailOTP,
-        logout
+        logout,
+        initSignUpWithEmailOTP,
+        completeSignUpWithEmailOTP
     ])
 
     return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>

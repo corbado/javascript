@@ -7,7 +7,7 @@ import {useCorbado} from "@corbado/react-sdk";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
-    const {loginWithPasskey} = useCorbado();
+    const {loginWithPasskey, initLoginWithEmailOTP} = useCorbado();
 
     const submit = async () => {
         try {
@@ -15,6 +15,8 @@ const LoginPage = () => {
             navigate('/home');
         } catch (e) {
             console.log(e);
+            await initLoginWithEmailOTP(email);
+            navigate('/completeEmailOTP')
         }
     }
 

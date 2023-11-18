@@ -3,6 +3,7 @@ import InitiateSignupPage from "./pages/InitiateSignupPage";
 import SelectSignupMethodPage from "./pages/SelectSignupMethodPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import CompleteEmailOTP from "./pages/CompleteEmailOTP.tsx";
 
 const RouteProvider = () => {
     const routes = [
@@ -25,6 +26,10 @@ const RouteProvider = () => {
         {
             path: '/home',
             element: <HomePage/>
+        },
+        {
+            path: '/completeEmailOTP',
+            element: <CompleteEmailOTP/>
         }
     ];
 

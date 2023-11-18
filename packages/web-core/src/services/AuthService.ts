@@ -117,12 +117,6 @@ export class AuthService {
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
   }
 
-  /**
-   * Method to verify the OTP.
-   * It also sets the session token in the ApiService instance.
-   * This can be used to verify both registration and login OTPs.
-   * @param otp The OTP to be verified
-   */
   async completeLoginWithEmailOTP(otp: string) {
     if (this.#emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
@@ -134,8 +128,19 @@ export class AuthService {
     });
 
     this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
+  }
 
-    this.#isEmailVerified = true;
+  async completeSignupWithEmailOTP(otp: string) {
+    if (this.#emailCodeIdRef === "") {
+      throw new Error("Email code id is empty");
+    }
+
+    const verifyResp = await this.#apiService.usersApi.emailCodeConfirm({
+      code: otp,
+      emailCodeID: this.#emailCodeIdRef,
+    });
+
+    this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
   }
 
   /**

@@ -86,16 +86,19 @@ export class AuthService {
   /**
    * Method to execute all the callbacks registered for authentication success.
    */
-  #executeOnAuthenticationSuccessCallbacks = (sessionResponse: {
-    shortSession?: ShortSession;
-    longSession?: string;
-    redirectURL: string;
-  }) => {
+  #executeOnAuthenticationSuccessCallbacks = (
+    sessionResponse: {
+      shortSession?: ShortSession;
+      longSession?: string;
+      redirectURL: string;
+    },
+    username = ""
+  ) => {
     const session: ISessionResponse = {
       shortSession: sessionResponse.shortSession,
       longSession: sessionResponse.longSession ?? "",
       redirectUrl: sessionResponse.redirectURL,
-      user: this.#email ?? this.#username ?? "",
+      user: username || (this.#email ?? this.#username ?? ""),
     };
 
     this.#isAuthenticated = true;
@@ -241,7 +244,10 @@ export class AuthService {
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
-    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
+    this.#executeOnAuthenticationSuccessCallbacks(
+      respFinish.data.data,
+      respFinish.data.data.username
+    );
 
     const successful = respFinish.status === 200;
 

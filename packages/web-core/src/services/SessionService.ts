@@ -3,12 +3,12 @@ import type {
   ISessionResponse,
   IShortSession,
   IShortSessionStore,
+  IUser,
 } from "../types";
 import type { ApiService } from "./ApiService";
 
 const shortSessionKey = "cbo_short_session";
 const longSessionKey = "cbo_long_session";
-const userKey = "cbo_user";
 
 /**
  * The SessionService manages user sessions for the Corbado Application, handling short-term and long-term session tokens, and the username.
@@ -18,14 +18,13 @@ const userKey = "cbo_user";
 export class SessionService {
   #shortSession: IShortSessionStore | null = null;
   #longSession = "";
-  #user = "";
   #apiService: ApiService;
+  #onSessionSetCallbacks: Array<(session: ISessionResponse) => void> = [];
 
   constructor(apiService: ApiService) {
     this.#apiService = apiService;
     this.#shortSession = SessionService.getShortTermSessionToken();
     this.#longSession = SessionService.getLongSessionToken();
-    this.#user = SessionService.getUser();
 
     this.#apiService.setInstanceWithToken(this.#shortSession?.session ?? "");
   }
@@ -34,7 +33,7 @@ export class SessionService {
    * Getter method for retrieving the short term session token.
    * @returns The short term session token or null if it's not set.
    */
-  get shortSession() {
+  public get shortSession() {
     return this.#shortSession;
   }
 
@@ -42,7 +41,7 @@ export class SessionService {
    * Getter method for retrieving the long term session token.
    * @returns The long term session token or null if it's not set.
    */
-  get longSession() {
+  public get longSession() {
     return this.#longSession;
   }
 
@@ -50,8 +49,28 @@ export class SessionService {
    * Getter method for retrieving the username.
    * @returns The username or null if it's not set.
    */
-  get user() {
-    return this.#user;
+  public get user(): IUser | null {
+    if (!this.#shortSession?.session) {
+      return null;
+    }
+
+    const sessionParts = this.#shortSession.session.split(".");
+    const sessionPayload = JSON.parse(atob(sessionParts[1]));
+    const user: IUser = {
+      email: sessionPayload.email,
+      name: sessionPayload.name,
+      orig: sessionPayload.orig,
+      sub: sessionPayload.sub,
+    };
+
+    return user;
+  }
+
+  /**
+   * Method to add a callback function to be called when the session is set.
+   */
+  onSessionSet(cb: (session: ISessionResponse) => void) {
+    this.#onSessionSetCallbacks.push(cb);
   }
 
   /**
@@ -111,30 +130,6 @@ export class SessionService {
   }
 
   /**
-   * Sets the username in localStorage.
-   * @param user The username to be set.
-   */
-  #setUser(username: string): void {
-    localStorage.setItem(userKey, username);
-    this.#user = username;
-  }
-
-  /**
-   * Deletes the username from localStorage.
-   */
-  #deleteUser(): void {
-    localStorage.removeItem(userKey);
-    this.#user = "";
-  }
-
-  /**
-   * Gets the username from localStorage.
-   */
-  static getUser() {
-    return (localStorage.getItem(userKey) as string) ?? "";
-  }
-
-  /**
    * Method to get the full user object from the Corbado API.
    */
   async getFullUser() {
@@ -160,7 +155,8 @@ export class SessionService {
     }
 
     this.#setLongSessionToken(sessionResponse.longSession ?? "");
-    this.#setUser(sessionResponse.user ?? "");
+
+    this.#onSessionSetCallbacks.forEach((cb) => cb(sessionResponse));
   }
 
   /**
@@ -170,6 +166,5 @@ export class SessionService {
   deleteSession() {
     this.#deleteShortTermSessionToken();
     this.#deleteLongSessionToken();
-    this.#deleteUser();
   }
 }

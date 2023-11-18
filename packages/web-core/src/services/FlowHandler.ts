@@ -72,6 +72,10 @@ export class FlowHandlerService {
    * Method to redirect to a specified URL.
    */
   redirect() {
+    if (!this.#flowHandlerConfig.shouldRedirect) {
+      return;
+    }
+
     window.location.href = this.#redirectUrl;
   }
 

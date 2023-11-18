@@ -11,6 +11,12 @@ export const useCorbadoFlowHandler = () => {
   );
   const [currentFlowName, setCurrentFlowName] = useState<FlowNames | null>();
 
+  if (flowHandlerService === undefined) {
+    throw new Error(
+      "useCorbadoFlowHandler must be used within an CorbadoProvider"
+    );
+  }
+
   useEffect(() => {
     if (!flowHandlerService) {
       return;
@@ -25,17 +31,7 @@ export const useCorbadoFlowHandler = () => {
     });
   }, [flowHandlerService]);
 
-  function checkFlowHandlerHealth() {
-    if (flowHandlerService === undefined) {
-      throw new Error(
-        "useCorbadoFlowHandler must be used within an CorbadoProvider"
-      );
-    }
-  }
-
   const navigateToNextScreen = async (userInput: StepFunctionParams = {}) => {
-    checkFlowHandlerHealth();
-
     const nextScreen =
       // eslint-disable-next-line @typescript-eslint/await-thenable
       (await flowHandlerService?.navigateToNextScreen(userInput)) ??
@@ -44,20 +40,15 @@ export const useCorbadoFlowHandler = () => {
   };
 
   const navigateBack = () => {
-    checkFlowHandlerHealth();
-
     const prevScreen =
       flowHandlerService?.navigateBack() ?? CommonScreens.Start;
     setCurrentScreenName && setCurrentScreenName(prevScreen);
   };
 
   function changeFlow(flowName: FlowNames) {
-    checkFlowHandlerHealth();
-
     return flowHandlerService?.changeFlow(flowName);
   }
 
-  checkFlowHandlerHealth();
   return {
     currentFlowName,
     currentScreenName,

@@ -1,15 +1,14 @@
 import {
   defaultTimeout,
-  type ICorbadoAppParams,
   LoginFlowNames,
   SignUpFlowNames,
 } from "@corbado/web-core";
 import type { FC, PropsWithChildren } from "react";
 import React from "react";
 
-import { AppProvider } from "./CorbadoAppContext";
+import { AppProvider, type IAppProviderParams } from "./CorbadoAppContext";
 
-export type ICorbadoContextParams = PropsWithChildren<ICorbadoAppParams>;
+export type ICorbadoContextParams = PropsWithChildren<IAppProviderParams>;
 
 export const CorbadoProvider: FC<ICorbadoContextParams> = ({
   projectId,
@@ -20,7 +19,7 @@ export const CorbadoProvider: FC<ICorbadoContextParams> = ({
   passkeyAppend = false,
   retryPasskeyOnError = false,
   compulsoryEmailVerification = false,
-  shouldRedirect = true,
+  shouldRedirect = false,
   children,
 }) => {
   return (

@@ -41,9 +41,9 @@ export class CorbadoApp {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
-    this.#authService = new AuthService(this.#apiService);
-    this.#projectService = new ProjectService(this.#apiService);
     this.#sessionService = new SessionService(this.#apiService);
+    this.#authService = new AuthService(this.#apiService, this.#sessionService);
+    this.#projectService = new ProjectService(this.#apiService);
 
     // void this.init(corbadoParams);
   }

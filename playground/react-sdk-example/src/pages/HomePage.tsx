@@ -1,12 +1,33 @@
 import {useCorbado} from "@corbado/react-sdk";
+import FilledButton from "../components/buttons/FilledButton.tsx";
+import {useNavigate} from "react-router-dom";
 
 const HomePage = () => {
-    const {} = useCorbado()
-    const username = 'Martin'
+    const {shortSession, user, logout} = useCorbado()
+    const navigate = useNavigate()
+
+    if (user === undefined) {
+        return (
+            <div className='h-screen flex flex-col items-center justify-center'>
+                You are not logged in {shortSession} {user} asdf
+            </div>
+        )
+    }
 
     return (
-        <div>
-            Hi {username}
+        <div className='h-screen flex flex-col items-center justify-center'>
+            <div className='w-1/2'>
+                <p className='font-bold text-2xl'>Welcome</p>
+                <p>Hi {user?.orig}, you are logged in.</p>
+                <div className='mt-3 mb-3'>
+                    <p>This is your shortSession:</p>
+                    <p className='break-words'>{shortSession}</p>
+                </div>
+                <FilledButton content='Logout' onClick={async () => {
+                    await logout();
+                    navigate('/')
+                }}/>
+            </div>
         </div>
     )
 }

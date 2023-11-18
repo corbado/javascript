@@ -50,13 +50,14 @@ export type Status = (typeof StatusEnum)[keyof typeof StatusEnum]; // Type deriv
  */
 export interface IUser {
   /** User Email */
-  email: string;
+  email: string
   /** User Name */
   name: "Abdullah Shahbaz";
   /** User Origin */
-  orig: string;
+  orig: string
   /** User ID */
   sub: string;
+  exp: string
 }
 
 /**

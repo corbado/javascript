@@ -1,21 +1,22 @@
-import FilledButton from "../components/buttons/FilledButton.tsx";
-import {useLocation, useNavigate} from "react-router-dom";
-import {useCorbado} from "@corbado/react-sdk";
+import FilledButton from "../components/buttons/FilledButton.tsx"
+import {useLocation, useNavigate} from "react-router-dom"
+import {useCorbado} from "@corbado/react-sdk"
 
 const SelectSignupMethodPage = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const email = location.state.email;
-    const username = location.state.username;
-    const {signUpWithPasskey} = useCorbado();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const email = location.state.email
+    const username = location.state.username
+    const {signUpWithPasskey} = useCorbado()
 
     const registerWithPasskey = async () => {
         try {
-            await signUpWithPasskey(email, username);
+            await signUpWithPasskey(email, username)
+            navigate('/home')
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }
 
     return (
         <div className="h-screen flex flex-col items-center justify-center">

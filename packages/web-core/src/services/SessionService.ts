@@ -1,11 +1,5 @@
-import type {
-  IFullUser,
-  ISessionResponse,
-  IShortSession,
-  IShortSessionStore,
-  IUser,
-} from "../types";
-import type { ApiService } from "./ApiService";
+import type {IFullUser, ISessionResponse, IShortSession, IShortSessionStore, IUser,} from "../types";
+import type {ApiService} from "./ApiService";
 
 const shortSessionKey = "cbo_short_session";
 const longSessionKey = "cbo_long_session";
@@ -49,21 +43,23 @@ export class SessionService {
    * Getter method for retrieving the username.
    * @returns The username or null if it's not set.
    */
-  public get user(): IUser | null {
+  public getUser(): IUser | undefined {
+    console.log(this.#shortSession)
     if (!this.#shortSession?.session) {
-      return null;
+      return;
     }
 
     const sessionParts = this.#shortSession.session.split(".");
+    console.log(sessionParts)
     const sessionPayload = JSON.parse(atob(sessionParts[1]));
-    const user: IUser = {
+
+    return {
       email: sessionPayload.email,
       name: sessionPayload.name,
       orig: sessionPayload.orig,
       sub: sessionPayload.sub,
+      exp: sessionPayload.exp,
     };
-
-    return user;
   }
 
   /**
@@ -107,7 +103,7 @@ export class SessionService {
       expires: session.expires ?? "",
     };
     localStorage.setItem(shortSessionKey, JSON.stringify(store));
-    this.#shortSession = session;
+    this.#shortSession = store;
   }
 
   /**
@@ -163,7 +159,7 @@ export class SessionService {
    * Method to delete Session.
    * It deletes the short term session token, long term session token, and username for the Corbado Application.
    */
-  deleteSession() {
+  clear() {
     this.#deleteShortTermSessionToken();
     this.#deleteLongSessionToken();
   }

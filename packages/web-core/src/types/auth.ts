@@ -9,3 +9,8 @@ export interface IAuthResponse {
   /** Unique identifier for the email link used in the authentication. */
   emailLinkID: string;
 }
+
+export enum AuthState {
+  LoggedOut,
+  LoggedIn
+}

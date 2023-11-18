@@ -1,8 +1,11 @@
-import { create, get } from "@github/webauthn-json";
+import {create, get} from "@github/webauthn-json";
+import {Subject} from 'rxjs';
 
-import type { AuthMethod, ShortSession } from "../api";
-import type { ISessionResponse } from "../types";
-import type { ApiService } from "./ApiService";
+import type {AuthMethod, ShortSession} from "../api";
+import type {ISessionResponse, IUser} from "../types";
+import {AuthState} from "../types";
+import type {ApiService} from "./ApiService";
+import {SessionService} from "./SessionService";
 
 /**
  * AuthService is a class that handles authentication-related operations.
@@ -10,6 +13,8 @@ import type { ApiService } from "./ApiService";
  */
 export class AuthService {
   #apiService: ApiService;
+  #sessionService: SessionService;
+
   #isAuthenticated = false;
   #isEmailVerified = false;
   #isPasskeySet = false;
@@ -25,11 +30,28 @@ export class AuthService {
     (sessionResponse: ISessionResponse) => void
   > = [];
 
+  #userChanges: Subject<IUser|undefined> = new Subject();
+  #shortSessionChanges: Subject<string|undefined> = new Subject();
+  #authStateChanges: Subject<AuthState> = new Subject();
+
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService) {
-    this.#apiService = apiService;
+  constructor(apiService: ApiService, sessionService: SessionService) {
+    this.#apiService = apiService
+    this.#sessionService = sessionService
+  }
+
+  get userChanges() {
+    return this.#userChanges.asObservable();
+  }
+
+  get shortSessionChanges() {
+    return this.#shortSessionChanges.asObservable();
+  }
+
+  get authStateChanges() {
+    return this.#authStateChanges.asObservable();
   }
 
   get isAuthenticated() {
@@ -84,63 +106,15 @@ export class AuthService {
   }
 
   /**
-   * Method to execute all the callbacks registered for authentication success.
-   */
-  #executeOnAuthenticationSuccessCallbacks = (
-    sessionResponse: {
-      shortSession?: ShortSession;
-      longSession?: string;
-      redirectURL: string;
-    },
-    username = ""
-  ) => {
-    const session: ISessionResponse = {
-      shortSession: sessionResponse.shortSession,
-      longSession: sessionResponse.longSession ?? "",
-      redirectUrl: sessionResponse.redirectURL,
-      user: username || (this.#email ?? this.#username ?? ""),
-    };
-
-    this.#isAuthenticated = true;
-
-    this.#onAuthenticationSuccessCallbacks.forEach((cb) => cb(session));
-  };
-
-  /**
-   * Method to initiate the signup process.
-   */
-  initiateSignup(email: string, username = "") {
-    this.#email = email;
-    this.#username = username;
-  }
-
-  /**
-   * Method to initiate the login process.
-   * This method fetches the authentication methods for the user as well based on the given email/username.
-   */
-  async initiateLogin(email: string) {
-    this.#email = email;
-
-    const resp = await this.#apiService.usersApi.authMethodsList({
-      username: this.#email,
-    });
-
-    this.#authMethod = resp.data.data.selectedMethods;
-    this.#possibleAuthMethods = resp.data.data.possibleMethods;
-  }
-
-  /**
    * Method to start registration of a user by sending an email with an OTP.
    */
-  async sendEmailWithOTP() {
+  async initSignUpWithEmailOTP(email: string, username: string) {
     const resp = await this.#apiService.usersApi.emailCodeRegisterStart({
-      email: this.#email,
-      username: this.#username,
+      email: email,
+      username: username,
     });
 
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
-
-    return resp.status === 200;
   }
 
   /**
@@ -266,6 +240,14 @@ export class AuthService {
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
   }
 
+  async logout() {
+    // TODO: should we call backend to destroy the session here?
+
+    this.#sessionService.clear();
+    this.#shortSessionChanges.next(undefined);
+    this.#authStateChanges.next(AuthState.LoggedOut);
+  }
+
   /**
    * Method to destroy the AuthService.
    */
@@ -280,4 +262,32 @@ export class AuthService {
       console.error(e);
     }
   }
+
+  /**
+   * Method to execute all the callbacks registered for authentication success.
+   */
+  #executeOnAuthenticationSuccessCallbacks = (
+      sessionResponse: {
+        shortSession?: ShortSession;
+        longSession?: string;
+        redirectURL: string;
+      },
+      username = ""
+  ) => {
+    const session: ISessionResponse = {
+      shortSession: sessionResponse.shortSession,
+      longSession: sessionResponse.longSession ?? "",
+      redirectUrl: sessionResponse.redirectURL,
+      user: username || (this.#email ?? this.#username ?? ""),
+    };
+
+    this.#sessionService.setSession(session);
+    const user = this.#sessionService.getUser();
+
+    if (user && sessionResponse.shortSession) {
+      this.#shortSessionChanges.next(sessionResponse.shortSession.value);
+      this.#authStateChanges.next(AuthState.LoggedIn);
+      this.#userChanges.next(user);
+    }
+  };
 }

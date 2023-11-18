@@ -21,7 +21,9 @@ const LoginPage = () => {
     return (
         <div className="h-screen flex flex-col items-center justify-center">
             <p className='font-bold text-2xl pb-2'>Welcome back!</p>
-            <p className='font-bold text-lg pb-2'>Don’t have an account yet? <a href="">Create account</a></p>
+            <p className='font-bold text-lg pb-2'>
+                Don’t have an account yet? <span className='cursor-pointer' onClick={() => navigate('/signUpInit')}>Create account</span>
+            </p>
             <div className='w-1/2'>
                 <div className="grid gap-2">
                     <RoundedTextInput placeholder='Email address' onChange={setEmail}/>

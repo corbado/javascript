@@ -2,6 +2,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import InitiateSignupPage from "./pages/InitiateSignupPage";
 import SelectSignupMethodPage from "./pages/SelectSignupMethodPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const RouteProvider = () => {
     const routes = [
@@ -16,6 +17,10 @@ const RouteProvider = () => {
         {
             path: '/signUpSelectMethod',
             element: <SelectSignupMethodPage />
+        },
+        {
+            path: '/login',
+            element: <LoginPage/>
         },
         {
             path: '/home',

@@ -4,8 +4,8 @@ import type {
   ICorbadoAppParams,
   IProjectConfig,
   ProjectService,
-  SessionService,
 } from "@corbado/web-core";
+import { SessionService } from "@corbado/web-core";
 import { CorbadoApp } from "@corbado/web-core";
 import React, {
   createContext,
@@ -16,10 +16,12 @@ import React, {
 } from "react";
 
 export interface IAppContext {
-  getProjectConfig: () => IProjectConfig | null;
+  projectId: string;
   authService: AuthService | null;
   flowHandlerService: FlowHandlerService | null;
   sessionService: SessionService | null;
+  getProjectConfig: () => IProjectConfig | null;
+  onSignOut: () => void;
 }
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
@@ -41,12 +43,12 @@ export const AppProvider: FC<IAppProviderParams> = React.memo(
     );
 
     useEffect(() => {
-      setCorbadoApp(new CorbadoApp(corbadoParams));
+      if (SessionService.isSessionActive()) {
+        //Session is active, not initializing Corbado App"
+        return;
+      }
 
-      return () => {
-        console.log("Destroying Corbado App - useEffect");
-        corbadoApp?.destroy();
-      };
+      setCorbadoApp(new CorbadoApp(corbadoParams));
     }, []);
 
     useEffect(() => {
@@ -62,19 +64,30 @@ export const AppProvider: FC<IAppProviderParams> = React.memo(
       corbadoApp.onInit((app) => {
         setFlowHandlerService(app.flowHandlerService);
       });
+
+      return () => {
+        console.log("Destroying Corbado App - useEffect");
+        corbadoApp?.destroy();
+      };
     }, [corbadoApp]);
 
     function getProjectConfig() {
       return projectService?.projConfig ?? null;
     }
 
+    function onSignOut() {
+      setCorbadoApp(new CorbadoApp(corbadoParams));
+    }
+
     return (
       <AppContext.Provider
         value={{
-          getProjectConfig,
+          projectId: corbadoParams.projectId,
           flowHandlerService,
           authService,
           sessionService,
+          getProjectConfig,
+          onSignOut,
         }}
       >
         {children}

@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 
-import type { ISessionResponse } from "..";
+import { type ISessionResponse, SessionService } from "..";
 import { AppContext } from "../contexts/CorbadoAppContext";
 
 export const useCorbadoSession = () => {
   const sessionService = useContext(AppContext)?.sessionService;
+  const onSignOut = useContext(AppContext)?.onSignOut;
+  const projectId = useContext(AppContext)?.projectId;
   const [session, setSession] = useState<ISessionResponse | null>(null);
   const [signedIn, setSignedIn] = useState<boolean>(false);
 
@@ -14,6 +16,9 @@ export const useCorbadoSession = () => {
 
   useEffect(() => {
     if (!sessionService) {
+      if (SessionService.isSessionActive()) {
+        setSignedIn(true);
+      }
       return;
     }
 
@@ -35,17 +40,31 @@ export const useCorbadoSession = () => {
   }
 
   function getUser() {
-    return sessionService?.user;
+    const shortSession = SessionService.getShortTermSessionToken();
+
+    if (!shortSession) {
+      return null;
+    }
+
+    return SessionService.getUserFromSession(shortSession);
   }
 
   function getFullUser() {
-    return sessionService?.getFullUser();
+    if (!projectId) {
+      throw new Error("ProjectId is not defined");
+    }
+
+    return SessionService.getFullUser(projectId);
   }
 
   function signOut() {
     sessionService?.deleteSession();
     setSignedIn(false);
     setSession(null);
+
+    if (onSignOut) {
+      onSignOut();
+    }
   }
 
   return {

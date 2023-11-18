@@ -5,7 +5,7 @@ import type {
   IShortSessionStore,
   IUser,
 } from "../types";
-import type { ApiService } from "./ApiService";
+import { ApiService } from "./ApiService";
 
 const shortSessionKey = "cbo_short_session";
 const longSessionKey = "cbo_long_session";
@@ -30,6 +30,79 @@ export class SessionService {
   }
 
   /**
+   * Method to check if the session is active.
+   * @returns A boolean indicating whether the session is active.
+   */
+  static isSessionActive() {
+    const shortSession = SessionService.getShortTermSessionToken();
+    const longSession = SessionService.getLongSessionToken();
+
+    const status =
+      shortSession?.session &&
+      Date.now() < new Date(shortSession.expires ?? "").getTime() &&
+      longSession;
+
+    if (!status) {
+      localStorage.removeItem(shortSessionKey);
+      localStorage.removeItem(longSessionKey);
+    }
+
+    return Boolean(status);
+  }
+
+  /**
+   * Gets the long term session token.
+   */
+  static getLongSessionToken() {
+    return (localStorage.getItem(longSessionKey) as string) ?? "";
+  }
+
+  /**
+   * Gets the short term session token.
+   */
+  static getShortTermSessionToken() {
+    const storedSessionStr = localStorage.getItem(shortSessionKey);
+
+    return storedSessionStr
+      ? (JSON.parse(storedSessionStr) as IShortSessionStore)
+      : null;
+  }
+
+  /**
+   * Method to get the user object from the short term session token.
+   * @param session The short term session token.
+   * @returns The user object.
+   */
+  static getUserFromSession(session: IShortSessionStore | null) {
+    if (!session?.session) {
+      return null;
+    }
+
+    const sessionParts = session.session.split(".");
+    const sessionPayload = JSON.parse(atob(sessionParts[1]));
+    const user: IUser = {
+      email: sessionPayload.email,
+      name: sessionPayload.name,
+      orig: sessionPayload.orig,
+      sub: sessionPayload.sub,
+    };
+
+    return user;
+  }
+
+  /**
+   * Method to get the full user object from the Corbado API.
+   */
+  static async getFullUser(projectId: string) {
+    const apiService = new ApiService(projectId);
+    const resp = await apiService.usersApi.currentUserGet();
+
+    const me = resp.data.data as IFullUser;
+
+    return me;
+  }
+
+  /**
    * Getter method for retrieving the short term session token.
    * @returns The short term session token or null if it's not set.
    */
@@ -46,24 +119,11 @@ export class SessionService {
   }
 
   /**
-   * Getter method for retrieving the username.
+   * Getter method for retrieving the user from short session.
    * @returns The username or null if it's not set.
    */
   public get user(): IUser | null {
-    if (!this.#shortSession?.session) {
-      return null;
-    }
-
-    const sessionParts = this.#shortSession.session.split(".");
-    const sessionPayload = JSON.parse(atob(sessionParts[1]));
-    const user: IUser = {
-      email: sessionPayload.email,
-      name: sessionPayload.name,
-      orig: sessionPayload.orig,
-      sub: sessionPayload.sub,
-    };
-
-    return user;
+    return SessionService.getUserFromSession(this.#shortSession);
   }
 
   /**
@@ -91,13 +151,6 @@ export class SessionService {
   }
 
   /**
-   * Gets the long term session token.
-   */
-  static getLongSessionToken() {
-    return (localStorage.getItem(longSessionKey) as string) ?? "";
-  }
-
-  /**
    * Sets a short term session token.
    * @param session The session token to be set.
    */
@@ -116,28 +169,6 @@ export class SessionService {
   #deleteShortTermSessionToken(): void {
     localStorage.removeItem(shortSessionKey);
     this.#shortSession = null;
-  }
-
-  /**
-   * Gets the short term session token.
-   */
-  static getShortTermSessionToken() {
-    const storedSessionStr = localStorage.getItem(shortSessionKey);
-
-    return storedSessionStr
-      ? (JSON.parse(storedSessionStr) as IShortSessionStore)
-      : null;
-  }
-
-  /**
-   * Method to get the full user object from the Corbado API.
-   */
-  async getFullUser() {
-    const resp = await this.#apiService.usersApi.currentUserGet();
-
-    const me = resp.data.data as IFullUser;
-
-    return me;
   }
 
   /** Method to set Session

@@ -36,7 +36,6 @@ export function AuthenticationFlows() {
   return (
     currentFlow ?? (
       <div>
-        <h1>Corbado React SDK Playground</h1>
         <h3>Please select the flow you want to test:</h3>
         <button onClick={() => handleFlowChange("login")}>
           Passkey Login with Email OTP Fallback

@@ -15,7 +15,7 @@ import { SessionService } from "./SessionService";
 export type { FlowHandlerService } from "./FlowHandler";
 export type { ProjectService } from "./ProjectService";
 export type { AuthService } from "./AuthService";
-export type { SessionService } from "./SessionService";
+export { SessionService } from "./SessionService";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;

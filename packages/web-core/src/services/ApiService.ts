@@ -9,7 +9,8 @@ import {
   UsersApi,
 } from "../api";
 
-const packageVersion = process.env.npm_package_version ?? "0";
+// TODO: does this work also without npm start? (e.g. vite js)
+const packageVersion = "0";
 
 /**
  * ApiService class encapsulates API handling for the Corbado Application.

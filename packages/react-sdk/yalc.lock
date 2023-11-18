@@ -2,9 +2,9 @@
   "version": "v1",
   "packages": {
     "@corbado/web-core": {
-      "signature": "841a8fd91f92047c4614bb1fdec2e217",
+      "signature": "5f21616c277a1a9bdf9bd4abc3c8e858",
       "file": true,
-      "replaced": "^0.1.0"
+      "replaced": "^0.1.4"
     }
   }
 }

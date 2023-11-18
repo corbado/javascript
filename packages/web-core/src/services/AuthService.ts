@@ -149,7 +149,7 @@ export class AuthService {
    * This can be used to verify both registration and login OTPs.
    * @param otp The OTP to be verified
    */
-  async verifyOTP(otp: string) {
+  async completeLoginWithEmailOTP(otp: string) {
     if (this.#emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
     }
@@ -162,18 +162,15 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
 
     this.#isEmailVerified = true;
-
-    return verifyResp.status === 200;
   }
 
   /**
-   * Method to register a passkey.
-   * This is used in passkey creation flow.
+   * Creates a new user and adds a passkey for him.
    */
-  async passkeyRegister() {
+  async signUpWithPasskey(email: string, username: string) {
     const respStart = await this.#apiService.usersApi.passKeyRegisterStart({
-      username: this.#email,
-      fullName: this.#username,
+      username: email,
+      fullName: username,
     });
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await create(challenge);
@@ -184,15 +181,13 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
 
     this.#isPasskeySet = true;
-
-    return respFinish.status === 200;
   }
 
   /**
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
-  async passkeyAppend() {
+  async appendPasskey() {
     const respStart = await this.#apiService.usersApi.passKeyAppendStart({});
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await create(challenge);
@@ -208,19 +203,19 @@ export class AuthService {
   /**
    * Method to login with a passkey.
    */
-  async passkeyLogin() {
+  async loginWithPasskey(email: string) {
     const respStart = await this.#apiService.usersApi.passKeyLoginStart({
-      username: this.#email,
+      username: email,
     });
+
     const challenge = JSON.parse(respStart.data.data.challenge);
     const signedChallenge = await get(challenge);
+
     const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
-
-    return respFinish.status === 200;
   }
 
   /**
@@ -263,14 +258,12 @@ export class AuthService {
   /**
    * Method to login with an email OTP.
    */
-  async emailOtpLogin() {
+  async initLoginWithEmailOTP(email: string) {
     const resp = await this.#apiService.usersApi.emailCodeLoginStart({
-      username: this.#email,
+      username: email,
     });
 
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
-
-    return resp.status === 200;
   }
 
   /**

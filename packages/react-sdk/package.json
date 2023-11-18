@@ -18,7 +18,10 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
+    "publish:local": "npx yalc push --replace  --sig",
+    "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {

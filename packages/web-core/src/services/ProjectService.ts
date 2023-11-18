@@ -31,6 +31,7 @@ export class ProjectService {
    * @returns A Promise that resolves to the fetched project configuration.
    */
   async getProjectConfig() {
+    console.log("getProjectConfig")
     const resp = await this.#apiService.projectsApi.projectConfig();
     const config = resp.data.data;
     this.#projConfig = config;

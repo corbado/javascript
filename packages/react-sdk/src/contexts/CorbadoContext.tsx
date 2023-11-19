@@ -1,5 +1,6 @@
 import type {ICorbadoAppParams, IUser,} from "@corbado/web-core";
 import {createContext, type PropsWithChildren,} from "react";
+import {LoginHandler} from "@corbado/web-core";
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
@@ -13,6 +14,7 @@ export interface CorbadoContextInterface {
     logout: () => Promise<void>
     initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>
     completeSignUpWithEmailOTP: (code: string) => Promise<void>
+    initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>
 }
 
 const missingImplementation = (): never => {
@@ -28,7 +30,8 @@ export const initialContext = {
     completeLoginWithEmailOTP: missingImplementation,
     logout: missingImplementation,
     initSignUpWithEmailOTP: missingImplementation,
-    completeSignUpWithEmailOTP: missingImplementation
+    completeSignUpWithEmailOTP: missingImplementation,
+    initAutocompletedLoginWithPasskey: missingImplementation
 };
 
 const CorbadoContext = createContext<CorbadoContextInterface>(initialContext)

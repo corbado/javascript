@@ -1,13 +1,19 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FilledButton from "../components/buttons/FilledButton.tsx";
 import RoundedTextInput from "../components/inputs/RoundedTextInput.tsx";
 import {useNavigate} from "react-router-dom";
 import {useCorbado} from "@corbado/react-sdk";
+import {LoginHandler} from "@corbado/web-core";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
+    const [loginHandler, setLoginHandler] = useState<LoginHandler>();
     const navigate = useNavigate();
-    const {loginWithPasskey, initLoginWithEmailOTP} = useCorbado();
+    const {loginWithPasskey, initLoginWithEmailOTP, initAutocompletedLoginWithPasskey } = useCorbado();
+
+    useEffect(() => {
+        initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh))
+    }, []);
 
     const submit = async () => {
         try {
@@ -20,6 +26,15 @@ const LoginPage = () => {
         }
     }
 
+    const onFocusEmail = async () => {
+        try {
+            await loginHandler?.completionCallback()
+            navigate('/home')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return (
         <div className="h-screen flex flex-col items-center justify-center">
             <p className='font-bold text-2xl pb-2'>Welcome back!</p>
@@ -28,7 +43,7 @@ const LoginPage = () => {
             </p>
             <div className='w-1/2'>
                 <div className="grid gap-2">
-                    <RoundedTextInput placeholder='Email address' onChange={setEmail}/>
+                    <RoundedTextInput placeholder='Email address' onChange={setEmail} onFocus={onFocusEmail}/>
                     <FilledButton content='Continue with email' onClick={submit}/>
                 </div>
             </div>

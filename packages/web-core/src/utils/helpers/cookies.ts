@@ -1,4 +1,4 @@
-import type { CookiesDefinition, IAuthResponse } from '../../types';
+import type {CookiesDefinition, IAuthResponse} from '../../types';
 
 export const dropCookie = (cookieDef: CookiesDefinition) => {
   let cookieString = `${encodeURIComponent(

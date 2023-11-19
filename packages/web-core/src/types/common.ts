@@ -1,4 +1,4 @@
-import type { AssetsApi, ProjectsApi, SessionsApi, UsersApi } from "../api";
+import type {AssetsApi, ProjectsApi, SessionsApi, UsersApi} from "../api";
 
 /**
  * Defines the structure and options for a cookie.

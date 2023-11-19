@@ -31,7 +31,8 @@ const HomePage = () => {
 
           // this should be covered by a guard (then we can remove it)
           navigate('/auth')
-        }}>Logout</button>
+        }}>Logout
+        </button>
       </div>
     </div>
   )

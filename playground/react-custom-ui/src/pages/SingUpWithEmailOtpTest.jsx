@@ -1,9 +1,9 @@
-import { useCorbadoFlowHandler } from "@corbado/react-sdk";
+import {useCorbadoFlowHandler} from "@corbado/react-sdk";
 import React from "react";
-import { SignupWithEmailOtpFlows } from "../flows/SignupWithEmailOtp";
+import {SignupWithEmailOtpFlows} from "../flows/SignupWithEmailOtp";
 
 export function SignUpWithEmailOtpTest() {
-  const { currentScreenName } = useCorbadoFlowHandler();
+  const {currentScreenName} = useCorbadoFlowHandler();
 
   return <div>{SignupWithEmailOtpFlows[currentScreenName]}</div>;
 }

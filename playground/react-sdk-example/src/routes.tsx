@@ -6,34 +6,34 @@ import LoginPage from "./pages/LoginPage.tsx";
 import CompleteEmailOTP from "./pages/CompleteEmailOTP.tsx";
 
 const RouteProvider = () => {
-    const routes = [
-        {
-            path: '/',
-            element: <InitiateSignupPage />
-        },
-        {
-            path: '/signUpInit',
-            element: <InitiateSignupPage />
-        },
-        {
-            path: '/signUpSelectMethod',
-            element: <SelectSignupMethodPage />
-        },
-        {
-            path: '/login',
-            element: <LoginPage/>
-        },
-        {
-            path: '/home',
-            element: <HomePage/>
-        },
-        {
-            path: '/completeEmailOTP',
-            element: <CompleteEmailOTP/>
-        }
-    ];
+  const routes = [
+    {
+      path: '/',
+      element: <InitiateSignupPage/>
+    },
+    {
+      path: '/signUpInit',
+      element: <InitiateSignupPage/>
+    },
+    {
+      path: '/signUpSelectMethod',
+      element: <SelectSignupMethodPage/>
+    },
+    {
+      path: '/login',
+      element: <LoginPage/>
+    },
+    {
+      path: '/home',
+      element: <HomePage/>
+    },
+    {
+      path: '/completeEmailOTP',
+      element: <CompleteEmailOTP/>
+    }
+  ];
 
-    return <RouterProvider router={createBrowserRouter(routes)} />
+  return <RouterProvider router={createBrowserRouter(routes)}/>
 }
 
 export default RouteProvider

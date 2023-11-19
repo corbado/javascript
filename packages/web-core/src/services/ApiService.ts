@@ -1,4 +1,4 @@
-import type { AxiosInstance } from "axios";
+import type {AxiosInstance} from "axios";
 import axios from "axios";
 
 import {
@@ -75,7 +75,7 @@ export class ApiService {
       timeout: this.#timeout,
       withCredentials: true,
       headers: token
-        ? { ...headers, Authorization: `Bearer ${token}` }
+        ? {...headers, Authorization: `Bearer ${token}`}
         : headers,
     });
   }

@@ -9,8 +9,8 @@ import {PasskeyLoginWithEmailOtpFallbackScreens} from "@corbado/react-sdk";
 import {InitiateLogin} from "../screens/InitiateLogin";
 
 export const EmailOTPSignupFlow = {
-    [EmailOtpSignupScreens.Start]: InitiateSignup,
-    [EmailOtpSignupScreens.EnterOtp]: EmailOTP,
+  [EmailOtpSignupScreens.Start]: InitiateSignup,
+  [EmailOtpSignupScreens.EnterOtp]: EmailOTP,
 };
 
 export const PasskeySignupWithEmailOTPFallbackFlow = {

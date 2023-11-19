@@ -1,4 +1,4 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import {useCorbadoAuth, useCorbadoFlowHandler} from "@corbado/react-sdk";
 import React from "react";
 
 /**
@@ -9,8 +9,8 @@ import React from "react";
  * If the user already has an account he can navigate to the login screen.
  */
 export function InitiateSignUp() {
-  const { initiateSignup } = useCorbadoAuth();
-  const { navigateToNextScreen } = useCorbadoFlowHandler();
+  const {initiateSignup} = useCorbadoAuth();
+  const {navigateToNextScreen} = useCorbadoFlowHandler();
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
 
@@ -43,7 +43,7 @@ export function InitiateSignUp() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit"/>
       </form>
     </>
   );

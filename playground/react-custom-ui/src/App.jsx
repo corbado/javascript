@@ -1,6 +1,6 @@
-import { CorbadoProvider } from "@corbado/react-sdk";
+import {CorbadoProvider} from "@corbado/react-sdk";
 import React from "react";
-import { CorbadoAppTest } from "./pages/CorbadoApp";
+import {CorbadoAppTest} from "./pages/CorbadoApp";
 
 export function App() {
   return (
@@ -11,7 +11,7 @@ export function App() {
       signupFlowName="PasskeySignupWithEmailOTPFallback"
       shouldRedirect={false}
     >
-      <CorbadoAppTest />
+      <CorbadoAppTest/>
     </CorbadoProvider>
   );
 }

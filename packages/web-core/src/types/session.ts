@@ -1,4 +1,4 @@
-import type { CookiesDefinition } from "./common";
+import type {CookiesDefinition} from "./common";
 
 /**
  * Represents the structure of a short session cookie, excluding the 'name' property from CookiesDefinition.

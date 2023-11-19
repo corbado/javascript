@@ -1,4 +1,4 @@
-import { CommonScreens } from "../../utils/constants/flowHandler";
+import {CommonScreens} from "../../utils/constants/flowHandler";
 
 export const defaultTimeout = 30000;
 

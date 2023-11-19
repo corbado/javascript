@@ -1,31 +1,31 @@
-import { SignUpWithEmailOtpTest } from "./SingUpWithEmailOtpTest";
-import { PasskeySignupTest } from "./PasskeySignupTest";
-import { PasskeyLoginTest } from "./PasskeyLoginTest";
+import {SignUpWithEmailOtpTest} from "./SingUpWithEmailOtpTest";
+import {PasskeySignupTest} from "./PasskeySignupTest";
+import {PasskeyLoginTest} from "./PasskeyLoginTest";
 import {
   LoginFlowNames,
   SignUpFlowNames,
   useCorbadoFlowHandler,
 } from "@corbado/react-sdk";
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 const flows = {
   login: {
-    component: <PasskeyLoginTest />,
+    component: <PasskeyLoginTest/>,
     flowName: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
   },
   "signup-1": {
-    component: <PasskeySignupTest />,
+    component: <PasskeySignupTest/>,
     flowName: SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
   },
   "signup-2": {
-    component: <SignUpWithEmailOtpTest />,
+    component: <SignUpWithEmailOtpTest/>,
     flowName: SignUpFlowNames.EmailOTPSignup,
   },
 };
 
 export function AuthenticationFlows() {
   const [currentFlow, setCurrentFlow] = useState(null);
-  const { changeFlow } = useCorbadoFlowHandler();
+  const {changeFlow} = useCorbadoFlowHandler();
 
   function handleFlowChange(flowKey) {
     const flow = flows[flowKey];

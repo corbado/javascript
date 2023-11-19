@@ -6,10 +6,10 @@ import {ProjectService} from "./ProjectService";
 import {SessionService} from "./SessionService";
 import {FlowHandlerService} from "./FlowHandlerService";
 
-export type { ProjectService } from "./ProjectService";
-export type { AuthService } from "./AuthService";
-export type { SessionService } from "./SessionService";
-export { FlowHandlerService } from "./FlowHandlerService";
+export type {ProjectService} from "./ProjectService";
+export type {AuthService} from "./AuthService";
+export type {SessionService} from "./SessionService";
+export {FlowHandlerService} from "./FlowHandlerService";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
@@ -32,7 +32,7 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: ICorbadoAppParams) {
-    const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
+    const {projectId, apiTimeout = defaultTimeout} = corbadoParams;
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
     const sessionService = new SessionService(this.#apiService);

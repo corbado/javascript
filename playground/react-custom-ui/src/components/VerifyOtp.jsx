@@ -1,9 +1,9 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
+import {useCorbadoAuth, useCorbadoFlowHandler} from "@corbado/react-sdk";
 import React from "react";
 
 export function VerifyOtp() {
-  const { verifyOTP, getEmail } = useCorbadoAuth();
-  const { navigateBack, navigateToNextScreen } = useCorbadoFlowHandler();
+  const {verifyOTP, getEmail} = useCorbadoAuth();
+  const {navigateBack, navigateToNextScreen} = useCorbadoFlowHandler();
   const [otp, setOtp] = React.useState("");
 
   const handleSubmitOtp = async (event) => {
@@ -27,7 +27,7 @@ export function VerifyOtp() {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit"/>
           <button onClick={navigateBack}>Back</button>
         </form>
       </div>

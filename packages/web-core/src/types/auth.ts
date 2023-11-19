@@ -1,4 +1,4 @@
-import type { CookiesDefinition } from "./common";
+import type {CookiesDefinition} from "./common";
 
 /**
  * The response received from an authentication process.

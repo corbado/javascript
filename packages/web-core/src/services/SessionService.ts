@@ -19,7 +19,7 @@ export class SessionService {
   #shortSession: ShortSession | undefined
   #longSession: string | undefined
   #apiService: ApiService;
-  #onShortSessionChange?: (value: ShortSession|undefined) => void
+  #onShortSessionChange?: (value: ShortSession | undefined) => void
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
   constructor(apiService: ApiService) {
@@ -27,7 +27,7 @@ export class SessionService {
     this.#longSession = undefined
   }
 
-  init(onShortSessionChange: (value: ShortSession|undefined) => void) {
+  init(onShortSessionChange: (value: ShortSession | undefined) => void) {
     this.#onShortSessionChange = onShortSessionChange
 
     const shortSession = SessionService.#getShortTermSessionToken();

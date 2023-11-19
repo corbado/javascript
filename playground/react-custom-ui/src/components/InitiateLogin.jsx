@@ -6,8 +6,8 @@ import {
 import React from "react";
 
 export function InitiateLogin() {
-  const { initiateLogin, passkeyLogin } = useCorbadoAuth();
-  const { navigateToNextScreen } = useCorbadoFlowHandler();
+  const {initiateLogin, passkeyLogin} = useCorbadoAuth();
+  const {navigateToNextScreen} = useCorbadoFlowHandler();
   const [username, setUsername] = React.useState("");
 
   const initiateAuthentication = async (event) => {
@@ -21,26 +21,26 @@ export function InitiateLogin() {
         const success = await passkeyLogin();
 
         if (success) {
-          return void navigateToNextScreen({ success: true });
+          return void navigateToNextScreen({success: true});
         } else {
-          return void navigateToNextScreen({ failure: true });
+          return void navigateToNextScreen({failure: true});
         }
       }
 
-      void navigateToNextScreen({ sendOtpEmail: true });
+      void navigateToNextScreen({sendOtpEmail: true});
     } catch (error) {
       console.log(error);
-      void navigateToNextScreen({ failure: true });
+      void navigateToNextScreen({failure: true});
     }
   };
 
   const initiateAuthenticationWithEmailOtp = () => {
     try {
       initiateLogin(username);
-      void navigateToNextScreen({ sendOtpEmail: true });
+      void navigateToNextScreen({sendOtpEmail: true});
     } catch (error) {
       console.log(error);
-      void navigateToNextScreen({ failure: true });
+      void navigateToNextScreen({failure: true});
     }
   };
 
@@ -53,7 +53,7 @@ export function InitiateLogin() {
         autoComplete="username webauthn"
         onChange={(e) => setUsername(e.target.value)}
       />
-      <input type="submit" value="Submit" />
+      <input type="submit" value="Submit"/>
       <button onClick={initiateAuthenticationWithEmailOtp}>
         Login with Email OTP
       </button>

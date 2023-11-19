@@ -1,1 +1,1 @@
-export { default as useCorbado } from './useCorbado';
+export {default as useCorbado} from './useCorbado';

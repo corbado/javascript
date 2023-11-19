@@ -1,11 +1,11 @@
 export class LoginHandler {
-    readonly #completionCallback: () => Promise<void>
+  readonly #completionCallback: () => Promise<void>
 
-    constructor(completionCallback: () => Promise<void>) {
-        this.#completionCallback = completionCallback
-    }
+  constructor(completionCallback: () => Promise<void>) {
+    this.#completionCallback = completionCallback
+  }
 
-    public get completionCallback() {
-        return this.#completionCallback
-    }
+  public get completionCallback() {
+    return this.#completionCallback
+  }
 }

@@ -16,14 +16,12 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
         initialized.current = true
 
         corbadoApp.authService.shortSessionChanges.subscribe((value) => {
-            console.log('shortSessionChanges', value)
             if (value !== undefined) {
                 setShortSession(value)
             }
         })
 
         corbadoApp.authService.userChanges.subscribe((value) => {
-            console.log('userChanges', value)
             if (value !== undefined) {
                 setUser(value)
             }

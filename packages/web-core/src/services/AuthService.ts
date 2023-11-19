@@ -1,8 +1,8 @@
 import {create, get} from "@github/webauthn-json";
 import {Subject} from 'rxjs';
 
-import type {AuthMethod, ShortSession} from "../api";
-import {ISessionResponse, IUser, LoginHandler, AuthState, IShortSessionStore} from "../types";
+import type {AuthMethod, ShortSession as ApiShortSession} from "../api";
+import {AuthState, ISessionResponse, IUser, LoginHandler, ShortSession} from "../types";
 import type {ApiService} from "./ApiService";
 import {SessionService} from "./SessionService";
 
@@ -18,8 +18,7 @@ export class AuthService {
     #isEmailVerified = false;
     #isPasskeySet = false;
     #emailCodeIdRef = "";
-    #email = "";
-    #username = "";
+
     #mediationController: AbortController | null = null;
     #authMethod: Array<AuthMethod> = [];
     #possibleAuthMethods: Array<AuthMethod> = [];
@@ -42,13 +41,11 @@ export class AuthService {
     }
 
     init() {
-        this.#sessionService.init((shortSession: IShortSessionStore) => {
-            console.log('onShortSessionChange')
+        this.#sessionService.init((shortSession: ShortSession) => {
             const user = this.#sessionService.getUser();
 
-            if (user && shortSession.session) {
-                console.log('shortSession.session')
-                this.#shortSessionChanges.next(shortSession.session);
+            if (user && shortSession) {
+                this.#shortSessionChanges.next(shortSession.value);
                 this.#authStateChanges.next(AuthState.LoggedIn);
                 this.#userChanges.next(user);
             }
@@ -77,14 +74,6 @@ export class AuthService {
 
     get isPasskeySet() {
         return this.#isPasskeySet;
-    }
-
-    get email() {
-        return this.#email;
-    }
-
-    get username() {
-        return this.#username;
     }
 
     get authMethod() {
@@ -207,6 +196,7 @@ export class AuthService {
             signedChallenge: JSON.stringify(signedChallenge),
         });
 
+        console.log('after login', respFinish.data.data)
         this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
     }
 
@@ -225,43 +215,6 @@ export class AuthService {
 
             this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data)
         })
-    }
-
-    /**
-     * Method to mediate a passkey.
-     * This is used in passkey mediation / conditional UI flow.
-     */
-    async passkeyMediation(username?: string) {
-        const controller = new AbortController();
-        const signal = controller.signal;
-        this.#mediationController = controller;
-
-        const respStart = await this.#apiService.usersApi.passKeyMediationStart(
-            username ? {username} : {}
-        );
-        const challenge = JSON.parse(respStart.data.data.challenge);
-        challenge.mediation = "conditional";
-        challenge.signal = signal;
-
-        const signedChallenge = await get(challenge);
-        const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
-            signedChallenge: JSON.stringify(signedChallenge),
-        });
-
-        this.#executeOnAuthenticationSuccessCallbacks(
-            respFinish.data.data,
-            respFinish.data.data.username
-        );
-
-        const successful = respFinish.status === 200;
-
-        if (successful) {
-            this.#onMediationSuccessCallbacks.forEach((cb) => cb());
-        } else {
-            this.#onMediationFailureCallbacks.forEach((cb) => cb());
-        }
-
-        return successful;
     }
 
     /**
@@ -303,19 +256,16 @@ export class AuthService {
      */
     #executeOnAuthenticationSuccessCallbacks = (
         sessionResponse: {
-            shortSession?: ShortSession;
+            shortSession?: ApiShortSession;
             longSession?: string;
             redirectURL: string;
-        },
-        username = ""
+        }
     ) => {
-        const session: ISessionResponse = {
-            shortSession: sessionResponse.shortSession,
-            longSession: sessionResponse.longSession ?? "",
-            redirectUrl: sessionResponse.redirectURL,
-            user: username || (this.#email ?? this.#username ?? ""),
-        };
+        if (!sessionResponse.shortSession?.value) {
+            return
+        }
 
-        this.#sessionService.setSession(session);
+        const shortSession = new ShortSession(sessionResponse.shortSession?.value)
+        this.#sessionService.setSession(shortSession, sessionResponse.longSession);
     };
 }

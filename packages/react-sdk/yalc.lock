@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@corbado/web-core": {
-      "signature": "fed5b20288545ca521ddda00cc0d4c62",
+      "signature": "803970c7c303a9bd5c6a8dc7e0e77aae",
       "file": true,
       "replaced": "link:.yalc/@corbado/web-core"
     }

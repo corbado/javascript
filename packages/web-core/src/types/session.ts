@@ -24,13 +24,6 @@ export interface ISessionResponse {
   redirectUrl?: string;
 }
 
-export interface IShortSessionStore {
-  /** The short session token. */
-  session?: string;
-  /** The short session expiry. */
-  expires?: string;
-}
-
 /**
  * Enumeration of possible statuses.
  */
@@ -52,12 +45,12 @@ export interface IUser {
   /** User Email */
   email: string
   /** User Name */
-  name: "Abdullah Shahbaz";
+  name: string
   /** User Origin */
   orig: string
   /** User ID */
-  sub: string;
-  exp: string
+  sub: string
+  exp: number
 }
 
 /**
@@ -112,4 +105,35 @@ export interface IFullUser {
   emails: IUserEmail[];
   /** Array of user's phone numbers */
   phoneNumbers: IUserPhoneNumber[];
+}
+
+export class ShortSession {
+  readonly #value: string
+  readonly #user: IUser
+
+  constructor(value: string) {
+    this.#value = value
+
+    // this is a quick and easy way to parse JWT tokens without using a library
+    const splits = value.split(".")
+    this.#user = JSON.parse(atob(splits[1]))
+  }
+
+  get value() {
+    return this.#value
+  }
+
+  get user() {
+    return this.#user
+  }
+
+  isValidForXMoreSeconds(seconds: number): boolean {
+    const now = new Date().getTime() / 1000
+
+    return this.#user.exp > now + seconds
+  }
+
+  toString(): string {
+    return this.#value
+  }
 }

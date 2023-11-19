@@ -8,6 +8,7 @@ import Text from "../components/Text";
 import {emailRegex} from "../utils/validations";
 import useFlowHandler from "../hooks/useFlowHandler";
 import useUserData from "../hooks/useUserData";
+import {FlowType} from "@corbado/web-core";
 
 interface SignupForm {
     name: string;
@@ -17,7 +18,7 @@ interface SignupForm {
 export const InitiateSignup = () => {
     const {t} = useTranslation();
 
-    const {navigateNext} = useFlowHandler();
+    const {navigateNext, changeFlow} = useFlowHandler();
     const {setEmail, setUserName} = useUserData()
 
     const formTemplate = {name: "", username: ""};
@@ -79,10 +80,11 @@ export const InitiateSignup = () => {
                 <Trans i18nKey="signup.sub-header">
                     text{" "}
                     <Link href="" className="text-secondary-font-color">
-                        text
+                      text
                     </Link>{" "}
                     text
                 </Trans>
+              <span onClick={() => changeFlow(FlowType.Login)}>Log in</span>
             </Text>
             <div className="form-wrapper">
                 <form onSubmit={handleSubmit}>

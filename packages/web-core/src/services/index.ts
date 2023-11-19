@@ -27,7 +27,6 @@ export class CorbadoApp {
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
-  #onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -39,8 +38,6 @@ export class CorbadoApp {
     const sessionService = new SessionService(this.#apiService);
     this.#authService = new AuthService(this.#apiService, sessionService);
     this.#projectService = new ProjectService(this.#apiService);
-
-    // void this.init(corbadoParams);
   }
 
   public get apiService() {
@@ -60,25 +57,10 @@ export class CorbadoApp {
   }
 
   /**
-   * Method to add a callback function to be called when the application is initialized.
-   */
-  public onInit(cb: (app: CorbadoApp) => void) {
-    this.#onInitCallbacks.push(cb);
-  }
-
-  /**
    * Method to initialize the application.
    * It fetches the project configuration and sets up the flow handler service.
    */
   public init() {
     this.#authService.init()
-  }
-
-  /**
-   * Method to destroy the application.
-   * It calls the destroy method of the AuthService.
-   */
-  public destroy() {
-    this.#authService.destroy();
   }
 }

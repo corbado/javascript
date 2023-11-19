@@ -1,8 +1,8 @@
 import {create, get} from "@github/webauthn-json";
 import {Subject} from 'rxjs';
 
-import type {AuthMethod, ShortSession as ApiShortSession} from "../api";
-import {AuthState, ISessionResponse, IUser, LoginHandler, ShortSession} from "../types";
+import type {ShortSession as ApiShortSession} from "../api";
+import {AuthState, IUser, LoginHandler, ShortSession} from "../types";
 import type {ApiService} from "./ApiService";
 import {SessionService} from "./SessionService";
 
@@ -16,19 +16,7 @@ export class AuthService {
     #apiService: ApiService;
     #sessionService: SessionService;
 
-    #isAuthenticated = false;
-    #isEmailVerified = false;
-    #isPasskeySet = false;
     #emailCodeIdRef = "";
-
-    #mediationController: AbortController | null = null;
-    #authMethod: Array<AuthMethod> = [];
-    #possibleAuthMethods: Array<AuthMethod> = [];
-    #onMediationSuccessCallbacks: Array<() => void> = [];
-    #onMediationFailureCallbacks: Array<() => void> = [];
-    #onAuthenticationSuccessCallbacks: Array<
-        (sessionResponse: ISessionResponse) => void
-    > = [];
 
     #userChanges: Subject<IUser | undefined> = new Subject();
     #shortSessionChanges: Subject<string | undefined> = new Subject();
@@ -43,13 +31,17 @@ export class AuthService {
     }
 
     init() {
-        this.#sessionService.init((shortSession: ShortSession) => {
+        this.#sessionService.init((shortSession: ShortSession|undefined) => {
             const user = this.#sessionService.getUser();
 
             if (user && shortSession) {
                 this.#shortSessionChanges.next(shortSession.value);
                 this.#authStateChanges.next(AuthState.LoggedIn);
                 this.#userChanges.next(user);
+            } else {
+              this.#shortSessionChanges.next(undefined);
+              this.#authStateChanges.next(AuthState.LoggedOut);
+              this.#userChanges.next(undefined);
             }
         });
     }
@@ -64,49 +56,6 @@ export class AuthService {
 
     get authStateChanges() {
         return this.#authStateChanges.asObservable();
-    }
-
-    get isAuthenticated() {
-        return this.#isAuthenticated;
-    }
-
-    get isEmailVerified() {
-        return this.#isEmailVerified;
-    }
-
-    get isPasskeySet() {
-        return this.#isPasskeySet;
-    }
-
-    get authMethod() {
-        return this.#authMethod;
-    }
-
-    get possibleAuthMethods() {
-        return this.#possibleAuthMethods;
-    }
-
-    /**
-     * Method to add a callback function to be called when mediation is successful.
-     */
-    onMediationSuccess(callback: () => void) {
-        this.#onMediationSuccessCallbacks.push(callback);
-    }
-
-    /**
-     * Method to add a callback function to be called when mediation fails.
-     */
-    onMediationFailure(callback: () => void) {
-        this.#onMediationFailureCallbacks.push(callback);
-    }
-
-    /**
-     * Method to add a callback function to be called when authentication is successful.
-     */
-    onAuthenticationSuccess(
-        callback: (sessionResponse: ISessionResponse) => void
-    ) {
-        this.#onAuthenticationSuccessCallbacks.push(callback);
     }
 
     /**
@@ -162,8 +111,6 @@ export class AuthService {
         });
 
         this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
-
-        this.#isPasskeySet = true;
     }
 
     /**
@@ -178,9 +125,9 @@ export class AuthService {
             signedChallenge: JSON.stringify(signedChallenge),
         });
 
-        this.#isPasskeySet = true;
-
-        return respFinish.status === 200;
+        if (respFinish.status !== 200) {
+          console.log('error during append passkey', respFinish)
+        }
     }
 
     /**
@@ -231,26 +178,7 @@ export class AuthService {
     }
 
     async logout() {
-        // TODO: should we call backend to destroy the session here?
-
-        this.#sessionService.clear();
-        this.#shortSessionChanges.next(undefined);
-        this.#authStateChanges.next(AuthState.LoggedOut);
-    }
-
-    /**
-     * Method to destroy the AuthService.
-     */
-    destroy() {
-        if (!this.#mediationController) {
-            return;
-        }
-
-        try {
-            this.#mediationController.abort("User chose to cancel");
-        } catch (e) {
-            console.error(e);
-        }
+        return this.#sessionService.logout();
     }
 
     /**

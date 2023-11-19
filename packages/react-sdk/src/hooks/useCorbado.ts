@@ -2,6 +2,6 @@ import CorbadoContext, {CorbadoContextInterface} from "../contexts/CorbadoContex
 import {useContext} from "react";
 
 const useCorbado = (context = CorbadoContext): CorbadoContextInterface =>
-    useContext(context) as CorbadoContextInterface
+  useContext(context) as CorbadoContextInterface
 
 export default useCorbado;

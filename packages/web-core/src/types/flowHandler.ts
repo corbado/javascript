@@ -6,20 +6,27 @@ import type {
   PasskeySignupWithEmailOtpFallbackScreens,
   SignUpFlowNames,
 } from "../utils";
-import type { IProjectConfig } from "./common";
+
+export enum FlowType {
+  SignUp,
+  Login,
+}
 
 /**
  * Configuration settings for handling different authentication flows.
  */
 export interface IFlowHandlerConfig {
-  /** Indicates if appending a passkey is enabled. */
-  passkeyAppend: boolean;
-  /** Specifies if the process should retry passkey authentication upon an error. */
-  retryPasskeyOnError: boolean;
-  /** Determines if email verification is mandatory. */
-  compulsoryEmailVerification: boolean;
-  /** Indicates whether a redirect should occur after a flow step is completed. */
-  shouldRedirect: boolean;
+  // callback that will be executed when a flow reached its end
+  onLoggedIn: () => void
+  // initial flow to start with
+  initialFlowType: FlowType
+}
+
+export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions
+
+export interface PasskeySignupWithEmailOtpFallbackOptions {
+  passkeyAppend: boolean
+  retryPasskeyOnError: boolean
 }
 
 /**
@@ -40,13 +47,11 @@ export type ScreenNames =
  * Type definition for a function that represents a step in an authentication flow.
  */
 export type StepFunction = (
-  /** Project configuration. */
-  projectConfig: IProjectConfig,
-  /** Flow handler configuration. */
-  flowHandlerConfig: IFlowHandlerConfig,
-  /** User input parameters. */
+  // Options that configure the behaviour of a single flow
+  flowOptions: FlowOptions,
+  // User input parameters.
   event?: string
-) => ScreenNames | Promise<ScreenNames>;
+) => ScreenNames | Promise<ScreenNames>
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.

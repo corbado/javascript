@@ -1,13 +1,11 @@
-import type { IProjectConfig } from "../types";
-import type { ApiService } from "./ApiService";
+import type {IProjectConfig} from "../types";
+import type {ApiService} from "./ApiService";
 
 /**
  * ProjectService is responsible for managing the project configuration.
  */
 export class ProjectService {
-  // Private property to hold the project configuration.
   #projConfig: IProjectConfig | null = null;
-  // Private property to hold the instance of ApiService.
   #apiService: ApiService;
 
   /**
@@ -30,11 +28,14 @@ export class ProjectService {
    * Asynchronously fetches the project configuration using the ApiService.
    * @returns A Promise that resolves to the fetched project configuration.
    */
-  async getProjectConfig() {
-    console.log("getProjectConfig")
-    const resp = await this.#apiService.projectsApi.projectConfig();
-    const config = resp.data.data;
-    this.#projConfig = config;
-    return this.#projConfig;
+  async getProjectConfig(forceRefresh: boolean = false) {
+    if (this.#projConfig && !forceRefresh) {
+      return this.#projConfig
+    }
+
+    const resp = await this.#apiService.projectsApi.projectConfig()
+    this.#projConfig = resp.data.data
+
+    return this.#projConfig
   }
 }

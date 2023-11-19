@@ -1,1 +1,1 @@
-export * from './EmailOTPSignupFlow';
+export * from './flowMapping';

@@ -4,8 +4,8 @@ import {canUsePasskeys} from "../helpers";
 
 export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.Start]: () => EmailOtpSignupScreens.EnterOtp,
-  [EmailOtpSignupScreens.EnterOtp]: async (_, flowConfig) => {
-    if (flowConfig.passkeyAppend) {
+  [EmailOtpSignupScreens.EnterOtp]: async (flowOptions) => {
+    if (flowOptions.passkeyAppend) {
       const isPasskeySupported = await canUsePasskeys();
       return isPasskeySupported
         ? EmailOtpSignupScreens.PasskeyOption
@@ -15,8 +15,7 @@ export const EmailOTPSignupFlow: Flow = {
   },
   [EmailOtpSignupScreens.PasskeyOption]: (
     _,
-    __,
-    ___?: string
+    __?: string
   ) => {
     return EmailOtpSignupScreens.End;
   },
@@ -31,8 +30,7 @@ export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.PasskeyWelcome]: () => EmailOtpSignupScreens.End,
   [EmailOtpSignupScreens.PasskeyError]: (
     _,
-    __,
-    ___?: string
+    __?: string
   ) => {
     return EmailOtpSignupScreens.End;
   },

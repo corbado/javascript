@@ -5,6 +5,10 @@
       "signature": "d7a988c6b63f93e1b1b5aed21b60f197",
       "file": true,
       "replaced": "^0.1.4"
+    },
+    "@corbado/web-core": {
+      "signature": "b4d4253b827e21dbedf78585275d4889",
+      "file": true
     }
   }
 }

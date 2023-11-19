@@ -7,8 +7,10 @@ import type {ApiService} from "./ApiService";
 import {SessionService} from "./SessionService";
 
 /**
- * AuthService is a class that handles authentication-related operations.
+ * AuthService is a class that handles authentication related operations.
  * It manages the user's authentication state and provides methods for signing up, logging in, and managing authentication methods.
+ *
+ * This service is the primary entrypoint for higher level SDKs (e.g. react-sdk)
  */
 export class AuthService {
     #apiService: ApiService;

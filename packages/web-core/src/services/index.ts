@@ -1,23 +1,19 @@
 import type {IFlowHandlerConfig} from "../types";
-import type {SignUpFlowNames} from "../utils";
-import {defaultTimeout, LoginFlowNames,} from "../utils";
+import {defaultTimeout,} from "../utils";
 import {ApiService} from "./ApiService";
 import {AuthService} from "./AuthService";
-import {FlowHandlerService} from "./FlowHandler";
 import {ProjectService} from "./ProjectService";
 import {SessionService} from "./SessionService";
+import {FlowHandlerService} from "./FlowHandlerService";
 
-export type { FlowHandlerService } from "./FlowHandler";
 export type { ProjectService } from "./ProjectService";
 export type { AuthService } from "./AuthService";
 export type { SessionService } from "./SessionService";
+export { FlowHandlerService } from "./FlowHandlerService";
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
   apiTimeout?: number;
-  defaultToLogin?: boolean;
-  signupFlowName?: SignUpFlowNames;
-  loginFlowName?: LoginFlowNames;
 }
 
 /**

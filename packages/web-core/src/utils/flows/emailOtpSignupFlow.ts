@@ -1,11 +1,6 @@
-import type {
-  Flow,
-  ISignupPasskeyAppendScreen,
-  ISignupPasskeyBenefitsScreen,
-  ISignupPasskeyErrorScreen,
-} from "../../types";
-import { EmailOtpSignupScreens } from "../../utils/constants/flowHandler";
-import { canUsePasskeys } from "../helpers/webAuthUtils";
+import type {Flow,} from "../../types";
+import {EmailOtpSignupScreens} from "../constants";
+import {canUsePasskeys} from "../helpers";
 
 export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.Start]: () => EmailOtpSignupScreens.EnterOtp,
@@ -20,48 +15,25 @@ export const EmailOTPSignupFlow: Flow = {
   },
   [EmailOtpSignupScreens.PasskeyOption]: (
     _,
-    flowConfig,
-    userInput: ISignupPasskeyAppendScreen
+    __,
+    ___?: string
   ) => {
-    let result = EmailOtpSignupScreens.End;
-
-    if (userInput.showBenefits) {
-      result = EmailOtpSignupScreens.PasskeyBenefits;
-    } else if (userInput.success) {
-      result = EmailOtpSignupScreens.PasskeyWelcome;
-    } else if (userInput.failure) {
-      result = flowConfig.retryPasskeyOnError
-        ? EmailOtpSignupScreens.PasskeyError
-        : EmailOtpSignupScreens.End;
-    }
-
-    return result;
+    return EmailOtpSignupScreens.End;
   },
   [EmailOtpSignupScreens.PasskeyBenefits]: (
     _,
-    flowConfig,
-    userInput: ISignupPasskeyBenefitsScreen
+    __,
+    ___?: string
   ) => {
-    let result = EmailOtpSignupScreens.End;
+    return EmailOtpSignupScreens.End;
 
-    if (userInput.success) {
-      result = EmailOtpSignupScreens.PasskeyWelcome;
-    } else if (userInput.failure) {
-      result = flowConfig.retryPasskeyOnError
-        ? EmailOtpSignupScreens.PasskeyError
-        : EmailOtpSignupScreens.End;
-    }
-
-    return result;
   },
   [EmailOtpSignupScreens.PasskeyWelcome]: () => EmailOtpSignupScreens.End,
   [EmailOtpSignupScreens.PasskeyError]: (
     _,
     __,
-    userInput: ISignupPasskeyErrorScreen
+    ___?: string
   ) => {
-    return userInput.success
-      ? EmailOtpSignupScreens.PasskeyWelcome
-      : EmailOtpSignupScreens.End;
+    return EmailOtpSignupScreens.End;
   },
 };

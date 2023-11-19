@@ -9,9 +9,11 @@ const shortSessionRefreshBeforeExpirationSeconds = 60
 const shortSessionRefreshIntervalMs = 10_000
 
 /**
- * The SessionService manages user sessions for the Corbado Application, handling short-term and long-term session tokens, and the username.
+ * The SessionService manages user sessions for the Corbado Application, handling shortSession and longSession.
  * It offers methods to set, delete, and retrieve these tokens and the username,
  * as well as a method to fetch the full user object from the Corbado API.
+ *
+ * The longSession should not be exposed from this service as it is only used for session refresh.
  */
 export class SessionService {
     #shortSession: ShortSession | undefined

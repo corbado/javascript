@@ -9,7 +9,6 @@ export function App() {
       passkeyAppend={true}
       retryPasskeyOnError={true}
       signupFlowName="PasskeySignupWithEmailOTPFallback"
-      shouldRedirect={false}
     >
       <CorbadoAppTest/>
     </CorbadoProvider>

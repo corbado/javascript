@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['@corbado/react-sdk'],
+    include: ['@corbado/react-sdk1'],
   }
 })

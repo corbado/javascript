@@ -2,7 +2,7 @@ import {create, get} from "@github/webauthn-json";
 import {Subject} from 'rxjs';
 
 import type {AuthMethod, ShortSession} from "../api";
-import {ISessionResponse, IUser, LoginHandler, AuthState} from "../types";
+import {ISessionResponse, IUser, LoginHandler, AuthState, IShortSessionStore} from "../types";
 import type {ApiService} from "./ApiService";
 import {SessionService} from "./SessionService";
 
@@ -39,6 +39,20 @@ export class AuthService {
     constructor(apiService: ApiService, sessionService: SessionService) {
         this.#apiService = apiService
         this.#sessionService = sessionService
+    }
+
+    init() {
+        this.#sessionService.init((shortSession: IShortSessionStore) => {
+            console.log('onShortSessionChange')
+            const user = this.#sessionService.getUser();
+
+            if (user && shortSession.session) {
+                console.log('shortSession.session')
+                this.#shortSessionChanges.next(shortSession.session);
+                this.#authStateChanges.next(AuthState.LoggedIn);
+                this.#userChanges.next(user);
+            }
+        });
     }
 
     get userChanges() {
@@ -202,6 +216,7 @@ export class AuthService {
         })
 
         return new LoginHandler(async () => {
+            console.log('LoginHandler called')
             const challenge = JSON.parse(respStart.data.data.challenge);
             const signedChallenge = await get(challenge);
             const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
@@ -302,12 +317,5 @@ export class AuthService {
         };
 
         this.#sessionService.setSession(session);
-        const user = this.#sessionService.getUser();
-
-        if (user && sessionResponse.shortSession) {
-            this.#shortSessionChanges.next(sessionResponse.shortSession.value);
-            this.#authStateChanges.next(AuthState.LoggedIn);
-            this.#userChanges.next(user);
-        }
     };
 }

@@ -30,7 +30,6 @@ export class CorbadoApp {
   #flowHandlerService: FlowHandlerService | null = null;
   #authService: AuthService;
   #projectService: ProjectService;
-  #sessionService: SessionService;
   #projectId: string;
   #onInitCallbacks: Array<(app: CorbadoApp) => void> = [];
 
@@ -41,8 +40,8 @@ export class CorbadoApp {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
-    this.#sessionService = new SessionService(this.#apiService);
-    this.#authService = new AuthService(this.#apiService, this.#sessionService);
+    const sessionService = new SessionService(this.#apiService);
+    this.#authService = new AuthService(this.#apiService, sessionService);
     this.#projectService = new ProjectService(this.#apiService);
 
     // void this.init(corbadoParams);
@@ -64,10 +63,6 @@ export class CorbadoApp {
     return this.#projectService;
   }
 
-  public get sessionService() {
-    return this.#sessionService;
-  }
-
   /**
    * Method to add a callback function to be called when the application is initialized.
    */
@@ -79,8 +74,8 @@ export class CorbadoApp {
    * Method to initialize the application.
    * It fetches the project configuration and sets up the flow handler service.
    */
-  public async init() {
-    await this.#projectService.getProjectConfig();
+  public init() {
+    this.#authService.init()
   }
 
   /**

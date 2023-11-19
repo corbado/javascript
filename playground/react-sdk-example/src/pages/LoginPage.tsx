@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import FilledButton from "../components/buttons/FilledButton.tsx";
 import RoundedTextInput from "../components/inputs/RoundedTextInput.tsx";
 import {useNavigate} from "react-router-dom";
@@ -10,8 +10,16 @@ const LoginPage = () => {
     const [loginHandler, setLoginHandler] = useState<LoginHandler>();
     const navigate = useNavigate();
     const {loginWithPasskey, initLoginWithEmailOTP, initAutocompletedLoginWithPasskey } = useCorbado();
+    const initialized = useRef(false)
+    const conditionalUIStarted = useRef(false)
 
     useEffect(() => {
+        if (initialized.current) {
+            return
+        }
+
+        initialized.current = true
+
         initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh))
     }, []);
 
@@ -27,6 +35,12 @@ const LoginPage = () => {
     }
 
     const onFocusEmail = async () => {
+        if (conditionalUIStarted.current) {
+            return
+        }
+
+        conditionalUIStarted.current = true
+
         try {
             await loginHandler?.completionCallback()
             navigate('/home')

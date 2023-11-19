@@ -28,6 +28,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
                 setUser(value)
             }
         })
+
+        corbadoApp.init()
     }, [])
 
     const signUpWithPasskey = useCallback((email: string, username: string) => {

@@ -34,6 +34,10 @@ export class FlowHandlerService {
     this.#projectConfig = projectConfig
   }
 
+  /**
+   * Initializes the FlowHandlerService.
+   * Call this function after registering all callbacks.
+   */
   async init() {
     this.changeFlow(this.#flowHandlerConfig.initialFlowType)
   }
@@ -65,10 +69,11 @@ export class FlowHandlerService {
    * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
    * If the next screen is the End screen, it redirects to a specified URL.
    * It adds the current screen to the screen history, sets the current screen to the next screen, and calls any registered onScreenUpdate callbacks with the new current screen.
+   *
    * @returns The new current screen.
    * @param event
    */
-  async navigateNext(event?: string) {
+  async navigateNext(event?: string): Promise<ScreenNames> {
     const stepFunction = this.#currentFlow[this.#currentScreen]
     if (!stepFunction) {
       throw new Error("Invalid screen")

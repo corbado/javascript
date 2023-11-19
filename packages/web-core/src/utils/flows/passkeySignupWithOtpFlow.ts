@@ -3,6 +3,7 @@ import {PasskeySignupWithEmailOtpFallbackScreens} from "../constants";
 import {canUsePasskeys} from "../helpers";
 import {PasskeySignupWithEmailOtpFallbackOptions} from "../../types";
 
+// TODO: Update step functions
 export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   [PasskeySignupWithEmailOtpFallbackScreens.Start]: async () => {
     const isPasskeySupported = await canUsePasskeys();

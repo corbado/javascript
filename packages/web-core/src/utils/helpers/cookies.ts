@@ -1,4 +1,4 @@
-import type {CookiesDefinition, IAuthResponse} from '../../types';
+import type {CookiesDefinition} from '../../types';
 
 export const dropCookie = (cookieDef: CookiesDefinition) => {
   let cookieString = `${encodeURIComponent(
@@ -23,12 +23,6 @@ export const dropCookie = (cookieDef: CookiesDefinition) => {
   }
 
   document.cookie = cookieString;
-};
-
-export const shortCookie = (rsp: IAuthResponse) => {
-  if (rsp.shortSession) {
-    dropCookie(rsp.shortSession);
-  }
 };
 
 export const getCookieValue = (a: string) => {

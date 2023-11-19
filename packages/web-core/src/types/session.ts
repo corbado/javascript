@@ -107,6 +107,7 @@ export interface IFullUser {
   phoneNumbers: IUserPhoneNumber[];
 }
 
+
 export class ShortSession {
   readonly #value: string
   readonly #user: IUser

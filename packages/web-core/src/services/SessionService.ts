@@ -5,7 +5,10 @@ import {AxiosRequestConfig} from "axios";
 
 const shortSessionKey = "cbo_short_session";
 const longSessionKey = "cbo_long_session";
-const shortSessionRefreshBeforeExpirationSeconds = 280
+
+// controls how long before the shortSession expires we should refresh it
+const shortSessionRefreshBeforeExpirationSeconds = 60
+// controls how often we check if we need to refresh the session
 const shortSessionRefreshIntervalMs = 10_000
 
 /**
@@ -27,6 +30,11 @@ export class SessionService {
     this.#longSession = undefined
   }
 
+  /**
+   * Initializes the SessionService by registering a callback that is called when the shortSession changes.
+   *
+   * @param onShortSessionChange
+   */
   init(onShortSessionChange: (value: ShortSession | undefined) => void) {
     this.#onShortSessionChange = onShortSessionChange
 
@@ -40,6 +48,7 @@ export class SessionService {
     this.#longSession = SessionService.#getLongSessionToken()
 
     // init scheduled session refresh
+    // TODO: make use of pageVisibility event and service workers
     this.#refreshIntervalId = setInterval(async () => {
       await this.#handleRefreshRequest()
     }, shortSessionRefreshIntervalMs)

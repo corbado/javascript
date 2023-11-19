@@ -14,8 +14,12 @@ import {SessionService} from "./SessionService";
  */
 export class AuthService {
   #apiService: ApiService;
+
+  // sessionService is used to store and manage (e.g. refresh) the user's session
   #sessionService: SessionService;
 
+  // state for an ongoing email OTP flow (signup or login)
+  // TODO: remove this?
   #emailCodeIdRef = "";
 
   #userChanges: Subject<IUser | undefined> = new Subject();
@@ -46,14 +50,23 @@ export class AuthService {
     });
   }
 
+  /**
+   * Exposes changes to the user object
+   */
   get userChanges() {
     return this.#userChanges.asObservable();
   }
 
+  /**
+   * Exposes changes to the shortSession
+   */
   get shortSessionChanges() {
     return this.#shortSessionChanges.asObservable();
   }
 
+  /**
+   * Exposes changes to the auth state
+   */
   get authStateChanges() {
     return this.#authStateChanges.asObservable();
   }
@@ -70,6 +83,12 @@ export class AuthService {
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
   }
 
+  /**
+   * Completes an ongoing email OTP login flow.
+   * Afterward, the user is logged in.
+   *
+   * @param otp 6-digit OTP code that was sent to the user's email
+   */
   async completeLoginWithEmailOTP(otp: string) {
     if (this.#emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
@@ -83,6 +102,12 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
   }
 
+  /**
+   * Completes an ongoing email OTP signUp flow.
+   * Afterward, the user is logged in.
+   *
+   * @param otp 6-digit OTP code that was sent to the user's email
+   */
   async completeSignupWithEmailOTP(otp: string) {
     if (this.#emailCodeIdRef === "") {
       throw new Error("Email code id is empty");
@@ -97,7 +122,10 @@ export class AuthService {
   }
 
   /**
-   * Creates a new user and adds a passkey for him.
+   * Creates a new user with a passkey.
+   *
+   * @param email
+   * @param username
    */
   async signUpWithPasskey(email: string, username: string) {
     const respStart = await this.#apiService.usersApi.passKeyRegisterStart({
@@ -131,7 +159,7 @@ export class AuthService {
   }
 
   /**
-   * Method to login with a passkey.
+   * Method to log in with a passkey.
    */
   async loginWithPasskey(email: string) {
     const respStart = await this.#apiService.usersApi.passKeyLoginStart({
@@ -149,7 +177,12 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
   }
 
-  async initAutocompletedLoginWithPasskey() {
+  /**
+   * Starts a passkey flow that shows all passkeys that are available to a user (autocompletion, aka conditionalUI).
+   *
+   * @returns A LoginHandler that needs to be called to show these passkeys to the user.
+   */
+  async initAutocompletedLoginWithPasskey(): Promise<LoginHandler> {
     const respStart = await this.#apiService.usersApi.passKeyMediationStart({
       username: ''
     })
@@ -167,7 +200,7 @@ export class AuthService {
   }
 
   /**
-   * Method to login with an email OTP.
+   * Method to log in with an email OTP.
    */
   async initLoginWithEmailOTP(email: string) {
     const resp = await this.#apiService.usersApi.emailCodeLoginStart({

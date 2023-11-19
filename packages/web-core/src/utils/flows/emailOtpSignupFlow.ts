@@ -2,6 +2,7 @@ import type {Flow,} from "../../types";
 import {EmailOtpSignupScreens} from "../constants";
 import {canUsePasskeys} from "../helpers";
 
+// TODO: Update step functions
 export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.Start]: () => EmailOtpSignupScreens.EnterOtp,
   [EmailOtpSignupScreens.EnterOtp]: async (flowOptions) => {

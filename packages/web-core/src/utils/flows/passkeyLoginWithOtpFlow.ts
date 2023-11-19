@@ -1,6 +1,7 @@
 import type {Flow} from "../../types";
 import {PasskeyLoginWithEmailOtpFallbackScreens} from "../constants";
 
+// TODO: Update step functions
 export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
   [PasskeyLoginWithEmailOtpFallbackScreens.Start]: (
     _,

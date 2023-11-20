@@ -16,7 +16,7 @@
     --secondary-font-hover-color: var(--secondary-color, --primary-color);
     --heading-color: #090f1f;
     --text-color: #090f1f;
-    --error-color: #FF4C51;
+    --error-color: #ff4c51;
     --primary-font: 'Space Grotesk', sans-serif;
     --secondary-font: 'Inter', sans-serif;
     --border-color: rgba(143, 155, 191, 0.5);

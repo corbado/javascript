@@ -1,23 +1,32 @@
 import './i18n';
 import './styles.css';
 
-import { CorbadoProvider, type ICorbadoContextParams } from "@corbado/react-sdk";
+import { FlowType } from '@corbado/web-core';
 import React from 'react';
 
+import FlowHandlerProvider from './hooks/FlowHandlerProvider';
+import UserDataProvider from './hooks/UserDataProvider';
 import { ScreensFlow } from './screens/ScreenFlow';
 
-type Props = ICorbadoContextParams;
-
-export const CorbadoAuth: React.FC<Props> = ({ projectId }) => {
-    return (
-        <div id="corbado-auth">
-            <div className="container">
-                <CorbadoProvider
-                    projectId={projectId}
-                >
-                    <ScreensFlow />
-                </CorbadoProvider>
-            </div>
-        </div>
-    );
+interface Props {
+  onLoggedIn: () => void;
 }
+
+const CorbadoAuthUI = ({ onLoggedIn }: Props) => {
+  return (
+    <div id='corbado-auth'>
+      <div className='container'>
+        <FlowHandlerProvider
+          onLoggedIn={onLoggedIn}
+          initialFlowType={FlowType.SignUp}
+        >
+          <UserDataProvider>
+            <ScreensFlow />
+          </UserDataProvider>
+        </FlowHandlerProvider>
+      </div>
+    </div>
+  );
+};
+
+export default CorbadoAuthUI;

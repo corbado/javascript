@@ -18,15 +18,19 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf ./dist",
     "lint": "eslint src --ext .ts --fix",
-    "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true"
+    "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true",
+    "build": "npm run clean && tsc",
+    "publish:local": "yalc push --replace  --sig",
+    "build_and_publish:local": "npm run build && npm run publish:local"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
     "@github/webauthn-json": "^2.1.1",
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "rxjs": "^7.8.1"
   }
 }

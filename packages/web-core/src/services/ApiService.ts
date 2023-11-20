@@ -1,15 +1,10 @@
-import type { AxiosInstance } from "axios";
-import axios from "axios";
+import type { AxiosInstance } from 'axios';
+import axios from 'axios';
 
-import {
-  AssetsApi,
-  Configuration,
-  ProjectsApi,
-  SessionsApi,
-  UsersApi,
-} from "../api";
+import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
 
-const packageVersion = process.env.npm_package_version ?? "0";
+// TODO: does this work also without npm start? (e.g. vite js)
+const packageVersion = '0';
 
 /**
  * ApiService class encapsulates API handling for the Corbado Application.
@@ -39,7 +34,7 @@ export class ApiService {
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
-    this.#setApis("");
+    this.#setApis('');
   }
 
   // Public getters for the API instances.
@@ -66,16 +61,14 @@ export class ApiService {
    */
   #createAxiosInstance(token: string): AxiosInstance {
     const headers = {
-      "Content-Type": "application/json",
-      "X-Corbado-WC-Version": token ? `Bearer ${token}` : packageVersion, // Example default version
+      'Content-Type': 'application/json',
+      'X-Corbado-WC-Version': token ? `Bearer ${token}` : packageVersion, // Example default version
     };
 
     return axios.create({
       timeout: this.#timeout,
       withCredentials: true,
-      headers: token
-        ? { ...headers, Authorization: `Bearer ${token}` }
-        : headers,
+      headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers,
     });
   }
 

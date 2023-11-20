@@ -18,7 +18,10 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
+    "publish:local": "yalc push --replace  --sig",
+    "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {
@@ -28,7 +31,7 @@
     "react": ">=16.8"
   },
   "dependencies": {
-    "@corbado/web-core": "^0.1.4"
+    "@corbado/web-core": "^0.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.0"

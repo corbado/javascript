@@ -1,5 +1,5 @@
-import { useCorbadoAuth, useCorbadoFlowHandler } from "@corbado/react-sdk";
-import React from "react";
+import { useCorbadoAuth, useCorbadoFlowHandler } from '@corbado/react-sdk';
+import React from 'react';
 
 /**
  * InitiateSignUp allows the user to provide all information required to create his account.
@@ -11,10 +11,10 @@ import React from "react";
 export function InitiateSignUp() {
   const { initiateSignup } = useCorbadoAuth();
   const { navigateToNextScreen } = useCorbadoFlowHandler();
-  const [email, setEmail] = React.useState("");
-  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
 
-  const initiateAuthentication = async (event) => {
+  const initiateAuthentication = async event => {
     event.preventDefault();
     try {
       initiateSignup(email, username);
@@ -33,17 +33,20 @@ export function InitiateSignUp() {
       <form onSubmit={initiateAuthentication}>
         <label>Email:</label>
         <input
-          type="text"
+          type='text'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
         />
         <label>Username:</label>
         <input
-          type="text"
+          type='text'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={e => setUsername(e.target.value)}
         />
-        <input type="submit" value="Submit" />
+        <input
+          type='submit'
+          value='Submit'
+        />
       </form>
     </>
   );

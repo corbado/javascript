@@ -1,9 +1,7 @@
-import type { CookiesDefinition, IAuthResponse } from '../../types';
+import type { CookiesDefinition } from '../../types';
 
 export const dropCookie = (cookieDef: CookiesDefinition) => {
-  let cookieString = `${encodeURIComponent(
-    cookieDef.name,
-  )}=${encodeURIComponent(cookieDef.value)}`;
+  let cookieString = `${encodeURIComponent(cookieDef.name)}=${encodeURIComponent(cookieDef.value)}`;
 
   if (cookieDef.path) {
     cookieString += `; path=${cookieDef.path}`;
@@ -25,15 +23,7 @@ export const dropCookie = (cookieDef: CookiesDefinition) => {
   document.cookie = cookieString;
 };
 
-export const shortCookie = (rsp: IAuthResponse) => {
-  if (rsp.shortSession) {
-    dropCookie(rsp.shortSession);
-  }
-};
-
 export const getCookieValue = (a: string) => {
-  const b = document.cookie.match(
-    '(^|;)\\s*' + encodeURIComponent(a) + '\\s*=\\s*([^;]+)',
-  );
+  const b = document.cookie.match('(^|;)\\s*' + encodeURIComponent(a) + '\\s*=\\s*([^;]+)');
   return b ? decodeURIComponent(b.pop() as string) : '';
 };

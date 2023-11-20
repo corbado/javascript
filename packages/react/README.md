@@ -1,10 +1,3 @@
-<p align="center">
-  <a href="https://www.corbado.com/" target="_blank" rel="noopener noreferrer">
-    <img src="https://uploads-ssl.webflow.com/626a572dd59ab59d107b26c6/6285290cdc476312ea882af9_Corbado%20Wort-Bildmarke.svg" height="64">
-  </a>
-  <br />
-</p>
-
 # @corbado/react
 
 ## Overview
@@ -27,30 +20,6 @@ a project in the [Corbado developer panel](https://app.corbado.com/signin#regist
 npm install @corbado/react
 ```
 
-## Usage
+## Noticeable concepts
 
-```jsx
-import { CorbadoAuth, Props } from '@corbado/react';
-
-const authConfig: Props = {
-    projectId: 'your-project-id',
-};
-
-function App() {
-  return (
-   <CorbadoAuth
-        {...authConfig}
-    />
-  );
-}
-```
-
-## Getting help
-
-Have questions or need help? Here's how you can reach us:
-
-- Join our [Slack community](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
-- Visit our [Support page](https://www.corbado.com/contact) for more contact options
-
-
-> TODO: Publish the package to npm.
+- We allow this package to depend on react-sdk (for the logic) and on web-core (for the UI logic, namely the flow handler)

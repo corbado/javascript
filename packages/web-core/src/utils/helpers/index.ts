@@ -1,1 +1,1 @@
-export * from "./webAuthUtils";
+export * from './webAuthUtils';

@@ -1,5 +1,5 @@
-import { useCorbadoSession } from "@corbado/react-sdk";
-import React, { useState } from "react";
+import { useCorbadoSession } from '@corbado/react-sdk';
+import React, { useState } from 'react';
 
 export function UserDetails() {
   const { getUser, getFullUser } = useCorbadoSession();

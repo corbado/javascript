@@ -1,10 +1,9 @@
-import type { CookiesDefinition } from "./common";
+import type { CookiesDefinition } from './common';
 
 /**
  * Represents the structure of a short session cookie, excluding the 'name' property from CookiesDefinition.
  */
-export interface IShortSession
-  extends Omit<CookiesDefinition, "name" | "expires" | "sameSite"> {
+export interface IShortSession extends Omit<CookiesDefinition, 'name' | 'expires' | 'sameSite'> {
   /** The key name of the cookie, replacing the omitted 'name' property. */
   key: string;
   /** The expiration date of the cookie in ISO 8601 format. */
@@ -24,20 +23,13 @@ export interface ISessionResponse {
   redirectUrl?: string;
 }
 
-export interface IShortSessionStore {
-  /** The short session token. */
-  session?: string;
-  /** The short session expiry. */
-  expires?: string;
-}
-
 /**
  * Enumeration of possible statuses.
  */
 export const StatusEnum = {
-  Active: "active",
-  Pending: "pending",
-  Deleted: "deleted",
+  Active: 'active',
+  Pending: 'pending',
+  Deleted: 'deleted',
 } as const; // Ensures that the properties of Status are readonly and their values are literal types.
 
 /**
@@ -52,11 +44,12 @@ export interface IUser {
   /** User Email */
   email: string;
   /** User Name */
-  name: "Abdullah Shahbaz";
+  name: string;
   /** User Origin */
   orig: string;
   /** User ID */
   sub: string;
+  exp: number;
 }
 
 /**
@@ -111,4 +104,35 @@ export interface IFullUser {
   emails: IUserEmail[];
   /** Array of user's phone numbers */
   phoneNumbers: IUserPhoneNumber[];
+}
+
+export class ShortSession {
+  readonly #value: string;
+  readonly #user: IUser;
+
+  constructor(value: string) {
+    this.#value = value;
+
+    // this is a quick and easy way to parse JWT tokens without using a library
+    const splits = value.split('.');
+    this.#user = JSON.parse(atob(splits[1]));
+  }
+
+  get value() {
+    return this.#value;
+  }
+
+  get user() {
+    return this.#user;
+  }
+
+  isValidForXMoreSeconds(seconds: number): boolean {
+    const now = new Date().getTime() / 1000;
+
+    return this.#user.exp > now + seconds;
+  }
+
+  toString(): string {
+    return this.#value;
+  }
 }

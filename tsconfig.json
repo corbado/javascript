@@ -22,8 +22,8 @@
     "strict": true,
     "target": "ES2019",
     "noErrorTruncation": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["packages/*/src"],
+  "include": ["packages/*/src"]
 }

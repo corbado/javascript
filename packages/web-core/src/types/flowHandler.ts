@@ -5,87 +5,62 @@ import type {
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
   SignUpFlowNames,
-} from "../utils/constants/flowHandler";
-import type { IProjectConfig } from "./common";
+} from '../utils';
 
-export interface IFlowHandlerConfig {
-  passkeyAppend: boolean;
-  retryPasskeyOnError: boolean;
-  compulsoryEmailVerification: boolean;
-  shouldRedirect: boolean;
+export enum FlowType {
+  SignUp,
+  Login,
 }
 
+/**
+ * Configuration settings for handling different authentication flows.
+ */
+export interface IFlowHandlerConfig {
+  // callback that will be executed when a flow reached its end
+  onLoggedIn: () => void;
+  // initial flow to start with
+  initialFlowType: FlowType;
+}
+
+export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions;
+
+export interface PasskeySignupWithEmailOtpFallbackOptions {
+  passkeyAppend: boolean;
+  retryPasskeyOnError: boolean;
+}
+
+/**
+ * Union type of all possible flow names for sign-up and login processes.
+ */
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
 
+/**
+ * Union type of all possible screen names within the authentication flows.
+ */
 export type ScreenNames =
   | CommonScreens
   | EmailOtpSignupScreens
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
-export type StepFunctionParams = Record<
-  string,
-  string | boolean | number | undefined
->;
-
+/**
+ * Type definition for a function that represents a step in an authentication flow.
+ */
 export type StepFunction = (
-  projectCOnfig: IProjectConfig,
-  flowHandlerCOnfig: IFlowHandlerConfig,
-  userInput: StepFunctionParams
+  // Options that configure the behaviour of a single flow
+  flowOptions: FlowOptions,
+  // User input parameters.
+  event?: string,
 ) => ScreenNames | Promise<ScreenNames>;
 
+/**
+ * Type representing a dictionary of step functions for each screen in a flow.
+ */
 export type Flow = {
   [K in ScreenNames]?: StepFunction;
 };
 
+/**
+ * Type representing a dictionary of flows for each flow name.
+ */
 export type Flows = Record<FlowNames, Flow>;
-
-export interface IPasskeyBaseScreen extends StepFunctionParams {
-  success?: boolean;
-  failure?: boolean;
-  cancel?: boolean;
-  sendOtpEmail?: boolean;
-  showBenefits?: boolean;
-  maybeLater?: boolean;
-  isUserAuthenticated?: boolean;
-  userHasPasskey?: boolean;
-}
-
-export type ISignupPasskeyErrorScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "cancel" | "sendOtpEmail" | "isUserAuthenticated"
->;
-
-export type ISignupPasskeyBenefitsScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "maybeLater" | "isUserAuthenticated"
->;
-export type ISignupPasskeyAppendScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "maybeLater" | "showBenefits"
->;
-
-export type ISignupPasskeyCreateScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "sendOtpEmail" | "showBenefits"
->;
-
-export type ILoginInitScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "sendOtpEmail"
->;
-
-export type ILoginPasskeyAppendScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "maybeLater"
->;
-
-export type ILoginPasskeyErrorScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "cancel" | "sendOtpEmail" | "isUserAuthenticated"
->;
-
-export type ILoginEmailOtpScreen = Pick<
-  IPasskeyBaseScreen,
-  "success" | "failure" | "userHasPasskey"
->;

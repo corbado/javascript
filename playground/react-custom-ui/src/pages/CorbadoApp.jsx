@@ -1,52 +1,35 @@
-import { SignUpWithEmailOtpTest } from "./SingUpWithEmailOtpTest";
-import { PasskeySignupTest } from "./PasskeySignupTest";
-import { PasskeyLoginTest } from "./PasskeyLoginTest";
-import {
-  LoginFlowNames,
-  SignUpFlowNames,
-  useCorbadoFlowHandler,
-} from "@corbado/react-sdk";
-import React, { useState } from "react";
-
-const flows = {
-  login: {
-    component: <PasskeyLoginTest />,
-    flowName: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
-  },
-  "signup-1": {
-    component: <PasskeySignupTest />,
-    flowName: SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
-  },
-  "signup-2": {
-    component: <SignUpWithEmailOtpTest />,
-    flowName: SignUpFlowNames.EmailOTPSignup,
-  },
-};
+import { useCorbadoSession } from '@corbado/react-sdk';
+import { AuthenticationFlows } from './AuthenticationFlows';
+import { UserDetails } from './UserDetails';
+import React from 'react';
 
 export function CorbadoAppTest() {
-  const [currentFlow, setCurrentFlow] = useState(null);
-  const { changeFlow } = useCorbadoFlowHandler();
+  const { signedIn, signOut } = useCorbadoSession();
 
-  function handleFlowChange(flowKey) {
-    const flow = flows[flowKey];
-    changeFlow(flow.flowName);
-    setCurrentFlow(flow.component);
-  }
   return (
-    currentFlow ?? (
-      <div>
-        <h1>Corbado React SDK Playground</h1>
-        <h3>Please select the flow you want to test:</h3>
-        <button onClick={() => handleFlowChange("login")}>
-          Passkey Login with Email OTP Fallback
-        </button>
-        <button onClick={() => handleFlowChange("signup-1")}>
-          Passkey Signup with Email OTP Fallback
-        </button>
-        <button onClick={() => handleFlowChange("signup-2")}>
-          Email OTP Signup
-        </button>
-      </div>
-    )
+    <div>
+      <header className='App-header'>
+        <h1>Header - Corbado React SDK Playground</h1>
+      </header>
+      <main>
+        {signedIn ? (
+          <>
+            <UserDetails />
+            <button
+              style={{ marginTop: '5px' }}
+              onClick={signOut}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <AuthenticationFlows />
+        )}
+      </main>
+      <footer style={{ margin: '10px' }}>
+        <h3>Footer</h3>
+        <em>Notice how header and footer are independent of auth state</em>
+      </footer>
+    </div>
   );
 }

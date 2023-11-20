@@ -1,78 +1,18 @@
-import type {
-  Flow,
-  ILoginEmailOtpScreen,
-  ILoginInitScreen,
-  ILoginPasskeyAppendScreen,
-  ILoginPasskeyErrorScreen,
-} from "../../types/flowHandler";
-import { PasskeyLoginWithEmailOtpFallbackScreens } from "../constants/flowHandler";
-import { canUsePasskeys } from "../helpers/webAuthUtils";
+import type { Flow } from '../../types';
+import { PasskeyLoginWithEmailOtpFallbackScreens } from '../constants';
 
+// TODO: Update step functions
 export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
-  [PasskeyLoginWithEmailOtpFallbackScreens.Start]: (
-    _,
-    flowConfig,
-    userInput: ILoginInitScreen
-  ) => {
-    let result = PasskeyLoginWithEmailOtpFallbackScreens.End;
-
-    if (userInput.sendOtpEmail) {
-      result = PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-    } else if (userInput.failure) {
-      result = flowConfig.retryPasskeyOnError
-        ? PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError
-        : PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-    }
-
-    return result;
-  },
-  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: async (
-    _,
-    flowConfig,
-    userInput: ILoginEmailOtpScreen
-  ) => {
-    const isPasskeySupported = await canUsePasskeys();
-
-    if (
-      flowConfig.passkeyAppend &&
-      isPasskeySupported &&
-      !userInput.userHasPasskey
-    ) {
-      return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend;
-    }
-
+  [PasskeyLoginWithEmailOtpFallbackScreens.Start]: (_, __?: string) => {
     return PasskeyLoginWithEmailOtpFallbackScreens.End;
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: (
-    _,
-    flowConfig,
-    userInput: ILoginPasskeyAppendScreen
-  ) => {
-    let result = PasskeyLoginWithEmailOtpFallbackScreens.End;
-
-    if (userInput.failure) {
-      result = flowConfig.retryPasskeyOnError
-        ? PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError
-        : PasskeyLoginWithEmailOtpFallbackScreens.End;
-    }
-
-    return result;
+  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: (_, __?: string) => {
+    return PasskeyLoginWithEmailOtpFallbackScreens.End;
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: (
-    _,
-    __,
-    userInput: ILoginPasskeyErrorScreen
-  ) => {
-    let result = PasskeyLoginWithEmailOtpFallbackScreens.End;
-
-    if (userInput.cancel) {
-      result = userInput.isUserAuthenticated
-        ? PasskeyLoginWithEmailOtpFallbackScreens.End
-        : PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-    } else if (userInput.sendOtpEmail && !userInput.isUserAuthenticated) {
-      result = PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-    }
-
-    return result;
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: (_, __?: string) => {
+    return PasskeyLoginWithEmailOtpFallbackScreens.End;
+  },
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: (_, __?: string) => {
+    return PasskeyLoginWithEmailOtpFallbackScreens.End;
   },
 };

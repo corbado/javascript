@@ -1,10 +1,10 @@
-import i18n from "i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
-import TRANSLATIONS_EN from "./locales/en";
+import TRANSLATIONS_EN from './locales/en';
 
-const defaultLanguage = "en";
+const defaultLanguage = 'en';
 
 void i18n
   .use(initReactI18next)
@@ -13,7 +13,7 @@ void i18n
     resources: {
       en: { translation: TRANSLATIONS_EN },
     },
-    keySeparator: ".",
+    keySeparator: '.',
     fallbackLng: defaultLanguage,
   });
 
@@ -23,7 +23,7 @@ void i18n
  * @param {string} locale The locale passed in the function e.g `de-DE`, `en-GB`
  * @return {*} {string} The language extracted from the locale e.g `de`, `en`
  */
-const getLanguage = (locale: string): string => locale.split("-")[0];
+const getLanguage = (locale: string): string => locale.split('-')[0];
 
 /**
  * @function setI18nLanguage Sets any language passed in the parameters to the html document body.
@@ -32,7 +32,7 @@ const getLanguage = (locale: string): string => locale.split("-")[0];
  * @return {*} void
  */
 const setI18nLanguage = (lang: string): void => {
-  document?.querySelector("html")?.setAttribute("lang", lang);
+  document?.querySelector('html')?.setAttribute('lang', lang);
 };
 
 /**

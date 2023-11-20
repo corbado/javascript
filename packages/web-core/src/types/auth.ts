@@ -1,6 +1,4 @@
-import type { CookiesDefinition } from "./common";
-
-export interface IAuthResponse {
-  shortSession: CookiesDefinition;
-  emailLinkID: string;
+export enum AuthState {
+  LoggedOut,
+  LoggedIn,
 }

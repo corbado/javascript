@@ -28,14 +28,8 @@ const LabelledInput = ({ label, type, id, name, value, onChange, error, ref, ...
           error={error}
           {...rest}
         />
-        <label
-          htmlFor={id}
-        >
-          {label}
-        </label>
-        <div className="h-5">
-        {error && <p className='error-text'>{error}</p>}
-      </div>
+        <label htmlFor={id}>{label}</label>
+        <div className='h-5'>{error && <p className='error-text'>{error}</p>}</div>
       </div>
     </>
   );

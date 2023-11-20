@@ -1,20 +1,41 @@
-import type { IProjectConfig } from "../types";
-import type { ApiService } from "./ApiService";
+import type { IProjectConfig } from '../types';
+import type { ApiService } from './ApiService';
 
+/**
+ * ProjectService is responsible for managing the project configuration.
+ */
 export class ProjectService {
-  private _projConfig: IProjectConfig | null = null;
-  constructor(private readonly _apiService: ApiService) {}
+  #projConfig: IProjectConfig | null = null;
+  #apiService: ApiService;
 
-  public get projConfig() {
-    return this._projConfig;
+  /**
+   * Constructs the ProjectService with the necessary ApiService.
+   * @param apiService An instance of ApiService to be used for HTTP requests.
+   */
+  constructor(apiService: ApiService) {
+    this.#apiService = apiService;
   }
 
-  public async getProjectConfig() {
-    const resp = await this._apiService.projectsApi.projectConfig();
+  /**
+   * Getter method for retrieving the current project configuration.
+   * @returns The current project configuration or null if it's not set.
+   */
+  get projConfig() {
+    return this.#projConfig;
+  }
 
-    const config = resp.data.data;
+  /**
+   * Asynchronously fetches the project configuration using the ApiService.
+   * @returns A Promise that resolves to the fetched project configuration.
+   */
+  async getProjectConfig(forceRefresh = false) {
+    if (this.#projConfig && !forceRefresh) {
+      return this.#projConfig;
+    }
 
-    this._projConfig = config;
-    return this._projConfig;
+    const resp = await this.#apiService.projectsApi.projectConfig();
+    this.#projConfig = resp.data.data;
+
+    return this.#projConfig;
   }
 }

@@ -3,7 +3,7 @@ import type {
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
   ScreenNames,
-} from "@corbado/react-sdk";
+} from '@corbado/react-sdk';
 
 export type EmailOTPSignupScreensList = {
   [K in EmailOtpSignupScreens]?: React.ReactNode;

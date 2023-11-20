@@ -3,23 +3,19 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint"
-        ]
+        "cacheableOperations": ["build", "lint", "build_and_publish:local"]
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
+    },
+    "build_and_publish:local": {
+      "dependsOn": ["^build_and_publish:local"]
     }
   }
 }

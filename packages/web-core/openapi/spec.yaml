@@ -732,8 +732,8 @@ components:
           type: boolean
         status:
           type: string
-          enum: [ 'pending', 'active' ]
-          description: "Status"
+          enum: ['pending', 'active']
+          description: 'Status'
         created:
           $ref: 'common.yml#/components/schemas/created'
 
@@ -864,7 +864,6 @@ components:
                   type: string
               required:
                 - redirectURL
-
 
     passKeyMediationStartReq:
       type: object
@@ -1132,7 +1131,6 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/authenticationRsp'
-
 
     loginTokenReq:
       type: object
@@ -1422,5 +1420,5 @@ components:
             $ref: 'common.yml#/components/schemas/errorRsp'
 
 security:
-  - bearerAuth: [ ]
-  - projectID: [ ]
+  - bearerAuth: []
+  - projectID: []

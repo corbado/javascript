@@ -22,9 +22,11 @@ For package specific details on installation, architecture and usage usage, you 
 To get started, you can refer to the corbado [documentation](https://docs.corbado.com/overview/welcome) page.
 
 You can add an SDK to your project by either
+
 ```sh
 npm install @corbado/{package}
 ```
+
 or
 
 ```sh
@@ -34,16 +36,19 @@ yarn add @corbado/{package}
 ## Test
 
 ### Prerequisite
+
 - Node.js v14+
 - Lerna CLI v7+
 
 ### Required First step
+
 - Clone the repository.
 - In the root directory and run `npm install --global lerna` in the terminal if you don't have Lerna installed already.
 - Then run `npm i` to install packages dependencies.
 - Run `lerna run build` to build all packages.
 
 ### React UI Example
+
 - Go to `react-example` under the playground directory by running `cd playground/react-example` in the terminal.
 - Run `npx yalc add @corbado/react`
 - Run `npm install` to install react-example app dependencies
@@ -51,6 +56,7 @@ yarn add @corbado/{package}
 - In your browser, visit `http://localhost:3000` to view the sample app.
 
 ### React SDK UI Exxample
+
 - Go to the `react-sdk` directory and run `npx publish @corbado/react-sdk` to publish the package locally.
 - Go to `react-custom-ui` under the playground directory by running `cd playground/react-custom-ui` in the terminal.
 - Run `npx yalc add @corbado/react-sdk`

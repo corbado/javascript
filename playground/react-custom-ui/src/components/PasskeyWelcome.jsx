@@ -1,5 +1,5 @@
-import { useCorbadoFlowHandler } from "@corbado/react-sdk";
-import React from "react";
+import { useCorbadoFlowHandler } from '@corbado/react-sdk';
+import React from 'react';
 
 export function PasskeyWelcome() {
   const { navigateToNextScreen } = useCorbadoFlowHandler();

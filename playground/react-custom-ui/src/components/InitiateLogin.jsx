@@ -1,16 +1,12 @@
-import {
-  useCorbadoAuth,
-  useCorbadoFlowHandler,
-  canUsePasskeys,
-} from "@corbado/react-sdk";
-import React from "react";
+import { useCorbadoAuth, useCorbadoFlowHandler, canUsePasskeys } from '@corbado/react-sdk';
+import React from 'react';
 
 export function InitiateLogin() {
   const { initiateLogin, passkeyLogin } = useCorbadoAuth();
   const { navigateToNextScreen } = useCorbadoFlowHandler();
-  const [username, setUsername] = React.useState("");
+  const [username, setUsername] = React.useState('');
 
-  const initiateAuthentication = async (event) => {
+  const initiateAuthentication = async event => {
     event.preventDefault();
     try {
       initiateLogin(username);
@@ -46,17 +42,18 @@ export function InitiateLogin() {
 
   return (
     <form onSubmit={initiateAuthentication}>
-      <label htmlFor="username">Username:</label>
+      <label htmlFor='username'>Username:</label>
       <input
-        type="text"
+        type='text'
         value={username}
-        autoComplete="username webauthn"
-        onChange={(e) => setUsername(e.target.value)}
+        autoComplete='username webauthn'
+        onChange={e => setUsername(e.target.value)}
       />
-      <input type="submit" value="Submit" />
-      <button onClick={initiateAuthenticationWithEmailOtp}>
-        Login with Email OTP
-      </button>
+      <input
+        type='submit'
+        value='Submit'
+      />
+      <button onClick={initiateAuthenticationWithEmailOtp}>Login with Email OTP</button>
     </form>
   );
 }

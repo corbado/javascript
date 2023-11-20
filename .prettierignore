@@ -1,0 +1,13 @@
+node_modules/
+dist
+
+.DS_Store
+.idea
+.yalc
+
+packages/*/node_modules/
+packages/*/dist/
+pacakges/web-core/openapi
+packages/web-core/src/api
+playground/*/node_modules/
+playground/*/yalc.lock

@@ -1,21 +1,21 @@
-import type {ICorbadoAppParams, IProjectConfig, IUser,} from "@corbado/web-core";
-import {createContext, type PropsWithChildren,} from "react";
-import {LoginHandler} from "@corbado/web-core";
+import type { ICorbadoAppParams, IProjectConfig, IUser } from '@corbado/web-core';
+import type { LoginHandler } from '@corbado/web-core';
+import { createContext, type PropsWithChildren } from 'react';
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
 export interface CorbadoContextInterface {
-  shortSession: string | undefined
-  user: IUser | undefined
-  signUpWithPasskey: (email: string, username: string) => Promise<void>
-  loginWithPasskey: (email: string) => Promise<void>
-  initLoginWithEmailOTP: (email: string) => Promise<void>
-  completeLoginWithEmailOTP: (code: string) => Promise<void>
-  logout: () => Promise<void>
-  initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>
-  completeSignUpWithEmailOTP: (code: string) => Promise<void>
-  initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>
-  getProjectConfig: () => Promise<IProjectConfig>
+  shortSession: string | undefined;
+  user: IUser | undefined;
+  signUpWithPasskey: (email: string, username: string) => Promise<void>;
+  loginWithPasskey: (email: string) => Promise<void>;
+  initLoginWithEmailOTP: (email: string) => Promise<void>;
+  completeLoginWithEmailOTP: (code: string) => Promise<void>;
+  logout: () => void;
+  initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>;
+  completeSignUpWithEmailOTP: (code: string) => Promise<void>;
+  initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>;
+  getProjectConfig: () => Promise<IProjectConfig>;
 }
 
 const missingImplementation = (): never => {
@@ -36,6 +36,6 @@ export const initialContext = {
   getProjectConfig: missingImplementation,
 };
 
-const CorbadoContext = createContext<CorbadoContextInterface>(initialContext)
+const CorbadoContext = createContext<CorbadoContextInterface>(initialContext);
 
-export default CorbadoContext
+export default CorbadoContext;

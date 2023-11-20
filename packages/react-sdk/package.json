@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc",
-    "publish:local": "npx yalc push --replace  --sig",
+    "publish:local": "yalc push --replace  --sig",
     "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
@@ -31,7 +31,7 @@
     "react": ">=16.8"
   },
   "dependencies": {
-    "@corbado/web-core": "file:.yalc/@corbado/web-core"
+    "@corbado/web-core": "^0.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.0"

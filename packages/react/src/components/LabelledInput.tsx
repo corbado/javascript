@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Input, {type Props as InputProps} from './Input';
+import Input, { type Props as InputProps } from './Input';
 
 interface Props extends InputProps {
   label: string;
 }
 
-const LabelledInput = ({label, type, id, name, value, onChange, error, ref, ...rest}: Props) => {
+const LabelledInput = ({ label, type, id, name, value, onChange, error, ref, ...rest }: Props) => {
   const [focused, setFocused] = React.useState(false);
 
   const onFocus = () => setFocused(true);
@@ -28,14 +28,8 @@ const LabelledInput = ({label, type, id, name, value, onChange, error, ref, ...r
           error={error}
           {...rest}
         />
-        <label
-          htmlFor={id}
-        >
-          {label}
-        </label>
-        <div className="h-5">
-          {error && <p className='error-text'>{error}</p>}
-        </div>
+        <label htmlFor={id}>{label}</label>
+        <div className='h-5'>{error && <p className='error-text'>{error}</p>}</div>
       </div>
     </>
   );

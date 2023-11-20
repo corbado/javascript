@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx,mdx}'
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx,mdx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -45,16 +43,16 @@ module.exports = {
         'secondary-border-color': 'var(--secondary-border-color, --primary-color)',
         'secondary-background-color': 'var(--secondary-background-color, #fff)',
         'disabled-color': 'var(--text-color, #535e80)',
-        'email-provider-btn-color': 'var(--email-provider-btn-color, #fff)'
+        'email-provider-btn-color': 'var(--email-provider-btn-color, #fff)',
       },
       borderRadius: ({ theme }) => ({
         ...theme('spacing'),
       }),
       keyframes: {
         'cd-spin': {
-          'from': { transform: 'rotate(0turn)' },
-          'to': { transform: 'rotate(1turn)' },
-        }
+          from: { transform: 'rotate(0turn)' },
+          to: { transform: 'rotate(1turn)' },
+        },
       },
       animation: {
         'cd-spin': 'cd-spin 1s ease infinite',
@@ -65,5 +63,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
-
+};

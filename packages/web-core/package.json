@@ -22,7 +22,7 @@
     "lint": "eslint src --ext .ts --fix",
     "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true",
     "build": "npm run clean && tsc",
-    "publish:local": "npx yalc push --replace  --sig",
+    "publish:local": "yalc push --replace  --sig",
     "build_and_publish:local": "npm run build && npm run publish:local"
   },
   "bugs": {

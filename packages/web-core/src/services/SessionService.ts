@@ -1,15 +1,16 @@
-import type {IFullUser, IUser,} from "../types";
-import {ShortSession} from "../types";
-import type {ApiService} from "./ApiService";
-import {AxiosRequestConfig} from "axios";
+import type { AxiosRequestConfig } from 'axios';
 
-const shortSessionKey = "cbo_short_session";
-const longSessionKey = "cbo_long_session";
+import type { IFullUser, IUser } from '../types';
+import { ShortSession } from '../types';
+import type { ApiService } from './ApiService';
+
+const shortSessionKey = 'cbo_short_session';
+const longSessionKey = 'cbo_long_session';
 
 // controls how long before the shortSession expires we should refresh it
-const shortSessionRefreshBeforeExpirationSeconds = 60
+const shortSessionRefreshBeforeExpirationSeconds = 60;
 // controls how often we check if we need to refresh the session
-const shortSessionRefreshIntervalMs = 10_000
+const shortSessionRefreshIntervalMs = 10_000;
 
 /**
  * The SessionService manages user sessions for the Corbado Application, handling shortSession and longSession.
@@ -19,15 +20,15 @@ const shortSessionRefreshIntervalMs = 10_000
  * The longSession should not be exposed from this service as it is only used for session refresh.
  */
 export class SessionService {
-  #shortSession: ShortSession | undefined
-  #longSession: string | undefined
+  #shortSession: ShortSession | undefined;
+  #longSession: string | undefined;
   #apiService: ApiService;
-  #onShortSessionChange?: (value: ShortSession | undefined) => void
+  #onShortSessionChange?: (value: ShortSession | undefined) => void;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
   constructor(apiService: ApiService) {
-    this.#apiService = apiService
-    this.#longSession = undefined
+    this.#apiService = apiService;
+    this.#longSession = undefined;
   }
 
   /**
@@ -36,22 +37,22 @@ export class SessionService {
    * @param onShortSessionChange
    */
   init(onShortSessionChange: (value: ShortSession | undefined) => void) {
-    this.#onShortSessionChange = onShortSessionChange
+    this.#onShortSessionChange = onShortSessionChange;
 
     const shortSession = SessionService.#getShortTermSessionToken();
     if (shortSession) {
-      this.#shortSession = shortSession
-      this.#onShortSessionChange(shortSession)
-      this.#apiService.setInstanceWithToken(shortSession.value)
+      this.#shortSession = shortSession;
+      this.#onShortSessionChange(shortSession);
+      this.#apiService.setInstanceWithToken(shortSession.value);
     }
 
-    this.#longSession = SessionService.#getLongSessionToken()
+    this.#longSession = SessionService.#getLongSessionToken();
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers
-    this.#refreshIntervalId = setInterval(async () => {
-      await this.#handleRefreshRequest()
-    }, shortSessionRefreshIntervalMs)
+    this.#refreshIntervalId = setInterval(() => {
+      void this.#handleRefreshRequest();
+    }, shortSessionRefreshIntervalMs);
   }
 
   /**
@@ -67,12 +68,12 @@ export class SessionService {
    * @returns The username or null if it's not set.
    */
   public getUser(): IUser | undefined {
-    console.log(this.#shortSession)
+    console.log(this.#shortSession);
     if (!this.#shortSession) {
       return;
     }
 
-    const sessionParts = this.#shortSession.value.split(".");
+    const sessionParts = this.#shortSession.value.split('.');
     const sessionPayload = JSON.parse(atob(sessionParts[1]));
 
     return {
@@ -101,11 +102,11 @@ export class SessionService {
    * @param longSession The long term session token to be set.
    */
   setSession(shortSession: ShortSession, longSession: string | undefined) {
-    this.#setShortTermSessionToken(shortSession)
-    this.#apiService.setInstanceWithToken(shortSession.value)
+    this.#setShortTermSessionToken(shortSession);
+    this.#apiService.setInstanceWithToken(shortSession.value);
 
     if (this.#onShortSessionChange) {
-      this.#onShortSessionChange(shortSession)
+      this.#onShortSessionChange(shortSession);
     }
 
     this.#setLongSessionToken(longSession);
@@ -120,17 +121,17 @@ export class SessionService {
     this.#deleteLongSessionToken();
 
     if (this.#refreshIntervalId) {
-      clearInterval(this.#refreshIntervalId)
+      clearInterval(this.#refreshIntervalId);
     }
   }
 
-  async logout() {
+  logout() {
     // TODO: should we call backend to destroy the session here?
-    console.log('logging out user')
+    console.log('logging out user');
     this.clear();
 
     if (this.#onShortSessionChange) {
-      this.#onShortSessionChange(undefined)
+      this.#onShortSessionChange(undefined);
     }
   }
 
@@ -138,12 +139,12 @@ export class SessionService {
    * Gets the short term session token.
    */
   static #getShortTermSessionToken(): ShortSession | undefined {
-    const v = localStorage.getItem(shortSessionKey)
+    const v = localStorage.getItem(shortSessionKey);
     if (!v) {
-      return
+      return;
     }
 
-    return new ShortSession(v)
+    return new ShortSession(v);
   }
 
   /**
@@ -151,14 +152,14 @@ export class SessionService {
    */
   #deleteLongSessionToken(): void {
     localStorage.removeItem(longSessionKey);
-    this.#longSession = "";
+    this.#longSession = '';
   }
 
   /**
    * Gets the long term session token.
    */
   static #getLongSessionToken() {
-    return (localStorage.getItem(longSessionKey) as string) ?? "";
+    return (localStorage.getItem(longSessionKey) as string) ?? '';
   }
 
   /**
@@ -184,7 +185,7 @@ export class SessionService {
    */
   #setLongSessionToken(longSessionToken: string | undefined): void {
     if (!longSessionToken) {
-      return
+      return;
     }
 
     localStorage.setItem(longSessionKey, longSessionToken);
@@ -194,44 +195,44 @@ export class SessionService {
   async #handleRefreshRequest() {
     // no shortSession => user is not logged in => nothing to refresh
     if (!this.#shortSession) {
-      return
+      return;
     }
 
     // refresh, token too old
     if (!this.#shortSession.isValidForXMoreSeconds(shortSessionRefreshBeforeExpirationSeconds)) {
-      await this.#refresh()
+      await this.#refresh();
     }
 
     // nothing to do for now
-    console.log('no refresh, token still valid')
-    return
+    console.log('no refresh, token still valid');
+    return;
   }
 
   async #refresh() {
     try {
       const options: AxiosRequestConfig = {
         headers: {
-          'Authorization': 'Bearer ' + this.#longSession
-        }
-      }
-      const response = await this.#apiService.sessionsApi.sessionRefresh({}, options)
+          Authorization: `Bearer ${this.#longSession}`,
+        },
+      };
+      const response = await this.#apiService.sessionsApi.sessionRefresh({}, options);
       if (response.status !== 200) {
-        console.error('refresh error, status code: ' + response.status)
-        return
+        console.error(`refresh error, status code: ${response.status}`);
+        return;
       }
 
       if (!response.data.shortSession?.value) {
-        console.error('refresh error, missing short session')
-        return
+        console.error('refresh error, missing short session');
+        return;
       }
 
-      const shortSession = new ShortSession(response.data.shortSession?.value)
-      this.setSession(shortSession, undefined)
+      const shortSession = new ShortSession(response.data.shortSession?.value);
+      this.setSession(shortSession, undefined);
     } catch (e) {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user
-      console.log(e)
-      await this.logout()
+      console.log(e);
+      this.logout();
     }
   }
 }

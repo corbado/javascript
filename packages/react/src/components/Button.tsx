@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Spinner} from './Spinner';
+import { Spinner } from './Spinner';
 
 interface AdditionalProps {
   variant?: 'primary' | 'secondary' | 'tertiary';
@@ -12,20 +12,19 @@ const variants = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
   tertiary: 'btn-tertiary',
-}
+};
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
 
 const Button: React.FunctionComponent<Props> = ({
-                                                  variant = 'tertiary',
-                                                  fullWidth = true,
-                                                  isLoading = false,
-                                                  className = '',
-                                                  disabled,
-                                                  children,
-                                                  ...rest
-                                                }) => {
-
+  variant = 'tertiary',
+  fullWidth = true,
+  isLoading = false,
+  className = '',
+  disabled,
+  children,
+  ...rest
+}) => {
   const classes = `${variants[variant]} ${className} ${fullWidth ? 'w-full' : ''}`;
   return (
     <button
@@ -33,7 +32,7 @@ const Button: React.FunctionComponent<Props> = ({
       disabled={disabled}
       {...rest}
     >
-      {isLoading ? <Spinner/> : children}
+      {isLoading ? <Spinner /> : children}
     </button>
   );
 };

@@ -5,7 +5,7 @@ import type {
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
   SignUpFlowNames,
-} from "../utils";
+} from '../utils';
 
 export enum FlowType {
   SignUp,
@@ -17,16 +17,16 @@ export enum FlowType {
  */
 export interface IFlowHandlerConfig {
   // callback that will be executed when a flow reached its end
-  onLoggedIn: () => void
+  onLoggedIn: () => void;
   // initial flow to start with
-  initialFlowType: FlowType
+  initialFlowType: FlowType;
 }
 
-export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions
+export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions;
 
 export interface PasskeySignupWithEmailOtpFallbackOptions {
-  passkeyAppend: boolean
-  retryPasskeyOnError: boolean
+  passkeyAppend: boolean;
+  retryPasskeyOnError: boolean;
 }
 
 /**
@@ -50,8 +50,8 @@ export type StepFunction = (
   // Options that configure the behaviour of a single flow
   flowOptions: FlowOptions,
   // User input parameters.
-  event?: string
-) => ScreenNames | Promise<ScreenNames>
+  event?: string,
+) => ScreenNames | Promise<ScreenNames>;
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.

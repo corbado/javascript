@@ -1,21 +1,17 @@
-import {useCorbado} from "@corbado/react-sdk";
-import {useNavigate} from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { useCorbado } from '@corbado/react-sdk';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const HomePage = () => {
-  const {shortSession, user, logout} = useCorbado()
-  const navigate = useNavigate()
+  const { shortSession, user, logout } = useCorbado();
+  const navigate = useNavigate();
 
   if (user === undefined || shortSession === undefined) {
-    return (
-      <div className='h-screen flex flex-col items-center justify-center'>
-        You are not logged in.
-      </div>
-    )
+    return <div className='h-screen flex flex-col items-center justify-center'>You are not logged in.</div>;
   }
 
   const decodedShortSession = jwtDecode(shortSession);
-  const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2)
+  const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);
 
   return (
     <div className='h-screen flex flex-col items-center justify-center'>
@@ -26,17 +22,19 @@ const HomePage = () => {
           <p>This is your shortSession:</p>
           <pre className='break-words'>{serializedDecodedShortSession}</pre>
         </div>
-        <button onClick={async () => {
-          await logout();
+        <button
+          onClick={async () => {
+            await logout();
 
-          // this should be covered by a guard (then we can remove it)
-          navigate('/auth')
-        }}>Logout
+            // this should be covered by a guard (then we can remove it)
+            navigate('/auth');
+          }}
+        >
+          Logout
         </button>
       </div>
     </div>
-  )
+  );
+};
 
-}
-
-export default HomePage
+export default HomePage;

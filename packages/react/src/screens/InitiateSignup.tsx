@@ -1,14 +1,14 @@
-import React from "react";
-import {Trans, useTranslation} from "react-i18next";
+import { FlowType } from '@corbado/web-core';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
-import Button from "../components/Button";
-import LabelledInput from "../components/LabelledInput";
-import Link from "../components/Link";
-import Text from "../components/Text";
-import {emailRegex} from "../utils/validations";
-import useFlowHandler from "../hooks/useFlowHandler";
-import useUserData from "../hooks/useUserData";
-import {FlowType} from "@corbado/web-core";
+import Button from '../components/Button';
+import LabelledInput from '../components/LabelledInput';
+import Link from '../components/Link';
+import Text from '../components/Text';
+import useFlowHandler from '../hooks/useFlowHandler';
+import useUserData from '../hooks/useUserData';
+import { emailRegex } from '../utils/validations';
 
 interface SignupForm {
   name: string;
@@ -16,12 +16,12 @@ interface SignupForm {
 }
 
 export const InitiateSignup = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
-  const {navigateNext, changeFlow} = useFlowHandler();
-  const {setEmail, setUserName} = useUserData()
+  const { navigateNext, changeFlow } = useFlowHandler();
+  const { setEmail, setUserName } = useUserData();
 
-  const formTemplate = {name: "", username: ""};
+  const formTemplate = { name: '', username: '' };
 
   const [signupData, setSignupData] = React.useState<SignupForm>({
     ...formTemplate,
@@ -33,18 +33,18 @@ export const InitiateSignup = () => {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     (event.target as HTMLInputElement).name;
-    const {value, name} = event.target;
-    setSignupData((prevData) => ({...prevData, [name]: value}));
+    const { value, name } = event.target;
+    setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleSignup = async (): Promise<void> => {
     setLoading(true);
     try {
-      setEmail(signupData.username)
-      setUserName(signupData.name)
+      setEmail(signupData.username);
+      setUserName(signupData.name);
       void navigateNext();
     } catch (error) {
-      console.log({error});
+      console.log({ error });
       setLoading(false);
     }
   };
@@ -52,13 +52,13 @@ export const InitiateSignup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
-    const errors: SignupForm = {...formTemplate};
+    const errors: SignupForm = { ...formTemplate };
 
     if (!signupData.name) {
-      errors.name = t("validation_errors.name");
+      errors.name = t('validation_errors.name');
     }
     if (!signupData.username || !emailRegex.test(signupData.username)) {
-      errors.username = t("validation_errors.email");
+      errors.username = t('validation_errors.email');
     }
 
     setErrorData(errors);
@@ -67,45 +67,51 @@ export const InitiateSignup = () => {
       return;
     }
 
-    setErrorData({...formTemplate});
+    setErrorData({ ...formTemplate });
 
     void handleSignup();
   };
 
   return (
     <>
-      <Text variant="header">{t("signup.header")}</Text>
-      <Text variant="sub-header">
+      <Text variant='header'>{t('signup.header')}</Text>
+      <Text variant='sub-header'>
         {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey="signup.sub-header">
-          text{" "}
-          <Link href="" className="text-secondary-font-color">
+        <Trans i18nKey='signup.sub-header'>
+          text{' '}
+          <Link
+            href=''
+            className='text-secondary-font-color'
+          >
             text
-          </Link>{" "}
+          </Link>{' '}
           text
         </Trans>
         <span onClick={() => changeFlow(FlowType.Login)}>Log in</span>
       </Text>
-      <div className="form-wrapper">
+      <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+          <div className='mb-3'>
             <LabelledInput
-              name="name"
-              label={t("generic.name")}
+              name='name'
+              label={t('generic.name')}
               onChange={onChange}
               value={signupData.name}
               error={errorData.name}
             />
             <LabelledInput
-              name="username"
-              label={t("generic.email")}
+              name='username'
+              label={t('generic.email')}
               onChange={onChange}
               value={signupData.username}
               error={errorData.username}
             />
           </div>
-          <Button variant="primary" isLoading={loading}>
-            {t("signup.continue_email")}
+          <Button
+            variant='primary'
+            isLoading={loading}
+          >
+            {t('signup.continue_email')}
           </Button>
         </form>
       </div>

@@ -1,5 +1,5 @@
-import type {IProjectConfig} from "../types";
-import type {ApiService} from "./ApiService";
+import type { IProjectConfig } from '../types';
+import type { ApiService } from './ApiService';
 
 /**
  * ProjectService is responsible for managing the project configuration.
@@ -28,14 +28,14 @@ export class ProjectService {
    * Asynchronously fetches the project configuration using the ApiService.
    * @returns A Promise that resolves to the fetched project configuration.
    */
-  async getProjectConfig(forceRefresh: boolean = false) {
+  async getProjectConfig(forceRefresh = false) {
     if (this.#projConfig && !forceRefresh) {
-      return this.#projConfig
+      return this.#projConfig;
     }
 
-    const resp = await this.#apiService.projectsApi.projectConfig()
-    this.#projConfig = resp.data.data
+    const resp = await this.#apiService.projectsApi.projectConfig();
+    this.#projConfig = resp.data.data;
 
-    return this.#projConfig
+    return this.#projConfig;
   }
 }

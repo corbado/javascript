@@ -1,13 +1,12 @@
-import {createContext,} from "react";
-import {FlowNames, FlowType, ScreenNames} from "@corbado/web-core";
-
+import type { FlowNames, FlowType, ScreenNames } from '@corbado/web-core';
+import { createContext } from 'react';
 
 export interface FlowHandlerContextInterface {
-  currentFlow: FlowNames | undefined
-  currentScreen: ScreenNames | undefined
-  navigateNext: (event?: string) => Promise<void>
-  navigateBack: () => void
-  changeFlow: (flowType: FlowType) => void
+  currentFlow: FlowNames | undefined;
+  currentScreen: ScreenNames | undefined;
+  navigateNext: (event?: string) => Promise<void>;
+  navigateBack: () => void;
+  changeFlow: (flowType: FlowType) => void;
 }
 
 const missingImplementation = (): never => {
@@ -19,9 +18,9 @@ export const initialContext = {
   currentScreen: undefined,
   navigateNext: missingImplementation,
   navigateBack: missingImplementation,
-  changeFlow: missingImplementation
+  changeFlow: missingImplementation,
 };
 
-const FlowHandlerContext = createContext<FlowHandlerContextInterface>(initialContext)
+const FlowHandlerContext = createContext<FlowHandlerContextInterface>(initialContext);
 
-export default FlowHandlerContext
+export default FlowHandlerContext;

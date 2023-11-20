@@ -9,5 +9,6 @@ This SDK is for developers who want to add Corbado's Authentication management i
 > TODO: Publish the package to npm.
 
 ## Noticeable concepts
+
 - We try to keep this package as simple as possible
 - It should contain no logic related directly to UI because this package will only be used by developers who want to use their own UI

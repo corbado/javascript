@@ -1,6 +1,6 @@
-import type {Flow, FlowNames, IFlowHandlerConfig, IProjectConfig, ScreenNames,} from "../types"
-import {FlowType} from "../types";
-import {CommonScreens, flows, LoginFlowNames, SignUpFlowNames} from "../utils"
+import type { Flow, FlowNames, IFlowHandlerConfig, IProjectConfig, ScreenNames } from '../types';
+import { FlowType } from '../types';
+import { CommonScreens, flows, LoginFlowNames, SignUpFlowNames } from '../utils';
 
 /**
  * FlowHandlerService is a class that manages the navigation flow of the application.
@@ -8,60 +8,57 @@ import {CommonScreens, flows, LoginFlowNames, SignUpFlowNames} from "../utils"
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
 export class FlowHandlerService {
-  #currentFlow!: Flow
-  #currentScreen: ScreenNames
-  #screenHistory: ScreenNames[]
-  #flowName!: FlowNames
+  #currentFlow!: Flow;
+  #currentScreen: ScreenNames;
+  #screenHistory: ScreenNames[];
+  #flowName!: FlowNames;
 
   // @ts-ignore
-  #projectConfig: IProjectConfig | undefined
-  #flowHandlerConfig: IFlowHandlerConfig
+  #projectConfig: IProjectConfig | undefined;
+  #flowHandlerConfig: IFlowHandlerConfig;
 
-  #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = []
-  #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = []
+  #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
+  #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
 
   /**
    * The constructor initializes the FlowHandlerService with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(
-    projectConfig: IProjectConfig,
-    flowHandlerConfig: IFlowHandlerConfig,
-  ) {
-    this.#flowHandlerConfig = flowHandlerConfig
-    this.#screenHistory = []
-    this.#currentScreen = CommonScreens.Start
-    this.#projectConfig = projectConfig
+  constructor(projectConfig: IProjectConfig, flowHandlerConfig: IFlowHandlerConfig) {
+    this.#flowHandlerConfig = flowHandlerConfig;
+    this.#screenHistory = [];
+    this.#currentScreen = CommonScreens.Start;
+    this.#projectConfig = projectConfig;
   }
 
   /**
    * Initializes the FlowHandlerService.
    * Call this function after registering all callbacks.
    */
-  async init() {
-    this.changeFlow(this.#flowHandlerConfig.initialFlowType)
+  init() {
+    this.changeFlow(this.#flowHandlerConfig.initialFlowType);
   }
 
   get currentScreenName() {
-    return this.#currentScreen
+    return this.#currentScreen;
   }
 
   get currentFlowName() {
-    return this.#flowName
+    return this.#flowName;
   }
 
   /**
    * Method to add a callback function to be called when the current screen changes.
    */
   onScreenChange(cb: (screen: ScreenNames) => void) {
-    this.#onScreenUpdateCallbacks.push(cb)
+    this.#onScreenUpdateCallbacks.push(cb);
   }
 
   /**
    * Method to add a callback function to be called when the current flow changes.
    */
   onFlowChange(cb: (flow: FlowNames) => void) {
-    this.#onFlowUpdateCallbacks.push(cb)
+    this.#onFlowUpdateCallbacks.push(cb);
   }
 
   /**
@@ -74,9 +71,9 @@ export class FlowHandlerService {
    * @param event
    */
   async navigateNext(event?: string): Promise<ScreenNames> {
-    const stepFunction = this.#currentFlow[this.#currentScreen]
+    const stepFunction = this.#currentFlow[this.#currentScreen];
     if (!stepFunction) {
-      throw new Error("Invalid screen")
+      throw new Error('Invalid screen');
     }
 
     // TODO: extract flowOptions from projectConfig
@@ -85,21 +82,21 @@ export class FlowHandlerService {
         passkeyAppend: true,
         retryPasskeyOnError: true,
       },
-      event
-    )
+      event,
+    );
 
     if (nextScreen === CommonScreens.End) {
-      void this.#flowHandlerConfig.onLoggedIn()
+      void this.#flowHandlerConfig.onLoggedIn();
     }
 
-    this.#screenHistory.push(this.#currentScreen)
-    this.#currentScreen = nextScreen
+    this.#screenHistory.push(this.#currentScreen);
+    this.#currentScreen = nextScreen;
 
     if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach((cb) => cb(this.#currentScreen))
+      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
     }
 
-    return nextScreen
+    return nextScreen;
   }
 
   /**
@@ -110,16 +107,16 @@ export class FlowHandlerService {
    */
   navigateBack() {
     if (!this.#screenHistory.length) {
-      return CommonScreens.Start
+      return CommonScreens.Start;
     }
 
-    this.#currentScreen = this.#screenHistory.pop() || CommonScreens.Start
+    this.#currentScreen = this.#screenHistory.pop() || CommonScreens.Start;
 
     if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach((cb) => cb(this.#currentScreen))
+      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
     }
 
-    return this.#currentScreen
+    return this.#currentScreen;
   }
 
   /**
@@ -131,26 +128,26 @@ export class FlowHandlerService {
    */
   changeFlow(flowType: FlowType) {
     // TODO: get flow name from flow type (currently this is basically hardcoded)
-    let flowName: FlowNames
+    let flowName: FlowNames;
     if (flowType === FlowType.SignUp) {
-      flowName = SignUpFlowNames.PasskeySignupWithEmailOTPFallback
+      flowName = SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
     } else {
-      flowName = LoginFlowNames.PasskeyLoginWithEmailOTPFallback
+      flowName = LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
     }
 
-    this.#currentFlow = flows[flowName]
-    this.#flowName = flowName
-    this.#currentScreen = CommonScreens.Start
-    this.#screenHistory = []
+    this.#currentFlow = flows[flowName];
+    this.#flowName = flowName;
+    this.#currentScreen = CommonScreens.Start;
+    this.#screenHistory = [];
 
     if (this.#onFlowUpdateCallbacks.length) {
-      this.#onFlowUpdateCallbacks.forEach((cb) => cb(this.#flowName))
+      this.#onFlowUpdateCallbacks.forEach(cb => cb(this.#flowName));
     }
 
     if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach((cb) => cb(this.#currentScreen))
+      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
     }
 
-    return this.#currentScreen
+    return this.#currentScreen;
   }
 }

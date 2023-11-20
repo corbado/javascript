@@ -1,50 +1,59 @@
-import React, {FC, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from "react"
-import {FlowHandlerService, FlowNames, FlowType, IFlowHandlerConfig, ScreenNames} from "@corbado/web-core"
-import FlowHandlerContext, {FlowHandlerContextInterface} from "./FlowHandlerContext"
-import {useCorbado} from "@corbado/react-sdk";
+import { useCorbado } from '@corbado/react-sdk';
+import type { FlowNames, FlowType, IFlowHandlerConfig, ScreenNames } from '@corbado/web-core';
+import { FlowHandlerService } from '@corbado/web-core';
+import type { FC, PropsWithChildren } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-type Props = IFlowHandlerConfig
+import type { FlowHandlerContextInterface } from './FlowHandlerContext';
+import FlowHandlerContext from './FlowHandlerContext';
 
-export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({children, ...props}) => {
-  const {getProjectConfig} = useCorbado()
-  const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>()
-  const initialized = useRef(false)
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>()
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>()
+type Props = IFlowHandlerConfig;
+
+export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
+  const { getProjectConfig } = useCorbado();
+  const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
+  const initialized = useRef(false);
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
+  const [currentFlow, setCurrentFlow] = useState<FlowNames>();
 
   useEffect(() => {
     if (initialized.current) {
-      return
+      return;
     }
-    initialized.current = true
+    initialized.current = true;
 
     const init = async () => {
-      const projectConfig = await getProjectConfig()
-      const flowHandlerService = new FlowHandlerService(projectConfig, props)
+      const projectConfig = await getProjectConfig();
+      const flowHandlerService = new FlowHandlerService(projectConfig, props);
 
-      flowHandlerService.onScreenChange((value: ScreenNames) => setCurrentScreen(value))
-      flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value))
+      flowHandlerService.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
+      flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
 
-      await flowHandlerService.init()
+      flowHandlerService.init();
 
-      setFlowHandlerService(flowHandlerService)
-    }
+      setFlowHandlerService(flowHandlerService);
+    };
 
-    init()
-  }, [])
+    void init();
+  }, []);
 
-
-  const navigateNext = useCallback(async (event?: string) => {
-    await flowHandlerService!.navigateNext(event)
-  }, [flowHandlerService])
+  const navigateNext = useCallback(
+    async (event?: string) => {
+      await flowHandlerService?.navigateNext(event);
+    },
+    [flowHandlerService],
+  );
 
   const navigateBack = useCallback(() => {
-    flowHandlerService!.navigateBack()
-  }, [flowHandlerService])
+    flowHandlerService?.navigateBack();
+  }, [flowHandlerService]);
 
-  const changeFlow = useCallback((flowType: FlowType) => {
-    flowHandlerService!.changeFlow(flowType)
-  }, [flowHandlerService])
+  const changeFlow = useCallback(
+    (flowType: FlowType) => {
+      flowHandlerService?.changeFlow(flowType);
+    },
+    [flowHandlerService],
+  );
 
   const contextValue = useMemo<FlowHandlerContextInterface>(() => {
     return {
@@ -52,17 +61,11 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({children, ...
       currentScreen,
       navigateNext,
       navigateBack,
-      changeFlow
-    }
-  }, [
-    currentFlow,
-    currentScreen,
-    navigateNext,
-    navigateBack,
-    changeFlow
-  ])
+      changeFlow,
+    };
+  }, [currentFlow, currentScreen, navigateNext, navigateBack, changeFlow]);
 
-  return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>
-}
+  return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;
+};
 
-export default FlowHandlerProvider
+export default FlowHandlerProvider;

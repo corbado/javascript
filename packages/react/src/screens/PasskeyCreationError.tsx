@@ -1,17 +1,19 @@
-import React from 'react'
-import {Trans, useTranslation} from 'react-i18next';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
-import type {ButtonType} from '../components/PasscodeScreensWrapper';
-import {PasscodeScreensWrapper} from '../components/PasscodeScreensWrapper';
+import type { ButtonType } from '../components/PasscodeScreensWrapper';
+import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
 
 export const PasskeyCreationError = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const header = t('create_passkey_error.header');
-  const body = <Trans i18nKey="create_passkey_error.body">
-    Creating your account with <strong className='text-primary-color underline'>passkeys</strong> not possible. Try
-    again or log in with email one time code.
-  </Trans>;
+  const body = (
+    <Trans i18nKey='create_passkey_error.body'>
+      Creating your account with <strong className='text-primary-color underline'>passkeys</strong> not possible. Try
+      again or log in with email one time code.
+    </Trans>
+  );
 
   const primaryButton = t('create_passkey_error.primary_btn');
   const secondaryButton = t('create_passkey_error.secondary_btn');
@@ -29,7 +31,7 @@ export const PasskeyCreationError = () => {
       return handleSendOtp();
     }
     handleBack();
-  }
+  };
 
   const props = {
     header,
@@ -37,14 +39,12 @@ export const PasskeyCreationError = () => {
     primaryButton,
     secondaryButton,
     tertiaryButton,
-    onClick: handleClick
-  }
+    onClick: handleClick,
+  };
 
   return (
     <>
-      <PasscodeScreensWrapper
-        {...props}
-      />
+      <PasscodeScreensWrapper {...props} />
     </>
-  )
-}
+  );
+};

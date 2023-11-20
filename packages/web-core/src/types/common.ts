@@ -1,4 +1,4 @@
-import type {AssetsApi, ProjectsApi, SessionsApi, UsersApi} from "../api";
+import type { AssetsApi, ProjectsApi, SessionsApi, UsersApi } from '../api';
 
 /**
  * Defines the structure and options for a cookie.
@@ -17,7 +17,7 @@ export type CookiesDefinition = {
   /** Flag to specify if the cookie transmission requires a secure protocol (HTTPS). Optional. */
   secure?: boolean;
   /** SameSite attribute of the cookie to assert control over cross-site requests. Optional. */
-  sameSite?: "strict" | "Strict" | "lax" | "Lax" | "none" | "None";
+  sameSite?: 'strict' | 'Strict' | 'lax' | 'Lax' | 'none' | 'None';
 };
 
 /**

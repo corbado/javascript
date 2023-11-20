@@ -1,70 +1,92 @@
-import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from "react"
-import {CorbadoApp, IUser} from "@corbado/web-core"
-import CorbadoContext, {CorbadoContextInterface, IAppProviderParams} from "./CorbadoContext"
+import type { IUser } from '@corbado/web-core';
+import { CorbadoApp } from '@corbado/web-core';
+import type { FC} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoParams}) => {
-  const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams))
-  const [shortSession, setShortSession] = useState<string | undefined>()
-  const [user, setUser] = useState<IUser | undefined>()
-  const initialized = useRef(false)
+import type { CorbadoContextInterface, IAppProviderParams } from './CorbadoContext';
+import CorbadoContext from './CorbadoContext';
+
+export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoParams }) => {
+  const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
+  const [shortSession, setShortSession] = useState<string | undefined>();
+  const [user, setUser] = useState<IUser | undefined>();
+  const initialized = useRef(false);
 
   useEffect(() => {
     if (initialized.current) {
-      return
+      return;
     }
 
-    initialized.current = true
+    initialized.current = true;
 
-    corbadoApp.authService.shortSessionChanges.subscribe((value) => {
+    corbadoApp.authService.shortSessionChanges.subscribe(value => {
       if (value !== undefined) {
-        setShortSession(value)
+        setShortSession(value);
       }
-    })
+    });
 
-    corbadoApp.authService.userChanges.subscribe((value) => {
+    corbadoApp.authService.userChanges.subscribe(value => {
       if (value !== undefined) {
-        setUser(value)
+        setUser(value);
       }
-    })
+    });
 
-    corbadoApp.init()
-  }, [])
+    corbadoApp.init();
+  }, []);
 
-  const signUpWithPasskey = useCallback((email: string, username: string) => {
-    return corbadoApp.authService.signUpWithPasskey(email, username)
-  }, [corbadoApp])
+  const signUpWithPasskey = useCallback(
+    (email: string, username: string) => {
+      return corbadoApp.authService.signUpWithPasskey(email, username);
+    },
+    [corbadoApp],
+  );
 
-  const loginWithPasskey = useCallback((email: string) => {
-    return corbadoApp.authService.loginWithPasskey(email)
-  }, [corbadoApp])
+  const loginWithPasskey = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.loginWithPasskey(email);
+    },
+    [corbadoApp],
+  );
 
-  const initLoginWithEmailOTP = useCallback((email: string) => {
-    return corbadoApp.authService.initLoginWithEmailOTP(email)
-  }, [corbadoApp])
+  const initLoginWithEmailOTP = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.initLoginWithEmailOTP(email);
+    },
+    [corbadoApp],
+  );
 
-  const completeLoginWithEmailOTP = useCallback((code: string) => {
-    return corbadoApp.authService.completeLoginWithEmailOTP(code)
-  }, [corbadoApp])
+  const completeLoginWithEmailOTP = useCallback(
+    (code: string) => {
+      return corbadoApp.authService.completeLoginWithEmailOTP(code);
+    },
+    [corbadoApp],
+  );
 
   const logout = useCallback(() => {
-    return corbadoApp.authService.logout()
-  }, [corbadoApp])
+    return corbadoApp.authService.logout();
+  }, [corbadoApp]);
 
-  const initSignUpWithEmailOTP = useCallback((email: string, username: string) => {
-    return corbadoApp.authService.initSignUpWithEmailOTP(email, username)
-  }, [corbadoApp])
+  const initSignUpWithEmailOTP = useCallback(
+    (email: string, username: string) => {
+      return corbadoApp.authService.initSignUpWithEmailOTP(email, username);
+    },
+    [corbadoApp],
+  );
 
-  const completeSignUpWithEmailOTP = useCallback((code: string) => {
-    return corbadoApp.authService.completeSignupWithEmailOTP(code)
-  }, [corbadoApp])
+  const completeSignUpWithEmailOTP = useCallback(
+    (code: string) => {
+      return corbadoApp.authService.completeSignupWithEmailOTP(code);
+    },
+    [corbadoApp],
+  );
 
   const initAutocompletedLoginWithPasskey = useCallback(() => {
-    return corbadoApp.authService.initAutocompletedLoginWithPasskey()
-  }, [corbadoApp])
+    return corbadoApp.authService.initAutocompletedLoginWithPasskey();
+  }, [corbadoApp]);
 
   const getProjectConfig = useCallback(() => {
-    return corbadoApp.projectService.getProjectConfig()
-  }, [corbadoApp])
+    return corbadoApp.projectService.getProjectConfig();
+  }, [corbadoApp]);
 
   const contextValue = useMemo<CorbadoContextInterface>(() => {
     return {
@@ -78,8 +100,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
       initAutocompletedLoginWithPasskey,
-      getProjectConfig
-    }
+      getProjectConfig,
+    };
   }, [
     shortSession,
     user,
@@ -91,10 +113,10 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({children, ...corbadoPar
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
     initAutocompletedLoginWithPasskey,
-    getProjectConfig
-  ])
+    getProjectConfig,
+  ]);
 
-  return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>
-}
+  return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>;
+};
 
-export default CorbadoProvider
+export default CorbadoProvider;

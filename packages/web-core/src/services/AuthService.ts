@@ -1,10 +1,11 @@
-import {create, get} from "@github/webauthn-json";
-import {Subject} from 'rxjs';
+import { create, get } from '@github/webauthn-json';
+import { Subject } from 'rxjs';
 
-import type {ShortSession as ApiShortSession} from "../api";
-import {AuthState, IUser, LoginHandler, ShortSession} from "../types";
-import type {ApiService} from "./ApiService";
-import {SessionService} from "./SessionService";
+import type { ShortSession as ApiShortSession } from '../api';
+import type { IUser } from '../types';
+import { AuthState, LoginHandler, ShortSession } from '../types';
+import type { ApiService } from './ApiService';
+import type { SessionService } from './SessionService';
 
 /**
  * AuthService is a class that handles authentication related operations.
@@ -20,7 +21,7 @@ export class AuthService {
 
   // state for an ongoing email OTP flow (signup or login)
   // TODO: remove this?
-  #emailCodeIdRef = "";
+  #emailCodeIdRef = '';
 
   #userChanges: Subject<IUser | undefined> = new Subject();
   #shortSessionChanges: Subject<string | undefined> = new Subject();
@@ -30,8 +31,8 @@ export class AuthService {
    * The constructor initializes the AuthService with an instance of ApiService.
    */
   constructor(apiService: ApiService, sessionService: SessionService) {
-    this.#apiService = apiService
-    this.#sessionService = sessionService
+    this.#apiService = apiService;
+    this.#sessionService = sessionService;
   }
 
   init() {
@@ -90,8 +91,8 @@ export class AuthService {
    * @param otp 6-digit OTP code that was sent to the user's email
    */
   async completeLoginWithEmailOTP(otp: string) {
-    if (this.#emailCodeIdRef === "") {
-      throw new Error("Email code id is empty");
+    if (this.#emailCodeIdRef === '') {
+      throw new Error('Email code id is empty');
     }
 
     const verifyResp = await this.#apiService.usersApi.emailCodeConfirm({
@@ -109,8 +110,8 @@ export class AuthService {
    * @param otp 6-digit OTP code that was sent to the user's email
    */
   async completeSignupWithEmailOTP(otp: string) {
-    if (this.#emailCodeIdRef === "") {
-      throw new Error("Email code id is empty");
+    if (this.#emailCodeIdRef === '') {
+      throw new Error('Email code id is empty');
     }
 
     const verifyResp = await this.#apiService.usersApi.emailCodeConfirm({
@@ -154,7 +155,7 @@ export class AuthService {
     });
 
     if (respFinish.status !== 200) {
-      console.log('error during append passkey', respFinish)
+      console.log('error during append passkey', respFinish);
     }
   }
 
@@ -173,7 +174,7 @@ export class AuthService {
       signedChallenge: JSON.stringify(signedChallenge),
     });
 
-    console.log('after login', respFinish.data.data)
+    console.log('after login', respFinish.data.data);
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
   }
 
@@ -184,19 +185,19 @@ export class AuthService {
    */
   async initAutocompletedLoginWithPasskey(): Promise<LoginHandler> {
     const respStart = await this.#apiService.usersApi.passKeyMediationStart({
-      username: ''
-    })
+      username: '',
+    });
 
     return new LoginHandler(async () => {
-      console.log('LoginHandler called')
+      console.log('LoginHandler called');
       const challenge = JSON.parse(respStart.data.data.challenge);
       const signedChallenge = await get(challenge);
       const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
         signedChallenge: JSON.stringify(signedChallenge),
       });
 
-      this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data)
-    })
+      this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
+    });
   }
 
   /**
@@ -210,25 +211,23 @@ export class AuthService {
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
   }
 
-  async logout() {
+  logout() {
     return this.#sessionService.logout();
   }
 
   /**
    * Method to execute all the callbacks registered for authentication success.
    */
-  #executeOnAuthenticationSuccessCallbacks = (
-    sessionResponse: {
-      shortSession?: ApiShortSession;
-      longSession?: string;
-      redirectURL: string;
-    }
-  ) => {
+  #executeOnAuthenticationSuccessCallbacks = (sessionResponse: {
+    shortSession?: ApiShortSession;
+    longSession?: string;
+    redirectURL: string;
+  }) => {
     if (!sessionResponse.shortSession?.value) {
-      return
+      return;
     }
 
-    const shortSession = new ShortSession(sessionResponse.shortSession?.value)
+    const shortSession = new ShortSession(sessionResponse.shortSession?.value);
     this.#sessionService.setSession(shortSession, sessionResponse.longSession);
   };
 }

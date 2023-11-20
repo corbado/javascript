@@ -1,15 +1,15 @@
-import type {IFlowHandlerConfig} from "../types";
-import {defaultTimeout,} from "../utils";
-import {ApiService} from "./ApiService";
-import {AuthService} from "./AuthService";
-import {ProjectService} from "./ProjectService";
-import {SessionService} from "./SessionService";
-import {FlowHandlerService} from "./FlowHandlerService";
+import type { IFlowHandlerConfig } from '../types';
+import { defaultTimeout } from '../utils';
+import { ApiService } from './ApiService';
+import { AuthService } from './AuthService';
+import type { FlowHandlerService } from './FlowHandlerService';
+import { ProjectService } from './ProjectService';
+import { SessionService } from './SessionService';
 
-export type {ProjectService} from "./ProjectService";
-export type {AuthService} from "./AuthService";
-export type {SessionService} from "./SessionService";
-export {FlowHandlerService} from "./FlowHandlerService";
+export type { ProjectService } from './ProjectService';
+export type { AuthService } from './AuthService';
+export type { SessionService } from './SessionService';
+export { FlowHandlerService } from './FlowHandlerService';
 
 export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
   projectId: string;
@@ -32,7 +32,7 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: ICorbadoAppParams) {
-    const {projectId, apiTimeout = defaultTimeout} = corbadoParams;
+    const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
     const sessionService = new SessionService(this.#apiService);
@@ -61,6 +61,6 @@ export class CorbadoApp {
    * It fetches the project configuration and sets up the flow handler service.
    */
   public init() {
-    this.#authService.init()
+    this.#authService.init();
   }
 }

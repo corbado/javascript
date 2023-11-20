@@ -9,6 +9,7 @@ This package contains core functionalities which are exported by all the SDKs an
 > TODO: Publish the package to npm.
 
 ## Noticeable concepts
+
 - SessionService should not be exposed to other packages (it should be encapsulated by AuthService)
 - LongSession should be completely encapsulated by SessionService
 - Functions should be pure if possible

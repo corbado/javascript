@@ -21,4 +21,5 @@ npm install @corbado/react
 ```
 
 ## Noticeable concepts
+
 - We allow this package to depend on react-sdk (for the logic) and on web-core (for the UI logic, namely the flow handler)

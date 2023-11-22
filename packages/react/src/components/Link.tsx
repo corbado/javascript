@@ -7,7 +7,7 @@ interface AdditionalProps {
 
 type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & React.PropsWithChildren<AdditionalProps>;
 
-const Link: React.FunctionComponent<Props> = ({ children, target = '_blank', className, ...rest }) => {
+export const Link: React.FunctionComponent<Props> = ({ children, target = '_blank', className, ...rest }) => {
   return (
     <a
       target={target}
@@ -18,5 +18,3 @@ const Link: React.FunctionComponent<Props> = ({ children, target = '_blank', cla
     </a>
   );
 };
-
-export default Link;

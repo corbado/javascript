@@ -1,22 +1,19 @@
-import { useCorbado } from '@corbado/react-sdk';
-import type { LoginHandler } from '@corbado/web-core';
-import { FlowType } from '@corbado/web-core';
-import React, { useEffect, useRef, useState } from 'react';
+//import { useCorbado } from '@corbado/react-sdk';
+//import type { LoginHandler } from '@corbado/web-core';
+import { FlowHandlerEvents, FlowType } from '@corbado/web-core';
+import React, { useEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Button from '../components/Button';
-import LabelledInput from '../components/LabelledInput';
-import Link from '../components/Link';
-import Text from '../components/Text';
+import { Button, LabelledInput, Link, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 
 export const InitiateLogin = () => {
   const { t } = useTranslation();
   const { setEmail, email } = useUserData();
-  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  //const [loginHandler, setLoginHandler] = useState<LoginHandler>();
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
+  //const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
   const initialized = useRef(false);
   const conditionalUIStarted = useRef(false);
 
@@ -27,14 +24,14 @@ export const InitiateLogin = () => {
 
     initialized.current = true;
 
-    initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
+    //initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  const onFocusEmail = async () => {
+  const onFocusEmail = () => {
     if (conditionalUIStarted.current) {
       return;
     }
@@ -42,14 +39,14 @@ export const InitiateLogin = () => {
     conditionalUIStarted.current = true;
 
     try {
-      await loginHandler?.completionCallback();
-      return navigateNext('passkey_success');
+      //await loginHandler?.completionCallback();
+      void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
     if (!email) {
@@ -57,10 +54,10 @@ export const InitiateLogin = () => {
     }
 
     try {
-      await loginWithPasskey(email);
-      return navigateNext('passkey_success');
+      //await loginWithPasskey(email);
+      void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
-      return navigateNext('passkey_error');
+      void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
 

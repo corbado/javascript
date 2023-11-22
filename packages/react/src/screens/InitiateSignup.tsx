@@ -2,10 +2,7 @@ import { FlowType } from '@corbado/web-core';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Button from '../components/Button';
-import LabelledInput from '../components/LabelledInput';
-import Link from '../components/Link';
-import Text from '../components/Text';
+import { Button, LabelledInput, Link, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 import { emailRegex } from '../utils/validations';
@@ -37,7 +34,7 @@ export const InitiateSignup = () => {
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = async (): Promise<void> => {
+  const handleSignup = (): void => {
     setLoading(true);
     try {
       setEmail(signupData.username);

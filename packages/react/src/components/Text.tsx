@@ -8,7 +8,7 @@ interface Props {
   className?: string;
 }
 
-const Text: React.FC<Props> = ({ variant = 'body', children, className = '' }) => {
+export const Text: React.FC<Props> = ({ variant = 'body', children, className = '' }) => {
   if (variant === 'header') {
     return <h1 className={`header text-center font-primary ${className}`}>{children}</h1>;
   }
@@ -17,5 +17,3 @@ const Text: React.FC<Props> = ({ variant = 'body', children, className = '' }) =
   }
   return <p className={`body text-center ${className}`}>{children}</p>;
 };
-
-export default Text;

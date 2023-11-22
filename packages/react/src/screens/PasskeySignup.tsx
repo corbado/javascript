@@ -1,9 +1,9 @@
-import { useCorbado } from '@corbado/react-sdk';
+import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../components/PasscodeScreensWrapper';
-import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
+import type { ButtonType } from '../components';
+import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 
@@ -36,19 +36,21 @@ export const PasskeySignup = () => {
 
     try {
       await signUpWithPasskey(email, userName);
-      return navigateNext('passkey_success');
+      return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
-      return navigateNext('passkey_error');
+      return navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
+
   const handleSendOtp = () => {
-    return navigateNext('email_otp');
-  };
-  const handleBack = () => {
-    navigateBack();
+    return navigateNext(FlowHandlerEvents.EmailOtp);
   };
 
-  const handleClick = async (btn: ButtonType) => {
+  const handleBack = () => {
+    return navigateBack();
+  };
+
+  const handleClick = (btn: ButtonType) => {
     if (btn === 'primary') {
       return handleCreateAccount();
     }
@@ -57,7 +59,7 @@ export const PasskeySignup = () => {
       return handleSendOtp();
     }
 
-    handleBack();
+    return handleBack();
   };
 
   const props = {
@@ -72,7 +74,7 @@ export const PasskeySignup = () => {
 
   return (
     <>
-      <PasscodeScreensWrapper {...props} />
+      <PasskeyScreensWrapper {...props} />
     </>
   );
 };

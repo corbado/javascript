@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Input, { type Props as InputProps } from './Input';
+import { Input, type Props as InputProps } from './Input';
 
 interface Props extends InputProps {
   label: string;
 }
 
-const LabelledInput = ({ label, type, id, name, value, onChange, error, ref, ...rest }: Props) => {
+export const LabelledInput = ({ label, type, id, name, value, onChange, error, ...rest }: Omit<Props, 'ref'>) => {
   const [focused, setFocused] = React.useState(false);
 
   const onFocus = () => setFocused(true);
@@ -34,5 +34,3 @@ const LabelledInput = ({ label, type, id, name, value, onChange, error, ref, ...
     </>
   );
 };
-
-export default LabelledInput;

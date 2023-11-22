@@ -155,7 +155,7 @@ export class AuthService {
     });
 
     if (respFinish.status !== 200) {
-      console.log('error during append passkey', respFinish);
+      throw new Error('error during append passkey');
     }
   }
 

@@ -1,6 +1,6 @@
 import type { IUser } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
-import type { FC} from 'react';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { CorbadoContextInterface, IAppProviderParams } from './CorbadoContext';
@@ -47,6 +47,10 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     },
     [corbadoApp],
   );
+
+  const appendPasskey = useCallback(() => {
+    return corbadoApp.authService.appendPasskey();
+  }, [corbadoApp]);
 
   const initLoginWithEmailOTP = useCallback(
     (email: string) => {
@@ -100,6 +104,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
       initAutocompletedLoginWithPasskey,
+      appendPasskey,
       getProjectConfig,
     };
   }, [
@@ -113,6 +118,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
     initAutocompletedLoginWithPasskey,
+    appendPasskey,
     getProjectConfig,
   ]);
 

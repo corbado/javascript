@@ -52,9 +52,9 @@ export type ScreenNames =
 
 export interface FlowHandlerEventOptionsInterface {
   // Current user's authentication status
-  isUserAuthenticated: boolean;
+  isUserAuthenticated?: boolean;
   // Whether the user has a passkey already set up
-  userHasPasskey: boolean;
+  userHasPasskey?: boolean;
 }
 
 /**

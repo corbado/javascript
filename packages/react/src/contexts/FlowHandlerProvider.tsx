@@ -10,13 +10,15 @@ import { CommonScreens, FlowHandlerService, FlowType, LoginFlowNames, SignUpFlow
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import useUserData from '../hooks/useUserData';
 import type { FlowHandlerContextInterface } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 
 type Props = IFlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
-  const { getProjectConfig } = useCorbado();
+  const { getProjectConfig, initSignUpWithEmailOTP } = useCorbado();
+  const { email, userName } = useUserData();
   const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
   const initialized = useRef(false);
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
@@ -32,19 +34,23 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     }
     initialized.current = true;
 
-    const init = async () => {
+    void (async () => {
       const projectConfig = await getProjectConfig();
       const flowHandlerService = new FlowHandlerService(projectConfig, props);
 
-      flowHandlerService.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
+      flowHandlerService.onScreenChange((value: ScreenNames) => {
+        setCurrentScreen(value);
+
+        if (value === CommonScreens.EnterOtp && email && userName) {
+          void initSignUpWithEmailOTP(email, userName);
+        }
+      });
       flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
 
       flowHandlerService.init();
 
       setFlowHandlerService(flowHandlerService);
-    };
-
-    void init();
+    })();
   }, []);
 
   const navigateNext = useCallback(

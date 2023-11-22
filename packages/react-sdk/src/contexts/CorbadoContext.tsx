@@ -15,6 +15,7 @@ export interface CorbadoContextInterface {
   initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>;
   completeSignUpWithEmailOTP: (code: string) => Promise<void>;
   initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>;
+  appendPasskey: () => Promise<void>;
   getProjectConfig: () => Promise<IProjectConfig>;
 }
 
@@ -33,6 +34,7 @@ export const initialContext = {
   initSignUpWithEmailOTP: missingImplementation,
   completeSignUpWithEmailOTP: missingImplementation,
   initAutocompletedLoginWithPasskey: missingImplementation,
+  appendPasskey: missingImplementation,
   getProjectConfig: missingImplementation,
 };
 

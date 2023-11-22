@@ -16,14 +16,14 @@ const CorbadoAuthUI = ({ onLoggedIn }: Props) => {
   return (
     <div id='corbado-auth'>
       <div className='container'>
-        <FlowHandlerProvider
-          onLoggedIn={onLoggedIn}
-          initialFlowType={FlowType.SignUp}
-        >
-          <UserDataProvider>
+        <UserDataProvider>
+          <FlowHandlerProvider
+            onLoggedIn={onLoggedIn}
+            initialFlowType={FlowType.SignUp}
+          >
             <ScreensFlow />
-          </UserDataProvider>
-        </FlowHandlerProvider>
+          </FlowHandlerProvider>
+        </UserDataProvider>
       </div>
     </div>
   );

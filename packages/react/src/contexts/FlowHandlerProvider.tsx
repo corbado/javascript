@@ -1,6 +1,12 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowNames, FlowType, IFlowHandlerConfig, ScreenNames } from '@corbado/web-core';
-import { FlowHandlerService } from '@corbado/web-core';
+import type {
+  FlowHandlerEventOptionsInterface,
+  FlowHandlerEvents,
+  FlowNames,
+  IFlowHandlerConfig,
+  ScreenNames,
+} from '@corbado/web-core';
+import { CommonScreens, FlowHandlerService, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -13,8 +19,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   const { getProjectConfig } = useCorbado();
   const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
   const initialized = useRef(false);
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>();
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
+  const [currentFlow, setCurrentFlow] = useState<FlowNames>(
+    props.initialFlowType === FlowType.Login
+      ? LoginFlowNames.PasskeyLoginWithEmailOTPFallback
+      : SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
+  );
 
   useEffect(() => {
     if (initialized.current) {
@@ -38,14 +48,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   }, []);
 
   const navigateNext = useCallback(
-    async (event?: string) => {
-      await flowHandlerService?.navigateNext(event);
+    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
+      return flowHandlerService?.navigateNext(event, eventOptions) ?? CommonScreens.End;
     },
     [flowHandlerService],
   );
 
   const navigateBack = useCallback(() => {
-    flowHandlerService?.navigateBack();
+    return flowHandlerService?.navigateBack() ?? CommonScreens.Start;
   }, [flowHandlerService]);
 
   const changeFlow = useCallback(
@@ -55,15 +65,16 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     [flowHandlerService],
   );
 
-  const contextValue = useMemo<FlowHandlerContextInterface>(() => {
-    return {
+  const contextValue = useMemo<FlowHandlerContextInterface>(
+    () => ({
       currentFlow,
       currentScreen,
       navigateNext,
       navigateBack,
       changeFlow,
-    };
-  }, [currentFlow, currentScreen, navigateNext, navigateBack, changeFlow]);
+    }),
+    [currentFlow, currentScreen, navigateNext, navigateBack, changeFlow],
+  );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;
 };

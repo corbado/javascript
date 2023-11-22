@@ -1,5 +1,13 @@
-import type { Flow, FlowNames, IFlowHandlerConfig, IProjectConfig, ScreenNames } from '../types';
+import type {
+  Flow,
+  FlowHandlerEventOptionsInterface,
+  FlowNames,
+  IFlowHandlerConfig,
+  IProjectConfig,
+  ScreenNames,
+} from '../types';
 import { FlowType } from '../types';
+import type { FlowHandlerEvents } from '../utils';
 import { CommonScreens, flows, LoginFlowNames, SignUpFlowNames } from '../utils';
 
 /**
@@ -70,7 +78,7 @@ export class FlowHandlerService {
    * @returns The new current screen.
    * @param event
    */
-  async navigateNext(event?: string): Promise<ScreenNames> {
+  async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
     const stepFunction = this.#currentFlow[this.#currentScreen];
     if (!stepFunction) {
       throw new Error('Invalid screen');
@@ -83,6 +91,7 @@ export class FlowHandlerService {
         retryPasskeyOnError: true,
       },
       event,
+      eventOptions,
     );
 
     if (nextScreen === CommonScreens.End) {

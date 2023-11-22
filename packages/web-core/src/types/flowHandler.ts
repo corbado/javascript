@@ -1,6 +1,7 @@
 import type {
   CommonScreens,
   EmailOtpSignupScreens,
+  FlowHandlerEvents,
   LoginFlowNames,
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
@@ -22,8 +23,14 @@ export interface IFlowHandlerConfig {
   initialFlowType: FlowType;
 }
 
+/**
+ * Configuration options for the authentication flows.
+ */
 export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions;
 
+/**
+ * Configuration options for the passkey sign-up with email OTP fallback flow.
+ */
 export interface PasskeySignupWithEmailOtpFallbackOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
@@ -43,14 +50,23 @@ export type ScreenNames =
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
+export interface FlowHandlerEventOptionsInterface {
+  // Current user's authentication status
+  isUserAuthenticated: boolean;
+  // Whether the user has a passkey already set up
+  userHasPasskey: boolean;
+}
+
 /**
  * Type definition for a function that represents a step in an authentication flow.
  */
 export type StepFunction = (
-  // Options that configure the behaviour of a single flow
-  flowOptions: FlowOptions,
-  // User input parameters.
-  event?: string,
+  // Options that configure the behavior of a single flow
+  flowOptions?: FlowOptions,
+  // Event that triggered the step function
+  event?: FlowHandlerEvents,
+  // options that were passed to the step function
+  eventOptions?: FlowHandlerEventOptionsInterface,
 ) => ScreenNames | Promise<ScreenNames>;
 
 /**

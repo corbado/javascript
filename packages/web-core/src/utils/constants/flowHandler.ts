@@ -42,3 +42,12 @@ export enum PasskeyLoginWithEmailOtpFallbackScreens {
   PasskeyAppend = 'passkey-append',
   End = 'end',
 }
+
+export enum FlowHandlerEvents {
+  ShowBenefits = 'show-benefits',
+  EmailOtp = 'email-otp',
+  PasskeySuccess = 'passkey-success',
+  PasskeyError = 'passkey-error',
+  MaybeLater = 'maybe-later',
+  CancelPasskey = 'cancel-passkey',
+}

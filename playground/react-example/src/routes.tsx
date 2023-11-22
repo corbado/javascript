@@ -9,7 +9,7 @@ const RouteProvider = () => {
       element: <AuthPage />,
     },
     {
-      path: '/home',
+      path: '/',
       element: <HomePage />,
     },
   ];

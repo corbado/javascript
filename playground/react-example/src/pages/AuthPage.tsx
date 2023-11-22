@@ -5,7 +5,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
 
   const onLoggedIn = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   return <CorbadoAuthUI onLoggedIn={onLoggedIn} />;

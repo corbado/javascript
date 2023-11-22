@@ -8,7 +8,7 @@ function App() {
       className='App'
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh' }}
     >
-      <CorbadoProvider projectId='pro-1743528526530787479'>
+      <CorbadoProvider projectId='pro-503401103218055321'>
         <RouteProvider />
       </CorbadoProvider>
     </div>

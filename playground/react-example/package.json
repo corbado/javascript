@@ -6,6 +6,14 @@
     "@corbado/react": "file:.yalc/@corbado/react",
     "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
     "@corbado/web-core": "file:.yalc/@corbado/web-core",
+    "jwt-decode": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.19.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,13 +21,7 @@
     "@types/node": "^16.18.60",
     "@types/react": "^18.2.36",
     "@types/react-dom": "^18.2.14",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.19.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",

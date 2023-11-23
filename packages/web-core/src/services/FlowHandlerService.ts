@@ -75,8 +75,9 @@ export class FlowHandlerService {
    * If the next screen is the End screen, it redirects to a specified URL.
    * It adds the current screen to the screen history, sets the current screen to the next screen, and calls any registered onScreenUpdate callbacks with the new current screen.
    *
+   * @param event The event that triggered the navigation.
+   * @param eventOptions The event options.
    * @returns The new current screen.
-   * @param event
    */
   async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
     const stepFunction = this.#currentFlow[this.#currentScreen];
@@ -106,6 +107,31 @@ export class FlowHandlerService {
     }
 
     return nextScreen;
+  }
+
+  /**
+   * Method to peek at the next screen
+   * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
+   * The next screen is returned, but the current screen is not changed.
+   * @param event The event that will trigger the navigation.
+   * @param eventOptions The event options.
+   * @returns
+   */
+  peekNextScreen(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
+    const stepFunction = this.#currentFlow[this.#currentScreen];
+    if (!stepFunction) {
+      throw new Error('Invalid screen');
+    }
+
+    // TODO: extract flowOptions from projectConfig
+    return stepFunction(
+      {
+        passkeyAppend: true,
+        retryPasskeyOnError: true,
+      },
+      event,
+      eventOptions,
+    );
   }
 
   /**

@@ -20,13 +20,15 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   const { getProjectConfig, initSignUpWithEmailOTP } = useCorbado();
   const { email, userName } = useUserData();
   const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
-  const initialized = useRef(false);
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(
     props.initialFlowType === FlowType.Login
       ? LoginFlowNames.PasskeyLoginWithEmailOTPFallback
       : SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
   );
+  const initialized = useRef(false);
+  const emailRef = useRef(email);
+  const userNameRef = useRef(userName);
 
   useEffect(() => {
     if (initialized.current) {
@@ -41,8 +43,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       flowHandlerService.onScreenChange((value: ScreenNames) => {
         setCurrentScreen(value);
 
-        if (value === CommonScreens.EnterOtp && email && userName) {
-          void initSignUpWithEmailOTP(email, userName);
+        if (value === CommonScreens.EnterOtp && emailRef.current) {
+          void initSignUpWithEmailOTP(emailRef.current, userNameRef.current ?? '');
         }
       });
       flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
@@ -53,9 +55,21 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     })();
   }, []);
 
+  useEffect(() => {
+    emailRef.current = email;
+    userNameRef.current = userName;
+  }, [email, userName]);
+
   const navigateNext = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
       return flowHandlerService?.navigateNext(event, eventOptions) ?? CommonScreens.End;
+    },
+    [flowHandlerService],
+  );
+
+  const peekNext = useCallback(
+    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
+      return flowHandlerService?.peekNextScreen(event, eventOptions) ?? CommonScreens.End;
     },
     [flowHandlerService],
   );
@@ -76,6 +90,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       currentFlow,
       currentScreen,
       navigateNext,
+      peekNext,
       navigateBack,
       changeFlow,
     }),

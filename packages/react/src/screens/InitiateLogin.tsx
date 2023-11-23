@@ -1,19 +1,22 @@
-//import { useCorbado } from '@corbado/react-sdk';
-//import type { LoginHandler } from '@corbado/web-core';
-import { FlowHandlerEvents, FlowType } from '@corbado/web-core';
-import React, { useEffect, useRef } from 'react';
+import { useCorbado } from '@corbado/react-sdk';
+import type { LoginHandler } from '@corbado/web-core';
+import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
+import React, { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { Button, LabelledInput, Link, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
+import { emailRegex } from '../utils/validations';
 
 export const InitiateLogin = () => {
   const { t } = useTranslation();
-  const { setEmail, email } = useUserData();
-  //const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
-  //const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
+  const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
+  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  const [formEmail, setFormEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const initialized = useRef(false);
   const conditionalUIStarted = useRef(false);
 
@@ -24,14 +27,14 @@ export const InitiateLogin = () => {
 
     initialized.current = true;
 
-    //initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
+    void initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+    setFormEmail(event.target.value);
   };
 
-  const onFocusEmail = () => {
+  const completeConditionalUI = async () => {
     if (conditionalUIStarted.current) {
       return;
     }
@@ -39,26 +42,42 @@ export const InitiateLogin = () => {
     conditionalUIStarted.current = true;
 
     try {
-      //await loginHandler?.completionCallback();
+      await loginHandler?.completionCallback();
       void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
-      console.log(e);
+      //void navigateNext(FlowHandlerEvents.PasskeyError);
+    }
+  };
+
+  const onFocusEmail = () => {
+    void completeConditionalUI();
+  };
+
+  const login = async () => {
+    try {
+      const hasPasskeySupport = await canUsePasskeys();
+
+      if (hasPasskeySupport) {
+        await loginWithPasskey(formEmail);
+        void navigateNext(FlowHandlerEvents.PasskeySuccess);
+      }
+
+      void navigateNext(FlowHandlerEvents.EmailOtp);
+    } catch (e) {
+      void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!emailRegex.test(formEmail)) {
+      setErrorMessage(t('validation_errors.email'));
       return;
     }
 
-    try {
-      //await loginWithPasskey(email);
-      void navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      void navigateNext(FlowHandlerEvents.PasskeyError);
-    }
+    setEmail(formEmail);
+    void login();
   };
 
   return (
@@ -86,10 +105,16 @@ export const InitiateLogin = () => {
               label={t('generic.name')}
               onChange={onChange}
               onFocus={onFocusEmail}
-              value={email}
+              value={formEmail}
+              error={errorMessage}
             />
           </div>
-          <Button variant='primary'>{t('signup.continue_email')}</Button>
+          <Button
+            variant='primary'
+            disabled={!formEmail}
+          >
+            {t('signup.continue_email')}
+          </Button>
         </form>
       </div>
     </>

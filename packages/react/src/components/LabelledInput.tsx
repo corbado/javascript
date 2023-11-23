@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FocusEvent } from 'react';
 
 import { Input, type Props as InputProps } from './Input';
 
@@ -6,11 +6,34 @@ interface Props extends InputProps {
   label: string;
 }
 
-export const LabelledInput = ({ label, type, id, name, value, onChange, error, ...rest }: Omit<Props, 'ref'>) => {
+export const LabelledInput = ({
+  label,
+  type,
+  id,
+  name,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  error,
+  ...rest
+}: Omit<Props, 'ref'>) => {
   const [focused, setFocused] = React.useState(false);
 
-  const onFocus = () => setFocused(true);
-  const onBlur = () => setFocused(false);
+  const onFocusClick = (event: FocusEvent<HTMLInputElement, Element>) => {
+    setFocused(true);
+
+    if (onFocus) {
+      onFocus(event);
+    }
+  };
+  const onBlurClick = (event: FocusEvent<HTMLInputElement, Element>) => {
+    setFocused(false);
+
+    if (onBlur) {
+      onBlur(event);
+    }
+  };
 
   const classes = `floating-label ${focused ? 'has-focus' : ''} ${value ? 'has-content' : ''}`;
 
@@ -23,8 +46,8 @@ export const LabelledInput = ({ label, type, id, name, value, onChange, error, .
           name={name}
           placeholder={label}
           onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={onFocusClick}
+          onBlur={onBlurClick}
           error={error}
           {...rest}
         />

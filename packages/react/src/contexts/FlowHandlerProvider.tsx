@@ -17,7 +17,7 @@ import FlowHandlerContext from './FlowHandlerContext';
 type Props = IFlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
-  const { getProjectConfig, initSignUpWithEmailOTP } = useCorbado();
+  const { getProjectConfig, initSignUpWithEmailOTP, initLoginWithEmailOTP } = useCorbado();
   const { email, userName } = useUserData();
   const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
@@ -44,7 +44,11 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         setCurrentScreen(value);
 
         if (value === CommonScreens.EnterOtp && emailRef.current) {
-          void initSignUpWithEmailOTP(emailRef.current, userNameRef.current ?? '');
+          if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
+            void initSignUpWithEmailOTP(emailRef.current, userNameRef.current ?? '');
+          } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
+            void initLoginWithEmailOTP(emailRef.current);
+          }
         }
       });
       flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));

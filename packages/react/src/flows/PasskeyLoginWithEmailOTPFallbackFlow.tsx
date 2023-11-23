@@ -2,12 +2,12 @@ import { PasskeyLoginWithEmailOtpFallbackScreens } from '@corbado/web-core';
 
 import { EmailOTP } from '../screens/EmailOTP';
 import { InitiateLogin } from '../screens/InitiateLogin';
+import { PasskeyAppend } from '../screens/PasskeyAppend';
 import { PasskeyError } from '../screens/PasskeyError';
-import { PasskeyWelcome } from '../screens/PasskeyWelcome';
 
-export const PasskeySignupWithEmailOTPFallbackFlow = {
+export const PasskeyLoginWithEmailOTPFallbackFlow = {
   [PasskeyLoginWithEmailOtpFallbackScreens.Start]: InitiateLogin,
   [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: EmailOTP,
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: PasskeyWelcome,
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: PasskeyAppend,
   [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: PasskeyError,
 };

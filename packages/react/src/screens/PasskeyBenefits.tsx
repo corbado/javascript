@@ -1,5 +1,5 @@
 import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import type { ButtonType } from '../components/PasskeyScreensWrapper';
@@ -13,18 +13,21 @@ export const PasskeyBenefits = () => {
   const { signUpWithPasskey, shortSession, appendPasskey } = useCorbado();
   const { navigateNext } = useFlowHandler();
 
-  const header = t('create_passkey.header');
-  const body = (
-    <Trans i18nKey='create_passkey.body'>
-      With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using{' '}
-      <strong>Face ID, Touch ID or screen lock code</strong>.
-    </Trans>
+  const header = useMemo(() => t('create_passkey.header'), [t]);
+  const body = useMemo(
+    () => (
+      <Trans i18nKey='create_passkey.body'>
+        With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using{' '}
+        <strong>Face ID, Touch ID or screen lock code</strong>.
+      </Trans>
+    ),
+    [t],
   );
 
-  const primaryButton = t('create_passkey.primary_btn');
-  const secondaryButton = t('create_passkey.secondary_btn');
+  const primaryButton = useMemo(() => t('create_passkey.primary_btn'), [t]);
+  const secondaryButton = useMemo(() => t('create_passkey.secondary_btn'), [t]);
 
-  const handleCreatePasskey = async () => {
+  const handleCreatePasskey = useCallback(async () => {
     try {
       if (shortSession) {
         await appendPasskey();
@@ -40,29 +43,35 @@ export const PasskeyBenefits = () => {
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);
     }
-  };
+  }, [appendPasskey, email, navigateNext, shortSession, signUpWithPasskey, userName]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     return navigateNext(FlowHandlerEvents.MaybeLater, {
       isUserAuthenticated: !!shortSession,
     });
-  };
+  }, [navigateNext, shortSession]);
 
-  const handleClick = async (btn: ButtonType) => {
-    if (btn === 'primary') {
-      return handleCreatePasskey();
-    }
+  const handleClick = useCallback(
+    async (btn: ButtonType) => {
+      if (btn === 'primary') {
+        return handleCreatePasskey();
+      }
 
-    return handleBack();
-  };
+      return handleBack();
+    },
+    [handleBack, handleCreatePasskey],
+  );
 
-  const props = {
-    header,
-    body,
-    primaryButton,
-    secondaryButton,
-    onClick: handleClick,
-  };
+  const props = useMemo(
+    () => ({
+      header,
+      body,
+      primaryButton,
+      secondaryButton,
+      onClick: handleClick,
+    }),
+    [body, header, primaryButton, secondaryButton, handleClick],
+  );
 
   return (
     <>

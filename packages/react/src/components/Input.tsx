@@ -13,7 +13,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ id, className,
         id={id}
         {...props}
         className={_classnames}
-        autoComplete='off'
+        autoComplete={props.autoComplete ? props.autoComplete : 'off'}
         ref={ref}
       />
     </div>

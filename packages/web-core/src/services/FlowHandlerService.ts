@@ -57,16 +57,58 @@ export class FlowHandlerService {
 
   /**
    * Method to add a callback function to be called when the current screen changes.
+   * @param cb The callback function to be called when the current screen changes.
+   * @returns The callback id.
    */
   onScreenChange(cb: (screen: ScreenNames) => void) {
-    this.#onScreenUpdateCallbacks.push(cb);
+    const cbId = this.#onScreenUpdateCallbacks.push(cb) - 1;
+
+    return cbId;
+  }
+
+  /**
+   * Method to remove a callback function that was registered with onScreenChange.
+   * @param cbId The callback id returned by onScreenChange.
+   */
+  removeOnScreenChangeCallback(cbId: number) {
+    this.#onScreenUpdateCallbacks.splice(cbId, 1);
+  }
+
+  /**
+   * Method to replace a callback function that was registered with onScreenChange.
+   * @param cbId The callback id returned by onScreenChange.
+   * @param cb The new callback function.
+   */
+  replaceOnScreenChangeCallback(cbId: number, cb: (screen: ScreenNames) => void) {
+    this.#onScreenUpdateCallbacks[cbId] = cb;
   }
 
   /**
    * Method to add a callback function to be called when the current flow changes.
+   * @param cb The callback function to be called when the current flow changes.
+   * @returns The callback id.
    */
   onFlowChange(cb: (flow: FlowNames) => void) {
-    this.#onFlowUpdateCallbacks.push(cb);
+    const cbId = this.#onFlowUpdateCallbacks.push(cb) - 1;
+
+    return cbId;
+  }
+
+  /**
+   * Method to remove a callback function that was registered with onFlowChange.
+   * @param cbId The callback id returned by onFlowChange.
+   */
+  removeOnFlowChangeCallback(cbId: number) {
+    this.#onFlowUpdateCallbacks.splice(cbId, 1);
+  }
+
+  /**
+   * Method to replace a callback function that was registered with onFlowChange.
+   * @param cbId The callback id returned by onFlowChange.
+   * @param cb The new callback function.
+   */
+  replaceOnFlowChangeCallback(cbId: number, cb: (flow: FlowNames) => void) {
+    this.#onFlowUpdateCallbacks[cbId] = cb;
   }
 
   /**

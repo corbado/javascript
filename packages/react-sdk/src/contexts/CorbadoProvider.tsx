@@ -67,7 +67,9 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   );
 
   const logout = useCallback(() => {
-    return corbadoApp.authService.logout();
+    corbadoApp.authService.logout();
+    setShortSession(undefined);
+    setUser(undefined);
   }, [corbadoApp]);
 
   const initSignUpWithEmailOTP = useCallback(

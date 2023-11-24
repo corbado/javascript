@@ -27,8 +27,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       : SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
   );
   const initialized = useRef(false);
-  const emailRef = useRef(email);
-  const userNameRef = useRef(userName);
+  const onScreenChangeCbId = useRef<number>(0);
+  const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
     if (initialized.current) {
@@ -40,29 +40,43 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       const projectConfig = await getProjectConfig();
       const flowHandlerService = new FlowHandlerService(projectConfig, props);
 
-      flowHandlerService.onScreenChange((value: ScreenNames) => {
+      onScreenChangeCbId.current = flowHandlerService.onScreenChange((value: ScreenNames) => {
         setCurrentScreen(value);
 
-        if (value === CommonScreens.EnterOtp && emailRef.current) {
+        if (value === CommonScreens.EnterOtp && email) {
           if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
-            void initSignUpWithEmailOTP(emailRef.current, userNameRef.current ?? '');
+            void initSignUpWithEmailOTP(email, userName ?? '');
           } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
-            void initLoginWithEmailOTP(emailRef.current);
+            void initLoginWithEmailOTP(email);
           }
         }
       });
-      flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onFlowChangeCbId.current = flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
 
       flowHandlerService.init();
 
       setFlowHandlerService(flowHandlerService);
+
+      return () => {
+        flowHandlerService?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
+        flowHandlerService?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
+      };
     })();
   }, []);
 
   useEffect(() => {
-    emailRef.current = email;
-    userNameRef.current = userName;
-  }, [email, userName]);
+    flowHandlerService?.replaceOnScreenChangeCallback(onScreenChangeCbId.current, (value: ScreenNames) => {
+      setCurrentScreen(value);
+
+      if (value === CommonScreens.EnterOtp && email) {
+        if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
+          void initSignUpWithEmailOTP(email, userName ?? '');
+        } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
+          void initLoginWithEmailOTP(email);
+        }
+      }
+    });
+  }, [email, userName, currentFlow]);
 
   const navigateNext = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {

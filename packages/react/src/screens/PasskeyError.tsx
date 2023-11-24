@@ -71,15 +71,14 @@ export const PasskeyError = () => {
 
   const handleClick = useCallback(
     (btn: ButtonType) => {
-      if (btn === 'primary') {
-        void handleCreatePasskey();
+      switch (btn) {
+        case 'primary':
+          return handleCreatePasskey();
+        case 'secondary':
+          return handleSendOtp();
+        case 'tertiary':
+          return handleBack();
       }
-
-      if (btn === 'secondary') {
-        handleSendOtp();
-      }
-
-      handleBack();
     },
     [handleBack, handleCreatePasskey, handleSendOtp],
   );

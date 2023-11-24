@@ -58,15 +58,14 @@ export const PasskeySignup = () => {
 
   const handleClick = useCallback(
     (btn: ButtonType) => {
-      if (btn === 'primary') {
-        return handleCreateAccount();
+      switch (btn) {
+        case 'primary':
+          return handleCreateAccount();
+        case 'secondary':
+          return handleSendOtp();
+        case 'tertiary':
+          return handleBack();
       }
-
-      if (btn === 'secondary') {
-        return handleSendOtp();
-      }
-
-      return handleBack();
     },
     [handleBack, handleCreateAccount, handleSendOtp],
   );

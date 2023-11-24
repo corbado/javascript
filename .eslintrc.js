@@ -15,6 +15,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
   ],
+
   rules: {
     curly: 'error',
     '@typescript-eslint/no-non-null-assertion': 'warn',

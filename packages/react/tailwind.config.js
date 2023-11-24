@@ -1,18 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx,mdx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        primary: ['var(--primary-font)', 'sans-serif'],
-        secondary: ['var(--secondary-font)', 'sans-serif'],
+        'space-grotesk': "'Space Grotesk'",
+        primary: ['var(--primary-font)', 'space-grotesk'],
+        secondary: ['var(--secondary-font)', 'space-grotesk'],
       },
       fontSize: {
         'cd-1': '0.75rem',
         'cd-2': '0.85rem',
         'cd-3': '1rem',
-        'cd-4': '24px',
-        'cd-5': '28px',
+        'cd-4': '1.25rem',
+        'cd-5': '1.6rem',
+        'cd-6': '1.88rem',
+        inherit: 'inherit',
       },
       spacing: {
         'cd-1': '0.25rem',

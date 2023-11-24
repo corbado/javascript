@@ -52,7 +52,13 @@ export const LabelledInput = ({
           {...rest}
         />
         <label htmlFor={id}>{label}</label>
-        <div className='h-5'>{error && <p className='error-text'>{error}</p>}</div>
+        {error ? (
+          <div className='h-5'>
+            <p className='error-text'>{error}</p>
+          </div>
+        ) : (
+          <div className='h-1'></div>
+        )}
       </div>
     </>
   );

@@ -79,16 +79,22 @@ export const InitiateSignup = () => {
           <Link
             href=''
             className='text-secondary-font-color'
+            onClick={() => changeFlow(FlowType.Login)}
           >
             text
           </Link>{' '}
           text
         </Trans>
-        <span onClick={() => changeFlow(FlowType.Login)}>Log in</span>
+        <span
+          className='link text-secondary-font-color'
+          onClick={() => changeFlow(FlowType.Login)}
+        >
+          Log in
+        </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
+          <div className='mb-2'>
             <LabelledInput
               name='name'
               label={t('generic.name')}

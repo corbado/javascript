@@ -3,3 +3,5 @@ dist
 build
 playground
 package-lock.json
+packages/**/dist
+packages/**/tatilwind.config.js

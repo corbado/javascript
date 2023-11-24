@@ -2,9 +2,9 @@ import { useCorbado } from '@corbado/react-sdk';
 import type { LoginHandler } from '@corbado/web-core';
 import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
 import React, { useEffect, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Link, Text } from '../components';
+import { Button, LabelledInput, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 import { emailRegex } from '../utils/validations';
@@ -82,20 +82,15 @@ export const InitiateLogin = () => {
 
   return (
     <>
-      <Text variant='header'>{t('signup.header')}</Text>
+      <Text variant='header'>Welcome back!</Text>
       <Text variant='sub-header'>
-        {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey='signup.sub-header'>
-          text{' '}
-          <Link
-            href=''
-            className='text-secondary-font-color'
-          >
-            text
-          </Link>{' '}
-          text
-        </Trans>
-        <span onClick={() => changeFlow(FlowType.SignUp)}>Create account</span>
+        Don't have an account yet?{' '}
+        <span
+          className='link text-secondary-font-color'
+          onClick={() => changeFlow(FlowType.SignUp)}
+        >
+          Create account
+        </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>

@@ -18,8 +18,14 @@ export const PasskeyError = () => {
   const body = useMemo(
     () => (
       <Trans i18nKey='create_passkey_error.body'>
-        Creating your account with <strong className='text-primary-color underline'>passkeys</strong> not possible. Try
-        again or log in with email one time code.
+        Creating your account with{' '}
+        <span
+          className='link text-primary-color underline'
+          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+        >
+          passkeys
+        </span>{' '}
+        not possible. Try again or log in with email one time code.
       </Trans>
     ),
     [t],

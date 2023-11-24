@@ -1,7 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/web-core';
 import React, { useCallback, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import type { ButtonType } from '../components/PasskeyScreensWrapper';
 import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
@@ -14,9 +14,18 @@ export const PasskeyAppend = () => {
 
   const header = useMemo(
     () => (
-      <Trans i18nKey='activate_passkey.header'>
-        text <span className='text-primary-color underline'>x</span>
-      </Trans>
+      // <Trans i18nKey='activate_passkey.header'>
+      //   text <span className='text-primary-color underline'>x</span>
+      // </Trans>
+      <span>
+        Log in even faster with{' '}
+        <span
+          className='link text-primary-color underline'
+          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+        >
+          Passkeys
+        </span>
+      </span>
     ),
     [t],
   );

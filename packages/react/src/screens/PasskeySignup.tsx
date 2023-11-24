@@ -1,6 +1,6 @@
 import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import type { ButtonType } from '../components';
 import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
@@ -15,18 +15,30 @@ export const PasskeySignup = () => {
 
   const header = useMemo(
     () => (
-      <Trans i18nKey='passkey_signup.header'>
-        text <span className='text-primary-color underline'>x</span> text
-      </Trans>
+      // <Trans i18nKey='passkey_signup.header'>
+      //   text <span className='text-primary-color underline'>x</span> text
+      // </Trans>
+      <span>
+        Let’s get you set up with{' '}
+        <span
+          className='link text-primary-color underline'
+          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+        >
+          Passkeys
+        </span>
+      </span>
     ),
     [t],
   );
 
   const subHeader = useMemo(
     () => (
-      <Trans i18nKey='passkey_signup.sub-header'>
-        text <span className='text-secondary-font-color'>{email}</span> text
-      </Trans>
+      // <Trans i18nKey='passkey_signup.sub-header'>
+      //   text <span className='text-secondary-font-color'>{email}</span> text
+      // </Trans>
+      <span>
+        We’ll create an account for <span className='ext-primary-color'>{email}</span>
+      </span>
     ),
     [t],
   );

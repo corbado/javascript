@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Gmail, Link, OTPInput, Outlook, Text, Yahoo } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
@@ -47,9 +47,13 @@ export const EmailOTP = () => {
       <Text variant='header'>{t('email_link.header')}</Text>
       <Text className='font-medium'>
         {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey='email_link.body'>
+        {/* <Trans i18nKey='email_link.body'>
           text <span className='text-secondary-font-color'>{email}</span> text
-        </Trans>
+        </Trans> */}
+        <span>
+          We just sent a one time code to <span className='ext-primary-color'>{email}</span>. The code expires shortly,
+          so please enter it soon.
+        </span>
       </Text>
       <div className='grid grid-cols-3 gap-3 mt-4'>
         <Link

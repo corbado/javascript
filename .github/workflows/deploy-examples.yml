@@ -1,0 +1,53 @@
+name: Deploy examples to Vercel
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+on:
+  push:
+    branches:
+      #- main
+      - 56-setup-deployment-to-vercel
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          npm install --dev
+          npm install lerna
+          npm install vercel
+
+      - name: Build SDKs
+        run: |
+          lerna run build_and_publish:local
+
+      - name: Deploy react-sdk-example to Vercel
+        run: |
+          cd playground/react-sdk-example
+          npm install
+          npm run build
+          npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK }}
+
+      - name: Deploy react-example to Vercel
+        run: |
+          cd playground/react-example
+          npm install
+          npm run build
+          npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT }}

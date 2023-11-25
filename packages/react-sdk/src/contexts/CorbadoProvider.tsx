@@ -13,7 +13,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) {
+    if (initialized === null || initialized.current) {
       return;
     }
 
@@ -32,7 +32,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     });
 
     corbadoApp.init();
-  }, []);
+  }, [initialized]);
 
   const signUpWithPasskey = useCallback(
     (email: string, username: string) => {

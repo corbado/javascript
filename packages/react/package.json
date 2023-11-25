@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
-    "@corbado/web-core": "^0.1.6",
+    "@corbado/web-core": "file:.yalc/@corbado/web-core",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "react-i18next": "13.2.2"

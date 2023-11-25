@@ -1,4 +1,4 @@
-import { useCorbado } from '@corbado/react-sdk';
+import { FlowHandlerEvents, LoginFlowNames, useCorbado } from '@corbado/react-sdk';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,13 +8,17 @@ import useUserData from '../hooks/useUserData';
 
 export const EmailOTP = () => {
   const { t } = useTranslation();
-  const { navigateBack, navigateNext } = useFlowHandler();
-  const { completeSignUpWithEmailOTP } = useCorbado();
-  const { email } = useUserData();
+  const { navigateBack, navigateNext, currentFlow } = useFlowHandler();
+  const { completeSignUpWithEmailOTP, getUserAuthMethods } = useCorbado();
+  const { email, sendEmail } = useUserData();
 
   const [otp, setOTP] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    void sendEmail(currentFlow);
+  }, []);
 
   const handleCancel = () => navigateBack();
 
@@ -24,6 +28,14 @@ export const EmailOTP = () => {
     setLoading(true);
     try {
       await completeSignUpWithEmailOTP(payload);
+
+      if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
+        const authMethods = await getUserAuthMethods(email ?? '');
+        const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
+        void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });
+        return;
+      }
+
       void navigateNext();
     } catch (error) {
       console.log({ error });

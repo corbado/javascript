@@ -10,15 +10,13 @@ import { CommonScreens, FlowHandlerService, FlowType, LoginFlowNames, SignUpFlow
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import useUserData from '../hooks/useUserData';
 import type { FlowHandlerContextInterface } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 
 type Props = IFlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
-  const { getProjectConfig, initSignUpWithEmailOTP, initLoginWithEmailOTP } = useCorbado();
-  const { email, userName } = useUserData();
+  const { getProjectConfig } = useCorbado();
   const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(
@@ -40,17 +38,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       const projectConfig = await getProjectConfig();
       const flowHandlerService = new FlowHandlerService(projectConfig, props);
 
-      onScreenChangeCbId.current = flowHandlerService.onScreenChange((value: ScreenNames) => {
-        setCurrentScreen(value);
-
-        if (value === CommonScreens.EnterOtp && email) {
-          if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
-            void initSignUpWithEmailOTP(email, userName ?? '');
-          } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
-            void initLoginWithEmailOTP(email);
-          }
-        }
-      });
+      onScreenChangeCbId.current = flowHandlerService.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
       onFlowChangeCbId.current = flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
 
       flowHandlerService.init();
@@ -63,20 +51,6 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       };
     })();
   }, []);
-
-  useEffect(() => {
-    flowHandlerService?.replaceOnScreenChangeCallback(onScreenChangeCbId.current, (value: ScreenNames) => {
-      setCurrentScreen(value);
-
-      if (value === CommonScreens.EnterOtp && email) {
-        if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
-          void initSignUpWithEmailOTP(email, userName ?? '');
-        } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
-          void initLoginWithEmailOTP(email);
-        }
-      }
-    });
-  }, [email, userName, currentFlow]);
 
   const navigateNext = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {

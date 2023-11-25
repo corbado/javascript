@@ -155,6 +155,7 @@ export class FlowHandlerService {
    * Method to peek at the next screen
    * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
    * The next screen is returned, but the current screen is not changed.
+   * Depreciated: will be removed in the future if not used in any frameworks.
    * @param event The event that will trigger the navigation.
    * @param eventOptions The event options.
    * @returns

@@ -1,3 +1,4 @@
+import type { FlowNames } from '@corbado/web-core';
 import { createContext } from 'react';
 
 export interface UserDataContextInterface {
@@ -5,6 +6,7 @@ export interface UserDataContextInterface {
   userName: string | undefined;
   setEmail: (value: string) => void;
   setUserName: (value: string) => void;
+  sendEmail: (currentFlow: FlowNames) => void;
 }
 
 const missingImplementation = (): never => {
@@ -16,6 +18,7 @@ export const initialContext = {
   userName: undefined,
   setEmail: missingImplementation,
   setUserName: missingImplementation,
+  sendEmail: missingImplementation,
 };
 
 const UserDataContext = createContext<UserDataContextInterface>(initialContext);

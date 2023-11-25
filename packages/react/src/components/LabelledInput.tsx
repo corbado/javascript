@@ -44,6 +44,7 @@ export const LabelledInput = ({
           type={type}
           id={id || name}
           name={name}
+          value={value}
           placeholder={label}
           onChange={onChange}
           onFocus={onFocusClick}

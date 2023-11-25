@@ -90,6 +90,13 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     return corbadoApp.authService.initAutocompletedLoginWithPasskey();
   }, [corbadoApp]);
 
+  const getUserAuthMethods = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.authMethods(email);
+    },
+    [corbadoApp],
+  );
+
   const getProjectConfig = useCallback(() => {
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
@@ -107,6 +114,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       completeSignUpWithEmailOTP,
       initAutocompletedLoginWithPasskey,
       appendPasskey,
+      getUserAuthMethods,
       getProjectConfig,
     };
   }, [

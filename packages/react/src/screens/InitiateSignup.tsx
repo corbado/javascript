@@ -1,5 +1,5 @@
 import { FlowType } from '@corbado/web-core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { Button, LabelledInput, Link, Text } from '../components';
@@ -12,29 +12,39 @@ interface SignupForm {
   username: string;
 }
 
+const defaultFormTemplate: SignupForm = {
+  name: '',
+  username: '',
+};
+
+const createFormTemplate = (email?: string, username?: string) => ({
+  name: username || '',
+  username: email || '',
+});
+
 export const InitiateSignup = () => {
   const { t } = useTranslation();
-
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { setEmail, setUserName } = useUserData();
-
-  const formTemplate = { name: '', username: '' };
+  const { setEmail, email, setUserName, userName } = useUserData();
 
   const [signupData, setSignupData] = React.useState<SignupForm>({
-    ...formTemplate,
+    ...defaultFormTemplate,
   });
   const [errorData, setErrorData] = React.useState<SignupForm>({
-    ...formTemplate,
+    ...defaultFormTemplate,
   });
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  useEffect(() => {
+    setSignupData(createFormTemplate(email, userName));
+  }, []);
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    (event.target as HTMLInputElement).name;
     const { value, name } = event.target;
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = (): void => {
+  const handleSignup = () => {
     setLoading(true);
     try {
       setEmail(signupData.username);
@@ -49,7 +59,7 @@ export const InitiateSignup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
-    const errors: SignupForm = { ...formTemplate };
+    const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
       errors.name = t('validation_errors.name');
@@ -64,7 +74,7 @@ export const InitiateSignup = () => {
       return;
     }
 
-    setErrorData({ ...formTemplate });
+    setErrorData({ ...defaultFormTemplate });
 
     void handleSignup();
   };

@@ -1,4 +1,4 @@
-import type { ICorbadoAppParams, IProjectConfig, IUser } from '@corbado/web-core';
+import type { ICorbadoAppParams, IProjectConfig, IUser, UserAuthMethodsInterface } from '@corbado/web-core';
 import type { LoginHandler } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
 
@@ -16,6 +16,7 @@ export interface CorbadoContextInterface {
   completeSignUpWithEmailOTP: (code: string) => Promise<void>;
   initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>;
   appendPasskey: () => Promise<void>;
+  getUserAuthMethods: (email: string) => Promise<UserAuthMethodsInterface>;
   getProjectConfig: () => Promise<IProjectConfig>;
 }
 
@@ -35,6 +36,7 @@ export const initialContext = {
   completeSignUpWithEmailOTP: missingImplementation,
   initAutocompletedLoginWithPasskey: missingImplementation,
   appendPasskey: missingImplementation,
+  getUserAuthMethods: missingImplementation,
   getProjectConfig: missingImplementation,
 };
 

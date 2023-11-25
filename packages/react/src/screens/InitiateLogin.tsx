@@ -64,6 +64,7 @@ export const InitiateLogin = () => {
 
       void navigateNext(FlowHandlerEvents.EmailOtp);
     } catch (e) {
+      //TODO: if the error is that passkey is not found, then navigate to email otp
       void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };

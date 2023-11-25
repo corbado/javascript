@@ -46,6 +46,7 @@ jobs:
       - name: Deploy react-example to Vercel
         run: |
           cd playground/react-example
+          npx yalc add @corbado/web-core && npx yalc add @corbado/react-sdk && npx yalc add @corbado/react
           npm install
           npm run build
           npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod

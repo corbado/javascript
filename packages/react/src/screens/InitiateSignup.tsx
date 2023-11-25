@@ -1,11 +1,8 @@
 import { FlowType } from '@corbado/web-core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Button from '../components/Button';
-import LabelledInput from '../components/LabelledInput';
-import Link from '../components/Link';
-import Text from '../components/Text';
+import { Button, LabelledInput, Link, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 import { emailRegex } from '../utils/validations';
@@ -15,29 +12,39 @@ interface SignupForm {
   username: string;
 }
 
+const defaultFormTemplate: SignupForm = {
+  name: '',
+  username: '',
+};
+
+const createFormTemplate = (email?: string, username?: string) => ({
+  name: username || '',
+  username: email || '',
+});
+
 export const InitiateSignup = () => {
   const { t } = useTranslation();
-
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { setEmail, setUserName } = useUserData();
-
-  const formTemplate = { name: '', username: '' };
+  const { setEmail, email, setUserName, userName } = useUserData();
 
   const [signupData, setSignupData] = React.useState<SignupForm>({
-    ...formTemplate,
+    ...defaultFormTemplate,
   });
   const [errorData, setErrorData] = React.useState<SignupForm>({
-    ...formTemplate,
+    ...defaultFormTemplate,
   });
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  useEffect(() => {
+    setSignupData(createFormTemplate(email, userName));
+  }, []);
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    (event.target as HTMLInputElement).name;
     const { value, name } = event.target;
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = async (): Promise<void> => {
+  const handleSignup = () => {
     setLoading(true);
     try {
       setEmail(signupData.username);
@@ -52,7 +59,7 @@ export const InitiateSignup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
-    const errors: SignupForm = { ...formTemplate };
+    const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
       errors.name = t('validation_errors.name');
@@ -67,7 +74,7 @@ export const InitiateSignup = () => {
       return;
     }
 
-    setErrorData({ ...formTemplate });
+    setErrorData({ ...defaultFormTemplate });
 
     void handleSignup();
   };
@@ -82,16 +89,22 @@ export const InitiateSignup = () => {
           <Link
             href=''
             className='text-secondary-font-color'
+            onClick={() => changeFlow(FlowType.Login)}
           >
             text
           </Link>{' '}
           text
         </Trans>
-        <span onClick={() => changeFlow(FlowType.Login)}>Log in</span>
+        <span
+          className='link text-secondary-font-color'
+          onClick={() => changeFlow(FlowType.Login)}
+        >
+          Log in
+        </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
+          <div className='mb-2'>
             <LabelledInput
               name='name'
               label={t('generic.name')}

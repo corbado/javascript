@@ -1,22 +1,22 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { LoginHandler } from '@corbado/web-core';
-import { FlowType } from '@corbado/web-core';
+import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
 import React, { useEffect, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import Button from '../components/Button';
-import LabelledInput from '../components/LabelledInput';
-import Link from '../components/Link';
-import Text from '../components/Text';
+import { Button, LabelledInput, Text } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
+import { emailRegex } from '../utils/validations';
 
 export const InitiateLogin = () => {
   const { t } = useTranslation();
-  const { setEmail, email } = useUserData();
-  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
   const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
+  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  const [formEmail, setFormEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const initialized = useRef(false);
   const conditionalUIStarted = useRef(false);
 
@@ -27,14 +27,14 @@ export const InitiateLogin = () => {
 
     initialized.current = true;
 
-    initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
+    void initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+    setFormEmail(event.target.value);
   };
 
-  const onFocusEmail = async () => {
+  const completeConditionalUI = async () => {
     if (conditionalUIStarted.current) {
       return;
     }
@@ -43,43 +43,55 @@ export const InitiateLogin = () => {
 
     try {
       await loginHandler?.completionCallback();
-      return navigateNext('passkey_success');
+      void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
-      console.log(e);
+      //void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
+  const onFocusEmail = () => {
+    void completeConditionalUI();
+  };
+
+  const login = async () => {
+    try {
+      const hasPasskeySupport = await canUsePasskeys();
+
+      if (hasPasskeySupport) {
+        await loginWithPasskey(formEmail);
+        void navigateNext(FlowHandlerEvents.PasskeySuccess);
+      }
+
+      void navigateNext(FlowHandlerEvents.EmailOtp);
+    } catch (e) {
+      //TODO: if the error is that passkey is not found, then navigate to email otp
+      void navigateNext(FlowHandlerEvents.PasskeyError);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!emailRegex.test(formEmail)) {
+      setErrorMessage(t('validation_errors.email'));
       return;
     }
 
-    try {
-      await loginWithPasskey(email);
-      return navigateNext('passkey_success');
-    } catch (e) {
-      return navigateNext('passkey_error');
-    }
+    setEmail(formEmail);
+    void login();
   };
 
   return (
     <>
-      <Text variant='header'>{t('signup.header')}</Text>
+      <Text variant='header'>Welcome back!</Text>
       <Text variant='sub-header'>
-        {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey='signup.sub-header'>
-          text{' '}
-          <Link
-            href=''
-            className='text-secondary-font-color'
-          >
-            text
-          </Link>{' '}
-          text
-        </Trans>
-        <span onClick={() => changeFlow(FlowType.SignUp)}>Create account</span>
+        Don't have an account yet?{' '}
+        <span
+          className='link text-secondary-font-color'
+          onClick={() => changeFlow(FlowType.SignUp)}
+        >
+          Create account
+        </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>
@@ -89,10 +101,16 @@ export const InitiateLogin = () => {
               label={t('generic.name')}
               onChange={onChange}
               onFocus={onFocusEmail}
-              value={email}
+              value={formEmail}
+              error={errorMessage}
             />
           </div>
-          <Button variant='primary'>{t('signup.continue_email')}</Button>
+          <Button
+            variant='primary'
+            disabled={!formEmail}
+          >
+            {t('signup.continue_email')}
+          </Button>
         </form>
       </div>
     </>

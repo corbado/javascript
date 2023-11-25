@@ -5,7 +5,7 @@ export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes
   error?: string;
 }
 
-const Input = React.forwardRef<HTMLInputElement, Props>(({ id, className, error, ...props }, ref) => {
+export const Input = React.forwardRef<HTMLInputElement, Props>(({ id, className, error, ...props }, ref) => {
   const _classnames = `${className} ${error ? '!border-error-color' : ''}`;
   return (
     <div className='input-wrapper'>
@@ -13,11 +13,9 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({ id, className, error,
         id={id}
         {...props}
         className={_classnames}
-        autoComplete='off'
+        autoComplete={props.autoComplete ? props.autoComplete : 'off'}
         ref={ref}
       />
     </div>
   );
 });
-
-export default Input;

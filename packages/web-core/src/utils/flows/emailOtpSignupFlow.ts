@@ -6,20 +6,20 @@ import { canUsePasskeys } from '../helpers';
 export const EmailOTPSignupFlow: Flow = {
   [EmailOtpSignupScreens.Start]: () => EmailOtpSignupScreens.EnterOtp,
   [EmailOtpSignupScreens.EnterOtp]: async flowOptions => {
-    if (flowOptions.passkeyAppend) {
+    if (flowOptions?.passkeyAppend) {
       const isPasskeySupported = await canUsePasskeys();
       return isPasskeySupported ? EmailOtpSignupScreens.PasskeyOption : EmailOtpSignupScreens.End;
     }
     return EmailOtpSignupScreens.End;
   },
-  [EmailOtpSignupScreens.PasskeyOption]: (_, __?: string) => {
+  [EmailOtpSignupScreens.PasskeyOption]: () => {
     return EmailOtpSignupScreens.End;
   },
-  [EmailOtpSignupScreens.PasskeyBenefits]: (_, __, ___?: string) => {
+  [EmailOtpSignupScreens.PasskeyBenefits]: () => {
     return EmailOtpSignupScreens.End;
   },
   [EmailOtpSignupScreens.PasskeyWelcome]: () => EmailOtpSignupScreens.End,
-  [EmailOtpSignupScreens.PasskeyError]: (_, __?: string) => {
+  [EmailOtpSignupScreens.PasskeyError]: () => {
     return EmailOtpSignupScreens.End;
   },
 };

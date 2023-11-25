@@ -2,7 +2,7 @@ import { create, get } from '@github/webauthn-json';
 import { Subject } from 'rxjs';
 
 import type { ShortSession as ApiShortSession } from '../api';
-import type { IUser } from '../types';
+import type { IUser, UserAuthMethodsInterface } from '../types';
 import { AuthState, LoginHandler, ShortSession } from '../types';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
@@ -155,7 +155,7 @@ export class AuthService {
     });
 
     if (respFinish.status !== 200) {
-      console.log('error during append passkey', respFinish);
+      throw new Error('error during append passkey');
     }
   }
 
@@ -209,6 +209,16 @@ export class AuthService {
     });
 
     this.#emailCodeIdRef = resp.data.data.emailCodeID;
+  }
+
+  async authMethods(email: string) {
+    const resp = await this.#apiService.usersApi.authMethodsList({
+      username: email,
+    });
+
+    const result: UserAuthMethodsInterface = resp.data.data;
+
+    return result;
   }
 
   logout() {

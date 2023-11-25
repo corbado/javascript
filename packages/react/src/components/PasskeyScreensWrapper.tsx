@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Button from '../components/Button';
-import { HorizontalRule } from '../components/HorizontalRule';
-import Text from '../components/Text';
+import { Button } from './Button';
+import { HorizontalRule } from './HorizontalRule';
+import { Text } from './Text';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
-interface Props {
+export interface PassketScreensWrapperProps {
   header: React.ReactNode;
   subHeader?: React.ReactNode;
   secondaryHeader?: React.ReactNode;
@@ -15,11 +15,11 @@ interface Props {
   secondaryButton?: string;
   tertiaryButton?: string;
   showHorizontalRule?: boolean;
-
   onClick(btn: ButtonType): void;
+  loading?: boolean;
 }
 
-export const PasscodeScreensWrapper: React.FC<Props> = ({
+export const PasskeyScreensWrapper: React.FC<PassketScreensWrapperProps> = ({
   header,
   subHeader,
   secondaryHeader,
@@ -29,6 +29,7 @@ export const PasscodeScreensWrapper: React.FC<Props> = ({
   tertiaryButton,
   showHorizontalRule = false,
   onClick,
+  loading = false,
 }) => {
   return (
     <div>
@@ -62,6 +63,8 @@ export const PasscodeScreensWrapper: React.FC<Props> = ({
         <Button
           variant='primary'
           onClick={() => onClick('primary')}
+          isLoading={loading}
+          disabled={loading}
         >
           {primaryButton}
         </Button>
@@ -71,6 +74,8 @@ export const PasscodeScreensWrapper: React.FC<Props> = ({
         <Button
           variant='secondary'
           onClick={() => onClick('secondary')}
+          isLoading={loading}
+          disabled={loading}
         >
           {secondaryButton}
         </Button>
@@ -80,6 +85,8 @@ export const PasscodeScreensWrapper: React.FC<Props> = ({
           className='my-0 !py-0'
           variant='tertiary'
           onClick={() => onClick('tertiary')}
+          isLoading={loading}
+          disabled={loading}
         >
           {tertiaryButton}
         </Button>

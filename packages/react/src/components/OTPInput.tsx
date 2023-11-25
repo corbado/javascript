@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from './Input';
+import { Input } from './Input';
 
 interface Props {
   length?: number;
@@ -12,7 +12,7 @@ interface Props {
 
 let currentOTPIndex = 0;
 
-const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = false }) => {
+export const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = false }) => {
   const [otps, setOtp] = React.useState<string[]>(new Array(length).fill(''));
   const [activeOtpIndex, setActiveOtpindex] = React.useState<number>(0);
 
@@ -84,5 +84,3 @@ const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = fa
     </div>
   );
 };
-
-export default OTPInput;

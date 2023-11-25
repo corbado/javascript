@@ -1,6 +1,6 @@
 import type { IUser } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
-import type { FC} from 'react';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { CorbadoContextInterface, IAppProviderParams } from './CorbadoContext';
@@ -48,6 +48,10 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     [corbadoApp],
   );
 
+  const appendPasskey = useCallback(() => {
+    return corbadoApp.authService.appendPasskey();
+  }, [corbadoApp]);
+
   const initLoginWithEmailOTP = useCallback(
     (email: string) => {
       return corbadoApp.authService.initLoginWithEmailOTP(email);
@@ -63,7 +67,9 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   );
 
   const logout = useCallback(() => {
-    return corbadoApp.authService.logout();
+    corbadoApp.authService.logout();
+    setShortSession(undefined);
+    setUser(undefined);
   }, [corbadoApp]);
 
   const initSignUpWithEmailOTP = useCallback(
@@ -84,6 +90,13 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     return corbadoApp.authService.initAutocompletedLoginWithPasskey();
   }, [corbadoApp]);
 
+  const getUserAuthMethods = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.authMethods(email);
+    },
+    [corbadoApp],
+  );
+
   const getProjectConfig = useCallback(() => {
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
@@ -100,6 +113,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
       initAutocompletedLoginWithPasskey,
+      appendPasskey,
+      getUserAuthMethods,
       getProjectConfig,
     };
   }, [
@@ -113,6 +128,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
     initAutocompletedLoginWithPasskey,
+    appendPasskey,
     getProjectConfig,
   ]);
 

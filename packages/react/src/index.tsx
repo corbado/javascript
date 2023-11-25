@@ -4,8 +4,8 @@ import './styles.css';
 import { FlowType } from '@corbado/web-core';
 import React from 'react';
 
-import FlowHandlerProvider from './hooks/FlowHandlerProvider';
-import UserDataProvider from './hooks/UserDataProvider';
+import FlowHandlerProvider from './contexts/FlowHandlerProvider';
+import UserDataProvider from './contexts/UserDataProvider';
 import { ScreensFlow } from './screens/ScreenFlow';
 
 interface Props {
@@ -16,14 +16,14 @@ const CorbadoAuthUI = ({ onLoggedIn }: Props) => {
   return (
     <div id='corbado-auth'>
       <div className='container'>
-        <FlowHandlerProvider
-          onLoggedIn={onLoggedIn}
-          initialFlowType={FlowType.SignUp}
-        >
-          <UserDataProvider>
+        <UserDataProvider>
+          <FlowHandlerProvider
+            onLoggedIn={onLoggedIn}
+            initialFlowType={FlowType.SignUp}
+          >
             <ScreensFlow />
-          </UserDataProvider>
-        </FlowHandlerProvider>
+          </FlowHandlerProvider>
+        </UserDataProvider>
       </div>
     </div>
   );

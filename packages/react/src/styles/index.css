@@ -75,11 +75,11 @@
   }
 
   .header {
-    @apply mt-0 text-cd-5 mb-cd-5 font-bold;
+    @apply mt-0 text-cd-6 mb-cd-5 font-bold;
   }
 
   .sub-header {
-    @apply font-bold mb-8;
+    @apply font-bold mb-8 text-cd-3;
   }
 
   button,

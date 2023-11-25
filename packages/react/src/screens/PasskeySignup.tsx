@@ -1,9 +1,9 @@
-import { useCorbado } from '@corbado/react-sdk';
-import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../components/PasscodeScreensWrapper';
-import { PasscodeScreensWrapper } from '../components/PasscodeScreensWrapper';
+import type { ButtonType } from '../components';
+import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 
@@ -13,66 +13,91 @@ export const PasskeySignup = () => {
   const { signUpWithPasskey } = useCorbado();
   const { email, userName } = useUserData();
 
-  const header = (
-    <Trans i18nKey='passkey_signup.header'>
-      text <span className='text-primary-color underline'>x</span> text
-    </Trans>
+  const header = useMemo(
+    () => (
+      // <Trans i18nKey='passkey_signup.header'>
+      //   text <span className='text-primary-color underline'>x</span> text
+      // </Trans>
+      <span>
+        Let’s get you set up with{' '}
+        <span
+          className='link text-primary-color underline'
+          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+        >
+          Passkeys
+        </span>
+      </span>
+    ),
+    [t],
   );
 
-  const subHeader = (
-    <Trans i18nKey='passkey_signup.sub-header'>
-      text <span className='text-secondary-font-color'>{email}</span> text
-    </Trans>
+  const subHeader = useMemo(
+    () => (
+      // <Trans i18nKey='passkey_signup.sub-header'>
+      //   text <span className='text-secondary-font-color'>{email}</span> text
+      // </Trans>
+      <span>
+        We’ll create an account for <span className='ext-primary-color'>{email}</span>
+      </span>
+    ),
+    [t],
   );
 
-  const primaryButton = t('passkey_signup.primary_btn');
-  const secondaryButton = t('passkey_signup.secondary_btn');
-  const tertiaryButton = t('passkey_signup.tertiary_btn');
+  const primaryButton = useMemo(() => t('passkey_signup.primary_btn'), [t]);
+  const secondaryButton = useMemo(() => t('passkey_signup.secondary_btn'), [t]);
+  const tertiaryButton = useMemo(() => t('passkey_signup.tertiary_btn'), [t]);
 
-  const handleCreateAccount = async () => {
+  const handleCreateAccount = useCallback(async () => {
     if (!email || !userName) {
       return;
     }
 
     try {
       await signUpWithPasskey(email, userName);
-      return navigateNext('passkey_success');
+      return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
-      return navigateNext('passkey_error');
+      return navigateNext(FlowHandlerEvents.PasskeyError);
     }
-  };
-  const handleSendOtp = () => {
-    return navigateNext('email_otp');
-  };
-  const handleBack = () => {
-    navigateBack();
-  };
+  }, [email, navigateNext, signUpWithPasskey, userName]);
 
-  const handleClick = async (btn: ButtonType) => {
-    if (btn === 'primary') {
-      return handleCreateAccount();
-    }
+  const handleSendOtp = useCallback(() => {
+    return navigateNext(FlowHandlerEvents.EmailOtp);
+  }, [navigateNext]);
 
-    if (btn === 'secondary') {
-      return handleSendOtp();
-    }
+  const handleBack = useCallback(() => {
+    return navigateBack();
+  }, [navigateBack]);
 
-    handleBack();
-  };
+  const handleClick = useCallback(
+    (btn: ButtonType) => {
+      switch (btn) {
+        case 'primary':
+          return handleCreateAccount();
+        case 'secondary':
+          return handleSendOtp();
+        case 'tertiary':
+          return handleBack();
+      }
+    },
+    [handleBack, handleCreateAccount, handleSendOtp],
+  );
 
-  const props = {
-    header,
-    subHeader,
-    primaryButton,
-    showHorizontalRule: true,
-    secondaryButton,
-    tertiaryButton,
-    onClick: handleClick,
-  };
+  const props = useMemo(
+    () => ({
+      header,
+      subHeader,
+      primaryButton,
+      showHorizontalRule: true,
+      secondaryButton,
+      tertiaryButton,
+      onClick: handleClick,
+    }),
+    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, handleClick],
+  );
 
   return (
     <>
-      <PasscodeScreensWrapper {...props} />
+      <PasskeyScreensWrapper {...props} />
     </>
   );
 };

@@ -1,44 +1,23 @@
-import { useCorbado } from '@corbado/react-sdk';
-import React, { useEffect, useRef } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { FlowHandlerEvents, LoginFlowNames, useCorbado } from '@corbado/react-sdk';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import Button from '../components/Button';
-import { Gmail, Outlook, Yahoo } from '../components/icons';
-import Link from '../components/Link';
-import OTPInput from '../components/OTPInput';
-import Text from '../components/Text';
+import { Button, Gmail, Link, OTPInput, Outlook, Text, Yahoo } from '../components';
 import useFlowHandler from '../hooks/useFlowHandler';
 import useUserData from '../hooks/useUserData';
 
 export const EmailOTP = () => {
   const { t } = useTranslation();
-  const { navigateBack, navigateNext } = useFlowHandler();
-  const { initSignUpWithEmailOTP, completeSignUpWithEmailOTP } = useCorbado();
-  const { email, userName } = useUserData();
+  const { navigateBack, navigateNext, currentFlow } = useFlowHandler();
+  const { completeSignUpWithEmailOTP, getUserAuthMethods } = useCorbado();
+  const { email, sendEmail } = useUserData();
 
   const [otp, setOTP] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
-  const initialised = useRef<boolean>(false);
 
-  useEffect(() => {
-    if (initialised.current) {
-      return;
-    }
-
-    initialised.current = true;
-
-    void (async () => {
-      if (!email || !userName) {
-        return;
-      }
-
-      try {
-        await initSignUpWithEmailOTP(email, userName);
-      } catch (error) {
-        console.log({ error });
-      }
-    })();
+  React.useEffect(() => {
+    void sendEmail(currentFlow);
   }, []);
 
   const handleCancel = () => navigateBack();
@@ -49,7 +28,15 @@ export const EmailOTP = () => {
     setLoading(true);
     try {
       await completeSignUpWithEmailOTP(payload);
-      return navigateNext('otp_success');
+
+      if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
+        const authMethods = await getUserAuthMethods(email ?? '');
+        const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
+        void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });
+        return;
+      }
+
+      void navigateNext();
     } catch (error) {
       console.log({ error });
       setLoading(false);
@@ -72,9 +59,13 @@ export const EmailOTP = () => {
       <Text variant='header'>{t('email_link.header')}</Text>
       <Text className='font-medium'>
         {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey='email_link.body'>
-          text <span className='text-secondary-font-color'>email adress</span> text
-        </Trans>
+        {/* <Trans i18nKey='email_link.body'>
+          text <span className='text-secondary-font-color'>{email}</span> text
+        </Trans> */}
+        <span>
+          We just sent a one time code to <span className='ext-primary-color'>{email}</span>. The code expires shortly,
+          so please enter it soon.
+        </span>
       </Text>
       <div className='grid grid-cols-3 gap-3 mt-4'>
         <Link

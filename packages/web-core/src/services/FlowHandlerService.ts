@@ -1,5 +1,13 @@
-import type { Flow, FlowNames, IFlowHandlerConfig, IProjectConfig, ScreenNames } from '../types';
+import type {
+  Flow,
+  FlowHandlerEventOptionsInterface,
+  FlowNames,
+  IFlowHandlerConfig,
+  IProjectConfig,
+  ScreenNames,
+} from '../types';
 import { FlowType } from '../types';
+import type { FlowHandlerEvents } from '../utils';
 import { CommonScreens, flows, LoginFlowNames, SignUpFlowNames } from '../utils';
 
 /**
@@ -49,16 +57,58 @@ export class FlowHandlerService {
 
   /**
    * Method to add a callback function to be called when the current screen changes.
+   * @param cb The callback function to be called when the current screen changes.
+   * @returns The callback id.
    */
   onScreenChange(cb: (screen: ScreenNames) => void) {
-    this.#onScreenUpdateCallbacks.push(cb);
+    const cbId = this.#onScreenUpdateCallbacks.push(cb) - 1;
+
+    return cbId;
+  }
+
+  /**
+   * Method to remove a callback function that was registered with onScreenChange.
+   * @param cbId The callback id returned by onScreenChange.
+   */
+  removeOnScreenChangeCallback(cbId: number) {
+    this.#onScreenUpdateCallbacks.splice(cbId, 1);
+  }
+
+  /**
+   * Method to replace a callback function that was registered with onScreenChange.
+   * @param cbId The callback id returned by onScreenChange.
+   * @param cb The new callback function.
+   */
+  replaceOnScreenChangeCallback(cbId: number, cb: (screen: ScreenNames) => void) {
+    this.#onScreenUpdateCallbacks[cbId] = cb;
   }
 
   /**
    * Method to add a callback function to be called when the current flow changes.
+   * @param cb The callback function to be called when the current flow changes.
+   * @returns The callback id.
    */
   onFlowChange(cb: (flow: FlowNames) => void) {
-    this.#onFlowUpdateCallbacks.push(cb);
+    const cbId = this.#onFlowUpdateCallbacks.push(cb) - 1;
+
+    return cbId;
+  }
+
+  /**
+   * Method to remove a callback function that was registered with onFlowChange.
+   * @param cbId The callback id returned by onFlowChange.
+   */
+  removeOnFlowChangeCallback(cbId: number) {
+    this.#onFlowUpdateCallbacks.splice(cbId, 1);
+  }
+
+  /**
+   * Method to replace a callback function that was registered with onFlowChange.
+   * @param cbId The callback id returned by onFlowChange.
+   * @param cb The new callback function.
+   */
+  replaceOnFlowChangeCallback(cbId: number, cb: (flow: FlowNames) => void) {
+    this.#onFlowUpdateCallbacks[cbId] = cb;
   }
 
   /**
@@ -67,10 +117,11 @@ export class FlowHandlerService {
    * If the next screen is the End screen, it redirects to a specified URL.
    * It adds the current screen to the screen history, sets the current screen to the next screen, and calls any registered onScreenUpdate callbacks with the new current screen.
    *
+   * @param event The event that triggered the navigation.
+   * @param eventOptions The event options.
    * @returns The new current screen.
-   * @param event
    */
-  async navigateNext(event?: string): Promise<ScreenNames> {
+  async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
     const stepFunction = this.#currentFlow[this.#currentScreen];
     if (!stepFunction) {
       throw new Error('Invalid screen');
@@ -83,6 +134,7 @@ export class FlowHandlerService {
         retryPasskeyOnError: true,
       },
       event,
+      eventOptions,
     );
 
     if (nextScreen === CommonScreens.End) {
@@ -97,6 +149,32 @@ export class FlowHandlerService {
     }
 
     return nextScreen;
+  }
+
+  /**
+   * Method to peek at the next screen
+   * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
+   * The next screen is returned, but the current screen is not changed.
+   * Depreciated: will be removed in the future if not used in any frameworks.
+   * @param event The event that will trigger the navigation.
+   * @param eventOptions The event options.
+   * @returns
+   */
+  peekNextScreen(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
+    const stepFunction = this.#currentFlow[this.#currentScreen];
+    if (!stepFunction) {
+      throw new Error('Invalid screen');
+    }
+
+    // TODO: extract flowOptions from projectConfig
+    return stepFunction(
+      {
+        passkeyAppend: true,
+        retryPasskeyOnError: true,
+      },
+      event,
+      eventOptions,
+    );
   }
 
   /**

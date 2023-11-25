@@ -16,7 +16,7 @@ const variants = {
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
 
-const Button: React.FunctionComponent<Props> = ({
+export const Button: React.FunctionComponent<Props> = ({
   variant = 'tertiary',
   fullWidth = true,
   isLoading = false,
@@ -36,5 +36,3 @@ const Button: React.FunctionComponent<Props> = ({
     </button>
   );
 };
-
-export default Button;

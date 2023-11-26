@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
+    "@corbado/web-core": "file:.yalc/@corbado/web-core",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

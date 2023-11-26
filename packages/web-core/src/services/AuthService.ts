@@ -1,10 +1,12 @@
-import { create, get } from '@github/webauthn-json';
 import { Subject } from 'rxjs';
+import type { Result } from 'ts-results';
+import { Ok } from 'ts-results';
 
-import type { ShortSession as ApiShortSession } from '../api';
-import type { IUser, UserAuthMethodsInterface } from '../types';
-import { AuthState, LoginHandler, ShortSession } from '../types';
+import type { AuthenticationResponse } from '../internaltypes/auth';
+import type { CorbadoError, IUser, ShortSession, UserAuthMethodsInterface } from '../types';
+import { AuthState, LoginHandler } from '../types';
 import type { ApiService } from './ApiService';
+import type { AuthenticatorService } from './AuthenticatorService';
 import type { SessionService } from './SessionService';
 
 /**
@@ -15,6 +17,7 @@ import type { SessionService } from './SessionService';
  */
 export class AuthService {
   #apiService: ApiService;
+  #authenticatorService: AuthenticatorService;
 
   // sessionService is used to store and manage (e.g. refresh) the user's session
   #sessionService: SessionService;
@@ -30,8 +33,13 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, sessionService: SessionService) {
+  constructor(
+    apiService: ApiService,
+    sessionService: SessionService,
+    authenticatorService: AuthenticatorService,
+  ) {
     this.#apiService = apiService;
+    this.#authenticatorService = authenticatorService;
     this.#sessionService = sessionService;
   }
 
@@ -75,13 +83,15 @@ export class AuthService {
   /**
    * Method to start registration of a user by sending an email with an OTP.
    */
-  async initSignUpWithEmailOTP(email: string, username: string) {
-    const resp = await this.#apiService.usersApi.emailCodeRegisterStart({
-      email: email,
-      username: username,
-    });
+  async initSignUpWithEmailOTP(email: string, username: string): Promise<Result<void, CorbadoError>> {
+    const resp = await this.#apiService.emailCodeRegisterStart(email, username);
+    if (resp.err) {
+      return resp;
+    }
 
-    this.#emailCodeIdRef = resp.data.data.emailCodeID;
+    this.#emailCodeIdRef = resp.val;
+
+    return Ok(void 0);
   }
 
   /**
@@ -90,17 +100,15 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeLoginWithEmailOTP(otp: string) {
-    if (this.#emailCodeIdRef === '') {
-      throw new Error('Email code id is empty');
+  async completeLoginWithEmailOTP(otp: string): Promise<Result<void, CorbadoError>> {
+    const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
+    if (resp.err) {
+      return resp;
     }
 
-    const verifyResp = await this.#apiService.usersApi.emailCodeConfirm({
-      code: otp,
-      emailCodeID: this.#emailCodeIdRef,
-    });
+    this.#executeOnAuthenticationSuccessCallbacks(resp.val);
 
-    this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
+    return Ok(void 0);
   }
 
   /**
@@ -109,17 +117,15 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeSignupWithEmailOTP(otp: string) {
-    if (this.#emailCodeIdRef === '') {
-      throw new Error('Email code id is empty');
+  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CorbadoError>> {
+    const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
+    if (resp.err) {
+      return resp;
     }
 
-    const verifyResp = await this.#apiService.usersApi.emailCodeConfirm({
-      code: otp,
-      emailCodeID: this.#emailCodeIdRef,
-    });
+    this.#executeOnAuthenticationSuccessCallbacks(resp.val);
 
-    this.#executeOnAuthenticationSuccessCallbacks(verifyResp.data.data);
+    return Ok(void 0);
   }
 
   /**
@@ -128,54 +134,72 @@ export class AuthService {
    * @param email
    * @param username
    */
-  async signUpWithPasskey(email: string, username: string) {
-    const respStart = await this.#apiService.usersApi.passKeyRegisterStart({
-      username: email,
-      fullName: username,
-    });
-    const challenge = JSON.parse(respStart.data.data.challenge);
-    const signedChallenge = await create(challenge);
-    const respFinish = await this.#apiService.usersApi.passKeyRegisterFinish({
-      signedChallenge: JSON.stringify(signedChallenge),
-    });
+  async signUpWithPasskey(email: string, username: string): Promise<Result<void, CorbadoError>> {
+    const respStart = await this.#apiService.passKeyRegisterStart(email, username);
+    if (respStart.err) {
+      return respStart;
+    }
 
-    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
+    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    if (signedChallenge.err) {
+      return signedChallenge;
+    }
+
+    const respFinish = await this.#apiService.passKeyRegisterFinish(signedChallenge.val);
+    if (respFinish.err) {
+      return respFinish;
+    }
+
+    this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
+
+    return Ok(void 0);
   }
 
   /**
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
-  async appendPasskey() {
-    const respStart = await this.#apiService.usersApi.passKeyAppendStart({});
-    const challenge = JSON.parse(respStart.data.data.challenge);
-    const signedChallenge = await create(challenge);
-    const respFinish = await this.#apiService.usersApi.passKeyAppendFinish({
-      signedChallenge: JSON.stringify(signedChallenge),
-    });
-
-    if (respFinish.status !== 200) {
-      throw new Error('error during append passkey');
+  async appendPasskey(): Promise<Result<void, CorbadoError>> {
+    const respStart = await this.#apiService.passKeyAppendStart();
+    if (respStart.err) {
+      return respStart;
     }
+
+    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    if (signedChallenge.err) {
+      return signedChallenge;
+    }
+
+    const respFinish = await this.#apiService.passKeyAppendFinish(signedChallenge.val);
+    if (respFinish.err) {
+      return respFinish;
+    }
+
+    return Ok(void 0);
   }
 
   /**
    * Method to log in with a passkey.
    */
-  async loginWithPasskey(email: string) {
-    const respStart = await this.#apiService.usersApi.passKeyLoginStart({
-      username: email,
-    });
+  async loginWithPasskey(email: string): Promise<Result<void, CorbadoError>> {
+    const respStart = await this.#apiService.passKeyLoginStart(email);
+    if (respStart.err) {
+      return respStart;
+    }
 
-    const challenge = JSON.parse(respStart.data.data.challenge);
-    const signedChallenge = await get(challenge);
+    const signedChallenge = await this.#authenticatorService.login(respStart.val);
+    if (signedChallenge.err) {
+      return signedChallenge;
+    }
 
-    const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
-      signedChallenge: JSON.stringify(signedChallenge),
-    });
+    const respFinish = await this.#apiService.passKeyLoginFinish(signedChallenge.val);
+    if (respFinish.err) {
+      return respFinish;
+    }
 
-    console.log('after login', respFinish.data.data);
-    this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
+    this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
+
+    return Ok(void 0);
   }
 
   /**
@@ -183,32 +207,43 @@ export class AuthService {
    *
    * @returns A LoginHandler that needs to be called to show these passkeys to the user.
    */
-  async initAutocompletedLoginWithPasskey(): Promise<LoginHandler> {
-    const respStart = await this.#apiService.usersApi.passKeyMediationStart({
-      username: '',
+  async initAutocompletedLoginWithPasskey(): Promise<Result<LoginHandler, CorbadoError>> {
+    const respStart = await this.#apiService.passKeyMediationStart();
+    if (respStart.err) {
+      return respStart;
+    }
+
+    const loginHandler = new LoginHandler(async () => {
+      const signedChallenge = await this.#authenticatorService.login(respStart.val);
+      if (signedChallenge.err) {
+        return signedChallenge;
+      }
+
+      const respFinish = await this.#apiService.passKeyLoginFinish(signedChallenge.val);
+      if (respFinish.err) {
+        return respFinish;
+      }
+
+      this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
+
+      return Ok(void 0);
     });
 
-    return new LoginHandler(async () => {
-      console.log('LoginHandler called');
-      const challenge = JSON.parse(respStart.data.data.challenge);
-      const signedChallenge = await get(challenge);
-      const respFinish = await this.#apiService.usersApi.passKeyLoginFinish({
-        signedChallenge: JSON.stringify(signedChallenge),
-      });
-
-      this.#executeOnAuthenticationSuccessCallbacks(respFinish.data.data);
-    });
+    return Ok(loginHandler);
   }
 
   /**
    * Method to log in with an email OTP.
    */
-  async initLoginWithEmailOTP(email: string) {
-    const resp = await this.#apiService.usersApi.emailCodeLoginStart({
-      username: email,
-    });
+  async initLoginWithEmailOTP(email: string): Promise<Result<void, CorbadoError>> {
+    const resp = await this.#apiService.emailCodeLoginStart(email);
+    if (resp.err) {
+      return resp;
+    }
 
-    this.#emailCodeIdRef = resp.data.data.emailCodeID;
+    this.#emailCodeIdRef = resp.val;
+
+    return Ok(void 0);
   }
 
   async authMethods(email: string) {
@@ -228,16 +263,7 @@ export class AuthService {
   /**
    * Method to execute all the callbacks registered for authentication success.
    */
-  #executeOnAuthenticationSuccessCallbacks = (sessionResponse: {
-    shortSession?: ApiShortSession;
-    longSession?: string;
-    redirectURL: string;
-  }) => {
-    if (!sessionResponse.shortSession?.value) {
-      return;
-    }
-
-    const shortSession = new ShortSession(sessionResponse.shortSession?.value);
-    this.#sessionService.setSession(shortSession, sessionResponse.longSession);
+  #executeOnAuthenticationSuccessCallbacks = (value: AuthenticationResponse) => {
+    this.#sessionService.setSession(value.shortSession, value.longSession);
   };
 }

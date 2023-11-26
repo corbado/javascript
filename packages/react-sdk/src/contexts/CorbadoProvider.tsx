@@ -1,4 +1,4 @@
-import type { IUser } from '@corbado/web-core';
+import type { IUser, NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
   const [shortSession, setShortSession] = useState<string | undefined>();
   const [user, setUser] = useState<IUser | undefined>();
+  const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -29,6 +30,10 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       if (value !== undefined) {
         setUser(value);
       }
+    });
+
+    corbadoApp.globalErrors.subscribe(value => {
+      setGlobalError(value);
     });
 
     corbadoApp.init();
@@ -105,6 +110,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     return {
       shortSession,
       user,
+      globalError,
       signUpWithPasskey,
       loginWithPasskey,
       initLoginWithEmailOTP,
@@ -120,6 +126,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   }, [
     shortSession,
     user,
+    globalError,
     signUpWithPasskey,
     loginWithPasskey,
     initLoginWithEmailOTP,

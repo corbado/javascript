@@ -1,21 +1,30 @@
-import type { ICorbadoAppParams, IProjectConfig, IUser, UserAuthMethodsInterface } from '@corbado/web-core';
-import type { LoginHandler } from '@corbado/web-core';
+import type {
+  CorbadoError,
+  ICorbadoAppParams,
+  IProjectConfig,
+  IUser,
+  LoginHandler,
+  UserAuthMethodsInterface,
+} from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
+import type { Result } from 'ts-results';
+import {NonRecoverableError} from "@corbado/web-core";
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
 export interface CorbadoContextInterface {
   shortSession: string | undefined;
   user: IUser | undefined;
-  signUpWithPasskey: (email: string, username: string) => Promise<void>;
-  loginWithPasskey: (email: string) => Promise<void>;
-  initLoginWithEmailOTP: (email: string) => Promise<void>;
-  completeLoginWithEmailOTP: (code: string) => Promise<void>;
+  globalError: NonRecoverableError | undefined;
+  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, CorbadoError>>;
+  loginWithPasskey: (email: string) => Promise<Result<void, CorbadoError>>;
+  initLoginWithEmailOTP: (email: string) => Promise<Result<void, CorbadoError>>;
+  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CorbadoError>>;
   logout: () => void;
-  initSignUpWithEmailOTP: (email: string, username: string) => Promise<void>;
-  completeSignUpWithEmailOTP: (code: string) => Promise<void>;
-  initAutocompletedLoginWithPasskey: () => Promise<LoginHandler>;
-  appendPasskey: () => Promise<void>;
+  initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, CorbadoError>>;
+  completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CorbadoError>>;
+  initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, CorbadoError>>;
+  appendPasskey: () => Promise<Result<void, CorbadoError>>;
   getUserAuthMethods: (email: string) => Promise<UserAuthMethodsInterface>;
   getProjectConfig: () => Promise<IProjectConfig>;
 }
@@ -27,6 +36,7 @@ const missingImplementation = (): never => {
 export const initialContext = {
   shortSession: undefined,
   user: undefined,
+  globalError: undefined,
   signUpWithPasskey: missingImplementation,
   loginWithPasskey: missingImplementation,
   initLoginWithEmailOTP: missingImplementation,

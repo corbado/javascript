@@ -31,7 +31,8 @@
     "react": ">=16.8"
   },
   "dependencies": {
-    "@corbado/web-core": "file:.yalc/@corbado/web-core"
+    "@corbado/web-core": "file:.yalc/@corbado/web-core",
+    "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0"

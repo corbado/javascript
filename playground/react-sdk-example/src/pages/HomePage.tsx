@@ -26,8 +26,8 @@ const HomePage = () => {
         <FilledButton
           content='Logout'
           onClick={async () => {
-            await logout();
-            navigate('/');
+            logout();
+            navigate('/auth');
           }}
         />
       </div>

@@ -31,6 +31,7 @@
   "dependencies": {
     "@github/webauthn-json": "^2.1.1",
     "axios": "^1.6.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "ts-results": "^3.3.0"
   }
 }

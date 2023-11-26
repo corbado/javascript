@@ -1,14 +1,14 @@
 import RoundedTextInput from '../components/inputs/RoundedTextInput.tsx';
 import FilledButton from '../components/buttons/FilledButton.tsx';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCorbado } from '@corbado/react-sdk';
+import useAuthUI from '../hooks/useAuthUI.ts';
 
 const CompleteEmailOTP = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const { completeSignUpWithEmailOTP } = useCorbado();
+  const { onAuthCompleted } = useAuthUI();
 
   const submit = async () => {
     try {
@@ -18,7 +18,7 @@ const CompleteEmailOTP = () => {
       }
 
       await completeSignUpWithEmailOTP(code);
-      navigate('/home');
+      onAuthCompleted();
     } catch (e) {
       setError('An unknown error has happened');
       console.log(e);
@@ -41,12 +41,6 @@ const CompleteEmailOTP = () => {
           content='Continue with email'
           onClick={submit}
         />
-        <p
-          className='text-center cursor-pointer'
-          onClick={() => navigate(-1)}
-        >
-          Cancel
-        </p>
       </div>
     </div>
   );

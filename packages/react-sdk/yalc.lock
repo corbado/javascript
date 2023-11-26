@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@corbado/web-core": {
+      "signature": "14993c682383c83879028e313ca5aeaf",
+      "file": true
+    }
+  }
+}

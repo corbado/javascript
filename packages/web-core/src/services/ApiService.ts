@@ -1,7 +1,11 @@
-import type { AxiosInstance } from 'axios';
+import type {AxiosError, AxiosInstance} from 'axios';
 import axios from 'axios';
+import {Err, Result} from 'ts-results';
 
-import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
+import type {ErrorRsp} from '../api';
+import {AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi} from '../api';
+import {AuthenticationResponse} from '../internaltypes/auth';
+import {CorbadoError, NonRecoverableError} from '../types';
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';
@@ -65,11 +69,34 @@ export class ApiService {
       'X-Corbado-WC-Version': token ? `Bearer ${token}` : packageVersion, // Example default version
     };
 
-    return axios.create({
+    const out = axios.create({
       timeout: this.#timeout,
       withCredentials: true,
       headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers,
     });
+
+    out.interceptors.response.use(
+      response => {
+        return response;
+      },
+      (error: AxiosError) => {
+        console.log('axios error', error);
+        if (!error.response || !error.response.data) {
+          return Promise.reject(NonRecoverableError.unknownError());
+        }
+
+        const errorResp = error.response.data as ErrorRsp;
+        if (error.response.status === 400 || error.response.status === 404) {
+          const e = CorbadoError.fromApiResponse(errorResp.error);
+          console.log('returning corbadoError', e);
+          return Promise.reject(e);
+        }
+
+        return Promise.reject(error);
+      },
+    );
+
+    return out;
   }
 
   /**
@@ -97,5 +124,117 @@ export class ApiService {
    */
   public setInstanceWithToken(token: string): void {
     this.#setApis(token);
+  }
+
+  public passKeyRegisterStart(email: string, username: string): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyRegisterStart({
+        username: email,
+        fullName: username,
+      });
+
+      return r.data.data.challenge;
+    });
+  }
+
+  public passKeyRegisterFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyRegisterFinish({
+        signedChallenge: signedChallenge,
+      });
+
+      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
+  }
+
+  public passKeyAppendStart(): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyAppendStart({});
+
+      return r.data.data.challenge;
+    });
+  }
+
+  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.usersApi.passKeyAppendFinish({
+        signedChallenge: signedChallenge,
+      });
+
+      return void 0;
+    });
+  }
+
+  public passKeyLoginStart(email: string): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyLoginStart({
+        username: email,
+      });
+
+      if (r.data.data.challenge === '') {
+        return Promise.reject(CorbadoError.noPasskeyAvailable());
+      }
+
+      return r.data.data.challenge;
+    });
+  }
+
+  public passKeyLoginFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyLoginFinish({
+        signedChallenge: signedChallenge,
+      });
+
+      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
+  }
+
+  public passKeyMediationStart(): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.passKeyMediationStart({
+        username: '',
+      });
+
+      return r.data.data.challenge;
+    });
+  }
+
+  public emailCodeRegisterStart(email: string, username: string): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailCodeRegisterStart({
+        email: email,
+        username: username,
+      });
+
+      return r.data.data.emailCodeID;
+    });
+  }
+
+  public emailCodeLoginStart(email: string): Promise<Result<string, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailCodeLoginStart({
+        username: email,
+      });
+
+      return r.data.data.emailCodeID;
+    });
+  }
+
+  public async emailCodeConfirm(
+    emailCodeId: string,
+    otpCode: string,
+  ): Promise<Result<AuthenticationResponse, CorbadoError>> {
+    if (emailCodeId === '') {
+      return Err(CorbadoError.illegalState('email OTP challenge has not been started'));
+    }
+
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailCodeConfirm({
+        emailCodeID: emailCodeId,
+        code: otpCode,
+      });
+
+      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
   }
 }

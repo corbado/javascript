@@ -1,6 +1,10 @@
+import { Subject } from 'rxjs';
+
 import type { IFlowHandlerConfig } from '../types';
+import { NonRecoverableError } from '../types';
 import { defaultTimeout } from '../utils';
 import { ApiService } from './ApiService';
+import { AuthenticatorService } from './AuthenticatorService';
 import { AuthService } from './AuthService';
 import type { FlowHandlerService } from './FlowHandlerService';
 import { ProjectService } from './ProjectService';
@@ -27,6 +31,7 @@ export class CorbadoApp {
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
+  #globalErrors: Subject<NonRecoverableError | undefined> = new Subject();
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -36,7 +41,8 @@ export class CorbadoApp {
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
     const sessionService = new SessionService(this.#apiService);
-    this.#authService = new AuthService(this.#apiService, sessionService);
+    const authenticatorService = new AuthenticatorService(this.#globalErrors);
+    this.#authService = new AuthService(this.#apiService, sessionService, authenticatorService);
     this.#projectService = new ProjectService(this.#apiService);
   }
 
@@ -56,11 +62,28 @@ export class CorbadoApp {
     return this.#projectService;
   }
 
+  public get globalErrors() {
+    return this.#globalErrors.asObservable();
+  }
+
   /**
    * Method to initialize the application.
    * It fetches the project configuration and sets up the flow handler service.
    */
   public init() {
+    if (!this.#validateProjectId(this.#projectId)) {
+      console.log('invalid project id');
+      this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
+    }
+
     this.#authService.init();
+  }
+
+  #validateProjectId(projectId: string): boolean {
+    if (!projectId.match(/^pro-\d+$/)) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import FilledButton from '../components/buttons/FilledButton.tsx';
-import RoundedTextInput from '../components/inputs/RoundedTextInput.tsx';
-import useAuthUI from '../hooks/useAuthUI.ts';
-import { AuthScreenNames } from '../contexts/AuthUIContext.ts';
+import FilledButton from '../buttons/FilledButton.tsx';
+import RoundedTextInput from '../inputs/RoundedTextInput.tsx';
+import useAuthUI from '../../hooks/useAuthUI.ts';
+import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 
-const InitiateSignupPage = () => {
+const InitiateSignup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const { switchScreen, setUserState } = useAuthUI();
@@ -46,4 +46,4 @@ const InitiateSignupPage = () => {
   );
 };
 
-export default InitiateSignupPage;
+export default InitiateSignup;

@@ -1,11 +1,21 @@
-import type {AxiosError, AxiosInstance} from 'axios';
+import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
-import {Err, Result} from 'ts-results';
+import { Err, Result } from 'ts-results';
 
-import type {ErrorRsp} from '../api';
-import {AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi} from '../api';
-import {AuthenticationResponse} from '../internaltypes/auth';
-import {CorbadoError, NonRecoverableError} from '../types';
+import type { ErrorRsp } from '../api';
+import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
+import { AuthenticationResponse } from '../internaltypes/auth';
+import type {
+  AppendPasskeyError,
+  CompleteLoginWithEmailOTPError,
+  CompleteSignupWithEmailOTPError,
+  InitAutocompletedLoginWithPasskeyError,
+  InitLoginWithEmailOTPError,
+  InitSignUpWithEmailOTPError,
+  LoginWithPasskeyError,
+  SignUpWithPasskeyError,
+} from '../types';
+import { CorbadoError, NonRecoverableError } from '../types';
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';
@@ -14,6 +24,7 @@ const packageVersion = '0';
  * ApiService class encapsulates API handling for the Corbado Application.
  * It manages API instances for users, assets, projects, and sessions, and configures them with
  * authentication tokens and default settings such as timeout and headers.
+ * ApiService should completely abstract away the API layer from the rest of the application.
  */
 export class ApiService {
   // Private API instances for various services.
@@ -75,12 +86,12 @@ export class ApiService {
       headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers,
     });
 
+    // We transform AxiosErrors into CorbadoErrors using axios interceptors.
     out.interceptors.response.use(
       response => {
         return response;
       },
       (error: AxiosError) => {
-        console.log('axios error', error);
         if (!error.response || !error.response.data) {
           return Promise.reject(NonRecoverableError.unknownError());
         }
@@ -88,7 +99,6 @@ export class ApiService {
         const errorResp = error.response.data as ErrorRsp;
         if (error.response.status === 400 || error.response.status === 404) {
           const e = CorbadoError.fromApiResponse(errorResp.error);
-          console.log('returning corbadoError', e);
           return Promise.reject(e);
         }
 
@@ -126,7 +136,7 @@ export class ApiService {
     this.#setApis(token);
   }
 
-  public passKeyRegisterStart(email: string, username: string): Promise<Result<string, CorbadoError>> {
+  public passKeyRegisterStart(email: string, username: string): Promise<Result<string, SignUpWithPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyRegisterStart({
         username: email,
@@ -137,7 +147,9 @@ export class ApiService {
     });
   }
 
-  public passKeyRegisterFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, CorbadoError>> {
+  public passKeyRegisterFinish(
+    signedChallenge: string,
+  ): Promise<Result<AuthenticationResponse, SignUpWithPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyRegisterFinish({
         signedChallenge: signedChallenge,
@@ -147,7 +159,7 @@ export class ApiService {
     });
   }
 
-  public passKeyAppendStart(): Promise<Result<string, CorbadoError>> {
+  public passKeyAppendStart(): Promise<Result<string, AppendPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyAppendStart({});
 
@@ -155,7 +167,7 @@ export class ApiService {
     });
   }
 
-  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, CorbadoError>> {
+  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, AppendPasskeyError>> {
     return Result.wrapAsync(async () => {
       await this.usersApi.passKeyAppendFinish({
         signedChallenge: signedChallenge,
@@ -165,7 +177,7 @@ export class ApiService {
     });
   }
 
-  public passKeyLoginStart(email: string): Promise<Result<string, CorbadoError>> {
+  public passKeyLoginStart(email: string): Promise<Result<string, LoginWithPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyLoginStart({
         username: email,
@@ -179,7 +191,7 @@ export class ApiService {
     });
   }
 
-  public passKeyLoginFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, CorbadoError>> {
+  public passKeyLoginFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, LoginWithPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyLoginFinish({
         signedChallenge: signedChallenge,
@@ -189,7 +201,7 @@ export class ApiService {
     });
   }
 
-  public passKeyMediationStart(): Promise<Result<string, CorbadoError>> {
+  public passKeyMediationStart(): Promise<Result<string, InitAutocompletedLoginWithPasskeyError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyMediationStart({
         username: '',
@@ -199,7 +211,7 @@ export class ApiService {
     });
   }
 
-  public emailCodeRegisterStart(email: string, username: string): Promise<Result<string, CorbadoError>> {
+  public emailCodeRegisterStart(email: string, username: string): Promise<Result<string, InitSignUpWithEmailOTPError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.emailCodeRegisterStart({
         email: email,
@@ -210,7 +222,7 @@ export class ApiService {
     });
   }
 
-  public emailCodeLoginStart(email: string): Promise<Result<string, CorbadoError>> {
+  public emailCodeLoginStart(email: string): Promise<Result<string, InitLoginWithEmailOTPError>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.emailCodeLoginStart({
         username: email,
@@ -223,7 +235,7 @@ export class ApiService {
   public async emailCodeConfirm(
     emailCodeId: string,
     otpCode: string,
-  ): Promise<Result<AuthenticationResponse, CorbadoError>> {
+  ): Promise<Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError>> {
     if (emailCodeId === '') {
       return Err(CorbadoError.illegalState('email OTP challenge has not been started'));
     }

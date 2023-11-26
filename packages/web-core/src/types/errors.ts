@@ -1,5 +1,26 @@
 import type { ErrorRspAllOfError } from '../api';
 
+export type SignUpWithPasskeyError =
+  | UserAlreadyExistsError
+  | InvalidUserInputError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
+export type AppendPasskeyError = PasskeyChallengeCancelledError | UnknownError;
+export type LoginWithPasskeyError =
+  | InvalidUserInputError
+  | InvalidPasskeyError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
+export type InitAutocompletedLoginWithPasskeyError = UnknownError;
+export type CompleteAutocompletedLoginWithPasskeyError =
+  | InvalidPasskeyError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
+export type InitSignUpWithEmailOTPError = InvalidUserInputError | UserAlreadyExistsError | UnknownError;
+export type CompleteSignupWithEmailOTPError = InvalidUserInputError | UnknownError;
+export type InitLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
+export type CompleteLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
+
 export class CorbadoError extends Error {
   constructor(message: string) {
     super(message);
@@ -11,7 +32,7 @@ export class CorbadoError extends Error {
     switch (errorResp.type) {
       case 'validation_error': {
         if (!errorResp.validation?.length) {
-          return NonRecoverableError.unknownError();
+          return CorbadoError.unknown();
         }
 
         // we only care about the first error
@@ -36,12 +57,10 @@ export class CorbadoError extends Error {
         }
     }
 
-    return NonRecoverableError.unknownError();
+    return CorbadoError.unknown();
   }
 
-  static fromDOMException(e: DOMException): CorbadoError {
-    console.log(e.name);
-    console.log(e);
+  static fromDOMException(e: DOMException): CorbadoError | NonRecoverableError {
     switch (e.name) {
       case 'NotAllowedError':
         return new PasskeyChallengeCancelledError();
@@ -49,17 +68,17 @@ export class CorbadoError extends Error {
         return new NonRecoverableError(
           'server',
           'The relying party ID is not a registrable domain suffix of, nor equal to the current domain.',
-          'Check your configuration for the relying party ID in Corbado\'s developer panel. This ID must be set to a value that matches your frontend\'s domain.',
+          "Check your configuration for the relying party ID in Corbado's developer panel. This ID must be set to a value that matches your frontend's domain.",
           'https://docs.corbado.com',
         );
       default:
-        return NonRecoverableError.unknownError();
+        return CorbadoError.unknown();
     }
   }
 
   static fromUnknownException(e: unknown): CorbadoError {
     console.log('unknown exception', e);
-    return NonRecoverableError.unknownError();
+    return CorbadoError.unknown();
   }
 
   static illegalState(message: string): CorbadoError {
@@ -69,9 +88,30 @@ export class CorbadoError extends Error {
   static noPasskeyAvailable(): CorbadoError {
     return new NoPasskeyAvailableError();
   }
+
+  static unknown(): CorbadoError {
+    return new UnknownError();
+  }
 }
 
-export class NonRecoverableError extends CorbadoError {
+/**
+ * RecoverableError can be handled by either showing an error message to the user, by retrying the operation or by calling a fallback function.
+ * Most errors fall into this category.
+ */
+export class RecoverableError extends CorbadoError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RecoverableError';
+  }
+}
+
+/**
+ * NonRecoverableErrors are only thrown when there is a big problem with the application (e.g. the application is misconfigured).
+ * We can not recover from such an error.
+ * Therefore, these errors are handled by showing a central error page.
+ * Only a few errors should fall into this category.
+ */
+export class NonRecoverableError extends Error {
   readonly type: 'client' | 'server';
   readonly hint: string;
   readonly link: string;
@@ -87,50 +127,60 @@ export class NonRecoverableError extends CorbadoError {
   }
 
   static unknownError() {
-    return new NonRecoverableError('server', 'An unknown error occurred', 'Contact the Corbado team', 'https://docs.corbado.com');
+    return new NonRecoverableError(
+      'server',
+      'An unknown error occurred',
+      'Contact the Corbado team',
+      'https://docs.corbado.com',
+    );
   }
 
   static invalidConfig(message: string) {
-    return new NonRecoverableError('client', message, 'Check your parameters for <CorbadoProvider/>','https://docs.corbado.com');
+    return new NonRecoverableError(
+      'client',
+      message,
+      'Check your parameters for <CorbadoProvider/>',
+      'https://docs.corbado.com',
+    );
   }
 }
 
-export class UserAlreadyExistsError extends CorbadoError {
+export class UserAlreadyExistsError extends RecoverableError {
   constructor() {
     super('User already exists');
     this.name = 'UserAlreadyExistsError';
   }
 }
 
-export class UnknownUserError extends CorbadoError {
+export class UnknownUserError extends RecoverableError {
   constructor() {
     super('User does not exist');
     this.name = 'UnknownUserError';
   }
 }
 
-export class NoPasskeyAvailableError extends CorbadoError {
+export class NoPasskeyAvailableError extends RecoverableError {
   constructor() {
     super('No passkey available');
     this.name = 'NoPasskeyAvailableError';
   }
 }
 
-export class InvalidPasskeyError extends CorbadoError {
+export class InvalidPasskeyError extends RecoverableError {
   constructor() {
     super('The provided passkey is no longer valid.');
     this.name = 'InvalidPasskeyError';
   }
 }
 
-export class PasskeyChallengeCancelledError extends CorbadoError {
+export class PasskeyChallengeCancelledError extends RecoverableError {
   constructor() {
     super('Passkey challenge cancelled');
     this.name = 'PasskeyChallengeCancelledError';
   }
 }
 
-export class InvalidUserInputError extends CorbadoError {
+export class InvalidUserInputError extends RecoverableError {
   field: string;
 
   constructor(message: string, field: string) {
@@ -144,9 +194,16 @@ export class InvalidUserInputError extends CorbadoError {
  * this error is thrown when the application is in an invalid state
  * (e.g. an email OTP challenge is verified, but that challenge has never been started)
  */
-export class IllegalStateError extends CorbadoError {
+export class IllegalStateError extends RecoverableError {
   constructor(message: string) {
     super(message);
     this.name = 'IllegalStateError';
+  }
+}
+
+export class UnknownError extends RecoverableError {
+  constructor() {
+    super('An unknown error occurred');
+    this.name = 'UnknownError';
   }
 }

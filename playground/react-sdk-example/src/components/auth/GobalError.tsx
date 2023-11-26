@@ -1,7 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
-import FilledButton from '../components/buttons/FilledButton.tsx';
+import FilledButton from '../buttons/FilledButton.tsx';
 
-const GlobalErrorPage = () => {
+export const GlobalErrorScreen = () => {
   const { globalError } = useCorbado();
 
   if (!globalError) {
@@ -40,5 +40,3 @@ const GlobalErrorPage = () => {
     </div>
   );
 };
-
-export default GlobalErrorPage;

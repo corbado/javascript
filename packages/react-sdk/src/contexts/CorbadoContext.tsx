@@ -1,14 +1,21 @@
 import type {
-  CorbadoError,
+  AppendPasskeyError,
+  CompleteLoginWithEmailOTPError,
+  CompleteSignupWithEmailOTPError,
   ICorbadoAppParams,
+  InitAutocompletedLoginWithPasskeyError,
+  InitLoginWithEmailOTPError,
+  InitSignUpWithEmailOTPError,
   IProjectConfig,
   IUser,
   LoginHandler,
+  LoginWithPasskeyError,
+  NonRecoverableError,
+  SignUpWithPasskeyError,
   UserAuthMethodsInterface,
 } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
-import {NonRecoverableError} from "@corbado/web-core";
 
 export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
 
@@ -16,15 +23,15 @@ export interface CorbadoContextInterface {
   shortSession: string | undefined;
   user: IUser | undefined;
   globalError: NonRecoverableError | undefined;
-  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, CorbadoError>>;
-  loginWithPasskey: (email: string) => Promise<Result<void, CorbadoError>>;
-  initLoginWithEmailOTP: (email: string) => Promise<Result<void, CorbadoError>>;
-  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CorbadoError>>;
+  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
+  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError>>;
+  initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError>>;
+  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError>>;
   logout: () => void;
-  initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, CorbadoError>>;
-  completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CorbadoError>>;
-  initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, CorbadoError>>;
-  appendPasskey: () => Promise<Result<void, CorbadoError>>;
+  initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, InitSignUpWithEmailOTPError>>;
+  completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
+  initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>>;
+  appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
   getUserAuthMethods: (email: string) => Promise<UserAuthMethodsInterface>;
   getProjectConfig: () => Promise<IProjectConfig>;
 }

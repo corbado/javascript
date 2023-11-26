@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import FilledButton from '../components/buttons/FilledButton.tsx';
-import RoundedTextInput from '../components/inputs/RoundedTextInput.tsx';
+import FilledButton from '../buttons/FilledButton.tsx';
+import RoundedTextInput from '../inputs/RoundedTextInput.tsx';
 import {
   InvalidPasskeyError,
   InvalidUserInputError,
@@ -9,15 +9,15 @@ import {
   useCorbado,
 } from '@corbado/react-sdk';
 import { LoginHandler, PasskeyChallengeCancelledError } from '@corbado/web-core';
-import useAuthUI from '../hooks/useAuthUI.ts';
-import { AuthScreenNames } from '../contexts/AuthUIContext.ts';
+import useAuthUI from '../../hooks/useAuthUI.ts';
+import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 
-const LoginPage = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | undefined>();
   const [loginHandler, setLoginHandler] = useState<LoginHandler>();
   const { loginWithPasskey, initAutocompletedLoginWithPasskey, initLoginWithEmailOTP } = useCorbado();
-  const { switchScreen, onAuthCompleted } = useAuthUI();
+  const { switchScreen, onAuthCompleted, setUserState } = useAuthUI();
 
   const initialized = useRef(false);
   const conditionalUIStarted = useRef(false);
@@ -30,6 +30,7 @@ const LoginPage = () => {
     initialized.current = true;
 
     initAutocompletedLoginWithPasskey().then(lh => {
+      // for conditional UI we ignore errors and just skip that functionality to the user
       if (lh.err) {
         return;
       }
@@ -63,6 +64,7 @@ const LoginPage = () => {
   };
 
   const fallbackToEmailOTP = async () => {
+    setUserState({ email: email, username: undefined });
     const result = await initLoginWithEmailOTP(email);
     if (!result.err) {
       switchScreen(AuthScreenNames.CompleteEmailOTP);
@@ -81,14 +83,13 @@ const LoginPage = () => {
 
     const result = await loginHandler.completionCallback();
     if (!result.err) {
-      onAuthCompleted();
+      return onAuthCompleted();
     }
 
     switch (true) {
       case result.val instanceof PasskeyChallengeCancelledError:
         // nothing to do here => the user can just try again
         return;
-      case result.val instanceof NoPasskeyAvailableError:
       case result.val instanceof InvalidPasskeyError:
         setError('We could not log you in using that passkey. Please try again by providing your email address.');
         return;
@@ -125,4 +126,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

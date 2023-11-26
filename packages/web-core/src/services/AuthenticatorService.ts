@@ -5,6 +5,10 @@ import { Err, Ok } from 'ts-results';
 
 import { CorbadoError, NonRecoverableError } from '../types';
 
+/**
+ * AuthenticatorService handles all interactions with webAuthn platform authenticators.
+ * Currently, this includes the creation of passkeys and the login with existing passkeys.
+ */
 export class AuthenticatorService {
   #globalErrors: Subject<NonRecoverableError | undefined>;
 
@@ -24,7 +28,7 @@ export class AuthenticatorService {
         if (e instanceof DOMException) {
           return Err(CorbadoError.fromDOMException(e));
         } else {
-          return Err(NonRecoverableError.fromUnknownException(e));
+          return Err(CorbadoError.fromUnknownException(e));
         }
       }
     });
@@ -42,12 +46,13 @@ export class AuthenticatorService {
         if (e instanceof DOMException) {
           return Err(CorbadoError.fromDOMException(e));
         } else {
-          return Err(NonRecoverableError.fromUnknownException(e));
+          return Err(CorbadoError.fromUnknownException(e));
         }
       }
     });
   }
 
+  // we don't want to expose NonRecoverableError to the caller, so we catch it here and emit it on the globalErrors subject
   async #handleWithGlobalErrors<T>(wrappedFunction: () => Promise<Result<T, CorbadoError>>) {
     const result = await wrappedFunction();
     if (result.err && result.val instanceof NonRecoverableError) {

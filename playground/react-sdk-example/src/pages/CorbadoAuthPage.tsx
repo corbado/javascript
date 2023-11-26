@@ -1,19 +1,20 @@
 import useAuthUI from '../hooks/useAuthUI.ts';
 import { useMemo } from 'react';
 import { AuthScreenNames } from '../contexts/AuthUIContext.ts';
-import InitiateSignupPage from './InitiateSignupPage.tsx';
-import SelectSignupMethodPage from './SelectSignupMethodPage.tsx';
-import CompleteEmailOTP from './CompleteEmailOTP.tsx';
-import LoginPage from './LoginPage.tsx';
+import InitiateSignup from '../components/auth/InitiateSignup.tsx';
+import SelectSignupMethod from '../components/auth/SelectSignupMethod.tsx';
+import CompleteEmailOTP from '../components/auth/CompleteEmailOTP.tsx';
+import Login from '../components/auth/Login.tsx';
 import { useCorbado } from '@corbado/react-sdk';
-import GlobalErrorPage from './GobalErrorPage.tsx';
+import {GlobalErrorScreen} from "../components/auth/GobalError.tsx";
 
 const screensMap = {
-  [AuthScreenNames.InitiateSignUp]: InitiateSignupPage,
-  [AuthScreenNames.Login]: LoginPage,
+  [AuthScreenNames.InitiateSignUp]: InitiateSignup,
+  [AuthScreenNames.Login]: Login,
   [AuthScreenNames.CompleteEmailOTP]: CompleteEmailOTP,
-  [AuthScreenNames.SelectSignUpMethod]: SelectSignupMethodPage,
+  [AuthScreenNames.SelectSignUpMethod]: SelectSignupMethod,
 };
+
 
 const CorbadoAuthPage = () => {
   const { currentScreen } = useAuthUI();
@@ -21,7 +22,7 @@ const CorbadoAuthPage = () => {
 
   const ScreenComponent = useMemo(() => {
     if (globalError) {
-      return GlobalErrorPage;
+      return GlobalErrorScreen;
     }
 
     return screensMap[currentScreen];

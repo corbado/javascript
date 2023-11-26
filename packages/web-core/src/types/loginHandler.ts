@@ -1,11 +1,11 @@
 import type { Result } from 'ts-results';
 
-import type { CorbadoError } from './errors';
+import type { CompleteAutocompletedLoginWithPasskeyError } from './errors';
 
 export class LoginHandler {
-  readonly #completionCallback: () => Promise<Result<void, CorbadoError>>;
+  readonly #completionCallback: () => Promise<Result<void, CompleteAutocompletedLoginWithPasskeyError>>;
 
-  constructor(completionCallback: () => Promise<Result<void, CorbadoError>>) {
+  constructor(completionCallback: () => Promise<Result<void, CompleteAutocompletedLoginWithPasskeyError>>) {
     this.#completionCallback = completionCallback;
   }
 

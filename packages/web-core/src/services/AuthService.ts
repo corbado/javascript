@@ -3,7 +3,19 @@ import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../internaltypes/auth';
-import type { CorbadoError, IUser, ShortSession, UserAuthMethodsInterface } from '../types';
+import type {
+  AppendPasskeyError,
+  CompleteLoginWithEmailOTPError,
+  CompleteSignupWithEmailOTPError,
+  InitAutocompletedLoginWithPasskeyError,
+  InitLoginWithEmailOTPError,
+  InitSignUpWithEmailOTPError,
+  IUser,
+  LoginWithPasskeyError,
+  ShortSession,
+  SignUpWithPasskeyError,
+  UserAuthMethodsInterface,
+} from '../types';
 import { AuthState, LoginHandler } from '../types';
 import type { ApiService } from './ApiService';
 import type { AuthenticatorService } from './AuthenticatorService';
@@ -33,11 +45,7 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(
-    apiService: ApiService,
-    sessionService: SessionService,
-    authenticatorService: AuthenticatorService,
-  ) {
+  constructor(apiService: ApiService, sessionService: SessionService, authenticatorService: AuthenticatorService) {
     this.#apiService = apiService;
     this.#authenticatorService = authenticatorService;
     this.#sessionService = sessionService;
@@ -83,7 +91,7 @@ export class AuthService {
   /**
    * Method to start registration of a user by sending an email with an OTP.
    */
-  async initSignUpWithEmailOTP(email: string, username: string): Promise<Result<void, CorbadoError>> {
+  async initSignUpWithEmailOTP(email: string, username: string): Promise<Result<void, InitSignUpWithEmailOTPError>> {
     const resp = await this.#apiService.emailCodeRegisterStart(email, username);
     if (resp.err) {
       return resp;
@@ -100,7 +108,7 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeLoginWithEmailOTP(otp: string): Promise<Result<void, CorbadoError>> {
+  async completeLoginWithEmailOTP(otp: string): Promise<Result<void, CompleteLoginWithEmailOTPError>> {
     const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
     if (resp.err) {
       return resp;
@@ -117,7 +125,7 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CorbadoError>> {
+  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CompleteSignupWithEmailOTPError>> {
     const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
     if (resp.err) {
       return resp;
@@ -134,7 +142,7 @@ export class AuthService {
    * @param email
    * @param username
    */
-  async signUpWithPasskey(email: string, username: string): Promise<Result<void, CorbadoError>> {
+  async signUpWithPasskey(email: string, username: string): Promise<Result<void, SignUpWithPasskeyError>> {
     const respStart = await this.#apiService.passKeyRegisterStart(email, username);
     if (respStart.err) {
       return respStart;
@@ -159,7 +167,7 @@ export class AuthService {
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
-  async appendPasskey(): Promise<Result<void, CorbadoError>> {
+  async appendPasskey(): Promise<Result<void, AppendPasskeyError>> {
     const respStart = await this.#apiService.passKeyAppendStart();
     if (respStart.err) {
       return respStart;
@@ -181,7 +189,7 @@ export class AuthService {
   /**
    * Method to log in with a passkey.
    */
-  async loginWithPasskey(email: string): Promise<Result<void, CorbadoError>> {
+  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError>> {
     const respStart = await this.#apiService.passKeyLoginStart(email);
     if (respStart.err) {
       return respStart;
@@ -207,7 +215,7 @@ export class AuthService {
    *
    * @returns A LoginHandler that needs to be called to show these passkeys to the user.
    */
-  async initAutocompletedLoginWithPasskey(): Promise<Result<LoginHandler, CorbadoError>> {
+  async initAutocompletedLoginWithPasskey(): Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>> {
     const respStart = await this.#apiService.passKeyMediationStart();
     if (respStart.err) {
       return respStart;
@@ -235,7 +243,7 @@ export class AuthService {
   /**
    * Method to log in with an email OTP.
    */
-  async initLoginWithEmailOTP(email: string): Promise<Result<void, CorbadoError>> {
+  async initLoginWithEmailOTP(email: string): Promise<Result<void, InitLoginWithEmailOTPError>> {
     const resp = await this.#apiService.emailCodeLoginStart(email);
     if (resp.err) {
       return resp;

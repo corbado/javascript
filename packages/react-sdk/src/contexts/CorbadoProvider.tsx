@@ -10,6 +10,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
   const [shortSession, setShortSession] = useState<string | undefined>();
   const [user, setUser] = useState<IUser | undefined>();
+  const [loading, setLoading] = useState<boolean>(true);
   const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);
 
@@ -20,6 +21,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
 
     initialized.current = true;
 
+    setLoading(true);
     corbadoApp.authService.shortSessionChanges.subscribe(value => {
       if (value !== undefined) {
         setShortSession(value);
@@ -37,6 +39,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     });
 
     corbadoApp.init();
+
+    setLoading(false);
   }, []);
 
   const signUpWithPasskey = useCallback(
@@ -111,6 +115,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       shortSession,
       user,
       globalError,
+      loading,
       signUpWithPasskey,
       loginWithPasskey,
       initLoginWithEmailOTP,
@@ -127,6 +132,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     shortSession,
     user,
     globalError,
+    loading,
     signUpWithPasskey,
     loginWithPasskey,
     initLoginWithEmailOTP,
@@ -136,6 +142,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     completeSignUpWithEmailOTP,
     initAutocompletedLoginWithPasskey,
     appendPasskey,
+    getUserAuthMethods,
     getProjectConfig,
   ]);
 

@@ -23,6 +23,7 @@ export interface CorbadoContextInterface {
   shortSession: string | undefined;
   user: IUser | undefined;
   globalError: NonRecoverableError | undefined;
+  loading: boolean;
   signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
   loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError>>;
   initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError>>;
@@ -44,6 +45,7 @@ export const initialContext = {
   shortSession: undefined,
   user: undefined,
   globalError: undefined,
+  loading: false,
   signUpWithPasskey: missingImplementation,
   loginWithPasskey: missingImplementation,
   initLoginWithEmailOTP: missingImplementation,

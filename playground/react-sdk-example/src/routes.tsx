@@ -15,10 +15,6 @@ const RouteProvider = () => {
 
   const routes = [
     {
-      path: '/',
-      element: <HomePage />,
-    },
-    {
       path: '/auth',
       element: (
         <AuthUIProvider>
@@ -27,7 +23,7 @@ const RouteProvider = () => {
       ),
     },
     {
-      path: '/home',
+      path: '/',
       element: <HomePage />,
     },
   ];

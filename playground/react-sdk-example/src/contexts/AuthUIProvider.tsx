@@ -15,7 +15,7 @@ export const AuthUIProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const onAuthCompleted = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   const contextValue = useMemo<AuthUIContextInterface>(

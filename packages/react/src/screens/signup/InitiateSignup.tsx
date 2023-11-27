@@ -2,7 +2,7 @@ import { FlowType } from '@corbado/web-core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Link, Text } from '../../components';
+import { Button, LabelledInput, Text } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 import { emailRegex } from '../../utils/validations';
@@ -84,13 +84,12 @@ export const InitiateSignup = () => {
       <Text variant='header'>{t('header')}</Text>
       <Text variant='sub-header'>
         {t('subheader')}{' '}
-        <Link
-          href=''
-          className='text-secondary-font-color'
+        <span
+          className='link text-secondary-font-color'
           onClick={() => changeFlow(FlowType.Login)}
         >
           {t('button_login')}
-        </Link>
+        </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>

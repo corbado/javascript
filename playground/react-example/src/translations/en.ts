@@ -1,6 +1,8 @@
 const en = {
   signup: {
-    header: 'This is new english header',
+    start: {
+      header: 'This is new english header',
+    },
   },
 };
 

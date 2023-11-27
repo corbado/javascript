@@ -1,4 +1,4 @@
-import { FlowHandlerEvents, SignUpFlowNames, useCorbado } from '@corbado/react-sdk';
+import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,8 +9,8 @@ import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyError' });
-  const { signUpWithPasskey, loginWithPasskey, shortSession } = useCorbado();
-  const { currentFlow, navigateBack, navigateNext } = useFlowHandler();
+  const { signUpWithPasskey, shortSession } = useCorbado();
+  const { navigateBack, navigateNext } = useFlowHandler();
   const { email, userName } = useUserData();
 
   const header = useMemo(() => t('header'), [t]);
@@ -54,14 +54,10 @@ export const PasskeyError = () => {
       return;
     }
 
-    if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
-      await signUpWithPasskey(email, userName ?? '');
-    } else {
-      await loginWithPasskey(email);
-    }
+    await signUpWithPasskey(email, userName ?? '');
 
     void navigateNext(FlowHandlerEvents.PasskeySuccess);
-  }, [currentFlow, email, loginWithPasskey, navigateBack, navigateNext, signUpWithPasskey, userName]);
+  }, [email, navigateBack, navigateNext, signUpWithPasskey, userName]);
 
   const handleSendOtp = useCallback(() => {
     void navigateNext(FlowHandlerEvents.EmailOtp);

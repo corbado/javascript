@@ -37,8 +37,7 @@ const en = {
     passkeySuccess: {
       header: 'Welcome!',
       subheader: 'Passkey created',
-      body_text1:
-        'You can now confirm your identity using your <1>passkey or via email one time code</1> when you log in.',
+      body_text1: 'You can now confirm your identity using your',
       body_text2: 'passkey or via email one time code',
       body_text3: 'when you log in.',
       button: 'Continue',

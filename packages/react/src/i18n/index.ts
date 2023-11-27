@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 import TRANSLATIONS_EN from './locales/en';
 
-const defaultLanguage = 'en';
+export const defaultLanguage = 'en';
 
 void i18n
   .use(initReactI18next)
@@ -38,17 +38,40 @@ const setI18nLanguage = (lang: string): void => {
 /**
  * @function handleDynamicLocaleSetup An async function that handles setting the language of the user to the preferred locale.
  *
- * @param {*} [locale=navigator.language] This is the locale a user wants to set. It deefaults to the locale of the user's browser if no value is padded. e.g `de-DE`, `en-GB`
+ * @param {boolean} [shouldAutoDetectLanguage=true] This is a boolean that determines if the language of the user should be auto detected. It defaults to true if no value is passed.
+ * @param {string} [defaultLang=defaultLanguage] This is the default language to be used if the language of the user cannot be auto detected. It defaults to `en` if no value is passed.
+ * @param {object} [customTranslations={}] This is an object containing custom translations. Each key should be a language code and each value should be an object containing the translations for that language.
  * @return {*} Promise<void>
  */
-export const handleDynamicLocaleSetup = (locale = navigator.language) => {
-  const lang = getLanguage(locale.substring(0, 2));
+export const handleDynamicLocaleSetup = (
+  shouldAutoDetectLanguage = true,
+  defaultLang = defaultLanguage,
+  customTranslations: Record<string, Record<string, string>> | null = null,
+) => {
+  const locale = window.navigator.language;
+
+  // If the language of the user is the same as the default language and there are no custom translations, do nothing
+  if (
+    shouldAutoDetectLanguage &&
+    defaultLang === defaultLanguage &&
+    locale === defaultLanguage &&
+    !customTranslations
+  ) {
+    return;
+  }
+
+  // Add custom translations
+  for (const [lang, translations] of Object.entries(customTranslations ?? {})) {
+    i18n.addResourceBundle(lang, 'translation', translations, true, true);
+  }
+
+  const language = shouldAutoDetectLanguage ? getLanguage(locale) : defaultLanguage;
   try {
-    void i18n.changeLanguage(lang);
-    setI18nLanguage(lang);
+    void i18n.changeLanguage(language);
+    setI18nLanguage(language);
   } catch {
-    void i18n.changeLanguage(defaultLanguage);
-    setI18nLanguage(defaultLanguage);
+    void i18n.changeLanguage(defaultLang);
+    setI18nLanguage(defaultLang);
   }
 };
 

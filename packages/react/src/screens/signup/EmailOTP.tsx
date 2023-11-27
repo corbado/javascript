@@ -1,15 +1,15 @@
-import { FlowHandlerEvents, LoginFlowNames, useCorbado } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react-sdk';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, Gmail, Link, OTPInput, Outlook, Text, Yahoo } from '../components';
-import useFlowHandler from '../hooks/useFlowHandler';
-import useUserData from '../hooks/useUserData';
+import { Button, Gmail, Link, OTPInput, Outlook, Text, Yahoo } from '../../components';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'signup.emailOtp' });
   const { navigateBack, navigateNext, currentFlow } = useFlowHandler();
-  const { completeSignUpWithEmailOTP, getUserAuthMethods } = useCorbado();
+  const { completeSignUpWithEmailOTP } = useCorbado();
   const { email, sendEmail } = useUserData();
 
   const [otp, setOTP] = React.useState<string[]>([]);
@@ -28,14 +28,6 @@ export const EmailOTP = () => {
     setLoading(true);
     try {
       await completeSignUpWithEmailOTP(payload);
-
-      if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
-        const authMethods = await getUserAuthMethods(email ?? '');
-        const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
-        void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });
-        return;
-      }
-
       void navigateNext();
     } catch (error) {
       console.log({ error });
@@ -47,7 +39,7 @@ export const EmailOTP = () => {
     setError('');
     const mergedChars = otp.join('');
     if (mergedChars.length < 6) {
-      setError(t('email_link.otp_required'));
+      setError(t('validationError_otp'));
       return;
     }
 
@@ -56,15 +48,10 @@ export const EmailOTP = () => {
 
   return (
     <>
-      <Text variant='header'>{t('email_link.header')}</Text>
+      <Text variant='header'>{t('header')}</Text>
       <Text className='font-medium'>
-        {/* "text" is a placeholder value for translations */}
-        {/* <Trans i18nKey='email_link.body'>
-          text <span className='text-secondary-font-color'>{email}</span> text
-        </Trans> */}
         <span>
-          We just sent a one time code to <span className='ext-primary-color'>{email}</span>. The code expires shortly,
-          so please enter it soon.
+          {t('body_text1')} <span className='ext-primary-color'>{email}</span>. {t('body_text2')}
         </span>
       </Text>
       <div className='grid grid-cols-3 gap-3 mt-4'>
@@ -98,7 +85,7 @@ export const EmailOTP = () => {
         isLoading={loading}
         disabled={loading}
       >
-        {t('generic.continue')}
+        {t('button_verify')}
       </Button>
       <Button
         type='button'
@@ -106,7 +93,7 @@ export const EmailOTP = () => {
         variant='tertiary'
         disabled={loading}
       >
-        {t('generic.cancel')}
+        {t('button_back')}
       </Button>
     </>
   );

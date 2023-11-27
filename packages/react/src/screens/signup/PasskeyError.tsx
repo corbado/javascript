@@ -1,50 +1,51 @@
 import { FlowHandlerEvents, SignUpFlowNames, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../components/PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
-import useFlowHandler from '../hooks/useFlowHandler';
-import useUserData from '../hooks/useUserData';
+import type { ButtonType } from '../../components/PasskeyScreensWrapper';
+import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyError' });
   const { signUpWithPasskey, loginWithPasskey, shortSession } = useCorbado();
   const { currentFlow, navigateBack, navigateNext } = useFlowHandler();
   const { email, userName } = useUserData();
 
-  const header = useMemo(() => t('create_passkey_error.header'), [t]);
+  const header = useMemo(() => t('header'), [t]);
 
   const body = useMemo(
     () => (
-      <Trans i18nKey='create_passkey_error.body'>
-        Creating your account with{' '}
+      <span>
+        {t('body_errorMessage1')}{' '}
         <span
           className='link text-primary-color underline'
           onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
         >
-          passkeys
-        </span>{' '}
-        not possible. Try again or log in with email one time code.
-      </Trans>
+          {t('button_showPasskeyBenefits')}
+        </span>
+        {'. '}
+        {t('body_errorMessage2')}
+      </span>
     ),
     [t],
   );
 
-  const primaryButton = useMemo(() => t('create_passkey_error.primary_btn'), [t]);
+  const primaryButton = useMemo(() => t('button_retry'), [t]);
   const secondaryButton = useMemo(() => {
     if (shortSession) {
       return '';
     }
 
-    return t('create_passkey_error.secondary_btn');
+    return t('button_emailOtp');
   }, [t]);
   const tertiaryButton = useMemo(() => {
     if (shortSession) {
-      return t('generic.cancel');
+      return t('button_cancel');
     }
 
-    return t('create_passkey_error.tertiary_btn');
+    return t('button_back');
   }, [t, shortSession]);
 
   const handleCreatePasskey = useCallback(async () => {

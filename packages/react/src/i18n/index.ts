@@ -46,7 +46,7 @@ const setI18nLanguage = (lang: string): void => {
 export const handleDynamicLocaleSetup = (
   shouldAutoDetectLanguage = true,
   defaultLang = defaultLanguage,
-  customTranslations: Record<string, Record<string, string>> | null = null,
+  customTranslations: Record<string, object> | null = null,
 ) => {
   const locale = window.navigator.language;
 
@@ -65,7 +65,7 @@ export const handleDynamicLocaleSetup = (
     i18n.addResourceBundle(lang, 'translation', translations, true, true);
   }
 
-  const language = shouldAutoDetectLanguage ? getLanguage(locale) : defaultLanguage;
+  const language = shouldAutoDetectLanguage ? getLanguage(locale) : defaultLang;
   try {
     void i18n.changeLanguage(language);
     setI18nLanguage(language);

@@ -13,7 +13,7 @@ interface Props {
   onLoggedIn: () => void;
   defaultLanguage?: string;
   autoDetectLanguage?: boolean;
-  customTranslations?: Record<string, Record<string, string>> | null;
+  customTranslations?: Record<string, object> | null;
 }
 
 const CorbadoAuthUI = ({
@@ -24,7 +24,7 @@ const CorbadoAuthUI = ({
 }: Props) => {
   React.useEffect(() => {
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
-  }, [autoDetectLanguage]);
+  }, []);
 
   return (
     <div id='corbado-auth'>

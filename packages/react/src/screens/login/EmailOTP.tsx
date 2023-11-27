@@ -9,7 +9,7 @@ import useUserData from '../../hooks/useUserData';
 export const EmailOTP = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'login.emailOtp' });
   const { navigateBack, navigateNext, currentFlow } = useFlowHandler();
-  const { completeSignUpWithEmailOTP, getUserAuthMethods } = useCorbado();
+  const { getUserAuthMethods, completeLoginWithEmailOTP } = useCorbado();
   const { email, sendEmail } = useUserData();
 
   const [otp, setOTP] = React.useState<string[]>([]);
@@ -27,7 +27,7 @@ export const EmailOTP = () => {
   const handleOTPVerification = async (payload: string) => {
     setLoading(true);
     try {
-      await completeSignUpWithEmailOTP(payload);
+      await completeLoginWithEmailOTP(payload);
       const authMethods = await getUserAuthMethods(email ?? '');
       const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
       void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });

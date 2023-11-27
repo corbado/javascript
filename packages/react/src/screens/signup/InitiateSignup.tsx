@@ -1,11 +1,11 @@
 import { FlowType } from '@corbado/web-core';
 import React, { useEffect } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Link, Text } from '../components';
-import useFlowHandler from '../hooks/useFlowHandler';
-import useUserData from '../hooks/useUserData';
-import { emailRegex } from '../utils/validations';
+import { Button, LabelledInput, Text } from '../../components';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import useUserData from '../../hooks/useUserData';
+import { emailRegex } from '../../utils/validations';
 
 interface SignupForm {
   name: string;
@@ -23,7 +23,7 @@ const createFormTemplate = (email?: string, username?: string) => ({
 });
 
 export const InitiateSignup = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'signup.start' });
   const { navigateNext, changeFlow } = useFlowHandler();
   const { setEmail, email, setUserName, userName } = useUserData();
 
@@ -62,10 +62,10 @@ export const InitiateSignup = () => {
     const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
-      errors.name = t('validation_errors.name');
+      errors.name = t('validationError_name');
     }
     if (!signupData.username || !emailRegex.test(signupData.username)) {
-      errors.username = t('validation_errors.email');
+      errors.username = t('validationError_email');
     }
 
     setErrorData(errors);
@@ -81,25 +81,14 @@ export const InitiateSignup = () => {
 
   return (
     <>
-      <Text variant='header'>{t('signup.header')}</Text>
+      <Text variant='header'>{t('header')}</Text>
       <Text variant='sub-header'>
-        {/* "text" is a placeholder value for translations */}
-        <Trans i18nKey='signup.sub-header'>
-          text{' '}
-          <Link
-            href=''
-            className='text-secondary-font-color'
-            onClick={() => changeFlow(FlowType.Login)}
-          >
-            text
-          </Link>{' '}
-          text
-        </Trans>
+        {t('subheader')}{' '}
         <span
           className='link text-secondary-font-color'
           onClick={() => changeFlow(FlowType.Login)}
         >
-          Log in
+          {t('button_login')}
         </span>{' '}
       </Text>
       <div className='form-wrapper'>
@@ -107,14 +96,14 @@ export const InitiateSignup = () => {
           <div className='mb-2'>
             <LabelledInput
               name='name'
-              label={t('generic.name')}
+              label={t('textField_name')}
               onChange={onChange}
               value={signupData.name}
               error={errorData.name}
             />
             <LabelledInput
               name='username'
-              label={t('generic.email')}
+              label={t('textField_email')}
               onChange={onChange}
               value={signupData.username}
               error={errorData.username}
@@ -124,7 +113,7 @@ export const InitiateSignup = () => {
             variant='primary'
             isLoading={loading}
           >
-            {t('signup.continue_email')}
+            {t('button_submit')}
           </Button>
         </form>
       </div>

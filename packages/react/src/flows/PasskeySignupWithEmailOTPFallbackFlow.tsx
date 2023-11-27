@@ -1,12 +1,12 @@
 import { PasskeySignupWithEmailOtpFallbackScreens } from '@corbado/web-core';
 
-import { EmailOTP } from '../screens/EmailOTP';
-import { InitiateSignup } from '../screens/InitiateSignup';
-import { PasskeyAppend } from '../screens/PasskeyAppend';
-import { PasskeyBenefits } from '../screens/PasskeyBenefits';
-import { PasskeyError } from '../screens/PasskeyError';
-import { PasskeySignup } from '../screens/PasskeySignup';
-import { PasskeyWelcome } from '../screens/PasskeyWelcome';
+import { PasskeyAppend } from '../screens/shared/PasskeyAppend';
+import { EmailOTP } from '../screens/signup/EmailOTP';
+import { InitiateSignup } from '../screens/signup/InitiateSignup';
+import { PasskeyBenefits } from '../screens/signup/PasskeyBenefits';
+import { PasskeyError } from '../screens/signup/PasskeyError';
+import { PasskeySignup } from '../screens/signup/PasskeySignup';
+import { PasskeyWelcome } from '../screens/signup/PasskeyWelcome';
 
 export const PasskeySignupWithEmailOTPFallbackFlow = {
   [PasskeySignupWithEmailOtpFallbackScreens.Start]: InitiateSignup,

@@ -32,12 +32,14 @@ jobs:
 
       - name: Build SDKs
         run: |
+          npm install
           lerna run build_and_publish:local
 
       - name: Deploy react-sdk-example to Vercel
         run: |
           cd playground/react-sdk-example
           npm install
+          npx yalc add @corbado/web-core
           npm run build
           npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
         env:
@@ -46,8 +48,8 @@ jobs:
       - name: Deploy react-example to Vercel
         run: |
           cd playground/react-example
-          npx yalc add @corbado/web-core && npx yalc add @corbado/react-sdk && npx yalc add @corbado/react
           npm install
+          npx yalc add @corbado/web-core && npx yalc add @corbado/react-sdk && npx yalc add @corbado/react
           npm run build
           npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
         env:

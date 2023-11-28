@@ -1,7 +1,11 @@
-export class LoginHandler {
-  readonly #completionCallback: () => Promise<void>;
+import type { Result } from 'ts-results';
 
-  constructor(completionCallback: () => Promise<void>) {
+import type { CompleteAutocompletedLoginWithPasskeyError } from '../utils/errors/errors';
+
+export class LoginHandler {
+  readonly #completionCallback: () => Promise<Result<void, CompleteAutocompletedLoginWithPasskeyError>>;
+
+  constructor(completionCallback: () => Promise<Result<void, CompleteAutocompletedLoginWithPasskeyError>>) {
     this.#completionCallback = completionCallback;
   }
 

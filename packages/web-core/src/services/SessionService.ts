@@ -3,6 +3,7 @@ import type { AxiosRequestConfig } from 'axios';
 import type { IFullUser, IUser } from '../types';
 import { ShortSession } from '../types';
 import type { ApiService } from './ApiService';
+import log from "loglevel";
 
 const shortSessionKey = 'cbo_short_session';
 const longSessionKey = 'cbo_long_session';
@@ -68,7 +69,6 @@ export class SessionService {
    * @returns The username or null if it's not set.
    */
   public getUser(): IUser | undefined {
-    console.log(this.#shortSession);
     if (!this.#shortSession) {
       return;
     }
@@ -127,7 +127,7 @@ export class SessionService {
 
   logout() {
     // TODO: should we call backend to destroy the session here?
-    console.log('logging out user');
+    log.debug('logging out user');
     this.clear();
 
     if (this.#onShortSessionChange) {
@@ -204,7 +204,7 @@ export class SessionService {
     }
 
     // nothing to do for now
-    console.log('no refresh, token still valid');
+    log.debug('no refresh, token still valid');
     return;
   }
 
@@ -217,12 +217,12 @@ export class SessionService {
       };
       const response = await this.#apiService.sessionsApi.sessionRefresh({}, options);
       if (response.status !== 200) {
-        console.error(`refresh error, status code: ${response.status}`);
+        log.warn(`refresh error, status code: ${response.status}`);
         return;
       }
 
       if (!response.data.shortSession?.value) {
-        console.error('refresh error, missing short session');
+        log.warn('refresh error, missing short session');
         return;
       }
 
@@ -231,7 +231,7 @@ export class SessionService {
     } catch (e) {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user
-      console.log(e);
+      log.warn(e);
       this.logout();
     }
   }

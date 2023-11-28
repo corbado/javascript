@@ -27,7 +27,14 @@ export const InitiateLogin = () => {
 
     initialized.current = true;
 
-    void initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
+    void initAutocompletedLoginWithPasskey().then(lh => {
+        // for conditional UI we ignore errors and just skip that functionality to the user
+        if (lh.err) {
+            return;
+        }
+
+        setLoginHandler(lh.val);
+    });
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

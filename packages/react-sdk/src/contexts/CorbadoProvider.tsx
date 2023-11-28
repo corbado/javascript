@@ -1,4 +1,4 @@
-import type { IUser } from '@corbado/web-core';
+import type { IUser, NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,6 +10,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
   const [shortSession, setShortSession] = useState<string | undefined>();
   const [user, setUser] = useState<IUser | undefined>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
 
     initialized.current = true;
 
+    setLoading(true);
     corbadoApp.authService.shortSessionChanges.subscribe(value => {
       if (value !== undefined) {
         setShortSession(value);
@@ -31,7 +34,13 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
       }
     });
 
+    corbadoApp.globalErrors.subscribe(value => {
+      setGlobalError(value);
+    });
+
     corbadoApp.init();
+
+    setLoading(false);
   }, []);
 
   const signUpWithPasskey = useCallback(
@@ -105,6 +114,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     return {
       shortSession,
       user,
+      globalError,
+      loading,
       signUpWithPasskey,
       loginWithPasskey,
       initLoginWithEmailOTP,
@@ -120,6 +131,8 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
   }, [
     shortSession,
     user,
+    globalError,
+    loading,
     signUpWithPasskey,
     loginWithPasskey,
     initLoginWithEmailOTP,
@@ -129,6 +142,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     completeSignUpWithEmailOTP,
     initAutocompletedLoginWithPasskey,
     appendPasskey,
+    getUserAuthMethods,
     getProjectConfig,
   ]);
 

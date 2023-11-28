@@ -39,7 +39,7 @@ jobs:
         run: |
           cd playground/react-sdk-example
           npm install
-          npx yalc add @corbado/web-core
+          npx yalc add @corbado/web-core && npx yalc add @corbado/react-sdk
           npm run build
           npx vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
         env:

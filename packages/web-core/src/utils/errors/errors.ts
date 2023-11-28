@@ -1,4 +1,6 @@
-import type { ErrorRspAllOfError } from '../api';
+import log from "loglevel";
+
+import type { ErrorRspAllOfError } from '../../api';
 
 export type SignUpWithPasskeyError =
   | UserAlreadyExistsError
@@ -28,7 +30,7 @@ export class CorbadoError extends Error {
   }
 
   static fromApiResponse(errorResp: ErrorRspAllOfError): CorbadoError {
-    console.log('errorResp', errorResp);
+    log.debug('errorResp', errorResp);
     switch (errorResp.type) {
       case 'validation_error': {
         if (!errorResp.validation?.length) {
@@ -77,7 +79,7 @@ export class CorbadoError extends Error {
   }
 
   static fromUnknownException(e: unknown): CorbadoError {
-    console.log('unknown exception', e);
+    log.debug('unknown exception', e);
     return CorbadoError.unknown();
   }
 

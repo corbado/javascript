@@ -1,8 +1,11 @@
+import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../internaltypes/auth';
+import type { IUser, ShortSession, UserAuthMethodsInterface } from '../types';
+import { AuthState, LoginHandler } from '../types';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
@@ -10,16 +13,12 @@ import type {
   InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
-  IUser,
   LoginWithPasskeyError,
-  ShortSession,
   SignUpWithPasskeyError,
-  UserAuthMethodsInterface,
-} from '../types';
-import { AuthState, LoginHandler } from '../types';
+} from '../utils';
 import type { ApiService } from './ApiService';
-import type { AuthenticatorService } from './AuthenticatorService';
 import type { SessionService } from './SessionService';
+import type { WebAuthnService } from './WebAuthnService';
 
 /**
  * AuthService is a class that handles authentication related operations.
@@ -29,7 +28,7 @@ import type { SessionService } from './SessionService';
  */
 export class AuthService {
   #apiService: ApiService;
-  #authenticatorService: AuthenticatorService;
+  #authenticatorService: WebAuthnService;
 
   // sessionService is used to store and manage (e.g. refresh) the user's session
   #sessionService: SessionService;
@@ -45,13 +44,19 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, sessionService: SessionService, authenticatorService: AuthenticatorService) {
+  constructor(apiService: ApiService, sessionService: SessionService, authenticatorService: WebAuthnService) {
     this.#apiService = apiService;
     this.#authenticatorService = authenticatorService;
     this.#sessionService = sessionService;
   }
 
-  init() {
+  init(isDebug = false) {
+    if (isDebug) {
+      log.setLevel('debug');
+    } else {
+      log.setLevel('error');
+    }
+
     this.#sessionService.init((shortSession: ShortSession | undefined) => {
       const user = this.#sessionService.getUser();
 

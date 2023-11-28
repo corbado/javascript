@@ -2,14 +2,14 @@ import { create, get } from '@github/webauthn-json';
 import type { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
+import {CorbadoError, NonRecoverableError} from "../utils";
 
-import { CorbadoError, NonRecoverableError } from '../types';
 
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
  * Currently, this includes the creation of passkeys and the login with existing passkeys.
  */
-export class AuthenticatorService {
+export class WebAuthnService {
   #globalErrors: Subject<NonRecoverableError | undefined>;
 
   constructor(globalErrors: Subject<NonRecoverableError | undefined>) {

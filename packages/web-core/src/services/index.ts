@@ -1,14 +1,13 @@
 import { Subject } from 'rxjs';
 
 import type { IFlowHandlerConfig } from '../types';
-import { NonRecoverableError } from '../types';
-import { defaultTimeout } from '../utils';
+import {defaultTimeout, NonRecoverableError} from '../utils';
 import { ApiService } from './ApiService';
-import { AuthenticatorService } from './AuthenticatorService';
 import { AuthService } from './AuthService';
 import type { FlowHandlerService } from './FlowHandlerService';
 import { ProjectService } from './ProjectService';
 import { SessionService } from './SessionService';
+import { WebAuthnService } from './WebAuthnService';
 
 export type { ProjectService } from './ProjectService';
 export type { AuthService } from './AuthService';
@@ -41,7 +40,7 @@ export class CorbadoApp {
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);
     const sessionService = new SessionService(this.#apiService);
-    const authenticatorService = new AuthenticatorService(this.#globalErrors);
+    const authenticatorService = new WebAuthnService(this.#globalErrors);
     this.#authService = new AuthService(this.#apiService, sessionService, authenticatorService);
     this.#projectService = new ProjectService(this.#apiService);
   }
@@ -72,7 +71,6 @@ export class CorbadoApp {
    */
   public init() {
     if (!this.#validateProjectId(this.#projectId)) {
-      console.log('invalid project id');
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
     }
 

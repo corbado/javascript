@@ -14,8 +14,8 @@ import type {
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   SignUpWithPasskeyError,
-} from '../types';
-import { CorbadoError, NonRecoverableError } from '../types';
+} from '../utils';
+import { CorbadoError, NonRecoverableError } from '../utils';
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';

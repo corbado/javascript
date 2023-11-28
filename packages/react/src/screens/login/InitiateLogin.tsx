@@ -4,13 +4,13 @@ import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Text } from '../components';
-import useFlowHandler from '../hooks/useFlowHandler';
-import useUserData from '../hooks/useUserData';
-import { emailRegex } from '../utils/validations';
+import { Button, LabelledInput, Text } from '../../components';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import useUserData from '../../hooks/useUserData';
+import { emailRegex } from '../../utils/validations';
 
 export const InitiateLogin = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'login.start' });
   const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
   const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
@@ -80,7 +80,7 @@ export const InitiateLogin = () => {
     e.preventDefault();
 
     if (!emailRegex.test(formEmail)) {
-      setErrorMessage(t('validation_errors.email'));
+      setErrorMessage(t('validationError_email'));
       return;
     }
 
@@ -90,22 +90,22 @@ export const InitiateLogin = () => {
 
   return (
     <>
-      <Text variant='header'>Welcome back!</Text>
+      <Text variant='header'>{t('header')}</Text>
       <Text variant='sub-header'>
-        Don't have an account yet?{' '}
+        {t('subheader')}{' '}
         <span
           className='link text-secondary-font-color'
           onClick={() => changeFlow(FlowType.SignUp)}
         >
-          Create account
+          {t('button_signup')}
         </span>{' '}
       </Text>
       <div className='form-wrapper'>
         <form onSubmit={handleSubmit}>
           <div className='mb-3'>
             <LabelledInput
-              name='name'
-              label={t('generic.name')}
+              name='username'
+              label={t('textField_email')}
               onChange={onChange}
               onFocus={onFocusEmail}
               value={formEmail}
@@ -116,7 +116,7 @@ export const InitiateLogin = () => {
             variant='primary'
             disabled={!formEmail}
           >
-            {t('signup.continue_email')}
+            {t('button_submit')}
           </Button>
         </form>
       </div>

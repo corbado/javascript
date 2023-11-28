@@ -2,30 +2,29 @@ import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../components/PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from '../components/PasskeyScreensWrapper';
-import useFlowHandler from '../hooks/useFlowHandler';
-import useUserData from '../hooks/useUserData';
+import type { ButtonType } from '../../components/PasskeyScreensWrapper';
+import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import useUserData from '../../hooks/useUserData';
 
 export const PasskeyBenefits = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyBenefits' });
   const { email, userName } = useUserData();
   const { signUpWithPasskey, shortSession, appendPasskey } = useCorbado();
   const { navigateNext } = useFlowHandler();
 
-  const header = useMemo(() => t('create_passkey.header'), [t]);
+  const header = useMemo(() => t('header'), [t]);
   const body = useMemo(
     () => (
       <Trans i18nKey='create_passkey.body'>
-        With passkeys, you don’t need to remember complex passwords anymore. Log in securely to using{' '}
-        <strong>Face ID, Touch ID or screen lock code</strong>.
+        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>.
       </Trans>
     ),
     [t],
   );
 
-  const primaryButton = useMemo(() => t('create_passkey.primary_btn'), [t]);
-  const secondaryButton = useMemo(() => t('create_passkey.secondary_btn'), [t]);
+  const primaryButton = useMemo(() => t('button_start'), [t]);
+  const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleCreatePasskey = useCallback(async () => {
     try {

@@ -31,7 +31,7 @@ export const PasskeySignup = () => {
   const subHeader = useMemo(
     () => (
       <span>
-        {t('body')} <span className='ext-primary-color'>{email}</span>.
+        {t('body')} <span className='text-primary-color'>{email}</span>.
       </span>
     ),
     [t],

@@ -51,7 +51,7 @@ export const EmailOTP = () => {
       <Text variant='header'>{t('header')}</Text>
       <Text className='font-medium'>
         <span>
-          {t('body_text1')} <span className='ext-primary-color'>{email}</span>. {t('body_text2')}
+          {t('body_text1')} <span className='text-primary-color'>{email}</span>. {t('body_text2')}
         </span>
       </Text>
       <div className='grid grid-cols-3 gap-3 mt-4'>

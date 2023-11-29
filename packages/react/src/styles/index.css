@@ -4,31 +4,57 @@
 
 @layer base {
   :root {
-    --primary-color: #1953ff;
-    --secondary-color: #59acff;
-    --primary-color-rgb: 25, 83, 255;
-    --primary-hover-color: #1145df;
-    --secondary-font-color: var(--secondary-color, --primary-color);
-    --secondary-background-color: transparent;
-    --secondary-background-hover-color: transparent;
-    --secondary-border-color: var(--secondary-color, --primary-color);
-    --secondary-border-hover-color: var(--secondary-color, --primary-color);
-    --secondary-font-hover-color: var(--secondary-color, --primary-color);
-    --heading-color: #090f1f;
-    --text-color: #090f1f;
-    --error-color: #ff4c51;
-    --primary-font: 'Space Grotesk', sans-serif;
-    --secondary-font: 'Inter', sans-serif;
-    --border-color: rgba(143, 155, 191, 0.5);
-    --email-provider-btn-color: #fff;
-    --box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
-    --margin-top: 5rem;
-    --border-container-width: 0;
-    --input-margin: 1rem 0 0 0;
-    --placeholder-opacity: 0;
-    --label-opacity: 1;
-    --light-color: #d9d9d9;
-    --fingerprint-icon: url('assets/fingerprint.png');
+    /* Colors */
+    --cb-primary-color: #1953ff;
+    --cb-secondary-color: #59acff;
+    --cb-primary-hover-color: #1145df;
+    --cb-secondary-font-color: var(--cb-secondary-color, --cb-primary-color);
+    --cb-background-color: #ffffff;
+    --cb-heading-color: #090f1f;
+      --cb-subheading-color: #090f1f;
+    --cb-text-color: #090f1f;
+    --cb-border-color: rgba(143, 155, 191, 0.5);
+    --cb-error-color: #ff4c51;
+    --cb-light-color: #d9d9d9;
+    --cb-email-provider-btn-color: #fff;
+    --cb-link-hover-color: #1145df;
+    --cb-alert-background-color: #ffdddd;
+    --cb-alert-border-color: #ffcccc;
+
+    /* Spacing */
+    --cb-margin-top: 5rem;
+    --cb-padding: 1rem;
+    --cb-layout-spacing: 2rem;
+    --cb-input-margin: 1rem 0 0 0;
+
+    /* Typography */
+    --cb-primary-font: 'Space Grotesk', sans-serif;
+    --cb-secondary-font: 'Inter', sans-serif;
+    --cb-font-size: 1rem;
+    --cb-font-weight: 400;
+    --cb-line-height: 1.5;
+    --cb-heading-weight: #090f1f;
+    --cb-subheading-weight: #090f1f;
+
+    /* Borders */
+    --cb-border-width: 1px;
+    --cb-border-style: solid;
+    --cb-border-radius: 5px;
+    --cb-border-container-width: 0;
+
+    /* Shadows */
+    --cb-box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+    --cb-text-shadow: 1px 1px 2px #000;
+
+    /* Sizes */
+    --cb-button-size: 3rem;
+    --cb-input-field-size: 2rem;
+    --cb-component-size: 100px;
+
+    /* Miscellaneous */
+    --cb-placeholder-opacity: 0;
+    --cb-label-opacity: 1;
+    --cb-fingerprint-icon: url('assets/fingerprint.png');
   }
 
   html {
@@ -42,11 +68,11 @@
 
 @layer components {
   .btn-primary {
-    @apply border-none text-white bg-[--primary-color] hover:bg-[--primary-hover-color];
+    @apply border-none text-white bg-[--cb-primary-color] hover:bg-[--cb-primary-hover-color];
   }
 
   .btn-secondary {
-    @apply border border-solid border-[--secondary-border-color] bg-[--secondary-background-color] text-[--secondary-color];
+    @apply border border-solid border-[--secondary-border-color] bg-[--secondary-background-color] text-[--cb-secondary-color];
   }
 
   .btn-tertiary {
@@ -58,7 +84,7 @@
   }
 
   .spinner-secondary {
-    @apply border-[0.25rem] border-solid border-black/[.55] border-t-[--primary-color];
+    @apply border-[0.25rem] border-solid border-black/[.55] border-t-[--cb-primary-color];
   }
 
   .finger-print-icon {
@@ -68,11 +94,15 @@
     height: 121px;
   }
 
-  .header,
-  .sub-header {
+  .header {
     font-family: var(--primary-font, sans-serif);
     color: var(--heading-color, #090f1f);
   }
+
+    .header {
+      font-family: var(--primary-font, sans-serif);
+      color: var(--subheading-color, #090f1f);
+    }
 
   .header {
     @apply mt-0 text-cd-6 mb-cd-5 font-bold;
@@ -181,7 +211,7 @@
 
   .floating-label label {
     @apply font-bold;
-    color: var(--secondary-color, #8f9bbf);
+    color: var(--cb-secondary-color, #8f9bbf);
     position: absolute;
     left: 1.4rem;
     top: 0.8rem;
@@ -196,7 +226,7 @@
     top: -1.1rem;
     left: 1.4rem;
     font-size: 0.75rem;
-    color: var(--secondary-color, #535e80);
+    color: var(--cb-secondary-color, #535e80);
     transition: 0.3s;
   }
 

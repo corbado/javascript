@@ -72,11 +72,11 @@
   }
 
   .btn-secondary {
-    @apply border border-solid border-[--secondary-border-color] bg-[--secondary-background-color] text-[--cb-secondary-color];
+    @apply border border-solid border-[--cb-secondary-border-color] bg-[--cb-secondary-background-color] text-[--cb-secondary-color];
   }
 
   .btn-tertiary {
-    @apply bg-[--secondary-background-color] text-[--secondary-font-color] font-secondary font-bold;
+    @apply bg-[--cb-secondary-background-color] text-[--cb-secondary-font-color] font-secondary font-bold;
   }
 
   .spinner-primary {
@@ -88,20 +88,20 @@
   }
 
   .finger-print-icon {
-    background-image: var(--fingerprint-icon);
+    background-image: var(--cb-fingerprint-icon);
     background-size: cover;
     width: 103px;
     height: 121px;
   }
 
   .header {
-    font-family: var(--primary-font, sans-serif);
-    color: var(--heading-color, #090f1f);
+    font-family: var(--cb-primary-font, sans-serif);
+    color: var(--cb-heading-color, #090f1f);
   }
 
     .header {
-      font-family: var(--primary-font, sans-serif);
-      color: var(--subheading-color, #090f1f);
+      font-family: var(--cb-primary-font, sans-serif);
+      color: var(--cb-subheading-color, #090f1f);
     }
 
   .header {
@@ -126,56 +126,56 @@
 
   div,
   p {
-    font-family: var(--secondary-font, sans-serif);
-    color: var(--text-color, #535e80);
+    font-family: var(--cb-secondary-font, sans-serif);
+    color: var(--cb-text-color, #535e80);
   }
 
   button {
     @apply my-cd-4 h-12 px-cd-14 flex items-center justify-center;
-    font-family: var(--primary-font, sans-serif);
+    font-family: var(--cb-primary-font, sans-serif);
     font-size: 1rem;
-    border-radius: var(--border-radius, 1.5rem);
+    border-radius: var(--cb-border-radius, 1.5rem);
     cursor: pointer;
   }
 
   .text-center {
-    text-align: var(--text-align, center);
+    text-align: var(--cb-text-align, center);
   }
 
   .container {
     margin: 0 auto;
     padding: 2.5rem 1.3rem;
     border-radius: 0.5rem;
-    border-width: var(--border-container-width, 1px);
+    border-width: var(--cb-border-container-width, 1px);
     border-style: solid;
-    border-color: var(--border-color, rgba(143, 155, 191, 0.5));
+    border-color: var(--cb-border-color, rgba(143, 155, 191, 0.5));
     max-width: 30rem;
     box-sizing: border-box;
-    box-shadow: var(--box-shadow, none);
-    margin-top: var(--margin-top, inherit);
+    box-shadow: var(--cb-box-shadow, none);
+    margin-top: var(--cb-margin-top, inherit);
   }
 
   .floating-label {
     position: relative;
-    margin: var(--input-margin);
+    margin: var(--cb-input-margin);
     width: 100%;
   }
 
   input[disabled] {
-    color: var(--text-disabled-color, var(--text-color, #535e80));
+    color: var(--cb-text-disabled-color, var(--cb-text-color, #535e80));
   }
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--primary-background-color, '#ffffff') inset !important;
+    -webkit-box-shadow: 0 0 0 30px var(--cb-primary-background-color, '#ffffff') inset !important;
     box-shadow: 0 0 0 1000px white inset;
   }
 
   /*Change text in autofill textbox*/
   input:-webkit-autofill {
-    -webkit-text-fill-color: var(--text-color, #535e80) !important;
+    -webkit-text-fill-color: var(--cb-text-color, #535e80) !important;
   }
 
   input:focus {
@@ -183,30 +183,30 @@
   }
 
   input {
-    color: var(--text-color, #535e80);
+    color: var(--cb-text-color, #535e80);
     font-size: 1rem;
-    padding: var(--input-padding, 0.8rem 1.4rem);
+    padding: var(--cb-input-padding, 0.8rem 1.4rem);
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    border-radius: var(--border-radius, 1.5rem);
-    border-color: var(--border-color, rgba(143, 155, 191, 0.5));
+    border-radius: var(--cb-border-radius, 1.5rem);
+    border-color: var(--cb-border-color, rgba(143, 155, 191, 0.5));
     position: relative;
     background: transparent;
     z-index: 2;
     box-sizing: border-box;
-    -webkit-text-fill-color: var(--text-color, #535e80);
+    -webkit-text-fill-color: var(--cb-text-color, #535e80);
     -webkit-background-clip: text !important;
     background-clip: text !important;
   }
 
   input::-ms-input-placeholder {
     /* Edge 12-18 */
-    opacity: var(--placeholder-opacity, 0);
+    opacity: var(--cb-placeholder-opacity, 0);
   }
 
   input::placeholder {
-    opacity: var(--placeholder-opacity, 0);
+    opacity: var(--cb-placeholder-opacity, 0);
   }
 
   .floating-label label {
@@ -217,7 +217,7 @@
     top: 0.8rem;
     transition: 0.3s;
     z-index: 1;
-    opacity: var(--label-opacity);
+    opacity: var(--cb-label-opacity);
   }
 
   .floating-label.has-content label,
@@ -234,7 +234,7 @@
   .link {
     text-decoration: none;
     font-weight: bold;
-    color: var(--light-color, #1953ff);
+    color: var(--cb-light-color, #1953ff);
     cursor: pointer;
   }
 

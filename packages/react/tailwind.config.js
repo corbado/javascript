@@ -5,8 +5,8 @@ module.exports = {
     extend: {
       fontFamily: {
         'space-grotesk': "'Space Grotesk'",
-        primary: ['var(--primary-font)', 'space-grotesk'],
-        secondary: ['var(--secondary-font)', 'space-grotesk'],
+        primary: ['var(--cb-primary-font)', 'space-grotesk'],
+        secondary: ['var(--cb-secondary-font)', 'space-grotesk'],
       },
       fontSize: {
         'cd-1': '0.75rem',
@@ -37,16 +37,16 @@ module.exports = {
         'cd-17': '2.5rem',
       },
       colors: {
-        'error-color': 'var(--error-color)',
-        'light-color': 'var(--light-color, #8F9BBF)',
+        'error-color': 'var(--cb-error-color)',
+        'light-color': 'var(--cb-light-color, #8F9BBF)',
         'primary-color': 'var(--cb-primary-color, #1953ff)',
-        'text-color': 'var(--text-color, #535e80)',
-        'secondary-font-color': 'var(--secondary-font-color, --cb-primary-color)',
+        'text-color': 'var(--cb-text-color, #535e80)',
+        'secondary-font-color': 'var(--cb-secondary-font-color, --cb-primary-color)',
         'primary-hover-color': 'var(--cb-primary-hover-color, --cb-primary-color)',
-        'secondary-border-color': 'var(--secondary-border-color, --cb-primary-color)',
-        'secondary-background-color': 'var(--secondary-background-color, #fff)',
-        'disabled-color': 'var(--text-color, #535e80)',
-        'email-provider-btn-color': 'var(--email-provider-btn-color, #fff)',
+        'secondary-border-color': 'var(--cb-secondary-border-color, --cb-primary-color)',
+        'secondary-background-color': 'var(--cb-secondary-background-color, #fff)',
+        'disabled-color': 'var(--cb-text-color, #535e80)',
+        'email-provider-btn-color': 'var(--cb-email-provider-btn-color, #fff)',
       },
       borderRadius: ({ theme }) => ({
         ...theme('spacing'),

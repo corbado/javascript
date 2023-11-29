@@ -21,6 +21,24 @@
     --cb-alert-background-color: #ffdddd;
     --cb-alert-border-color: #ffcccc;
 
+    .dark {
+      --cb-primary-color: #4b8fff;
+        --cb-secondary-color: #3a7cdd;
+        --cb-primary-hover-color: #3670c8;
+        --cb-secondary-font-color: var(--cb-secondary-color, --cb-primary-color);
+        --cb-background-color: #1e1e1e;
+        --cb-heading-color: #e0e0e0;
+        --cb-subheading-color: #c0c0c0;
+        --cb-text-color: #c0c0c0;
+        --cb-border-color: rgba(255, 255, 255, 0.25);
+        --cb-error-color: #ff6b6b;
+        --cb-light-color: #555;
+        --cb-email-provider-btn-color: #333;
+        --cb-link-hover-color: #4b8fff;
+        --cb-alert-background-color: #442222;
+        --cb-alert-border-color: #552222;
+    }
+
     /* Spacing */
     --cb-margin-top: 5rem;
     --cb-padding: 1rem;

@@ -9,9 +9,9 @@ interface AdditionalProps {
 }
 
 const variants = {
-  primary: 'btn-primary',
-  secondary: 'btn-secondary',
-  tertiary: 'btn-tertiary',
+  primary: 'cb-button-primary',
+  secondary: 'cb-button-secondary',
+  tertiary: 'cb-button-tertiary',
 };
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;

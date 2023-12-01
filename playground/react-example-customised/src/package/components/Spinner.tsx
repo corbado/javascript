@@ -5,6 +5,7 @@ interface Props {
 }
 
 export const Spinner: React.FC<Props> = ({ variant = 'primary' }) => {
-  const className = variant === 'primary' ? 'spinner-primary' : 'spinner-secondary';
+  const className = variant === 'primary' ? 'cb-spinner-primary' : 'cb-spinner-secondary';
+
   return <div className={className}></div>;
 };

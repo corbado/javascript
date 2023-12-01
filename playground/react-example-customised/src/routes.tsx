@@ -17,7 +17,7 @@ const routes: RouteObject[] = [
         children: [
           {
             path: '',
-            element: <h1>In Progress</h1>, //<SignUpStart />,
+            element: <SignUpStart />,
           },
         ],
       },

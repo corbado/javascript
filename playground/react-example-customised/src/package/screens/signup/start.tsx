@@ -1,31 +1,25 @@
 import { FunctionComponent } from 'react';
 import '../../styles/index.css';
-import { Text, Button, LabelledInput } from '../../components';
+import { FormInput, Header, SubHeader, Form } from '../../components';
 
 const SignUpStart: FunctionComponent = () => {
   return (
-    <>
-      <Text variant='header'>Create your account</Text>
-      <Text variant='sub-header'>
-        You already have an account?
-        <span className='link text-secondary-font-color'>Log in</span>{' '}
-      </Text>
-      <div className='form-wrapper'>
-        <form onSubmit={() => {}}>
-          <div className='mb-2'>
-            <LabelledInput
-              name='name'
-              label='Name'
-            />
-            <LabelledInput
-              name='username'
-              label='Email Address'
-            />
-          </div>
-          <Button variant='primary'>Continue with email</Button>
-        </form>
-      </div>
-    </>
+    <div className='cb-container'>
+      <Header>Create your account</Header>
+      <SubHeader>
+        You already have an account? <span className='cb-link'>Log in</span>
+      </SubHeader>
+      <Form onSubmit={() => {}}>
+        <FormInput
+          name='name'
+          label='Name'
+        />
+        <FormInput
+          name='username'
+          label='Email Address'
+        />
+      </Form>
+    </div>
   );
 };
 

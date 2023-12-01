@@ -1,0 +1,205 @@
+.cb-container {
+    padding: 2.5rem 1.3rem 1.25rem 1.3rem;
+    border-radius: 0.5rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(143, 155, 191, 0.5);
+    max-width: 30rem;
+    box-sizing: border-box;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+    margin-top: 5rem;
+}
+
+.cb-header {
+    font-family: 'Space Grotesk', sans-serif;
+    color:#000;
+    font-size: 1.88rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.cb-subheader {
+    margin-top: 0.5rem;
+    color: #000;
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.cb-link {
+    color:#59ACFF;
+    cursor: pointer;
+}
+
+.cb-form {
+    margin: 2rem 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cb-form-body {
+    margin-bottom: 1.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cb-input {
+    color: #090f1f;
+    font-size: 1rem;
+    padding: 0.8rem 1.4rem;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 1.5rem;
+    border-color: #8f9bbf80;
+    position: relative;
+    background: transparent;
+    z-index: 2;
+    box-sizing: border-box;
+    -webkit-text-fill-color: #090f1f;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    line-height: 1;
+}
+
+.cb-input.cb-error {
+    border-color: #ff4c51;
+}
+
+.cb-input[disabled] {
+    color: #090f1f;
+}
+
+.cb-input:-webkit-autofill,
+.cb-input:-webkit-autofill:hover,
+.cb-input:-webkit-autofill:focus,
+.cb-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px white inset;
+}
+
+.cb-input:-webkit-autofill {
+    -webkit-text-fill-color: #090f1f !important;
+}
+
+.cb-input:focus {
+    outline: none;
+}
+
+.cb-input::-ms-input-placeholder {
+    opacity: 0;
+}
+
+.cb-input::placeholder {
+    opacity: 0;
+}
+
+.cb-form-input {
+    position: relative;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.cb-form-input label {
+    font-weight: bold;
+    color: #59acff;
+    position: absolute;
+    left: 1.4rem;
+    top: 0.8rem;
+    transition: 0.3s;
+    z-index: 1;
+    opacity: 1;
+}
+
+.cb-form-input.has-content label,
+.cb-form-input.has-focus label {
+    font-weight: normal;
+    top: -1.1rem;
+    left: 1.4rem;
+    font-size: 0.75rem;
+    color: #535e80;
+    transition: 0.3s;
+}
+
+.cb-error {
+    color: #ff4c51;
+    margin: 0;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    text-align: left;
+    padding-left: 1.4rem;
+}
+
+.cb-form-input-error {
+    height: 1.25rem;
+}
+
+.cb-button-primary {
+    border: none;
+    color: #ffffff;
+    background-color: #1953ff;
+    border-radius: 1.5rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cb-button-primary:hover {
+    background-color: #1145df;
+}
+
+.cb-button-secondary {
+    border: 1px solid rgba(143, 155, 191, 0.5);
+    background-color: #ffffff;
+    color: #59acff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cb-button-secondary:hover {
+    background-color: #e6e6e6;
+}
+
+.cb-button-tertiary {
+    background-color: #ffffff;
+    color: #59acff;
+    font-family: 'Inter', 'Space Grotesk', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cb-button-tertiary:hover {
+    background-color: #e6e6e6;
+}
+
+.cb-spinner-primary {
+    display: block;
+    position: relative;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: auto;
+    border: 0.25rem solid rgba(0, 0, 0, 0.55);
+    border-top-color: #ffffff;
+    border-radius: 100%;
+    animation: cb-spin-animation 1s ease infinite;
+}
+
+.cb-spinner-secondary {
+    border: 0.25rem solid rgba(0, 0, 0, 0.55);
+    border-top-color: #1953ff;
+}
+
+@keyframes cb-spin-animation {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}

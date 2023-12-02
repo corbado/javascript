@@ -7,7 +7,7 @@ const SignUpStart: FunctionComponent = () => {
     <div className='cb-container'>
       <Header>Create your account</Header>
       <SubHeader>
-        You already have an account? <span className='cb-link'>Log in</span>
+        You already have an account? <span className='cb-link-secondary'>Log in</span>
       </SubHeader>
       <Form onSubmit={() => {}}>
         <FormInput

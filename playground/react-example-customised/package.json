@@ -25,6 +25,6 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
-    "vite-svg-loader": "^5.1.0"
+    "vite-plugin-svgr": "^4.2.0"
   }
 }

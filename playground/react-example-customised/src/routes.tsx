@@ -3,7 +3,9 @@ import App from './App';
 import ErrorPage from './pages/error';
 import SignUp from './pages/signup';
 import Login from './pages/login';
-import SignUpStart from './package/screens/signup/start';
+import SignUpStart from './package/screens/signup/Start';
+import Passkey from './package/screens/signup/Passkey';
+import EmailOtp from './package/screens/signup/EmailOTP';
 
 const routes: RouteObject[] = [
   {
@@ -18,6 +20,14 @@ const routes: RouteObject[] = [
           {
             path: '',
             element: <SignUpStart />,
+          },
+          {
+            path: '/passkey',
+            element: <Passkey />,
+          },
+          {
+            path: '/email-otp',
+            element: <EmailOtp />,
           },
         ],
       },

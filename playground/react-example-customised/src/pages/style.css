@@ -30,9 +30,27 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    font-family: Inter, sans-serif;
 }
 
-.cb-link {
+.cb-body {
+    margin-top: 0.5rem;
+    color: #000;
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-family: Inter, sans-serif;
+}
+
+.cb-link-primary {
+    color: #1953ff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.cb-link-secondary {
     color:#59ACFF;
     cursor: pointer;
 }
@@ -155,9 +173,10 @@
 }
 
 .cb-button-secondary {
-    border: 1px solid rgba(143, 155, 191, 0.5);
+    border: 1px solid #59acff;
     background-color: #ffffff;
     color: #59acff;
+    border-radius: 1.5rem;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -166,15 +185,24 @@
 }
 
 .cb-button-tertiary {
-    background-color: #ffffff;
-    color: #59acff;
     font-family: 'Inter', 'Space Grotesk', sans-serif;
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
+    background: none;
+    border: none;
+    color: #59acff;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    box-shadow: none;
 }
 
-.cb-button-tertiary:hover {
-    background-color: #e6e6e6;
+.cb-button-tertiary:hover,
+.cb-button-tertiary:focus {
+    text-decoration: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .cb-spinner-primary {
@@ -202,4 +230,63 @@
     to {
         transform: rotate(1turn);
     }
+}
+
+.cb-layout-passkey {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cb-primary-text {
+    color: #1953ff;
+}
+
+.cb-secondary-text {
+    color: #59ACFF;
+}
+
+.cb-finger-print-icon {
+    background: url("../package/assets/fingerprint.png"), lightgray 50% / cover no-repeat;
+    width: 103px;
+    height: 121px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cb-horizontal-divider {
+    width: 110%;
+    text-align: center;
+    position: relative;
+    line-height: 0.1em;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: -1.2rem;
+    color: #d9d9d9
+}
+
+.cb-horizontal-divider:before,
+.cb-horizontal-divider:after {
+    content: '';
+    background: #d9d9d9;
+    display: inline-block;
+    width: 40%;
+    height: 1px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.cb-horizontal-divider:before {
+    right: 5%;
+    margin-left: -50%;
+}
+
+.cb-horizontal-divider:after {
+    left: 5%;
+    margin-right: -50%;
+}
+
+.cb-body-spacing {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
 }

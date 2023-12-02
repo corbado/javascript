@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button } from './Button';
 import { HorizontalRule } from './HorizontalRule';
-import { Text } from './Text';
+import { Body, Header, SubHeader } from '.';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
@@ -17,6 +17,7 @@ export interface PassketScreensWrapperProps {
   showHorizontalRule?: boolean;
   onClick(btn: ButtonType): void;
   loading?: boolean;
+  hideFingerPrintIcon?: boolean;
 }
 
 export const PasskeyScreensWrapper: React.FC<PassketScreensWrapperProps> = ({
@@ -30,35 +31,15 @@ export const PasskeyScreensWrapper: React.FC<PassketScreensWrapperProps> = ({
   showHorizontalRule = false,
   onClick,
   loading = false,
+  hideFingerPrintIcon = false,
 }) => {
   return (
-    <div>
-      <Text variant='header'>{header}</Text>
-      {subHeader && (
-        <Text
-          variant='sub-header'
-          className='mt-4'
-        >
-          {subHeader}
-        </Text>
-      )}
-      <div className='finger-print-icon mx-auto'></div>
-      {secondaryHeader && (
-        <Text
-          variant='header'
-          className='my-4'
-        >
-          {secondaryHeader}
-        </Text>
-      )}
-      {body && (
-        <Text
-          variant='body'
-          className='my-4'
-        >
-          {body}
-        </Text>
-      )}
+    <div className='cb-layout-passkey'>
+      <Header>{header}</Header>
+      {subHeader && <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>}
+      {!hideFingerPrintIcon && <div className='cb-finger-print-icon'></div>}
+      {secondaryHeader && <Header className='cb-secondary-header-spacing'>{secondaryHeader}</Header>}
+      {body && <Body className='cb-body-spacing'>{body}</Body>}
       {primaryButton && (
         <Button
           variant='primary'

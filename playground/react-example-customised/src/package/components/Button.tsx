@@ -1,4 +1,4 @@
-import React from 'react';
+import { ButtonHTMLAttributes, FunctionComponent } from 'react';
 
 import { Spinner } from './Spinner';
 
@@ -14,9 +14,9 @@ const variants = {
   tertiary: 'cb-button-tertiary',
 };
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & AdditionalProps;
 
-export const Button: React.FunctionComponent<Props> = ({
+export const Button: FunctionComponent<ButtonProps> = ({
   variant = 'tertiary',
   fullWidth = true,
   isLoading = false,

@@ -11,10 +11,10 @@ export const IconLink: FunctionComponent<Props> = ({ target = '_blank', classNam
   return (
     <a
       target={target}
-      className={` ${className}`}
+      className={`cb-link-icon ${className}`}
       {...rest}
     >
-      <Icon /> <p className={`cb-body font-bold pl-2 text-center`}>{label}</p>
+      <Icon className='cb-icon' /> <p className={``}>{label}</p>
     </a>
   );
 };

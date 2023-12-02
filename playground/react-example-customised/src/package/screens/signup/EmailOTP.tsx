@@ -1,17 +1,32 @@
 import { FunctionComponent } from 'react';
 import '../../styles/index.css';
-import { Header, Body } from '../../components';
-import OTPForm from '../../components/OTPForm';
+import { EmailOtpScreen } from '../../components';
 
 const EmailOtp: FunctionComponent = () => {
+  const header = 'Enter code to create account';
+  const body = (
+    <>
+      We just sent a one time code to <span className='cb-link-secondary'>abcd@testing.com</span>. The code expires
+      shortly, so please enter it soon.
+    </>
+  );
+  const validationError = 'Please enter a valid code';
+  const verificationButtonText = 'Continue';
+  const backButtonText = 'Cancel';
+  const onVerificationButtonClick = async () => {};
+  const onBackButtonClick = () => {};
+
   return (
     <div className='cb-container'>
-      <Header>Enter code to create account</Header>
-      <Body className='cb-body-spacing'>
-        We just sent a one time code to <span className='cb-link-secondary'>abcd@testing.com</span>. The code expires
-        shortly, so please enter it soon.
-      </Body>
-      <OTPForm />
+      <EmailOtpScreen
+        header={header}
+        body={body}
+        validationError={validationError}
+        verificationButtonText={verificationButtonText}
+        backButtonText={backButtonText}
+        onVerificationButtonClick={onVerificationButtonClick}
+        onBackButtonClick={onBackButtonClick}
+      />
     </div>
   );
 };

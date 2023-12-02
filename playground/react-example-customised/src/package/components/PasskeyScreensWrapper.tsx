@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 import { Button } from './Button';
 import { HorizontalRule } from './HorizontalRule';
@@ -7,10 +7,10 @@ import { Body, Header, SubHeader } from '.';
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
 export interface PassketScreensWrapperProps {
-  header: React.ReactNode;
-  subHeader?: React.ReactNode;
-  secondaryHeader?: React.ReactNode;
-  body?: React.ReactNode;
+  header: ReactNode;
+  subHeader?: ReactNode;
+  secondaryHeader?: ReactNode;
+  body?: ReactNode;
   primaryButton: string;
   secondaryButton?: string;
   tertiaryButton?: string;
@@ -20,7 +20,7 @@ export interface PassketScreensWrapperProps {
   hideFingerPrintIcon?: boolean;
 }
 
-export const PasskeyScreensWrapper: React.FC<PassketScreensWrapperProps> = ({
+export const PasskeyScreensWrapper: FC<PassketScreensWrapperProps> = ({
   header,
   subHeader,
   secondaryHeader,

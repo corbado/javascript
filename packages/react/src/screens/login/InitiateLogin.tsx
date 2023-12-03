@@ -4,7 +4,7 @@ import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Text } from '../../components';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 import { emailRegex } from '../../utils/validations';
@@ -83,36 +83,30 @@ export const InitiateLogin = () => {
 
   return (
     <>
-      <Text variant='header'>{t('header')}</Text>
-      <Text variant='sub-header'>
-        {t('subheader')}{' '}
+      <Header>{t('header')}</Header>
+      <SubHeader>
+        {t('subheader')}
         <span
-          className='link text-secondary-font-color'
+          className='cb-link-secondary'
           onClick={() => changeFlow(FlowType.SignUp)}
         >
           {t('button_signup')}
-        </span>{' '}
-      </Text>
-      <div className='form-wrapper'>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
-            <LabelledInput
-              name='username'
-              label={t('textField_email')}
-              onChange={onChange}
-              onFocus={onFocusEmail}
-              value={formEmail}
-              error={errorMessage}
-            />
-          </div>
-          <Button
-            variant='primary'
-            disabled={!formEmail}
-          >
-            {t('button_submit')}
-          </Button>
-        </form>
-      </div>
+        </span>
+      </SubHeader>
+      <AuthFormScreenWrapper
+        onSubmit={handleSubmit}
+        submitButtonText={t('button_submit')}
+        disableSubmitButton={!formEmail}
+      >
+        <FormInput
+          name='username'
+          label={t('textField_email')}
+          onChange={onChange}
+          onFocus={onFocusEmail}
+          value={formEmail}
+          error={errorMessage}
+        />
+      </AuthFormScreenWrapper>
     </>
   );
 };

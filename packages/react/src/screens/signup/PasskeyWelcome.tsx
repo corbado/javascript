@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
+import type { PasskeyScreensWrapperProps } from '../../components';
+import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyWelcome = () => {
@@ -25,7 +26,7 @@ export const PasskeyWelcome = () => {
     void navigateNext();
   }, [navigateNext]);
 
-  const props = useMemo(
+  const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
       secondaryHeader,

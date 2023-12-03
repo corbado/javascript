@@ -2,7 +2,7 @@ import { FlowType } from '@corbado/web-core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Text } from '../../components';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 import { emailRegex } from '../../utils/validations';
@@ -81,42 +81,36 @@ export const InitiateSignup = () => {
 
   return (
     <>
-      <Text variant='header'>{t('header')}</Text>
-      <Text variant='sub-header'>
-        {t('subheader')}{' '}
+      <Header>{t('header')}</Header>
+      <SubHeader>
+        {t('subheader')}
         <span
-          className='link text-secondary-font-color'
-          onClick={() => changeFlow(FlowType.Login)}
+          className='cb-link-secondary'
+          onClick={() => changeFlow(FlowType.SignUp)}
         >
           {t('button_login')}
-        </span>{' '}
-      </Text>
-      <div className='form-wrapper'>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-2'>
-            <LabelledInput
-              name='name'
-              label={t('textField_name')}
-              onChange={onChange}
-              value={signupData.name}
-              error={errorData.name}
-            />
-            <LabelledInput
-              name='username'
-              label={t('textField_email')}
-              onChange={onChange}
-              value={signupData.username}
-              error={errorData.username}
-            />
-          </div>
-          <Button
-            variant='primary'
-            isLoading={loading}
-          >
-            {t('button_submit')}
-          </Button>
-        </form>
-      </div>
+        </span>
+      </SubHeader>
+      <AuthFormScreenWrapper
+        onSubmit={handleSubmit}
+        submitButtonText={t('button_submit')}
+        disableSubmitButton={!loading}
+      >
+        <FormInput
+          name='name'
+          label={t('textField_name')}
+          onChange={onChange}
+          value={signupData.name}
+          error={errorData.name}
+        />
+        <FormInput
+          name='username'
+          label={t('textField_email')}
+          onChange={onChange}
+          value={signupData.username}
+          error={errorData.username}
+        />
+      </AuthFormScreenWrapper>
     </>
   );
 };

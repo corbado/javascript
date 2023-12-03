@@ -1,3 +1,4 @@
+import type { ButtonHTMLAttributes, FunctionComponent } from 'react';
 import React from 'react';
 
 import { Spinner } from './Spinner';
@@ -9,14 +10,14 @@ interface AdditionalProps {
 }
 
 const variants = {
-  primary: 'btn-primary',
-  secondary: 'btn-secondary',
-  tertiary: 'btn-tertiary',
+  primary: 'cb-button-primary',
+  secondary: 'cb-button-secondary',
+  tertiary: 'cb-button-tertiary',
 };
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & AdditionalProps;
 
-export const Button: React.FunctionComponent<Props> = ({
+export const Button: FunctionComponent<ButtonProps> = ({
   variant = 'tertiary',
   fullWidth = true,
   isLoading = false,

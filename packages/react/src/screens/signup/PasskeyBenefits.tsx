@@ -2,8 +2,8 @@ import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../../components/PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
+import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
+import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
@@ -61,7 +61,7 @@ export const PasskeyBenefits = () => {
     [handleBack, handleCreatePasskey],
   );
 
-  const props = useMemo(
+  const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
       body,

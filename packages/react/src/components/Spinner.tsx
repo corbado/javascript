@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-interface Props {
+export interface SpinnerProps {
   variant?: 'primary' | 'secondary';
+  className?: string;
 }
 
-export const Spinner: React.FC<Props> = ({ variant = 'primary' }) => {
-  const className = variant === 'primary' ? 'spinner-primary' : 'spinner-secondary';
-  return <div className={className}></div>;
-};
+export const Spinner: React.FC<SpinnerProps> = memo(
+  ({ variant = 'primary', className = '' }) => {
+    const customClass = `${variant === 'primary' ? 'cb-spinner-primary' : 'cb-spinner-secondary'} ${className}`;
+
+    return <div className={customClass}></div>;
+  },
+  (prevProps, nextProps) => prevProps.variant === nextProps.variant && prevProps.className === nextProps.className,
+);

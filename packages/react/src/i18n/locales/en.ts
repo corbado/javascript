@@ -30,7 +30,7 @@ const en = {
       header: 'Passkeys',
       body_introduction:
         "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using",
-      body_loginMethods: 'Face ID, Touch ID or screen lock code',
+      body_loginMethods: 'Face ID, Touch ID or screen lock code.',
       button_start: 'Create passkey',
       button_skip: 'Maybe later',
     },
@@ -39,13 +39,13 @@ const en = {
       subheader: 'Passkey created',
       body_text1: 'You can now confirm your identity using your',
       body_text2: 'passkey or via email one time code',
-      body_text3: 'when you log in',
+      body_text3: 'when you log in.',
       button: 'Continue',
     },
     passkeyError: {
       header: "Let's get you set up",
       body_errorMessage1: 'Creating your account was not possible with',
-      body_errorMessage2: 'Try again or sign up with email one time code',
+      body_errorMessage2: '. Try again or sign up with email one time code.',
       button_showPasskeyBenefits: 'passkeys',
       button_retry: 'Try again',
       button_emailOtp: 'Send email one time code',
@@ -55,7 +55,7 @@ const en = {
     emailOtp: {
       header: 'Enter code to create account',
       body_text1: 'We just sent a one time code to ',
-      body_text2: 'The code expires shortly, so please enter it soon.',
+      body_text2: '. The code expires shortly, so please enter it soon.',
       validationError_otp: 'OTP is incorrect',
       button_verify: 'Continue',
       button_sendOtpAgain: 'Send one time code again',
@@ -82,7 +82,7 @@ const en = {
     emailOtp: {
       header: 'Enter code to log in',
       body_text1: 'We just sent a one time code to ',
-      body_text2: 'The code expires shortly, so please enter it soon.',
+      body_text2: '. The code expires shortly, so please enter it soon.',
       validationError_otp: 'OTP is incorrect',
       button_verify: 'Continue',
       button_sendOtpAgain: 'Send one time code again',

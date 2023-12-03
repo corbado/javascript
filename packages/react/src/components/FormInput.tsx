@@ -1,12 +1,12 @@
 import React, { type FocusEvent } from 'react';
 
-import { Input, type Props as InputProps } from './Input';
+import { Input, type InputProps } from './Input';
 
 interface Props extends InputProps {
   label: string;
 }
 
-export const LabelledInput = ({
+export const FormInput = ({
   label,
   type,
   id,
@@ -35,7 +35,7 @@ export const LabelledInput = ({
     }
   };
 
-  const classes = `floating-label ${focused ? 'has-focus' : ''} ${value ? 'has-content' : ''}`;
+  const classes = `cb-form-input ${focused ? 'cb-has-focus' : ''} ${value ? 'cb-has-content' : ''}`;
 
   return (
     <>
@@ -52,14 +52,12 @@ export const LabelledInput = ({
           error={error}
           {...rest}
         />
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id || name}>{label}</label>
         {error ? (
-          <div className='h-5'>
-            <p className='error-text'>{error}</p>
+          <div className='cb-form-input-error'>
+            <p className='cb-error'>{error}</p>
           </div>
-        ) : (
-          <div className='h-1'></div>
-        )}
+        ) : null}
       </div>
     </>
   );

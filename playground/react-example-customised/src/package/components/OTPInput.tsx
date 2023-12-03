@@ -65,7 +65,7 @@ export const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loadi
   }, [activeOtpIndex, loading]);
 
   return (
-    <div className='grid grid-cols-6 gap-2 mt-4'>
+    <div className='cb-email-otp-input-container'>
       {otps.map((_, index) => {
         return (
           <Input
@@ -77,7 +77,7 @@ export const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loadi
             onChange={handleChange}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
             disabled={loading}
-            className='text-center px-0'
+            className='cb-email-otp-input'
           />
         );
       })}

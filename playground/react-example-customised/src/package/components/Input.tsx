@@ -10,14 +10,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ id, class
   const _classnames = `cb-input ${className} ${error ? 'cb-error' : ''}`;
 
   return (
-    <div>
-      <input
-        id={id}
-        {...props}
-        className={_classnames}
-        autoComplete={props.autoComplete ? props.autoComplete : 'off'}
-        ref={ref}
-      />
-    </div>
+    <input
+      id={id}
+      {...props}
+      className={_classnames}
+      autoComplete={props.autoComplete ? props.autoComplete : 'off'}
+      ref={ref}
+    />
   );
 });

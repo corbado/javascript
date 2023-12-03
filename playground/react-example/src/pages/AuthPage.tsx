@@ -13,8 +13,6 @@ const AuthPage = () => {
   return (
     <CorbadoAuthUI
       onLoggedIn={onLoggedIn}
-      defaultLanguage='fr'
-      autoDetectLanguage={false}
       customTranslations={{
         fr: frenchTranslations,
         en: englishTranslations,

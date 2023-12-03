@@ -329,7 +329,7 @@
 /********** Icons **********/
 .cb-finger-print-icon {
   background:
-    url('../package/assets/fingerprint.png'),
+    url('assets/fingerprint.png'),
     lightgray 50% / cover no-repeat;
   width: 103px;
   height: 121px;
@@ -380,5 +380,64 @@
     height: 3rem;
     border: 1px solid #d9d9d9;
     border-radius: 9999px;
+  }
+}
+
+/***** Dark Mode Styles *****/
+.dark {
+  .cb-container {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .cb-header,
+  .cb-subheader,
+  .cb-body {
+    color: #e0e0e0;
+  }
+
+  .cb-link-primary {
+    color: #4b8fff;
+  }
+
+  .cb-link-secondary {
+    color: #3a7cdd;
+  }
+
+  .cb-error {
+    color: #ff6b6b;
+  }
+
+  .cb-horizontal-divider,
+  .cb-horizontal-divider:before,
+  .cb-horizontal-divider:after {
+    color: #555;
+    background: #555;
+  }
+
+  .cb-form-input label {
+    color: #c0c0c0;
+  }
+
+  .cb-button-primary {
+    background-color: #4b8fff;
+  }
+
+  .cb-button-primary:hover {
+    background-color: #3670c8;
+  }
+
+  .cb-button-secondary {
+    border-color: #3a7cdd;
+    color: #3a7cdd;
+  }
+
+  .cb-button-secondary:hover {
+    background-color: #333;
+  }
+
+  .cb-button-tertiary {
+    color: #4b8fff;
   }
 }

@@ -6,6 +6,9 @@ import Login from './pages/login';
 import SignUpStart from './package/screens/signup/Start';
 import Passkey from './package/screens/signup/Passkey';
 import EmailOtp from './package/screens/signup/EmailOTP';
+import PasskeyBenefits from './package/screens/signup/PasskeyBenefits';
+import PasskeyError from './package/screens/signup/PasskeyError';
+import PasskeySuccess from './package/screens/signup/PasskeySuccess';
 
 const routes: RouteObject[] = [
   {
@@ -28,6 +31,22 @@ const routes: RouteObject[] = [
           {
             path: '/email-otp',
             element: <EmailOtp />,
+          },
+          {
+            path: '/passkey-benefits',
+            element: <PasskeyBenefits />,
+          },
+          {
+            path: '/passkey-success',
+            element: <PasskeySuccess />,
+          },
+          {
+            path: '/passkey-error',
+            element: <PasskeyError />,
+          },
+          {
+            path: '/passkey-prompt',
+            element: <div>Passkey Prompt</div>,
           },
         ],
       },

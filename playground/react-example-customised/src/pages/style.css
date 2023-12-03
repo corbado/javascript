@@ -48,6 +48,7 @@
   color: #1953ff;
   cursor: pointer;
   text-decoration: underline;
+  font-weight: 700;
 }
 
 .cb-link-secondary {

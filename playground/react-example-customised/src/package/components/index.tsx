@@ -11,4 +11,4 @@ export * from './Header';
 export * from './SubHeader';
 export * from './Body';
 export * from './Form';
-export * from './EmailOtpScreen';
+export * from './EmailOtpScreenWrapper';

@@ -1,6 +1,6 @@
 import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import type { ButtonType } from '../../components/PasskeyScreensWrapper';
 import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
@@ -16,9 +16,9 @@ export const PasskeyBenefits = () => {
   const header = useMemo(() => t('header'), [t]);
   const body = useMemo(
     () => (
-      <Trans i18nKey='create_passkey.body'>
+      <>
         {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>.
-      </Trans>
+      </>
     ),
     [t],
   );

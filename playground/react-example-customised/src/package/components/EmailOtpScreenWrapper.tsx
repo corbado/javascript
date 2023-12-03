@@ -20,7 +20,7 @@ export interface EmailOtpScreenProps {
   onBackButtonClick(): void;
 }
 
-export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
+export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
   header,
   body,
   verificationButtonText,

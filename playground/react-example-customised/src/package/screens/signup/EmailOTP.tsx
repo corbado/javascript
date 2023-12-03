@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import '../../styles/index.css';
-import { EmailOtpScreen } from '../../components';
+import { EmailOtpScreenWrapper } from '../../components';
 
 const EmailOtp: FunctionComponent = () => {
   const header = 'Enter code to create account';
@@ -18,7 +18,7 @@ const EmailOtp: FunctionComponent = () => {
 
   return (
     <div className='cb-container'>
-      <EmailOtpScreen
+      <EmailOtpScreenWrapper
         header={header}
         body={body}
         validationError={validationError}

@@ -6,7 +6,7 @@ import { Body, Header, SubHeader } from '.';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
-export interface PassketScreensWrapperProps {
+export interface PasskeyScreensWrapperProps {
   header: ReactNode;
   subHeader?: ReactNode;
   secondaryHeader?: ReactNode;
@@ -20,7 +20,7 @@ export interface PassketScreensWrapperProps {
   hideFingerPrintIcon?: boolean;
 }
 
-export const PasskeyScreensWrapper: FC<PassketScreensWrapperProps> = ({
+export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
   header,
   subHeader,
   secondaryHeader,
@@ -63,7 +63,6 @@ export const PasskeyScreensWrapper: FC<PassketScreensWrapperProps> = ({
       )}
       {tertiaryButton && (
         <Button
-          className='my-0 !py-0'
           variant='tertiary'
           onClick={() => onClick('tertiary')}
           isLoading={loading}

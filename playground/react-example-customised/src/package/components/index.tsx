@@ -4,7 +4,7 @@ export * from './Icons';
 export * from './Input';
 export * from './FormInput';
 export * from './IconLink';
-export * from './OTPInput';
+export * from './OtpInput';
 export * from './PasskeyScreensWrapper';
 export * from './Spinner';
 export * from './Text';

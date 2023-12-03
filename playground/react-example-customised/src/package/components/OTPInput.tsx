@@ -1,81 +1,90 @@
-import React from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { Input } from './Input';
 
 interface Props {
-  length?: number;
+  numberOfDigits?: number;
   loading?: boolean;
-  value?: string[];
-
   emittedOTP(otp: string[]): void;
 }
 
-let currentOTPIndex = 0;
+export const OTPInput: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false }) => {
+  const [otp, setOtp] = useState(new Array(numberOfDigits).fill(''));
+  const inputRefs = useRef<HTMLInputElement[]>([]);
 
-export const OTPInput: React.FC<Props> = ({ length = 6, emittedOTP, value, loading = false }) => {
-  const [otps, setOtp] = React.useState<string[]>(new Array(length).fill(''));
-  const [activeOtpIndex, setActiveOtpindex] = React.useState<number>(0);
+  useEffect(() => {
+    inputRefs.current[0].focus();
+  }, []);
 
-  const inputRef = React.createRef<HTMLInputElement>();
+  useEffect(() => {
+    emittedOTP(otp);
+  }, [otp]);
 
-  const getOnlyLengthCharacters = (text = '') => text.substring(0, length);
-
-  const handlePaste = (text: string) => {
-    const formattedOTP = Array.from({ length }, (_, k) => getOnlyLengthCharacters(text)[k] || '');
-    setActiveOtpindex(text.length);
-    currentOTPIndex = text.length - 1;
-    emittedOTP(formattedOTP);
-    setOtp(formattedOTP);
-  };
-
-  const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    if (value.length > 2) {
-      return handlePaste(value);
+  const handleOtpChange = (element: HTMLInputElement, index: number) => {
+    const value = element.value;
+    if (/^[^0-9]$/.test(value)) {
+      return;
     }
-    const newOtp: string[] = [...otps];
-    newOtp[currentOTPIndex] = value.substring(value.length - 1);
 
-    if (!value) {
-      setActiveOtpindex(currentOTPIndex - 1);
+    const newIndex = index + 1;
+
+    if (otp[index]) {
+      if (newIndex >= otp.length) {
+        return;
+      }
+
+      setOtp(otp.map((d, idx) => (idx === newIndex ? value : d)));
+
+      if (newIndex + 1 < otp.length) {
+        inputRefs.current[newIndex + 1].focus();
+      } else {
+        inputRefs.current[index].blur();
+      }
     } else {
-      setActiveOtpindex(currentOTPIndex + 1);
-    }
+      setOtp(otp.map((d, idx) => (idx === index ? value : d)));
 
-    setOtp(newOtp);
-    emittedOTP(newOtp);
-  };
-
-  const handleKeyDown = ({ key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    currentOTPIndex = index;
-    if (key === 'Backspace') {
-      setActiveOtpindex(currentOTPIndex - 1);
+      if (newIndex < otp.length && value) {
+        inputRefs.current[newIndex].focus();
+      } else {
+        inputRefs.current[index].blur();
+      }
     }
   };
 
-  React.useEffect(() => {
-    if (value?.length) {
-      setOtp(value);
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Backspace') {
+      if (otp[index]) {
+        setOtp(otp.map((val, idx) => (index === idx ? '' : val)));
+      } else if (index > 0) {
+        inputRefs.current[index - 1].focus();
+        setOtp(otp.map((val, idx) => (index - 1 === idx ? '' : val)));
+      }
     }
-  }, [value]);
+  };
 
-  React.useEffect(() => {
-    if (!loading) {
-      inputRef.current?.focus();
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
+    if (pasteData.every(d => /^[0-9]$/.test(d))) {
+      setOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
+      inputRefs.current[pasteData.length - 1].focus();
     }
-  }, [activeOtpIndex, loading]);
+  };
 
   return (
     <div className='cb-email-otp-input-container'>
-      {otps.map((_, index) => {
+      {otp.map((data, index) => {
         return (
           <Input
             key={index}
-            ref={index === activeOtpIndex ? inputRef : null}
-            id={`otp${index}`}
-            value={otps[index]}
+            ref={el => (inputRefs.current[index] = el!)}
+            id={`otp-${index}`}
+            value={data}
+            type='text'
             maxLength={1}
-            onChange={handleChange}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
+            onChange={e => handleOtpChange(e.target, index)}
+            onKeyDown={e => handleKeyDown(e, index)}
+            onPaste={handlePaste}
             disabled={loading}
             className='cb-email-otp-input'
           />

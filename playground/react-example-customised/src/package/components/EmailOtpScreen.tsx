@@ -1,6 +1,6 @@
 import { Gmail, Yahoo, Outlook } from './Icons';
 import { IconLink } from './IconLink';
-import { OTPInput } from './OTPInput';
+import { OTPInput } from './OtpInput';
 import { Button } from './Button';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { Header } from './Header';

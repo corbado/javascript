@@ -35,7 +35,7 @@ export const FormInput = ({
     }
   };
 
-  const classes = `cb-form-input ${focused ? 'has-focus' : ''} ${value ? 'has-content' : ''}`;
+  const classes = `cb-form-input ${focused ? 'cb-has-focus' : ''} ${value ? 'cb-has-content' : ''}`;
 
   return (
     <>

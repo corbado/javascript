@@ -36,10 +36,15 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
   return (
     <div className='cb-layout-passkey'>
       <Header>{header}</Header>
+
       {subHeader && <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>}
+
       {!hideFingerPrintIcon && <div className='cb-finger-print-icon'></div>}
+
       {secondaryHeader && <Header className='cb-secondary-header-spacing'>{secondaryHeader}</Header>}
+
       {body && <Body className='cb-body-spacing'>{body}</Body>}
+
       {primaryButton && (
         <Button
           variant='primary'
@@ -50,7 +55,9 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
           {primaryButton}
         </Button>
       )}
-      {showHorizontalRule && <HorizontalRule />}
+
+      {showHorizontalRule && <HorizontalRule>or</HorizontalRule>}
+
       {secondaryButton && (
         <Button
           variant='secondary'
@@ -61,6 +68,7 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
           {secondaryButton}
         </Button>
       )}
+
       {tertiaryButton && (
         <Button
           variant='tertiary'

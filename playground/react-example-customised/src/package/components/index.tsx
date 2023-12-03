@@ -7,7 +7,6 @@ export * from './IconLink';
 export * from './OtpInput';
 export * from './PasskeyScreensWrapper';
 export * from './Spinner';
-export * from './Text';
 export * from './Header';
 export * from './SubHeader';
 export * from './Body';

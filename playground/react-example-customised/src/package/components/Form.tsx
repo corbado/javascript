@@ -1,12 +1,13 @@
-import { FC, FormEventHandler } from 'react';
+import { FC, FormEventHandler, ReactNode } from 'react';
 import { CustomizableComponent } from '../types/common';
 import { Button } from './Button';
 
 export interface FormProps extends CustomizableComponent {
   onSubmit: FormEventHandler<HTMLFormElement>;
+  submitButtonText: ReactNode;
 }
 
-export const Form: FC<FormProps> = ({ children, onSubmit }) => {
+export const Form: FC<FormProps> = ({ children, onSubmit, submitButtonText }) => {
   return (
     <form
       className='cb-form'
@@ -17,7 +18,7 @@ export const Form: FC<FormProps> = ({ children, onSubmit }) => {
         variant='primary'
         className='cb-form-button'
       >
-        Continue with email
+        {submitButtonText}
       </Button>
     </form>
   );

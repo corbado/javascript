@@ -1,13 +1,11 @@
-import { AnchorHTMLAttributes, FunctionComponent, SVGProps } from 'react';
+import { AnchorHTMLAttributes, FunctionComponent, SVGProps, ReactNode } from 'react';
 
-interface AdditionalProps {
+export interface IconLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   Icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-  label: string;
+  label: ReactNode;
 }
 
-type Props = AnchorHTMLAttributes<HTMLAnchorElement> & AdditionalProps;
-
-export const IconLink: FunctionComponent<Props> = ({ target = '_blank', className, Icon, label, ...rest }) => {
+export const IconLink: FunctionComponent<IconLinkProps> = ({ target = '_blank', className, Icon, label, ...rest }) => {
   return (
     <a
       target={target}

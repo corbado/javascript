@@ -36,20 +36,28 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
   const handleOtpChange = useCallback((userOTP: string[]) => setOTP(userOTP), [setOTP]);
 
   const handleSubmit = () => {
-    setError('');
     const mergedChars = otp.join('');
+
     if (mergedChars.length < 6) {
       setError(validationError);
       return;
     }
 
-    void onVerificationButtonClick(mergedChars, setLoading, setError);
+    setError('');
+
+    try {
+      onVerificationButtonClick(mergedChars, setLoading, setError);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (
     <div className='cb-email-otp'>
       <Header>{header}</Header>
+
       <Body>{body}</Body>
+
       <div className='cb-email-links'>
         <IconLink
           Icon={Gmail}
@@ -67,7 +75,9 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
           href='https://outlook.office.com/mail/0/inbox'
         />
       </div>
+
       <OTPInput emittedOTP={handleOtpChange} />
+
       {error && <p className='error-text mt-3 ml-0'>{error}</p>}
 
       <Button
@@ -80,6 +90,7 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
       >
         {verificationButtonText}
       </Button>
+
       <Button
         type='button'
         onClick={onBackButtonClick}

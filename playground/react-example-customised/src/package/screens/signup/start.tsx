@@ -9,10 +9,14 @@ const SignUpStart: FunctionComponent = () => {
       <SubHeader>
         You already have an account? <span className='cb-link-secondary'>Log in</span>
       </SubHeader>
-      <Form onSubmit={() => {}}>
+      <Form
+        onSubmit={() => {}}
+        submitButtonText='Continue with email'
+      >
         <FormInput
           name='name'
           label='Name'
+          value='asdasd'
         />
         <FormInput
           name='username'

@@ -1,3 +1,5 @@
+/***** Main *****/
+
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
   border-radius: 0.5rem;
@@ -10,6 +12,7 @@
   margin-top: 5rem;
 }
 
+/********** Typography **********/
 .cb-header {
   font-family: 'Space Grotesk', sans-serif;
   color: #000;
@@ -56,6 +59,56 @@
   cursor: pointer;
 }
 
+.cb-error {
+  color: #ff4c51;
+  margin: 0;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  text-align: left;
+  padding-left: 1.4rem;
+}
+
+.cb-primary-text {
+  color: #1953ff;
+}
+
+.cb-secondary-text {
+  color: #59acff;
+}
+
+.cb-horizontal-divider {
+  width: 110%;
+  text-align: center;
+  position: relative;
+  line-height: 0.1em;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: -1.2rem;
+  color: #d9d9d9;
+}
+
+.cb-horizontal-divider:before,
+.cb-horizontal-divider:after {
+  content: '';
+  background: #d9d9d9;
+  display: inline-block;
+  width: 40%;
+  height: 1px;
+  vertical-align: middle;
+  position: relative;
+}
+
+.cb-horizontal-divider:before {
+  right: 5%;
+  margin-left: -50%;
+}
+
+.cb-horizontal-divider:after {
+  left: 5%;
+  margin-right: -50%;
+}
+
+/********** Form **********/
 .cb-form {
   margin: 2rem 0;
   width: 100%;
@@ -148,19 +201,11 @@
   transition: 0.3s;
 }
 
-.cb-error {
-  color: #ff4c51;
-  margin: 0;
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  text-align: left;
-  padding-left: 1.4rem;
-}
-
 .cb-form-input-error {
   height: 1.25rem;
 }
 
+/********** Buttons **********/
 .cb-button-primary {
   border: none;
   color: #ffffff;
@@ -237,60 +282,11 @@
   }
 }
 
+/********** Layout **********/
 .cb-layout-passkey {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.cb-primary-text {
-  color: #1953ff;
-}
-
-.cb-secondary-text {
-  color: #59acff;
-}
-
-.cb-finger-print-icon {
-  background:
-    url('../package/assets/fingerprint.png'),
-    lightgray 50% / cover no-repeat;
-  width: 103px;
-  height: 121px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.cb-horizontal-divider {
-  width: 110%;
-  text-align: center;
-  position: relative;
-  line-height: 0.1em;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: -1.2rem;
-  color: #d9d9d9;
-}
-
-.cb-horizontal-divider:before,
-.cb-horizontal-divider:after {
-  content: '';
-  background: #d9d9d9;
-  display: inline-block;
-  width: 40%;
-  height: 1px;
-  vertical-align: middle;
-  position: relative;
-}
-
-.cb-horizontal-divider:before {
-  right: 5%;
-  margin-left: -50%;
-}
-
-.cb-horizontal-divider:after {
-  left: 5%;
-  margin-right: -50%;
 }
 
 .cb-email-otp {
@@ -310,6 +306,35 @@
   flex-direction: row;
   gap: 1rem;
   justify-content: space-around;
+}
+
+.cb-email-otp-input-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.cb-email-otp-input {
+  height: 5.2rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 1.75rem;
+  font-size: 1.2rem;
+  text-align: center;
+  font-family: Inter, sans-serif;
+}
+
+/********** Icons **********/
+.cb-finger-print-icon {
+  background:
+    url('../package/assets/fingerprint.png'),
+    lightgray 50% / cover no-repeat;
+  width: 103px;
+  height: 121px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cb-link-icon {
@@ -336,24 +361,8 @@
   height: 1.5rem;
 }
 
-.cb-email-otp-input-container {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  justify-content: center;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
 
-.cb-email-otp-input {
-  height: 5.2rem;
-  border: 1px solid #d9d9d9;
-  border-radius: 1.75rem;
-  font-size: 1.2rem;
-  text-align: center;
-  font-family: Inter, sans-serif;
-}
-
+?/***** Media Queries *****/
 @media screen and (max-width: 768px) {
   .cb-email-links {
     display: flex;

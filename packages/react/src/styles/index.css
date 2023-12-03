@@ -361,8 +361,7 @@
   height: 1.5rem;
 }
 
-
-?/***** Media Queries *****/
+/***** Media Queries *****/
 @media screen and (max-width: 768px) {
   .cb-email-links {
     display: flex;

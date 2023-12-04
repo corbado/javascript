@@ -418,7 +418,6 @@
   .cb-horizontal-divider:before,
   .cb-horizontal-divider:after {
     color: #555;
-    background: #555;
   }
 
   .cb-input {

@@ -8,6 +8,8 @@ import FlowHandlerProvider from './contexts/FlowHandlerProvider';
 import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
+import type { CorbadoThemes } from './utils/themes';
+import { loadTheme } from './utils/themes';
 
 interface Props {
   // A callback function that is called when the user is logged in.
@@ -27,6 +29,9 @@ interface Props {
 
   // A boolean indicating whether the app's theme should be automatically set based on the system's theme. If this is enabled, the value of darkMode is ignored.
   autoDetectSystemTheme?: boolean;
+
+  // The theme to be used for the app. Corbado provides custom themes for the app.
+  theme?: CorbadoThemes;
 }
 
 const CorbadoAuthUI = ({
@@ -36,6 +41,7 @@ const CorbadoAuthUI = ({
   customTranslations = null,
   darkMode = false,
   autoDetectSystemTheme = false,
+  theme,
 }: Props) => {
   React.useEffect(() => {
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
@@ -52,6 +58,10 @@ const CorbadoAuthUI = ({
       };
 
       darkModeMediaQuery.addEventListener('change', listener);
+
+      if (theme) {
+        loadTheme(theme);
+      }
 
       return () => {
         darkModeMediaQuery.removeEventListener('change', listener);

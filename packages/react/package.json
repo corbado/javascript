@@ -19,9 +19,8 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build:css": "npx tailwindcss -i ./src/styles/index.css -o ./dist/styles.css --minify",
-    "copy:assets": "cp -R ./src/assets ./dist",
-    "build": "npm run clean && tsc && npm run build:css && npm run copy:assets",
+    "copy:assets": "cp -R ./src/assets ./dist && cp -R ./src/styles ./dist",
+    "build": "npm run clean && tsc && npm run copy:assets",
     "publish:local": "npx yalc push --replace  --sig",
     "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"

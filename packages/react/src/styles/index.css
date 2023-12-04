@@ -333,11 +333,13 @@
 
 /********** Icons **********/
 .cb-finger-print-icon {
-  background:
-    url('assets/fingerprint.png'),
-    lightgray 50% / cover no-repeat;
-  width: 103px;
-  height: 121px;
+  width: 6.4375rem;
+  height: 7.5625rem;
+  background-image: url('../assets/fingerprint.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: lightgray;
   margin-left: auto;
   margin-right: auto;
 }
@@ -447,6 +449,11 @@
     color: #c0c0c0;
   }
 
+  .cb-form-input.cb-has-content label,
+  .cb-form-input.cb-has-focus label {
+    color: #c0c0c0;
+  }
+
   .cb-button-primary {
     background-color: #4b8fff;
   }
@@ -458,6 +465,7 @@
   .cb-button-secondary {
     border-color: #3a7cdd;
     color: #3a7cdd;
+    background: #1e1e1e;
   }
 
   .cb-button-secondary:hover {
@@ -466,5 +474,10 @@
 
   .cb-button-tertiary {
     color: #4b8fff;
+  }
+
+  .cb-finger-print-icon {
+    background-color: #4b8fff;
+    border-radius: 3.5rem;
   }
 }

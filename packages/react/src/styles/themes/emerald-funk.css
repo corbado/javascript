@@ -1,10 +1,13 @@
 .cb-green-theme {
-  --cb-primary-color: #21ba45; /* Greenish primary color */
-  --cb-secondary-color: #b5ff7d; /* Light green secondary color */
-  --cb-background-color: #1b1c1d; /* Dark background for contrast */
-  --cb-text-color: #ffffff; /* White text for better visibility */
-  --cb-border-color: #21ba45; /* Greenish border color */
-  --cb-funky-font: 'Comic Sans MS', cursive, sans-serif; /* Example of a funky font */
+  --cb-primary-color: #21ba45;
+  --cb-secondary-color: #b5ff7d;
+  --cb-background-color: #1b1d1b;
+  --cb-text-color: #ffffff;
+  --cb-border-color: #21ba45;
+  --cb-error-color: #ff6b6b;
+  --cb-horizontal-divider-color: #555;
+  --cb-input-color: #e0e0e0;
+  --cb-funky-font: 'Comic Sans MS', cursive, sans-serif;
 }
 
 .cb-green-theme .cb-container {
@@ -25,20 +28,72 @@
   color: var(--cb-primary-color);
 }
 
+.cb-error {
+  color: var(--cb-error-color);
+}
+
+.cb-horizontal-divider,
+.cb-horizontal-divider:before,
+.cb-horizontal-divider:after {
+  color: var(--cb-horizontal-divider-color);
+}
+
+.cb-input {
+  color: var(--cb-input-color);
+  caret-color: var(--cb-input-color);
+  border-color: #ffffff80;
+  -webkit-text-fill-color: var(--cb-input-color);
+}
+
+.cb-input[disabled] {
+  color: var(--cb-input-color);
+}
+
+.cb-input:-webkit-autofill,
+.cb-input:-webkit-autofill:hover,
+.cb-input:-webkit-autofill:focus,
+.cb-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1e1e1e inset !important;
+  box-shadow: 0 0 0 1000px #1e1e1e inset;
+}
+
+.cb-input:-webkit-autofill {
+  -webkit-text-fill-color: var(--cb-input-color) !important;
+}
+
+.cb-form-input label {
+  color: var(--cb-input-color);
+}
+
+.cb-form-input.cb-has-content label,
+.cb-form-input.cb-has-focus label {
+  color: var(--cb-input-color);
+}
+
 .cb-green-theme .cb-button-primary {
   background-color: var(--cb-primary-color);
   color: var(--cb-text-color);
 }
 
 .cb-green-theme .cb-button-primary:hover {
-  background-color: darken(var(--cb-primary-color), 10%);
+  background-color: #1b8834;
 }
 
 .cb-green-theme .cb-button-secondary {
   border-color: var(--cb-secondary-color);
   color: var(--cb-secondary-color);
+  background-color: var(--cb-background-color);
 }
 
 .cb-green-theme .cb-button-secondary:hover {
-  background-color: lighten(var(--cb-secondary-color), 10%);
+  background-color: #133113;
+}
+
+.cb-button-tertiary {
+  color: var(--cb-primary-color);
+}
+
+.cb-finger-print-icon {
+  background-color: var(--cb-primary-color);
+  border-radius: 3.5rem;
 }

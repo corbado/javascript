@@ -1,13 +1,13 @@
-const themesList: Record<string, string> = {
-  'emerald-funk': '../styles/themes/emerald-funk.css',
-};
-
-export const loadTheme = (theme: string) => {
-  if (themesList[theme]) {
-    import(themesList[theme]);
-  }
-};
-
 export enum CorbadoThemes {
   EmeraldFunk = 'emerald-funk',
 }
+
+const themesList: Record<CorbadoThemes, () => void> = {
+  'emerald-funk': () => void 0, //import(''),
+};
+
+export const loadTheme = (theme: CorbadoThemes) => {
+  if (themesList[theme]) {
+    themesList[theme]();
+  }
+};

@@ -1,5 +1,6 @@
 import './i18n';
-import './styles.css';
+import './styles/index.css';
+import './styles/themes/emerald-funk.css';
 
 import { FlowType } from '@corbado/web-core';
 import React from 'react';
@@ -9,7 +10,6 @@ import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
 import type { CorbadoThemes } from './utils/themes';
-import { loadTheme } from './utils/themes';
 
 interface Props {
   // A callback function that is called when the user is logged in.
@@ -44,12 +44,13 @@ const CorbadoAuthUI = ({
   theme,
 }: Props) => {
   React.useEffect(() => {
+    let darkModeListener: ((e: MediaQueryListEvent) => void) | null = null;
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
 
     if (autoDetectSystemTheme) {
       const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-      const listener = (e: MediaQueryListEvent) => {
+      darkModeListener = (e: MediaQueryListEvent) => {
         if (e.matches) {
           document.body.classList.add('dark');
         } else {
@@ -57,22 +58,23 @@ const CorbadoAuthUI = ({
         }
       };
 
-      darkModeMediaQuery.addEventListener('change', listener);
-
-      if (theme) {
-        loadTheme(theme);
-      }
-
-      return () => {
-        darkModeMediaQuery.removeEventListener('change', listener);
-      };
+      darkModeMediaQuery.addEventListener('change', darkModeListener);
     }
 
     if (darkMode) {
       document.body.classList.add('dark');
     }
 
-    return () => null;
+    if (theme) {
+      document.body.classList.add('cb-green-theme');
+    }
+
+    return () => {
+      if (autoDetectSystemTheme && darkModeListener) {
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        darkModeMediaQuery.removeEventListener('change', darkModeListener);
+      }
+    };
   }, []);
 
   return (

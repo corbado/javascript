@@ -1,0 +1,44 @@
+.cb-green-theme {
+  --cb-primary-color: #21ba45; /* Greenish primary color */
+  --cb-secondary-color: #b5ff7d; /* Light green secondary color */
+  --cb-background-color: #1b1c1d; /* Dark background for contrast */
+  --cb-text-color: #ffffff; /* White text for better visibility */
+  --cb-border-color: #21ba45; /* Greenish border color */
+  --cb-funky-font: 'Comic Sans MS', cursive, sans-serif; /* Example of a funky font */
+}
+
+.cb-green-theme .cb-container {
+  background-color: var(--cb-background-color);
+  border-color: var(--cb-border-color);
+  color: var(--cb-text-color);
+}
+
+.cb-green-theme .cb-header,
+.cb-green-theme .cb-subheader,
+.cb-green-theme .cb-body {
+  font-family: var(--cb-funky-font);
+  color: var(--cb-text-color);
+}
+
+.cb-green-theme .cb-link-primary,
+.cb-green-theme .cb-link-secondary {
+  color: var(--cb-primary-color);
+}
+
+.cb-green-theme .cb-button-primary {
+  background-color: var(--cb-primary-color);
+  color: var(--cb-text-color);
+}
+
+.cb-green-theme .cb-button-primary:hover {
+  background-color: darken(var(--cb-primary-color), 10%);
+}
+
+.cb-green-theme .cb-button-secondary {
+  border-color: var(--cb-secondary-color);
+  color: var(--cb-secondary-color);
+}
+
+.cb-green-theme .cb-button-secondary:hover {
+  background-color: lighten(var(--cb-secondary-color), 10%);
+}

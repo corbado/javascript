@@ -77,12 +77,11 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       <OTPInput emittedOTP={handleOtpChange} />
 
-      {error && <p className='error-text mt-3 ml-0'>{error}</p>}
+      {error && <p className='cb-error'>{error}</p>}
 
       <Button
         type='button'
         onClick={handleSubmit}
-        className='mt-4'
         variant='primary'
         isLoading={loading}
         disabled={loading}

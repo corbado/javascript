@@ -20,7 +20,7 @@ export const PasskeyError = () => {
       <span>
         {t('body_errorMessage1')}{' '}
         <span
-          className='link text-primary-color underline'
+          className='cb-link-primary'
           onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}

@@ -66,17 +66,15 @@ const CorbadoAuthUI = ({
   }, []);
 
   return (
-    <div id='corbado-auth'>
-      <div className='container'>
-        <UserDataProvider>
-          <FlowHandlerProvider
-            onLoggedIn={onLoggedIn}
-            initialFlowType={FlowType.SignUp}
-          >
-            <ScreensFlow />
-          </FlowHandlerProvider>
-        </UserDataProvider>
-      </div>
+    <div className='cb-container'>
+      <UserDataProvider>
+        <FlowHandlerProvider
+          onLoggedIn={onLoggedIn}
+          initialFlowType={FlowType.SignUp}
+        >
+          <ScreensFlow />
+        </FlowHandlerProvider>
+      </UserDataProvider>
     </div>
   );
 };

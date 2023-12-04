@@ -1,7 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { LoginHandler } from '@corbado/web-core';
 import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
@@ -30,9 +30,9 @@ export const InitiateLogin = () => {
     void initAutocompletedLoginWithPasskey().then(lh => setLoginHandler(lh));
   }, []);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFormEmail(event.target.value);
-  };
+  }, []);
 
   const completeConditionalUI = async () => {
     if (conditionalUIStarted.current) {
@@ -49,9 +49,9 @@ export const InitiateLogin = () => {
     }
   };
 
-  const onFocusEmail = () => {
+  const onFocusEmail = useCallback(() => {
     void completeConditionalUI();
-  };
+  }, [loginHandler]);
 
   const login = async () => {
     try {
@@ -69,9 +69,7 @@ export const InitiateLogin = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = useCallback(() => {
     if (!emailRegex.test(formEmail)) {
       setErrorMessage(t('validationError_email'));
       return;
@@ -79,13 +77,13 @@ export const InitiateLogin = () => {
 
     setEmail(formEmail);
     void login();
-  };
+  }, [formEmail, t, setEmail, navigateNext, setErrorMessage]);
 
   return (
     <>
       <Header>{t('header')}</Header>
       <SubHeader>
-        {t('subheader')}
+        {t('subheader')}{' '}
         <span
           className='cb-link-secondary'
           onClick={() => changeFlow(FlowType.SignUp)}

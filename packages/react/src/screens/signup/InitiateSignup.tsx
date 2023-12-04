@@ -1,5 +1,6 @@
 import { FlowType } from '@corbado/web-core';
-import React, { useEffect } from 'react';
+import type { ChangeEvent } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
@@ -27,19 +28,19 @@ export const InitiateSignup = () => {
   const { navigateNext, changeFlow } = useFlowHandler();
   const { setEmail, email, setUserName, userName } = useUserData();
 
-  const [signupData, setSignupData] = React.useState<SignupForm>({
+  const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
   });
-  const [errorData, setErrorData] = React.useState<SignupForm>({
+  const [errorData, setErrorData] = useState<SignupForm>({
     ...defaultFormTemplate,
   });
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setSignupData(createFormTemplate(email, userName));
   }, []);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
@@ -56,9 +57,7 @@ export const InitiateSignup = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = useCallback(() => {
     const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
@@ -77,16 +76,16 @@ export const InitiateSignup = () => {
     setErrorData({ ...defaultFormTemplate });
 
     void handleSignup();
-  };
+  }, [signupData]);
 
   return (
     <>
       <Header>{t('header')}</Header>
       <SubHeader>
-        {t('subheader')}
+        {t('subheader')}{' '}
         <span
           className='cb-link-secondary'
-          onClick={() => changeFlow(FlowType.SignUp)}
+          onClick={() => changeFlow(FlowType.Login)}
         >
           {t('button_login')}
         </span>
@@ -94,7 +93,7 @@ export const InitiateSignup = () => {
       <AuthFormScreenWrapper
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
-        disableSubmitButton={!loading}
+        disableSubmitButton={loading}
       >
         <FormInput
           name='name'

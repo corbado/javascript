@@ -1,11 +1,11 @@
-import type { FC, FormEventHandler, ReactNode } from 'react';
+import type { FC, FormEvent, ReactNode } from 'react';
 import React from 'react';
 
 import type { CustomizableComponent } from '../types/common';
 import { Button } from './Button';
 
 export interface AuthFormScreenWrapperProps extends CustomizableComponent {
-  onSubmit: FormEventHandler<HTMLFormElement>;
+  onSubmit: () => void;
   submitButtonText: ReactNode;
   disableSubmitButton?: boolean;
 }
@@ -16,10 +16,15 @@ export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
   submitButtonText,
   disableSubmitButton,
 }) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    onSubmit();
+  };
   return (
     <form
       className='cb-form'
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className='cb-form-body'>{children}</div>
       <Button

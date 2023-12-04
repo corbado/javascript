@@ -110,7 +110,7 @@
 
 /********** Form **********/
 .cb-form {
-  margin: 2rem 0;
+  margin: 1rem 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -176,7 +176,7 @@
 
 .cb-form-input {
   position: relative;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   width: 100%;
 }
 
@@ -211,6 +211,8 @@
   color: #ffffff;
   background-color: #1953ff;
   border-radius: 1.5rem;
+  font-size: 1rem;
+  height: 2.5rem;
   transition:
     background-color 0.3s,
     color 0.3s;
@@ -225,6 +227,8 @@
   background-color: #ffffff;
   color: #59acff;
   border-radius: 1.5rem;
+  font-size: 1rem;
+  height: 2.5rem;
   transition:
     background-color 0.3s,
     color 0.3s;
@@ -243,7 +247,8 @@
   padding: 0;
   cursor: pointer;
   font-family: inherit;
-  font-size: inherit;
+  font-size: 1rem;
+  height: 2.5rem;
   box-shadow: none;
 }
 
@@ -414,6 +419,29 @@
   .cb-horizontal-divider:after {
     color: #555;
     background: #555;
+  }
+
+  .cb-input {
+    color: #e0e0e0;
+    caret-color: #e0e0e0;
+    border-color: #ffffff80;
+    -webkit-text-fill-color: #e0e0e0;
+  }
+
+  .cb-input[disabled] {
+    color: #e0e0e0;
+  }
+
+  .cb-input:-webkit-autofill,
+  .cb-input:-webkit-autofill:hover,
+  .cb-input:-webkit-autofill:focus,
+  .cb-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1e1e1e inset !important;
+    box-shadow: 0 0 0 1000px #1e1e1e inset;
+  }
+
+  .cb-input:-webkit-autofill {
+    -webkit-text-fill-color: #e0e0e0 !important;
   }
 
   .cb-form-input label {

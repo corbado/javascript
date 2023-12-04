@@ -18,7 +18,7 @@ const AuthPage = () => {
         fr: frenchTranslations,
         en: englishTranslations,
       }}
-      theme={CorbadoThemes.EmeraldFunk}
+      darkMode={false}
     />
   );
 };

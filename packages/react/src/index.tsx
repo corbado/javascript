@@ -66,7 +66,7 @@ const CorbadoAuthUI = ({
     }
 
     if (theme) {
-      document.body.classList.add('cb-green-theme');
+      document.body.classList.add(`cb-${theme}-theme`);
     }
 
     return () => {

@@ -12,8 +12,6 @@ const RoundedTextInput = ({ placeholder, onChange, onFocus }: Props) => {
   };
 
   const onFocusClick = () => {
-    console.log('onFocusClick', onFocus);
-
     if (!onFocus) {
       return;
     }

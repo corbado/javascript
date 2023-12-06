@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import FilledButton from '../components/buttons/FilledButton.tsx';
-import RoundedTextInput from '../components/inputs/RoundedTextInput.tsx';
-import { useNavigate } from 'react-router-dom';
+import FilledButton from '../buttons/FilledButton.tsx';
+import RoundedTextInput from '../inputs/RoundedTextInput.tsx';
+import useAuthUI from '../../hooks/useAuthUI.ts';
+import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 
-const InitiateSignupPage = () => {
+const InitiateSignup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const navigate = useNavigate();
+  const { switchScreen, setUserState } = useAuthUI();
 
   const submit = () => {
-    navigate('/signUpSelectMethod', { state: { email: email, username: username } });
+    setUserState({ email: email, username: username });
+    switchScreen(AuthScreenNames.SelectSignUpMethod);
   };
 
   return (
@@ -19,12 +21,12 @@ const InitiateSignupPage = () => {
         You already have an account?{' '}
         <span
           className='cursor-pointer'
-          onClick={() => navigate('/login')}
+          onClick={() => switchScreen(AuthScreenNames.Login)}
         >
           Log in
         </span>
       </p>
-      <div className='w-1/2'>
+      <div className='w-full'>
         <div className='grid gap-2'>
           <RoundedTextInput
             placeholder='Email'
@@ -44,4 +46,4 @@ const InitiateSignupPage = () => {
   );
 };
 
-export default InitiateSignupPage;
+export default InitiateSignup;

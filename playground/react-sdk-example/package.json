@@ -1,20 +1,22 @@
 {
-  "name": "react-sdk-example3",
+  "name": "react-sdk-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode=vercel",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
+    "@corbado/web-core": "file:.yalc/@corbado/web-core",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

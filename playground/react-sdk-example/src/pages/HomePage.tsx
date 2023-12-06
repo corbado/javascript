@@ -2,6 +2,7 @@ import { useCorbado } from '@corbado/react-sdk';
 import FilledButton from '../components/buttons/FilledButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import {withAuthRequired} from "../components/withAuthRequired.tsx";
 
 const HomePage = () => {
   const { shortSession, user, logout } = useCorbado();
@@ -26,8 +27,8 @@ const HomePage = () => {
         <FilledButton
           content='Logout'
           onClick={async () => {
-            await logout();
-            navigate('/');
+            logout();
+            navigate('/auth');
           }}
         />
       </div>
@@ -35,4 +36,6 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+const HomePageWithAuth = withAuthRequired(HomePage);
+
+export default HomePageWithAuth;

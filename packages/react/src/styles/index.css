@@ -6,7 +6,8 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgba(143, 155, 191, 0.5);
-  max-width: 30rem;
+  max-width: 25rem;
+  width: 25rem;
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
   margin-top: 5rem;

@@ -18,14 +18,13 @@ export const PasskeyError = () => {
   const body = useMemo(
     () => (
       <span>
-        {t('body_errorMessage1')}{' '}
+        {t('body_errorMessage1')}
         <span
           className='cb-link-primary'
           onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
-        {'. '}
         {t('body_errorMessage2')}
       </span>
     ),

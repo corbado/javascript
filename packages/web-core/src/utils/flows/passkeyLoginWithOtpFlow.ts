@@ -17,7 +17,11 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
         return PasskeyLoginWithEmailOtpFallbackScreens.End;
     }
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: async (flowOptions, _, eventOptions) => {
+  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: async (flowOptions, event, eventOptions) => {
+    if (event === FlowHandlerEvents.CancelOtp) {
+      return PasskeyLoginWithEmailOtpFallbackScreens.Start;
+    }
+
     const isPasskeySupported = await canUsePasskeys();
 
     if (flowOptions?.passkeyAppend && isPasskeySupported && !eventOptions?.userHasPasskey) {

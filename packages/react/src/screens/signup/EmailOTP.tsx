@@ -1,4 +1,4 @@
-import { useCorbado } from '@corbado/react-sdk';
+import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.emailOtp' });
-  const { navigateBack, navigateNext, currentFlow } = useFlowHandler();
+  const { navigateNext, currentFlow } = useFlowHandler();
   const { completeSignUpWithEmailOTP } = useCorbado();
   const { email, sendEmail } = useUserData();
 
@@ -21,7 +21,7 @@ export const EmailOTP = () => {
   const body = (
     <>
       {t('body_text1')}
-      <span className='cb-link-secondary'>{email}</span>
+      <span className='cb-text-secondary'>{email}</span>
       {t('body_text2')}
     </>
   );
@@ -29,7 +29,7 @@ export const EmailOTP = () => {
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => navigateBack(), []);
+  const handleCancel = useCallback(() => navigateNext(FlowHandlerEvents.CancelOtp), []);
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading, setError) => {

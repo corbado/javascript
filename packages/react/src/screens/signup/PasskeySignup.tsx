@@ -16,7 +16,7 @@ export const PasskeySignup = () => {
   const header = useMemo(
     () => (
       <span>
-        {t('header')}{' '}
+        {t('header')}
         <span
           className='cb-link-primary'
           onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
@@ -31,7 +31,7 @@ export const PasskeySignup = () => {
   const subHeader = useMemo(
     () => (
       <span>
-        {t('body')} <span className='cb-link-primary'>{email}</span>.
+        {t('body')} <span className='cb-text-secondary'>{email}</span>.
       </span>
     ),
     [t],

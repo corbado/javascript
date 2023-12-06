@@ -1,5 +1,5 @@
-import type { FC, ReactNode } from 'react';
-import { useCallback, useState } from 'react';
+import type { FC, FormEvent, ReactNode } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import React from 'react';
 
 import { Body } from './Body';
@@ -7,7 +7,7 @@ import { Button } from './Button';
 import { Header } from './Header';
 import { IconLink } from './IconLink';
 import { Gmail, Outlook, Yahoo } from './icons';
-import { OTPInput } from './OtpInput';
+import { OtpInputGroup } from './OtpInputGroup';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
@@ -33,26 +33,43 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
   onBackButtonClick,
 }) => {
   const [error, setError] = useState('');
-  const [otp, setOTP] = useState<string[]>([]);
+  const [otp, setOTP] = useState<string>('');
+  const [isOtpValid, setIsOtpValid] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleOtpChange = useCallback((userOTP: string[]) => setOTP(userOTP), [setOTP]);
+  const handleOtpChange = useCallback(
+    (userOtp: string[]) => {
+      const newOtp = userOtp.join('');
+      setOTP(newOtp);
 
-  const handleSubmit = () => {
-    const mergedChars = otp.join('');
+      const isValid = newOtp.length === 6;
+      setIsOtpValid(isValid);
 
-    if (mergedChars.length < 6) {
+      if (isValid) {
+        submitButtonRef.current?.focus();
+      }
+    },
+    [setOTP, setIsOtpValid],
+  );
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isOtpValid) {
       setError(validationError);
       return;
     }
 
     setError('');
 
-    void onVerificationButtonClick(mergedChars, setLoading, setError);
+    void onVerificationButtonClick(otp, setLoading, setError);
   };
 
   return (
-    <div className='cb-email-otp'>
+    <form
+      className='cb-email-otp'
+      onSubmit={handleSubmit}
+    >
       <Header>{header}</Header>
 
       <Body>{body}</Body>
@@ -75,16 +92,16 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
         />
       </div>
 
-      <OTPInput emittedOTP={handleOtpChange} />
+      <OtpInputGroup emittedOTP={handleOtpChange} />
 
       {error && <p className='cb-error'>{error}</p>}
 
       <Button
-        type='button'
-        onClick={handleSubmit}
+        type='submit'
+        ref={submitButtonRef}
         variant='primary'
         isLoading={loading}
-        disabled={loading}
+        disabled={!isOtpValid || loading}
       >
         {verificationButtonText}
       </Button>
@@ -97,6 +114,6 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
       >
         {backButtonText}
       </Button>
-    </div>
+    </form>
   );
 };

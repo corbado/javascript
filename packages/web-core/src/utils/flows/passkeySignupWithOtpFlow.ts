@@ -27,15 +27,20 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         return PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey;
     }
   },
-  [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: async flowOptions => {
-    if (flowOptions?.passkeyAppend) {
-      const isPasskeySupported = await canUsePasskeys();
-      return isPasskeySupported
-        ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend
-        : PasskeySignupWithEmailOtpFallbackScreens.End;
-    }
+  [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: async (flowOptions, event) => {
+    switch (event) {
+      case FlowHandlerEvents.CancelOtp:
+        return PasskeySignupWithEmailOtpFallbackScreens.Start;
+      default:
+        if (flowOptions?.passkeyAppend) {
+          const isPasskeySupported = await canUsePasskeys();
+          return isPasskeySupported
+            ? PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend
+            : PasskeySignupWithEmailOtpFallbackScreens.End;
+        }
 
-    return PasskeySignupWithEmailOtpFallbackScreens.End;
+        return PasskeySignupWithEmailOtpFallbackScreens.End;
+    }
   },
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend]: (flowOptions, event) => {
     switch (event) {
@@ -92,6 +97,8 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         }
 
         return PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
+      case FlowHandlerEvents.ShowBenefits:
+        return PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits;
       default:
         return PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome;
     }

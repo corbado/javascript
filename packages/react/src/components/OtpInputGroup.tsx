@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { notANumberRegex, numberRegex } from '../utils/validations';
 import { Input } from './Input';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   emittedOTP(otp: string[]): void;
 }
 
-export const OTPInput: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false }) => {
+export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false }) => {
   const [otp, setOtp] = useState(new Array(numberOfDigits).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
@@ -23,7 +24,7 @@ export const OTPInput: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = 
 
   const handleOtpChange = (element: HTMLInputElement, index: number) => {
     const value = element.value;
-    if (/^[^0-9]$/.test(value)) {
+    if (notANumberRegex.test(value)) {
       return;
     }
 
@@ -38,16 +39,12 @@ export const OTPInput: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = 
 
       if (newIndex + 1 < otp.length) {
         inputRefs.current[newIndex + 1].focus();
-      } else {
-        inputRefs.current[index].blur();
       }
     } else {
       setOtp(otp.map((d, idx) => (idx === index ? value : d)));
 
       if (newIndex < otp.length && value) {
         inputRefs.current[newIndex].focus();
-      } else {
-        inputRefs.current[index].blur();
       }
     }
   };
@@ -66,7 +63,7 @@ export const OTPInput: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
-    if (pasteData.every(d => /^[0-9]$/.test(d))) {
+    if (pasteData.every(d => numberRegex.test(d))) {
       setOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
       inputRefs.current[pasteData.length - 1].focus();
     }

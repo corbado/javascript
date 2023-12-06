@@ -68,11 +68,11 @@
   padding-left: 1.4rem;
 }
 
-.cb-primary-text {
+.cb-text-primary {
   color: #1953ff;
 }
 
-.cb-secondary-text {
+.cb-text-secondary {
   color: #59acff;
 }
 
@@ -377,15 +377,8 @@
   }
 
   .cb-link-icon {
-    display: flex;
-    gap: 0.5rem;
-    flex-direction: row;
-    align-items: center;
     justify-content: center;
     width: 100%;
-    height: 3rem;
-    border: 1px solid #d9d9d9;
-    border-radius: 9999px;
   }
 }
 
@@ -473,6 +466,15 @@
 
   .cb-button-tertiary {
     color: #4b8fff;
+  }
+
+  .cb-link-icon {
+    color: #e0e0e0;
+    caret-color: #e0e0e0;
+  }
+
+  .cb-link-icon:hover {
+    background-color: #242222;
   }
 
   .cb-finger-print-icon {

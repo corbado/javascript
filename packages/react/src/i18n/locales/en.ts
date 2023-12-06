@@ -1,16 +1,8 @@
 const en = {
-  common: {
-    passkeyPrompt: {
-      header: 'Log in even faster with',
-      button_showPasskeyBenefits: 'Passkeys',
-      button_start: 'Activate',
-      button_skip: 'Maybe later',
-    },
-  },
   signup: {
     start: {
       header: 'Create your account',
-      subheader: 'You already have an account?',
+      subheader: 'You already have an account? ',
       button_login: 'Log in',
       button_submit: 'Continue with email',
       textField_name: 'Name',
@@ -19,8 +11,8 @@ const en = {
       validationError_email: 'Please enter a valid email',
     },
     passkey: {
-      header: "Let's get you set up with",
-      body: "We'll create an account for",
+      header: "Let's get you set up with ",
+      body: "We'll create an account for ",
       button_showPasskeyBenefits: 'Passkeys',
       button_start: 'Create your account',
       button_emailOtp: 'Send email one time code',
@@ -37,20 +29,26 @@ const en = {
     passkeySuccess: {
       header: 'Welcome!',
       subheader: 'Passkey created',
-      body_text1: 'You can now confirm your identity using your',
+      body_text1: 'You can now confirm your identity using your ',
       body_text2: 'passkey or via email one time code',
-      body_text3: 'when you log in.',
+      body_text3: ' when you log in.',
       button: 'Continue',
     },
     passkeyError: {
       header: "Let's get you set up",
-      body_errorMessage1: 'Creating your account was not possible with',
+      body_errorMessage1: 'Creating your account was not possible with ',
       body_errorMessage2: '. Try again or sign up with email one time code.',
       button_showPasskeyBenefits: 'passkeys',
       button_retry: 'Try again',
       button_emailOtp: 'Send email one time code',
       button_back: 'Back',
       button_cancel: 'Cancel',
+    },
+    passkeyPrompt: {
+      header: 'Log in even faster with',
+      button_showPasskeyBenefits: 'Passkeys',
+      button_start: 'Activate',
+      button_skip: 'Maybe later',
     },
     emailOtp: {
       header: 'Enter code to create account',
@@ -65,7 +63,7 @@ const en = {
   login: {
     start: {
       header: 'Welcome back!',
-      subheader: "Don't have and account yet?",
+      subheader: "Don't have and account yet? ",
       button_signup: 'Create account',
       button_submit: 'Continue with email',
       textField_email: 'Email address',
@@ -87,6 +85,11 @@ const en = {
       button_verify: 'Continue',
       button_sendOtpAgain: 'Send one time code again',
       button_back: 'Cancel',
+    },
+    passkeyPrompt: {
+      header: 'Log in even faster with Passkeys',
+      button_start: 'Activate',
+      button_skip: 'Maybe later',
     },
   },
 };

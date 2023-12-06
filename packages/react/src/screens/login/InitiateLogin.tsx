@@ -83,7 +83,7 @@ export const InitiateLogin = () => {
     <>
       <Header>{t('header')}</Header>
       <SubHeader>
-        {t('subheader')}{' '}
+        {t('subheader')}
         <span
           className='cb-link-secondary'
           onClick={() => changeFlow(FlowType.SignUp)}

@@ -9,7 +9,7 @@ import FlowHandlerProvider from './contexts/FlowHandlerProvider';
 import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
-import type { CorbadoThemes } from './utils/themes';
+import { type CorbadoThemes, handleDarkMode, loadTheme } from './utils/themes';
 
 interface Props {
   // A callback function that is called when the user is logged in.
@@ -25,10 +25,7 @@ interface Props {
   customTranslations?: Record<string, object> | null;
 
   // A boolean indicating whether the app should be displayed in dark mode. This value is only used if autoDetectSystemTheme is disabled.
-  darkMode?: boolean;
-
-  // A boolean indicating whether the app's theme should be automatically set based on the system's theme. If this is enabled, the value of darkMode is ignored.
-  autoDetectSystemTheme?: boolean;
+  darkMode?: 'on' | 'off' | 'auto';
 
   // The theme to be used for the app. Corbado provides custom themes for the app.
   theme?: CorbadoThemes;
@@ -39,42 +36,15 @@ const CorbadoAuthUI = ({
   defaultLanguage = defaultAppLanguage,
   autoDetectLanguage = true,
   customTranslations = null,
-  darkMode = false,
-  autoDetectSystemTheme = false,
+  darkMode = 'auto',
   theme,
 }: Props) => {
   React.useEffect(() => {
-    let darkModeListener: ((e: MediaQueryListEvent) => void) | null = null;
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
+    const removeDarkModeListener = handleDarkMode(darkMode);
+    loadTheme(theme);
 
-    if (autoDetectSystemTheme) {
-      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-      darkModeListener = (e: MediaQueryListEvent) => {
-        if (e.matches) {
-          document.body.classList.add('dark');
-        } else {
-          document.body.classList.remove('dark');
-        }
-      };
-
-      darkModeMediaQuery.addEventListener('change', darkModeListener);
-    }
-
-    if (darkMode) {
-      document.body.classList.add('dark');
-    }
-
-    if (theme) {
-      document.body.classList.add(`cb-${theme}-theme`);
-    }
-
-    return () => {
-      if (autoDetectSystemTheme && darkModeListener) {
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        darkModeMediaQuery.removeEventListener('change', darkModeListener);
-      }
-    };
+    return removeDarkModeListener;
   }, []);
 
   return (

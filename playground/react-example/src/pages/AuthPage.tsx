@@ -18,7 +18,7 @@ const AuthPage = () => {
         fr: frenchTranslations,
         en: englishTranslations,
       }}
-      darkMode={false}
+      darkMode='on'
     />
   );
 };

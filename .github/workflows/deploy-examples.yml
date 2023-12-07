@@ -6,8 +6,8 @@ env:
 on:
   push:
     branches:
-      #- main
-      - 56-setup-deployment-to-vercel
+      - main
+      #- 56-setup-deployment-to-vercel
 
 jobs:
   deploy:

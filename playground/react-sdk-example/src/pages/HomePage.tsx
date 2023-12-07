@@ -2,7 +2,7 @@ import { useCorbado } from '@corbado/react-sdk';
 import FilledButton from '../components/buttons/FilledButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import {withAuthRequired} from "../components/withAuthRequired.tsx";
+import { withAuthRequired } from '../components/withAuthRequired.tsx';
 
 const HomePage = () => {
   const { shortSession, user, logout } = useCorbado();

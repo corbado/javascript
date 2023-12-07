@@ -1,8 +1,10 @@
+import { useCorbado } from '@corbado/react-sdk';
 import { FlowType } from '@corbado/web-core';
-import React, { useEffect } from 'react';
+import type { ChangeEvent } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Text } from '../../components';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 import { emailRegex } from '../../utils/validations';
@@ -26,44 +28,51 @@ export const InitiateSignup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.start' });
   const { navigateNext, changeFlow } = useFlowHandler();
   const { setEmail, email, setUserName, userName } = useUserData();
+  const { getUserAuthMethods } = useCorbado();
 
-  const [signupData, setSignupData] = React.useState<SignupForm>({
+  const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
   });
-  const [errorData, setErrorData] = React.useState<SignupForm>({
+  const [errorData, setErrorData] = useState<SignupForm>({
     ...defaultFormTemplate,
   });
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setSignupData(createFormTemplate(email, userName));
   }, []);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     setLoading(true);
     try {
+      const authMethods = await getUserAuthMethods(signupData.username);
+
+      if (authMethods) {
+        const errors: SignupForm = { ...defaultFormTemplate };
+        errors.username = t('validationError_emailExists');
+        setErrorData(errors);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
       setEmail(signupData.username);
       setUserName(signupData.name);
       void navigateNext();
-    } catch (error) {
-      console.log({ error });
-      setLoading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = useCallback(() => {
     const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
       errors.name = t('validationError_name');
     }
+
     if (!signupData.username || !emailRegex.test(signupData.username)) {
       errors.username = t('validationError_email');
     }
@@ -77,46 +86,40 @@ export const InitiateSignup = () => {
     setErrorData({ ...defaultFormTemplate });
 
     void handleSignup();
-  };
+  }, [signupData]);
 
   return (
     <>
-      <Text variant='header'>{t('header')}</Text>
-      <Text variant='sub-header'>
-        {t('subheader')}{' '}
+      <Header>{t('header')}</Header>
+      <SubHeader>
+        {t('subheader')}
         <span
-          className='link text-secondary-font-color'
+          className='cb-link-secondary'
           onClick={() => changeFlow(FlowType.Login)}
         >
           {t('button_login')}
-        </span>{' '}
-      </Text>
-      <div className='form-wrapper'>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-2'>
-            <LabelledInput
-              name='name'
-              label={t('textField_name')}
-              onChange={onChange}
-              value={signupData.name}
-              error={errorData.name}
-            />
-            <LabelledInput
-              name='username'
-              label={t('textField_email')}
-              onChange={onChange}
-              value={signupData.username}
-              error={errorData.username}
-            />
-          </div>
-          <Button
-            variant='primary'
-            isLoading={loading}
-          >
-            {t('button_submit')}
-          </Button>
-        </form>
-      </div>
+        </span>
+      </SubHeader>
+      <AuthFormScreenWrapper
+        onSubmit={handleSubmit}
+        submitButtonText={t('button_submit')}
+        disableSubmitButton={loading}
+      >
+        <FormInput
+          name='name'
+          label={t('textField_name')}
+          onChange={onChange}
+          value={signupData.name}
+          error={errorData.name}
+        />
+        <FormInput
+          name='username'
+          label={t('textField_email')}
+          onChange={onChange}
+          value={signupData.username}
+          error={errorData.username}
+        />
+      </AuthFormScreenWrapper>
     </>
   );
 };

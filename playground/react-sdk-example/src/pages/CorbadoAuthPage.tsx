@@ -6,7 +6,7 @@ import SelectSignupMethod from '../components/auth/SelectSignupMethod.tsx';
 import CompleteEmailOTP from '../components/auth/CompleteEmailOTP.tsx';
 import Login from '../components/auth/Login.tsx';
 import { useCorbado } from '@corbado/react-sdk';
-import {GlobalErrorScreen} from "../components/auth/GobalError.tsx";
+import { GlobalErrorScreen } from '../components/auth/GobalError.tsx';
 
 const screensMap = {
   [AuthScreenNames.InitiateSignUp]: InitiateSignup,
@@ -14,7 +14,6 @@ const screensMap = {
   [AuthScreenNames.CompleteEmailOTP]: CompleteEmailOTP,
   [AuthScreenNames.SelectSignUpMethod]: SelectSignupMethod,
 };
-
 
 const CorbadoAuthPage = () => {
   const { currentScreen } = useAuthUI();

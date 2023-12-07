@@ -1,10 +1,10 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { LoginHandler } from '@corbado/web-core';
 import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, LabelledInput, Text } from '../../components';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 import { emailRegex } from '../../utils/validations';
@@ -28,18 +28,18 @@ export const InitiateLogin = () => {
     initialized.current = true;
 
     void initAutocompletedLoginWithPasskey().then(lh => {
-        // for conditional UI we ignore errors and just skip that functionality to the user
-        if (lh.err) {
-            return;
-        }
+      // for conditional UI we ignore errors and just skip that functionality to the user
+      if (lh.err) {
+        return;
+      }
 
-        setLoginHandler(lh.val);
+      setLoginHandler(lh.val);
     });
   }, []);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFormEmail(event.target.value);
-  };
+  }, []);
 
   const completeConditionalUI = async () => {
     if (conditionalUIStarted.current) {
@@ -49,36 +49,49 @@ export const InitiateLogin = () => {
     conditionalUIStarted.current = true;
 
     try {
-      await loginHandler?.completionCallback();
+      const result = await loginHandler?.completionCallback();
+
+      if (result?.err) {
+        throw result.val;
+      }
+
       void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       //void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
 
-  const onFocusEmail = () => {
+  const onFocusEmail = useCallback(() => {
     void completeConditionalUI();
-  };
+  }, [loginHandler]);
 
   const login = async () => {
     try {
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
-        await loginWithPasskey(formEmail);
+        const result = await loginWithPasskey(formEmail);
+
+        if (result?.err) {
+          throw result.val.name;
+        }
+
         void navigateNext(FlowHandlerEvents.PasskeySuccess);
       }
 
       void navigateNext(FlowHandlerEvents.EmailOtp);
     } catch (e) {
-      //TODO: if the error is that passkey is not found, then navigate to email otp
+      console.log(e);
+      if (e === 'NoPasskeyAvailableError') {
+        void navigateNext(FlowHandlerEvents.EmailOtp);
+        return;
+      }
+
       void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | MouseEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = useCallback(() => {
     if (!emailRegex.test(formEmail)) {
       setErrorMessage(t('validationError_email'));
       return;
@@ -86,40 +99,34 @@ export const InitiateLogin = () => {
 
     setEmail(formEmail);
     void login();
-  };
+  }, [formEmail, t, setEmail, navigateNext, setErrorMessage]);
 
   return (
     <>
-      <Text variant='header'>{t('header')}</Text>
-      <Text variant='sub-header'>
-        {t('subheader')}{' '}
+      <Header>{t('header')}</Header>
+      <SubHeader>
+        {t('subheader')}
         <span
-          className='link text-secondary-font-color'
+          className='cb-link-secondary'
           onClick={() => changeFlow(FlowType.SignUp)}
         >
           {t('button_signup')}
-        </span>{' '}
-      </Text>
-      <div className='form-wrapper'>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
-            <LabelledInput
-              name='username'
-              label={t('textField_email')}
-              onChange={onChange}
-              onFocus={onFocusEmail}
-              value={formEmail}
-              error={errorMessage}
-            />
-          </div>
-          <Button
-            variant='primary'
-            disabled={!formEmail}
-          >
-            {t('button_submit')}
-          </Button>
-        </form>
-      </div>
+        </span>
+      </SubHeader>
+      <AuthFormScreenWrapper
+        onSubmit={handleSubmit}
+        submitButtonText={t('button_submit')}
+        disableSubmitButton={!formEmail}
+      >
+        <FormInput
+          name='username'
+          label={t('textField_email')}
+          onChange={onChange}
+          onFocus={onFocusEmail}
+          value={formEmail}
+          error={errorMessage}
+        />
+      </AuthFormScreenWrapper>
     </>
   );
 };

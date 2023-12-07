@@ -3,29 +3,16 @@ import { FlowHandlerEvents } from '@corbado/web-core';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType } from '../../components/PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from '../../components/PasskeyScreensWrapper';
+import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
+import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyAppend = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'common.passkeyPrompt' });
+  const { t } = useTranslation('translation', { keyPrefix: 'login.passkeyPrompt' });
   const { navigateNext } = useFlowHandler();
   const { appendPasskey } = useCorbado();
 
-  const header = useMemo(
-    () => (
-      <span>
-        {t('header')}{' '}
-        <span
-          className='link text-primary-color underline'
-          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
-        >
-          {t('button_showPasskeyBenefits')}
-        </span>
-      </span>
-    ),
-    [t],
-  );
+  const header = useMemo(() => t('header'), [t]);
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
@@ -52,7 +39,7 @@ export const PasskeyAppend = () => {
     [handleLater, handlePasskeyActivation],
   );
 
-  const props = useMemo(
+  const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
       primaryButton,

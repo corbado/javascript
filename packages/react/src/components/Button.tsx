@@ -1,4 +1,5 @@
-import React from 'react';
+import type { ButtonHTMLAttributes } from 'react';
+import React, { forwardRef } from 'react';
 
 import { Spinner } from './Spinner';
 
@@ -9,30 +10,25 @@ interface AdditionalProps {
 }
 
 const variants = {
-  primary: 'btn-primary',
-  secondary: 'btn-secondary',
-  tertiary: 'btn-tertiary',
+  primary: 'cb-button-primary',
+  secondary: 'cb-button-secondary',
+  tertiary: 'cb-button-tertiary',
 };
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & React.PropsWithChildren<AdditionalProps>;
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & AdditionalProps;
 
-export const Button: React.FunctionComponent<Props> = ({
-  variant = 'tertiary',
-  fullWidth = true,
-  isLoading = false,
-  className = '',
-  disabled,
-  children,
-  ...rest
-}) => {
-  const classes = `${variants[variant]} ${className} ${fullWidth ? 'w-full' : ''}`;
-  return (
-    <button
-      className={classes}
-      disabled={disabled}
-      {...rest}
-    >
-      {isLoading ? <Spinner /> : children}
-    </button>
-  );
-};
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = 'tertiary', fullWidth = true, isLoading = false, className = '', disabled, children, ...rest }, ref) => {
+    const classes = `${variants[variant]} ${className} ${fullWidth ? 'w-full' : ''}`;
+    return (
+      <button
+        className={classes}
+        disabled={disabled}
+        ref={ref}
+        {...rest}
+      >
+        {isLoading ? <Spinner /> : children}
+      </button>
+    );
+  },
+);

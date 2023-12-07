@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 
 import type { IFlowHandlerConfig } from '../types';
-import {defaultTimeout, NonRecoverableError} from '../utils';
+import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
 import { AuthService } from './AuthService';
 import type { FlowHandlerService } from './FlowHandlerService';

@@ -1,9 +1,9 @@
 import type { AxiosRequestConfig } from 'axios';
+import log from 'loglevel';
 
 import type { IFullUser, IUser } from '../types';
 import { ShortSession } from '../types';
 import type { ApiService } from './ApiService';
-import log from "loglevel";
 
 const shortSessionKey = 'cbo_short_session';
 const longSessionKey = 'cbo_long_session';

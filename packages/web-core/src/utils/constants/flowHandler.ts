@@ -50,4 +50,5 @@ export enum FlowHandlerEvents {
   PasskeyError = 'passkey-error',
   MaybeLater = 'maybe-later',
   CancelPasskey = 'cancel-passkey',
+  CancelOtp = 'cancel-otp',
 }

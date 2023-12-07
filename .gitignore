@@ -3,6 +3,7 @@ packages/*/node_modules/
 packages/*/dist/
 playground/*/node_modules/
 playground/*/yalc.lock
+playground/react-example-customised/
 dist
 
 .DS_Store

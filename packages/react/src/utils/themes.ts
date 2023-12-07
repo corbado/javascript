@@ -1,11 +1,14 @@
-export enum CorbadoThemes {
-  EmeraldFunk = 'emerald-funk',
-}
+import type { ICustomThemes } from '../types/themes';
 
-export const loadTheme = (theme: CorbadoThemes | undefined) => {
-  if (theme) {
-    document.body.classList.add(`cb-${theme}-theme`);
+const loadTheme = (theme: string | ICustomThemes, isDarkMode: boolean) => {
+  const classList = document.body.classList;
+  const newClass = typeof theme === 'string' ? theme : isDarkMode ? theme.dark : theme.light;
+
+  if (classList.contains(newClass)) {
+    classList.remove(newClass);
   }
+
+  classList.add(newClass);
 };
 
 const addDarkMode = () => {
@@ -20,7 +23,7 @@ const removeDarkMode = () => {
   document.body.classList.remove('dark');
 };
 
-const autoDetectSystemTheme = () => {
+const autoDetectSystemTheme = (customTheme?: string | ICustomThemes) => {
   const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const darkModeListener = (e: MediaQueryListEvent) => {
@@ -28,6 +31,10 @@ const autoDetectSystemTheme = () => {
       addDarkMode();
     } else {
       removeDarkMode();
+    }
+
+    if (customTheme) {
+      loadTheme(customTheme, e.matches);
     }
   };
 
@@ -39,22 +46,34 @@ const autoDetectSystemTheme = () => {
     removeDarkMode();
   }
 
+  if (customTheme) {
+    loadTheme(customTheme, darkModeMediaQuery.matches);
+  }
+
   return () => {
     darkModeMediaQuery.removeEventListener('change', darkModeListener);
   };
 };
 
-export const handleDarkMode = (darkMode: 'on' | 'off' | 'auto') => {
+export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: string | ICustomThemes) => {
   let removeDarkModeListener: (() => void) | undefined;
   switch (darkMode) {
     case 'on':
       addDarkMode();
+
+      if (customTheme) {
+        loadTheme(customTheme, true);
+      }
       break;
     case 'off':
       removeDarkMode();
+
+      if (customTheme) {
+        loadTheme(customTheme, false);
+      }
       break;
     case 'auto':
-      removeDarkModeListener = autoDetectSystemTheme();
+      removeDarkModeListener = autoDetectSystemTheme(customTheme);
       break;
     default:
       break;
@@ -66,3 +85,7 @@ export const handleDarkMode = (darkMode: 'on' | 'off' | 'auto') => {
     }
   };
 };
+
+export enum CorbadoThemes {
+  EmeraldFunk = 'cb-emerald-funk-theme',
+}

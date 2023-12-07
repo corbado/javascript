@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import type { CustomizableComponent } from '../types/common';
+import type { ICustomizableComponent } from '../types/common';
 
-export const HorizontalRule: FC<CustomizableComponent> = ({ children, className = '' }) => (
+export const HorizontalRule: FC<ICustomizableComponent> = ({ children, className = '' }) => (
   <div className={`cb-horizontal-divider ${className}`}>{children}</div>
 );

@@ -28,12 +28,12 @@ export const InitiateLogin = () => {
     initialized.current = true;
 
     void initAutocompletedLoginWithPasskey().then(lh => {
-        // for conditional UI we ignore errors and just skip that functionality to the user
-        if (lh.err) {
-            return;
-        }
+      // for conditional UI we ignore errors and just skip that functionality to the user
+      if (lh.err) {
+        return;
+      }
 
-        setLoginHandler(lh.val);
+      setLoginHandler(lh.val);
     });
   }, []);
 
@@ -49,7 +49,12 @@ export const InitiateLogin = () => {
     conditionalUIStarted.current = true;
 
     try {
-      await loginHandler?.completionCallback();
+      const result = await loginHandler?.completionCallback();
+
+      if (result?.err) {
+        throw result.val;
+      }
+
       void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       //void navigateNext(FlowHandlerEvents.PasskeyError);
@@ -65,13 +70,23 @@ export const InitiateLogin = () => {
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
-        await loginWithPasskey(formEmail);
+        const result = await loginWithPasskey(formEmail);
+
+        if (result?.err) {
+          throw result.val.name;
+        }
+
         void navigateNext(FlowHandlerEvents.PasskeySuccess);
       }
 
       void navigateNext(FlowHandlerEvents.EmailOtp);
     } catch (e) {
-      //TODO: if the error is that passkey is not found, then navigate to email otp
+      console.log(e);
+      if (e === 'NoPasskeyAvailableError') {
+        void navigateNext(FlowHandlerEvents.EmailOtp);
+        return;
+      }
+
       void navigateNext(FlowHandlerEvents.PasskeyError);
     }
   };

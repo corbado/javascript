@@ -9,6 +9,7 @@ const en = {
       textField_email: 'Email address',
       validationError_name: 'Please enter a name',
       validationError_email: 'Please enter a valid email',
+      validationError_emailExists: 'Email Address is already in use.',
     },
     passkey: {
       header: "Let's get you set up with ",
@@ -21,7 +22,7 @@ const en = {
     passkeyBenefits: {
       header: 'Passkeys',
       body_introduction:
-        "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using",
+        "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
       body_loginMethods: 'Face ID, Touch ID or screen lock code.',
       button_start: 'Create passkey',
       button_skip: 'Maybe later',
@@ -45,7 +46,7 @@ const en = {
       button_cancel: 'Cancel',
     },
     passkeyPrompt: {
-      header: 'Log in even faster with',
+      header: 'Log in even faster with ',
       button_showPasskeyBenefits: 'Passkeys',
       button_start: 'Activate',
       button_skip: 'Maybe later',

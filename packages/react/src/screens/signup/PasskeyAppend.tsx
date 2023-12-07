@@ -8,7 +8,7 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyAppend = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'common.passkeyPrompt' });
+  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyPrompt' });
   const { navigateNext } = useFlowHandler();
   const { appendPasskey } = useCorbado();
 

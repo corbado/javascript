@@ -1,3 +1,4 @@
+import { useCorbado } from '@corbado/react-sdk';
 import { FlowType } from '@corbado/web-core';
 import type { ChangeEvent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -27,6 +28,7 @@ export const InitiateSignup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.start' });
   const { navigateNext, changeFlow } = useFlowHandler();
   const { setEmail, email, setUserName, userName } = useUserData();
+  const { getUserAuthMethods } = useCorbado();
 
   const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
@@ -45,15 +47,22 @@ export const InitiateSignup = () => {
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     setLoading(true);
     try {
+      const authMethods = await getUserAuthMethods(signupData.username);
+
+      if (authMethods) {
+        const errors: SignupForm = { ...defaultFormTemplate };
+        errors.username = t('validationError_emailExists');
+        setErrorData(errors);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
       setEmail(signupData.username);
       setUserName(signupData.name);
       void navigateNext();
-    } catch (error) {
-      console.log({ error });
-      setLoading(false);
     }
   };
 
@@ -63,6 +72,7 @@ export const InitiateSignup = () => {
     if (!signupData.name) {
       errors.name = t('validationError_name');
     }
+
     if (!signupData.username || !emailRegex.test(signupData.username)) {
       errors.username = t('validationError_email');
     }

@@ -5,6 +5,7 @@
   "dependencies": {
     "@corbado/react": "file:.yalc/@corbado/react",
     "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
+    "@corbado/web-core": "file:.yalc/@corbado/web-core",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

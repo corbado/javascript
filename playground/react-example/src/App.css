@@ -1,33 +1,35 @@
-.cb-button-primary {
-  border: none;
-  color: #ffffff;
-  background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-  border-radius: 1.5rem;
-  font-size: 1rem;
-  height: 2.5rem;
-  position: relative;
-  overflow: hidden;
-  background-size: 300% 300%;
-  animation: moveGradient 4s ease infinite;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-}
-
-.cb-button-primary:hover,
-.cb-button-primary:focus {
-  background-position: 100% 0;
-  transition: background-position 2s; /* Slower transition */
-}
-
-@keyframes moveGradient {
-  0% {
-    background-position: 0% 50%;
+.corbado-custom-theme-test {
+  .cb-button-primary {
+    border: none;
+    color: #ffffff;
+    background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+    border-radius: 1.5rem;
+    font-size: 1rem;
+    height: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    background-size: 300% 300%;
+    animation: moveGradient 4s ease infinite;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
   }
-  50% {
-    background-position: 100% 50%;
+
+  .cb-button-primary:hover,
+  .cb-button-primary:focus {
+    background-position: 100% 0;
+    transition: background-position 2s;
   }
-  100% {
-    background-position: 0% 50%;
+
+  @keyframes moveGradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }

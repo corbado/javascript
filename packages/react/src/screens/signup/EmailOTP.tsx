@@ -14,7 +14,11 @@ export const EmailOTP = () => {
   const { email, sendEmail } = useUserData();
 
   React.useEffect(() => {
-    void sendEmail(currentFlow);
+    try {
+      void sendEmail(currentFlow);
+    } catch (error) {
+      void navigateNext(FlowHandlerEvents.CancelOtp);
+    }
   }, []);
 
   const header = t('header');

@@ -12,20 +12,7 @@ export const PasskeyAppend = () => {
   const { navigateNext } = useFlowHandler();
   const { appendPasskey } = useCorbado();
 
-  const header = useMemo(
-    () => (
-      <span>
-        {t('header')}
-        <span
-          className='cb-link-primary'
-          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
-        >
-          {t('button_showPasskeyBenefits')}
-        </span>
-      </span>
-    ),
-    [t],
-  );
+  const header = useMemo(() => t('header'), [t]);
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const secondaryButton = useMemo(() => t('button_skip'), [t]);

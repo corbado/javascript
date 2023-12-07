@@ -6,8 +6,8 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgba(143, 155, 191, 0.5);
-  max-width: 25rem;
-  width: 25rem;
+  max-width: 100%;
+  width: 30rem;
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
   margin-top: 5rem;
@@ -303,8 +303,8 @@
 
 .cb-email-otp .cb-body {
   margin-top: 0.5rem;
-  margin-left: 2.5rem;
-  margin-right: 2.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .cb-email-links {
@@ -319,17 +319,18 @@
   flex-direction: row;
   gap: 1rem;
   justify-content: center;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .cb-email-otp-input {
-  height: 5.2rem;
+  height: 4.5rem;
   border: 1px solid #d9d9d9;
   border-radius: 1.75rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   text-align: center;
   font-family: Inter, sans-serif;
+  padding: 0;
 }
 
 /********** Icons **********/
@@ -346,14 +347,14 @@
 
 .cb-link-icon {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.3rem;
   flex-direction: row;
   align-items: center;
   width: 29.875rem;
   height: 3rem;
   border: 1px solid #d9d9d9;
   border-radius: 9999px;
-  padding-left: 0.75rem;
+  padding-left: 0.6rem;
   text-decoration: none;
   color: #000;
   font-family: Inter, sans-serif;

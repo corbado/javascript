@@ -15,7 +15,9 @@ export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loadi
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
   useEffect(() => {
-    inputRefs.current[0].focus();
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -50,13 +52,27 @@ export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loadi
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace') {
-      if (otp[index]) {
-        setOtp(otp.map((val, idx) => (index === idx ? '' : val)));
-      } else if (index > 0) {
-        inputRefs.current[index - 1].focus();
-        setOtp(otp.map((val, idx) => (index - 1 === idx ? '' : val)));
-      }
+    switch (e.key) {
+      case 'ArrowLeft':
+        if (index > 0) {
+          inputRefs.current[index - 1].focus();
+        }
+        break;
+      case 'ArrowRight':
+        if (index < otp.length - 1) {
+          inputRefs.current[index + 1].focus();
+        }
+        break;
+      case 'Backspace':
+        if (otp[index]) {
+          setOtp(otp.map((d, idx) => (idx === index ? '' : d)));
+        } else if (index > 0) {
+          inputRefs.current[index - 1].focus();
+          setOtp(otp.map((d, idx) => (idx === index - 1 ? '' : d)));
+        }
+        break;
+      default:
+        break;
     }
   };
 

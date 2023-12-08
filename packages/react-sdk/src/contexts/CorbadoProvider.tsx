@@ -1,5 +1,6 @@
-import type { IUser, NonRecoverableError } from '@corbado/web-core';
+import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
+import type { SessionUser } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -9,7 +10,7 @@ import CorbadoContext from './CorbadoContext';
 export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoParams }) => {
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
   const [shortSession, setShortSession] = useState<string | undefined>();
-  const [user, setUser] = useState<IUser | undefined>();
+  const [user, setUser] = useState<SessionUser | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);

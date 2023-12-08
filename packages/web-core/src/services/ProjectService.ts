@@ -1,11 +1,12 @@
-import type { IProjectConfig } from '../types';
+import type { ProjectConfig } from '@corbado/types';
+
 import type { ApiService } from './ApiService';
 
 /**
  * ProjectService is responsible for managing the project configuration.
  */
 export class ProjectService {
-  #projConfig: IProjectConfig | null = null;
+  #projConfig: ProjectConfig | null = null;
   #apiService: ApiService;
 
   /**

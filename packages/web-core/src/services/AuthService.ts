@@ -1,11 +1,13 @@
+import type { SessionUser, UserAuthMethods } from '@corbado/types';
+import { AuthState } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
-import type { AuthenticationResponse } from '../internaltypes/auth';
-import type { IUser, ShortSession, UserAuthMethodsInterface } from '../types';
-import { AuthState, LoginHandler } from '../types';
+import type { AuthenticationResponse } from '../models/auth';
+import { LoginHandler } from '../models/loginHandler';
+import type { ShortSession } from '../models/session';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
@@ -37,7 +39,7 @@ export class AuthService {
   // TODO: remove this?
   #emailCodeIdRef = '';
 
-  #userChanges: Subject<IUser | undefined> = new Subject();
+  #userChanges: Subject<SessionUser | undefined> = new Subject();
   #shortSessionChanges: Subject<string | undefined> = new Subject();
   #authStateChanges: Subject<AuthState> = new Subject();
 
@@ -264,7 +266,7 @@ export class AuthService {
       username: email,
     });
 
-    const result: UserAuthMethodsInterface = resp.data.data;
+    const result: UserAuthMethods = resp.data.data;
 
     return result;
   }

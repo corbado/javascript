@@ -1,11 +1,6 @@
-import type {
-  Flow,
-  FlowHandlerEventOptionsInterface,
-  FlowNames,
-  IFlowHandlerConfig,
-  IProjectConfig,
-  ScreenNames,
-} from '../types';
+import type { ProjectConfig } from '@corbado/types';
+
+import type { Flow, FlowHandlerEventOptionsInterface, FlowNames, IFlowHandlerConfig, ScreenNames } from '../types';
 import { FlowType } from '../types';
 import type { FlowHandlerEvents } from '../utils';
 import { CommonScreens, flows, LoginFlowNames, SignUpFlowNames } from '../utils';
@@ -22,7 +17,7 @@ export class FlowHandlerService {
   #flowName!: FlowNames;
 
   // @ts-ignore
-  #projectConfig: IProjectConfig | undefined;
+  #projectConfig: ProjectConfig | undefined;
   #flowHandlerConfig: IFlowHandlerConfig;
 
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
@@ -32,7 +27,7 @@ export class FlowHandlerService {
    * The constructor initializes the FlowHandlerService with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: IProjectConfig, flowHandlerConfig: IFlowHandlerConfig) {
+  constructor(projectConfig: ProjectConfig, flowHandlerConfig: IFlowHandlerConfig) {
     this.#flowHandlerConfig = flowHandlerConfig;
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;

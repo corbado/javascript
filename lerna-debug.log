@@ -2,18 +2,18 @@
 0 silly argv   _: [ 'create' ],
 0 silly argv   lernaVersion: '7.4.1',
 0 silly argv   '$0': 'C:\\Program Files\\nodejs\\node_modules\\lerna\\dist\\cli.js',
-0 silly argv   name: '@corbado/web-core'
+0 silly argv   name: '@corbado/types'
 0 silly argv }
 1 notice cli v7.4.1
 2 verbose packageConfigs Resolving packages based on package.json "workspaces" configuration.
 3 verbose rootPath C:\Users\abdul\Documents\Github\javascript
-4 error Error: canceled
-4 error     at Interface.<anonymous> (C:\Users\abdul\Documents\Github\javascript\node_modules\read\lib\read.js:79:15)
-4 error     at Interface.emit (node:events:513:28)
-4 error     at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1130:18)
-4 error     at ReadStream.onkeypress (node:internal/readline/interface:270:20)
-4 error     at ReadStream.emit (node:events:513:28)
-4 error     at emitKeys (node:internal/readline/utils:357:14)
-4 error     at emitKeys.next (<anonymous>)
-4 error     at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
-4 error     at ReadStream.emit (node:events:513:28)
+4 error Error: ENOENT: no such file or directory, chdir 'C:\Users\abdul\Documents\Github\javascript' -> 'C:\Users\abdul\Documents\Github\javascript\packages\types'
+4 error     at process.wrappedChdir (node:internal/bootstrap/switches/does_own_process_state:112:14)
+4 error     at process.chdir (C:\Users\abdul\Documents\Github\javascript\node_modules\graceful-fs\polyfills.js:22:11)
+4 error     at process.chdir (node:internal/worker:99:5)
+4 error     at resolveCommandAttempt (C:\Users\abdul\Documents\Github\javascript\node_modules\cross-spawn\lib\util\resolveCommand.js:35:21)
+4 error     at resolveCommand (C:\Users\abdul\Documents\Github\javascript\node_modules\cross-spawn\lib\util\resolveCommand.js:49:12)
+4 error     at detectShebang (C:\Users\abdul\Documents\Github\javascript\node_modules\cross-spawn\lib\parse.js:13:19)
+4 error     at parseNonShell (C:\Users\abdul\Documents\Github\javascript\node_modules\cross-spawn\lib\parse.js:33:25)
+4 error     at Function.parse [as _parse] (C:\Users\abdul\Documents\Github\javascript\node_modules\cross-spawn\lib\parse.js:88:37)
+4 error     at handleArguments (C:\Users\abdul\Documents\Github\javascript\node_modules\execa\index.js:28:28)

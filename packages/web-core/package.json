@@ -34,5 +34,8 @@
     "loglevel": "^1.8.1",
     "rxjs": "^7.8.1",
     "ts-results": "^3.3.0"
+  },
+  "devDependencies": {
+    "@corbado/types": "^0.1.0"
   }
 }

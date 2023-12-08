@@ -1,6 +1,6 @@
-import type { ICustomThemes } from '../types/themes';
+import type { CustomThemes } from '@corbado/types';
 
-const loadTheme = (theme: string | ICustomThemes, isDarkMode: boolean) => {
+const loadTheme = (theme: string | CustomThemes, isDarkMode: boolean) => {
   const classList = document.body.classList;
   const newClass = typeof theme === 'string' ? theme : isDarkMode ? theme.dark : theme.light;
 
@@ -23,7 +23,7 @@ const removeDarkMode = () => {
   document.body.classList.remove('dark');
 };
 
-const autoDetectSystemTheme = (customTheme?: string | ICustomThemes) => {
+const autoDetectSystemTheme = (customTheme?: string | CustomThemes) => {
   const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const darkModeListener = (e: MediaQueryListEvent) => {
@@ -55,7 +55,7 @@ const autoDetectSystemTheme = (customTheme?: string | ICustomThemes) => {
   };
 };
 
-export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: string | ICustomThemes) => {
+export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: string | CustomThemes) => {
   let removeDarkModeListener: (() => void) | undefined;
   switch (darkMode) {
     case 'on':

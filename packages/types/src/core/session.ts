@@ -1,18 +1,7 @@
 /**
- * Enumeration of possible statuses.
- * @readonly
- * @enum {string}
- */
-export const StatusEnum = {
-  Active: 'active', // Represents an active status
-  Pending: 'pending', // Represents a pending status
-  Deleted: 'deleted', // Represents a deleted status
-} as const; // Ensures that the properties of Status are readonly and their values are literal types.
-
-/**
  * Type representing the allowed values of the Status enumeration.
  */
-export type Status = (typeof StatusEnum)[keyof typeof StatusEnum]; // Type derived from the values of the Status object.
+export type Status = 'active' | 'pending' | 'deleted'; // Type derived from the values of the Status object.
 
 /**
  * Represents a user from JWT token.

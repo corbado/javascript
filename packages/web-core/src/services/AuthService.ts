@@ -1,5 +1,4 @@
 import type { SessionUser, UserAuthMethods } from '@corbado/types';
-import { AuthState } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
@@ -18,6 +17,7 @@ import type {
   LoginWithPasskeyError,
   SignUpWithPasskeyError,
 } from '../utils';
+import { AuthState } from '../utils/constants/auth';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
 import type { WebAuthnService } from './WebAuthnService';

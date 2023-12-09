@@ -1,6 +1,6 @@
-import type { Flow } from '../../types';
+import { canUsePasskeys } from '../../utils/webAuthUtils';
 import { FlowHandlerEvents, PasskeySignupWithEmailOtpFallbackScreens } from '../constants';
-import { canUsePasskeys } from '../helpers/webAuthUtils';
+import type { Flow } from '../types';
 
 export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   [PasskeySignupWithEmailOtpFallbackScreens.Start]: async () => {

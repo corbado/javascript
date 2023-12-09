@@ -44,9 +44,9 @@
   },
   "scripts": {
     "clean": "rimraf dist",
+    "lint": "eslint src --ext .ts --fix",
     "build": "npm run clean && tsc --build tsconfig.json",
-    "publish:local": "yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build && npm run publish:local"
+    "build_and_publish:local": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

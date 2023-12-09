@@ -1,4 +1,5 @@
-import { FlowHandlerEvents, useCorbado } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react-sdk';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

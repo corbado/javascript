@@ -1,4 +1,4 @@
-import { PasskeySignupWithEmailOtpFallbackScreens } from '@corbado/web-core';
+import { PasskeySignupWithEmailOtpFallbackScreens } from '@corbado/shared-ui';
 
 import { EmailOTP } from '../screens/signup/EmailOTP';
 import { InitiateSignup } from '../screens/signup/InitiateSignup';

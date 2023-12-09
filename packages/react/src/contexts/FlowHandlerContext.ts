@@ -4,8 +4,8 @@ import type {
   FlowNames,
   FlowType,
   ScreenNames,
-} from '@corbado/web-core';
-import { CommonScreens, LoginFlowNames } from '@corbado/web-core';
+} from '@corbado/shared-ui';
+import { CommonScreens, LoginFlowNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextInterface {

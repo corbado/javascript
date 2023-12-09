@@ -5,8 +5,8 @@ import type {
   FlowNames,
   IFlowHandlerConfig,
   ScreenNames,
-} from '@corbado/web-core';
-import { CommonScreens, FlowHandlerService, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/web-core';
+} from '@corbado/shared-ui';
+import { CommonScreens, FlowHandler, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -17,7 +17,7 @@ type Props = IFlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
   const { getProjectConfig } = useCorbado();
-  const [flowHandlerService, setFlowHandlerService] = useState<FlowHandlerService>();
+  const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(
     props.initialFlowType === FlowType.Login
@@ -36,45 +36,45 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
 
     void (async () => {
       const projectConfig = await getProjectConfig();
-      const flowHandlerService = new FlowHandlerService(projectConfig, props);
+      const flowHandler = new FlowHandler(projectConfig, props);
 
-      onScreenChangeCbId.current = flowHandlerService.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandlerService.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
+      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
 
-      flowHandlerService.init();
+      flowHandler.init();
 
-      setFlowHandlerService(flowHandlerService);
+      setFlowHandler(flowHandler);
 
       return () => {
-        flowHandlerService?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-        flowHandlerService?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
+        flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
+        flowHandler?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
       };
     })();
   }, []);
 
   const navigateNext = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
-      return flowHandlerService?.navigateNext(event, eventOptions) ?? CommonScreens.End;
+      return flowHandler?.navigateNext(event, eventOptions) ?? CommonScreens.End;
     },
-    [flowHandlerService],
+    [flowHandler],
   );
 
   const peekNext = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
-      return flowHandlerService?.peekNextScreen(event, eventOptions) ?? CommonScreens.End;
+      return flowHandler?.peekNextScreen(event, eventOptions) ?? CommonScreens.End;
     },
-    [flowHandlerService],
+    [flowHandler],
   );
 
   const navigateBack = useCallback(() => {
-    return flowHandlerService?.navigateBack() ?? CommonScreens.Start;
-  }, [flowHandlerService]);
+    return flowHandler?.navigateBack() ?? CommonScreens.Start;
+  }, [flowHandler]);
 
   const changeFlow = useCallback(
     (flowType: FlowType) => {
-      flowHandlerService?.changeFlow(flowType);
+      flowHandler?.changeFlow(flowType);
     },
-    [flowHandlerService],
+    [flowHandler],
   );
 
   const contextValue = useMemo<FlowHandlerContextInterface>(

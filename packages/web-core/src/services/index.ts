@@ -1,10 +1,8 @@
 import { Subject } from 'rxjs';
 
-import type { IFlowHandlerConfig } from '../types';
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
 import { AuthService } from './AuthService';
-import type { FlowHandlerService } from './FlowHandlerService';
 import { ProjectService } from './ProjectService';
 import { SessionService } from './SessionService';
 import { WebAuthnService } from './WebAuthnService';
@@ -12,9 +10,8 @@ import { WebAuthnService } from './WebAuthnService';
 export type { ProjectService } from './ProjectService';
 export type { AuthService } from './AuthService';
 export type { SessionService } from './SessionService';
-export { FlowHandlerService } from './FlowHandlerService';
 
-export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
+export interface ICorbadoAppParams {
   projectId: string;
   apiTimeout?: number;
 }
@@ -26,7 +23,6 @@ export interface ICorbadoAppParams extends Partial<IFlowHandlerConfig> {
  */
 export class CorbadoApp {
   #apiService: ApiService;
-  #flowHandlerService: FlowHandlerService | null = null;
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
@@ -49,10 +45,6 @@ export class CorbadoApp {
     return this.#apiService;
   }
 
-  public get flowHandlerService() {
-    return this.#flowHandlerService;
-  }
-
   public get authService() {
     return this.#authService;
   }
@@ -67,7 +59,7 @@ export class CorbadoApp {
 
   /**
    * Method to initialize the application.
-   * It fetches the project configuration and sets up the flow handler service.
+   * It fetches the project configuration and initializes the services.
    */
   public init() {
     if (!this.#validateProjectId(this.#projectId)) {

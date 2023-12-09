@@ -1,17 +1,13 @@
 import './i18n';
-import './styles/index.css';
-import './styles/themes/emerald-funk.css';
-import './styles/themes/dark.css';
 
+import { FlowType, handleTheming } from '@corbado/shared-ui';
 import type { CorbadoAuthUIProps } from '@corbado/types';
-import { FlowType } from '@corbado/web-core';
 import React from 'react';
 
 import FlowHandlerProvider from './contexts/FlowHandlerProvider';
 import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
-import { handleTheming } from './utils/themes';
 
 const CorbadoAuthUI = ({
   onLoggedIn,

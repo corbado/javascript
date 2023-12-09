@@ -2,16 +2,12 @@ import type {
   CommonScreens,
   EmailOtpSignupScreens,
   FlowHandlerEvents,
+  FlowType,
   LoginFlowNames,
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
   SignUpFlowNames,
-} from '../utils';
-
-export enum FlowType {
-  SignUp,
-  Login,
-}
+} from './constants';
 
 /**
  * Configuration settings for handling different authentication flows.

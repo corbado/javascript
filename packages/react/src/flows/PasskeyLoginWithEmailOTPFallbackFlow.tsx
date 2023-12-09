@@ -1,4 +1,4 @@
-import { PasskeyLoginWithEmailOtpFallbackScreens } from '@corbado/web-core';
+import { PasskeyLoginWithEmailOtpFallbackScreens } from '@corbado/shared-ui';
 
 import { EmailOTP } from '../screens/login/EmailOTP';
 import { InitiateLogin } from '../screens/login/InitiateLogin';

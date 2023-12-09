@@ -1,4 +1,4 @@
-import type { FlowNames } from '@corbado/web-core';
+import type { FlowNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface UserDataContextInterface {

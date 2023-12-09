@@ -1,16 +1,16 @@
 import type { ProjectConfig } from '@corbado/types';
 
-import type { Flow, FlowHandlerEventOptionsInterface, FlowNames, IFlowHandlerConfig, ScreenNames } from '../types';
-import { FlowType } from '../types';
-import type { FlowHandlerEvents } from '../utils';
-import { CommonScreens, flows, LoginFlowNames, SignUpFlowNames } from '../utils';
+import type { FlowHandlerEvents } from './constants';
+import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
+import { flows } from './flows';
+import type { Flow, FlowHandlerEventOptionsInterface, FlowNames, IFlowHandlerConfig, ScreenNames } from './types';
 
 /**
- * FlowHandlerService is a class that manages the navigation flow of the application.
+ * FlowHandler is a class that manages the navigation flow of the application.
  * It keeps track of the current flow, the current screen, and the screen history.
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
-export class FlowHandlerService {
+export class FlowHandler {
   #currentFlow!: Flow;
   #currentScreen: ScreenNames;
   #screenHistory: ScreenNames[];
@@ -24,7 +24,7 @@ export class FlowHandlerService {
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
 
   /**
-   * The constructor initializes the FlowHandlerService with a flow name, a project configuration, and a flow handler configuration.
+   * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
   constructor(projectConfig: ProjectConfig, flowHandlerConfig: IFlowHandlerConfig) {
@@ -35,7 +35,7 @@ export class FlowHandlerService {
   }
 
   /**
-   * Initializes the FlowHandlerService.
+   * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
   init() {

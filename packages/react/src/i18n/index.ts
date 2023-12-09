@@ -1,9 +1,7 @@
+import { i18n as i18nTranslations } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
-
-import TRANSLATIONS_DE from './locales/de';
-import TRANSLATIONS_EN from './locales/en';
 
 export const defaultLanguage = 'en';
 
@@ -12,8 +10,8 @@ void i18n
   .use(LanguageDetector)
   .init({
     resources: {
-      en: { translation: TRANSLATIONS_EN },
-      de: { translation: TRANSLATIONS_DE },
+      en: { translation: i18nTranslations.en },
+      de: { translation: i18nTranslations.de },
     },
     keySeparator: '.',
     fallbackLng: defaultLanguage,

@@ -1,5 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowType } from '@corbado/web-core';
+import { emailRegex, FlowType } from '@corbado/shared-ui';
 import type { ChangeEvent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
-import { emailRegex } from '../../utils/validations';
 
 interface SignupForm {
   name: string;

@@ -1,3 +1,4 @@
+import type { ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
@@ -11,7 +12,6 @@ import type {
   NonRecoverableError,
   SignUpWithPasskeyError,
 } from '@corbado/web-core';
-import type { ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
 

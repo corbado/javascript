@@ -19,8 +19,7 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "copy:assets": "cp -R ./src/assets ./dist && cp -R ./src/styles ./dist",
-    "build": "npm run clean && tsc && npm run copy:assets",
+    "build": "npm run clean && tsc",
     "publish:local": "npx yalc push --replace  --sig",
     "build_and_publish:local": "npm run build && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"
@@ -30,7 +29,7 @@
   },
   "dependencies": {
     "@corbado/react-sdk": "^0.1.6",
-    "@corbado/web-core": "^0.1.6",
+    "@corbado/shared-ui": "^0.1.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "react-i18next": "13.2.2"
@@ -38,6 +37,7 @@
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@corbado/types": "^0.1.0",
+    "@corbado/web-core": "^0.1.6",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },

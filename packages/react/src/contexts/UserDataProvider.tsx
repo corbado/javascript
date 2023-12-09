@@ -1,5 +1,6 @@
-import { LoginFlowNames, SignUpFlowNames, useCorbado } from '@corbado/react-sdk';
-import type { FlowNames } from '@corbado/web-core';
+import { useCorbado } from '@corbado/react-sdk';
+import type { FlowNames } from '@corbado/shared-ui';
+import { LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 

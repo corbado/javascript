@@ -19,9 +19,10 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc",
-    "publish:local": "npx yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build && npm run publish:local",
+    "build": "webpack --config webpack.prod.js",
+    "build:local": "npm run clean && tsc",
+    "publish:local": "yalc push --replace  --sig",
+    "build_and_publish:local": "npm run build:local && npm run publish:local",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {

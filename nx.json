@@ -11,6 +11,9 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "build:local": {
+      "dependsOn": ["^build:local"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

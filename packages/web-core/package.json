@@ -6,7 +6,11 @@
   "homepage": "https://github.com/corbado/javascript#readme",
   "license": "ISC",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "directories": {
     "lib": "src"
   },
@@ -21,9 +25,10 @@
     "clean": "rimraf ./dist",
     "lint": "eslint src --ext .ts --fix",
     "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true",
-    "build": "npm run clean && tsc",
+    "build": "webpack --config webpack.prod.js",
+    "build:local": "npm run clean && tsc",
     "publish:local": "yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build && npm run publish:local"
+    "build_and_publish:local": "npm run build:local && npm run publish:local"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

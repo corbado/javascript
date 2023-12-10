@@ -25,6 +25,7 @@
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.10.0",
     "yalc": "^1.0.0-pre.53"
   }
 }

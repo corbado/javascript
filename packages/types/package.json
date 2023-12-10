@@ -45,7 +45,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src --ext .ts --fix",
-    "build": "npm run clean && tsc --build tsconfig.json",
+    "build": "npm run clean && tsc",
+    "build:local": "npm run build",
     "build_and_publish:local": "npm run build"
   },
   "bugs": {

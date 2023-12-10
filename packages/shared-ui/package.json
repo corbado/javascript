@@ -22,10 +22,9 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "build:prod": "webpack --mode production",
-    "build": "cross-env NODE_ENV=development webpack",
-    "build:local": "cross-env NODE_ENV=development webpack serve --open",
-    "build_and_publish:local": "npm run build",
+    "build": "webpack --config webpack.prod.js",
+    "build:local": "webpack --config webpack.dev.js",
+    "build_and_publish:local": "npm run build:local",
     "clean": "rimraf ./dist",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
@@ -39,6 +38,11 @@
     "image-webpack-loader": "^8.1.0",
     "style-loader": "^3.3.3",
     "svgo-loader": "^4.0.0",
-    "url-loader": "^4.1.1"
-  }
+    "url-loader": "^4.1.1",
+    "@corbado/types": "^0.1.0"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.json"
+  ]
 }

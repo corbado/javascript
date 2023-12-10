@@ -7,8 +7,8 @@
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": ["es6", "DOM"],
-    "module": "ES2020",
+    "lib": ["ESNext", "DOM"],
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noEmitHelpers": true,
     "noFallthroughCasesInSwitch": true,
@@ -18,11 +18,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
     "target": "ES2019",
     "noErrorTruncation": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "dist"],
   "include": ["packages/**/*"]

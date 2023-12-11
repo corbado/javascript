@@ -7,10 +7,13 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: {
-      name: 'CorbadoReactSDK',
+      name: '@corbado/react-sdk',
       type: 'umd',
     },
   },
   devtool: 'source-map',
   mode: 'production',
+  externals: {
+    '@corbado/web-core': '@corbado/web-core',
+  },
 });

@@ -7,7 +7,7 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: {
-      name: 'CorbadoWebCore',
+      name: '@corbado/web-core',
       type: 'umd',
     },
   },

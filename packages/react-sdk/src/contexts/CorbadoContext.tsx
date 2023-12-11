@@ -57,6 +57,4 @@ export const initialContext = {
   getProjectConfig: missingImplementation,
 };
 
-const CorbadoContext = createContext<CorbadoContextInterface>(initialContext);
-
-export default CorbadoContext;
+export const CorbadoContext = createContext<CorbadoContextInterface>(initialContext);

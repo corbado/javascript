@@ -5,7 +5,7 @@ import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { CorbadoContextInterface, IAppProviderParams } from './CorbadoContext';
-import CorbadoContext from './CorbadoContext';
+import { CorbadoContext } from './CorbadoContext';
 
 export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoParams }) => {
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
@@ -149,5 +149,3 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
 
   return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>;
 };
-
-export default CorbadoProvider;

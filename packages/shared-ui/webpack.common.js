@@ -7,7 +7,7 @@ module.exports = merge(common, {
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: {
-      name: 'CorbadoSharedUI',
+      name: '@corbado/shared-ui',
       type: 'umd',
     },
   },

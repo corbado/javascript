@@ -36,9 +36,10 @@
     "react-i18next": "13.2.2"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
     "@corbado/types": "^0.1.0",
     "@corbado/web-core": "^0.1.6",
+    "@types/react": "^18.2.0",
+    "file-loader": "^6.2.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },

@@ -17,6 +17,7 @@ module.exports = merge(common, {
     '@corbado/react-sdk': '@corbado/react-sdk',
     '@corbado/shared-ui': '@corbado/shared-ui',
     '@corbado/web-core': '@corbado/web-core',
+    react: 'react',
   },
   module: {
     rules: [

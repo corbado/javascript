@@ -1,19 +1,19 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type {
-  FlowHandlerEventOptionsInterface,
+  FlowHandlerConfig,
+  FlowHandlerEventOptions,
   FlowHandlerEvents,
   FlowNames,
-  IFlowHandlerConfig,
   ScreenNames,
 } from '@corbado/shared-ui';
 import { CommonScreens, FlowHandler, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { FlowHandlerContextInterface } from './FlowHandlerContext';
+import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 
-type Props = IFlowHandlerConfig;
+type Props = FlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
   const { getProjectConfig } = useCorbado();
@@ -53,14 +53,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   }, []);
 
   const navigateNext = useCallback(
-    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
+    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
       return flowHandler?.navigateNext(event, eventOptions) ?? CommonScreens.End;
     },
     [flowHandler],
   );
 
   const peekNext = useCallback(
-    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) => {
+    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
       return flowHandler?.peekNextScreen(event, eventOptions) ?? CommonScreens.End;
     },
     [flowHandler],
@@ -77,7 +77,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     [flowHandler],
   );
 
-  const contextValue = useMemo<FlowHandlerContextInterface>(
+  const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
       currentFlow,
       currentScreen,

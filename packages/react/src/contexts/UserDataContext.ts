@@ -1,7 +1,7 @@
 import type { FlowNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
-export interface UserDataContextInterface {
+export interface UserDataContextProps {
   email: string | undefined;
   userName: string | undefined;
   setEmail: (value: string) => void;
@@ -21,6 +21,4 @@ export const initialContext = {
   sendEmail: missingImplementation,
 };
 
-const UserDataContext = createContext<UserDataContextInterface>(initialContext);
-
-export default UserDataContext;
+export const UserDataContext = createContext<UserDataContextProps>(initialContext);

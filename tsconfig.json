@@ -18,7 +18,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
-    "sourceMap": true,
     "strict": true,
     "target": "ES2019",
     "noErrorTruncation": true,

@@ -1,2 +1,2 @@
 export { CorbadoProvider } from './CorbadoProvider';
-export { CorbadoContext, CorbadoContextInterface } from './CorbadoContext';
+export { CorbadoContext, CorbadoContextProps } from './CorbadoContext';

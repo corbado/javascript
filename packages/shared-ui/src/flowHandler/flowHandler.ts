@@ -3,7 +3,7 @@ import type { ProjectConfig } from '@corbado/types';
 import type { FlowHandlerEvents } from './constants';
 import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
 import { flows } from './flows';
-import type { Flow, FlowHandlerEventOptionsInterface, FlowNames, IFlowHandlerConfig, ScreenNames } from './types';
+import type { Flow, FlowHandlerConfig, FlowHandlerEventOptions, FlowNames, ScreenNames } from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -18,7 +18,7 @@ export class FlowHandler {
 
   // @ts-ignore
   #projectConfig: ProjectConfig | undefined;
-  #flowHandlerConfig: IFlowHandlerConfig;
+  #flowHandlerConfig: FlowHandlerConfig;
 
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
@@ -27,7 +27,7 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: ProjectConfig, flowHandlerConfig: IFlowHandlerConfig) {
+  constructor(projectConfig: ProjectConfig, flowHandlerConfig: FlowHandlerConfig) {
     this.#flowHandlerConfig = flowHandlerConfig;
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;
@@ -116,7 +116,7 @@ export class FlowHandler {
    * @param eventOptions The event options.
    * @returns The new current screen.
    */
-  async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
+  async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
     const stepFunction = this.#currentFlow[this.#currentScreen];
     if (!stepFunction) {
       throw new Error('Invalid screen');
@@ -155,7 +155,7 @@ export class FlowHandler {
    * @param eventOptions The event options.
    * @returns
    */
-  peekNextScreen(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptionsInterface) {
+  peekNextScreen(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
     const stepFunction = this.#currentFlow[this.#currentScreen];
     if (!stepFunction) {
       throw new Error('Invalid screen');

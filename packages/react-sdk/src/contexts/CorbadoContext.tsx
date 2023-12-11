@@ -3,7 +3,7 @@ import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  ICorbadoAppParams,
+  CorbadoAppParams,
   InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
@@ -15,9 +15,9 @@ import type {
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
 
-export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
+export type AppProviderParams = PropsWithChildren<CorbadoAppParams>;
 
-export interface CorbadoContextInterface {
+export interface CorbadoContextProps {
   shortSession: string | undefined;
   user: SessionUser | undefined;
   globalError: NonRecoverableError | undefined;
@@ -57,4 +57,4 @@ export const initialContext = {
   getProjectConfig: missingImplementation,
 };
 
-export const CorbadoContext = createContext<CorbadoContextInterface>(initialContext);
+export const CorbadoContext = createContext<CorbadoContextProps>(initialContext);

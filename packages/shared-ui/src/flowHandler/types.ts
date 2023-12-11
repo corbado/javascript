@@ -12,7 +12,7 @@ import type {
 /**
  * Configuration settings for handling different authentication flows.
  */
-export interface IFlowHandlerConfig {
+export interface FlowHandlerConfig {
   // callback that will be executed when a flow reached its end
   onLoggedIn: () => void;
   // initial flow to start with
@@ -46,7 +46,7 @@ export type ScreenNames =
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
-export interface FlowHandlerEventOptionsInterface {
+export interface FlowHandlerEventOptions {
   // Current user's authentication status
   isUserAuthenticated?: boolean;
   // Whether the user has a passkey already set up
@@ -62,7 +62,7 @@ export type StepFunction = (
   // Event that triggered the step function
   event?: FlowHandlerEvents,
   // options that were passed to the step function
-  eventOptions?: FlowHandlerEventOptionsInterface,
+  eventOptions?: FlowHandlerEventOptions,
 ) => ScreenNames | Promise<ScreenNames>;
 
 /**

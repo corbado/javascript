@@ -11,7 +11,7 @@ export type { ProjectService } from './ProjectService';
 export type { AuthService } from './AuthService';
 export type { SessionService } from './SessionService';
 
-export interface ICorbadoAppParams {
+export interface CorbadoAppParams {
   projectId: string;
   apiTimeout?: number;
 }
@@ -31,7 +31,7 @@ export class CorbadoApp {
   /**
    * The constructor initializes the services and sets up the application.
    */
-  constructor(corbadoParams: ICorbadoAppParams) {
+  constructor(corbadoParams: CorbadoAppParams) {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this.#projectId = projectId;
     this.#apiService = new ApiService(this.#projectId, apiTimeout);

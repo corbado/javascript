@@ -4,8 +4,8 @@ import { LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import type { UserDataContextInterface } from './UserDataContext';
-import UserDataContext from './UserDataContext';
+import type { UserDataContextProps } from './UserDataContext';
+import { UserDataContext } from './UserDataContext';
 
 export const UserDataProvider = ({ children }: PropsWithChildren) => {
   const { initLoginWithEmailOTP, initSignUpWithEmailOTP } = useCorbado();
@@ -29,7 +29,7 @@ export const UserDataProvider = ({ children }: PropsWithChildren) => {
     [email, userName],
   );
 
-  const contextValue = useMemo<UserDataContextInterface>(() => {
+  const contextValue = useMemo<UserDataContextProps>(() => {
     return {
       email,
       setEmail,

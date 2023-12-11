@@ -29,8 +29,9 @@
   "homepage": "https://github.com/corbado/javascript#readme",
   "license": "ISC",
   "main": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "directories": {
-    ".": "dist"
+    "lib": "dist"
   },
   "files": [
     "dist"

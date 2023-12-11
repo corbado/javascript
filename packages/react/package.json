@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
-    ".": "dist"
+    "lib": "dist"
   },
   "files": [
     "dist"
@@ -20,27 +20,23 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "webpack --config webpack.prod.js",
-    "build:local": "npm run clean && tsc",
-    "publish:local": "yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build:local && npm run publish:local",
+    "build:dev": "npm run clean && tsc -b",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/react-sdk": "^0.1.6",
-    "@corbado/shared-ui": "^0.1.0",
+    "@corbado/react-sdk": "*",
+    "@corbado/shared-ui": "*",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "react-i18next": "13.2.2"
   },
   "devDependencies": {
-    "@corbado/types": "^0.1.0",
-    "@corbado/web-core": "^0.1.6",
     "@types/react": "^18.2.0",
-    "file-loader": "^6.2.0",
-    "rimraf": "^5.0.5",
+    "@corbado/types": "*",
+    "@corbado/web-core": "*",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {

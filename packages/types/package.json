@@ -30,6 +30,7 @@
   "license": "ISC",
   "main": "dist/index.d.ts",
   "types": "dist/index.d.ts",
+  "module": "dist/index.d.ts",
   "directories": {
     "lib": "dist"
   },
@@ -46,9 +47,8 @@
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src --ext .ts --fix",
-    "build": "npm run clean && tsc",
-    "build:local": "npm run build",
-    "build_and_publish:local": "npm run build"
+    "build": "npm run clean && tsc -b",
+    "build:dev": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

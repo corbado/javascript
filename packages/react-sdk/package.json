@@ -9,7 +9,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
-    "lib": "src"
+    "lib": "dist"
   },
   "files": [
     "dist"
@@ -21,9 +21,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "webpack --config webpack.prod.js",
-    "build:local": "npm run clean && tsc",
-    "publish:local": "yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build:local && npm run publish:local",
+    "build:dev": "npm run clean && tsc -b",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {
@@ -33,10 +31,10 @@
     "react": ">=16.8"
   },
   "dependencies": {
-    "@corbado/web-core": "^0.1.6"
+    "@corbado/web-core": "*"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
-    "@corbado/types": "^0.1.0"
+    "@corbado/types": "*"
   }
 }

@@ -16,8 +16,10 @@ module.exports = merge(common, {
   externals: {
     '@corbado/react-sdk': '@corbado/react-sdk',
     '@corbado/shared-ui': '@corbado/shared-ui',
-    '@corbado/web-core': '@corbado/web-core',
     react: 'react',
+    i18next: 'i18next',
+    'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
+    'react-i18next': 'react-i18next',
   },
   module: {
     rules: [

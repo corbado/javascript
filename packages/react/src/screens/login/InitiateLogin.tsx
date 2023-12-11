@@ -1,6 +1,6 @@
+import type { LoginHandler } from '@corbado/react-sdk';
 import { useCorbado } from '@corbado/react-sdk';
 import { canUsePasskeys, emailRegex, FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
-import type { LoginHandler } from '@corbado/web-core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

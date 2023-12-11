@@ -1,6 +1,10 @@
 import FilledButton from '../buttons/FilledButton.tsx';
-import { InvalidUserInputError, useCorbado } from '@corbado/react-sdk';
-import { PasskeyChallengeCancelledError, UserAlreadyExistsError } from '@corbado/web-core';
+import {
+  InvalidUserInputError,
+  useCorbado,
+  PasskeyChallengeCancelledError,
+  UserAlreadyExistsError,
+} from '@corbado/react-sdk';
 import { useState } from 'react';
 import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 import useAuthUI from '../../hooks/useAuthUI.ts';

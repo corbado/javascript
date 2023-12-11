@@ -28,13 +28,13 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": "^18.2.0"
   },
   "dependencies": {
     "@corbado/web-core": "*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@corbado/types": "*"
+    "@corbado/types": "*",
+    "@types/react": "^18.2.0"
   }
 }

@@ -15,5 +15,6 @@ module.exports = merge(common, {
   mode: 'production',
   externals: {
     '@corbado/web-core': '@corbado/web-core',
+    react: 'react',
   },
 });

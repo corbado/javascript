@@ -11,7 +11,7 @@ import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from 
 import { ScreensFlow } from './screens/ScreenFlow';
 
 export { CorbadoProvider, useCorbado };
-const CorbadoAuthUI = ({
+export const CorbadoAuthUI = ({
   onLoggedIn,
   defaultLanguage = defaultAppLanguage,
   autoDetectLanguage = true,
@@ -39,5 +39,4 @@ const CorbadoAuthUI = ({
     </div>
   );
 };
-
 export default CorbadoAuthUI;

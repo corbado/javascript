@@ -7,9 +7,9 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "build:dev": "lerna run build:dev",
     "lint": "lerna run lint",
-    "format": "prettier --write .",
-    "build_and_publish:local": "lerna run build_and_publish:local"
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

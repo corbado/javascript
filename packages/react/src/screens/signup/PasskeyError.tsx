@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
@@ -13,6 +13,7 @@ export const PasskeyError = () => {
   const { signUpWithPasskey, shortSession } = useCorbado();
   const { navigateBack, navigateNext } = useFlowHandler();
   const { email, userName } = useUserData();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
 
@@ -54,9 +55,19 @@ export const PasskeyError = () => {
       return;
     }
 
-    await signUpWithPasskey(email, userName ?? '');
+    setLoading(true);
 
-    void navigateNext(FlowHandlerEvents.PasskeySuccess);
+    try {
+      const resp = await signUpWithPasskey(email, userName ?? '');
+
+      if (resp?.err) {
+        throw new Error(resp.val.name);
+      }
+
+      void navigateNext(FlowHandlerEvents.PasskeySuccess);
+    } catch (e) {
+      console.error(e);
+    }
   }, [email, navigateBack, navigateNext, signUpWithPasskey, userName]);
 
   const handleSendOtp = useCallback(() => {
@@ -93,6 +104,7 @@ export const PasskeyError = () => {
       primaryButton,
       secondaryButton,
       tertiaryButton,
+      loading,
       onClick: handleClick,
     }),
     [body, handleClick, header, primaryButton, secondaryButton, tertiaryButton],

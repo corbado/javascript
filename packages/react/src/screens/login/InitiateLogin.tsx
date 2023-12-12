@@ -119,6 +119,8 @@ export const InitiateLogin = () => {
       >
         <FormInput
           name='username'
+          type='email'
+          autoComplete='email'
           label={t('textField_email')}
           onChange={onChange}
           onFocus={onFocusEmail}

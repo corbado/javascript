@@ -39,10 +39,13 @@ export const EmailOTP = () => {
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading, setError) => {
       setLoading(true);
+
       try {
         await completeLoginWithEmailOTP(otp);
+
         const authMethods = await getUserAuthMethods(email ?? '');
         const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
+
         void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });
       } catch (error) {
         setLoading(false);

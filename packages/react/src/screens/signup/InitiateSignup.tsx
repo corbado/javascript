@@ -113,6 +113,8 @@ export const InitiateSignup = () => {
         />
         <FormInput
           name='username'
+          type='email'
+          autoComplete='email'
           label={t('textField_email')}
           onChange={onChange}
           value={signupData.username}

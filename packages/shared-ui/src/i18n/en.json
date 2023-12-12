@@ -9,7 +9,7 @@
       "textField_email": "Email address",
       "validationError_name": "Please enter a name",
       "validationError_email": "Please enter a valid email",
-      "validationError_emailExists": "Email Address is already in use."
+      "validationError_emailExists": "Email address is already in use."
     },
     "passkey": {
       "header": "Let's get you set up with ",

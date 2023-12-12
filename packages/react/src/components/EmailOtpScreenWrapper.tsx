@@ -47,7 +47,7 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
       setIsOtpValid(isValid);
 
       if (isValid) {
-        submitButtonRef.current?.focus();
+        void onVerificationButtonClick(newOtp, setLoading, setError);
       }
     },
     [setOTP, setIsOtpValid],

@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
@@ -13,6 +13,7 @@ export const PasskeyBenefits = () => {
   const { email, userName } = useUserData();
   const { signUpWithPasskey, shortSession, appendPasskey } = useCorbado();
   const { navigateNext } = useFlowHandler();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
   const body = useMemo(
@@ -28,11 +29,14 @@ export const PasskeyBenefits = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleCreatePasskey = useCallback(async () => {
+    setLoading(true);
+
     try {
       if (shortSession) {
         await appendPasskey();
       } else {
         if (!email || !userName) {
+          setLoading(false);
           return;
         }
 
@@ -68,6 +72,7 @@ export const PasskeyBenefits = () => {
       body,
       primaryButton,
       secondaryButton,
+      loading,
       onClick: handleClick,
     }),
     [body, header, primaryButton, secondaryButton, handleClick],

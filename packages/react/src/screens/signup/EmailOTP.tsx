@@ -39,6 +39,7 @@ export const EmailOTP = () => {
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading, setError) => {
       setLoading(true);
+
       try {
         await completeSignUpWithEmailOTP(otp);
         void navigateNext();

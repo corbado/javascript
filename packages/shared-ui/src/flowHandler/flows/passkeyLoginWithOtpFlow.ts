@@ -45,12 +45,6 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
   [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: (_, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.CancelPasskey:
-        if (eventOptions?.isUserAuthenticated) {
-          return PasskeyLoginWithEmailOtpFallbackScreens.End;
-        }
-
-        return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-
       case FlowHandlerEvents.EmailOtp:
         if (eventOptions?.isUserAuthenticated) {
           return PasskeyLoginWithEmailOtpFallbackScreens.End;

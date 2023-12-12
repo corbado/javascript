@@ -38,6 +38,8 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
         }
 
         return PasskeyLoginWithEmailOtpFallbackScreens.End;
+      case FlowHandlerEvents.ShowBenefits:
+        return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits;
       default:
         return PasskeyLoginWithEmailOtpFallbackScreens.End;
     }
@@ -51,6 +53,18 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
         }
 
         return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
+      default:
+        return PasskeyLoginWithEmailOtpFallbackScreens.End;
+    }
+  },
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits]: (flowOptions, event) => {
+    switch (event) {
+      case FlowHandlerEvents.PasskeyError:
+        if (flowOptions?.retryPasskeyOnError) {
+          return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
+        }
+
+        return PasskeyLoginWithEmailOtpFallbackScreens.End;
       default:
         return PasskeyLoginWithEmailOtpFallbackScreens.End;
     }

@@ -1,6 +1,5 @@
 import './i18n';
 
-import { CorbadoProvider, useCorbado } from '@corbado/react-sdk';
 import { FlowType, handleTheming } from '@corbado/shared-ui';
 import type { CorbadoAuthUIProps } from '@corbado/types';
 import React from 'react';
@@ -10,8 +9,7 @@ import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
 
-export { CorbadoProvider, useCorbado };
-export const CorbadoAuthUI = ({
+const CorbadoAuthUI = ({
   onLoggedIn,
   defaultLanguage = defaultAppLanguage,
   autoDetectLanguage = true,

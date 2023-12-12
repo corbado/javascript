@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { CorbadoAuthUI } from '@corbado/react/';
+import CorbadoAuthUI from '@corbado/react/';
 import frenchTranslations from '../translations/fr';
 import englishTranslations from '../translations/en';
 

@@ -3,7 +3,7 @@ const path = require('path');
 const common = require('../../webpack.common.js');
 
 module.exports = merge(common, {
-  entry: path.resolve(__dirname, './src/index.tsx'),
+  entry: path.resolve(__dirname, './src/index.ts'),
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: {

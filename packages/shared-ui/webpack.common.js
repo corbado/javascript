@@ -20,6 +20,7 @@ module.exports = merge(common, {
       {
         test: /\.svg$/,
         use: [
+          '@svgr/webpack',
           {
             loader: 'file-loader',
             options: {

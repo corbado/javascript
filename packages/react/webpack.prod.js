@@ -25,7 +25,9 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.svg$/,
+        issuer: /\.[jt]sx?$/,
         use: [
+          '@svgr/webpack',
           {
             loader: 'file-loader',
             options: {

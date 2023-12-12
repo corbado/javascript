@@ -90,6 +90,13 @@
       "header": "Log in even faster with Passkeys",
       "button_start": "Activate",
       "button_skip": "Maybe later"
+    },
+    "passkeyBenefits": {
+      "header": "Passkeys",
+      "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+      "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+      "button_start": "Create passkey",
+      "button_skip": "Maybe later"
     }
   }
 }

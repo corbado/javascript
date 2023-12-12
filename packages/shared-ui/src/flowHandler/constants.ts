@@ -39,6 +39,7 @@ export enum PasskeyLoginWithEmailOtpFallbackScreens {
   EnterOtp = 'enter-otp',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
+  PasskeyBenefits = 'passkey-benefits',
   End = 'end',
 }
 

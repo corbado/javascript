@@ -6,9 +6,10 @@ import {
   InvalidUserInputError,
   NoPasskeyAvailableError,
   UnknownUserError,
+  LoginHandler,
+  PasskeyChallengeCancelledError,
   useCorbado,
 } from '@corbado/react-sdk';
-import { LoginHandler, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import useAuthUI from '../../hooks/useAuthUI.ts';
 import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 

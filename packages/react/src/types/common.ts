@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export interface ICustomizableComponent {
+export interface CustomizableComponent {
   className?: string;
   children: ReactNode;
 }

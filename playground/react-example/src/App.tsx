@@ -1,5 +1,5 @@
 import './App.css';
-import { CorbadoProvider } from '@corbado/react-sdk';
+import { CorbadoProvider } from '@corbado/react';
 import RouteProvider from './routes';
 
 function App() {

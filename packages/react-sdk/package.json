@@ -6,9 +6,10 @@
   "homepage": "https://github.com/corbado/javascript#readme",
   "license": "ISC",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
-    ".": "dist"
+    "lib": "dist"
   },
   "files": [
     "dist"
@@ -19,21 +20,21 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc",
-    "publish:local": "yalc push --replace  --sig",
-    "build_and_publish:local": "npm run build && npm run publish:local",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "npm run clean && tsc -b",
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": ">=18.0.0"
   },
   "dependencies": {
-    "@corbado/web-core": "^0.1.6"
+    "@corbado/web-core": "*"
   },
   "devDependencies": {
+    "@corbado/types": "*",
     "@types/react": "^18.2.0"
   }
 }

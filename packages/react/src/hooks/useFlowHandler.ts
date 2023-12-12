@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
-import type { FlowHandlerContextInterface } from '../contexts/FlowHandlerContext';
+import type { FlowHandlerContextProps } from '../contexts/FlowHandlerContext';
 import FlowHandlerContext from '../contexts/FlowHandlerContext';
 
-const useFlowHandler = (context = FlowHandlerContext): FlowHandlerContextInterface => {
+const useFlowHandler = (context = FlowHandlerContext): FlowHandlerContextProps => {
   const flowHandler = useContext(context);
 
   if (!flowHandler) {

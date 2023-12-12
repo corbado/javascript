@@ -4,7 +4,7 @@ import { Err, Result } from 'ts-results';
 
 import type { ErrorRsp } from '../api';
 import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
-import { AuthenticationResponse } from '../internaltypes/auth';
+import { AuthenticationResponse } from '../models/auth';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,

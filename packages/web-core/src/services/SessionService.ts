@@ -1,8 +1,8 @@
+import type { CorbadoUser, SessionUser } from '@corbado/types';
 import type { AxiosRequestConfig } from 'axios';
 import log from 'loglevel';
 
-import type { IFullUser, IUser } from '../types';
-import { ShortSession } from '../types';
+import { ShortSession } from '../models/session';
 import type { ApiService } from './ApiService';
 
 const shortSessionKey = 'cbo_short_session';
@@ -68,7 +68,7 @@ export class SessionService {
    * Getter method for retrieving the username.
    * @returns The username or null if it's not set.
    */
-  public getUser(): IUser | undefined {
+  public getUser(): SessionUser | undefined {
     if (!this.#shortSession) {
       return;
     }
@@ -88,10 +88,10 @@ export class SessionService {
   /**
    * Method to get the full user object from the Corbado API.
    */
-  async getFullUser() {
+  async getCorbadoUser() {
     const resp = await this.#apiService.usersApi.currentUserGet();
 
-    const me = resp.data.data as IFullUser;
+    const me = resp.data.data as CorbadoUser;
 
     return me;
   }

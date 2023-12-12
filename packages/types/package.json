@@ -1,0 +1,56 @@
+{
+  "name": "@corbado/types",
+  "version": "0.1.0",
+  "description": "Comprehensive TypeScript type definitions to seamlessly integrate with Corbado. Designed to empower developers with strong typing for enhanced code quality and autocompletion in supported IDEs. Perfect for ensuring type safety and consistency across JavaScript and TypeScript projects.",
+  "keywords": [
+    "TypeScript",
+    "Type",
+    "Definitions",
+    "Corbado",
+    "Autocompletion",
+    "Code",
+    "Quality",
+    "Strong",
+    "Typing",
+    "Developer",
+    "Tools",
+    "Intellisense",
+    "Shared",
+    "Types",
+    "Type",
+    "Safety",
+    "JavaScript",
+    "Frontend",
+    "Development",
+    "API",
+    "Types"
+  ],
+  "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
+  "homepage": "https://github.com/corbado/javascript#readme",
+  "license": "ISC",
+  "main": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corbado/javascript.git"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "lint": "eslint src --ext .ts --fix",
+    "build": "npm run clean && tsc -b",
+    "build:dev": "npm run build"
+  },
+  "bugs": {
+    "url": "https://github.com/corbado/javascript/issues"
+  }
+}

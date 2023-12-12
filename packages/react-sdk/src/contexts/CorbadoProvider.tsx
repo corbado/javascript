@@ -1,15 +1,16 @@
-import type { IUser, NonRecoverableError } from '@corbado/web-core';
+import type { SessionUser } from '@corbado/types';
+import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { CorbadoContextInterface, IAppProviderParams } from './CorbadoContext';
-import CorbadoContext from './CorbadoContext';
+import type { AppProviderParams, CorbadoContextProps } from './CorbadoContext';
+import { CorbadoContext } from './CorbadoContext';
 
-export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoParams }) => {
+export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoParams }) => {
   const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
   const [shortSession, setShortSession] = useState<string | undefined>();
-  const [user, setUser] = useState<IUser | undefined>();
+  const [user, setUser] = useState<SessionUser | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);
@@ -110,7 +111,7 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
 
-  const contextValue = useMemo<CorbadoContextInterface>(() => {
+  const contextValue = useMemo<CorbadoContextProps>(() => {
     return {
       shortSession,
       user,
@@ -148,5 +149,3 @@ export const CorbadoProvider: FC<IAppProviderParams> = ({ children, ...corbadoPa
 
   return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>;
 };
-
-export default CorbadoProvider;

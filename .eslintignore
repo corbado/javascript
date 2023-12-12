@@ -4,4 +4,8 @@ build
 playground
 package-lock.json
 packages/**/dist
-packages/**/tatilwind.config.js
+packages/**/webpack.dev.js
+packages/**/webpack.common.js
+packages/**/webpack.prod.js
+webpack.common.js
+.eslintrc.js

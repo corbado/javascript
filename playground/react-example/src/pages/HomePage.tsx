@@ -1,4 +1,4 @@
-import { useCorbado } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 

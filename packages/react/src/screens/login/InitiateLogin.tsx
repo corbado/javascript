@@ -1,13 +1,12 @@
+import type { LoginHandler } from '@corbado/react-sdk';
 import { useCorbado } from '@corbado/react-sdk';
-import type { LoginHandler } from '@corbado/web-core';
-import { canUsePasskeys, FlowHandlerEvents, FlowType } from '@corbado/web-core';
+import { canUsePasskeys, emailRegex, FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
-import { emailRegex } from '../../utils/validations';
 
 export const InitiateLogin = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'login.start' });

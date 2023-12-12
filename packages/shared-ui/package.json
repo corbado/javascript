@@ -1,0 +1,48 @@
+{
+  "name": "@corbado/shared-ui",
+  "version": "0.1.0",
+  "description": "This package contains shared files for all the complete packages of Corbado for VanillaJS, React, Angular, Vue, etc.",
+  "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
+  "homepage": "https://github.com/corbado/javascript#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corbado/javascript.git"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "clean": "rimraf ./dist",
+    "lint": "eslint src --ext .ts,.tsx --fix"
+  },
+  "bugs": {
+    "url": "https://github.com/corbado/javascript/issues"
+  },
+  "devDependencies": {
+    "@corbado/types": "*",
+    "@svgr/webpack": "^8.1.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "file-loader": "^6.2.0",
+    "image-webpack-loader": "^8.1.0",
+    "style-loader": "^3.3.3",
+    "svgo-loader": "^4.0.0",
+    "url-loader": "^4.1.1"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.json"
+  ]
+}

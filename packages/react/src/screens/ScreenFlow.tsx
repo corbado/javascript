@@ -1,4 +1,4 @@
-import { CommonScreens } from '@corbado/web-core';
+import { CommonScreens } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ScreenMap } from '../flows';

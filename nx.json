@@ -3,7 +3,7 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "build_and_publish:local"]
+        "cacheableOperations": ["build", "lint", "build:dev"]
       }
     }
   },
@@ -11,11 +11,11 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "build:dev": {
+      "dependsOn": ["^build:dev"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
-    },
-    "build_and_publish:local": {
-      "dependsOn": ["^build_and_publish:local"]
     }
   }
 }

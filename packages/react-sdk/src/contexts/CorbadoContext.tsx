@@ -1,27 +1,25 @@
+import type { ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  ICorbadoAppParams,
+  CorbadoAppParams,
   InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
-  IProjectConfig,
-  IUser,
   LoginHandler,
   LoginWithPasskeyError,
   NonRecoverableError,
   SignUpWithPasskeyError,
-  UserAuthMethodsInterface,
 } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
 
-export type IAppProviderParams = PropsWithChildren<ICorbadoAppParams>;
+export type AppProviderParams = PropsWithChildren<CorbadoAppParams>;
 
-export interface CorbadoContextInterface {
+export interface CorbadoContextProps {
   shortSession: string | undefined;
-  user: IUser | undefined;
+  user: SessionUser | undefined;
   globalError: NonRecoverableError | undefined;
   loading: boolean;
   signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
@@ -33,8 +31,8 @@ export interface CorbadoContextInterface {
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
   initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
-  getUserAuthMethods: (email: string) => Promise<UserAuthMethodsInterface>;
-  getProjectConfig: () => Promise<IProjectConfig>;
+  getUserAuthMethods: (email: string) => Promise<UserAuthMethods>;
+  getProjectConfig: () => Promise<ProjectConfig>;
 }
 
 const missingImplementation = (): never => {
@@ -59,6 +57,4 @@ export const initialContext = {
   getProjectConfig: missingImplementation,
 };
 
-const CorbadoContext = createContext<CorbadoContextInterface>(initialContext);
-
-export default CorbadoContext;
+export const CorbadoContext = createContext<CorbadoContextProps>(initialContext);

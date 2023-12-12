@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@corbado/react": "file:.yalc/@corbado/react",
-    "@corbado/react-sdk": "file:.yalc/@corbado/react-sdk",
-    "@corbado/web-core": "file:.yalc/@corbado/web-core",
+    "@corbado/react": "*",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -19,15 +17,17 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.60",
-    "@types/react": "^18.2.36",
-    "@types/react-dom": "^18.2.14",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1",
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "REACT_APP_ENV=production react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "REACT_APP_ENV=production react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [

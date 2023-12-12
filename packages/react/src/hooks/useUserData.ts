@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
-import type { UserDataContextInterface } from '../contexts/UserDataContext';
-import UserDataContext from '../contexts/UserDataContext';
+import type { UserDataContextProps } from '../contexts/UserDataContext';
+import { UserDataContext } from '../contexts/UserDataContext';
 
-const useUserData = (context = UserDataContext): UserDataContextInterface => {
+const useUserData = (context = UserDataContext): UserDataContextProps => {
   const userData = useContext(context);
 
   if (!userData) {

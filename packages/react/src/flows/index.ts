@@ -1,5 +1,5 @@
-import type { ScreenNames } from '@corbado/web-core';
-import { type FlowNames, LoginFlowNames, SignUpFlowNames } from '@corbado/web-core';
+import type { ScreenNames } from '@corbado/shared-ui';
+import { type FlowNames, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type React from 'react';
 
 import { PasskeyLoginWithEmailOTPFallbackFlow } from './PasskeyLoginWithEmailOTPFallbackFlow';

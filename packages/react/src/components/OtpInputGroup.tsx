@@ -1,7 +1,7 @@
+import { notANumberRegex, numberRegex } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { notANumberRegex, numberRegex } from '../utils/validations';
 import { Input } from './Input';
 
 interface Props {

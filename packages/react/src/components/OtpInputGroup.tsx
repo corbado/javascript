@@ -94,13 +94,16 @@ export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loadi
             ref={el => el && (inputRefs.current[index] = el)}
             id={`otp-${index}`}
             value={data}
-            type='text'
+            type='tel'
+            inputMode='numeric'
+            pattern='[0-9]*'
             maxLength={1}
             onChange={e => handleOtpChange(e.target, index)}
             onKeyDown={e => handleKeyDown(e, index)}
             onPaste={handlePaste}
             disabled={loading}
             className='cb-email-otp-input'
+            autoFocus={index === 0}
           />
         );
       })}

@@ -9,9 +9,9 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const PasskeyBenefits = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyBenefits' });
+  const { t } = useTranslation('translation', { keyPrefix: 'login.passkeyBenefits' });
   const { email, userName } = useUserData();
-  const { signUpWithPasskey, shortSession, appendPasskey } = useCorbado();
+  const { appendPasskey } = useCorbado();
   const { navigateNext } = useFlowHandler();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,36 +32,21 @@ export const PasskeyBenefits = () => {
     setLoading(true);
 
     try {
-      if (shortSession) {
-        const resp = await appendPasskey();
+      const resp = await appendPasskey();
 
-        if (resp.err) {
-          throw new Error(resp.val.name);
-        }
-      } else {
-        if (!email || !userName) {
-          setLoading(false);
-          return;
-        }
-
-        const resp = await signUpWithPasskey(email, userName);
-
-        if (resp.err) {
-          throw new Error(resp.val.name);
-        }
+      if (resp.err) {
+        throw new Error(resp.val.name);
       }
 
       return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);
     }
-  }, [appendPasskey, email, navigateNext, shortSession, signUpWithPasskey, userName]);
+  }, [appendPasskey, email, navigateNext, userName]);
 
   const handleBack = useCallback(() => {
-    return navigateNext(FlowHandlerEvents.MaybeLater, {
-      isUserAuthenticated: !!shortSession,
-    });
-  }, [navigateNext, shortSession]);
+    return navigateNext(FlowHandlerEvents.MaybeLater);
+  }, [navigateNext]);
 
   const handleClick = useCallback(
     async (btn: ButtonType) => {

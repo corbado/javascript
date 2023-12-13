@@ -2,8 +2,8 @@
   "name": "@corbado/javascript",
   "private": true,
   "workspaces": [
-    "packages/**",
-    "playground/**"
+    "packages/*",
+    "playground/*"
   ],
   "scripts": {
     "build": "lerna run build",

@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
@@ -11,6 +11,7 @@ export const PasskeyAppend = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyPrompt' });
   const { navigateNext } = useFlowHandler();
   const { appendPasskey } = useCorbado();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(
     () => (
@@ -31,8 +32,15 @@ export const PasskeyAppend = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handlePasskeyActivation = useCallback(async () => {
+    setLoading(true);
+
     try {
-      await appendPasskey();
+      const resp = await appendPasskey();
+
+      if (resp.err) {
+        throw new Error(resp.val.name);
+      }
+
       return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);
@@ -58,8 +66,9 @@ export const PasskeyAppend = () => {
       primaryButton,
       secondaryButton,
       onClick: handleClick,
+      loading,
     }),
-    [header, primaryButton, secondaryButton, handleClick],
+    [header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

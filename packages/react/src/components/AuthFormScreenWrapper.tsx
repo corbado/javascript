@@ -8,6 +8,7 @@ export interface AuthFormScreenWrapperProps extends CustomizableComponent {
   onSubmit: () => void;
   submitButtonText: ReactNode;
   disableSubmitButton?: boolean;
+  loading: boolean;
 }
 
 export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
@@ -15,6 +16,7 @@ export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
   onSubmit,
   submitButtonText,
   disableSubmitButton,
+  loading = false,
 }) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
         variant='primary'
         className='cb-form-button'
         disabled={disableSubmitButton}
+        isLoading={loading}
       >
         {submitButtonText}
       </Button>

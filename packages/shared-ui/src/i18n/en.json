@@ -9,7 +9,7 @@
       "textField_email": "Email address",
       "validationError_name": "Please enter a name",
       "validationError_email": "Please enter a valid email",
-      "validationError_emailExists": "Email Address is already in use."
+      "validationError_emailExists": "Email address is already in use."
     },
     "passkey": {
       "header": "Let's get you set up with ",
@@ -87,8 +87,16 @@
       "button_back": "Cancel"
     },
     "passkeyPrompt": {
-      "header": "Log in even faster with Passkeys",
+      "header": "Log in even faster with ",
+      "button_showPasskeyBenefits": "Passkeys",
       "button_start": "Activate",
+      "button_skip": "Maybe later"
+    },
+    "passkeyBenefits": {
+      "header": "Passkeys",
+      "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+      "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+      "button_start": "Create passkey",
       "button_skip": "Maybe later"
     }
   }

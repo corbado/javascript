@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
@@ -13,6 +13,7 @@ export const PasskeySignup = () => {
   const { navigateNext, navigateBack } = useFlowHandler();
   const { signUpWithPasskey } = useCorbado();
   const { email, userName } = useUserData();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(
     () => (
@@ -47,8 +48,15 @@ export const PasskeySignup = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      await signUpWithPasskey(email, userName);
+      const resp = await signUpWithPasskey(email, userName);
+
+      if (resp.err) {
+        throw new Error(resp.val.name);
+      }
+
       return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);
@@ -85,9 +93,10 @@ export const PasskeySignup = () => {
       showHorizontalRule: true,
       secondaryButton,
       tertiaryButton,
+      loading,
       onClick: handleClick,
     }),
-    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, handleClick],
+    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, loading, handleClick],
   );
 
   return (

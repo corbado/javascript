@@ -103,6 +103,7 @@ export const InitiateSignup = () => {
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
         disableSubmitButton={loading}
+        loading={loading}
       >
         <FormInput
           name='name'

@@ -16,6 +16,7 @@ export const InitiateLogin = () => {
   const [loginHandler, setLoginHandler] = useState<LoginHandler>();
   const [formEmail, setFormEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
   const conditionalUIStarted = useRef(false);
 
@@ -65,6 +66,7 @@ export const InitiateLogin = () => {
   }, [loginHandler]);
 
   const login = async () => {
+    setLoading(true);
     try {
       const hasPasskeySupport = await canUsePasskeys();
 
@@ -116,6 +118,7 @@ export const InitiateLogin = () => {
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
         disableSubmitButton={!formEmail}
+        loading={loading}
       >
         <FormInput
           name='username'

@@ -53,6 +53,7 @@ export const PasskeyError = () => {
       void navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       console.log(e);
+      setLoading(false);
     }
   }, [email, loginWithPasskey, navigateBack, navigateNext]);
 

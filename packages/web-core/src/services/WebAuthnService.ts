@@ -1,10 +1,10 @@
+import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
 import type { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import { CorbadoError, NonRecoverableError } from '../utils';
-import {CredentialRequestOptionsJSON} from "@github/webauthn-json/src/webauthn-json/basic/json";
 
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.

@@ -16,7 +16,6 @@ export const FormInput = ({
   onFocus,
   onBlur,
   error,
-  autoComplete,
   ...rest
 }: Omit<Props, 'ref'>) => {
   const [focused, setFocused] = React.useState(false);
@@ -51,7 +50,6 @@ export const FormInput = ({
           onFocus={onFocusClick}
           onBlur={onBlurClick}
           error={error}
-          autoComplete={autoComplete}
           {...rest}
         />
         <label htmlFor={id || name}>{label}</label>

@@ -5,8 +5,8 @@ import {
   InvalidPasskeyError,
   InvalidUserInputError,
   NoPasskeyAvailableError,
-  UnknownUserError,
   PasskeyChallengeCancelledError,
+  UnknownUserError,
   useCorbado,
 } from '@corbado/react-sdk';
 import useAuthUI from '../../hooks/useAuthUI.ts';
@@ -15,7 +15,7 @@ import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | undefined>();
-  const { loginWithPasskey, initLoginWithEmailOTP } = useCorbado();
+  const { loginWithPasskey, loginWithConditionalUI, initLoginWithEmailOTP } = useCorbado();
   const { switchScreen, onAuthCompleted, setUserState } = useAuthUI();
   const initialized = useRef(false);
 
@@ -30,7 +30,7 @@ const Login = () => {
   }, []);
 
   const initLoginWithAutoComplete = async () => {
-    const response = await loginWithPasskey('', true);
+    const response = await loginWithConditionalUI();
     if (!response.err) {
       onAuthCompleted();
       return;
@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   const submit = async () => {
-    const result = await loginWithPasskey(email, false);
+    const result = await loginWithPasskey(email);
     if (!result.err) {
       onAuthCompleted();
       return;

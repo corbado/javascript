@@ -21,7 +21,8 @@ export interface CorbadoContextProps {
   globalError: NonRecoverableError | undefined;
   loading: boolean;
   signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
-  loginWithPasskey: (email: string, conditional: boolean) => Promise<Result<void, LoginWithPasskeyError>>;
+  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError>>;
+  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError>>;
   initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError>>;
   completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError>>;
   logout: () => void;
@@ -43,6 +44,7 @@ export const initialContext = {
   loading: false,
   signUpWithPasskey: missingImplementation,
   loginWithPasskey: missingImplementation,
+  loginWithConditionalUI: missingImplementation,
   initLoginWithEmailOTP: missingImplementation,
   completeLoginWithEmailOTP: missingImplementation,
   logout: missingImplementation,

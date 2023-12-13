@@ -11,7 +11,7 @@ export const InitiateLogin = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'login.start' });
   const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { loginWithPasskey } = useCorbado();
+  const { loginWithPasskey, loginWithConditionalUI } = useCorbado();
   const [formEmail, setFormEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const initialized = useRef(false);
@@ -32,7 +32,7 @@ export const InitiateLogin = () => {
       return;
     }
 
-    const response = await loginWithPasskey('', true);
+    const response = await loginWithConditionalUI();
     if (response.err) {
       return;
     }
@@ -49,7 +49,7 @@ export const InitiateLogin = () => {
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
-        const result = await loginWithPasskey(formEmail, false);
+        const result = await loginWithPasskey(formEmail);
 
         if (result?.err) {
           throw result.val.name;

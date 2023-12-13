@@ -1,11 +1,11 @@
-import type { SessionUser, UserAuthMethods } from '@corbado/types';
+import type {SessionUser, UserAuthMethods} from '@corbado/types';
 import log from 'loglevel';
-import { Subject } from 'rxjs';
-import type { Result } from 'ts-results';
-import { Ok } from 'ts-results';
+import {Subject} from 'rxjs';
+import type {Result} from 'ts-results';
+import {Ok} from 'ts-results';
 
-import type { AuthenticationResponse } from '../models/auth';
-import type { ShortSession } from '../models/session';
+import type {AuthenticationResponse} from '../models/auth';
+import type {ShortSession} from '../models/session';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
@@ -15,10 +15,10 @@ import type {
   LoginWithPasskeyError,
   SignUpWithPasskeyError,
 } from '../utils';
-import { AuthState } from '../utils/constants/auth';
-import type { ApiService } from './ApiService';
-import type { SessionService } from './SessionService';
-import type { WebAuthnService } from './WebAuthnService';
+import {AuthState} from '../utils';
+import type {ApiService} from './ApiService';
+import type {SessionService} from './SessionService';
+import type {WebAuthnService} from './WebAuthnService';
 
 /**
  * AuthService is a class that handles authentication related operations.
@@ -28,7 +28,7 @@ import type { WebAuthnService } from './WebAuthnService';
  */
 export class AuthService {
   #apiService: ApiService;
-  #authenticatorService: WebAuthnService;
+  #webAuthnService: WebAuthnService;
 
   // sessionService is used to store and manage (e.g. refresh) the user's session
   #sessionService: SessionService;
@@ -44,9 +44,9 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, sessionService: SessionService, authenticatorService: WebAuthnService) {
+  constructor(apiService: ApiService, sessionService: SessionService, webAuthnService: WebAuthnService) {
     this.#apiService = apiService;
-    this.#authenticatorService = authenticatorService;
+    this.#webAuthnService = webAuthnService;
     this.#sessionService = sessionService;
   }
 
@@ -153,7 +153,7 @@ export class AuthService {
       return respStart;
     }
 
-    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -178,7 +178,7 @@ export class AuthService {
       return respStart;
     }
 
-    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -195,25 +195,27 @@ export class AuthService {
    * Method to log in with a passkey.
    * If conditional is true, conditional UI will be invoked.
    */
-  async loginWithPasskey(email: string, conditional = false): Promise<Result<void, LoginWithPasskeyError>> {
-    let challenge: string;
+  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError>> {
+    return this.#loginWithPasskey(email, false);
+  }
+
+  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError>> {
+    return this.#loginWithPasskey('', true);
+  }
+
+  async #loginWithPasskey(email: string, conditional = false): Promise<Result<void, LoginWithPasskeyError>> {
+    let resp: Result<string, LoginWithPasskeyError>;
     if (conditional) {
-      const respStart = await this.#apiService.passKeyMediationStart();
-      if (respStart.err) {
-        return respStart;
-      }
-
-      challenge = respStart.val;
+      resp = await this.#apiService.passKeyMediationStart();
     } else {
-      const respStart = await this.#apiService.passKeyLoginStart(email);
-      if (respStart.err) {
-        return respStart;
-      }
-
-      challenge = respStart.val;
+      resp = await this.#apiService.passKeyLoginStart(email);
     }
 
-    const signedChallenge = await this.#authenticatorService.login(challenge, conditional);
+    if (resp.err) {
+      return resp;
+    }
+
+    const signedChallenge = await this.#webAuthnService.login(resp.val, conditional);
     if (signedChallenge.err) {
       return signedChallenge;
     }

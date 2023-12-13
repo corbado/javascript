@@ -52,11 +52,15 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
   );
 
   const loginWithPasskey = useCallback(
-    (email: string, conditional = false) => {
-      return corbadoApp.authService.loginWithPasskey(email, conditional);
+    (email: string) => {
+      return corbadoApp.authService.loginWithPasskey(email);
     },
     [corbadoApp],
   );
+
+  const loginWithConditionalUI = useCallback(() => {
+    return corbadoApp.authService.loginWithConditionalUI();
+  }, [corbadoApp]);
 
   const appendPasskey = useCallback(() => {
     return corbadoApp.authService.appendPasskey();
@@ -115,6 +119,7 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
       loading,
       signUpWithPasskey,
       loginWithPasskey,
+      loginWithConditionalUI,
       initLoginWithEmailOTP,
       completeLoginWithEmailOTP,
       logout,
@@ -131,6 +136,7 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     loading,
     signUpWithPasskey,
     loginWithPasskey,
+    loginWithConditionalUI,
     initLoginWithEmailOTP,
     completeLoginWithEmailOTP,
     logout,

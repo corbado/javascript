@@ -83,7 +83,7 @@ export const PasskeyBenefits = () => {
       loading,
       onClick: handleClick,
     }),
-    [body, header, primaryButton, secondaryButton, handleClick],
+    [body, header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

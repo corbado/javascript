@@ -68,7 +68,7 @@ export const PasskeyAppend = () => {
       onClick: handleClick,
       loading,
     }),
-    [header, primaryButton, secondaryButton, handleClick],
+    [header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

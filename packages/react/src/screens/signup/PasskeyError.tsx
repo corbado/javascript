@@ -107,7 +107,7 @@ export const PasskeyError = () => {
       loading,
       onClick: handleClick,
     }),
-    [body, handleClick, header, primaryButton, secondaryButton, tertiaryButton],
+    [body, handleClick, header, primaryButton, secondaryButton, loading, tertiaryButton],
   );
 
   return (

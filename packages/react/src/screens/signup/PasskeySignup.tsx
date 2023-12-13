@@ -96,7 +96,7 @@ export const PasskeySignup = () => {
       loading,
       onClick: handleClick,
     }),
-    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, handleClick],
+    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, loading, handleClick],
   );
 
   return (

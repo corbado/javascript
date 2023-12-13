@@ -6,7 +6,6 @@ import {
   InvalidUserInputError,
   NoPasskeyAvailableError,
   UnknownUserError,
-  LoginHandler,
   PasskeyChallengeCancelledError,
   useCorbado,
 } from '@corbado/react-sdk';
@@ -16,12 +15,9 @@ import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | undefined>();
-  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
-  const { loginWithPasskey, initAutocompletedLoginWithPasskey, initLoginWithEmailOTP } = useCorbado();
+  const { loginWithPasskey, initLoginWithEmailOTP } = useCorbado();
   const { switchScreen, onAuthCompleted, setUserState } = useAuthUI();
-
   const initialized = useRef(false);
-  const conditionalUIStarted = useRef(false);
 
   useEffect(() => {
     if (initialized.current) {
@@ -30,18 +26,28 @@ const Login = () => {
 
     initialized.current = true;
 
-    initAutocompletedLoginWithPasskey().then(lh => {
-      // for conditional UI we ignore errors and just skip that functionality to the user
-      if (lh.err) {
-        return;
-      }
+    void initLoginWithAutoComplete();
+  }, []);
 
-      setLoginHandler(lh.val);
-    });
-  }, [initAutocompletedLoginWithPasskey]);
+  const initLoginWithAutoComplete = async () => {
+    const response = await loginWithPasskey('', true);
+    if (!response.err) {
+      onAuthCompleted();
+      return;
+    }
+
+    switch (true) {
+      case response.val instanceof PasskeyChallengeCancelledError:
+        // nothing to do here => the user can just try again
+        return;
+      case response.val instanceof InvalidPasskeyError:
+        setError('We could not log you in using that passkey. Please try again by providing your email address.');
+        return;
+    }
+  };
 
   const submit = async () => {
-    const result = await loginWithPasskey(email);
+    const result = await loginWithPasskey(email, false);
     if (!result.err) {
       onAuthCompleted();
       return;
@@ -72,31 +78,6 @@ const Login = () => {
     }
   };
 
-  const onFocusEmail = async () => {
-    if (conditionalUIStarted.current) {
-      return;
-    }
-
-    conditionalUIStarted.current = true;
-    if (!loginHandler) {
-      return;
-    }
-
-    const result = await loginHandler.completionCallback();
-    if (!result.err) {
-      return onAuthCompleted();
-    }
-
-    switch (true) {
-      case result.val instanceof PasskeyChallengeCancelledError:
-        // nothing to do here => the user can just try again
-        return;
-      case result.val instanceof InvalidPasskeyError:
-        setError('We could not log you in using that passkey. Please try again by providing your email address.');
-        return;
-    }
-  };
-
   return (
     <div className='h-screen flex flex-col items-center justify-center'>
       <p className='font-bold text-2xl pb-2'>Welcome back!</p>
@@ -114,7 +95,7 @@ const Login = () => {
           <RoundedTextInput
             placeholder='Email address'
             onChange={setEmail}
-            onFocus={onFocusEmail}
+            autoComplete='username webauthn'
           />
           {error ? <p className='text-lg text-red-600'>Error: {error}</p> : <></>}
           <FilledButton

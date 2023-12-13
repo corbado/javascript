@@ -5,13 +5,11 @@ import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../models/auth';
-import { LoginHandler } from '../models/loginHandler';
 import type { ShortSession } from '../models/session';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
@@ -195,14 +193,27 @@ export class AuthService {
 
   /**
    * Method to log in with a passkey.
+   * If conditional is true, conditional UI will be invoked.
    */
-  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError>> {
-    const respStart = await this.#apiService.passKeyLoginStart(email);
-    if (respStart.err) {
-      return respStart;
+  async loginWithPasskey(email: string, conditional = false): Promise<Result<void, LoginWithPasskeyError>> {
+    let challenge: string;
+    if (conditional) {
+      const respStart = await this.#apiService.passKeyMediationStart();
+      if (respStart.err) {
+        return respStart;
+      }
+
+      challenge = respStart.val;
+    } else {
+      const respStart = await this.#apiService.passKeyLoginStart(email);
+      if (respStart.err) {
+        return respStart;
+      }
+
+      challenge = respStart.val;
     }
 
-    const signedChallenge = await this.#authenticatorService.login(respStart.val);
+    const signedChallenge = await this.#authenticatorService.login(challenge, conditional);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -215,36 +226,6 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
 
     return Ok(void 0);
-  }
-
-  /**
-   * Starts a passkey flow that shows all passkeys that are available to a user (autocompletion, aka conditionalUI).
-   *
-   * @returns A LoginHandler that needs to be called to show these passkeys to the user.
-   */
-  async initAutocompletedLoginWithPasskey(): Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>> {
-    const respStart = await this.#apiService.passKeyMediationStart();
-    if (respStart.err) {
-      return respStart;
-    }
-
-    const loginHandler = new LoginHandler(async () => {
-      const signedChallenge = await this.#authenticatorService.login(respStart.val);
-      if (signedChallenge.err) {
-        return signedChallenge;
-      }
-
-      const respFinish = await this.#apiService.passKeyLoginFinish(signedChallenge.val);
-      if (respFinish.err) {
-        return respFinish;
-      }
-
-      this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
-
-      return Ok(void 0);
-    });
-
-    return Ok(loginHandler);
   }
 
   /**

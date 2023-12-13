@@ -40,7 +40,7 @@ export const PasskeyError = () => {
       return;
     }
 
-    await loginWithPasskey(email);
+    await loginWithPasskey(email, false);
 
     void navigateNext(FlowHandlerEvents.PasskeySuccess);
   }, [email, loginWithPasskey, navigateBack, navigateNext]);

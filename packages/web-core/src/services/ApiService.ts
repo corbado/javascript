@@ -1,3 +1,4 @@
+import type { UserAuthMethods } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import { Err, Result } from 'ts-results';
@@ -7,6 +8,7 @@ import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '..
 import { AuthenticationResponse } from '../models/auth';
 import type {
   AppendPasskeyError,
+  AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
   InitAutocompletedLoginWithPasskeyError,
@@ -247,6 +249,16 @@ export class ApiService {
       });
 
       return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
+  }
+
+  public async authMethodsList(email: string): Promise<Result<UserAuthMethods, AuthMethodsListError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.authMethodsList({
+        username: email,
+      });
+
+      return r.data.data;
     });
   }
 }

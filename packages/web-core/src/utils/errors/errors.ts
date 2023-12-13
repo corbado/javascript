@@ -22,6 +22,7 @@ export type InitSignUpWithEmailOTPError = InvalidUserInputError | UserAlreadyExi
 export type CompleteSignupWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type InitLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type CompleteLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
+export type AuthMethodsListError = UnknownUserError | UnknownError;
 
 export class CorbadoError extends Error {
   constructor(message: string) {
@@ -56,6 +57,10 @@ export class CorbadoError extends Error {
 
         if (errorResp.details === 'Used invalid credentials') {
           return new InvalidPasskeyError();
+        }
+
+        if (errorResp.details === 'Email code not valid') {
+          return new InvalidOtpInputError();
         }
     }
 
@@ -200,6 +205,13 @@ export class IllegalStateError extends RecoverableError {
   constructor(message: string) {
     super(message);
     this.name = 'IllegalStateError';
+  }
+}
+
+export class InvalidOtpInputError extends RecoverableError {
+  constructor() {
+    super('The provided OTP is no longer valid');
+    this.name = 'InvalidOtpInputError';
   }
 }
 

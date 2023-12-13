@@ -1,5 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
+import type { RecoverableError } from '@corbado/web-core';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -38,18 +39,29 @@ export const EmailOTP = () => {
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading, setError) => {
+      if (!email) {
+        return;
+      }
+
       setLoading(true);
 
       try {
-        await completeLoginWithEmailOTP(otp);
+        await makeApiCallWithErrorHandler(() => completeLoginWithEmailOTP(otp));
 
-        const authMethods = await getUserAuthMethods(email ?? '');
+        const authMethods = await makeApiCallWithErrorHandler(() => getUserAuthMethods(email));
         const userHasPasskey = authMethods.selectedMethods.includes('webauthn');
 
         void navigateNext(FlowHandlerEvents.PasskeySuccess, { userHasPasskey });
-      } catch (error) {
+      } catch (e) {
         setLoading(false);
-        setError(error as string);
+        const error = e as RecoverableError;
+
+        if (error.name === 'InvalidOtpInputError') {
+          setError(t('validationError_otp'));
+          return;
+        }
+
+        throw e;
       }
     },
     [],

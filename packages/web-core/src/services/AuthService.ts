@@ -1,4 +1,4 @@
-import type { SessionUser, UserAuthMethods } from '@corbado/types';
+import type { SessionUser } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
@@ -262,13 +262,9 @@ export class AuthService {
   }
 
   async authMethods(email: string) {
-    const resp = await this.#apiService.usersApi.authMethodsList({
-      username: email,
-    });
+    const resp = await this.#apiService.authMethodsList(email);
 
-    const result: UserAuthMethods = resp.data.data;
-
-    return result;
+    return resp;
   }
 
   logout() {

@@ -1,6 +1,7 @@
 import type { ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
+  AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
   CorbadoAppParams,
@@ -31,7 +32,7 @@ export interface CorbadoContextProps {
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
   initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
-  getUserAuthMethods: (email: string) => Promise<UserAuthMethods>;
+  getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError>>;
   getProjectConfig: () => Promise<ProjectConfig>;
 }
 

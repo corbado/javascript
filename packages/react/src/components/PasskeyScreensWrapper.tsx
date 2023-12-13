@@ -65,7 +65,6 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
         <Button
           variant='secondary'
           onClick={() => onClick('secondary')}
-          isLoading={loading}
           disabled={loading}
         >
           {secondaryButton}
@@ -76,7 +75,6 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
         <Button
           variant='tertiary'
           onClick={() => onClick('tertiary')}
-          isLoading={loading}
           disabled={loading}
         >
           {tertiaryButton}

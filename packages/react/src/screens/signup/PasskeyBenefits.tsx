@@ -19,7 +19,7 @@ export const PasskeyBenefits = () => {
   const body = useMemo(
     () => (
       <>
-        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>.
+        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>
       </>
     ),
     [t],
@@ -33,14 +33,22 @@ export const PasskeyBenefits = () => {
 
     try {
       if (shortSession) {
-        await appendPasskey();
+        const resp = await appendPasskey();
+
+        if (resp.err) {
+          throw new Error(resp.val.name);
+        }
       } else {
         if (!email || !userName) {
           setLoading(false);
           return;
         }
 
-        await signUpWithPasskey(email, userName);
+        const resp = await signUpWithPasskey(email, userName);
+
+        if (resp.err) {
+          throw new Error(resp.val.name);
+        }
       }
 
       return navigateNext(FlowHandlerEvents.PasskeySuccess);

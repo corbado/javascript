@@ -19,7 +19,7 @@ export const PasskeyBenefits = () => {
   const body = useMemo(
     () => (
       <>
-        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>.
+        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>
       </>
     ),
     [t],

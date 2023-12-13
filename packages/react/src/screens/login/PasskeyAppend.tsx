@@ -35,7 +35,12 @@ export const PasskeyAppend = () => {
     setLoading(true);
 
     try {
-      await appendPasskey();
+      const resp = await appendPasskey();
+
+      if (resp.err) {
+        throw new Error(resp.val.name);
+      }
+
       return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);

@@ -51,7 +51,12 @@ export const PasskeySignup = () => {
     setLoading(true);
 
     try {
-      await signUpWithPasskey(email, userName);
+      const resp = await signUpWithPasskey(email, userName);
+
+      if (resp.err) {
+        throw new Error(resp.val.name);
+      }
+
       return navigateNext(FlowHandlerEvents.PasskeySuccess);
     } catch (e) {
       return navigateNext(FlowHandlerEvents.PasskeyError);

@@ -2,7 +2,7 @@ name: Deploy examples to Vercel
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
   pull_request:
@@ -45,6 +45,11 @@ jobs:
         # currently we have to use build:dev here, because npm run build is not yet working
         run: |
           npm run build:dev
+
+      - name: Normalize branch name
+        run: |
+          echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
+        shell: bash
 
       - name: Deploy react-sdk-example to Vercel
         run: |

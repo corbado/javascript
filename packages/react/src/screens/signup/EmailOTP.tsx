@@ -10,6 +10,7 @@ import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signup.emailOtp' });
+  const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, currentFlow } = useFlowHandler();
   const { completeSignUpWithEmailOTP } = useCorbado();
   const { email, sendEmail } = useUserData();
@@ -30,7 +31,7 @@ export const EmailOTP = () => {
       {t('body_text2')}
     </>
   );
-  const validationError = t('validationError_otp');
+  const validationError = tErrors('serverErrors.InvalidOtpInputError');
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
@@ -61,7 +62,17 @@ export const EmailOTP = () => {
       onVerificationButtonClick: handleOTPVerification,
       onBackButtonClick: handleCancel,
     }),
-    [t, email, handleOTPVerification, handleCancel],
+    [
+      t,
+      email,
+      handleOTPVerification,
+      handleCancel,
+      header,
+      body,
+      validationError,
+      verificationButtonText,
+      backButtonText,
+    ],
   );
 
   return <EmailOtpScreenWrapper {...props} />;

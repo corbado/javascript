@@ -103,20 +103,14 @@
     }
   },
   "errors": {
-    "validationErrors": {
-      "InvalidEmail": "Please enter a valid email",
-      "InvalidName": "Please enter a name",
-      "PasskeyChallengeCancelledError": "Passkey challenge cancelled"
-    },
-    "serverErrors": {
-      "UserAlreadyExistsError": "Email address is already in use",
-      "UnknownUserError": "User does not exist",
-      "NoPasskeyAvailableError": "No passkey available",
-      "InvalidPasskeyError": "The provided passkey is no longer valid",
-      "InvalidOtpInputError": "The provided OTP is no longer valid"
-    },
-    "common": {
-      "UnknownError": "Something went wrong. Please try again later"
-    }
+    "validationError_invalidEmail": "Please enter a valid email",
+    "validationError_invalidName": "Please enter a name",
+    "validationError_passkeyChallengeCancelled": "Passkey challenge cancelled",
+    "serverError_userAlreadyExists": "Email address is already in use",
+    "serverError_unknownUser": "User does not exist",
+    "serverError_noPasskeyAvailable": "No passkey available",
+    "serverError_invalidPasskey": "The provided passkey is no longer valid",
+    "serverError_invalidOtp": "The provided OTP is no longer valid",
+    "unknownError": "Something went wrong. Please try again later"
   }
 }

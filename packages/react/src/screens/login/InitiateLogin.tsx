@@ -1,4 +1,3 @@
-import type { LoginHandler } from '@corbado/react-sdk';
 import { useCorbado } from '@corbado/react-sdk';
 import { canUsePasskeys, emailRegex, FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -12,13 +11,11 @@ export const InitiateLogin = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'login.start' });
   const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { initAutocompletedLoginWithPasskey, loginWithPasskey } = useCorbado();
-  const [loginHandler, setLoginHandler] = useState<LoginHandler>();
+  const { loginWithPasskey, loginWithConditionalUI } = useCorbado();
   const [formEmail, setFormEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
-  const conditionalUIStarted = useRef(false);
 
   useEffect(() => {
     if (initialized.current) {
@@ -27,43 +24,26 @@ export const InitiateLogin = () => {
 
     initialized.current = true;
 
-    void initAutocompletedLoginWithPasskey().then(lh => {
-      // for conditional UI we ignore errors and just skip that functionality to the user
-      if (lh.err) {
-        return;
-      }
-
-      setLoginHandler(lh.val);
-    });
+    void initLoginWithAutoComplete();
   }, []);
+
+  const initLoginWithAutoComplete = async () => {
+    const hasPasskeySupport = await canUsePasskeys();
+    if (!hasPasskeySupport) {
+      return;
+    }
+
+    const response = await loginWithConditionalUI();
+    if (response.err) {
+      return;
+    }
+
+    void navigateNext(FlowHandlerEvents.PasskeySuccess);
+  };
 
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFormEmail(event.target.value);
   }, []);
-
-  const completeConditionalUI = async () => {
-    if (conditionalUIStarted.current) {
-      return;
-    }
-
-    conditionalUIStarted.current = true;
-
-    try {
-      const result = await loginHandler?.completionCallback();
-
-      if (result?.err) {
-        throw result.val;
-      }
-
-      void navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      //void navigateNext(FlowHandlerEvents.PasskeyError);
-    }
-  };
-
-  const onFocusEmail = useCallback(() => {
-    void completeConditionalUI();
-  }, [loginHandler]);
 
   const login = async () => {
     setLoading(true);
@@ -123,10 +103,9 @@ export const InitiateLogin = () => {
         <FormInput
           name='username'
           type='email'
-          autoComplete='email'
+          autoComplete='email webauthn'
           label={t('textField_email')}
           onChange={onChange}
-          onFocus={onFocusEmail}
           value={formEmail}
           error={errorMessage}
         />

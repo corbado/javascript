@@ -58,6 +58,10 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     [corbadoApp],
   );
 
+  const loginWithConditionalUI = useCallback(() => {
+    return corbadoApp.authService.loginWithConditionalUI();
+  }, [corbadoApp]);
+
   const appendPasskey = useCallback(() => {
     return corbadoApp.authService.appendPasskey();
   }, [corbadoApp]);
@@ -96,10 +100,6 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     [corbadoApp],
   );
 
-  const initAutocompletedLoginWithPasskey = useCallback(() => {
-    return corbadoApp.authService.initAutocompletedLoginWithPasskey();
-  }, [corbadoApp]);
-
   const getUserAuthMethods = useCallback(
     (email: string) => {
       return corbadoApp.authService.authMethods(email);
@@ -119,12 +119,12 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
       loading,
       signUpWithPasskey,
       loginWithPasskey,
+      loginWithConditionalUI,
       initLoginWithEmailOTP,
       completeLoginWithEmailOTP,
       logout,
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
-      initAutocompletedLoginWithPasskey,
       appendPasskey,
       getUserAuthMethods,
       getProjectConfig,
@@ -136,12 +136,12 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     loading,
     signUpWithPasskey,
     loginWithPasskey,
+    loginWithConditionalUI,
     initLoginWithEmailOTP,
     completeLoginWithEmailOTP,
     logout,
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
-    initAutocompletedLoginWithPasskey,
     appendPasskey,
     getUserAuthMethods,
     getProjectConfig,

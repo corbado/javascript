@@ -5,19 +5,17 @@ import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../models/auth';
-import { LoginHandler } from '../models/loginHandler';
 import type { ShortSession } from '../models/session';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   SignUpWithPasskeyError,
 } from '../utils';
-import { AuthState } from '../utils/constants/auth';
+import { AuthState } from '../utils';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
 import type { WebAuthnService } from './WebAuthnService';
@@ -30,7 +28,7 @@ import type { WebAuthnService } from './WebAuthnService';
  */
 export class AuthService {
   #apiService: ApiService;
-  #authenticatorService: WebAuthnService;
+  #webAuthnService: WebAuthnService;
 
   // sessionService is used to store and manage (e.g. refresh) the user's session
   #sessionService: SessionService;
@@ -46,9 +44,9 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, sessionService: SessionService, authenticatorService: WebAuthnService) {
+  constructor(apiService: ApiService, sessionService: SessionService, webAuthnService: WebAuthnService) {
     this.#apiService = apiService;
-    this.#authenticatorService = authenticatorService;
+    this.#webAuthnService = webAuthnService;
     this.#sessionService = sessionService;
   }
 
@@ -155,7 +153,7 @@ export class AuthService {
       return respStart;
     }
 
-    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -180,7 +178,7 @@ export class AuthService {
       return respStart;
     }
 
-    const signedChallenge = await this.#authenticatorService.createPasskey(respStart.val);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -195,14 +193,29 @@ export class AuthService {
 
   /**
    * Method to log in with a passkey.
+   * If conditional is true, conditional UI will be invoked.
    */
   async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError>> {
-    const respStart = await this.#apiService.passKeyLoginStart(email);
-    if (respStart.err) {
-      return respStart;
+    return this.#loginWithPasskey(email, false);
+  }
+
+  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError>> {
+    return this.#loginWithPasskey('', true);
+  }
+
+  async #loginWithPasskey(email: string, conditional = false): Promise<Result<void, LoginWithPasskeyError>> {
+    let resp: Result<string, LoginWithPasskeyError>;
+    if (conditional) {
+      resp = await this.#apiService.passKeyMediationStart();
+    } else {
+      resp = await this.#apiService.passKeyLoginStart(email);
     }
 
-    const signedChallenge = await this.#authenticatorService.login(respStart.val);
+    if (resp.err) {
+      return resp;
+    }
+
+    const signedChallenge = await this.#webAuthnService.login(resp.val, conditional);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -215,36 +228,6 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
 
     return Ok(void 0);
-  }
-
-  /**
-   * Starts a passkey flow that shows all passkeys that are available to a user (autocompletion, aka conditionalUI).
-   *
-   * @returns A LoginHandler that needs to be called to show these passkeys to the user.
-   */
-  async initAutocompletedLoginWithPasskey(): Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>> {
-    const respStart = await this.#apiService.passKeyMediationStart();
-    if (respStart.err) {
-      return respStart;
-    }
-
-    const loginHandler = new LoginHandler(async () => {
-      const signedChallenge = await this.#authenticatorService.login(respStart.val);
-      if (signedChallenge.err) {
-        return signedChallenge;
-      }
-
-      const respFinish = await this.#apiService.passKeyLoginFinish(signedChallenge.val);
-      if (respFinish.err) {
-        return respFinish;
-      }
-
-      this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
-
-      return Ok(void 0);
-    });
-
-    return Ok(loginHandler);
   }
 
   /**

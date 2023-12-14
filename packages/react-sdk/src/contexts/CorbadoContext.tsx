@@ -5,10 +5,8 @@ import type {
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
   CorbadoAppParams,
-  InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
-  LoginHandler,
   LoginWithPasskeyError,
   NonRecoverableError,
   SignUpWithPasskeyError,
@@ -25,12 +23,12 @@ export interface CorbadoContextProps {
   loading: boolean;
   signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
   loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError>>;
+  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError>>;
   initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError>>;
   completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError>>;
   logout: () => void;
   initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, InitSignUpWithEmailOTPError>>;
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
-  initAutocompletedLoginWithPasskey: () => Promise<Result<LoginHandler, InitAutocompletedLoginWithPasskeyError>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
   getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError>>;
   getProjectConfig: () => Promise<ProjectConfig>;
@@ -47,6 +45,7 @@ export const initialContext = {
   loading: false,
   signUpWithPasskey: missingImplementation,
   loginWithPasskey: missingImplementation,
+  loginWithConditionalUI: missingImplementation,
   initLoginWithEmailOTP: missingImplementation,
   completeLoginWithEmailOTP: missingImplementation,
   logout: missingImplementation,

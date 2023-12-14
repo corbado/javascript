@@ -4,9 +4,10 @@ interface Props {
   placeholder: string;
   onChange: (value: string) => void;
   onFocus?: () => void;
+  autoComplete?: string;
 }
 
-const RoundedTextInput = ({ placeholder, onChange, onFocus }: Props) => {
+const RoundedTextInput = ({ placeholder, onChange, onFocus, autoComplete }: Props) => {
   const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -26,6 +27,7 @@ const RoundedTextInput = ({ placeholder, onChange, onFocus }: Props) => {
       placeholder={placeholder}
       onChange={onValueChange}
       onFocus={onFocusClick}
+      autoComplete={autoComplete}
       required
     />
   );

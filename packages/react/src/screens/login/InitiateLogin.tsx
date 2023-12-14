@@ -103,12 +103,11 @@ export const InitiateLogin = () => {
         <FormInput
           name='username'
           type='email'
-          autoComplete='email'
+          autoComplete='email webauthn'
           label={t('textField_email')}
           onChange={onChange}
           value={formEmail}
           error={errorMessage}
-          autoComplete='username webauthn'
         />
       </AuthFormScreenWrapper>
     </>

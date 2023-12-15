@@ -82,11 +82,11 @@ export const InitiateSignup = () => {
     const errors: SignupForm = { ...defaultFormTemplate };
 
     if (!signupData.name) {
-      errors.name = t('validationError_name');
+      errors.name = tError('validationError_invalidName');
     }
 
     if (!signupData.username || !emailRegex.test(signupData.username)) {
-      errors.username = t('validationError_email');
+      errors.username = tError('validationError_invalidEmail');
     }
 
     setErrorData(errors);

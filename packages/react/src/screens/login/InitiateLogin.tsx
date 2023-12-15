@@ -1,5 +1,12 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { canUsePasskeys, emailRegex, FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
+import {
+  canUsePasskeys,
+  emailRegex,
+  FlowHandlerEvents,
+  FlowType,
+  makeApiCallWithErrorHandler,
+} from '@corbado/shared-ui';
+import type { RecoverableError } from '@corbado/web-core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,10 +15,11 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const InitiateLogin = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'login.start' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.start' });
+  const { t: tError } = useTranslation('translation', { keyPrefix: 'errors' });
   const { setEmail } = useUserData();
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { loginWithPasskey, loginWithConditionalUI } = useCorbado();
+  const { loginWithPasskey, loginWithConditionalUI, getUserAuthMethods } = useCorbado();
   const [formEmail, setFormEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -51,30 +59,35 @@ export const InitiateLogin = () => {
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
-        const result = await loginWithPasskey(formEmail);
-
-        if (result?.err) {
-          throw result.val.name;
-        }
-
+        await makeApiCallWithErrorHandler(() => loginWithPasskey(formEmail));
         void navigateNext(FlowHandlerEvents.PasskeySuccess);
       }
 
+      await makeApiCallWithErrorHandler(() => getUserAuthMethods(formEmail));
       void navigateNext(FlowHandlerEvents.EmailOtp);
     } catch (e) {
-      console.log(e);
-      if (e === 'NoPasskeyAvailableError') {
-        void navigateNext(FlowHandlerEvents.EmailOtp);
-        return;
-      }
+      const error = e as RecoverableError;
 
-      void navigateNext(FlowHandlerEvents.PasskeyError);
+      switch (error.name) {
+        case 'UnknownUserError':
+          setErrorMessage(tError('serverError_unknownUser'));
+          setLoading(false);
+          break;
+        case 'NoPasskeyAvailableError':
+          void navigateNext(FlowHandlerEvents.EmailOtp);
+          break;
+        case 'UnknownError':
+          throw e;
+        default:
+          void navigateNext(FlowHandlerEvents.PasskeyError);
+          break;
+      }
     }
   };
 
   const handleSubmit = useCallback(() => {
     if (!emailRegex.test(formEmail)) {
-      setErrorMessage(t('validationError_email'));
+      setErrorMessage(tError('validationError_invalidEmail'));
       return;
     }
 

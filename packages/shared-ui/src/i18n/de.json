@@ -1,95 +1,118 @@
 {
-  "signup": {
-    "start": {
-      "header": "Erstellen Sie Ihr Konto",
-      "subheader": "Sie haben bereits ein Konto? ",
-      "button_login": "Einloggen",
-      "button_submit": "Mit E-Mail fortfahren",
-      "textField_name": "Name",
-      "textField_email": "E-Mail-Adresse",
-      "validationError_name": "Bitte geben Sie einen Namen ein",
-      "validationError_email": "Bitte geben Sie eine gültige E-Mail ein",
-      "validationError_emailExists": "E-Mail-Adresse wird bereits verwendet."
+  "authenticationFlows": {
+    "signup": {
+      "start": {
+        "header": "Erstellen Sie Ihr Konto",
+        "subheader": "Haben Sie bereits ein Konto? ",
+        "button_login": "Einloggen",
+        "button_submit": "Weiter mit E-Mail",
+        "textField_name": "Name",
+        "textField_email": "E-Mail-Adresse",
+        "validationError_name": "Bitte geben Sie einen Namen ein",
+        "validationError_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+        "validationError_emailExists": "E-Mail-Adresse wird bereits verwendet."
+      },
+      "passkey": {
+        "header": "Richten wir Sie ein mit ",
+        "body": "Wir erstellen ein Konto für ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Ihr Konto erstellen",
+        "button_emailOtp": "E-Mail-Einmalkode senden",
+        "button_back": "Zurück"
+      },
+      "passkeyBenefits": {
+        "header": "Passkeys",
+        "body_introduction": "Mit Passkeys müssen Sie sich keine komplexen Passwörter mehr merken. Melden Sie sich sicher an mit ",
+        "body_loginMethods": "Face ID, Touch ID oder Sperrcode.",
+        "button_start": "Passkey erstellen",
+        "button_skip": "Vielleicht später"
+      },
+      "passkeySuccess": {
+        "header": "Willkommen!",
+        "subheader": "Passkey erstellt",
+        "body_text1": "Sie können jetzt Ihre Identität bestätigen mit Ihrem ",
+        "body_text2": "Passkey oder per E-Mail-Einmalkode",
+        "body_text3": " beim Einloggen.",
+        "button": "Fortfahren"
+      },
+      "passkeyError": {
+        "header": "Richten wir Sie ein",
+        "body_errorMessage1": "Ihr Konto konnte nicht erstellt werden mit ",
+        "body_errorMessage2": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Einmalkode an.",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_retry": "Erneut versuchen",
+        "button_emailOtp": "E-Mail-Einmalkode senden",
+        "button_back": "Zurück",
+        "button_cancel": "Abbrechen"
+      },
+      "passkeyPrompt": {
+        "header": "Schneller einloggen mit ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Aktivieren",
+        "button_skip": "Vielleicht später"
+      },
+      "emailOtp": {
+        "header": "Code eingeben, um Konto zu erstellen",
+        "body_text1": "Wir haben gerade einen Einmalkode an ",
+        "body_text2": " gesendet. Der Code läuft bald ab, bitte geben Sie ihn bald ein.",
+        "validationError_otp": "OTP ist falsch",
+        "button_verify": "Fortfahren",
+        "button_sendOtpAgain": "Einmalkode erneut senden",
+        "button_back": "Abbrechen"
+      }
     },
-    "passkey": {
-      "header": "Lassen Sie uns Ihr Konto einrichten mit ",
-      "body": "Wir werden ein Konto für ",
-      "button_showPasskeyBenefits": "Passkeys",
-      "button_start": "Ihr Konto erstellen",
-      "button_emailOtp": "E-Mail-Einmalkennwort senden",
-      "button_back": "Zurück"
-    },
-    "passkeyBenefits": {
-      "header": "Passkeys",
-      "body_introduction": "Mit Passkeys müssen Sie sich keine komplexen Passwörter mehr merken. Melden Sie sich sicher an mit ",
-      "body_loginMethods": "Face ID, Touch ID oder Bildschirmsperrcode.",
-      "button_start": "Passkey erstellen",
-      "button_skip": "Vielleicht später"
-    },
-    "passkeySuccess": {
-      "header": "Willkommen!",
-      "subheader": "Passkey erstellt",
-      "body_text1": "Sie können jetzt Ihre Identität bestätigen mit Ihrem ",
-      "body_text2": "Passkey oder per E-Mail-Einmalkennwort",
-      "body_text3": " beim Einloggen.",
-      "button": "Weiter"
-    },
-    "passkeyError": {
-      "header": "Lassen Sie uns Ihr Konto einrichten",
-      "body_errorMessage1": "Ihr Konto konnte nicht mit ",
-      "body_errorMessage2": " erstellt werden. Versuchen Sie es erneut oder registrieren Sie sich mit E-Mail-Einmalkennwort.",
-      "button_showPasskeyBenefits": "Passkeys",
-      "button_retry": "Erneut versuchen",
-      "button_emailOtp": "E-Mail-Einmalkennwort senden",
-      "button_back": "Zurück",
-      "button_cancel": "Abbrechen"
-    },
-    "passkeyPrompt": {
-      "header": "Schneller einloggen mit ",
-      "button_showPasskeyBenefits": "Passkeys",
-      "button_start": "Aktivieren",
-      "button_skip": "Vielleicht später"
-    },
-    "emailOtp": {
-      "header": "Geben Sie den Code ein, um das Konto zu erstellen",
-      "body_text1": "Wir haben Ihnen gerade einen Einmalkennwort gesendet an ",
-      "body_text2": ". Der Code läuft bald ab, bitte geben Sie ihn bald ein.",
-      "validationError_otp": "OTP ist falsch",
-      "button_verify": "Weiter",
-      "button_sendOtpAgain": "Einmalkennwort erneut senden",
-      "button_back": "Abbrechen"
+    "login": {
+      "start": {
+        "header": "Willkommen zurück!",
+        "subheader": "Noch kein Konto? ",
+        "button_signup": "Konto erstellen",
+        "button_submit": "Weiter mit E-Mail",
+        "textField_email": "E-Mail-Adresse",
+        "validationError_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+      },
+      "passkeyError": {
+        "header": "Einloggen mit Passkeys",
+        "body": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Einmalkode an.",
+        "button_retry": "Erneut versuchen",
+        "button_emailOtp": "E-Mail-Einmalkode senden",
+        "button_back": "Zurück",
+        "button_cancel": "Abbrechen"
+      },
+      "emailOtp": {
+        "header": "Code eingeben, um sich einzuloggen",
+        "body_text1": "Wir haben gerade einen Einmalkode an ",
+        "body_text2": " gesendet. Der Code läuft bald ab, bitte geben Sie ihn bald ein.",
+        "validationError_otp": "OTP ist falsch",
+        "button_verify": "Fortfahren",
+        "button_sendOtpAgain": "Einmalkode erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "passkeyPrompt": {
+        "header": "Schneller einloggen mit ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Aktivieren",
+        "button_skip": "Vielleicht später"
+      },
+      "passkeyBenefits": {
+        "header": "Passkeys",
+        "body_introduction": "Mit Passkeys müssen Sie sich keine komplexen Passwörter mehr merken. Melden Sie sich sicher an mit ",
+        "body_loginMethods": "Face ID, Touch ID oder Sperrcode.",
+        "button_start": "Passkey erstellen",
+        "button_skip": "Vielleicht später"
+      }
     }
   },
-  "login": {
-    "start": {
-      "header": "Willkommen zurück!",
-      "subheader": "Sie haben noch kein Konto? ",
-      "button_signup": "Konto erstellen",
-      "button_submit": "Mit E-Mail fortfahren",
-      "textField_email": "E-Mail-Adresse",
-      "validationError_email": "Bitte geben Sie eine gültige E-Mail ein"
-    },
-    "passkeyError": {
-      "header": "Einloggen mit Passkeys",
-      "body": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder loggen Sie sich mit E-Mail-Einmalkennwort ein.",
-      "button_retry": "Erneut versuchen",
-      "button_emailOtp": "E-Mail-Einmalkennwort senden",
-      "button_back": "Zurück",
-      "button_cancel": "Abbrechen"
-    },
-    "emailOtp": {
-      "header": "Geben Sie den Code ein, um sich anzumelden",
-      "body_text1": "Wir haben Ihnen gerade einen Einmalkennwort gesendet an ",
-      "body_text2": ". Der Code läuft bald ab, bitte geben Sie ihn bald ein.",
-      "validationError_otp": "OTP ist falsch",
-      "button_verify": "Weiter",
-      "button_sendOtpAgain": "Einmalkennwort erneut senden",
-      "button_back": "Abbrechen"
-    },
-    "passkeyPrompt": {
-      "header": "Schneller einloggen mit Passkeys",
-      "button_start": "Aktivieren",
-      "button_skip": "Vielleicht später"
-    }
+  "errors": {
+    "validationError_invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "validationError_invalidName": "Bitte geben Sie einen Namen ein",
+    "validationError_passkeyChallengeCancelled": "Passkey-Herausforderung abgebrochen",
+    "serverError_userAlreadyExists": "E-Mail-Adresse wird bereits verwendet",
+    "serverError_unknownUser": "Benutzer existiert nicht",
+    "serverError_noPasskeyAvailable": "Kein Passkey verfügbar",
+    "serverError_invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
+    "serverError_invalidOtp": "Der bereitgestellte OTP ist nicht gültig",
+    "serverError_timeoutOtp": "Der bereitgestellte OTP ist nicht mehr gültig",
+    "serverError_unreachableEmail": "Ungültige / unerreichbare E-Mail-Adresse",
+    "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
   }
 }

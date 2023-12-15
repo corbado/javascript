@@ -1,5 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
+import type { RecoverableError } from '@corbado/web-core';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,18 +10,22 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.emailOtp' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.emailOtp' });
   const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, currentFlow } = useFlowHandler();
   const { completeSignUpWithEmailOTP } = useCorbado();
-  const { email, sendEmail } = useUserData();
+  const { email, sendEmail, setEmailError } = useUserData();
 
   React.useEffect(() => {
-    try {
-      void sendEmail(currentFlow);
-    } catch (error) {
+    sendEmail(currentFlow).catch(e => {
+      const error = e as RecoverableError;
+
+      if (error.name === 'InvalidUserInputError') {
+        setEmailError(tErrors('serverError_unreachableEmail'));
+      }
+
       void navigateNext(FlowHandlerEvents.CancelOtp);
-    }
+    });
   }, []);
 
   const header = t('header');
@@ -31,7 +36,7 @@ export const EmailOTP = () => {
       {t('body_text2')}
     </>
   );
-  const validationError = tErrors('serverErrors.InvalidOtpInputError');
+  const validationError = tErrors('serverError_invalidOtp');
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
@@ -41,13 +46,20 @@ export const EmailOTP = () => {
     async (otp: string, setLoading, setError) => {
       setLoading(true);
 
-      try {
-        await completeSignUpWithEmailOTP(otp);
-        void navigateNext();
-      } catch (error) {
-        setLoading(false);
-        setError(error as string);
-      }
+      await makeApiCallWithErrorHandler(
+        () => completeSignUpWithEmailOTP(otp),
+        () => void navigateNext(),
+        error => {
+          setLoading(false);
+
+          if (error.name === 'InvalidOtpInputError') {
+            setError(tErrors('serverError_invalidOtp'));
+            return;
+          }
+
+          throw error;
+        },
+      );
     },
     [],
   );

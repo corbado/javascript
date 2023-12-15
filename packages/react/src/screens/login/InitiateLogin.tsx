@@ -76,8 +76,6 @@ export const InitiateLogin = () => {
         case 'NoPasskeyAvailableError':
           void navigateNext(FlowHandlerEvents.EmailOtp);
           break;
-        case 'UnknownError':
-          throw e;
         default:
           void navigateNext(FlowHandlerEvents.PasskeyError);
           break;

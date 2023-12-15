@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { FlowNames } from '@corbado/shared-ui';
-import { LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
+import { LoginFlowNames, makeApiCallWithErrorHandler, SignUpFlowNames } from '@corbado/shared-ui';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
@@ -11,20 +11,22 @@ export const UserDataProvider = ({ children }: PropsWithChildren) => {
   const { initLoginWithEmailOTP, initSignUpWithEmailOTP } = useCorbado();
   const [email, setEmail] = useState<string>();
   const [userName, setUserName] = useState<string>();
+  const [emailError, setEmailError] = useState<string>();
   const emailSentTo = useRef<string>();
 
   const sendEmail = useCallback(
-    (currentFlow: FlowNames) => {
+    async (currentFlow: FlowNames) => {
       if (!email || email === emailSentTo.current) {
         return;
       }
 
-      if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
-        void initSignUpWithEmailOTP(email, userName ?? '');
-      } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
-        void initLoginWithEmailOTP(email);
-      }
       emailSentTo.current = email;
+
+      if (currentFlow === SignUpFlowNames.PasskeySignupWithEmailOTPFallback) {
+        await makeApiCallWithErrorHandler(() => initSignUpWithEmailOTP(email, userName ?? ''));
+      } else if (currentFlow === LoginFlowNames.PasskeyLoginWithEmailOTPFallback) {
+        await makeApiCallWithErrorHandler(() => initLoginWithEmailOTP(email));
+      }
     },
     [email, userName],
   );
@@ -35,9 +37,11 @@ export const UserDataProvider = ({ children }: PropsWithChildren) => {
       setEmail,
       userName,
       setUserName,
+      emailError,
+      setEmailError,
       sendEmail,
     };
-  }, [email, userName, sendEmail]);
+  }, [email, userName, emailError, sendEmail]);
 
   return <UserDataContext.Provider value={contextValue}>{children}</UserDataContext.Provider>;
 };

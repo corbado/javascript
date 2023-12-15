@@ -10,7 +10,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'login.emailOtp' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.emailOtp' });
   const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, currentFlow } = useFlowHandler();
   const { getUserAuthMethods, completeLoginWithEmailOTP } = useCorbado();
@@ -32,7 +32,7 @@ export const EmailOTP = () => {
       {t('body_text2')}
     </>
   );
-  const validationError = tErrors('serverErrors.InvalidOtpInputError');
+  const validationError = tErrors('serverError_invalidOtp');
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
@@ -58,7 +58,7 @@ export const EmailOTP = () => {
         const error = e as RecoverableError;
 
         if (error.name === 'InvalidOtpInputError') {
-          setError(tErrors('serverErrors.InvalidOtpInputError'));
+          setError(tErrors('serverError_invalidOtp'));
           return;
         }
 

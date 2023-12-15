@@ -110,7 +110,9 @@
     "serverError_unknownUser": "User does not exist",
     "serverError_noPasskeyAvailable": "No passkey available",
     "serverError_invalidPasskey": "The provided passkey is no longer valid",
-    "serverError_invalidOtp": "The provided OTP is no longer valid",
+    "serverError_invalidOtp": "The provided OTP is not valid",
+    "serverError_timeoutOtp": "The provided OTP is no longer valid",
+    "serverError_unreachableEmail": "Invalid / unreachable email address",
     "unknownError": "Something went wrong. Please try again later"
   }
 }

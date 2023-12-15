@@ -49,6 +49,9 @@ export class CorbadoError extends Error {
               return new InvalidUserInputError('Field cannot be blank', 'username');
             case "user doesn't exist":
               return new UnknownUserError();
+            case 'Invalid email address':
+            case 'Invalid / unreachable email address':
+              return new InvalidUserInputError('Invalid / unreachable email address', 'username');
           }
         }
 

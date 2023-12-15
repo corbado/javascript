@@ -1,6 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { emailRegex, FlowType, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
-import type { RecoverableError } from '@corbado/web-core';
 import type { ChangeEvent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +27,7 @@ export const InitiateSignup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.start' });
   const { t: tError } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, changeFlow } = useFlowHandler();
-  const { setEmail, email, setUserName, userName } = useUserData();
+  const { setEmail, email, setUserName, userName, emailError } = useUserData();
   const { getUserAuthMethods } = useCorbado();
 
   const [signupData, setSignupData] = useState<SignupForm>({
@@ -41,6 +40,7 @@ export const InitiateSignup = () => {
 
   useEffect(() => {
     setSignupData(createFormTemplate(email, userName));
+    setErrorData(createFormTemplate(emailError));
   }, []);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -51,31 +51,24 @@ export const InitiateSignup = () => {
   const handleSignup = async () => {
     setLoading(true);
 
-    try {
-      const authMethods = await makeApiCallWithErrorHandler(
-        () => getUserAuthMethods(signupData.username),
-        () => {
+    await makeApiCallWithErrorHandler(
+      () => getUserAuthMethods(signupData.username),
+      () => {
+        const errors: SignupForm = { ...defaultFormTemplate };
+        errors.username = tError('serverError_userAlreadyExists');
+        setErrorData(errors);
+        setLoading(false);
+      },
+      e => {
+        if (e.name === 'UnknownUserError') {
           setEmail(signupData.username);
           setUserName(signupData.name);
           void navigateNext();
-        },
-      );
-
-      if (!authMethods) {
-        return;
-      }
-
-      const errors: SignupForm = { ...defaultFormTemplate };
-      errors.username = tError('serverError_userAlreadyExists');
-      setErrorData(errors);
-      setLoading(false);
-    } catch (e) {
-      const error = e as RecoverableError;
-
-      if (error.name !== 'UnknownUserError') {
+          return;
+        }
         throw e;
-      }
-    }
+      },
+    );
   };
 
   const handleSubmit = useCallback(() => {

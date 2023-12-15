@@ -4,9 +4,11 @@ import { createContext } from 'react';
 export interface UserDataContextProps {
   email: string | undefined;
   userName: string | undefined;
+  emailError: string | undefined;
   setEmail: (value: string) => void;
   setUserName: (value: string) => void;
-  sendEmail: (currentFlow: FlowNames) => void;
+  setEmailError: (value: string) => void;
+  sendEmail: (currentFlow: FlowNames) => Promise<void>;
 }
 
 const missingImplementation = (): never => {
@@ -16,8 +18,10 @@ const missingImplementation = (): never => {
 export const initialContext = {
   email: undefined,
   userName: undefined,
+  emailError: undefined,
   setEmail: missingImplementation,
   setUserName: missingImplementation,
+  setEmailError: missingImplementation,
   sendEmail: missingImplementation,
 };
 

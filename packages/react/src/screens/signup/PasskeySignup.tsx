@@ -1,5 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,10 +9,11 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const PasskeySignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkey' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkey' });
+  const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, navigateBack } = useFlowHandler();
   const { signUpWithPasskey } = useCorbado();
-  const { email, userName } = useUserData();
+  const { email, userName, setEmailError } = useUserData();
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(
@@ -50,18 +51,20 @@ export const PasskeySignup = () => {
 
     setLoading(true);
 
-    try {
-      const resp = await signUpWithPasskey(email, userName);
+    await makeApiCallWithErrorHandler(
+      () => signUpWithPasskey(email, userName),
+      () => navigateNext(FlowHandlerEvents.PasskeySuccess),
+      error => {
+        if (error.name === 'InvalidUserInputError') {
+          setEmailError(tErrors('serverError_unreachableEmail'));
+          navigateBack();
+          return;
+        }
 
-      if (resp.err) {
-        throw new Error(resp.val.name);
-      }
-
-      return navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      return navigateNext(FlowHandlerEvents.PasskeyError);
-    }
-  }, [email, navigateNext, signUpWithPasskey, userName]);
+        return navigateNext(FlowHandlerEvents.PasskeyError);
+      },
+    );
+  }, [email, userName, navigateBack, navigateNext, setEmailError, tErrors]);
 
   const handleSendOtp = useCallback(() => {
     return navigateNext(FlowHandlerEvents.EmailOtp);

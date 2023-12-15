@@ -22,6 +22,7 @@ export const EmailOTP = () => {
 
       if (error.name === 'InvalidUserInputError') {
         setEmailError(tErrors('serverError_unreachableEmail'));
+        return void navigateNext(FlowHandlerEvents.InvalidEmail);
       }
 
       void navigateNext(FlowHandlerEvents.CancelOtp);

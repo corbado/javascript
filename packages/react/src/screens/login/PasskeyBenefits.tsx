@@ -1,5 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const PasskeyBenefits = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'login.passkeyBenefits' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.passkeyBenefits' });
   const { email, userName } = useUserData();
   const { appendPasskey } = useCorbado();
   const { navigateNext } = useFlowHandler();
@@ -31,17 +31,11 @@ export const PasskeyBenefits = () => {
   const handleCreatePasskey = useCallback(async () => {
     setLoading(true);
 
-    try {
-      const resp = await appendPasskey();
-
-      if (resp.err) {
-        throw new Error(resp.val.name);
-      }
-
-      return navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      return navigateNext(FlowHandlerEvents.PasskeyError);
-    }
+    await makeApiCallWithErrorHandler(
+      appendPasskey,
+      () => navigateNext(FlowHandlerEvents.PasskeySuccess),
+      () => navigateNext(FlowHandlerEvents.PasskeyError),
+    );
   }, [appendPasskey, email, navigateNext, userName]);
 
   const handleBack = useCallback(() => {

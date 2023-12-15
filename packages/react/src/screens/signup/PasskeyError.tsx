@@ -1,5 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,10 +9,11 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyError' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeyError' });
+  const { t: tError } = useTranslation('translation', { keyPrefix: 'errors' });
   const { signUpWithPasskey, shortSession } = useCorbado();
   const { navigateBack, navigateNext } = useFlowHandler();
-  const { email, userName } = useUserData();
+  const { email, userName, setEmailError } = useUserData();
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
@@ -50,25 +51,24 @@ export const PasskeyError = () => {
   }, [t, shortSession]);
 
   const handleCreatePasskey = useCallback(async () => {
-    if (!email) {
-      navigateBack();
-      return;
+    if (!email || !userName) {
+      return void navigateNext(FlowHandlerEvents.InvalidEmail);
     }
 
     setLoading(true);
 
-    try {
-      const resp = await signUpWithPasskey(email, userName ?? '');
+    await makeApiCallWithErrorHandler(
+      () => signUpWithPasskey(email, userName),
+      () => void navigateNext(FlowHandlerEvents.PasskeySuccess),
+      error => {
+        if (error.name === 'InvalidUserInputError') {
+          setEmailError(tError('serverError_unreachableEmail'));
+          return void navigateNext(FlowHandlerEvents.InvalidEmail);
+        }
 
-      if (resp?.err) {
-        throw new Error(resp.val.name);
-      }
-
-      void navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-    }
+        setLoading(false);
+      },
+    );
   }, [email, navigateBack, navigateNext, signUpWithPasskey, userName]);
 
   const handleSendOtp = useCallback(() => {

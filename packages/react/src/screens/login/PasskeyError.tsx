@@ -9,7 +9,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'login.passkeyError' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.passkeyError' });
   const { loginWithPasskey, shortSession } = useCorbado();
   const { navigateBack, navigateNext } = useFlowHandler();
   const { email } = useUserData();

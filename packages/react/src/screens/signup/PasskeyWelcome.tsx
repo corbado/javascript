@@ -6,7 +6,7 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyWelcome = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeySuccess' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeySuccess' });
   const { navigateNext } = useFlowHandler();
 
   const header = useMemo(() => t('header'), [t]);

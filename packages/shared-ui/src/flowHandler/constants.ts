@@ -51,6 +51,7 @@ export enum FlowHandlerEvents {
   MaybeLater = 'maybe-later',
   CancelPasskey = 'cancel-passkey',
   CancelOtp = 'cancel-otp',
+  InvalidEmail = 'invalid-email',
 }
 
 export enum FlowType {

@@ -46,7 +46,7 @@ export const PasskeySignup = () => {
 
   const handleCreateAccount = useCallback(async () => {
     if (!email || !userName) {
-      return;
+      return void navigateNext(FlowHandlerEvents.InvalidEmail);
     }
 
     setLoading(true);
@@ -57,14 +57,13 @@ export const PasskeySignup = () => {
       error => {
         if (error.name === 'InvalidUserInputError') {
           setEmailError(tErrors('serverError_unreachableEmail'));
-          navigateBack();
-          return;
+          return navigateNext(FlowHandlerEvents.InvalidEmail);
         }
 
         return navigateNext(FlowHandlerEvents.PasskeyError);
       },
     );
-  }, [email, userName, navigateBack, navigateNext, setEmailError, tErrors]);
+  }, [email, userName, navigateNext, setEmailError, tErrors]);
 
   const handleSendOtp = useCallback(() => {
     return navigateNext(FlowHandlerEvents.EmailOtp);

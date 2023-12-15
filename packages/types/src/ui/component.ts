@@ -18,4 +18,6 @@ export interface CorbadoAuthUIProps {
   customTranslations?: Record<string, object> | null;
   darkMode?: 'on' | 'off' | 'auto';
   theme?: string | CustomThemes;
+  isDevMode?: boolean;
+  customerSupportEmail?: string;
 }

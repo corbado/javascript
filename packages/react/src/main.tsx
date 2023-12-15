@@ -16,6 +16,8 @@ const CorbadoAuthUI = ({
   customTranslations = null,
   darkMode = 'auto',
   theme,
+  isDevMode = false,
+  customerSupportEmail = '',
 }: CorbadoAuthUIProps) => {
   React.useEffect(() => {
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
@@ -31,7 +33,10 @@ const CorbadoAuthUI = ({
           onLoggedIn={onLoggedIn}
           initialFlowType={FlowType.SignUp}
         >
-          <ScreensFlow />
+          <ScreensFlow
+            isDevMode={isDevMode}
+            customerSupportEmail={customerSupportEmail}
+          />
         </FlowHandlerProvider>
       </UserDataProvider>
     </div>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import './styles/index.css';
+import './styles/error_page.css';
 import './styles/themes/dark.css';
 import './styles/themes/emerald-funk.css';
 

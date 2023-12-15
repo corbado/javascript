@@ -1,12 +1,21 @@
+import { useCorbado } from '@corbado/react-sdk';
 import { CommonScreens } from '@corbado/shared-ui';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ScreenMap } from '../flows';
 import { flowScreensMap } from '../flows';
 import useFlowHandler from '../hooks/useFlowHandler';
+import { ErrorBoundary } from './ErrorBoundary';
 
-export const ScreensFlow = () => {
+interface ScreenFlowProps {
+  isDevMode: boolean;
+  customerSupportEmail: string;
+}
+
+export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEmail }) => {
   const { currentFlow, currentScreen } = useFlowHandler();
+  const { globalError } = useCorbado();
   const [ComponentMap, setComponentMap] = useState<ScreenMap>({});
 
   useEffect(() => {
@@ -22,5 +31,13 @@ export const ScreensFlow = () => {
   }, [ComponentMap]);
 
   // Render the component if it exists, otherwise a fallback or null
-  return ScreenComponent ? <ScreenComponent /> : <EndComponent />;
+  return (
+    <ErrorBoundary
+      globalError={globalError}
+      isDevMode={isDevMode}
+      customerSupportEmail={customerSupportEmail}
+    >
+      {ScreenComponent ? <ScreenComponent /> : <EndComponent />}
+    </ErrorBoundary>
+  );
 };

@@ -8,7 +8,7 @@ function App() {
       className='App'
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh' }}
     >
-      <CorbadoProvider projectId={process.env.REACT_APP_CORBADO_PROJECT_ID!}>
+      <CorbadoProvider projectId=''>
         <RouteProvider />
       </CorbadoProvider>
     </div>

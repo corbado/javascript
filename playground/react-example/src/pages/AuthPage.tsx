@@ -5,6 +5,7 @@ import englishTranslations from '../translations/en';
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const isDevMode = process.env.NODE_ENV === 'development';
 
   const onLoggedIn = () => {
     navigate('/');
@@ -17,6 +18,8 @@ const AuthPage = () => {
         fr: frenchTranslations,
         en: englishTranslations,
       }}
+      isDevMode={isDevMode}
+      customerSupportEmail='dev@test.com'
     />
   );
 };

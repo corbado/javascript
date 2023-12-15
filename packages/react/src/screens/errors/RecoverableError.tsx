@@ -8,14 +8,20 @@ const RecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: ErrorTyp
       <div className='title'>{error.name} (server side)</div>
       <div className='error-details'>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Message:</div>
+          <div className='error-detail-title'>Message</div>
           <div className='error-detail-value'>{error.message}</div>
         </div>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Stack:</div>
+          <div className='error-detail-title'>Stack</div>
           <div className='error-detail-value'>{error.stack}</div>
         </div>
       </div>
+      <button
+        className='error-button'
+        disabled
+      >
+        See browser console for more details
+      </button>
     </div>
   );
 };

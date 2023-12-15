@@ -31,21 +31,23 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if ((this.props.globalError || this.state.error) && !this.props.isDevMode) {
       return (
-        <div className='error-page prod-error-container'>
-          <div className='prod-error-title'>Something went wrong</div>
-          <div className='prod-error-details'>
-            <div className='prod-error-apology'>We’re sorry that our service is currently not available.</div>
-            <div>
-              Please try again in a few moments and if the issue persists, please contact{' '}
-              {this.props.customerSupportEmail}.
+        <div className='error-page'>
+          <div className='prod-error-container'>
+            <div className='prod-error-title'>Something went wrong</div>
+            <div className='prod-error-details'>
+              <div className='prod-error-apology'>We’re sorry that our service is currently not available.</div>
+              <div>
+                Please try again in a few moments and if the issue persists
+                {this.props.customerSupportEmail ? `, please contact ${this.props.customerSupportEmail}.` : '.'}
+              </div>
             </div>
+            <button
+              className='prod-error-button'
+              onClick={() => window.location.reload()}
+            >
+              Refresh page
+            </button>
           </div>
-          <button
-            className='prod-error-button'
-            onClick={() => window.location.reload()}
-          >
-            Refresh page
-          </button>
         </div>
       );
     }

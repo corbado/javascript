@@ -1,5 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { emailRegex, FlowType } from '@corbado/shared-ui';
+import { emailRegex, FlowType, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
+import type { RecoverableError } from '@corbado/web-core';
 import type { ChangeEvent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,8 @@ const createFormTemplate = (email?: string, username?: string) => ({
 });
 
 export const InitiateSignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.start' });
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.start' });
+  const { t: tError } = useTranslation('translation', { keyPrefix: 'errors' });
   const { navigateNext, changeFlow } = useFlowHandler();
   const { setEmail, email, setUserName, userName } = useUserData();
   const { getUserAuthMethods } = useCorbado();
@@ -48,20 +50,31 @@ export const InitiateSignup = () => {
 
   const handleSignup = async () => {
     setLoading(true);
-    try {
-      const authMethods = await getUserAuthMethods(signupData.username);
 
-      if (authMethods) {
-        const errors: SignupForm = { ...defaultFormTemplate };
-        errors.username = t('validationError_emailExists');
-        setErrorData(errors);
-        setLoading(false);
+    try {
+      const authMethods = await makeApiCallWithErrorHandler(
+        () => getUserAuthMethods(signupData.username),
+        () => {
+          setEmail(signupData.username);
+          setUserName(signupData.name);
+          void navigateNext();
+        },
+      );
+
+      if (!authMethods) {
         return;
       }
-    } catch (error) {
-      setEmail(signupData.username);
-      setUserName(signupData.name);
-      void navigateNext();
+
+      const errors: SignupForm = { ...defaultFormTemplate };
+      errors.username = tError('serverError_userAlreadyExists');
+      setErrorData(errors);
+      setLoading(false);
+    } catch (e) {
+      const error = e as RecoverableError;
+
+      if (error.name !== 'UnknownUserError') {
+        throw e;
+      }
     }
   };
 

@@ -16,6 +16,7 @@ export const makeApiCallWithErrorHandler = async <V, E extends RecoverableError>
     errorHandler(resp.val);
     return Promise.reject(resp.val);
   } else {
+    // result is set in else for type inference
     result = resp.val;
   }
 

@@ -40,12 +40,16 @@ export class CorbadoError extends Error {
 
         // we only care about the first error
         const firstError = errorResp.validation[0];
-        if (firstError.field === 'username' && firstError.message === 'user already exists') {
-          return new UserAlreadyExistsError();
-        }
 
-        if (firstError.field === 'username' && firstError.message === 'cannot be blank') {
-          return new InvalidUserInputError('Field cannot be blank', 'username');
+        if (firstError.field === 'username') {
+          switch (firstError.message) {
+            case 'user already exists':
+              return new UserAlreadyExistsError();
+            case 'cannot be blank':
+              return new InvalidUserInputError('Field cannot be blank', 'username');
+            case "user doesn't exist":
+              return new UnknownUserError();
+          }
         }
 
         break;

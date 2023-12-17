@@ -1,4 +1,4 @@
-import { useCorbado } from '@corbado/react';
+import { PasskeyList, useCorbado } from '@corbado/react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
@@ -6,7 +6,7 @@ const HomePage = () => {
   const { shortSession, user, logout } = useCorbado();
   const navigate = useNavigate();
 
-  if (user === undefined || shortSession === undefined) {
+  if (!user || !shortSession) {
     return <div className='h-screen flex flex-col items-center justify-center'>You are not logged in.</div>;
   }
 
@@ -32,6 +32,7 @@ const HomePage = () => {
         >
           Logout
         </button>
+        <PasskeyList />
       </div>
     </div>
   );

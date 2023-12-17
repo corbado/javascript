@@ -96,4 +96,12 @@
     background-color: #4b8fff;
     border-radius: 3.5rem;
   }
+
+  .cb-passkey-list-icon svg {
+    fill: #fff;
+  }
+
+  .cb-passkey-list-header-bullet {
+    border-color: #fff;
+  }
 }

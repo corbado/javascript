@@ -1,4 +1,4 @@
-import type { ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
+import type { PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   AuthMethodsListError,
@@ -9,6 +9,8 @@ import type {
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   NonRecoverableError,
+  PasskeyDeleteError,
+  PasskeyListError,
   SignUpWithPasskeyError,
 } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
@@ -30,6 +32,8 @@ export interface CorbadoContextProps {
   initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, InitSignUpWithEmailOTPError>>;
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
+  passkeyList(): Promise<Result<PassKeyList, PasskeyListError>>;
+  passkeyDelete(id: string): Promise<Result<void, PasskeyDeleteError>>;
   getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError>>;
   getProjectConfig: () => Promise<ProjectConfig>;
 }
@@ -53,6 +57,8 @@ export const initialContext = {
   completeSignUpWithEmailOTP: missingImplementation,
   initAutocompletedLoginWithPasskey: missingImplementation,
   appendPasskey: missingImplementation,
+  passkeyList: missingImplementation,
+  passkeyDelete: missingImplementation,
   getUserAuthMethods: missingImplementation,
   getProjectConfig: missingImplementation,
 };

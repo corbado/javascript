@@ -372,6 +372,75 @@
   height: 1.5rem;
 }
 
+/********** Passkey List **********/
+.cb-passkey-list-card {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  border-radius: 10px;
+  border: black 1px solid;
+  width: 100%;
+  margin: 0.5rem 0.25rem;
+  padding: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.cb-passkey-list-icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.cb-passkey-list-icon img {
+  width: 2rem;
+  height: 2rem;
+}
+
+.cb-passkey-list-icon svg {
+  width: 2rem;
+  height: 2rem;
+  fill: #000;
+}
+
+.cb-passkey-list-details {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  font-size: 1rem;
+  line-height: normal;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+.cb-passkey-list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 1rem;
+}
+
+.cb-passkey-list-header-title {
+  font-weight: 700;
+  margin: auto 0;
+}
+
+.cb-passkey-list-header-badge {
+  border-radius: 2rem;
+  border: black 1px solid;
+  padding: 0.5rem;
+}
+
+.cb-passkey-list-delete:hover {
+  fill: #ff4c51;
+  cursor: pointer;
+}
+
+.cb-passkey-list-primary-button {
+  width: 100%;
+}
+
 /***** Media Queries *****/
 @media screen and (max-width: 768px) {
   .cb-email-links {

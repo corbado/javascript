@@ -23,6 +23,8 @@ export type CompleteSignupWithEmailOTPError = InvalidUserInputError | UnknownErr
 export type InitLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type CompleteLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type AuthMethodsListError = UnknownUserError | UnknownError;
+export type PasskeyListError = UnknownError;
+export type PasskeyDeleteError = UnknownError;
 
 export class CorbadoError extends Error {
   constructor(message: string) {

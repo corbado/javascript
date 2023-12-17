@@ -230,6 +230,16 @@ export class AuthService {
     return Ok(void 0);
   }
 
+  async passkeyList() {
+    const resp = await this.#apiService.passkeyList();
+    return resp;
+  }
+
+  async passkeyDelete(id: string) {
+    const resp = await this.#apiService.passkeyDelete(id);
+    return resp;
+  }
+
   /**
    * Method to log in with an email OTP.
    */

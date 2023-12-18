@@ -1,5 +1,4 @@
 import { useCorbado } from '@corbado/react-sdk';
-import { makeApiCallWithErrorHandler } from '@corbado/shared-ui';
 import type { PassKeyList } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
@@ -18,17 +17,27 @@ const PasskeyList: FC = () => {
       return;
     }
 
-    makeApiCallWithErrorHandler(passkeyList, setPasskeys);
+    void fetchPasskeys();
   }, []);
 
+  const fetchPasskeys = async () => {
+    const result = await passkeyList();
+
+    if (result.err) {
+      throw new Error(result.val.name);
+    }
+
+    setPasskeys(result.val);
+  };
+
   const handleAppendPasskey = async () => {
-    await makeApiCallWithErrorHandler(appendPasskey);
-    await makeApiCallWithErrorHandler(passkeyList, setPasskeys);
+    await appendPasskey();
+    await fetchPasskeys();
   };
 
   const handleDeletePasskey = async (id: string) => {
-    await makeApiCallWithErrorHandler(() => passkeyDelete(id));
-    await makeApiCallWithErrorHandler(passkeyList, setPasskeys);
+    await passkeyDelete(id);
+    await fetchPasskeys();
   };
 
   if (!shortSession) {

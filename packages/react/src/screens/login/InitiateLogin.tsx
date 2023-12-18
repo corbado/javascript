@@ -6,7 +6,6 @@ import {
   FlowType,
   makeApiCallWithErrorHandler,
 } from '@corbado/shared-ui';
-import type { RecoverableError } from '@corbado/web-core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -55,7 +54,7 @@ export const InitiateLogin = () => {
 
   const login = async () => {
     setLoading(true);
-    try {
+    // try {
       const hasPasskeySupport = await canUsePasskeys();
 
       if (hasPasskeySupport) {
@@ -65,7 +64,7 @@ export const InitiateLogin = () => {
 
       await makeApiCallWithErrorHandler(() => getUserAuthMethods(formEmail));
       void navigateNext(FlowHandlerEvents.EmailOtp);
-    } catch (e) {
+    /*} catch (e) {
       const error = e as RecoverableError;
 
       switch (error.name) {
@@ -80,7 +79,7 @@ export const InitiateLogin = () => {
           void navigateNext(FlowHandlerEvents.PasskeyError);
           break;
       }
-    }
+    }*/
   };
 
   const handleSubmit = useCallback(() => {

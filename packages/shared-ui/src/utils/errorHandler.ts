@@ -10,7 +10,7 @@ function defaultSuccessHandler() {
 }
 
 export const makeApiCallWithErrorHandler = async <V, E extends RecoverableError>(
-  apiCall: () => Promise<Result<V, E>>,
+  apiCall: () => Promise<Result<V, E | undefined>>,
   onSuccess: (value: V) => void = defaultSuccessHandler,
   onError: (error: E) => void = defaultErrorHandler,
 ): Promise<V> => {
@@ -18,7 +18,10 @@ export const makeApiCallWithErrorHandler = async <V, E extends RecoverableError>
   let result: V;
 
   if (resp.err) {
-    onError(resp.val);
+    if (resp.val) {
+      onError(resp.val);
+    }
+
     result = null as V;
   } else {
     onSuccess(resp.val);

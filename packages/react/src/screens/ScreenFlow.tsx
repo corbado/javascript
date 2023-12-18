@@ -14,7 +14,7 @@ interface ScreenFlowProps {
 }
 
 export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEmail }) => {
-  const { currentFlow, currentScreen } = useFlowHandler();
+  const { currentFlow, currentScreen, initialized } = useFlowHandler();
   const { globalError } = useCorbado();
   const [ComponentMap, setComponentMap] = useState<ScreenMap>({});
 
@@ -30,6 +30,7 @@ export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEma
     return EndComponentScreen ? <EndComponentScreen /> : null;
   }, [ComponentMap]);
 
+  // TODO: Improve loading component
   // Render the component if it exists, otherwise a fallback or null
   return (
     <ErrorBoundary
@@ -37,7 +38,7 @@ export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEma
       isDevMode={isDevMode}
       customerSupportEmail={customerSupportEmail}
     >
-      {ScreenComponent ? <ScreenComponent /> : <EndComponent />}
+      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <div>Loading...</div>}
     </ErrorBoundary>
   );
 };

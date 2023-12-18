@@ -52,6 +52,10 @@ export enum FlowHandlerEvents {
   CancelPasskey = 'cancel-passkey',
   CancelOtp = 'cancel-otp',
   InvalidEmail = 'invalid-email',
+
+  ChangeFlow = 'change-flow',
+  PrimaryButton = 'primary-button',
+  SecondaryButton = 'secondary-button',
 }
 
 export enum FlowType {

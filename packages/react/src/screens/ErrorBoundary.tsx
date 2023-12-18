@@ -2,7 +2,6 @@ import type { NonRecoverableError, RecoverableError } from '@corbado/web-core';
 import React from 'react';
 
 import NonRecoverableErrorComponent from './errors/NonRecoverableError';
-import RecoverableErrorComponent from './errors/RecoverableError';
 
 export type ErrorBoundaryProps = React.PropsWithChildren<{
   globalError: NonRecoverableError | undefined;
@@ -58,16 +57,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           <NonRecoverableErrorComponent error={this.props.globalError} />
         </div>
       );
-    }
-
-    if (this.state.error) {
-      if (this.props.globalError) {
-        return (
-          <div className='error-page'>
-            <RecoverableErrorComponent error={this.state.error} />
-          </div>
-        );
-      }
     }
 
     return this.props.children;

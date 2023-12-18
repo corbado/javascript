@@ -5,8 +5,10 @@ import type {
   FlowHandlerEvents,
   FlowNames,
   ScreenNames,
+  UserState,
 } from '@corbado/shared-ui';
 import { CommonScreens, FlowHandler, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
+import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -16,9 +18,10 @@ import FlowHandlerContext from './FlowHandlerContext';
 type Props = FlowHandlerConfig;
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
-  const { getProjectConfig } = useCorbado();
+  const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
+  const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(
     props.initialFlowType === FlowType.Login
       ? LoginFlowNames.PasskeyLoginWithEmailOTPFallback
@@ -27,41 +30,52 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   const initialized = useRef(false);
   const onScreenChangeCbId = useRef<number>(0);
   const onFlowChangeCbId = useRef<number>(0);
+  const onUserStateChangeCbId = useRef<number>(0);
 
   useEffect(() => {
     if (initialized.current) {
       return;
     }
-    initialized.current = true;
 
     void (async () => {
       const projectConfig = await getProjectConfig();
-      const flowHandler = new FlowHandler(projectConfig, props);
+      if (projectConfig.err) {
+        // currently there are no errors that can be thrown here
+        return;
+      }
+
+      const flowHandler = new FlowHandler(projectConfig.val, props, i18n);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
       onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
+        setCurrentUserState(value);
+      });
 
-      flowHandler.init();
+      void flowHandler.init(corbadoApp);
 
       setFlowHandler(flowHandler);
-
-      return () => {
-        flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-        flowHandler?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
-      };
+      initialized.current = true;
     })();
+
+    return () => {
+      flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
+      flowHandler?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
+      flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
+    };
   }, []);
 
-  const navigateNext = useCallback(
-    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
-      return flowHandler?.navigateNext(event, eventOptions) ?? CommonScreens.End;
-    },
-    [flowHandler],
-  );
+  useEffect(() => {
+    if (!initialized.current || !user) {
+      return;
+    }
 
-  const peekNext = useCallback(
-    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
-      return flowHandler?.peekNextScreen(event, eventOptions) ?? CommonScreens.End;
+    flowHandler?.updateUser(user);
+  }, [initialized, user]);
+
+  const navigateNext = useCallback(
+    async (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
+      (await flowHandler?.navigateNext(event, eventOptions)) ?? CommonScreens.End;
     },
     [flowHandler],
   );
@@ -77,16 +91,33 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     [flowHandler],
   );
 
+  const emitEvent = useCallback(
+    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
+      return flowHandler!.handleStateUpdate(event, eventOptions);
+    },
+    [flowHandler],
+  );
+
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
       currentFlow,
       currentScreen,
+      currentUserState,
+      initialized: initialized.current,
       navigateNext,
-      peekNext,
       navigateBack,
       changeFlow,
+      emitEvent,
     }),
-    [currentFlow, currentScreen, navigateNext, navigateBack, changeFlow],
+    [
+      currentFlow,
+      currentScreen,
+      currentUserState,
+      initialized.current,
+      navigateNext,
+      navigateBack,
+      changeFlow,
+    ],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

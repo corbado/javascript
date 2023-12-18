@@ -46,7 +46,7 @@ export const PasskeyError = () => {
     try {
       const resp = await loginWithPasskey(email);
 
-      if (resp?.err) {
+      if (resp?.err && resp?.val) {
         throw new Error(resp.val.name);
       }
 

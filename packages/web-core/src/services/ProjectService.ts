@@ -1,6 +1,8 @@
 import type { ProjectConfig } from '@corbado/types';
 
 import type { ApiService } from './ApiService';
+import {GetProjectConfigError} from "../utils";
+import {Ok, Result} from "ts-results";
 
 /**
  * ProjectService is responsible for managing the project configuration.
@@ -29,14 +31,11 @@ export class ProjectService {
    * Asynchronously fetches the project configuration using the ApiService.
    * @returns A Promise that resolves to the fetched project configuration.
    */
-  async getProjectConfig(forceRefresh = false) {
+  async getProjectConfig(forceRefresh = false): Promise<Result<ProjectConfig, GetProjectConfigError | undefined>> {
     if (this.#projConfig && !forceRefresh) {
-      return this.#projConfig;
+      return Ok(this.#projConfig);
     }
 
-    const resp = await this.#apiService.projectsApi.projectConfig();
-    this.#projConfig = resp.data.data;
-
-    return this.#projConfig;
+    return this.#apiService.getProjectConfig();
   }
 }

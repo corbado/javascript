@@ -1,6 +1,8 @@
 import {
+  InvalidEmailError,
   InvalidPasskeyError,
   InvalidUserInputError,
+  InvalidUsernameError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
@@ -16,4 +18,6 @@ export {
   PasskeyChallengeCancelledError,
   UnknownUserError,
   UserAlreadyExistsError,
+  InvalidUsernameError,
+  InvalidEmailError,
 };

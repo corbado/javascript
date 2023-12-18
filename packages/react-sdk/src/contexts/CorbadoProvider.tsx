@@ -1,6 +1,6 @@
 import type { SessionUser } from '@corbado/types';
-import type { NonRecoverableError } from '@corbado/web-core';
-import { CorbadoApp } from '@corbado/web-core';
+import type { NonRecoverableError} from '@corbado/web-core';
+import {CorbadoApp} from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -107,12 +107,20 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     [corbadoApp],
   );
 
+  const userExists = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.userExists(email);
+    },
+    [corbadoApp],
+  );
+
   const getProjectConfig = useCallback(() => {
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
 
   const contextValue = useMemo<CorbadoContextProps>(() => {
     return {
+      corbadoApp,
       shortSession,
       user,
       globalError,
@@ -128,8 +136,10 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
       appendPasskey,
       getUserAuthMethods,
       getProjectConfig,
+      userExists,
     };
   }, [
+    corbadoApp,
     shortSession,
     user,
     globalError,
@@ -145,6 +155,7 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     appendPasskey,
     getUserAuthMethods,
     getProjectConfig,
+    userExists,
   ]);
 
   return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>;

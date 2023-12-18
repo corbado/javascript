@@ -1,97 +1,63 @@
-import { useCorbado } from '@corbado/react-sdk';
-import { emailRegex, FlowType, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
+import { FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
+import type { RecoverableError } from '@corbado/web-core';
 import type { ChangeEvent } from 'react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import useUserData from '../../hooks/useUserData';
 
 interface SignupForm {
   name: string;
-  username: string;
+  fullName: string;
 }
 
 const defaultFormTemplate: SignupForm = {
   name: '',
-  username: '',
+  fullName: '',
 };
 
-const createFormTemplate = (email?: string, username?: string) => ({
-  name: username || '',
-  username: email || '',
+const createFormTemplate = (email?: string, fullName?: string) => ({
+  name: email || '',
+  fullName: fullName || '',
 });
 
 export const InitiateSignup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.start' });
-  const { t: tError } = useTranslation('translation', { keyPrefix: 'errors' });
-  const { navigateNext, changeFlow } = useFlowHandler();
-  const { setEmail, email, setUserName, userName, emailError } = useUserData();
-  const { getUserAuthMethods } = useCorbado();
+  const { changeFlow, currentUserState, emitEvent } =
+    useFlowHandler();
 
   const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
   });
-  const [errorData, setErrorData] = useState<SignupForm>({
-    ...defaultFormTemplate,
-  });
+  const [emailError, setEmailError] = useState<RecoverableError | null>(null);
+  const [userNameError, setUserNameError] = useState<RecoverableError | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setSignupData(createFormTemplate(email, userName));
-    setErrorData(createFormTemplate(emailError));
-  }, []);
+    setLoading(false);
+    setSignupData(createFormTemplate(currentUserState.email, currentUserState.fullName));
+
+    if (currentUserState.emailError) {
+      setEmailError(currentUserState.emailError);
+    }
+
+    if (currentUserState.userNameError) {
+      setUserNameError(currentUserState.userNameError);
+    }
+  }, [currentUserState]);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setSignupData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSignup = async () => {
+  const handleSubmit = () => {
     setLoading(true);
-
-    await makeApiCallWithErrorHandler(
-      () => getUserAuthMethods(signupData.username),
-      () => {
-        const errors: SignupForm = { ...defaultFormTemplate };
-        errors.username = tError('serverError_userAlreadyExists');
-        setErrorData(errors);
-        setLoading(false);
-      },
-      e => {
-        if (e.name === 'UnknownUserError') {
-          setEmail(signupData.username);
-          setUserName(signupData.name);
-          void navigateNext();
-          return;
-        }
-        throw e;
-      },
-    );
+    void emitEvent(FlowHandlerEvents.PrimaryButton, {
+      userStateUpdate: {email: signupData.name, fullName: signupData.fullName},
+    });
   };
-
-  const handleSubmit = useCallback(() => {
-    const errors: SignupForm = { ...defaultFormTemplate };
-
-    if (!signupData.name) {
-      errors.name = tError('validationError_invalidName');
-    }
-
-    if (!signupData.username || !emailRegex.test(signupData.username)) {
-      errors.username = tError('validationError_invalidEmail');
-    }
-
-    setErrorData(errors);
-
-    if (errors.name || errors.username) {
-      return;
-    }
-
-    setErrorData({ ...defaultFormTemplate });
-
-    void handleSignup();
-  }, [signupData]);
 
   return (
     <>
@@ -112,20 +78,20 @@ export const InitiateSignup = () => {
         loading={loading}
       >
         <FormInput
-          name='name'
+          name='fullName'
           label={t('textField_name')}
           onChange={onChange}
-          value={signupData.name}
-          error={errorData.name}
+          value={signupData.fullName}
+          error={userNameError?.translatedMessage}
         />
         <FormInput
-          name='username'
+          name='name'
           type='email'
           autoComplete='email'
           label={t('textField_email')}
           onChange={onChange}
-          value={signupData.username}
-          error={errorData.username}
+          value={signupData.name}
+          error={emailError?.translatedMessage}
         />
       </AuthFormScreenWrapper>
     </>

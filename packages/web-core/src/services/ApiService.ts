@@ -1,16 +1,16 @@
-import type { UserAuthMethods } from '@corbado/types';
+import type {ProjectConfig, UserAuthMethods} from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
+import type { Subject } from 'rxjs';
 import { Err, Result } from 'ts-results';
 
-import type { ErrorRsp } from '../api';
 import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
 import { AuthenticationResponse } from '../models/auth';
 import type {
   AppendPasskeyError,
   AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
-  CompleteSignupWithEmailOTPError,
+  CompleteSignupWithEmailOTPError, GetProjectConfigError,
   InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
@@ -34,6 +34,7 @@ export class ApiService {
   #assetsApi: AssetsApi = new AssetsApi();
   #projectsApi: ProjectsApi = new ProjectsApi();
   #sessionsApi: SessionsApi = new SessionsApi();
+  #globalErrors: Subject<NonRecoverableError | undefined>;
 
   // Private fields for project ID and default timeout for API calls.
   #projectId: string;
@@ -45,7 +46,8 @@ export class ApiService {
    * @param projectId The project ID for the current application instance.
    * @param timeout Optional timeout for API requests, defaulting to 30 seconds.
    */
-  constructor(projectId: string, timeout: number = 30 * 1000) {
+  constructor(globalErrors: Subject<NonRecoverableError | undefined>, projectId: string, timeout: number = 30 * 1000) {
+    this.#globalErrors = globalErrors;
     this.#projectId = projectId;
     this.#timeout = timeout;
 
@@ -94,17 +96,15 @@ export class ApiService {
         return response;
       },
       (error: AxiosError) => {
-        if (!error.response || !error.response.data) {
-          return Promise.reject(NonRecoverableError.unknownError());
+        const e = CorbadoError.fromAxiosError(error);
+        console.log('error', e)
+
+        if (e instanceof NonRecoverableError) {
+          this.#globalErrors.next(e);
+          return Promise.reject();
         }
 
-        const errorResp = error.response.data as ErrorRsp;
-        if (error.response.status === 400 || error.response.status === 404) {
-          const e = CorbadoError.fromApiResponse(errorResp.error);
-          return Promise.reject(e);
-        }
-
-        return Promise.reject(error);
+        return Promise.reject(e);
       },
     );
 
@@ -138,7 +138,10 @@ export class ApiService {
     this.#setApis(token);
   }
 
-  public passKeyRegisterStart(email: string, username: string): Promise<Result<string, SignUpWithPasskeyError>> {
+  public passKeyRegisterStart(
+    email: string,
+    username: string,
+  ): Promise<Result<string, SignUpWithPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyRegisterStart({
         username: email,
@@ -151,7 +154,7 @@ export class ApiService {
 
   public passKeyRegisterFinish(
     signedChallenge: string,
-  ): Promise<Result<AuthenticationResponse, SignUpWithPasskeyError>> {
+  ): Promise<Result<AuthenticationResponse, SignUpWithPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyRegisterFinish({
         signedChallenge: signedChallenge,
@@ -161,7 +164,7 @@ export class ApiService {
     });
   }
 
-  public passKeyAppendStart(): Promise<Result<string, AppendPasskeyError>> {
+  public passKeyAppendStart(): Promise<Result<string, AppendPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyAppendStart({});
 
@@ -169,7 +172,7 @@ export class ApiService {
     });
   }
 
-  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, AppendPasskeyError>> {
+  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, AppendPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       await this.usersApi.passKeyAppendFinish({
         signedChallenge: signedChallenge,
@@ -179,7 +182,7 @@ export class ApiService {
     });
   }
 
-  public passKeyLoginStart(email: string): Promise<Result<string, LoginWithPasskeyError>> {
+  public passKeyLoginStart(email: string): Promise<Result<string, LoginWithPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyLoginStart({
         username: email,
@@ -193,7 +196,9 @@ export class ApiService {
     });
   }
 
-  public passKeyLoginFinish(signedChallenge: string): Promise<Result<AuthenticationResponse, LoginWithPasskeyError>> {
+  public passKeyLoginFinish(
+    signedChallenge: string,
+  ): Promise<Result<AuthenticationResponse, LoginWithPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyLoginFinish({
         signedChallenge: signedChallenge,
@@ -203,7 +208,7 @@ export class ApiService {
     });
   }
 
-  public passKeyMediationStart(): Promise<Result<string, InitAutocompletedLoginWithPasskeyError>> {
+  public passKeyMediationStart(): Promise<Result<string, InitAutocompletedLoginWithPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.passKeyMediationStart({
         username: '',
@@ -213,7 +218,10 @@ export class ApiService {
     });
   }
 
-  public emailCodeRegisterStart(email: string, username: string): Promise<Result<string, InitSignUpWithEmailOTPError>> {
+  public emailCodeRegisterStart(
+    email: string,
+    username: string,
+  ): Promise<Result<string, InitSignUpWithEmailOTPError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.emailCodeRegisterStart({
         email: email,
@@ -224,7 +232,7 @@ export class ApiService {
     });
   }
 
-  public emailCodeLoginStart(email: string): Promise<Result<string, InitLoginWithEmailOTPError>> {
+  public emailCodeLoginStart(email: string): Promise<Result<string, InitLoginWithEmailOTPError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.emailCodeLoginStart({
         username: email,
@@ -237,7 +245,9 @@ export class ApiService {
   public async emailCodeConfirm(
     emailCodeId: string,
     otpCode: string,
-  ): Promise<Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError>> {
+  ): Promise<
+    Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError | undefined>
+  > {
     if (emailCodeId === '') {
       return Err(CorbadoError.illegalState('email OTP challenge has not been started'));
     }
@@ -252,11 +262,19 @@ export class ApiService {
     });
   }
 
-  public async authMethodsList(email: string): Promise<Result<UserAuthMethods, AuthMethodsListError>> {
+  public async authMethodsList(email: string): Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.authMethodsList({
         username: email,
       });
+
+      return r.data.data;
+    });
+  }
+
+  public async getProjectConfig(): Promise<Result<ProjectConfig, GetProjectConfigError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.projectsApi.projectConfig();
 
       return r.data.data;
     });

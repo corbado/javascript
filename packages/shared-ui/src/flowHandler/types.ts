@@ -1,3 +1,6 @@
+import type {SessionUser} from '@corbado/types';
+import type {RecoverableError} from '@corbado/web-core';
+
 import type {
   CommonScreens,
   EmailOtpSignupScreens,
@@ -8,6 +11,8 @@ import type {
   PasskeySignupWithEmailOtpFallbackScreens,
   SignUpFlowNames,
 } from './constants';
+import type {FlowUpdate} from './stepFunctionResult';
+import {CorbadoApp} from "@corbado/web-core";
 
 /**
  * Configuration settings for handling different authentication flows.
@@ -51,6 +56,8 @@ export interface FlowHandlerEventOptions {
   isUserAuthenticated?: boolean;
   // Whether the user has a passkey already set up
   userHasPasskey?: boolean;
+  userStateUpdate?: UserState;
+  emailOTPCode?: string;
 }
 
 /**
@@ -63,16 +70,47 @@ export type StepFunction = (
   event?: FlowHandlerEvents,
   // options that were passed to the step function
   eventOptions?: FlowHandlerEventOptions,
-) => ScreenNames | Promise<ScreenNames>;
+  error?: RecoverableError,
+) => FlowUpdate;
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.
  */
 export type Flow = {
-  [K in ScreenNames]?: StepFunction;
+  [K in ScreenNames]?: ScreenUpdater;
 };
 
+export type ScreenUpdater = {
+  onEvent: (state: FlowHandlerState, event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<FlowUpdate|undefined>;
+  onError?: (state: FlowHandlerState, error: RecoverableError) => Promise<FlowUpdate>;
+};
 /**
  * Type representing a dictionary of flows for each flow name.
  */
 export type Flows = Record<FlowNames, Flow>;
+
+export type UserState = {
+  email?: string;
+  emailOTPState?: EmailOTPState;
+  fullName?: string;
+  emailError?: RecoverableError;
+  userNameError?: RecoverableError;
+  emailOTPError?: RecoverableError;
+};
+
+export type FlowHandlerState = {
+  flowOptions: FlowOptions;
+  userState: UserState;
+  passkeysSupported: boolean;
+  user?: SessionUser;
+  corbadoApp: CorbadoApp;
+};
+
+export type FlowHandlerStateUpdate = {
+  userState?: UserState;
+  user?: SessionUser;
+};
+
+export type EmailOTPState = {
+  lastMailSent: Date;
+};

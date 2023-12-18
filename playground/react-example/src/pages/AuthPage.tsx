@@ -18,7 +18,8 @@ const AuthPage = () => {
         fr: frenchTranslations,
         en: englishTranslations,
       }}
-      isDevMode={isDevMode}
+      isDevMode={true}
+      darkMode='auto'
       customerSupportEmail='dev@test.com'
     />
   );

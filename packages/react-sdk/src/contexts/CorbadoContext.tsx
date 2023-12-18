@@ -4,34 +4,42 @@ import type {
   AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  CorbadoAppParams,
+  CorbadoAppParams, GetProjectConfigError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   NonRecoverableError,
+  RecoverableError,
   SignUpWithPasskeyError,
 } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
+import {CorbadoApp} from "@corbado/web-core";
 
 export type AppProviderParams = PropsWithChildren<CorbadoAppParams>;
 
 export interface CorbadoContextProps {
+  corbadoApp: CorbadoApp | undefined;
   shortSession: string | undefined;
   user: SessionUser | undefined;
   globalError: NonRecoverableError | undefined;
   loading: boolean;
-  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError>>;
-  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError>>;
-  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError>>;
-  initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError>>;
-  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError>>;
+  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError | undefined>>;
+  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError | undefined>>;
+  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError | undefined>>;
+  initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError | undefined>>;
+  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError | undefined>>;
   logout: () => void;
-  initSignUpWithEmailOTP: (email: string, username: string) => Promise<Result<void, InitSignUpWithEmailOTPError>>;
-  completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
-  appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
-  getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError>>;
-  getProjectConfig: () => Promise<ProjectConfig>;
+  initSignUpWithEmailOTP: (
+    email: string,
+    username: string,
+  ) => Promise<Result<void, InitSignUpWithEmailOTPError | undefined>>;
+  completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>>;
+  appendPasskey: () => Promise<Result<void, AppendPasskeyError | undefined>>;
+  getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>>;
+  getProjectConfig: () => Promise<Result<ProjectConfig, GetProjectConfigError | undefined>>;
+
+  userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>>;
 }
 
 const missingImplementation = (): never => {
@@ -39,6 +47,7 @@ const missingImplementation = (): never => {
 };
 
 export const initialContext = {
+  corbadoApp: undefined,
   shortSession: undefined,
   user: undefined,
   globalError: undefined,
@@ -55,6 +64,7 @@ export const initialContext = {
   appendPasskey: missingImplementation,
   getUserAuthMethods: missingImplementation,
   getProjectConfig: missingImplementation,
+  userExists: missingImplementation,
 };
 
 export const CorbadoContext = createContext<CorbadoContextProps>(initialContext);

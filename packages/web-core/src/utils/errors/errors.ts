@@ -1,41 +1,70 @@
+import type { AxiosError } from 'axios';
 import log from 'loglevel';
 
-import type { ErrorRspAllOfError } from '../../api';
+import type {ErrorRsp} from '../../api';
 
 export type SignUpWithPasskeyError =
-  | UserAlreadyExistsError
-  | InvalidUserInputError
-  | PasskeyChallengeCancelledError
-  | UnknownError;
+    | UserAlreadyExistsError
+    | InvalidUserInputError
+    | PasskeyChallengeCancelledError
+    | UnknownError;
 export type AppendPasskeyError = PasskeyChallengeCancelledError | UnknownError;
 export type LoginWithPasskeyError =
-  | InvalidUserInputError
-  | InvalidPasskeyError
-  | PasskeyChallengeCancelledError
-  | UnknownError;
+    | InvalidUserInputError
+    | InvalidPasskeyError
+    | PasskeyChallengeCancelledError
+    | UnknownError;
 export type InitAutocompletedLoginWithPasskeyError = UnknownError;
 export type CompleteAutocompletedLoginWithPasskeyError =
-  | InvalidPasskeyError
-  | PasskeyChallengeCancelledError
-  | UnknownError;
+    | InvalidPasskeyError
+    | PasskeyChallengeCancelledError
+    | UnknownError;
 export type InitSignUpWithEmailOTPError = InvalidUserInputError | UserAlreadyExistsError | UnknownError;
-export type CompleteSignupWithEmailOTPError = InvalidUserInputError | UnknownError;
+export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
 export type InitLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type CompleteLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
 export type AuthMethodsListError = UnknownUserError | UnknownError;
+export type GetProjectConfigError = UnknownError;
 
 export class CorbadoError extends Error {
-  constructor(message: string) {
+  #translatedMessage?: string;
+  recoverable: boolean;
+
+  constructor(message: string, recoverable: boolean) {
     super(message);
     this.name = 'CorbadoError';
+    this.recoverable = recoverable;
   }
 
-  static fromApiResponse(errorResp: ErrorRspAllOfError): CorbadoError {
-    log.debug('errorResp', errorResp);
+  get translatedMessage(): string {
+    if (!this.#translatedMessage) {
+      throw new Error('error has not been translated.');
+    }
+
+    return this.#translatedMessage;
+  }
+
+  set translatedMessage(message: string) {
+    this.#translatedMessage = message;
+  }
+
+  static fromAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
+    log.debug('axios error', error);
+
+    if (!error.response || !error.response.data) {
+      return NonRecoverableError.unknown();
+    }
+
+    if (error.response.status >= 500) {
+      return NonRecoverableError.server(error.message);
+    }
+
+    const errorRespRaw = error.response.data as ErrorRsp;
+    const errorResp = errorRespRaw.error;
     switch (errorResp.type) {
       case 'validation_error': {
         if (!errorResp.validation?.length) {
-          return CorbadoError.unknown();
+          return RecoverableError.unknown();
         }
 
         // we only care about the first error
@@ -71,10 +100,10 @@ export class CorbadoError extends Error {
         }
     }
 
-    return CorbadoError.unknown();
+    return NonRecoverableError.unknown();
   }
 
-  static fromDOMException(e: DOMException): CorbadoError | NonRecoverableError {
+  static fromDOMException(e: DOMException): CorbadoError {
     switch (e.name) {
       case 'NotAllowedError':
         return new PasskeyChallengeCancelledError();
@@ -86,13 +115,13 @@ export class CorbadoError extends Error {
           'https://docs.corbado.com',
         );
       default:
-        return CorbadoError.unknown();
+        return NonRecoverableError.unknown();
     }
   }
 
   static fromUnknownException(e: unknown): CorbadoError {
     log.debug('unknown exception', e);
-    return CorbadoError.unknown();
+    return NonRecoverableError.unknown();
   }
 
   static illegalState(message: string): CorbadoError {
@@ -114,8 +143,12 @@ export class CorbadoError extends Error {
  */
 export class RecoverableError extends CorbadoError {
   constructor(message: string) {
-    super(message);
+    super(message, true);
     this.name = 'RecoverableError';
+  }
+
+  static unknown() {
+    return new RecoverableError('An unknown error occurred');
   }
 }
 
@@ -125,14 +158,14 @@ export class RecoverableError extends CorbadoError {
  * Therefore, these errors are handled by showing a central error page.
  * Only a few errors should fall into this category.
  */
-export class NonRecoverableError extends Error {
+export class NonRecoverableError extends CorbadoError {
   readonly type: 'client' | 'server';
   readonly hint: string;
   readonly link: string;
   readonly requestId?: string;
 
   constructor(type: 'client' | 'server', message: string, hint: string, link: string, requestId?: string) {
-    super(message);
+    super(message, false);
     this.name = 'DeveloperNoticeError';
     this.hint = hint;
     this.type = type;
@@ -140,21 +173,30 @@ export class NonRecoverableError extends Error {
     this.requestId = requestId;
   }
 
-  static unknownError() {
+  static unknown() {
     return new NonRecoverableError(
-      'server',
-      'An unknown error occurred',
-      'Contact the Corbado team',
-      'https://docs.corbado.com',
+        'server',
+        'An unknown error occurred',
+        'Contact the Corbado team',
+        'https://docs.corbado.com',
     );
   }
 
   static invalidConfig(message: string) {
     return new NonRecoverableError(
-      'client',
-      message,
-      'Check your parameters for <CorbadoProvider/>',
-      'https://docs.corbado.com',
+        'client',
+        message,
+        'Check your parameters for <CorbadoProvider/>',
+        'https://docs.corbado.com',
+    );
+  }
+
+  static server(message: string) {
+    return new NonRecoverableError(
+        'server',
+        'An unknown error occurred: ' + message,
+        'Contact the Corbado team',
+        'https://docs.corbado.com',
     );
   }
 }
@@ -162,7 +204,7 @@ export class NonRecoverableError extends Error {
 export class UserAlreadyExistsError extends RecoverableError {
   constructor() {
     super('User already exists');
-    this.name = 'UserAlreadyExistsError';
+    this.name = 'errors.userAlreadyExists';
   }
 }
 
@@ -204,6 +246,20 @@ export class InvalidUserInputError extends RecoverableError {
   }
 }
 
+export class InvalidUsernameError extends RecoverableError {
+  constructor() {
+    super('Invalid username');
+    this.name = 'errors.invalidUsername';
+  }
+}
+
+export class InvalidEmailError extends RecoverableError {
+  constructor() {
+    super('Invalid email');
+    this.name = 'errors.invalidName';
+  }
+}
+
 /**
  * this error is thrown when the application is in an invalid state
  * (e.g. an email OTP challenge is verified, but that challenge has never been started)
@@ -218,7 +274,7 @@ export class IllegalStateError extends RecoverableError {
 export class InvalidOtpInputError extends RecoverableError {
   constructor() {
     super('The provided OTP is no longer valid');
-    this.name = 'InvalidOtpInputError';
+    this.name = 'errors.invalidOtp';
   }
 }
 

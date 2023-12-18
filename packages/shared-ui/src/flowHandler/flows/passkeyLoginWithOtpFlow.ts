@@ -1,72 +1,93 @@
-import { canUsePasskeys } from '../../utils/webAuthUtils';
-import { FlowHandlerEvents, PasskeyLoginWithEmailOtpFallbackScreens } from '../constants';
+import { PasskeyLoginWithEmailOtpFallbackScreens } from '../constants';
+import { FlowUpdate } from '../stepFunctionResult';
 import type { Flow } from '../types';
 
 export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
-  [PasskeyLoginWithEmailOtpFallbackScreens.Start]: (flowOptions, event) => {
-    switch (event) {
-      case FlowHandlerEvents.EmailOtp:
-        return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-      case FlowHandlerEvents.PasskeyError:
-        if (flowOptions?.retryPasskeyOnError) {
-          return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
-        }
+  [PasskeyLoginWithEmailOtpFallbackScreens.Start]: {
+    onEvent: async () => {
+      return FlowUpdate.state({});
+      /*
+            if (error) {
+              if (state.flowOptions?.retryPasskeyOnError) {
+                return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
+              }
 
-        return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-      default:
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-    }
+              return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
+            }
+
+            switch (event) {
+              case FlowHandlerEvents.EmailOtp:
+                return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
+              default:
+                return PasskeyLoginWithEmailOtpFallbackScreens.End;
+            }*/
+    },
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: async (flowOptions, event, eventOptions) => {
-    if (event === FlowHandlerEvents.CancelOtp) {
-      return PasskeyLoginWithEmailOtpFallbackScreens.Start;
-    }
+  [PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp]: {
+    onEvent: async () => {
+      return FlowUpdate.state({});
+      /*
+      if (event === FlowHandlerEvents.CancelOtp) {
+        return PasskeyLoginWithEmailOtpFallbackScreens.Start;
+      }
 
-    const isPasskeySupported = await canUsePasskeys();
+      const isPasskeySupported = await canUsePasskeys();
 
-    if (flowOptions?.passkeyAppend && isPasskeySupported && !eventOptions?.userHasPasskey) {
-      return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend;
-    }
+      if (flowOptions?.passkeyAppend && isPasskeySupported && !eventOptions?.userHasPasskey) {
+        return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend;
+      }
 
-    return PasskeyLoginWithEmailOtpFallbackScreens.End;
+      return PasskeyLoginWithEmailOtpFallbackScreens.End;*/
+    },
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: (flowOptions, event) => {
-    switch (event) {
-      case FlowHandlerEvents.PasskeyError:
-        if (flowOptions?.retryPasskeyOnError) {
-          return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
-        }
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: {
+    onEvent: async () => {
+      return FlowUpdate.state({});
+      /*switch (event) {
+        case FlowHandlerEvents.PasskeyError:
+          if (flowOptions?.retryPasskeyOnError) {
+            return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
+          }
 
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-      case FlowHandlerEvents.ShowBenefits:
-        return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits;
-      default:
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-    }
-  },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: (_, event, eventOptions) => {
-    switch (event) {
-      case FlowHandlerEvents.CancelPasskey:
-      case FlowHandlerEvents.EmailOtp:
-        if (eventOptions?.isUserAuthenticated) {
           return PasskeyLoginWithEmailOtpFallbackScreens.End;
-        }
-
-        return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
-      default:
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-    }
+        case FlowHandlerEvents.ShowBenefits:
+          return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits;
+        default:
+          return PasskeyLoginWithEmailOtpFallbackScreens.End;
+      }*/
+    },
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits]: (flowOptions, event) => {
-    switch (event) {
-      case FlowHandlerEvents.PasskeyError:
-        if (flowOptions?.retryPasskeyOnError) {
-          return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
-        }
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: {
+    onEvent: async () => {
+      return FlowUpdate.state({});
+      /*
+      switch (event) {
+        case FlowHandlerEvents.CancelPasskey:
+        case FlowHandlerEvents.EmailOtp:
+          if (eventOptions?.isUserAuthenticated) {
+            return PasskeyLoginWithEmailOtpFallbackScreens.End;
+          }
 
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-      default:
-        return PasskeyLoginWithEmailOtpFallbackScreens.End;
-    }
+          return PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp;
+        default:
+          return PasskeyLoginWithEmailOtpFallbackScreens.End;
+      }*/
+    },
+  },
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits]: {
+    onEvent: async () => {
+      return FlowUpdate.state({});
+      /*
+      switch (event) {
+        case FlowHandlerEvents.PasskeyError:
+          if (flowOptions?.retryPasskeyOnError) {
+            return PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError;
+          }
+
+          return PasskeyLoginWithEmailOtpFallbackScreens.End;
+        default:
+          return PasskeyLoginWithEmailOtpFallbackScreens.End;
+      }*/
+    },
   },
 };

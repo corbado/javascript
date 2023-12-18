@@ -1,6 +1,6 @@
 import type {ProjectConfig, SessionUser} from '@corbado/types';
 import type {RecoverableError} from '@corbado/web-core';
-import {CorbadoApp} from "@corbado/web-core";
+import type {CorbadoApp} from "@corbado/web-core";
 import type {i18n} from 'i18next';
 
 import {canUsePasskeys} from '../utils';
@@ -176,14 +176,15 @@ export class FlowHandler {
     }
 
     console.log(this.#state, event, eventOptions);
-    const flowUpdate= await stateUpdater.onEvent(this.#state, event, eventOptions);
+    const flowUpdate= await stateUpdater(this.#state, event, eventOptions);
     console.log(flowUpdate);
-    if (flowUpdate?.nextFlow) {
+    if (flowUpdate !== undefined && flowUpdate?.nextFlow !== null) {
       this.changeFlow(flowUpdate.nextFlow);
     }
 
     if (flowUpdate?.stateUpdate) {
-      this.#changeState({ userState: this.withTranslation(flowUpdate.stateUpdate) });
+      const newState = {...this.#state.userState, ...flowUpdate.stateUpdate}
+      this.#changeState({ userState: this.withTranslation(newState) });
     }
 
     if (flowUpdate?.nextScreen) {

@@ -1,4 +1,4 @@
-import { FlowHandlerEvents, FlowType } from '@corbado/shared-ui';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import type { RecoverableError } from '@corbado/web-core';
 import type { ChangeEvent } from 'react';
 import React, { useEffect, useState } from 'react';
@@ -24,8 +24,7 @@ const createFormTemplate = (email?: string, fullName?: string) => ({
 
 export const InitiateSignup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.start' });
-  const { changeFlow, currentUserState, emitEvent } =
-    useFlowHandler();
+  const { currentUserState, emitEvent } = useFlowHandler();
 
   const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
@@ -55,7 +54,7 @@ export const InitiateSignup = () => {
   const handleSubmit = () => {
     setLoading(true);
     void emitEvent(FlowHandlerEvents.PrimaryButton, {
-      userStateUpdate: {email: signupData.name, fullName: signupData.fullName},
+      userStateUpdate: { email: signupData.name, fullName: signupData.fullName },
     });
   };
 
@@ -66,7 +65,7 @@ export const InitiateSignup = () => {
         {t('subheader')}
         <span
           className='cb-link-secondary'
-          onClick={() => changeFlow(FlowType.Login)}
+          onClick={() => void emitEvent(FlowHandlerEvents.ChangeFlow)}
         >
           {t('button_login')}
         </span>

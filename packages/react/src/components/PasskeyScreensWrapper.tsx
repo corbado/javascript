@@ -40,6 +40,7 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
   secondaryLoading = false,
   hideFingerPrintIcon = false,
 }) => {
+  console.log('loading', primaryLoading);
   return (
     <div className='cb-layout-passkey'>
       <Header>{header}</Header>

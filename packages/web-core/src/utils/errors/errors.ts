@@ -104,8 +104,10 @@ export class CorbadoError extends Error {
   }
 
   static fromDOMException(e: DOMException): CorbadoError {
+
     switch (e.name) {
       case 'NotAllowedError':
+      case 'AbortError':
         return new PasskeyChallengeCancelledError();
       case 'SecurityError':
         return new NonRecoverableError(
@@ -115,6 +117,7 @@ export class CorbadoError extends Error {
           'https://docs.corbado.com',
         );
       default:
+        log.warn('unhandled DOM exception', e.name, e.message);
         return NonRecoverableError.unknown();
     }
   }
@@ -211,7 +214,7 @@ export class UserAlreadyExistsError extends RecoverableError {
 export class UnknownUserError extends RecoverableError {
   constructor() {
     super('User does not exist');
-    this.name = 'UnknownUserError';
+    this.name = 'errors.unknownUser';
   }
 }
 

@@ -12,19 +12,19 @@ export class FlowUpdate {
     this.stateUpdate = stateUpdate;
   }
 
-  static navigate(screen: ScreenNames): FlowUpdate {
-    return new FlowUpdate(null, screen, null);
+  static navigate(screen: ScreenNames, stateUpdate?: UserState): FlowUpdate {
+    return new FlowUpdate(null, screen, stateUpdate ?? null);
   }
 
   static changeFlow(flowType: FlowType): FlowUpdate {
     return new FlowUpdate(flowType, null, null);
   }
 
-  static navigateWithState(screen: ScreenNames, stateUpdate: UserState): FlowUpdate {
-    return new FlowUpdate(null, screen, stateUpdate);
-  }
-
   static state(stateUpdate: UserState): FlowUpdate {
     return new FlowUpdate(null, null, stateUpdate);
+  }
+
+  static ignore() {
+    return new FlowUpdate(null, null, null);
   }
 }

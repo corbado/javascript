@@ -1,5 +1,6 @@
 import type {SessionUser} from '@corbado/types';
 import type {RecoverableError} from '@corbado/web-core';
+import type {CorbadoApp} from '@corbado/web-core';
 
 import type {
   CommonScreens,
@@ -12,7 +13,6 @@ import type {
   SignUpFlowNames,
 } from './constants';
 import type {FlowUpdate} from './stepFunctionResult';
-import {CorbadoApp} from "@corbado/web-core";
 
 /**
  * Configuration settings for handling different authentication flows.
@@ -64,26 +64,18 @@ export interface FlowHandlerEventOptions {
  * Type definition for a function that represents a step in an authentication flow.
  */
 export type StepFunction = (
-  // Options that configure the behavior of a single flow
-  flowOptions?: FlowOptions,
-  // Event that triggered the step function
-  event?: FlowHandlerEvents,
-  // options that were passed to the step function
-  eventOptions?: FlowHandlerEventOptions,
-  error?: RecoverableError,
-) => FlowUpdate;
+    state: FlowHandlerState,
+    event?: FlowHandlerEvents,
+    eventOptions?: FlowHandlerEventOptions,
+) => Promise<FlowUpdate | undefined>;
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.
  */
 export type Flow = {
-  [K in ScreenNames]?: ScreenUpdater;
+  [K in ScreenNames]?: StepFunction;
 };
 
-export type ScreenUpdater = {
-  onEvent: (state: FlowHandlerState, event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<FlowUpdate|undefined>;
-  onError?: (state: FlowHandlerState, error: RecoverableError) => Promise<FlowUpdate>;
-};
 /**
  * Type representing a dictionary of flows for each flow name.
  */

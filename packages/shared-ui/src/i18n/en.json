@@ -107,7 +107,7 @@
     "invalidName": "Please enter a name",
     "validationError_passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use",
-    "serverError_unknownUser": "User does not exist",
+    "unknownUser": "User does not exist",
     "serverError_noPasskeyAvailable": "No passkey available",
     "serverError_invalidPasskey": "The provided passkey is no longer valid",
     "invalidOtp": "The provided OTP is not valid",

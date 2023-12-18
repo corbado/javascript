@@ -45,17 +45,11 @@ export enum PasskeyLoginWithEmailOtpFallbackScreens {
 
 export enum FlowHandlerEvents {
   ShowBenefits = 'show-benefits',
-  EmailOtp = 'email-otp',
-  PasskeySuccess = 'passkey-success',
-  PasskeyError = 'passkey-error',
-  MaybeLater = 'maybe-later',
-  CancelPasskey = 'cancel-passkey',
   CancelOtp = 'cancel-otp',
-  InvalidEmail = 'invalid-email',
-
   ChangeFlow = 'change-flow',
   PrimaryButton = 'primary-button',
   SecondaryButton = 'secondary-button',
+  InitConditionalUI = 'init-conditional-ui',
 }
 
 export enum FlowType {

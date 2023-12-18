@@ -6,13 +6,11 @@ import { useTranslation } from 'react-i18next';
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.passkeyError' });
-  const { loginWithPasskey, shortSession } = useCorbado();
-  const { navigateBack, navigateNext } = useFlowHandler();
-  const { email } = useUserData();
+  const { shortSession } = useCorbado();
+  const { navigateBack, emitEvent } = useFlowHandler();
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
@@ -35,53 +33,19 @@ export const PasskeyError = () => {
     return t('button_back');
   }, [t, shortSession]);
 
-  const handleCreatePasskey = useCallback(async () => {
-    if (!email) {
-      navigateBack();
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const resp = await loginWithPasskey(email);
-
-      if (resp?.err && resp?.val) {
-        throw new Error(resp.val.name);
-      }
-
-      void navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
-  }, [email, loginWithPasskey, navigateBack, navigateNext]);
-
-  const handleSendOtp = useCallback(() => {
-    void navigateNext(FlowHandlerEvents.EmailOtp);
-  }, [navigateNext]);
-
-  const handleBack = useCallback(() => {
-    if (shortSession) {
-      void navigateNext(FlowHandlerEvents.CancelPasskey);
-      return;
-    }
-
-    navigateBack();
-  }, [navigateBack, navigateNext, shortSession]);
-
   const handleClick = useCallback(
     (btn: ButtonType) => {
       switch (btn) {
         case 'primary':
-          return handleCreatePasskey();
+          setLoading(true);
+          return emitEvent(FlowHandlerEvents.PrimaryButton);
         case 'secondary':
-          return handleSendOtp();
+          return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return handleBack();
+          return navigateBack();
       }
     },
-    [handleBack, handleCreatePasskey, handleSendOtp],
+    [navigateBack, emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
@@ -91,7 +55,7 @@ export const PasskeyError = () => {
       primaryButton,
       secondaryButton,
       tertiaryButton,
-      loading,
+      primaryLoading: loading,
       onClick: handleClick,
     }),
     [body, handleClick, header, primaryButton, secondaryButton, loading, tertiaryButton],

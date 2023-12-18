@@ -29,22 +29,16 @@ export const PasskeyAppend = () => {
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
-  const handlePasskeyActivation = useCallback(() => {
-    setLoading(true);
-    return emitEvent(FlowHandlerEvents.PrimaryButton);
-  }, [emitEvent]);
-
-  const handleLater = useCallback(() => emitEvent(FlowHandlerEvents.MaybeLater), [emitEvent]);
-
   const handleClick = useCallback(
     (btn: ButtonType) => {
       if (btn === 'primary') {
-        return handlePasskeyActivation();
+        setLoading(true);
+        return emitEvent(FlowHandlerEvents.PrimaryButton);
       }
 
-      return handleLater();
+      return emitEvent(FlowHandlerEvents.SecondaryButton);
     },
-    [handleLater, handlePasskeyActivation],
+    [emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(

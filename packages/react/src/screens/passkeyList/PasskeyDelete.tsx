@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Dialog } from '../../components';
 
@@ -9,6 +10,7 @@ export interface PasskeyDeleteProps {
 }
 
 const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) => {
+  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = () => {
@@ -37,9 +39,10 @@ const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) =
       <Dialog
         inverseButtonVariants
         isOpen={isDialogOpen}
-        header='Delete Passkey'
-        body='Are you sure you want to delete this passkey?'
-        confirmText='Yes, Delete'
+        header={t('deleteDialog_header')}
+        body={t('deleteDialog_body')}
+        confirmText={t('deleteDialog_deleteButton')}
+        cancelText={t('deleteDialog_cancelButton')}
         onClose={closeDialog}
         onConfirm={confirmDelete}
       />

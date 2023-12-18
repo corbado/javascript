@@ -91,5 +91,21 @@
       "button_start": "Aktivieren",
       "button_skip": "Vielleicht später"
     }
+  },
+  "passkeysList": {
+    "warning_notLoggedIn": "Bitte loggen Sie sich ein, um Ihre Passkeys zu sehen.",
+    "message_noPasskeys": "Sie haben noch keine Passkeys.",
+    "button_createPasskey": "Passkey erstellen",
+    "badge_synced": "Synchronisiert",
+    "field_credentialId": "Anmelde-ID: ",
+    "field_created_text1": "Erstellt: ",
+    "field_created_text2": " mit ",
+    "field_created_text3": " am ",
+    "field_lastUsed": "Zuletzt verwendet: ",
+    "field_status": "Status: ",
+    "deleteDialog_header": "Passkey löschen",
+    "deleteDialog_body": "Sind Sie sicher, dass Sie diesen Passkey löschen möchten?",
+    "deleteDialog_cancelButton": "Abbrechen",
+    "deleteDialog_deleteButton": "Ja, löschen"
   }
 }

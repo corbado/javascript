@@ -99,5 +99,21 @@
       "button_start": "Create passkey",
       "button_skip": "Maybe later"
     }
+  },
+  "passkeysList": {
+    "warning_notLoggedIn": "Please log in to see your passkeys.",
+    "message_noPasskeys": "You don't have any passkeys yet.",
+    "button_createPasskey": "Create a Passkey",
+    "badge_synced": "Synced",
+    "field_credentialId": "Credential ID: ",
+    "field_created_text1": "Created: ",
+    "field_created_text2": " with ",
+    "field_created_text3": " on ",
+    "field_lastUsed": "Last used: ",
+    "field_status": "Status: ",
+    "deleteDialog_header": "Delete Passkey",
+    "deleteDialog_body": "Are you sure you want to delete this passkey?",
+    "deleteDialog_cancelButton": "Cancel",
+    "deleteDialog_deleteButton": "Yes, Delete"
   }
 }

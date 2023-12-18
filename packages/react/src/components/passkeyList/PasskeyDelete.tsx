@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog } from '../../components';
+import { Dialog } from '..';
 
 export interface PasskeyDeleteProps {
   passkeyId: string;

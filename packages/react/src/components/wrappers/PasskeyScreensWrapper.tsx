@@ -1,11 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
-import { Body } from './Body';
-import { Button } from './Button';
-import { Header } from './Header';
-import { HorizontalRule } from './HorizontalRule';
-import { SubHeader } from './SubHeader';
+import { Body, Button, Header, HorizontalRule, SubHeader } from '../ui';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 

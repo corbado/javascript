@@ -253,7 +253,6 @@ export class ApiService {
       return Err(
         CorbadoError.illegalState(
           'email OTP challenge has not been started',
-          'make sure to call emailCodeLoginStart or emailCodeRegisterStart first',
           '',
         ),
       );

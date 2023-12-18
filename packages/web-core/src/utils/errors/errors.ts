@@ -56,8 +56,20 @@ export class CorbadoError extends Error {
       return NonRecoverableError.unknown();
     }
 
-    if (error.response.status >= 500) {
-      return NonRecoverableError.server(error.message);
+    if (error.response.status >= 500 || error.response.status === 422) {
+      try {
+        const errorRespRaw = error.response.data as ErrorRsp;
+        const message = errorRespRaw.error.details ?? error.message;
+        return NonRecoverableError.server(
+          message,
+          errorRespRaw.requestData.requestID,
+          errorRespRaw.error.links.pop() ?? '',
+          errorRespRaw.error.type,
+          errorRespRaw.requestData.link,
+        );
+      } catch (e) {
+        return NonRecoverableError.server(error.message, '', '', '');
+      }
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;
@@ -113,7 +125,6 @@ export class CorbadoError extends Error {
         return new NonRecoverableError(
           'server',
           'The relying party ID is not a registrable domain suffix of, nor equal to the current domain.',
-          "Check your configuration for the relying party ID in Corbado's developer panel. This ID must be set to a value that matches your frontend's domain.",
           'https://docs.corbado.com',
         );
       default:
@@ -127,8 +138,8 @@ export class CorbadoError extends Error {
     return NonRecoverableError.unknown();
   }
 
-  static illegalState(message: string, hint: string, link: string): CorbadoError {
-    return NonRecoverableError.client(message, hint, link);
+  static illegalState(message: string, link: string): CorbadoError {
+    return NonRecoverableError.client(message, link);
   }
 
   static noPasskeyAvailable(): CorbadoError {
@@ -163,49 +174,42 @@ export class RecoverableError extends CorbadoError {
  */
 export class NonRecoverableError extends CorbadoError {
   readonly type: 'client' | 'server';
-  readonly hint: string;
   readonly link: string;
   readonly details?: string;
+  readonly detailedType?: string;
   readonly requestId?: string;
 
-  constructor(type: 'client' | 'server', message: string, hint: string, link: string, requestId?: string, details?: string) {
+  constructor(
+    type: 'client' | 'server',
+    message: string,
+    link: string,
+    details?: string,
+    detailedType?: string,
+    requestId?: string,
+  ) {
     super(message, false);
     this.name = 'Integration error';
-    this.hint = hint;
     this.type = type;
     this.link = link;
-    this.requestId = requestId;
     this.details = details;
+    this.detailedType = detailedType;
+    this.requestId = requestId;
   }
 
   static unknown() {
-    return new NonRecoverableError(
-      'server',
-      'An unknown error occurred',
-      'Contact the Corbado team',
-      'https://docs.corbado.com',
-    );
+    return new NonRecoverableError('server', 'An unknown error occurred', 'https://docs.corbado.com');
   }
 
   static invalidConfig(message: string) {
-    return NonRecoverableError.client(
-      message,
-      'Check your parameters for <CorbadoProvider/>',
-      'https://docs.corbado.com',
-    );
+    return NonRecoverableError.client(message, 'https://docs.corbado.com');
   }
 
-  static server(message: string) {
-    return new NonRecoverableError(
-      'server',
-      'An unknown error occurred: ' + message,
-      'Contact the Corbado team',
-      'https://docs.corbado.com',
-    );
+  static server(message: string, requestId: string, link: string, detailedType: string, details?: string) {
+    return new NonRecoverableError('server', message, link, details, detailedType, requestId);
   }
 
-  static client(message: string, hint: string, link: string) {
-    return new NonRecoverableError('client', message, hint, link);
+  static client(message: string, link: string) {
+    return new NonRecoverableError('client', message, link);
   }
 }
 

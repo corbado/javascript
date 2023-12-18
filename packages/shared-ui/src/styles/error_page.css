@@ -21,15 +21,15 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 1rem;
+    gap: .5rem;
   }
 
   .error-detail-row {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: 1rem;
     color: #000000;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 400;
   }
 
@@ -41,6 +41,7 @@
 
   .error-detail-value {
     flex: 3;
+    line-break: anywhere;
   }
 
   .error-button {
@@ -54,6 +55,7 @@
     transition:
       background-color 0.3s,
       color 0.3s;
+    cursor: pointer;
   }
 
   .prod-error-container {

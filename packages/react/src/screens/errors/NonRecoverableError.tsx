@@ -6,12 +6,16 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
   return (
     <div className='container'>
       <div className='title'>
-        {error.name} ({error.type === 'client' ? 'client side' : 'server side'})
+        {error.name} <br />({error.type === 'client' ? 'client side' : 'server side'})
       </div>
       <div className='error-details'>
         <div className='error-detail-row'>
           <div className='error-detail-title'>:Message</div>
           <div className='error-detail-value'>{error.message}</div>
+        </div>
+        <div className='error-detail-row'>
+          <div className='error-detail-title'>:Type</div>
+          <div className='error-detail-value'>{error.detailedType}</div>
         </div>
         <div className='error-detail-row'>
           <div className='error-detail-title'>:Link</div>
@@ -22,6 +26,10 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
             {error.link}
           </a>
         </div>
+      </div>
+      <div className='error-detail-row'>
+        <div className='error-detail-title'>:RequestID</div>
+        <div className='error-detail-value'>{error.requestId}</div>
       </div>
       {error.details && (
         <button

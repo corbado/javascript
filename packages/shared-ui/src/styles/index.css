@@ -1,5 +1,4 @@
 /***** Main *****/
-
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
   border-radius: 0.5rem;
@@ -370,6 +369,42 @@
 .cb-link-icon .cb-icon {
   flex-shrink: 0;
   height: 1.5rem;
+}
+
+/********** Dialog / Modal **********/
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.dialog-body {
+  margin-bottom: 20px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /********** Passkey List **********/

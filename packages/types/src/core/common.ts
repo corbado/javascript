@@ -3,3 +3,8 @@ export interface Paging {
   totalPages: number;
   totalItems: number;
 }
+
+export interface CorbadoAppParams {
+  projectId: string;
+  apiTimeout?: number;
+}

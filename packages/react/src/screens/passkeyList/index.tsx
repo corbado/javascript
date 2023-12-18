@@ -4,6 +4,7 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 
 import { Button, Spinner } from '../../components';
+import CorbadoScreen from '../../hocs/CorbadoScreen';
 import PasskeyAgentIcon from './PasskeyAgentIcon';
 import PasskeyDelete from './PasskeyDelete';
 import PasskeyDetails from './PasskeyDetails';
@@ -53,7 +54,7 @@ const PasskeyList: FC = () => {
   }
 
   return (
-    <div>
+    <CorbadoScreen>
       {passkeys.passkeys.map(passkey => (
         <div
           key={passkey.id}
@@ -74,7 +75,7 @@ const PasskeyList: FC = () => {
       >
         Create a Passkey
       </Button>
-    </div>
+    </CorbadoScreen>
   );
 };
 

@@ -445,8 +445,7 @@
   gap: 1rem;
   border-radius: 10px;
   border: black 1px solid;
-  width: 100%;
-  margin: 0.5rem 0.25rem;
+  margin: 0.5rem 0;
   padding: 0.5rem;
   font-family: 'Inter', sans-serif;
 }
@@ -505,6 +504,7 @@
 
 .cb-passkey-list-primary-button {
   padding: 0.75rem;
+  margin-top: 1rem;
 }
 
 /***** Media Queries *****/
@@ -519,5 +519,9 @@
   .cb-link-icon {
     justify-content: center;
     width: 100%;
+  }
+
+  .cb-passkey-list-card {
+    flex-direction: column;
   }
 }

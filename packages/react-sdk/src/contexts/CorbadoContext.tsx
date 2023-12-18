@@ -1,9 +1,8 @@
-import type { PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
+import type { CorbadoAppParams, PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  CorbadoAppParams,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,

@@ -1,5 +1,5 @@
 import './App.css';
-import { CorbadoProvider, CorbadoThemes } from '@corbado/react';
+import { CorbadoProvider } from '@corbado/react';
 import RouteProvider from './routes';
 import frenchTranslations from './translations/fr';
 import englishTranslations from './translations/en';

@@ -72,7 +72,7 @@ const PasskeyList: FC = () => {
         className='cb-passkey-list-primary-button'
         onClick={() => void handleAppendPasskey()}
       >
-        Create Passkey
+        Create a Passkey
       </Button>
     </div>
   );

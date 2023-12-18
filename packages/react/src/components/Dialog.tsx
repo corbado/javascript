@@ -1,17 +1,29 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
+import { Button } from './Button';
+
 export interface DialogProps {
   isOpen: boolean;
   header: string;
   body: ReactNode;
-  confirmText: string;
-  cancelText: string;
+  confirmText?: string;
+  cancelText?: string;
+  inverseButtonVariants?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-const Dialog: FC<DialogProps> = ({ isOpen, onClose, onConfirm, header, confirmText, cancelText, body }) => {
+export const Dialog: FC<DialogProps> = ({
+  isOpen,
+  header,
+  body,
+  confirmText = 'Yes',
+  cancelText = 'Cancel',
+  inverseButtonVariants = false,
+  onClose,
+  onConfirm,
+}) => {
   if (!isOpen) {
     return null;
   }
@@ -27,31 +39,31 @@ const Dialog: FC<DialogProps> = ({ isOpen, onClose, onConfirm, header, confirmTe
       >
         <div className='dialog-header'>
           {header}
-          <button
+          <div
+            className='dialog-x-button'
             onClick={onClose}
-            style={{ float: 'right', cursor: 'pointer' }}
           >
             X
-          </button>
+          </div>
         </div>
         <div className='dialog-body'>{body}</div>
         <div className='dialog-footer'>
-          <button
-            className='btn-danger'
+          <Button
+            variant={inverseButtonVariants ? 'close' : 'primary'}
+            className='dialog-button'
             onClick={onConfirm}
           >
             {confirmText}
-          </button>
-          <button
-            className='btn-outline'
+          </Button>
+          <Button
+            variant={inverseButtonVariants ? 'primary' : 'close'}
+            className='dialog-button'
             onClick={onClose}
           >
             {cancelText}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   );
 };
-
-export default Dialog;

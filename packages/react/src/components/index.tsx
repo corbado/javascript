@@ -12,3 +12,4 @@ export * from './SubHeader';
 export * from './Body';
 export * from './AuthFormScreenWrapper';
 export * from './EmailOtpScreenWrapper';
+export * from './Dialog';

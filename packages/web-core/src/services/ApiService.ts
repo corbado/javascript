@@ -19,6 +19,7 @@ import type {
   SignUpWithPasskeyError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
+import log from "loglevel";
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';
@@ -98,7 +99,7 @@ export class ApiService {
       },
       (error: AxiosError) => {
         const e = CorbadoError.fromAxiosError(error);
-        console.log('error', e);
+        log.warn('error', e);
 
         if (e instanceof NonRecoverableError) {
           this.#globalErrors.next(e);

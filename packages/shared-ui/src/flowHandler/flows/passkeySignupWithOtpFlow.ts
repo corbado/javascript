@@ -71,7 +71,6 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
           : PasskeySignupWithEmailOtpFallbackScreens.EnterOtp;
 
         const res = await state.corbadoApp.authService.userExists(eventOptions?.userStateUpdate?.email);
-        console.log('userExists', res);
         if (res.err) {
           return FlowUpdate.state({ emailError: new UnknownError(), ...eventOptions?.userStateUpdate });
         }

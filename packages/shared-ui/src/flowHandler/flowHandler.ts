@@ -176,9 +176,7 @@ export class FlowHandler {
       throw new Error('Invalid screen');
     }
 
-    console.log(this.#state, event, eventOptions);
     const flowUpdate = await stateUpdater(this.#state, event, eventOptions);
-    console.log(flowUpdate);
     if (flowUpdate !== undefined && flowUpdate?.nextFlow !== null) {
       this.changeFlow(flowUpdate.nextFlow);
     }
@@ -254,9 +252,7 @@ export class FlowHandler {
   }
 
   #changeState = (update: FlowHandlerStateUpdate) => {
-    console.log('before', this.#state);
     this.#state.update(update);
-    console.log('after', this.#state);
 
     this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));
   };

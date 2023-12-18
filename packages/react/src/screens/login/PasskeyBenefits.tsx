@@ -48,7 +48,6 @@ export const PasskeyBenefits = () => {
     [body, header, primaryButton, secondaryButton, loading, handleClick],
   );
 
-  console.log('PasskeyBenefits props', props)
   return (
     <>
       <PasskeyScreensWrapper {...props} />

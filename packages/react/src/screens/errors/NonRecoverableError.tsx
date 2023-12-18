@@ -10,11 +10,11 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
       </div>
       <div className='error-details'>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Message</div>
+          <div className='error-detail-title'>:Message</div>
           <div className='error-detail-value'>{error.message}</div>
         </div>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Link</div>
+          <div className='error-detail-title'>:Link</div>
           <a
             className='error-detail-value'
             href={error.link}
@@ -23,12 +23,16 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
           </a>
         </div>
       </div>
-      <button
-        className='error-button'
-        disabled
-      >
-        See browser console for more details
-      </button>
+      {error.details && (
+        <button
+          className='error-button'
+          onClick={() => {
+            window.open(error.details, '_blank');
+          }}
+        >
+          See browser console for more details
+        </button>
+      )}
     </div>
   );
 };

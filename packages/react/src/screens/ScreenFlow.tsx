@@ -7,6 +7,7 @@ import type { ScreenMap } from '../flows';
 import { flowScreensMap } from '../flows';
 import useFlowHandler from '../hooks/useFlowHandler';
 import { ErrorBoundary } from './ErrorBoundary';
+import {LoadingScreen} from "./LoadingScreen";
 
 interface ScreenFlowProps {
   isDevMode: boolean;
@@ -38,7 +39,7 @@ export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEma
       isDevMode={isDevMode}
       customerSupportEmail={customerSupportEmail}
     >
-      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <div>Loading...</div>}
+      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <LoadingScreen />}
     </ErrorBoundary>
   );
 };

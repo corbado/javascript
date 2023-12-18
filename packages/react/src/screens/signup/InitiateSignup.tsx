@@ -36,6 +36,8 @@ export const InitiateSignup = () => {
   useEffect(() => {
     setLoading(false);
     setSignupData(createFormTemplate(currentUserState.email, currentUserState.fullName));
+    setEmailError(null);
+    setUserNameError(null);
 
     if (currentUserState.emailError) {
       setEmailError(currentUserState.emailError);

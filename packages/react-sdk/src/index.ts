@@ -1,8 +1,7 @@
 import {
   InvalidEmailError,
   InvalidPasskeyError,
-  InvalidUserInputError,
-  InvalidUsernameError,
+  InvalidFullnameError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
@@ -13,11 +12,10 @@ export * from './contexts';
 export * from './hooks';
 export {
   InvalidPasskeyError,
-  InvalidUserInputError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
   UserAlreadyExistsError,
-  InvalidUsernameError,
+  InvalidFullnameError,
   InvalidEmailError,
 };

@@ -2,7 +2,7 @@ import type { AuthService } from '@corbado/web-core';
 import {
   InvalidEmailError,
   InvalidOtpInputError,
-  NoPasskeyAvailableError,
+  NoPasskeyAvailableError, PasskeyChallengeCancelledError,
   UnknownError,
   UnknownUserError,
 } from '@corbado/web-core';
@@ -13,8 +13,9 @@ import {
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
 } from '../constants';
-import { FlowUpdate } from '../stepFunctionResult';
-import type { Flow, FlowHandlerState, UserState } from '../types';
+import type {FlowHandlerState} from "../flowHandlerState";
+import { FlowUpdate } from '../flowUpdate';
+import type { Flow, UserState } from '../types';
 
 const sendEmailOTP = async (authService: AuthService, email?: string): Promise<FlowUpdate> => {
   if (!email) {
@@ -73,6 +74,10 @@ const loginWithPasskey = async (
     }
 
     if (res.val instanceof NoPasskeyAvailableError) {
+      return sendEmailOTP(state.corbadoApp.authService, email);
+    }
+
+    if (res.val instanceof PasskeyChallengeCancelledError) {
       return sendEmailOTP(state.corbadoApp.authService, email);
     }
 
@@ -175,7 +180,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
         return loginWithPasskey(state, state?.userState.email);
       case FlowHandlerEvents.SecondaryButton:
-        return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End);
+        return sendEmailOTP(state.corbadoApp.authService, state?.userState.email);
     }
     return FlowUpdate.state({});
   },

@@ -51,7 +51,6 @@ export const InitiateLogin = () => {
       <AuthFormScreenWrapper
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
-        disableSubmitButton={!formEmail}
         loading={loading}
       >
         <FormInput

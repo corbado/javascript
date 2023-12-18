@@ -3,8 +3,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 3rem;
-    padding: 0rem 1.25rem;
+    gap: 2rem;
+    padding: 1rem 1.25rem;
   }
 
   .title {
@@ -36,6 +36,7 @@
   .error-detail-title {
     direction: rtl;
     flex: 1;
+    font-weight: 700;
   }
 
   .error-detail-value {
@@ -80,7 +81,7 @@
     justify-content: space-between;
     gap: 1rem;
     color: #000000;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-style: normal;
     font-weight: 500;
     line-height: 1.25rem;

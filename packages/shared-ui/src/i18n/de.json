@@ -103,16 +103,14 @@
     }
   },
   "errors": {
-    "validationError_invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "validationError_invalidName": "Bitte geben Sie einen Namen ein",
-    "validationError_passkeyChallengeCancelled": "Passkey-Herausforderung abgebrochen",
-    "serverError_userAlreadyExists": "E-Mail-Adresse wird bereits verwendet",
-    "serverError_unknownUser": "Benutzer existiert nicht",
-    "serverError_noPasskeyAvailable": "Kein Passkey verfügbar",
-    "serverError_invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
-    "serverError_invalidOtp": "Der bereitgestellte OTP ist nicht gültig",
-    "serverError_timeoutOtp": "Der bereitgestellte OTP ist nicht mehr gültig",
-    "serverError_unreachableEmail": "Ungültige / unerreichbare E-Mail-Adresse",
+    "invalidName": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "invalidFullname": "Bitte geben Sie einen Namen ein",
+    "passkeyChallengeCancelled": "Passkey Challenge abgebrochen",
+    "userAlreadyExists": "E-Mail-Adresse wird bereits verwendet",
+    "unknownUser": "Benutzer existiert nicht",
+    "noPasskeyAvailable": "Kein Passkey verfügbar",
+    "invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
+    "invalidOtp": "Der eingegebene Code ist nicht gültig",
     "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
   }
 }

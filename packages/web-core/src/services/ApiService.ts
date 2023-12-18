@@ -1,4 +1,4 @@
-import type {ProjectConfig, UserAuthMethods} from '@corbado/types';
+import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import type { Subject } from 'rxjs';
@@ -10,7 +10,8 @@ import type {
   AppendPasskeyError,
   AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
-  CompleteSignupWithEmailOTPError, GetProjectConfigError,
+  CompleteSignupWithEmailOTPError,
+  GetProjectConfigError,
   InitAutocompletedLoginWithPasskeyError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
@@ -97,7 +98,7 @@ export class ApiService {
       },
       (error: AxiosError) => {
         const e = CorbadoError.fromAxiosError(error);
-        console.log('error', e)
+        console.log('error', e);
 
         if (e instanceof NonRecoverableError) {
           this.#globalErrors.next(e);
@@ -249,7 +250,13 @@ export class ApiService {
     Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError | undefined>
   > {
     if (emailCodeId === '') {
-      return Err(CorbadoError.illegalState('email OTP challenge has not been started'));
+      return Err(
+        CorbadoError.illegalState(
+          'email OTP challenge has not been started',
+          'make sure to call emailCodeLoginStart or emailCodeRegisterStart first',
+          '',
+        ),
+      );
     }
 
     return Result.wrapAsync(async () => {

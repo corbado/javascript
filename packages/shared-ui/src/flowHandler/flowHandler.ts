@@ -1,17 +1,16 @@
-import type {ProjectConfig, SessionUser} from '@corbado/types';
-import type {RecoverableError} from '@corbado/web-core';
-import type {CorbadoApp} from "@corbado/web-core";
-import type {i18n} from 'i18next';
+import type { ProjectConfig, SessionUser } from '@corbado/types';
+import type { CorbadoApp, RecoverableError } from '@corbado/web-core';
+import type { i18n } from 'i18next';
 
-import {canUsePasskeys} from '../utils';
-import type {FlowHandlerEvents} from './constants';
-import {CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames} from './constants';
-import {flows} from './flows';
+import { canUsePasskeys } from '../utils';
+import type { FlowHandlerEvents } from './constants';
+import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
+import { flows } from './flows';
+import { FlowHandlerState } from './flowHandlerState';
 import type {
   Flow,
   FlowHandlerConfig,
   FlowHandlerEventOptions,
-  FlowHandlerState,
   FlowHandlerStateUpdate,
   FlowNames,
   ScreenNames,
@@ -56,7 +55,7 @@ export class FlowHandler {
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(corbadoApp: CorbadoApp|undefined) {
+  async init(corbadoApp: CorbadoApp | undefined) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
@@ -64,19 +63,21 @@ export class FlowHandler {
     const passkeysSupported = await canUsePasskeys();
 
     // TODO: extract flowOptions from projectConfig
-    this.#state = {
-      corbadoApp: corbadoApp,
-      flowOptions: {
+    this.#state = new FlowHandlerState(
+      {
         passkeyAppend: true,
         retryPasskeyOnError: false,
       },
-      passkeysSupported: passkeysSupported,
-      userState: {
+      {
         email: undefined,
         fullName: undefined,
         emailError: undefined,
       },
-    };
+      passkeysSupported,
+      corbadoApp,
+      this.#i18next,
+    );
+
     this.changeFlow(this.#flowHandlerConfig.initialFlowType);
   }
 
@@ -176,15 +177,14 @@ export class FlowHandler {
     }
 
     console.log(this.#state, event, eventOptions);
-    const flowUpdate= await stateUpdater(this.#state, event, eventOptions);
+    const flowUpdate = await stateUpdater(this.#state, event, eventOptions);
     console.log(flowUpdate);
     if (flowUpdate !== undefined && flowUpdate?.nextFlow !== null) {
       this.changeFlow(flowUpdate.nextFlow);
     }
 
     if (flowUpdate?.stateUpdate) {
-      const newState = {...this.#state.userState, ...flowUpdate.stateUpdate}
-      this.#changeState({ userState: this.withTranslation(newState) });
+      this.#changeState({ userState: flowUpdate.stateUpdate });
     }
 
     if (flowUpdate?.nextScreen) {
@@ -253,28 +253,9 @@ export class FlowHandler {
     return this.#currentScreen;
   }
 
-  withTranslation(userState: UserState): UserState {
-    if (userState.emailError) {
-      userState.emailError.translatedMessage = this.#i18next.t(userState.emailError.name);
-    }
-
-    if (userState.userNameError) {
-      userState.userNameError.translatedMessage = this.#i18next.t(userState.userNameError.name);
-    }
-
-    if (userState.emailOTPError) {
-      userState.emailOTPError.translatedMessage = this.#i18next.t(userState.emailOTPError.name);
-    }
-
-    return userState;
-  }
-
   #changeState = (update: FlowHandlerStateUpdate) => {
     console.log('before', this.#state);
-    this.#state = {
-      ...this.#state,
-      ...update,
-    };
+    this.#state.update(update);
     console.log('after', this.#state);
 
     this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));

@@ -1,11 +1,18 @@
 import type { AuthService, SignUpWithPasskeyError } from '@corbado/web-core';
-import { InvalidEmailError, InvalidOtpInputError, UnknownError, UserAlreadyExistsError } from '@corbado/web-core';
+import {
+  InvalidEmailError,
+  InvalidFullnameError,
+  InvalidOtpInputError,
+  UnknownError,
+  UserAlreadyExistsError,
+} from '@corbado/web-core';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import { FlowHandlerEvents, FlowType, PasskeySignupWithEmailOtpFallbackScreens } from '../constants';
-import { FlowUpdate } from '../stepFunctionResult';
-import type { Flow, FlowHandlerState } from '../types';
+import type { FlowHandlerState } from '../flowHandlerState';
+import { FlowUpdate } from '../flowUpdate';
+import type { Flow } from '../types';
 
 const sendEmailOTP = async (
   authService: AuthService,
@@ -51,8 +58,12 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
       case FlowHandlerEvents.ChangeFlow:
         return FlowUpdate.changeFlow(FlowType.Login);
       case FlowHandlerEvents.PrimaryButton: {
+        if (!eventOptions?.userStateUpdate?.fullName) {
+          return FlowUpdate.state({ userNameError: new InvalidFullnameError(), ...eventOptions?.userStateUpdate });
+        }
+
         if (!eventOptions?.userStateUpdate?.email) {
-          return FlowUpdate.state({ emailError: new InvalidEmailError() });
+          return FlowUpdate.state({ emailError: new InvalidEmailError(), ...eventOptions?.userStateUpdate });
         }
 
         const nextScreen = state.passkeysSupported
@@ -62,7 +73,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         const res = await state.corbadoApp.authService.userExists(eventOptions?.userStateUpdate?.email);
         console.log('userExists', res);
         if (res.err) {
-          return FlowUpdate.state({ emailError: new UnknownError() });
+          return FlowUpdate.state({ emailError: new UnknownError(), ...eventOptions?.userStateUpdate });
         }
 
         const userAlreadyExists = res.val;

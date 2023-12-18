@@ -1,28 +1,29 @@
 import type { AxiosError } from 'axios';
 import log from 'loglevel';
 
-import type {ErrorRsp} from '../../api';
+import type { ErrorRsp } from '../../api';
 
 export type SignUpWithPasskeyError =
-    | UserAlreadyExistsError
-    | InvalidUserInputError
-    | PasskeyChallengeCancelledError
-    | UnknownError;
+  | UserAlreadyExistsError
+  | InvalidEmailError
+  | InvalidFullnameError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
 export type AppendPasskeyError = PasskeyChallengeCancelledError | UnknownError;
 export type LoginWithPasskeyError =
-    | InvalidUserInputError
-    | InvalidPasskeyError
-    | PasskeyChallengeCancelledError
-    | UnknownError;
+  | InvalidEmailError
+  | InvalidPasskeyError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
 export type InitAutocompletedLoginWithPasskeyError = UnknownError;
 export type CompleteAutocompletedLoginWithPasskeyError =
-    | InvalidPasskeyError
-    | PasskeyChallengeCancelledError
-    | UnknownError;
-export type InitSignUpWithEmailOTPError = InvalidUserInputError | UserAlreadyExistsError | UnknownError;
+  | InvalidPasskeyError
+  | PasskeyChallengeCancelledError
+  | UnknownError;
+export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
 export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
-export type InitLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
-export type CompleteLoginWithEmailOTPError = InvalidUserInputError | UnknownError;
+export type InitLoginWithEmailOTPError = InvalidEmailError | UnknownError;
+export type CompleteLoginWithEmailOTPError = InvalidEmailError | UnknownError;
 export type AuthMethodsListError = UnknownUserError | UnknownError;
 export type GetProjectConfigError = UnknownError;
 
@@ -75,12 +76,12 @@ export class CorbadoError extends Error {
             case 'user already exists':
               return new UserAlreadyExistsError();
             case 'cannot be blank':
-              return new InvalidUserInputError('Field cannot be blank', 'username');
+              return new InvalidEmailError();
             case "user doesn't exist":
               return new UnknownUserError();
             case 'Invalid email address':
             case 'Invalid / unreachable email address':
-              return new InvalidUserInputError('Invalid / unreachable email address', 'username');
+              return new InvalidEmailError();
           }
         }
 
@@ -104,7 +105,6 @@ export class CorbadoError extends Error {
   }
 
   static fromDOMException(e: DOMException): CorbadoError {
-
     switch (e.name) {
       case 'NotAllowedError':
       case 'AbortError':
@@ -127,8 +127,8 @@ export class CorbadoError extends Error {
     return NonRecoverableError.unknown();
   }
 
-  static illegalState(message: string): CorbadoError {
-    return new IllegalStateError(message);
+  static illegalState(message: string, hint: string, link: string): CorbadoError {
+    return NonRecoverableError.client(message, hint, link);
   }
 
   static noPasskeyAvailable(): CorbadoError {
@@ -165,42 +165,47 @@ export class NonRecoverableError extends CorbadoError {
   readonly type: 'client' | 'server';
   readonly hint: string;
   readonly link: string;
+  readonly details?: string;
   readonly requestId?: string;
 
-  constructor(type: 'client' | 'server', message: string, hint: string, link: string, requestId?: string) {
+  constructor(type: 'client' | 'server', message: string, hint: string, link: string, requestId?: string, details?: string) {
     super(message, false);
-    this.name = 'DeveloperNoticeError';
+    this.name = 'Integration error';
     this.hint = hint;
     this.type = type;
     this.link = link;
     this.requestId = requestId;
+    this.details = details;
   }
 
   static unknown() {
     return new NonRecoverableError(
-        'server',
-        'An unknown error occurred',
-        'Contact the Corbado team',
-        'https://docs.corbado.com',
+      'server',
+      'An unknown error occurred',
+      'Contact the Corbado team',
+      'https://docs.corbado.com',
     );
   }
 
   static invalidConfig(message: string) {
-    return new NonRecoverableError(
-        'client',
-        message,
-        'Check your parameters for <CorbadoProvider/>',
-        'https://docs.corbado.com',
+    return NonRecoverableError.client(
+      message,
+      'Check your parameters for <CorbadoProvider/>',
+      'https://docs.corbado.com',
     );
   }
 
   static server(message: string) {
     return new NonRecoverableError(
-        'server',
-        'An unknown error occurred: ' + message,
-        'Contact the Corbado team',
-        'https://docs.corbado.com',
+      'server',
+      'An unknown error occurred: ' + message,
+      'Contact the Corbado team',
+      'https://docs.corbado.com',
     );
+  }
+
+  static client(message: string, hint: string, link: string) {
+    return new NonRecoverableError('client', message, hint, link);
   }
 }
 
@@ -221,38 +226,28 @@ export class UnknownUserError extends RecoverableError {
 export class NoPasskeyAvailableError extends RecoverableError {
   constructor() {
     super('No passkey available');
-    this.name = 'NoPasskeyAvailableError';
+    this.name = 'errors.noPasskeyAvailable';
   }
 }
 
 export class InvalidPasskeyError extends RecoverableError {
   constructor() {
     super('The provided passkey is no longer valid.');
-    this.name = 'InvalidPasskeyError';
+    this.name = 'errors.invalidPasskey';
   }
 }
 
 export class PasskeyChallengeCancelledError extends RecoverableError {
   constructor() {
     super('Passkey challenge cancelled');
-    this.name = 'PasskeyChallengeCancelledError';
+    this.name = 'errors.passkeyChallengeCancelled';
   }
 }
 
-export class InvalidUserInputError extends RecoverableError {
-  field: string;
-
-  constructor(message: string, field: string) {
-    super(message);
-    this.name = 'InvalidUserInputError';
-    this.field = field;
-  }
-}
-
-export class InvalidUsernameError extends RecoverableError {
+export class InvalidFullnameError extends RecoverableError {
   constructor() {
-    super('Invalid username');
-    this.name = 'errors.invalidUsername';
+    super('Invalid fullName');
+    this.name = 'errors.invalidFullname';
   }
 }
 
@@ -260,17 +255,6 @@ export class InvalidEmailError extends RecoverableError {
   constructor() {
     super('Invalid email');
     this.name = 'errors.invalidName';
-  }
-}
-
-/**
- * this error is thrown when the application is in an invalid state
- * (e.g. an email OTP challenge is verified, but that challenge has never been started)
- */
-export class IllegalStateError extends RecoverableError {
-  constructor(message: string) {
-    super(message);
-    this.name = 'IllegalStateError';
   }
 }
 
@@ -284,6 +268,6 @@ export class InvalidOtpInputError extends RecoverableError {
 export class UnknownError extends RecoverableError {
   constructor() {
     super('An unknown error occurred');
-    this.name = 'UnknownError';
+    this.name = 'errors.unknownError';
   }
 }

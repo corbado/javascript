@@ -2,7 +2,7 @@ import { aaguidMappings, getParsedUA } from '@corbado/shared-ui';
 import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export interface PasskeyDetailsProps {
   passkey: PassKeyItem;
@@ -24,12 +24,15 @@ const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
         {passkey.id}
       </div>
       <div>
-        {t('field_created_text1')}
-        {passkey.created}
-        {t('field_created_text2')}
-        {userAgent?.browser.name}
-        {t('field_created_text3')}
-        {userAgent?.os.name}
+        <Trans
+          i18nKey='field_created'
+          t={t}
+          values={{
+            date: passkey.created,
+            browser: userAgent.browser.name,
+            os: userAgent.os.name,
+          }}
+        />
       </div>
       <div>
         {t('field_lastUsed')}

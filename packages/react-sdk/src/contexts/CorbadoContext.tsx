@@ -31,8 +31,8 @@ export interface CorbadoContextProps {
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError>>;
   getUserAuthMethods: (email: string) => Promise<UserAuthMethods>;
-  passkeyList: () => Promise<Result<PassKeyList, PasskeyListError>>;
-  passkeyDelete: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
+  getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
+  deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getProjectConfig: () => Promise<ProjectConfig>;
 }
 
@@ -40,7 +40,7 @@ const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <CorbadoProvider/>');
 };
 
-export const initialContext = {
+export const initialContext: CorbadoContextProps = {
   shortSession: undefined,
   user: undefined,
   globalError: undefined,
@@ -53,10 +53,9 @@ export const initialContext = {
   logout: missingImplementation,
   initSignUpWithEmailOTP: missingImplementation,
   completeSignUpWithEmailOTP: missingImplementation,
-  initAutocompletedLoginWithPasskey: missingImplementation,
   appendPasskey: missingImplementation,
-  passkeyList: missingImplementation,
-  passkeyDelete: missingImplementation,
+  getPasskeys: missingImplementation,
+  deletePasskey: missingImplementation,
   getUserAuthMethods: missingImplementation,
   getProjectConfig: missingImplementation,
 };

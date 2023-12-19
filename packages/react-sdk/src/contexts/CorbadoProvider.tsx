@@ -66,11 +66,11 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     return corbadoApp.authService.appendPasskey();
   }, [corbadoApp]);
 
-  const passkeyList = useCallback(() => {
+  const getPasskeys = useCallback(() => {
     return corbadoApp.authService.passkeyList();
   }, [corbadoApp]);
 
-  const passkeyDelete = useCallback(
+  const deletePasskey = useCallback(
     (id: string) => {
       return corbadoApp.authService.passkeyDelete(id);
     },
@@ -137,8 +137,8 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
       appendPasskey,
-      passkeyList,
-      passkeyDelete,
+      getPasskeys,
+      deletePasskey,
       getUserAuthMethods,
       getProjectConfig,
     };
@@ -156,8 +156,8 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
     appendPasskey,
-    passkeyList,
-    passkeyDelete,
+    getPasskeys,
+    deletePasskey,
     getUserAuthMethods,
     getProjectConfig,
   ]);

@@ -1,9 +1,14 @@
 import type { ProjectConfig } from '@corbado/types';
 
 import type { FlowHandlerEvents } from './constants';
-import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
+import { CommonScreens, FlowNameByFlowStyle, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
 import { flows } from './flows';
-import type { Flow, FlowHandlerConfig, FlowHandlerEventOptions, FlowNames, ScreenNames } from './types';
+import type { Flow, FlowHandlerConfig, FlowHandlerEventOptions, FlowNames, FlowOptions, ScreenNames } from './types';
+
+const defaultFlowOptions: FlowOptions = {
+  passkeyAppend: true,
+  retryPasskeyOnError: true,
+};
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -16,9 +21,11 @@ export class FlowHandler {
   #screenHistory: ScreenNames[];
   #flowName!: FlowNames;
 
-  // @ts-ignore
-  #projectConfig: ProjectConfig | undefined;
+  #projectConfig: ProjectConfig | undefined = undefined;
   #flowHandlerConfig: FlowHandlerConfig;
+  #flowOptions: FlowOptions | undefined = undefined;
+  #signUpFlowName: SignUpFlowNames = SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+  #loginFlowName: LoginFlowNames = LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
 
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
@@ -32,6 +39,10 @@ export class FlowHandler {
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;
     this.#projectConfig = projectConfig;
+    this.#signUpFlowName =
+      FlowNameByFlowStyle[projectConfig.signupFlow].SignUp ?? SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+    this.#loginFlowName =
+      FlowNameByFlowStyle[projectConfig.loginFlow].Login ?? LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
   }
 
   /**
@@ -122,15 +133,7 @@ export class FlowHandler {
       throw new Error('Invalid screen');
     }
 
-    // TODO: extract flowOptions from projectConfig
-    const nextScreen = await stepFunction(
-      {
-        passkeyAppend: true,
-        retryPasskeyOnError: true,
-      },
-      event,
-      eventOptions,
-    );
+    const nextScreen = await stepFunction(this.#flowOptions, event, eventOptions);
 
     if (nextScreen === CommonScreens.End) {
       void this.#flowHandlerConfig.onLoggedIn();
@@ -161,15 +164,7 @@ export class FlowHandler {
       throw new Error('Invalid screen');
     }
 
-    // TODO: extract flowOptions from projectConfig
-    return stepFunction(
-      {
-        passkeyAppend: true,
-        retryPasskeyOnError: true,
-      },
-      event,
-      eventOptions,
-    );
+    return stepFunction(this.#flowOptions, event, eventOptions);
   }
 
   /**
@@ -200,12 +195,21 @@ export class FlowHandler {
    * @param flowType
    */
   changeFlow(flowType: FlowType) {
-    // TODO: get flow name from flow type (currently this is basically hardcoded)
     let flowName: FlowNames;
+
+    //TODO: Remove defaultOptions once BE has added support for flow options
     if (flowType === FlowType.SignUp) {
-      flowName = SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+      flowName = this.#signUpFlowName;
+      this.#flowOptions = {
+        ...defaultFlowOptions,
+        ...this.#projectConfig?.signupFlowOptions,
+      };
     } else {
-      flowName = LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
+      flowName = this.#loginFlowName;
+      this.#flowOptions = {
+        ...defaultFlowOptions,
+        ...this.#projectConfig?.loginFlowOptions,
+      };
     }
 
     this.#currentFlow = flows[flowName];

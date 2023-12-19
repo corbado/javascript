@@ -600,6 +600,12 @@ paths:
       operationId: SessionLogout
       tags:
         - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emptyReq'
       responses:
         '200':
           description: Successful performed logout
@@ -705,16 +711,20 @@ components:
       type: object
       required:
         - id
+        - credentialHash
         - aaguid
         - userAgent
         - attestationType
         - transport
         - backupEligible
         - backupState
+        - lastUsed
         - status
         - created
       properties:
         id:
+          type: string
+        credentialHash:
           type: string
         aaguid:
           type: string
@@ -730,10 +740,13 @@ components:
           type: boolean
         backupState:
           type: boolean
+        lastUsed:
+          type: string
+          description: Timestamp of when the entity was last used in yyyy-MM-dd'T'HH:mm:ss format
         status:
           type: string
-          enum: ['pending', 'active']
-          description: 'Status'
+          enum: [ 'pending', 'active' ]
+          description: "Status"
         created:
           $ref: 'common.yml#/components/schemas/created'
 
@@ -864,6 +877,7 @@ components:
                   type: string
               required:
                 - redirectURL
+
 
     passKeyMediationStartReq:
       type: object
@@ -1132,6 +1146,7 @@ components:
             data:
               $ref: '#/components/schemas/authenticationRsp'
 
+
     loginTokenReq:
       type: object
       properties:
@@ -1192,6 +1207,10 @@ components:
                 - userFullNameRequired
                 - webComponentDebug
                 - environment
+                - signupFlow
+                - signupFlowOptions
+                - loginFlow
+                - loginFlowOptions
               properties:
                 allowUserRegistration:
                   type: boolean
@@ -1207,6 +1226,14 @@ components:
                   type: boolean
                 environment:
                   type: string
+                signupFlow:
+                  type: string
+                signupFlowOptions:
+                  type: object
+                loginFlow:
+                  type: string
+                loginFlowOptions:
+                  type: object
 
     assetLinksRsp:
       type: array
@@ -1420,5 +1447,5 @@ components:
             $ref: 'common.yml#/components/schemas/errorRsp'
 
 security:
-  - bearerAuth: []
-  - projectID: []
+  - bearerAuth: [ ]
+  - projectID: [ ]

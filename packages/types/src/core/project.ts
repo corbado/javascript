@@ -17,4 +17,16 @@ export interface ProjectConfig {
   userFullNameRequired: boolean;
   webComponentDebug: boolean;
   environment: string;
+  loginFlow: string;
+  //TODO: make them compulsory and remove the question mark (waiting on BE support)
+  loginFlowOptions: {
+    passkeyAppend?: boolean;
+    retryPasskeyOnError?: boolean;
+  };
+  signupFlow: string;
+  //TODO: make them compulsory and remove the question mark (waiting on BE support)
+  signupFlowOptions: {
+    passkeyAppend?: boolean;
+    retryPasskeyOnError?: boolean;
+  };
 }

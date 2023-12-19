@@ -1,9 +1,9 @@
 import FilledButton from '../buttons/FilledButton.tsx';
 import {
-  InvalidUserInputError,
   useCorbado,
   PasskeyChallengeCancelledError,
   UserAlreadyExistsError,
+  InvalidEmailError,
 } from '@corbado/react-sdk';
 import { useState } from 'react';
 import { AuthScreenNames } from '../../contexts/AuthUIContext.ts';
@@ -26,12 +26,17 @@ const SelectSignupMethod = () => {
       return;
     }
 
+    if (!result.val) {
+      // this is a globalError that can not be handled here
+      return;
+    }
+
     switch (true) {
       case result.val instanceof PasskeyChallengeCancelledError:
         // nothing to do here => the user can just try again
         return;
       case result.val instanceof UserAlreadyExistsError:
-      case result.val instanceof InvalidUserInputError:
+      case result.val instanceof InvalidEmailError:
         setError(result.val.message);
         return;
       default:
@@ -52,8 +57,12 @@ const SelectSignupMethod = () => {
       return;
     }
 
+    if (!result.val) {
+      return;
+    }
+
     switch (true) {
-      case result.val instanceof InvalidUserInputError:
+      case result.val instanceof InvalidEmailError:
       case result.val instanceof UserAlreadyExistsError:
         setError(result.val.message);
         return;

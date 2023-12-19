@@ -17,12 +17,12 @@ export const GlobalErrorScreen = () => {
           <td>{globalError.message}</td>
         </tr>
         <tr>
-          <td>Link</td>
-          <td>{globalError.link}</td>
+          <td>Type</td>
+          <td>{globalError.detailedType}</td>
         </tr>
         <tr>
-          <td>Hint</td>
-          <td>{globalError.hint}</td>
+          <td>Link</td>
+          <td>{globalError.link}</td>
         </tr>
         {globalError.requestId && (
           <tr>
@@ -31,12 +31,14 @@ export const GlobalErrorScreen = () => {
           </tr>
         )}
       </table>
-      <FilledButton
-        content='See browser console for more details'
-        onClick={() => {
-          window.open('https://app.corbado.com', '_blank', 'noreferrer');
-        }}
-      />
+      {globalError.details && (
+        <FilledButton
+          content='See browser console for more details'
+          onClick={() => {
+            window.open(globalError?.details, '_blank', 'noreferrer');
+          }}
+        />
+      )}
     </div>
   );
 };

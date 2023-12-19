@@ -1,6 +1,7 @@
 import {
   InvalidEmailError,
   InvalidFullnameError,
+  InvalidOtpInputError,
   InvalidPasskeyError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
@@ -13,6 +14,7 @@ export * from './hooks';
 export {
   InvalidPasskeyError,
   NoPasskeyAvailableError,
+  InvalidOtpInputError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
   UserAlreadyExistsError,

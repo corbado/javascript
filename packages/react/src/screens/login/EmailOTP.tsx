@@ -8,7 +8,6 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.emailOtp' });
-  const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
   const { emitEvent, currentUserState } = useFlowHandler();
 
   const header = t('header');
@@ -19,7 +18,6 @@ export const EmailOTP = () => {
       {t('body_text2')}
     </>
   );
-  const validationError = tErrors('serverError_invalidOtp');
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
@@ -38,7 +36,6 @@ export const EmailOTP = () => {
     () => ({
       header,
       body,
-      validationError,
       verificationButtonText,
       backButtonText,
       onVerificationButtonClick: handleOTPVerification,
@@ -51,7 +48,6 @@ export const EmailOTP = () => {
       handleCancel,
       header,
       body,
-      validationError,
       verificationButtonText,
       backButtonText,
     ],

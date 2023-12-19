@@ -100,6 +100,13 @@
         "button_start": "Create passkey",
         "button_skip": "Maybe later"
       }
+    },
+    "unexpectedError": {
+      "header": "Something went wrong",
+      "body_introduction": "We’re sorry that our service is currently not available.",
+      "body_explanationCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
+      "body_explanationNoCustomerSupport": "Please try again in a few moments.",
+      "cta": "Refresh Page"
     }
   },
   "errors": {

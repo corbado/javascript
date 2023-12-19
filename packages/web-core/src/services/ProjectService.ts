@@ -1,8 +1,9 @@
 import type { ProjectConfig } from '@corbado/types';
+import type { Result } from 'ts-results';
+import { Ok } from 'ts-results';
 
+import type { GetProjectConfigError } from '../utils';
 import type { ApiService } from './ApiService';
-import {GetProjectConfigError} from "../utils";
-import {Ok, Result} from "ts-results";
 
 /**
  * ProjectService is responsible for managing the project configuration.

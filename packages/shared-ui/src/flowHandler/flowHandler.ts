@@ -1,12 +1,12 @@
 import type { ProjectConfig, SessionUser } from '@corbado/types';
-import type { CorbadoApp, RecoverableError } from '@corbado/web-core';
+import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
 import type { FlowHandlerEvents } from './constants';
 import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
-import { flows } from './flows';
 import { FlowHandlerState } from './flowHandlerState';
+import { flows } from './flows';
 import type {
   Flow,
   FlowHandlerConfig,
@@ -155,29 +155,14 @@ export class FlowHandler {
     this.#onUserStateChangeCallbacks.splice(cbId, 1);
   }
 
-  /**
-   * @deprecated
-   * Method to navigate to the next screen.
-   * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
-   * If the next screen is the End screen, it redirects to a specified URL.
-   * It adds the current screen to the screen history, sets the current screen to the next screen, and calls any registered onScreenUpdate callbacks with the new current screen.
-   *
-   * @param event The event that triggered the navigation.
-   * @param eventOptions The event options.
-   * @returns The new current screen.
-   */
-  navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
-    return this.handleStateUpdate(event, eventOptions);
-  }
-
-  async handleStateUpdate(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions, _?: RecoverableError) {
+  async handleStateUpdate(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
     const stateUpdater = this.#currentFlow[this.#currentScreen];
     if (!stateUpdater) {
       throw new Error('Invalid screen');
     }
 
     const flowUpdate = await stateUpdater(this.#state, event, eventOptions);
-    if (flowUpdate !== undefined && flowUpdate?.nextFlow !== null) {
+    if (flowUpdate && flowUpdate?.nextFlow !== null) {
       this.changeFlow(flowUpdate.nextFlow);
     }
 
@@ -251,11 +236,11 @@ export class FlowHandler {
     return this.#currentScreen;
   }
 
-  #changeState = (update: FlowHandlerStateUpdate) => {
+  #changeState(update: FlowHandlerStateUpdate) {
     this.#state.update(update);
 
     this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));
-  };
+  }
 
   updateUser(user: SessionUser) {
     this.#changeState({ user: user });

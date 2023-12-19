@@ -1,6 +1,6 @@
 import type { SessionUser } from '@corbado/types';
-import type { NonRecoverableError} from '@corbado/web-core';
-import {CorbadoApp} from '@corbado/web-core';
+import type { NonRecoverableError } from '@corbado/web-core';
+import { CorbadoApp } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

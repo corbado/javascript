@@ -201,6 +201,7 @@ export class NonRecoverableError extends CorbadoError {
   }
 
   static invalidConfig(message: string) {
+    // TODO: add link to docs
     return NonRecoverableError.client(message, 'https://docs.corbado.com');
   }
 

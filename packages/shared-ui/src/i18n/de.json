@@ -100,6 +100,13 @@
         "button_start": "Passkey erstellen",
         "button_skip": "Vielleicht später"
       }
+    },
+    "unexpectedError": {
+      "header": "Hier ist etwas schief gelaufen",
+      "body_introduction": "Dieser Service ist aktuell leider nicht verfügbar",
+      "body_explanationCustomerSupport": "Bitte versuchen Sie es später noch einmal. Sollte das Problem bestehen bleiben, wenden Sie sich bitte an {{customerSupportEmail}}.",
+      "body_explanationNoCustomerSupport": "Bitte versuchen Sie es später noch einmal.",
+      "cta": "Seite neu laden"
     }
   },
   "errors": {

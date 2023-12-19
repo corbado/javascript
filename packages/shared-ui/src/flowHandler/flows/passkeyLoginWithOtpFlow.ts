@@ -2,7 +2,8 @@ import type { AuthService } from '@corbado/web-core';
 import {
   InvalidEmailError,
   InvalidOtpInputError,
-  NoPasskeyAvailableError, PasskeyChallengeCancelledError,
+  NoPasskeyAvailableError,
+  PasskeyChallengeCancelledError,
   UnknownError,
   UnknownUserError,
 } from '@corbado/web-core';
@@ -13,7 +14,7 @@ import {
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
 } from '../constants';
-import type {FlowHandlerState} from "../flowHandlerState";
+import type { FlowHandlerState } from '../flowHandlerState';
 import { FlowUpdate } from '../flowUpdate';
 import type { Flow, UserState } from '../types';
 
@@ -156,17 +157,17 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
     }
     return FlowUpdate.state({});
   },
-  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: async (_, event) => {
+  [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend]: async (_, event): Promise<FlowUpdate | undefined> => {
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits);
+        return Promise.resolve(FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits));
       case FlowHandlerEvents.SecondaryButton:
-        return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End);
+        return Promise.resolve(FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End));
       case FlowHandlerEvents.ShowBenefits:
-        return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits);
+        return Promise.resolve(FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyBenefits));
     }
 
-    return undefined;
+    return Promise.resolve(undefined);
   },
 
   [PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError]: async (state, event) => {

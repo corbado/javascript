@@ -3,11 +3,11 @@ import { CommonScreens } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { Spinner } from '../components';
 import type { ScreenMap } from '../flows';
 import { flowScreensMap } from '../flows';
 import useFlowHandler from '../hooks/useFlowHandler';
 import { ErrorBoundary } from './ErrorBoundary';
-import {LoadingScreen} from "./LoadingScreen";
 
 interface ScreenFlowProps {
   isDevMode: boolean;
@@ -39,7 +39,7 @@ export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEma
       isDevMode={isDevMode}
       customerSupportEmail={customerSupportEmail}
     >
-      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <LoadingScreen />}
+      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <Spinner />}
     </ErrorBoundary>
   );
 };

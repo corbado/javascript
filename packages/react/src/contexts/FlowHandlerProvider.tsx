@@ -27,13 +27,13 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       ? LoginFlowNames.PasskeyLoginWithEmailOTPFallback
       : SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
   );
-  const initialized = useRef(false);
+  const [initialized, setInitialized] = useState(false);
   const onScreenChangeCbId = useRef<number>(0);
   const onFlowChangeCbId = useRef<number>(0);
   const onUserStateChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    if (initialized.current) {
+    if (initialized) {
       return;
     }
 
@@ -55,7 +55,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       void flowHandler.init(corbadoApp);
 
       setFlowHandler(flowHandler);
-      initialized.current = true;
+      setInitialized(true);
     })();
 
     return () => {
@@ -66,19 +66,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   }, []);
 
   useEffect(() => {
-    if (!initialized.current || !user) {
+    if (!initialized || !user) {
       return;
     }
 
     flowHandler?.updateUser(user);
   }, [initialized, user]);
-
-  const navigateNext = useCallback(
-    async (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
-      (await flowHandler?.navigateNext(event, eventOptions)) ?? CommonScreens.End;
-    },
-    [flowHandler],
-  );
 
   const navigateBack = useCallback(() => {
     return flowHandler?.navigateBack() ?? CommonScreens.Start;
@@ -93,7 +86,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
 
   const emitEvent = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
-      return flowHandler!.handleStateUpdate(event, eventOptions);
+      return flowHandler?.handleStateUpdate(event, eventOptions);
     },
     [flowHandler],
   );
@@ -103,21 +96,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       currentFlow,
       currentScreen,
       currentUserState,
-      initialized: initialized.current,
-      navigateNext,
+      initialized,
       navigateBack,
       changeFlow,
       emitEvent,
     }),
-    [
-      currentFlow,
-      currentScreen,
-      currentUserState,
-      initialized.current,
-      navigateNext,
-      navigateBack,
-      changeFlow,
-    ],
+    [currentFlow, currentScreen, currentUserState, initialized, navigateBack, changeFlow],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

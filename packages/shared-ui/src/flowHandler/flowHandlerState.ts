@@ -14,6 +14,27 @@ const defaultErrors = {
  * Internal state of the FlowHandler.
  */
 export class FlowHandlerState {
+  #flowOptions: FlowOptions;
+  #userState: UserState;
+  #passkeysSupported: boolean;
+  #user?: SessionUser;
+  #corbadoApp: CorbadoApp;
+  #i18next: i18n;
+
+  constructor(
+    flowOptions: FlowOptions,
+    userState: UserState,
+    passkeysSupported: boolean,
+    corbadoApp: CorbadoApp,
+    i18next: i18n,
+  ) {
+    this.#flowOptions = flowOptions;
+    this.#userState = userState;
+    this.#passkeysSupported = passkeysSupported;
+    this.#corbadoApp = corbadoApp;
+    this.#i18next = i18next;
+  }
+
   get user(): SessionUser | undefined {
     return this.#user;
   }
@@ -30,21 +51,6 @@ export class FlowHandlerState {
 
   get corbadoApp(): CorbadoApp {
     return this.#corbadoApp;
-  }
-
-  #flowOptions: FlowOptions;
-  #userState: UserState;
-  #passkeysSupported: boolean;
-  #user?: SessionUser;
-  #corbadoApp: CorbadoApp;
-  #i18next: i18n;
-
-  constructor(flowOptions: FlowOptions, userState: UserState, passkeysSupported: boolean, corbadoApp: CorbadoApp, i18next: i18n) {
-    this.#flowOptions = flowOptions;
-    this.#userState = userState;
-    this.#passkeysSupported = passkeysSupported;
-    this.#corbadoApp = corbadoApp;
-    this.#i18next = i18next;
   }
 
   /**

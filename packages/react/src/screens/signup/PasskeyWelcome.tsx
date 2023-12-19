@@ -1,10 +1,10 @@
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
 
 export const PasskeyWelcome = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeySuccess' });

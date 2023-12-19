@@ -24,9 +24,9 @@ export const EmailOTP = () => {
   const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.SecondaryButton), []);
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
-    (otp: string, setLoading) => {
+    async (otp: string, setLoading) => {
       setLoading(true);
-      return emitEvent(FlowHandlerEvents.PrimaryButton, { emailOTPCode: otp });
+      await emitEvent(FlowHandlerEvents.PrimaryButton, { emailOTPCode: otp });
     },
     [],
   );

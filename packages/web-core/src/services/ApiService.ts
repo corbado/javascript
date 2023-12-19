@@ -1,6 +1,7 @@
 import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
+import log from 'loglevel';
 import type { Subject } from 'rxjs';
 import { Err, Result } from 'ts-results';
 
@@ -19,7 +20,6 @@ import type {
   SignUpWithPasskeyError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
-import log from "loglevel";
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';
@@ -251,12 +251,7 @@ export class ApiService {
     Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError | undefined>
   > {
     if (emailCodeId === '') {
-      return Err(
-        CorbadoError.illegalState(
-          'email OTP challenge has not been started',
-          '',
-        ),
-      );
+      return Err(CorbadoError.illegalState('email OTP challenge has not been started', ''));
     }
 
     return Result.wrapAsync(async () => {

@@ -14,10 +14,9 @@ export interface FlowHandlerContextProps {
   currentScreen: ScreenNames;
   currentUserState: UserState;
   initialized: boolean;
-  navigateNext: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void>;
   navigateBack: () => ScreenNames;
   changeFlow: (flowType: FlowType) => void;
-  emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void>;
+  emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
 }
 
 export const initialContext: FlowHandlerContextProps = {
@@ -25,7 +24,6 @@ export const initialContext: FlowHandlerContextProps = {
   currentScreen: CommonScreens.Start,
   currentUserState: {},
   initialized: false,
-  navigateNext: () => Promise.resolve(),
   navigateBack: () => CommonScreens.Start,
   changeFlow: () => void 0,
   emitEvent: () => Promise.reject(),

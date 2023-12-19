@@ -212,13 +212,13 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
     return;
   },
 
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: async (_, event) => {
+  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: (_, event): Promise<FlowUpdate | undefined> => {
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.End);
+        return Promise.resolve(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.End));
     }
 
-    return;
+    return Promise.resolve(undefined);
   },
 
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyError]: async (state, event) => {

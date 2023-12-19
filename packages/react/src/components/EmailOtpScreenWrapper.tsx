@@ -1,13 +1,13 @@
 import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import useFlowHandler from '../hooks/useFlowHandler';
 import { Body } from './Body';
 import { Button } from './Button';
 import { Header } from './Header';
 import { IconLink } from './IconLink';
 import { Gmail, Outlook, Yahoo } from './icons';
 import { OtpInputGroup } from './OtpInputGroup';
-import useFlowHandler from '../hooks/useFlowHandler';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
@@ -30,7 +30,6 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 }) => {
   const [otp, setOTP] = useState<string>('');
   const { currentUserState } = useFlowHandler();
-  const [isOtpValid] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -91,7 +90,7 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
         ref={submitButtonRef}
         variant='primary'
         isLoading={loading}
-        disabled={!isOtpValid || loading}
+        disabled={!loading}
       >
         {verificationButtonText}
       </Button>

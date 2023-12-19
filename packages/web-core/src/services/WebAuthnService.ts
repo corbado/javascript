@@ -4,8 +4,7 @@ import type { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import {CorbadoError, NonRecoverableError} from '../utils';
-
+import { CorbadoError, NonRecoverableError } from '../utils';
 
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.

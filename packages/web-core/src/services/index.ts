@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 
-import {defaultTimeout, NonRecoverableError} from '../utils';
+import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
 import { AuthService } from './AuthService';
 import { ProjectService } from './ProjectService';

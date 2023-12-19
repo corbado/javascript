@@ -1,7 +1,7 @@
 import {
   InvalidEmailError,
-  InvalidPasskeyError,
   InvalidFullnameError,
+  InvalidPasskeyError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,

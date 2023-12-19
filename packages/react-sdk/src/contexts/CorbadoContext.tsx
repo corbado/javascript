@@ -4,7 +4,8 @@ import type {
   AuthMethodsListError,
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailOTPError,
-  CorbadoAppParams, GetProjectConfigError,
+  CorbadoAppParams,
+  GetProjectConfigError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
@@ -12,9 +13,9 @@ import type {
   RecoverableError,
   SignUpWithPasskeyError,
 } from '@corbado/web-core';
+import type { CorbadoApp } from '@corbado/web-core';
 import { createContext, type PropsWithChildren } from 'react';
 import type { Result } from 'ts-results';
-import {CorbadoApp} from "@corbado/web-core";
 
 export type AppProviderParams = PropsWithChildren<CorbadoAppParams>;
 

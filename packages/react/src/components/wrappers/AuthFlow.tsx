@@ -1,11 +1,12 @@
 import { CommonScreens } from '@corbado/shared-ui';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ScreenMap } from '../../flows';
 import { flowScreensMap } from '../../flows';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const AuthFlow = () => {
+export const AuthFlow: FC = () => {
   const { currentFlow, currentScreen } = useFlowHandler();
   const [ComponentMap, setComponentMap] = useState<ScreenMap>({});
 

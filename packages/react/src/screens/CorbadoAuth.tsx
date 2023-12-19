@@ -6,11 +6,10 @@ import React from 'react';
 import { AuthFlow } from '../components/wrappers/AuthFlow';
 import FlowHandlerProvider from '../contexts/FlowHandlerProvider';
 import UserDataProvider from '../contexts/UserDataProvider';
-import CorbadoScreen from '../hocs/CorbadoScreen';
 
 const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn }) => {
   return (
-    <CorbadoScreen>
+    <div>
       <div className='cb-container'>
         <UserDataProvider>
           <FlowHandlerProvider
@@ -21,7 +20,7 @@ const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn }) => {
           </FlowHandlerProvider>
         </UserDataProvider>
       </div>
-    </CorbadoScreen>
+    </div>
   );
 };
 

@@ -8,10 +8,9 @@ import { Button, Spinner } from '../components';
 import PasskeyAgentIcon from '../components/passkeyList/PasskeyAgentIcon';
 import PasskeyDelete from '../components/passkeyList/PasskeyDelete';
 import PasskeyDetails from '../components/passkeyList/PasskeyDetails';
-import CorbadoScreen from '../hocs/CorbadoScreen';
 
 const PasskeyList: FC = () => {
-  const { passkeyList, appendPasskey, passkeyDelete, shortSession } = useCorbado();
+  const { getPasskeys, appendPasskey, deletePasskey, shortSession } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
 
@@ -24,7 +23,7 @@ const PasskeyList: FC = () => {
   }, []);
 
   const fetchPasskeys = async () => {
-    const result = await passkeyList();
+    const result = await getPasskeys();
 
     if (result.err) {
       throw new Error(result.val.name);
@@ -39,7 +38,7 @@ const PasskeyList: FC = () => {
   };
 
   const handleDeletePasskey = async (id: string) => {
-    await passkeyDelete(id);
+    await deletePasskey(id);
     await fetchPasskeys();
   };
 
@@ -48,7 +47,7 @@ const PasskeyList: FC = () => {
   }
 
   return (
-    <CorbadoScreen>
+    <div>
       {passkeys ? (
         passkeys.passkeys.map(passkey => (
           <div
@@ -74,7 +73,7 @@ const PasskeyList: FC = () => {
       >
         {t('button_createPasskey')}
       </Button>
-    </CorbadoScreen>
+    </div>
   );
 };
 

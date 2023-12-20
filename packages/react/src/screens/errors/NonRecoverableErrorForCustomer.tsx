@@ -8,18 +8,16 @@ const NonRecoverableErrorForCustomer = (customerSupportEmail: { customerSupportE
       <div className='prod-error-container'>
         <div className='prod-error-title'>{t('header')}</div>
         <div className='prod-error-details'>
-          <div className='prod-error-apology'>{t('body_introduction')}</div>
+          <div className='prod-error-apology'>{t('subheader')}</div>
           <div>
-            {customerSupportEmail
-              ? t('body_explanationCustomerSupport', customerSupportEmail)
-              : t('body_explanationNoCustomerSupport')}
+            {customerSupportEmail ? t('body_withCustomerSupport', customerSupportEmail) : t('body_noCustomerSupport')}
           </div>
         </div>
         <button
           className='prod-error-button'
           onClick={() => window.location.reload()}
         >
-          {t('cta')}
+          {t('button')}
         </button>
       </div>
     </div>

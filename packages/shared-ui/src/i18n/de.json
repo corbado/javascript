@@ -103,10 +103,10 @@
     },
     "unexpectedError": {
       "header": "Hier ist etwas schief gelaufen",
-      "body_introduction": "Dieser Service ist aktuell leider nicht verfügbar",
-      "body_explanationCustomerSupport": "Bitte versuchen Sie es später noch einmal. Sollte das Problem bestehen bleiben, wenden Sie sich bitte an {{customerSupportEmail}}.",
-      "body_explanationNoCustomerSupport": "Bitte versuchen Sie es später noch einmal.",
-      "cta": "Seite neu laden"
+      "subheader": "Dieser Service ist aktuell leider nicht verfügbar",
+      "body_withCustomerSupport": "Bitte versuchen Sie es später noch einmal. Sollte das Problem bestehen bleiben, wenden Sie sich bitte an {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Bitte versuchen Sie es später noch einmal.",
+      "button": "Seite neu laden"
     }
   },
   "errors": {

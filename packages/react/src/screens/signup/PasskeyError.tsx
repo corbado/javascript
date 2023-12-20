@@ -6,14 +6,13 @@ import { useTranslation } from 'react-i18next';
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import useUserData from '../../hooks/useUserData';
 
 export const PasskeyError = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkeyError' });
-  const { signUpWithPasskey, shortSession } = useCorbado();
-  const { navigateBack, navigateNext } = useFlowHandler();
-  const { email, userName } = useUserData();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeyError' });
+  const { shortSession } = useCorbado();
+  const { navigateBack, emitEvent } = useFlowHandler();
+  const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
+  const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
 
@@ -23,7 +22,7 @@ export const PasskeyError = () => {
         {t('body_errorMessage1')}
         <span
           className='cb-link-primary'
-          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+          onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
@@ -49,53 +48,20 @@ export const PasskeyError = () => {
     return t('button_back');
   }, [t, shortSession]);
 
-  const handleCreatePasskey = useCallback(async () => {
-    if (!email) {
-      navigateBack();
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const resp = await signUpWithPasskey(email, userName ?? '');
-
-      if (resp?.err) {
-        throw new Error(resp.val.name);
-      }
-
-      void navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-    }
-  }, [email, navigateBack, navigateNext, signUpWithPasskey, userName]);
-
-  const handleSendOtp = useCallback(() => {
-    void navigateNext(FlowHandlerEvents.EmailOtp);
-  }, [navigateNext]);
-
-  const handleBack = useCallback(() => {
-    if (shortSession) {
-      void navigateNext(FlowHandlerEvents.CancelPasskey);
-      return;
-    }
-
-    navigateBack();
-  }, [navigateBack, navigateNext, shortSession]);
-
   const handleClick = useCallback(
     (btn: ButtonType) => {
       switch (btn) {
         case 'primary':
-          return handleCreatePasskey();
+          setPrimaryLoading(true);
+          return emitEvent(FlowHandlerEvents.PrimaryButton);
         case 'secondary':
-          return handleSendOtp();
+          setSecondaryLoading(true);
+          return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return handleBack();
+          return navigateBack();
       }
     },
-    [handleBack, handleCreatePasskey, handleSendOtp],
+    [navigateBack, emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
@@ -105,10 +71,11 @@ export const PasskeyError = () => {
       primaryButton,
       secondaryButton,
       tertiaryButton,
-      loading,
+      primaryLoading,
+      secondaryLoading,
       onClick: handleClick,
     }),
-    [body, handleClick, header, primaryButton, secondaryButton, loading, tertiaryButton],
+    [body, handleClick, header, primaryButton, secondaryButton, primaryLoading, secondaryButton, tertiaryButton],
   );
 
   return (

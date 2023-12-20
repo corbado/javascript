@@ -31,7 +31,9 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
+    "i18next": "23.5.1",
     "@corbado/types": "*",
+    "@corbado/web-core": "*",
     "@svgr/webpack": "^8.1.0",
     "@types/ua-parser-js": "^0.7.39",
     "copy-webpack-plugin": "^11.0.0",
@@ -40,6 +42,7 @@
     "image-webpack-loader": "^8.1.0",
     "style-loader": "^3.3.3",
     "svgo-loader": "^4.0.0",
+    "ts-results": "^3.3.0",
     "url-loader": "^4.1.1"
   },
   "sideEffects": [

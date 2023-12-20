@@ -14,8 +14,11 @@ export interface PasskeyScreensWrapperProps {
   secondaryButton?: string;
   tertiaryButton?: string;
   showHorizontalRule?: boolean;
+
   onClick(btn: ButtonType): void;
-  loading?: boolean;
+
+  primaryLoading?: boolean;
+  secondaryLoading?: boolean;
   hideFingerPrintIcon?: boolean;
 }
 
@@ -29,7 +32,8 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
   tertiaryButton,
   showHorizontalRule = false,
   onClick,
-  loading = false,
+  primaryLoading = false,
+  secondaryLoading = false,
   hideFingerPrintIcon = false,
 }) => {
   return (
@@ -48,8 +52,8 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
         <Button
           variant='primary'
           onClick={() => onClick('primary')}
-          isLoading={loading}
-          disabled={loading}
+          isLoading={primaryLoading}
+          disabled={primaryLoading || secondaryLoading}
         >
           {primaryButton}
         </Button>
@@ -61,7 +65,8 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
         <Button
           variant='secondary'
           onClick={() => onClick('secondary')}
-          disabled={loading}
+          isLoading={secondaryLoading}
+          disabled={primaryLoading || secondaryLoading}
         >
           {secondaryButton}
         </Button>
@@ -71,7 +76,7 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
         <Button
           variant='tertiary'
           onClick={() => onClick('tertiary')}
-          disabled={loading}
+          disabled={primaryLoading || secondaryLoading}
         >
           {tertiaryButton}
         </Button>

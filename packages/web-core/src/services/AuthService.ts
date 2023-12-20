@@ -1,4 +1,4 @@
-import type { SessionUser, UserAuthMethods } from '@corbado/types';
+import type { SessionUser  } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
@@ -13,6 +13,7 @@ import type {
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
+  RecoverableError,
   SignUpWithPasskeyError,
 } from '../utils';
 import { AuthState } from '../utils';
@@ -96,7 +97,10 @@ export class AuthService {
   /**
    * Method to start registration of a user by sending an email with an OTP.
    */
-  async initSignUpWithEmailOTP(email: string, username: string): Promise<Result<void, InitSignUpWithEmailOTPError>> {
+  async initSignUpWithEmailOTP(
+    email: string,
+    username: string,
+  ): Promise<Result<void, InitSignUpWithEmailOTPError | undefined>> {
     const resp = await this.#apiService.emailCodeRegisterStart(email, username);
     if (resp.err) {
       return resp;
@@ -113,7 +117,7 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeLoginWithEmailOTP(otp: string): Promise<Result<void, CompleteLoginWithEmailOTPError>> {
+  async completeLoginWithEmailOTP(otp: string): Promise<Result<void, CompleteLoginWithEmailOTPError | undefined>> {
     const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
     if (resp.err) {
       return resp;
@@ -130,7 +134,7 @@ export class AuthService {
    *
    * @param otp 6-digit OTP code that was sent to the user's email
    */
-  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CompleteSignupWithEmailOTPError>> {
+  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>> {
     const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
     if (resp.err) {
       return resp;
@@ -147,7 +151,7 @@ export class AuthService {
    * @param email
    * @param username
    */
-  async signUpWithPasskey(email: string, username: string): Promise<Result<void, SignUpWithPasskeyError>> {
+  async signUpWithPasskey(email: string, username: string): Promise<Result<void, SignUpWithPasskeyError | undefined>> {
     const respStart = await this.#apiService.passKeyRegisterStart(email, username);
     if (respStart.err) {
       return respStart;
@@ -172,7 +176,7 @@ export class AuthService {
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
-  async appendPasskey(): Promise<Result<void, AppendPasskeyError>> {
+  async appendPasskey(): Promise<Result<void, AppendPasskeyError | undefined>> {
     const respStart = await this.#apiService.passKeyAppendStart();
     if (respStart.err) {
       return respStart;
@@ -195,16 +199,19 @@ export class AuthService {
    * Method to log in with a passkey.
    * If conditional is true, conditional UI will be invoked.
    */
-  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError>> {
+  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError | undefined>> {
     return this.#loginWithPasskey(email, false);
   }
 
-  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError>> {
+  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError | undefined>> {
     return this.#loginWithPasskey('', true);
   }
 
-  async #loginWithPasskey(email: string, conditional = false): Promise<Result<void, LoginWithPasskeyError>> {
-    let resp: Result<string, LoginWithPasskeyError>;
+  async #loginWithPasskey(
+    email: string,
+    conditional = false,
+  ): Promise<Result<void, LoginWithPasskeyError | undefined>> {
+    let resp: Result<string, LoginWithPasskeyError | undefined>;
     if (conditional) {
       resp = await this.#apiService.passKeyMediationStart();
     } else {
@@ -243,7 +250,7 @@ export class AuthService {
   /**
    * Method to log in with an email OTP.
    */
-  async initLoginWithEmailOTP(email: string): Promise<Result<void, InitLoginWithEmailOTPError>> {
+  async initLoginWithEmailOTP(email: string): Promise<Result<void, InitLoginWithEmailOTPError | undefined>> {
     const resp = await this.#apiService.emailCodeLoginStart(email);
     if (resp.err) {
       return resp;
@@ -255,13 +262,18 @@ export class AuthService {
   }
 
   async authMethods(email: string) {
-    const resp = await this.#apiService.usersApi.authMethodsList({
-      username: email,
-    });
+    const resp = await this.#apiService.authMethodsList(email);
 
-    const result: UserAuthMethods = resp.data.data;
+    return resp;
+  }
 
-    return result;
+  async userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
+    const resp = await this.#apiService.authMethodsList(email);
+    if (resp.err) {
+      return Ok(false);
+    }
+
+    return Ok(resp.ok);
   }
 
   logout() {

@@ -16,6 +16,7 @@ function App() {
           fr: frenchTranslations,
           en: englishTranslations,
         }}
+        darkMode={'off'}
       >
         <RouteProvider />
       </CorbadoProvider>

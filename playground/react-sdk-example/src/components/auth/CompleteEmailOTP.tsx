@@ -1,7 +1,7 @@
 import RoundedTextInput from '../inputs/RoundedTextInput.tsx';
 import FilledButton from '../buttons/FilledButton.tsx';
 import { useState } from 'react';
-import { InvalidUserInputError, useCorbado } from '@corbado/react-sdk';
+import { InvalidOtpInputError, useCorbado } from '@corbado/react-sdk';
 import useAuthUI from '../../hooks/useAuthUI.ts';
 
 const CompleteEmailOTP = () => {
@@ -21,8 +21,12 @@ const CompleteEmailOTP = () => {
       return onAuthCompleted();
     }
 
+    if (!result.val) {
+      return;
+    }
+
     switch (true) {
-      case result.val instanceof InvalidUserInputError:
+      case result.val instanceof InvalidOtpInputError:
         setError(result.val.message);
         return;
       default:

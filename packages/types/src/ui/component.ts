@@ -26,4 +26,6 @@ export interface CorbadoUIConfig {
  */
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
+  isDevMode?: boolean;
+  customerSupportEmail?: string;
 }

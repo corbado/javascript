@@ -118,12 +118,20 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     [corbadoApp],
   );
 
+  const userExists = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.userExists(email);
+    },
+    [corbadoApp],
+  );
+
   const getProjectConfig = useCallback(() => {
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
 
   const contextValue = useMemo<CorbadoContextProps>(() => {
     return {
+      corbadoApp,
       shortSession,
       user,
       globalError,
@@ -141,8 +149,10 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
       deletePasskey,
       getUserAuthMethods,
       getProjectConfig,
+      userExists,
     };
   }, [
+    corbadoApp,
     shortSession,
     user,
     globalError,
@@ -160,6 +170,7 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     deletePasskey,
     getUserAuthMethods,
     getProjectConfig,
+    userExists,
   ]);
 
   return <CorbadoContext.Provider value={contextValue}>{children}</CorbadoContext.Provider>;

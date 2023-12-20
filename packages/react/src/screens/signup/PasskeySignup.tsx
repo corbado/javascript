@@ -1,19 +1,21 @@
-import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import useUserData from '../../hooks/useUserData';
 
 export const PasskeySignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signup.passkey' });
-  const { navigateNext, navigateBack } = useFlowHandler();
-  const { signUpWithPasskey } = useCorbado();
-  const { email, userName } = useUserData();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkey' });
+  const { navigateBack, currentUserState, emitEvent } = useFlowHandler();
+  const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
+  const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setPrimaryLoading(false);
+    setSecondaryLoading(false);
+  }, [currentUserState]);
 
   const header = useMemo(
     () => (
@@ -21,7 +23,7 @@ export const PasskeySignup = () => {
         {t('header')}
         <span
           className='cb-link-primary'
-          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+          onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
@@ -33,7 +35,7 @@ export const PasskeySignup = () => {
   const subHeader = useMemo(
     () => (
       <span>
-        {t('body')} <span className='cb-text-secondary'>{email}</span>.
+        {t('body')} <span className='cb-text-secondary'>{currentUserState.email}</span>.
       </span>
     ),
     [t],
@@ -43,30 +45,6 @@ export const PasskeySignup = () => {
   const secondaryButton = useMemo(() => t('button_emailOtp'), [t]);
   const tertiaryButton = useMemo(() => t('button_back'), [t]);
 
-  const handleCreateAccount = useCallback(async () => {
-    if (!email || !userName) {
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const resp = await signUpWithPasskey(email, userName);
-
-      if (resp.err) {
-        throw new Error(resp.val.name);
-      }
-
-      return navigateNext(FlowHandlerEvents.PasskeySuccess);
-    } catch (e) {
-      return navigateNext(FlowHandlerEvents.PasskeyError);
-    }
-  }, [email, navigateNext, signUpWithPasskey, userName]);
-
-  const handleSendOtp = useCallback(() => {
-    return navigateNext(FlowHandlerEvents.EmailOtp);
-  }, [navigateNext]);
-
   const handleBack = useCallback(() => {
     return navigateBack();
   }, [navigateBack]);
@@ -75,14 +53,16 @@ export const PasskeySignup = () => {
     (btn: ButtonType) => {
       switch (btn) {
         case 'primary':
-          return handleCreateAccount();
+          setPrimaryLoading(true);
+          return emitEvent(FlowHandlerEvents.PrimaryButton);
         case 'secondary':
-          return handleSendOtp();
+          setSecondaryLoading(true);
+          return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return handleBack();
+          return navigateBack();
       }
     },
-    [handleBack, handleCreateAccount, handleSendOtp],
+    [handleBack],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
@@ -93,10 +73,11 @@ export const PasskeySignup = () => {
       showHorizontalRule: true,
       secondaryButton,
       tertiaryButton,
-      loading,
+      primaryLoading,
+      secondaryLoading,
       onClick: handleClick,
     }),
-    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, loading, handleClick],
+    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, primaryLoading, secondaryLoading, handleClick],
   );
 
   return (

@@ -60,8 +60,6 @@ export type ScreenNames =
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
 export interface FlowHandlerEventOptions {
-  // Current user's authentication status
-  isUserAuthenticated?: boolean;
   // Whether the user has a passkey already set up
   userHasPasskey?: boolean;
   userStateUpdate?: UserState;

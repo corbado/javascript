@@ -13,10 +13,10 @@ import {
   FlowType,
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
-} from '../constants';
-import type { FlowHandlerState } from '../flowHandlerState';
-import { FlowUpdate } from '../flowUpdate';
-import type { Flow, UserState } from '../types';
+} from '../../constants';
+import type { FlowHandlerState } from '../../flowHandlerState';
+import { FlowUpdate } from '../../flowUpdate';
+import type { Flow, UserState } from '../../types';
 
 const sendEmailOTP = async (authService: AuthService, email?: string): Promise<FlowUpdate> => {
   if (!email) {

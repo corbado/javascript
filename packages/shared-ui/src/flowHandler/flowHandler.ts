@@ -173,7 +173,7 @@ export class FlowHandler {
 
     if (flowUpdate?.nextScreen) {
       if (flowUpdate.nextScreen === CommonScreens.End) {
-        void this.#flowHandlerConfig.onLoggedIn();
+        return void this.#flowHandlerConfig.onLoggedIn();
       }
 
       this.#screenHistory.push(this.#currentScreen);

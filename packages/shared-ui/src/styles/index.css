@@ -1,5 +1,4 @@
 /***** Main *****/
-
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
   border-radius: 0.5rem;
@@ -225,6 +224,14 @@
   background-color: #1145df;
 }
 
+.cb-button-close {
+  background-color: #ff4c51;
+}
+
+.cb-button-close:hover {
+  background-color: #e63c41;
+}
+
 .cb-button-secondary {
   border: 1px solid #59acff;
   background-color: #ffffff;
@@ -250,7 +257,6 @@
   color: #59acff;
   padding: 0;
   cursor: pointer;
-  font-family: inherit;
   font-size: 1rem;
   height: 2.5rem;
   box-shadow: none;
@@ -372,6 +378,135 @@
   height: 1.5rem;
 }
 
+/********** Dialog / Modal **********/
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 1.3rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-header {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.dialog-body {
+  margin-bottom: 1.5rem;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.dialog-x-button {
+  float: right;
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  font-weight: bold;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.dialog-x-button:hover {
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  color: #ff4c51;
+}
+
+.dialog-button {
+  padding: 0.2rem 0.5rem;
+}
+
+/********** Passkey List **********/
+.cb-passkey-list-card {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  border-radius: 10px;
+  border: black 1px solid;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.cb-passkey-list-icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.cb-passkey-list-icon img {
+  width: 2rem;
+  height: 2rem;
+}
+
+.cb-passkey-list-icon svg {
+  width: 2rem;
+  height: 2rem;
+  fill: #000;
+}
+
+.cb-passkey-list-details {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  font-size: 1rem;
+  line-height: normal;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+.cb-passkey-list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 1rem;
+}
+
+.cb-passkey-list-header-title {
+  font-weight: 700;
+  margin: auto 0;
+}
+
+.cb-passkey-list-header-badge {
+  border-radius: 2rem;
+  border: black 1px solid;
+  padding: 0.5rem;
+}
+
+.cb-passkey-list-delete:hover {
+  fill: #ff4c51;
+  cursor: pointer;
+}
+
+.cb-passkey-list-primary-button {
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
 /***** Media Queries *****/
 @media screen and (max-width: 768px) {
   .cb-email-links {
@@ -384,5 +519,9 @@
   .cb-link-icon {
     justify-content: center;
     width: 100%;
+  }
+
+  .cb-passkey-list-card {
+    flex-direction: column;
   }
 }

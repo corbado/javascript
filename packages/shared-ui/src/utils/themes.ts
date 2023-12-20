@@ -11,8 +11,12 @@ const loadTheme = (theme: string | CustomThemes, isDarkMode: boolean) => {
   classList.add(newClass);
 };
 
+export const hasDarkMode = () => {
+  return document.body.classList.contains('dark');
+};
+
 const addDarkMode = () => {
-  if (document.body.classList.contains('dark')) {
+  if (hasDarkMode()) {
     return;
   }
 

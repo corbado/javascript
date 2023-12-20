@@ -1,11 +1,11 @@
-import type {SessionUser, UserAuthMethods} from '@corbado/types';
+import type { SessionUser, UserAuthMethods } from '@corbado/types';
 import log from 'loglevel';
-import {Subject} from 'rxjs';
-import type {Result} from 'ts-results';
-import {Ok} from 'ts-results';
+import { Subject } from 'rxjs';
+import type { Result } from 'ts-results';
+import { Ok } from 'ts-results';
 
-import type {AuthenticationResponse} from '../models/auth';
-import type {ShortSession} from '../models/session';
+import type { AuthenticationResponse } from '../models/auth';
+import type { ShortSession } from '../models/session';
 import type {
   AppendPasskeyError,
   CompleteLoginWithEmailOTPError,
@@ -15,10 +15,10 @@ import type {
   LoginWithPasskeyError,
   SignUpWithPasskeyError,
 } from '../utils';
-import {AuthState} from '../utils';
-import type {ApiService} from './ApiService';
-import type {SessionService} from './SessionService';
-import type {WebAuthnService} from './WebAuthnService';
+import { AuthState } from '../utils';
+import type { ApiService } from './ApiService';
+import type { SessionService } from './SessionService';
+import type { WebAuthnService } from './WebAuthnService';
 
 /**
  * AuthService is a class that handles authentication related operations.
@@ -228,6 +228,16 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
 
     return Ok(void 0);
+  }
+
+  async passkeyList() {
+    const resp = await this.#apiService.passkeyList();
+    return resp;
+  }
+
+  async passkeyDelete(id: string) {
+    const resp = await this.#apiService.passkeyDelete(id);
+    return resp;
   }
 
   /**

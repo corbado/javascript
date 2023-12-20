@@ -1,3 +1,4 @@
+import type { CorbadoAppParams } from '@corbado/types';
 import { Subject } from 'rxjs';
 
 import { defaultTimeout, NonRecoverableError } from '../utils';
@@ -10,11 +11,6 @@ import { WebAuthnService } from './WebAuthnService';
 export type { ProjectService } from './ProjectService';
 export type { AuthService } from './AuthService';
 export type { SessionService } from './SessionService';
-
-export interface CorbadoAppParams {
-  projectId: string;
-  apiTimeout?: number;
-}
 
 /**
  * CorbadoApp is a class that represents the main application.

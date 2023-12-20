@@ -2,12 +2,7 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import React from 'react';
 
-import { Body } from './Body';
-import { Button } from './Button';
-import { Header } from './Header';
-import { IconLink } from './IconLink';
-import { Gmail, Outlook, Yahoo } from './icons';
-import { OtpInputGroup } from './OtpInputGroup';
+import { Body, Button, Gmail, Header, IconLink, OtpInputGroup, Outlook, Yahoo } from '../ui';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;

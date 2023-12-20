@@ -33,6 +33,7 @@
   "devDependencies": {
     "@corbado/types": "*",
     "@svgr/webpack": "^8.1.0",
+    "@types/ua-parser-js": "^0.7.39",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "file-loader": "^6.2.0",
@@ -44,5 +45,8 @@
   "sideEffects": [
     "**/*.css",
     "**/*.json"
-  ]
+  ],
+  "dependencies": {
+    "ua-parser-js": "^1.0.37"
+  }
 }

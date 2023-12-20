@@ -1,6 +1,8 @@
-import { CorbadoProvider, useCorbado } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react-sdk';
+import { CorbadoThemes } from '@corbado/shared-ui';
 
-import CorbadoAuthUI from './main';
+import CorbadoProvider from './hocs/CorbadoProvider';
+import CorbadoAuth from './screens/CorbadoAuth';
+import PasskeyList from './screens/PasskeyList';
 
-export { CorbadoProvider, useCorbado };
-export default CorbadoAuthUI;
+export { CorbadoProvider, useCorbado, CorbadoAuth, PasskeyList, CorbadoThemes };

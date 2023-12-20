@@ -69,6 +69,14 @@
     background-color: #3670c8;
   }
 
+  .cb-button-close {
+    background-color: #ff6b6b;
+  }
+
+  .cb-button-close:hover {
+    background-color: #ff4c51;
+  }
+
   .cb-button-secondary {
     border-color: #3a7cdd;
     color: #3a7cdd;
@@ -95,5 +103,32 @@
   .cb-finger-print-icon {
     background-color: #4b8fff;
     border-radius: 3.5rem;
+  }
+
+  .dialog-content {
+    background-color: #1e1e1e;
+  }
+
+  .dialog-x-button:hover {
+    color: #ff4c51;
+  }
+
+  .cb-passkey-list-card {
+    background-color: #1e1e1e;
+    border-color: #ffffff80;
+    color: #e0e0e0;
+  }
+
+  .cb-passkey-list-icon svg {
+    fill: #e0e0e0;
+  }
+
+  .cb-passkey-list-delete:hover {
+    fill: #ff4c51;
+    cursor: pointer;
+  }
+
+  .cb-passkey-list-header-badge {
+    border-color: #e0e0e0;
   }
 }

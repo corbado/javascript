@@ -1,3 +1,4 @@
+import type { PassKeyList } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import { Err, Result } from 'ts-results';
@@ -13,6 +14,8 @@ import type {
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
+  PasskeyDeleteError,
+  PasskeyListError,
   SignUpWithPasskeyError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
@@ -247,6 +250,22 @@ export class ApiService {
       });
 
       return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
+  }
+
+  public async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#usersApi.currentUserPassKeyGet();
+
+      return r.data.data;
+    });
+  }
+
+  public async passkeyDelete(passkeyId: string): Promise<Result<void, PasskeyDeleteError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserPassKeyDelete(passkeyId);
+
+      return void 0;
     });
   }
 }

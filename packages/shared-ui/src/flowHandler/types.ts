@@ -25,17 +25,25 @@ export interface FlowHandlerConfig {
 }
 
 /**
- * Configuration options for the authentication flows.
- */
-export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions;
-
-/**
  * Configuration options for the passkey sign-up with email OTP fallback flow.
  */
-export interface PasskeySignupWithEmailOtpFallbackOptions {
+export interface SignupOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
 }
+
+/**
+ * Configuration options for the passkey login with email OTP fallback flow.
+ */
+export interface LoginOptions {
+  passkeyAppend: boolean;
+  retryPasskeyOnError: boolean;
+}
+
+/**
+ * Configuration options for the authentication flows.
+ */
+export type FlowOptions = SignupOptions | LoginOptions;
 
 /**
  * Union type of all possible flow names for sign-up and login processes.

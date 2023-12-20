@@ -4,7 +4,7 @@ import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
 import type { FlowHandlerEvents } from './constants';
-import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
+import { CommonScreens, FlowNameByFlowStyle, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
 import type {
@@ -13,6 +13,7 @@ import type {
   FlowHandlerEventOptions,
   FlowHandlerStateUpdate,
   FlowNames,
+  FlowOptions,
   ScreenNames,
   UserState,
 } from './types';
@@ -28,10 +29,10 @@ export class FlowHandler {
   #screenHistory: ScreenNames[];
   #flowName!: FlowNames;
   #i18next: i18n;
-
-  // @ts-ignore
-  #projectConfig: ProjectConfig | undefined;
   #flowHandlerConfig: FlowHandlerConfig;
+  #projectConfig: ProjectConfig;
+  #signUpFlowName: SignUpFlowNames = SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+  #loginFlowName: LoginFlowNames = LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
 
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
@@ -47,8 +48,12 @@ export class FlowHandler {
     this.#flowHandlerConfig = flowHandlerConfig;
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;
-    this.#projectConfig = projectConfig;
     this.#i18next = i18next;
+    this.#projectConfig = projectConfig;
+    this.#signUpFlowName =
+      FlowNameByFlowStyle[projectConfig.signupFlow].SignUp ?? SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+    this.#loginFlowName =
+      FlowNameByFlowStyle[projectConfig.loginFlow].Login ?? LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
   }
 
   /**
@@ -62,12 +67,8 @@ export class FlowHandler {
 
     const passkeysSupported = await canUsePasskeys();
 
-    // TODO: extract flowOptions from projectConfig
     this.#state = new FlowHandlerState(
-      {
-        passkeyAppend: true,
-        retryPasskeyOnError: false,
-      },
+      this.#getFlowOptions(this.#flowHandlerConfig.initialFlowType),
       {
         email: undefined,
         fullName: undefined,
@@ -167,7 +168,7 @@ export class FlowHandler {
     }
 
     if (flowUpdate?.stateUpdate) {
-      this.#changeState({ userState: flowUpdate.stateUpdate });
+      this.#changeUserState({ userState: flowUpdate.stateUpdate });
     }
 
     if (flowUpdate?.nextScreen) {
@@ -212,13 +213,15 @@ export class FlowHandler {
    * @param flowType
    */
   changeFlow(flowType: FlowType) {
-    // TODO: get flow name from flow type (currently this is basically hardcoded)
     let flowName: FlowNames;
+
     if (flowType === FlowType.SignUp) {
-      flowName = SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+      flowName = this.#signUpFlowName;
     } else {
-      flowName = LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
+      flowName = this.#loginFlowName;
     }
+
+    this.#state.updateFlowOptions(this.#getFlowOptions(flowType));
 
     this.#currentFlow = flows[flowName];
     this.#flowName = flowName;
@@ -236,13 +239,17 @@ export class FlowHandler {
     return this.#currentScreen;
   }
 
-  #changeState(update: FlowHandlerStateUpdate) {
-    this.#state.update(update);
-
-    this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));
+  updateUser(user: SessionUser) {
+    this.#changeUserState({ user: user });
   }
 
-  updateUser(user: SessionUser) {
-    this.#changeState({ user: user });
+  #getFlowOptions(flowType: FlowType): Partial<FlowOptions> {
+    return flowType === FlowType.SignUp ? this.#projectConfig.signupFlowOptions : this.#projectConfig.loginFlowOptions;
+  }
+
+  #changeUserState(update: FlowHandlerStateUpdate) {
+    this.#state.updateUser(update);
+
+    this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));
   }
 }

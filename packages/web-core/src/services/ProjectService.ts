@@ -37,6 +37,17 @@ export class ProjectService {
       return Ok(this.#projConfig);
     }
 
-    return this.#apiService.getProjectConfig();
+    const projConfig = await this.#apiService.getProjectConfig();
+
+    if (projConfig.ok) {
+      this.#projConfig = projConfig.val;
+      this.#projConfig.signupFlowOptions = {
+        retryPasskeyOnError: false,
+        passkeyAppend: false,
+      };
+      return Ok(this.#projConfig);
+    }
+
+    return projConfig;
   }
 }

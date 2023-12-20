@@ -1413,6 +1413,12 @@ export interface PassKeyItem {
      * @type {string}
      * @memberof PassKeyItem
      */
+    'credentialHash': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
     'aaguid': string;
     /**
      * 
@@ -1444,6 +1450,12 @@ export interface PassKeyItem {
      * @memberof PassKeyItem
      */
     'backupState': boolean;
+    /**
+     * Timestamp of when the entity was last used in yyyy-MM-dd\'T\'HH:mm:ss format
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'lastUsed': string;
     /**
      * Status
      * @type {string}
@@ -1917,6 +1929,30 @@ export interface ProjectConfigRspAllOfData {
      * @memberof ProjectConfigRspAllOfData
      */
     'environment': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectConfigRspAllOfData
+     */
+    'signupFlow': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof ProjectConfigRspAllOfData
+     */
+    'signupFlowOptions': object;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectConfigRspAllOfData
+     */
+    'loginFlow': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof ProjectConfigRspAllOfData
+     */
+    'loginFlowOptions': object;
 }
 /**
  * Data about the request itself, can be used for debugging
@@ -2429,10 +2465,13 @@ export const SessionsApiAxiosParamCreator = function (configuration?: Configurat
     return {
         /**
          * Performs session logout
+         * @param {EmptyReq} emptyReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        sessionLogout: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        sessionLogout: async (emptyReq: EmptyReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'emptyReq' is not null or undefined
+            assertParamExists('sessionLogout', 'emptyReq', emptyReq)
             const localVarPath = `/v1/sessions/logout`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2454,9 +2493,12 @@ export const SessionsApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(emptyReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2553,11 +2595,12 @@ export const SessionsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Performs session logout
+         * @param {EmptyReq} emptyReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async sessionLogout(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LogoutRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionLogout(options);
+        async sessionLogout(emptyReq: EmptyReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LogoutRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sessionLogout(emptyReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2591,11 +2634,12 @@ export const SessionsApiFactory = function (configuration?: Configuration, baseP
     return {
         /**
          * Performs session logout
+         * @param {EmptyReq} emptyReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        sessionLogout(options?: any): AxiosPromise<LogoutRsp> {
-            return localVarFp.sessionLogout(options).then((request) => request(axios, basePath));
+        sessionLogout(emptyReq: EmptyReq, options?: any): AxiosPromise<LogoutRsp> {
+            return localVarFp.sessionLogout(emptyReq, options).then((request) => request(axios, basePath));
         },
         /**
          * Performs session refresh
@@ -2626,12 +2670,13 @@ export const SessionsApiFactory = function (configuration?: Configuration, baseP
 export class SessionsApi extends BaseAPI {
     /**
      * Performs session logout
+     * @param {EmptyReq} emptyReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SessionsApi
      */
-    public sessionLogout(options?: AxiosRequestConfig) {
-        return SessionsApiFp(this.configuration).sessionLogout(options).then((request) => request(this.axios, this.basePath));
+    public sessionLogout(emptyReq: EmptyReq, options?: AxiosRequestConfig) {
+        return SessionsApiFp(this.configuration).sessionLogout(emptyReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

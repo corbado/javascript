@@ -285,19 +285,19 @@ export class ApiService {
     });
   }
 
-    public async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
-        return Result.wrapAsync(async () => {
-            const r = await this.#usersApi.currentUserPassKeyGet();
+  public async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#usersApi.currentUserPassKeyGet();
 
-            return r.data.data;
-        });
-    }
+      return r.data.data;
+    });
+  }
 
-    public async passkeyDelete(passkeyId: string): Promise<Result<void, PasskeyDeleteError>> {
-        return Result.wrapAsync(async () => {
-            await this.#usersApi.currentUserPassKeyDelete(passkeyId);
+  public async passkeyDelete(passkeyId: string): Promise<Result<void, PasskeyDeleteError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserPassKeyDelete(passkeyId);
 
-            return void 0;
-        });
-    }
+      return void 0;
+    });
+  }
 }

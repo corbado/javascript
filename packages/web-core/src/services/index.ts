@@ -34,7 +34,7 @@ export class CorbadoApp {
   constructor(corbadoParams: CorbadoAppParams) {
     const { projectId, apiTimeout = defaultTimeout } = corbadoParams;
     this.#projectId = projectId;
-    this.#apiService = new ApiService(this.#projectId, apiTimeout);
+    this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout);
     const sessionService = new SessionService(this.#apiService);
     const authenticatorService = new WebAuthnService(this.#globalErrors);
     this.#authService = new AuthService(this.#apiService, sessionService, authenticatorService);
@@ -66,7 +66,7 @@ export class CorbadoApp {
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
     }
 
-    this.#authService.init();
+    this.#authService.init(true);
   }
 
   #validateProjectId(projectId: string): boolean {

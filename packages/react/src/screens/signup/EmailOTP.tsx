@@ -1,66 +1,32 @@
-import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
-import type { RecoverableError } from '@corbado/web-core';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { EmailOtpScreenProps } from '../../components';
 import { EmailOtpScreenWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import useUserData from '../../hooks/useUserData';
 
 export const EmailOTP = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.emailOtp' });
-  const { t: tErrors } = useTranslation('translation', { keyPrefix: 'errors' });
-  const { navigateNext, currentFlow } = useFlowHandler();
-  const { completeSignUpWithEmailOTP } = useCorbado();
-  const { email, sendEmail, setEmailError } = useUserData();
-
-  React.useEffect(() => {
-    sendEmail(currentFlow).catch(e => {
-      const error = e as RecoverableError;
-
-      if (error.name === 'InvalidUserInputError') {
-        setEmailError(tErrors('serverError_unreachableEmail'));
-        return void navigateNext(FlowHandlerEvents.InvalidEmail);
-      }
-
-      void navigateNext(FlowHandlerEvents.CancelOtp);
-    });
-  }, []);
+  const { emitEvent, currentUserState } = useFlowHandler();
 
   const header = t('header');
   const body = (
     <>
       {t('body_text1')}
-      <span className='cb-text-secondary'>{email}</span>
+      <span className='cb-text-secondary'>{currentUserState.email}</span>
       {t('body_text2')}
     </>
   );
-  const validationError = tErrors('serverError_invalidOtp');
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => navigateNext(FlowHandlerEvents.CancelOtp), []);
+  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.SecondaryButton), []);
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
-    async (otp: string, setLoading, setError) => {
+    async (otp: string, setLoading) => {
       setLoading(true);
-
-      await makeApiCallWithErrorHandler(
-        () => completeSignUpWithEmailOTP(otp),
-        () => void navigateNext(),
-        error => {
-          setLoading(false);
-
-          if (error.name === 'InvalidOtpInputError') {
-            setError(tErrors('serverError_invalidOtp'));
-            return;
-          }
-
-          throw error;
-        },
-      );
+      await emitEvent(FlowHandlerEvents.PrimaryButton, { emailOTPCode: otp });
     },
     [],
   );
@@ -69,23 +35,12 @@ export const EmailOTP = () => {
     () => ({
       header,
       body,
-      validationError,
       verificationButtonText,
       backButtonText,
       onVerificationButtonClick: handleOTPVerification,
       onBackButtonClick: handleCancel,
     }),
-    [
-      t,
-      email,
-      handleOTPVerification,
-      handleCancel,
-      header,
-      body,
-      validationError,
-      verificationButtonText,
-      backButtonText,
-    ],
+    [t, currentUserState, handleOTPVerification, handleCancel, header, body, verificationButtonText, backButtonText],
   );
 
   return <EmailOtpScreenWrapper {...props} />;

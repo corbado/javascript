@@ -3,7 +3,7 @@ import FilledButton from '../buttons/FilledButton.tsx';
 import RoundedTextInput from '../inputs/RoundedTextInput.tsx';
 import {
   InvalidPasskeyError,
-  InvalidUserInputError,
+  InvalidEmailError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
@@ -57,7 +57,7 @@ const Login = () => {
       case result.val instanceof PasskeyChallengeCancelledError:
         // nothing to do here => the user can just try again
         return;
-      case result.val instanceof InvalidUserInputError:
+      case result.val instanceof InvalidEmailError:
         setError('Check your email address and try again');
         return;
       case result.val instanceof UnknownUserError:

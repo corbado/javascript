@@ -1,3 +1,4 @@
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,7 +8,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyWelcome = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeySuccess' });
-  const { navigateNext } = useFlowHandler();
+  const { emitEvent } = useFlowHandler();
 
   const header = useMemo(() => t('header'), [t]);
   const secondaryHeader = useMemo(() => t('subheader'), [t]);
@@ -23,8 +24,8 @@ export const PasskeyWelcome = () => {
   const primaryButton = useMemo(() => t('button'), [t]);
 
   const handleClick = useCallback(() => {
-    void navigateNext();
-  }, [navigateNext]);
+    void emitEvent(FlowHandlerEvents.PrimaryButton);
+  }, [emitEvent]);
 
   const props: PasskeyScreensWrapperProps = useMemo(
     () => ({

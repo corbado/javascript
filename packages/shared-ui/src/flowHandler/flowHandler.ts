@@ -1,9 +1,21 @@
-import type { ProjectConfig } from '@corbado/types';
+import type { ProjectConfig, SessionUser } from '@corbado/types';
+import type { CorbadoApp } from '@corbado/web-core';
+import type { i18n } from 'i18next';
 
+import { canUsePasskeys } from '../utils';
 import type { FlowHandlerEvents } from './constants';
 import { CommonScreens, FlowType, LoginFlowNames, SignUpFlowNames } from './constants';
+import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
-import type { Flow, FlowHandlerConfig, FlowHandlerEventOptions, FlowNames, ScreenNames } from './types';
+import type {
+  Flow,
+  FlowHandlerConfig,
+  FlowHandlerEventOptions,
+  FlowHandlerStateUpdate,
+  FlowNames,
+  ScreenNames,
+  UserState,
+} from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -15,6 +27,7 @@ export class FlowHandler {
   #currentScreen: ScreenNames;
   #screenHistory: ScreenNames[];
   #flowName!: FlowNames;
+  #i18next: i18n;
 
   // @ts-ignore
   #projectConfig: ProjectConfig | undefined;
@@ -22,23 +35,49 @@ export class FlowHandler {
 
   #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
   #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
+  #onUserStateChangeCallbacks: Array<(v: UserState) => void> = [];
+
+  #state!: FlowHandlerState;
 
   /**
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: ProjectConfig, flowHandlerConfig: FlowHandlerConfig) {
+  constructor(projectConfig: ProjectConfig, flowHandlerConfig: FlowHandlerConfig, i18next: i18n) {
     this.#flowHandlerConfig = flowHandlerConfig;
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;
     this.#projectConfig = projectConfig;
+    this.#i18next = i18next;
   }
 
   /**
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  init() {
+  async init(corbadoApp: CorbadoApp | undefined) {
+    if (!corbadoApp) {
+      throw new Error('corbadoApp is undefined. This should not happen.');
+    }
+
+    const passkeysSupported = await canUsePasskeys();
+
+    // TODO: extract flowOptions from projectConfig
+    this.#state = new FlowHandlerState(
+      {
+        passkeyAppend: true,
+        retryPasskeyOnError: false,
+      },
+      {
+        email: undefined,
+        fullName: undefined,
+        emailError: undefined,
+      },
+      passkeysSupported,
+      corbadoApp,
+      this.#i18next,
+    );
+
     this.changeFlow(this.#flowHandlerConfig.initialFlowType);
   }
 
@@ -106,70 +145,43 @@ export class FlowHandler {
     this.#onFlowUpdateCallbacks[cbId] = cb;
   }
 
-  /**
-   * Method to navigate to the next screen.
-   * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
-   * If the next screen is the End screen, it redirects to a specified URL.
-   * It adds the current screen to the screen history, sets the current screen to the next screen, and calls any registered onScreenUpdate callbacks with the new current screen.
-   *
-   * @param event The event that triggered the navigation.
-   * @param eventOptions The event options.
-   * @returns The new current screen.
-   */
-  async navigateNext(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
-    const stepFunction = this.#currentFlow[this.#currentScreen];
-    if (!stepFunction) {
-      throw new Error('Invalid screen');
-    }
+  onUserStateChange(cb: (v: UserState) => void) {
+    const cbId = this.#onUserStateChangeCallbacks.push(cb) - 1;
 
-    // TODO: extract flowOptions from projectConfig
-    const nextScreen = await stepFunction(
-      {
-        passkeyAppend: true,
-        retryPasskeyOnError: true,
-      },
-      event,
-      eventOptions,
-    );
-
-    if (nextScreen === CommonScreens.End) {
-      void this.#flowHandlerConfig.onLoggedIn();
-    }
-
-    this.#screenHistory.push(this.#currentScreen);
-    this.#currentScreen = nextScreen;
-
-    if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
-    }
-
-    return nextScreen;
+    return cbId;
   }
 
-  /**
-   * Method to peek at the next screen
-   * It calls the step function of the current screen with the project configuration, the flow handler configuration, and the user input.
-   * The next screen is returned, but the current screen is not changed.
-   * Depreciated: will be removed in the future if not used in any frameworks.
-   * @param event The event that will trigger the navigation.
-   * @param eventOptions The event options.
-   * @returns
-   */
-  peekNextScreen(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
-    const stepFunction = this.#currentFlow[this.#currentScreen];
-    if (!stepFunction) {
+  removeOnUserStateChange(cbId: number) {
+    this.#onUserStateChangeCallbacks.splice(cbId, 1);
+  }
+
+  async handleStateUpdate(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
+    const stateUpdater = this.#currentFlow[this.#currentScreen];
+    if (!stateUpdater) {
       throw new Error('Invalid screen');
     }
 
-    // TODO: extract flowOptions from projectConfig
-    return stepFunction(
-      {
-        passkeyAppend: true,
-        retryPasskeyOnError: true,
-      },
-      event,
-      eventOptions,
-    );
+    const flowUpdate = await stateUpdater(this.#state, event, eventOptions);
+    if (flowUpdate && flowUpdate?.nextFlow !== null) {
+      this.changeFlow(flowUpdate.nextFlow);
+    }
+
+    if (flowUpdate?.stateUpdate) {
+      this.#changeState({ userState: flowUpdate.stateUpdate });
+    }
+
+    if (flowUpdate?.nextScreen) {
+      if (flowUpdate.nextScreen === CommonScreens.End) {
+        void this.#flowHandlerConfig.onLoggedIn();
+      }
+
+      this.#screenHistory.push(this.#currentScreen);
+      this.#currentScreen = flowUpdate.nextScreen;
+
+      if (this.#onScreenUpdateCallbacks.length) {
+        this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
+      }
+    }
   }
 
   /**
@@ -222,5 +234,15 @@ export class FlowHandler {
     }
 
     return this.#currentScreen;
+  }
+
+  #changeState(update: FlowHandlerStateUpdate) {
+    this.#state.update(update);
+
+    this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state.userState));
+  }
+
+  updateUser(user: SessionUser) {
+    this.#changeState({ user: user });
   }
 }

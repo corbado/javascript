@@ -1,26 +1,32 @@
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, FlowType, ScreenNames } from '@corbado/shared-ui';
+import type {
+  FlowHandlerEventOptions,
+  FlowHandlerEvents,
+  FlowNames,
+  FlowType,
+  ScreenNames,
+  UserState,
+} from '@corbado/shared-ui';
 import { CommonScreens, LoginFlowNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
   currentFlow: FlowNames;
   currentScreen: ScreenNames;
-  navigateNext: (
-    event?: FlowHandlerEvents,
-    eventOptions?: FlowHandlerEventOptions,
-  ) => Promise<ScreenNames> | ScreenNames;
-  peekNext: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<ScreenNames> | ScreenNames;
+  currentUserState: UserState;
+  initialized: boolean;
   navigateBack: () => ScreenNames;
   changeFlow: (flowType: FlowType) => void;
+  emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
 }
 
 export const initialContext: FlowHandlerContextProps = {
   currentFlow: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
   currentScreen: CommonScreens.Start,
-  navigateNext: () => CommonScreens.End,
-  peekNext: () => CommonScreens.End,
+  currentUserState: {},
+  initialized: false,
   navigateBack: () => CommonScreens.Start,
   changeFlow: () => void 0,
+  emitEvent: () => Promise.reject(),
 };
 
 const FlowHandlerContext = createContext<FlowHandlerContextProps>(initialContext);

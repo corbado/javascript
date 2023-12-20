@@ -1,6 +1,7 @@
 # Corbado Shared Types
 
-This package provides shared TypeScript type definitions for Corbado. It's designed to give developers the power of strong typing and enhance the development experience with autocompletion and IntelliSense support in various IDEs.
+This package provides shared TypeScript type definitions for Corbado. It's designed to give developers the power of
+strong typing and enhance the development experience with autocompletion and IntelliSense support in various IDEs.
 
 ## Installation
 

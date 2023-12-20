@@ -6,15 +6,19 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
   return (
     <div className='container'>
       <div className='title'>
-        {error.name} ({error.type === 'client' ? 'client side' : 'server side'})
+        {error.name} <br />({error.type === 'client' ? 'client side' : 'server side'})
       </div>
       <div className='error-details'>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Message</div>
+          <div className='error-detail-title'>:Message</div>
           <div className='error-detail-value'>{error.message}</div>
         </div>
         <div className='error-detail-row'>
-          <div className='error-detail-title'>Link</div>
+          <div className='error-detail-title'>:Type</div>
+          <div className='error-detail-value'>{error.detailedType}</div>
+        </div>
+        <div className='error-detail-row'>
+          <div className='error-detail-title'>:Link</div>
           <a
             className='error-detail-value'
             href={error.link}
@@ -23,12 +27,20 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
           </a>
         </div>
       </div>
-      <button
-        className='error-button'
-        disabled
-      >
-        See browser console for more details
-      </button>
+      <div className='error-detail-row'>
+        <div className='error-detail-title'>:RequestID</div>
+        <div className='error-detail-value'>{error.requestId}</div>
+      </div>
+      {error.details && (
+        <button
+          className='error-button'
+          onClick={() => {
+            window.open(error.details, '_blank');
+          }}
+        >
+          See browser console for more details
+        </button>
+      )}
     </div>
   );
 };

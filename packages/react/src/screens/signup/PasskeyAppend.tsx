@@ -1,5 +1,4 @@
-import { useCorbado } from '@corbado/react-sdk';
-import { FlowHandlerEvents, makeApiCallWithErrorHandler } from '@corbado/shared-ui';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,8 +8,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyAppend = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeyPrompt' });
-  const { navigateNext } = useFlowHandler();
-  const { appendPasskey } = useCorbado();
+  const { emitEvent } = useFlowHandler();
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(
@@ -19,7 +17,7 @@ export const PasskeyAppend = () => {
         {t('header')}
         <span
           className='cb-link-primary'
-          onClick={() => void navigateNext(FlowHandlerEvents.ShowBenefits)}
+          onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
@@ -31,27 +29,16 @@ export const PasskeyAppend = () => {
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
-  const handlePasskeyActivation = useCallback(async () => {
-    setLoading(true);
-
-    await makeApiCallWithErrorHandler(
-      appendPasskey,
-      () => navigateNext(FlowHandlerEvents.PasskeySuccess),
-      () => navigateNext(FlowHandlerEvents.PasskeyError),
-    );
-  }, [appendPasskey, navigateNext]);
-
-  const handleLater = useCallback(() => navigateNext(FlowHandlerEvents.MaybeLater), [navigateNext]);
-
   const handleClick = useCallback(
     (btn: ButtonType) => {
       if (btn === 'primary') {
-        return handlePasskeyActivation();
+        setLoading(true);
+        return emitEvent(FlowHandlerEvents.PrimaryButton);
       }
 
-      return handleLater();
+      return emitEvent(FlowHandlerEvents.SecondaryButton);
     },
-    [handleLater, handlePasskeyActivation],
+    [emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(

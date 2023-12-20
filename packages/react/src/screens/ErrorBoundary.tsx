@@ -2,7 +2,7 @@ import type { NonRecoverableError, RecoverableError } from '@corbado/web-core';
 import React from 'react';
 
 import NonRecoverableErrorComponent from './errors/NonRecoverableError';
-import RecoverableErrorComponent from './errors/RecoverableError';
+import NonRecoverableErrorForCustomer from './errors/NonRecoverableErrorForCustomer';
 
 export type ErrorBoundaryProps = React.PropsWithChildren<{
   globalError: NonRecoverableError | undefined;
@@ -30,26 +30,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   render() {
     if ((this.props.globalError || this.state.error) && !this.props.isDevMode) {
-      return (
-        <div className='error-page'>
-          <div className='prod-error-container'>
-            <div className='prod-error-title'>Something went wrong</div>
-            <div className='prod-error-details'>
-              <div className='prod-error-apology'>We’re sorry that our service is currently not available.</div>
-              <div>
-                Please try again in a few moments and if the issue persists
-                {this.props.customerSupportEmail ? `, please contact ${this.props.customerSupportEmail}.` : '.'}
-              </div>
-            </div>
-            <button
-              className='prod-error-button'
-              onClick={() => window.location.reload()}
-            >
-              Refresh page
-            </button>
-          </div>
-        </div>
-      );
+      return <NonRecoverableErrorForCustomer customerSupportEmail={this.props.customerSupportEmail} />;
     }
 
     if (this.props.globalError) {
@@ -58,16 +39,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           <NonRecoverableErrorComponent error={this.props.globalError} />
         </div>
       );
-    }
-
-    if (this.state.error) {
-      if (this.props.globalError) {
-        return (
-          <div className='error-page'>
-            <RecoverableErrorComponent error={this.state.error} />
-          </div>
-        );
-      }
     }
 
     return this.props.children;

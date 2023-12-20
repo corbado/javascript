@@ -37,4 +37,7 @@ module.exports = merge(common, {
       },
     ],
   },
+  externals: {
+    '@corbado/web-core': '@corbado/web-core',
+  },
 });

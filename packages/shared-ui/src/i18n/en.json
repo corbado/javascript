@@ -100,19 +100,24 @@
         "button_start": "Create passkey",
         "button_skip": "Maybe later"
       }
+    },
+    "unexpectedError": {
+      "header": "Something went wrong",
+      "subheader": "We’re sorry that our service is currently not available.",
+      "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Please try again in a few moments.",
+      "button": "Refresh Page"
     }
   },
   "errors": {
-    "validationError_invalidEmail": "Please enter a valid email",
-    "validationError_invalidName": "Please enter a name",
-    "validationError_passkeyChallengeCancelled": "Passkey challenge cancelled",
-    "serverError_userAlreadyExists": "Email address is already in use",
-    "serverError_unknownUser": "User does not exist",
-    "serverError_noPasskeyAvailable": "No passkey available",
-    "serverError_invalidPasskey": "The provided passkey is no longer valid",
-    "serverError_invalidOtp": "The provided OTP is not valid",
-    "serverError_timeoutOtp": "The provided OTP is no longer valid",
-    "serverError_unreachableEmail": "Invalid / unreachable email address",
+    "invalidName": "Please enter a valid email",
+    "invalidFullname": "Please enter a valid name",
+    "passkeyChallengeCancelled": "Passkey challenge cancelled",
+    "userAlreadyExists": "Email address is already in use",
+    "unknownUser": "User does not exist",
+    "noPasskeyAvailable": "No passkey available",
+    "invalidPasskey": "The provided passkey is no longer valid",
+    "invalidOtp": "The provided OTP is not valid",
     "unknownError": "Something went wrong. Please try again later"
   }
 }

@@ -1,7 +1,7 @@
 import type { FC, FormEvent, ReactNode } from 'react';
-import { useCallback, useRef, useState } from 'react';
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import useFlowHandler from '../hooks/useFlowHandler';
 import { Body } from './Body';
 import { Button } from './Button';
 import { Header } from './Header';
@@ -14,12 +14,9 @@ export interface EmailOtpScreenProps {
   body?: ReactNode;
   verificationButtonText: string;
   backButtonText: string;
-  validationError: string;
-  onVerificationButtonClick(
-    otp: string,
-    setLoading: (newLoadingState: boolean) => void,
-    setError: (newError: string) => void,
-  ): Promise<void>;
+
+  onVerificationButtonClick(otp: string, setLoading: (newLoadingState: boolean) => void): Promise<void>;
+
   onBackButtonClick(): void;
 }
 
@@ -28,41 +25,33 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
   body,
   verificationButtonText,
   backButtonText,
-  validationError,
   onVerificationButtonClick,
   onBackButtonClick,
 }) => {
-  const [error, setError] = useState('');
   const [otp, setOTP] = useState<string>('');
-  const [isOtpValid, setIsOtpValid] = useState<boolean>(false);
+  const { currentUserState } = useFlowHandler();
   const [loading, setLoading] = useState<boolean>(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [currentUserState]);
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
       const newOtp = userOtp.join('');
       setOTP(newOtp);
 
-      const isValid = newOtp.length === 6;
-      setIsOtpValid(isValid);
-
-      if (isValid) {
-        void onVerificationButtonClick(newOtp, setLoading, setError);
+      if (newOtp.length === 6) {
+        void onVerificationButtonClick(newOtp, setLoading);
       }
     },
-    [setOTP, setIsOtpValid],
+    [setOTP],
   );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isOtpValid) {
-      setError(validationError);
-      return;
-    }
-
-    setError('');
-
-    void onVerificationButtonClick(otp, setLoading, setError);
+    void onVerificationButtonClick(otp, setLoading);
   };
 
   return (
@@ -94,14 +83,14 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       <OtpInputGroup emittedOTP={handleOtpChange} />
 
-      {error && <p className='cb-error'>{error}</p>}
+      {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
 
       <Button
         type='submit'
         ref={submitButtonRef}
         variant='primary'
         isLoading={loading}
-        disabled={!isOtpValid || loading}
+        disabled={!loading}
       >
         {verificationButtonText}
       </Button>

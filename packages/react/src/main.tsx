@@ -5,7 +5,6 @@ import type { CorbadoAuthUIProps } from '@corbado/types';
 import React from 'react';
 
 import FlowHandlerProvider from './contexts/FlowHandlerProvider';
-import UserDataProvider from './contexts/UserDataProvider';
 import { defaultLanguage as defaultAppLanguage, handleDynamicLocaleSetup } from './i18n';
 import { ScreensFlow } from './screens/ScreenFlow';
 
@@ -28,17 +27,15 @@ const CorbadoAuthUI = ({
 
   return (
     <div className='cb-container'>
-      <UserDataProvider>
-        <FlowHandlerProvider
-          onLoggedIn={onLoggedIn}
-          initialFlowType={FlowType.SignUp}
-        >
-          <ScreensFlow
-            isDevMode={isDevMode}
-            customerSupportEmail={customerSupportEmail}
-          />
-        </FlowHandlerProvider>
-      </UserDataProvider>
+      <FlowHandlerProvider
+        onLoggedIn={onLoggedIn}
+        initialFlowType={FlowType.SignUp}
+      >
+        <ScreensFlow
+          isDevMode={isDevMode}
+          customerSupportEmail={customerSupportEmail}
+        />
+      </FlowHandlerProvider>
     </div>
   );
 };

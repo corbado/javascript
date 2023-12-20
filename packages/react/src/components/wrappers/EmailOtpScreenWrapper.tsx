@@ -1,13 +1,8 @@
 import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import useFlowHandler from '../hooks/useFlowHandler';
-import { Body } from './Body';
-import { Button } from './Button';
-import { Header } from './Header';
-import { IconLink } from './IconLink';
-import { Gmail, Outlook, Yahoo } from './icons';
-import { OtpInputGroup } from './OtpInputGroup';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import { Body, Button, Gmail, Header, IconLink, OtpInputGroup, Outlook, Yahoo } from '../ui';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;

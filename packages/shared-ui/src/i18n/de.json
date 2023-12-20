@@ -119,5 +119,19 @@
     "invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
     "invalidOtp": "Der eingegebene Code ist nicht gültig",
     "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
+  },
+  "passkeysList": {
+    "warning_notLoggedIn": "Bitte loggen Sie sich ein, um Ihre Passkeys zu sehen.",
+    "message_noPasskeys": "Sie haben noch keine Passkeys.",
+    "button_createPasskey": "Passkey erstellen",
+    "badge_synced": "Synchronisiert",
+    "field_credentialId": "Anmelde-ID: ",
+    "field_created": "Erstellt: {{date}} mit {{browser}} am {{os}}",
+    "field_lastUsed": "Zuletzt verwendet: ",
+    "field_status": "Status: ",
+    "deleteDialog_header": "Passkey löschen",
+    "deleteDialog_body": "Sind Sie sicher, dass Sie diesen Passkey löschen möchten?",
+    "deleteDialog_cancelButton": "Abbrechen",
+    "deleteDialog_deleteButton": "Ja, löschen"
   }
 }

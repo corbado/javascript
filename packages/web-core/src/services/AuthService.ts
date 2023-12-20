@@ -1,4 +1,4 @@
-import type { SessionUser } from '@corbado/types';
+import type { SessionUser  } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';
@@ -235,6 +235,16 @@ export class AuthService {
     this.#executeOnAuthenticationSuccessCallbacks(respFinish.val);
 
     return Ok(void 0);
+  }
+
+  async passkeyList() {
+    const resp = await this.#apiService.passkeyList();
+    return resp;
+  }
+
+  async passkeyDelete(id: string) {
+    const resp = await this.#apiService.passkeyDelete(id);
+    return resp;
   }
 
   /**

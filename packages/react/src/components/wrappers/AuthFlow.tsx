@@ -3,18 +3,18 @@ import { CommonScreens } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Spinner } from '../components';
-import type { ScreenMap } from '../flows';
-import { flowScreensMap } from '../flows';
-import useFlowHandler from '../hooks/useFlowHandler';
+import type { ScreenMap } from '../../flows';
+import { flowScreensMap } from '../../flows';
+import useFlowHandler from '../../hooks/useFlowHandler';
+import { Spinner } from '../ui';
 import { ErrorBoundary } from './ErrorBoundary';
 
-interface ScreenFlowProps {
+interface AuthFlowProps {
   isDevMode: boolean;
   customerSupportEmail: string;
 }
 
-export const ScreensFlow: FC<ScreenFlowProps> = ({ isDevMode, customerSupportEmail }) => {
+export const AuthFlow: FC<AuthFlowProps> = ({ isDevMode, customerSupportEmail }) => {
   const { currentFlow, currentScreen, initialized } = useFlowHandler();
   const { globalError } = useCorbado();
   const [ComponentMap, setComponentMap] = useState<ScreenMap>({});

@@ -1,8 +1,8 @@
 import type { NonRecoverableError, RecoverableError } from '@corbado/web-core';
 import React from 'react';
 
-import NonRecoverableErrorComponent from './errors/NonRecoverableError';
-import NonRecoverableErrorForCustomer from './errors/NonRecoverableErrorForCustomer';
+import NonRecoverableErrorComponent from '../../screens/errors/NonRecoverableError';
+import NonRecoverableErrorForCustomer from '../../screens/errors/NonRecoverableErrorForCustomer';
 
 export type ErrorBoundaryProps = React.PropsWithChildren<{
   globalError: NonRecoverableError | undefined;

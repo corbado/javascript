@@ -26,6 +26,8 @@ export type InitLoginWithEmailOTPError = InvalidEmailError | UnknownError;
 export type CompleteLoginWithEmailOTPError = InvalidEmailError | UnknownError;
 export type AuthMethodsListError = UnknownUserError | UnknownError;
 export type GetProjectConfigError = UnknownError;
+export type PasskeyListError = UnknownError;
+export type PasskeyDeleteError = UnknownError;
 
 export class CorbadoError extends Error {
   #translatedMessage?: string;

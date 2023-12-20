@@ -117,5 +117,19 @@ const fr = {
     serverError_unreachableEmail: 'Adresse e-mail invalide / injoignable',
     unknownError: 'Un problème est survenu. Veuillez réessayer plus tard',
   },
+  passkeysList: {
+    warning_notLoggedIn: 'Veuillez vous connecter pour voir vos clés de passe.',
+    message_noPasskeys: "Vous n'avez pas encore de clés de passe.",
+    button_createPasskey: 'Créer une clé de passe',
+    badge_synced: 'Synchronisé',
+    field_credentialId: "ID d'identification : ",
+    field_created: 'Créé : {{date}} avec {{browser}} sur {{os}}',
+    field_lastUsed: 'Dernière utilisation : ',
+    field_status: 'Statut : ',
+    deleteDialog_header: 'Supprimer la clé de passe',
+    deleteDialog_body: 'Êtes-vous sûr de vouloir supprimer cette clé de passe ?',
+    deleteDialog_cancelButton: 'Annuler',
+    deleteDialog_deleteButton: 'Oui, supprimer',
+  },
 };
 export default fr;

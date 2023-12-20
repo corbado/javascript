@@ -1,7 +1,5 @@
+import { CorbadoAuth } from '@corbado/react';
 import { useNavigate } from 'react-router-dom';
-import { CorbadoAuthUI } from '@corbado/react';
-import frenchTranslations from '../translations/fr';
-import englishTranslations from '../translations/en';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -12,14 +10,9 @@ const AuthPage = () => {
   };
 
   return (
-    <CorbadoAuthUI
+    <CorbadoAuth
       onLoggedIn={onLoggedIn}
-      customTranslations={{
-        fr: frenchTranslations,
-        en: englishTranslations,
-      }}
       isDevMode={isDevMode}
-      darkMode='off'
       customerSupportEmail='dev@test.com'
     />
   );

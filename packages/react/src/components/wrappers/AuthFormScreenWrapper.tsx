@@ -1,8 +1,8 @@
 import type { FC, FormEvent, ReactNode } from 'react';
 import React from 'react';
 
-import type { CustomizableComponent } from '../types/common';
-import { Button } from './Button';
+import type { CustomizableComponent } from '../../types/common';
+import { Button } from '../ui/Button';
 
 export interface AuthFormScreenWrapperProps extends CustomizableComponent {
   onSubmit: () => void;

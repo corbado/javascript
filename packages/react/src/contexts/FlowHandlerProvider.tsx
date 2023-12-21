@@ -70,19 +70,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       return;
     }
 
-    flowHandler?.updateUser(user);
+    flowHandler?.update(user);
   }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
     return flowHandler?.navigateBack() ?? CommonScreens.Start;
   }, [flowHandler]);
-
-  const changeFlow = useCallback(
-    (flowType: FlowType) => {
-      flowHandler?.changeFlow(flowType);
-    },
-    [flowHandler],
-  );
 
   const emitEvent = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
@@ -98,10 +91,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       currentUserState,
       initialized,
       navigateBack,
-      changeFlow,
       emitEvent,
     }),
-    [currentFlow, currentScreen, currentUserState, initialized, navigateBack, changeFlow],
+    [currentFlow, currentScreen, currentUserState, initialized, navigateBack],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

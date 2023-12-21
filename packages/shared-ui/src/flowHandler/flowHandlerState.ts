@@ -66,20 +66,15 @@ export class FlowHandlerState {
    * Allows to update the internal state of the FlowHandler User.
    * @param update
    */
-  updateUser(update: FlowHandlerStateUpdate) {
-    const newState = update.userState || defaultErrors || this.#userState;
-    this.#userState = this.withTranslation(newState);
+  update(update: FlowHandlerStateUpdate) {
+    const newState = update.userState || defaultErrors;
+    this.#userState = this.#withTranslation(newState);
     this.#user = update.user || this.#user;
-  }
 
-  /**
-   * Allows to update the internal state of the FlowHandler FlowOptions.
-   */
-  updateFlowOptions(updateFlowOptions: Partial<FlowOptions>) {
     //TODO: Remove defaultOptions once BE has added support for flow options
     this.#flowOptions = {
       ...defaultFlowOptions,
-      ...updateFlowOptions,
+      ...update.flowOptions,
     };
   }
 
@@ -87,7 +82,7 @@ export class FlowHandlerState {
    * Here we translate the error messages. This is a very simple implementation, but it should be enough for now.
    * @param userState
    */
-  withTranslation(userState: UserState): UserState {
+  #withTranslation(userState: UserState): UserState {
     if (userState.emailError) {
       userState.emailError.translatedMessage = this.#i18next.t(userState.emailError.name);
     }

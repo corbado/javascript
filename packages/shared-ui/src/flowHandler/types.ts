@@ -5,7 +5,6 @@ import type {
   CommonScreens,
   EmailOtpSignupScreens,
   FlowHandlerEvents,
-  FlowType,
   LoginFlowNames,
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
@@ -13,16 +12,6 @@ import type {
 } from './constants';
 import type { FlowHandlerState } from './flowHandlerState';
 import type { FlowUpdate } from './flowUpdate';
-
-/**
- * Configuration settings for handling different authentication flows.
- */
-export interface FlowHandlerConfig {
-  // callback that will be executed when a flow reached its end
-  onLoggedIn: () => void;
-  // initial flow to start with
-  initialFlowType: FlowType;
-}
 
 /**
  * Configuration options for the passkey sign-up with email OTP fallback flow.
@@ -107,6 +96,7 @@ export type UserState = {
 export type FlowHandlerStateUpdate = {
   userState?: UserState;
   user?: SessionUser;
+  flowOptions?: Partial<FlowOptions>;
 };
 
 export type EmailOTPState = {

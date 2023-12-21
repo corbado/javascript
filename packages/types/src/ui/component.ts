@@ -23,6 +23,8 @@ export interface CorbadoUIConfig {
  *
  * @interface CorbadoAuthConfig
  * @property {() => void} onLoggedIn - A callback function that is called when the user is logged in.
+ * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
+ * @property {string} [customerSupportEmail] - The email address to be used for customer support. Defaults to '
  */
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;

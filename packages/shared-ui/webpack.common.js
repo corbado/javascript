@@ -6,10 +6,6 @@ module.exports = merge(common, {
   entry: path.resolve(__dirname, './src/index.ts'),
   output: {
     path: path.resolve(__dirname, 'dist'),
-    library: {
-      name: '@corbado/shared-ui',
-      type: 'umd',
-    },
   },
   module: {
     rules: [

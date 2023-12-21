@@ -25,7 +25,6 @@ export class FlowHandlerState {
   #user?: SessionUser;
   #corbadoApp: CorbadoApp;
   #i18next: i18n;
-  #isUserAuthenticated = false;
 
   constructor(
     flowOptions: Partial<FlowOptions>,
@@ -43,10 +42,6 @@ export class FlowHandlerState {
     this.#passkeysSupported = passkeysSupported;
     this.#corbadoApp = corbadoApp;
     this.#i18next = i18next;
-
-    this.#corbadoApp.authService.shortSessionChanges.subscribe(value => {
-      this.#isUserAuthenticated = !!value;
-    });
   }
 
   get user(): SessionUser | undefined {
@@ -65,10 +60,6 @@ export class FlowHandlerState {
 
   get corbadoApp(): CorbadoApp {
     return this.#corbadoApp;
-  }
-
-  get isUserAuthenticated(): boolean {
-    return this.#isUserAuthenticated;
   }
 
   /**

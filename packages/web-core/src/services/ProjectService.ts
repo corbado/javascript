@@ -41,10 +41,6 @@ export class ProjectService {
 
     if (projConfig.ok) {
       this.#projConfig = projConfig.val;
-      this.#projConfig.signupFlowOptions = {
-        retryPasskeyOnError: false,
-        passkeyAppend: false,
-      };
       return Ok(this.#projConfig);
     }
 

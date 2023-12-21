@@ -7,14 +7,18 @@ import {
   UserAlreadyExistsError,
 } from '@corbado/web-core';
 import type { Result } from 'ts-results';
-import { Ok } from 'ts-results';
+import { Err, Ok } from 'ts-results';
 
 import { PasskeySignupWithEmailOtpFallbackScreens } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
 import type { UserState } from '../../types';
 
-export const checkErrors = (email?: string, fullName?: string, onStartScreen = false): FlowUpdate | undefined => {
+export const validateEmailAndFullName = (
+  email?: string,
+  fullName?: string,
+  onStartScreen = false,
+): Result<undefined, FlowUpdate> => {
   let userState: UserState | null = null;
 
   if (!email) {
@@ -26,41 +30,51 @@ export const checkErrors = (email?: string, fullName?: string, onStartScreen = f
   }
 
   if (!userState) {
-    return undefined;
+    return Ok(undefined);
   }
+
+  userState = { ...userState, email: email, fullName: fullName };
 
   return onStartScreen
-    ? FlowUpdate.state(userState)
-    : FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, userState);
+    ? Err(FlowUpdate.state(userState))
+    : Err(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, userState));
 };
 
-export const checkErrorsAfterAuth = (state: FlowHandlerState): FlowUpdate | undefined => {
+export const validateUserAuthState = (state: FlowHandlerState): Result<undefined, FlowUpdate> => {
   if (!state.user) {
-    return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, { emailError: new UnknownError() });
+    return Err(
+      FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, {
+        emailError: new UnknownError(),
+        fullName: state.userState.fullName,
+        email: state.userState.email,
+      }),
+    );
   }
 
-  return undefined;
+  return Ok(undefined);
 };
 
-export const checkUserExistsError = async (
+export const checkUserExists = async (
   corbadoApp: CorbadoApp,
-  email?: string,
-  userState?: UserState,
-): Promise<FlowUpdate | undefined> => {
-  const res = await corbadoApp.authService.userExists(email ?? '');
+  email: string,
+  userState: UserState,
+): Promise<Result<undefined, FlowUpdate>> => {
+  const res = await corbadoApp.authService.userExists(email);
 
   if (res.err) {
-    return FlowUpdate.state({ emailError: new UnknownError(), ...(userState ?? {}) });
+    return Err(FlowUpdate.state({ emailError: new UnknownError(), ...userState }));
   }
 
   if (res.val) {
-    return FlowUpdate.state({
-      ...(userState ?? {}),
-      emailError: new UserAlreadyExistsError(),
-    });
+    return Err(
+      FlowUpdate.state({
+        ...userState,
+        emailError: new UserAlreadyExistsError(),
+      }),
+    );
   }
 
-  return undefined;
+  return Ok(undefined);
 };
 
 export const sendEmailOTP = async (
@@ -69,11 +83,6 @@ export const sendEmailOTP = async (
   fullName?: string,
   onStartScreen = false,
 ): Promise<FlowUpdate> => {
-  const errors = checkErrors(email, fullName, onStartScreen);
-  if (errors) {
-    return errors;
-  }
-
   const res = await corbadoApp.authService.initSignUpWithEmailOTP(email ?? '', fullName ?? '');
 
   if (res.ok) {
@@ -90,11 +99,6 @@ export const sendEmailOTP = async (
 export const createPasskey = async (
   state: FlowHandlerState,
 ): Promise<Result<FlowUpdate, SignUpWithPasskeyError | undefined>> => {
-  const errors = checkErrors(state.userState.email, state.userState.fullName);
-  if (errors) {
-    return Ok(errors);
-  }
-
   const res = await state.corbadoApp.authService.signUpWithPasskey(
     state.userState.email ?? '',
     state.userState.fullName ?? '',
@@ -109,11 +113,6 @@ export const createPasskey = async (
 export const appendPasskey = async (
   state: FlowHandlerState,
 ): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
-  const errors = checkErrorsAfterAuth(state);
-  if (errors) {
-    return Ok(errors);
-  }
-
   const res = await state.corbadoApp.authService.appendPasskey();
   if (res.ok) {
     return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));

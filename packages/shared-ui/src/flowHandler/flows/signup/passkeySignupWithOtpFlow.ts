@@ -3,11 +3,12 @@ import { FlowUpdate } from '../../flowUpdate';
 import type { Flow } from '../../types';
 import {
   appendPasskey,
-  checkErrors,
-  checkUserExistsError,
+  checkUserExists,
   createPasskey,
   sendEmailOTP,
   signupWithEmailOTP,
+  validateEmailAndFullName,
+  validateUserAuthState,
 } from './utils';
 
 export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
@@ -16,18 +17,17 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
       case FlowHandlerEvents.ChangeFlow:
         return FlowUpdate.changeFlow(FlowType.Login);
       case FlowHandlerEvents.PrimaryButton: {
-        const inputErrors = checkErrors(
-          eventOptions?.userStateUpdate?.email,
-          eventOptions?.userStateUpdate?.fullName,
-          true,
-        );
-        if (inputErrors) {
-          return inputErrors;
+        const email = eventOptions?.userStateUpdate?.email;
+        const fullName = eventOptions?.userStateUpdate?.fullName;
+        const validations = validateEmailAndFullName(email, fullName, true);
+        if (validations.err) {
+          return validations.val;
         }
 
-        const userExistsError = await checkUserExistsError(state.corbadoApp, eventOptions?.userStateUpdate?.email);
-        if (userExistsError) {
-          return userExistsError;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const userExistsError = await checkUserExists(state.corbadoApp, email!, eventOptions!.userStateUpdate!);
+        if (userExistsError.err) {
+          return userExistsError.val;
         }
 
         return state.passkeysSupported
@@ -90,6 +90,11 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
     return;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend]: async (state, event) => {
+    const validations = validateUserAuthState(state);
+    if (validations.err) {
+      return validations.val;
+    }
+
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
         const res = await appendPasskey(state);

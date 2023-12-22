@@ -5,6 +5,9 @@ module.exports = {
     filename: 'index.js',
     clean: true,
     globalObject: 'this',
+    library: {
+      type: 'module',
+    },
   },
   module: {
     rules: [
@@ -17,5 +20,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.json'],
+  },
+  experiments: {
+    outputModule: true,
   },
 };

@@ -23,7 +23,8 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "lint": "eslint src --ext .ts --fix",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true",
     "build": "webpack --config webpack.prod.js",
     "build:dev": "npm run clean && tsc -b"

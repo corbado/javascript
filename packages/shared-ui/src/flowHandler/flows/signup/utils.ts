@@ -18,7 +18,7 @@ export const validateEmailAndFullName = (
   email?: string,
   fullName?: string,
   onStartScreen = false,
-): Result<undefined, FlowUpdate> => {
+): Result<{ email: string; fullName: string }, FlowUpdate> => {
   let userState: UserState | null = null;
 
   if (!email) {
@@ -30,7 +30,8 @@ export const validateEmailAndFullName = (
   }
 
   if (!userState) {
-    return Ok(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return Ok({ email: email!, fullName: fullName! });
   }
 
   userState = { ...userState, email: email, fullName: fullName };

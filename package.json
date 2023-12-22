@@ -9,6 +9,7 @@
     "build": "lerna run build",
     "build:dev": "lerna run build:dev",
     "lint": "lerna run lint",
+    "prettier:check": "prettier --check .",
     "format": "prettier --write ."
   },
   "devDependencies": {

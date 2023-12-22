@@ -41,6 +41,12 @@ jobs:
           npm install lerna
           npm install vercel
 
+      - name: Check ESLint Errors
+        run: npm run lint
+      
+      - name: Check Prettier Formatting
+        run: npm run prettier:check
+
       - name: Build SDKs
         # currently we have to use build:dev here, because npm run build is not yet working
         run: |

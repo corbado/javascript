@@ -1,4 +1,4 @@
-import type { SessionUser  } from '@corbado/types';
+import type { SessionUser } from '@corbado/types';
 import log from 'loglevel';
 import { Subject } from 'rxjs';
 import type { Result } from 'ts-results';

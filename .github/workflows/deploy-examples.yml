@@ -43,7 +43,7 @@ jobs:
 
       - name: Check ESLint Errors
         run: npm run lint
-      
+
       - name: Check Prettier Formatting
         run: npm run prettier:check
 

@@ -71,9 +71,8 @@ export class FlowHandlerState {
     this.#userState = this.#withTranslation(newState);
     this.#user = update.user || this.#user;
 
-    //TODO: Remove defaultOptions once BE has added support for flow options
     this.#flowOptions = {
-      ...defaultFlowOptions,
+      ...this.#flowOptions,
       ...update.flowOptions,
     };
   }

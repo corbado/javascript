@@ -34,7 +34,6 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         // currently there are no errors that can be thrown here
         return;
       }
-
       const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
@@ -43,10 +42,10 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         setCurrentUserState(value);
       });
 
-      void flowHandler.init(corbadoApp, i18n);
-
-      setFlowHandler(flowHandler);
-      setInitialized(true);
+      void flowHandler.init(corbadoApp, i18n).then(() => {
+        setFlowHandler(flowHandler);
+        setInitialized(true);
+      });
     })();
 
     return () => {

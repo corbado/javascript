@@ -222,7 +222,7 @@ export class FlowHandler {
    * @returns The new current screen.
    */
   #changeFlow(flowType?: FlowType, screen: CommonScreens = CommonScreens.Start) {
-    if (flowType) {
+    if (flowType !== undefined) {
       this.#config.update(flowType);
     }
 

@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ScreenMap } from '../../flows';
 import { flowScreensMap } from '../../flows';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Spinner } from '../ui';
+import Loading from '../../screens/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface AuthFlowProps {
@@ -39,7 +39,7 @@ export const AuthFlow: FC<AuthFlowProps> = ({ isDevMode, customerSupportEmail })
       isDevMode={isDevMode}
       customerSupportEmail={customerSupportEmail}
     >
-      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <Spinner />}
+      {initialized ? ScreenComponent ? <ScreenComponent /> : <EndComponent /> : <Loading />}
     </ErrorBoundary>
   );
 };

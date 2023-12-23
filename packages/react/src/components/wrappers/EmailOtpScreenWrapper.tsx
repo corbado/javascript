@@ -76,7 +76,10 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
         />
       </div>
 
-      <OtpInputGroup emittedOTP={handleOtpChange} />
+      <OtpInputGroup
+        emittedOTP={handleOtpChange}
+        error={currentUserState.emailOTPError?.translatedMessage}
+      />
 
       {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
 
@@ -85,7 +88,7 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
         ref={submitButtonRef}
         variant='primary'
         isLoading={loading}
-        disabled={!loading}
+        disabled={loading}
       >
         {verificationButtonText}
       </Button>

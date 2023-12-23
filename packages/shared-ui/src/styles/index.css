@@ -5,11 +5,14 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgba(143, 155, 191, 0.5);
-  max-width: 100%;
   width: 30rem;
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
-  margin-top: 5rem;
+}
+
+.cb-loading {
+  height: 18rem;
+  display: flex;
 }
 
 /********** Typography **********/
@@ -176,7 +179,7 @@
 
 .cb-form-input {
   position: relative;
-  margin-top: 1rem;
+  margin-top: 1.2rem;
   width: 100%;
 }
 
@@ -192,7 +195,8 @@
 }
 
 .cb-form-input.cb-has-content label,
-.cb-form-input.cb-has-focus label {
+.cb-form-input.cb-has-focus label,
+.cb-form-input.cb-has-error label {
   font-weight: normal;
   top: -1.1rem;
   left: 1.4rem;
@@ -202,7 +206,7 @@
 }
 
 .cb-form-input-error {
-  height: 1.25rem;
+  height: 1rem;
 }
 
 /********** Buttons **********/

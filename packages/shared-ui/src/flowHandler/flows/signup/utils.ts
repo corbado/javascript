@@ -84,16 +84,19 @@ export const sendEmailOTP = async (
   onStartScreen = false,
 ): Promise<FlowUpdate> => {
   const res = await corbadoApp.authService.initSignUpWithEmailOTP(email, fullName);
+  const updatedState: UserState = { email, fullName };
 
   if (res.ok) {
     return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.EnterOtp, {
+      ...updatedState,
       emailOTPState: { lastMailSent: new Date() },
     });
   }
 
+  const unknownErrorState = { ...updatedState, emailError: new UnknownError() };
   return onStartScreen
-    ? FlowUpdate.state({ emailError: new UnknownError() })
-    : FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, { emailError: new UnknownError() });
+    ? FlowUpdate.state(unknownErrorState)
+    : FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, unknownErrorState);
 };
 
 export const createPasskey = async (
@@ -120,19 +123,23 @@ export const appendPasskey = async (
   return res;
 };
 
-export const signupWithEmailOTP = async (corbadoApp: CorbadoApp, otp?: string): Promise<FlowUpdate | undefined> => {
-  if (!otp) {
-    return FlowUpdate.state({ emailOTPError: new InvalidOtpInputError() });
+export const signupWithEmailOTP = async (
+  corbadoApp: CorbadoApp,
+  userState: UserState,
+  otp?: string,
+): Promise<Result<undefined, FlowUpdate>> => {
+  if (!otp || otp.length !== 6) {
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidOtpInputError() }));
   }
 
   const res = await corbadoApp.authService.completeSignupWithEmailOTP(otp);
   if (res.ok) {
-    return undefined;
+    return Ok(undefined);
   }
 
   if (res.val instanceof InvalidOtpInputError) {
-    return FlowUpdate.state({ emailOTPError: res.val });
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
   }
 
-  return FlowUpdate.state({ emailOTPError: new UnknownError() });
+  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
 };

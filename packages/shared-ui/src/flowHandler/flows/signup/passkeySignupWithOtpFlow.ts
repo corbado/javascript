@@ -69,11 +69,16 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
     return;
   },
   [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: async (state, event, eventOptions) => {
+    const validations = validateEmailAndFullName(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const error = await signupWithEmailOTP(state.corbadoApp, eventOptions?.emailOTPCode);
-        if (error) {
-          return error;
+        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.emailOTPCode);
+        if (res.err) {
+          return res.val;
         }
 
         if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {

@@ -15,26 +15,24 @@ import { FlowUpdate } from '../../flowUpdate';
 import type { UserState } from '../../types';
 
 export const validateEmailAndFullName = (
-  email?: string,
-  fullName?: string,
+  userStateIn?: UserState,
   onStartScreen = false,
 ): Result<{ email: string; fullName: string }, FlowUpdate> => {
-  let userState: UserState | null = null;
+  let userState: UserState = {};
 
-  if (!email) {
+  if (!userStateIn?.email) {
     userState = { emailError: new InvalidEmailError() };
   }
 
-  if (!fullName) {
+  if (!userStateIn?.fullName) {
     userState = { ...userState, userNameError: new InvalidFullnameError() };
   }
 
-  if (!userState) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return Ok({ email: email!, fullName: fullName! });
+  if (userStateIn?.email && userStateIn.fullName) {
+    return Ok({ email: userStateIn.email, fullName: userStateIn.fullName });
   }
 
-  userState = { ...userState, email: email, fullName: fullName };
+  userState = { ...userState, email: userStateIn?.email, fullName: userStateIn?.fullName };
 
   return onStartScreen
     ? Err(FlowUpdate.state(userState))
@@ -58,18 +56,19 @@ export const validateUserAuthState = (state: FlowHandlerState): Result<undefined
 export const checkUserExists = async (
   corbadoApp: CorbadoApp,
   email: string,
-  userState: UserState,
+  fullName: string,
 ): Promise<Result<undefined, FlowUpdate>> => {
   const res = await corbadoApp.authService.userExists(email);
 
   if (res.err) {
-    return Err(FlowUpdate.state({ emailError: new UnknownError(), ...userState }));
+    return Err(FlowUpdate.state({ email, fullName, emailError: new UnknownError() }));
   }
 
   if (res.val) {
     return Err(
       FlowUpdate.state({
-        ...userState,
+        email,
+        fullName,
         emailError: new UserAlreadyExistsError(),
       }),
     );
@@ -80,11 +79,11 @@ export const checkUserExists = async (
 
 export const sendEmailOTP = async (
   corbadoApp: CorbadoApp,
-  email?: string,
-  fullName?: string,
+  email: string,
+  fullName: string,
   onStartScreen = false,
 ): Promise<FlowUpdate> => {
-  const res = await corbadoApp.authService.initSignUpWithEmailOTP(email ?? '', fullName ?? '');
+  const res = await corbadoApp.authService.initSignUpWithEmailOTP(email, fullName);
 
   if (res.ok) {
     return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.EnterOtp, {
@@ -98,12 +97,11 @@ export const sendEmailOTP = async (
 };
 
 export const createPasskey = async (
-  state: FlowHandlerState,
+  corbadoApp: CorbadoApp,
+  email: string,
+  fullName: string,
 ): Promise<Result<FlowUpdate, SignUpWithPasskeyError | undefined>> => {
-  const res = await state.corbadoApp.authService.signUpWithPasskey(
-    state.userState.email ?? '',
-    state.userState.fullName ?? '',
-  );
+  const res = await corbadoApp.authService.signUpWithPasskey(email, fullName);
   if (res.ok) {
     return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
   }
@@ -112,9 +110,9 @@ export const createPasskey = async (
 };
 
 export const appendPasskey = async (
-  state: FlowHandlerState,
+  corbadoApp: CorbadoApp,
 ): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
-  const res = await state.corbadoApp.authService.appendPasskey();
+  const res = await corbadoApp.authService.appendPasskey();
   if (res.ok) {
     return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
   }

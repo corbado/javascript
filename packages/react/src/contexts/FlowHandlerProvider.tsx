@@ -42,10 +42,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         setCurrentUserState(value);
       });
 
-      void flowHandler.init(corbadoApp, i18n).then(() => {
-        setFlowHandler(flowHandler);
-        setInitialized(true);
-      });
+      await flowHandler.init(corbadoApp, i18n);
+      setFlowHandler(flowHandler);
+      setInitialized(true);
     })();
 
     return () => {

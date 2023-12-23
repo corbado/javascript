@@ -8,10 +8,11 @@ interface Props {
   numberOfDigits?: number;
   loading?: boolean;
   emittedOTP(otp: string[]): void;
+  error?: string;
 }
 
-export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false }) => {
-  const [otp, setOtp] = useState(new Array(numberOfDigits).fill(''));
+export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false, error }) => {
+  const [otp, setOtp] = useState(new Array<string>(numberOfDigits).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
   useEffect(() => {
@@ -104,6 +105,7 @@ export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loadi
             disabled={loading}
             className='cb-email-otp-input'
             autoFocus={index === 0}
+            error={error}
           />
         );
       })}

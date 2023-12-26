@@ -1,11 +1,4 @@
-import type {
-  FlowHandlerEventOptions,
-  FlowHandlerEvents,
-  FlowNames,
-  FlowType,
-  ScreenNames,
-  UserState,
-} from '@corbado/shared-ui';
+import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
 import { CommonScreens, LoginFlowNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
@@ -15,7 +8,6 @@ export interface FlowHandlerContextProps {
   currentUserState: UserState;
   initialized: boolean;
   navigateBack: () => ScreenNames;
-  changeFlow: (flowType: FlowType) => void;
   emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
 }
 
@@ -25,7 +17,6 @@ export const initialContext: FlowHandlerContextProps = {
   currentUserState: {},
   initialized: false,
   navigateBack: () => CommonScreens.Start,
-  changeFlow: () => void 0,
   emitEvent: () => Promise.reject(),
 };
 

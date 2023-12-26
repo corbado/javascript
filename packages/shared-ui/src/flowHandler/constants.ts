@@ -1,3 +1,8 @@
+export enum FlowType {
+  SignUp,
+  Login,
+}
+
 export enum SignUpFlowNames {
   PasskeySignupWithEmailOTPFallback = 'PasskeySignupWithEmailOTPFallback',
 }
@@ -5,6 +10,13 @@ export enum SignUpFlowNames {
 export enum LoginFlowNames {
   PasskeyLoginWithEmailOTPFallback = 'PasskeyLoginWithEmailOTPFallback',
 }
+
+export const FlowNameByFlowStyle: Record<string, { SignUp: SignUpFlowNames; Login: LoginFlowNames }> = {
+  PasskeyWithEmailOTPFallback: {
+    SignUp: SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
+    Login: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
+  },
+};
 
 export enum CommonScreens {
   Start = 'start',
@@ -50,9 +62,4 @@ export enum FlowHandlerEvents {
   PrimaryButton = 'primary-button',
   SecondaryButton = 'secondary-button',
   InitConditionalUI = 'init-conditional-ui',
-}
-
-export enum FlowType {
-  SignUp,
-  Login,
 }

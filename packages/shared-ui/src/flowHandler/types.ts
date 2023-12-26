@@ -5,7 +5,6 @@ import type {
   CommonScreens,
   EmailOtpSignupScreens,
   FlowHandlerEvents,
-  FlowType,
   LoginFlowNames,
   PasskeyLoginWithEmailOtpFallbackScreens,
   PasskeySignupWithEmailOtpFallbackScreens,
@@ -15,27 +14,25 @@ import type { FlowHandlerState } from './flowHandlerState';
 import type { FlowUpdate } from './flowUpdate';
 
 /**
- * Configuration settings for handling different authentication flows.
+ * Configuration options for the passkey sign-up with email OTP fallback flow.
  */
-export interface FlowHandlerConfig {
-  // callback that will be executed when a flow reached its end
-  onLoggedIn: () => void;
-  // initial flow to start with
-  initialFlowType: FlowType;
+export interface SignupOptions {
+  passkeyAppend: boolean;
+  retryPasskeyOnError: boolean;
+}
+
+/**
+ * Configuration options for the passkey login with email OTP fallback flow.
+ */
+export interface LoginOptions {
+  passkeyAppend: boolean;
+  retryPasskeyOnError: boolean;
 }
 
 /**
  * Configuration options for the authentication flows.
  */
-export type FlowOptions = PasskeySignupWithEmailOtpFallbackOptions;
-
-/**
- * Configuration options for the passkey sign-up with email OTP fallback flow.
- */
-export interface PasskeySignupWithEmailOtpFallbackOptions {
-  passkeyAppend: boolean;
-  retryPasskeyOnError: boolean;
-}
+export type FlowOptions = SignupOptions | LoginOptions;
 
 /**
  * Union type of all possible flow names for sign-up and login processes.
@@ -52,8 +49,6 @@ export type ScreenNames =
   | PasskeyLoginWithEmailOtpFallbackScreens;
 
 export interface FlowHandlerEventOptions {
-  // Current user's authentication status
-  isUserAuthenticated?: boolean;
   // Whether the user has a passkey already set up
   userHasPasskey?: boolean;
   userStateUpdate?: UserState;
@@ -101,6 +96,7 @@ export type UserState = {
 export type FlowHandlerStateUpdate = {
   userState?: UserState;
   user?: SessionUser;
+  flowOptions?: Partial<FlowOptions>;
 };
 
 export type EmailOTPState = {

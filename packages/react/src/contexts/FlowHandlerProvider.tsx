@@ -1,13 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type {
-  FlowHandlerConfig,
-  FlowHandlerEventOptions,
-  FlowHandlerEvents,
-  FlowNames,
-  ScreenNames,
-  UserState,
-} from '@corbado/shared-ui';
-import { CommonScreens, FlowHandler, FlowType, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
+import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
+import { CommonScreens, FlowHandler, SignUpFlowNames } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,18 +8,16 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 
-type Props = FlowHandlerConfig;
+type Props = {
+  onLoggedIn: () => void;
+};
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
   const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>(
-    props.initialFlowType === FlowType.Login
-      ? LoginFlowNames.PasskeyLoginWithEmailOTPFallback
-      : SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
-  );
+  const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
   const [initialized, setInitialized] = useState(false);
   const onScreenChangeCbId = useRef<number>(0);
   const onFlowChangeCbId = useRef<number>(0);
@@ -43,8 +34,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         // currently there are no errors that can be thrown here
         return;
       }
-
-      const flowHandler = new FlowHandler(projectConfig.val, props, i18n);
+      const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
       onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
@@ -52,8 +42,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         setCurrentUserState(value);
       });
 
-      void flowHandler.init(corbadoApp);
-
+      await flowHandler.init(corbadoApp, i18n);
       setFlowHandler(flowHandler);
       setInitialized(true);
     })();
@@ -70,19 +59,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       return;
     }
 
-    flowHandler?.updateUser(user);
+    flowHandler?.update(user);
   }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
     return flowHandler?.navigateBack() ?? CommonScreens.Start;
   }, [flowHandler]);
-
-  const changeFlow = useCallback(
-    (flowType: FlowType) => {
-      flowHandler?.changeFlow(flowType);
-    },
-    [flowHandler],
-  );
 
   const emitEvent = useCallback(
     (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
@@ -98,10 +80,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       currentUserState,
       initialized,
       navigateBack,
-      changeFlow,
       emitEvent,
     }),
-    [currentFlow, currentScreen, currentUserState, initialized, navigateBack, changeFlow],
+    [currentFlow, currentScreen, currentUserState, initialized, navigateBack],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

@@ -34,7 +34,6 @@
   "devDependencies": {
     "i18next": "23.5.1",
     "@corbado/types": "*",
-    "@corbado/web-core": "*",
     "@svgr/webpack": "^8.1.0",
     "@types/ua-parser-js": "^0.7.39",
     "copy-webpack-plugin": "^11.0.0",
@@ -51,6 +50,7 @@
     "**/*.json"
   ],
   "dependencies": {
-    "ua-parser-js": "^1.0.37"
+    "ua-parser-js": "^1.0.37",
+    "@corbado/web-core": "*"
   }
 }

@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "release:build": "lerna run build --scope \"@corbado/*\" --skip-nx-cache",
     "release:version": "lerna version prerelease --no-push --yes --no-private",
-    "release:publish": "lerna publish --scope \"@corbado/*\""
+    "release:publish": "lerna publish from-package --no-private"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

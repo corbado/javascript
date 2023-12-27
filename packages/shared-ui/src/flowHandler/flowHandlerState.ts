@@ -67,7 +67,7 @@ export class FlowHandlerState {
    * @param update
    */
   update(update: FlowHandlerStateUpdate) {
-    const newState = update.userState || defaultErrors;
+    const newState = update.userState || { ...this.#userState, ...defaultErrors };
     this.#userState = this.#withTranslation(newState);
     this.#user = update.user || this.#user;
 

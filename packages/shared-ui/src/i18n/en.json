@@ -7,10 +7,7 @@
         "button_login": "Log in",
         "button_submit": "Continue with email",
         "textField_name": "Name",
-        "textField_email": "Email address",
-        "validationError_name": "Please enter a name",
-        "validationError_email": "Please enter a valid email",
-        "validationError_emailExists": "Email address is already in use."
+        "textField_email": "Email address"
       },
       "passkey": {
         "header": "Let's get you set up with ",
@@ -55,7 +52,6 @@
         "header": "Enter code to create account",
         "body_text1": "We just sent a one time code to ",
         "body_text2": ". The code expires shortly, so please enter it soon.",
-        "validationError_otp": "OTP is incorrect",
         "button_verify": "Continue",
         "button_sendOtpAgain": "Send one time code again",
         "button_back": "Cancel"
@@ -67,8 +63,7 @@
         "subheader": "Don't have and account yet? ",
         "button_signup": "Create account",
         "button_submit": "Continue with email",
-        "textField_email": "Email address",
-        "validationError_email": "Please enter a valid email"
+        "textField_email": "Email address"
       },
       "passkeyError": {
         "header": "Log in with Passkeys",
@@ -82,7 +77,6 @@
         "header": "Enter code to log in",
         "body_text1": "We just sent a one time code to ",
         "body_text2": ". The code expires shortly, so please enter it soon.",
-        "validationError_otp": "OTP is incorrect",
         "button_verify": "Continue",
         "button_sendOtpAgain": "Send one time code again",
         "button_back": "Cancel"

@@ -11,7 +11,10 @@
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix",
     "prettier:check": "prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "release:build": "lerna run build --scope \"@corbado/*\" --skip-nx-cache",
+    "release:version": "lerna version prerelease --no-push --yes --no-private",
+    "release:publish": "lerna publish --scope \"@corbado/*\""
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

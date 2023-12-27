@@ -183,6 +183,13 @@
   width: 100%;
 }
 
+.cb-form-input.cb-has-content,
+.cb-form-input.cb-has-focus,
+.cb-form-input.cb-has-error {
+  margin-top: 1.4rem;
+  transition: 0.3s;
+}
+
 .cb-form-input label {
   font-weight: bold;
   color: #59acff;

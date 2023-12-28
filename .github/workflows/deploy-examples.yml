@@ -30,6 +30,7 @@ jobs:
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react-sdk.test.korbado.com
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK }}
+          VITE_CORBADO_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK }}
 
       - name: Deploy React example to Vercel
         run: |
@@ -40,3 +41,4 @@ jobs:
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react.test.korbado.com
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT }}
+          VITE_CORBADO_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT }}

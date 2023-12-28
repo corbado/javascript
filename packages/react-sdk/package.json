@@ -1,6 +1,6 @@
 {
   "name": "@corbado/react-sdk",
-  "version": "0.1.6",
+  "version": "0.1.7-alpha.0",
   "description": "This SDK is for developers who want to add Corbado's Authentication management in their applications but want to use a UI flow of their own.",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -14,6 +14,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/corbado/javascript.git"
@@ -32,10 +35,11 @@
     "react": ">=18.0.0"
   },
   "dependencies": {
-    "@corbado/web-core": "*"
+    "@corbado/web-core": "^0.1.7-alpha.0"
   },
   "devDependencies": {
-    "@corbado/types": "*",
+    "@corbado/types": "^0.1.1-alpha.0",
     "@types/react": "^18.2.0"
-  }
+  },
+  "gitHead": "fe41b23e7cd2a949b5585b93feb98602c37d73c2"
 }

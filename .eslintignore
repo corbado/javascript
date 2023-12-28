@@ -2,6 +2,7 @@ node_modules
 dist
 build
 playground
+examples
 package-lock.json
 packages/**/dist
 packages/**/webpack.dev.js

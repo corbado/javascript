@@ -2,13 +2,12 @@ name: Deploy examples to Vercel
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
-  pull_request:
   push:
     branches:
       - main
+      - publishing_packages
 
 jobs:
   deploy:
@@ -21,57 +20,22 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
 
-      - name: Cache node modules
-        id: cache-nodemodules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: Install Dependencies
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+      - name: Deploy React SDK example to Vercel
         run: |
-          npm ci
-          npm install lerna
-          npm install vercel
-
-      - name: Check ESLint Errors
-        run: npm run lint
-
-      - name: Check Prettier Formatting
-        run: npm run prettier:check
-
-      - name: Build SDKs
-        run: |
-          npm run build
-
-      - name: Normalize branch name
-        run: |
-          echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
-        shell: bash
-
-      - name: Deploy react-sdk-example to Vercel
-        run: |
-          cd playground/react-sdk-example
+          cd examples/react-sdk
           npm install
           npm run build
           url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react-sdk.korbado.com
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react-sdk.test.korbado.com
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK }}
 
-      - name: Deploy react-example to Vercel
+      - name: Deploy React example to Vercel
         run: |
-          cd playground/react-example
+          cd examples/react
           npm install
           npm run build
           url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.korbado.com
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react.test.korbado.com
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT }}

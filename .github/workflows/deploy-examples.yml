@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - publishing_packages
 
 jobs:
   deploy:

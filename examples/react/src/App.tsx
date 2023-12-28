@@ -5,7 +5,7 @@ import englishTranslations from './translations/en';
 function App() {
   return (
     <CorbadoProvider
-      projectId={import.meta.env.VITE_CORBADO_PROJECT_ID}
+      projectId="pro-503401103218055321"
       customTranslations={{
         en: englishTranslations,
       }}

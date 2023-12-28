@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-eloquent: 'Great Vibes', cursive;
+  --font-eloquent: 'Lobster';
 
   --color-light-brown: #d2b48c;
   --color-dark-brown: #654321;
@@ -35,15 +35,12 @@
   }
 
   .cb-error {
-    color: var(--color-light-brown); /* Assuming error color is light brown */
+    color: var(--color-light-brown);
   }
 
   .cb-form-input label {
     color: var(--color-light-brown);
   }
-
-  /* You can continue defining other elements like .cb-horizontal-divider, .cb-input, etc., 
-     based on your specific requirements and the color/font variables defined above. */
 
   .cb-button-primary {
     background-color: var(--color-dark-brown);

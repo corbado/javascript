@@ -3,7 +3,7 @@ import { CorbadoProvider } from '@corbado/react-sdk';
 
 const App = () => {
   return (
-    <CorbadoProvider projectId="pro-503401103218055321">
+    <CorbadoProvider projectId={import.meta.env.VITE_CORBADO_PROJECT_ID}>
       <RouteProvider />
     </CorbadoProvider>
   );

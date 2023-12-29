@@ -1,0 +1,24 @@
+{
+  "name": "@corbado/tests-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "This package contains all the end to end tests for testing different packages of Corbado JavaScript Library.",
+  "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
+  "homepage": "https://github.com/corbado/javascript#readme",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corbado/javascript.git"
+  },
+  "scripts": {
+    "test:e2e": "npx playwright test",
+    "test:e2e:report": "npx playwright show-report"
+  },
+  "bugs": {
+    "url": "https://github.com/corbado/javascript/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  }
+}

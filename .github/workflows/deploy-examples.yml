@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - publishing_packages
+      - feature-102/vercel-deployment-for-examples
 
 jobs:
   deploy:
@@ -23,19 +23,17 @@ jobs:
       - name: Deploy React SDK example to Vercel
         run: |
           cd examples/react-sdk
-          npm install
-          npm run build
-          url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react-sdk.test.korbado.com
+          npx vercel pull -t $VERCEL_TOKEN
+          url="$(npx vercel deploy -t $VERCEL_TOKEN)"
+          npx vercel alias -S corbado -t $VERCEL_TOKEN "$url" react-sdk-example.korbado.com
         env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK_EXAMPLE }}
 
       - name: Deploy React example to Vercel
         run: |
           cd examples/react
-          npm install
-          npm run build
-          url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" react.test.korbado.com
+          npx vercel pull -t $VERCEL_TOKEN
+          url="$(npx vercel deploy -t $VERCEL_TOKEN)"
+          npx vercel alias -S corbado -t $VERCEL_TOKEN "$url" react-example.korbado.com
         env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_EXAMPLE }}

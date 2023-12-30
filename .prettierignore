@@ -4,6 +4,7 @@ dist
 .DS_Store
 .idea
 .yalc
+.github
 
 packages/*/node_modules/
 packages/*/dist/

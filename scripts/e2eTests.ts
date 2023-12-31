@@ -1,19 +1,20 @@
-import { exec, spawn } from 'child_process';
-import fs from 'fs/promises';
-import path from 'path';
+import { exec } from 'child_process';
+import { readdir } from 'fs/promises';
+import fetch from 'node-fetch';
+import { join, resolve } from 'path';
+import { pathToFileURL } from 'url';
 import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-async function importEnv(appDir: string) {
-  const envPath = path.join(appDir, 'playwright.env.ts');
+async function importEnv(appDir: URL) {
+  const envPath = join(appDir.toString(), 'playwright.env.ts');
   const envModule = await import(envPath);
-  return envModule.config;
+  return envModule.config ?? envModule.default.config;
 }
 
 async function checkServerHealth(url: string) {
   let isReady = false;
-  const fetch = (await import('node-fetch')).default;
 
   while (!isReady) {
     try {
@@ -28,26 +29,30 @@ async function checkServerHealth(url: string) {
   }
 }
 
-async function serveAndTestApp(appDir: string) {
+async function serveAndTestApp(appDir: URL) {
   const envConfig = await importEnv(appDir);
+  const appDirPath = appDir.toString();
+  const appName = appDirPath.split('/').pop();
 
-  const server = spawn('npm.cmd', ['run', 'serve'], { cwd: appDir, stdio: 'inherit' });
+  await execAsync(`pm2 start npm --name "app-${appName}" -- run serve`, { cwd: appDirPath });
 
   await checkServerHealth(envConfig.PLAYWRIGHT_TEST_URL);
 
-  const { stdout, stderr } = await execAsync('npm run test:e2e', { cwd: appDir, env: { ...envConfig } });
+  const { stdout, stderr } = await execAsync('npm run test:e2e:playwright', { cwd: appDir, env: { ...envConfig } });
   console.log('stdout:', stdout);
   console.error('stderr:', stderr);
 
-  server.kill();
+  await execAsync(`pm2 delete "app-${appName}"`);
 }
 
 async function serveAndTestApps() {
-  const playgroundDir = path.join(path.resolve(), 'playground');
-  const dirs = await fs.readdir(playgroundDir);
+  const playgroundDirPath = join(resolve(), 'playground');
+  const playgroundDir = pathToFileURL(playgroundDirPath);
+  const dirs = await readdir(playgroundDir);
 
   const promises = dirs.map(dir => {
-    const appDir = path.join(playgroundDir, dir);
+    const appDirPath = join(playgroundDirPath, dir);
+    const appDir = pathToFileURL(appDirPath);
     return serveAndTestApp(appDir);
   });
 

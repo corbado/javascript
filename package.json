@@ -1,7 +1,6 @@
 {
   "name": "@corbado/javascript",
   "private": true,
-  "type": "module",
   "workspaces": [
     "packages/*",
     "playground/*"

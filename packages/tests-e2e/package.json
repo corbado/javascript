@@ -12,8 +12,8 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "test:e2e": "npx playwright test",
-    "test:e2e:report": "npx playwright show-report"
+    "e2e": "npx playwright test",
+    "e2e:report": "npx playwright show-report"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

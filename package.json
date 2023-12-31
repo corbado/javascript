@@ -1,6 +1,7 @@
 {
   "name": "@corbado/javascript",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*",
     "playground/*"
@@ -15,8 +16,9 @@
     "release:build": "lerna run build --scope \"@corbado/*\" --skip-nx-cache",
     "release:version": "lerna version prerelease --no-push --yes --no-private",
     "release:publish": "lerna publish from-package --no-private",
-    "test:e2e": "ts-node ./scripts/e2eTests.ts",
-    "test:e2e:report": "lerna run test:e2e:report"
+    "test:e2e": "ts-node-esm ./scripts/e2eTests.ts",
+    "test:e2e:playwright": "lerna run e2e",
+    "test:e2e:report": "lerna run e2e:report"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
@@ -29,6 +31,7 @@
     "eslint-plugin-simple-import-sort": "10.0.0",
     "lerna": "^7.4.1",
     "node-fetch": "^3.3.2",
+    "pm2": "^5.3.0",
     "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "ts-loader": "^9.5.1",

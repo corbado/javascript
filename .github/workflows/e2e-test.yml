@@ -1,0 +1,55 @@
+name: End-to-End testing check for Playground Apps
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches:
+      - playwright_setup
+
+jobs:
+  prepare:
+      runs-on: ubuntu-latest
+      outputs:
+        BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
+      steps:
+      - uses: actions/checkout@v2
+      - name: Normalize branch name
+        id: set_branch_name
+        run: |
+          echo "::set-output name=BRANCH_NAME::$(echo $BRANCH_NAME_RAW | tr '/_' '-')"
+  e2e-tests:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - app: "react"
+            url: ".react.korbado.com"
+            type: "UI"
+          - app: "react-sdk"
+            url: ".react-sdk.korbado.com"
+            type: "sdk"
+          # Add more playground apps as needed
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+
+    - name: Install Dependencies
+      run: |
+        npm ci
+        npm install lerna
+
+    - name: Run E2E Test for ${{ matrix.app }}
+      run: npm run test:e2e
+      env:
+        PLAYWRIGHT_TEST_URL: ${{ format('{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+        PLAYWRIGHT_TEST_TYPE: ${{ matrix.type }}

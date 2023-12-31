@@ -13,17 +13,44 @@ on:
 
 jobs:
   prepare:
-      runs-on: ubuntu-latest
-      outputs:
-        BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
-      steps:
-      - uses: actions/checkout@v2
-      - name: Normalize branch name
-        id: set_branch_name
-        run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
+    runs-on: ubuntu-latest
+    outputs:
+      BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Normalize branch name
+      run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
+      shell: bash
+  install-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+          npm install lerna
+
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
   e2e-tests:
     timeout-minutes: 5
-    needs: prepare
+    needs: [prepare, install-deps]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,28 +64,32 @@ jobs:
           # Add more playground apps as needed
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
 
-    - name: Install Dependencies
-      run: |
-        npm ci
-        npm install lerna
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      - name: Grant execute permissions for Playwright
+        run: chmod +x node_modules/.bin/playwright
 
-    - name: Run E2E Test for ${{ matrix.app }}
-      run: npm run test:e2e
-      env:
-        PLAYWRIGHT_TEST_URL: ${{ format('{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
-        PLAYWRIGHT_TEST_TYPE: ${{ matrix.type }}
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E Test for ${{ matrix.app }}
+        run: npm run test:e2e
+        env:
+          PLAYWRIGHT_TEST_URL: ${{ format('{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          PLAYWRIGHT_TEST_TYPE: ${{ matrix.type }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

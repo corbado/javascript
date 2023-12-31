@@ -1,7 +1,5 @@
 name: End-to-End testing check for Playground Apps
 env:
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
@@ -17,40 +15,38 @@ jobs:
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Normalize branch name
       run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
       shell: bash
-  install-deps:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+    - name: Install Dependencies
+      run: |
+        npm ci
+        npm install lerna
 
-      - name: Install Dependencies
-        run: |
-          npm ci
-          npm install lerna
+    - name: Upload node_modules
+      uses: actions/upload-artifact@v4
+      with:
+        name: node-modules
+        path: node_modules
 
-      - name: Upload node_modules
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-modules
-          path: node_modules
   e2e-tests:
     timeout-minutes: 5
-    needs: [prepare, install-deps]
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix:

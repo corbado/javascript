@@ -15,8 +15,8 @@
     "release:build": "lerna run build --scope \"@corbado/*\" --skip-nx-cache",
     "release:version": "lerna version prerelease --no-push --yes --no-private",
     "release:publish": "lerna publish from-package --no-private",
-    "test:e2e": "ts-node-esm ./scripts/e2eTests.ts",
-    "test:e2e:playwright": "lerna run e2e",
+    "test:e2e:local": "ts-node-esm ./scripts/e2eTests.ts",
+    "test:e2e": "lerna run e2e",
     "test:e2e:report": "lerna run e2e:report"
   },
   "devDependencies": {

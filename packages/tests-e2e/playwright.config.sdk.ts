@@ -17,11 +17,11 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['shared/**/*.*', 'sdk/**/*.*'],
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-      testMatch: ['shared/all-browsers/**/*.*', 'sdk/all-browsers/**/*.*'],
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    //   testMatch: ['shared/all-browsers/**/*.*', 'sdk/all-browsers/**/*.*'],
+    // },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },

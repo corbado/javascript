@@ -52,10 +52,10 @@ jobs:
       matrix:
         include:
           - app: "react"
-            url: ".react.korbado.com"
+            url: ".react.korbado.com/"
             type: "ui"
           - app: "react-sdk"
-            url: ".react-sdk.korbado.com"
+            url: ".react-sdk.korbado.com/"
             type: "sdk"
           # Add more playground apps as needed
 
@@ -86,7 +86,7 @@ jobs:
             npm run test:e2e:ui
           fi
         env:
-          PLAYWRIGHT_TEST_URL: ${{ format('{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

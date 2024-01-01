@@ -19,6 +19,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Normalize branch name
+      id: set_branch_name
       run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
       shell: bash
     

@@ -15,32 +15,32 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['shared/**/*.*', 'ui/**/*.*'],
+      testMatch: ['ui/**/*.*'],
     },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
-    //   testMatch: ['shared/all-browsers/**/*.*', 'ui/all-browsers/**/*.*'],
+    //   testMatch: ['ui/all-browsers/**/*.*'],
     // },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: ['shared/all-browsers/**/*.*', 'ui/all-browsers/**/*.*'],
+      testMatch: ['ui/all-browsers/**/*.*'],
     },
     {
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 5'] },
-      testMatch: ['shared/**/*.*', 'ui/**/*.*'],
+      testMatch: ['ui/**/*.*'],
     },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
-      testMatch: ['shared/all-browsers/**/*.*', 'ui/all-browsers/**/*.*'],
+      testMatch: ['ui/all-browsers/**/*.*'],
     },
     {
       name: 'Microsoft Edge',
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
-      testMatch: ['shared/**/*.*', 'ui/**/*.*'],
+      testMatch: ['ui/**/*.*'],
     },
   ],
 });

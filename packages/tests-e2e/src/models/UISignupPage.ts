@@ -5,48 +5,49 @@ import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '
 import UserManager from '../utils/UserManager';
 
 export class UISignupPage {
-  readonly #page: Page;
+  readonly page: Page;
   #cdpClient: CDPSession | null = null;
   #authenticatorId = '';
 
   constructor(page: Page) {
-    this.#page = page;
+    this.page = page;
   }
 
   async goto() {
-    await this.#page.goto('/auth');
-    // Note: The #page will make an API call to fetch project config after navigation
+    await this.page.goto('/auth');
+    // Note: The page will make an API call to fetch project config after navigation
   }
 
   async initiateSignup() {
     const user = UserManager.getUserForSignup();
 
-    await this.#page.getByPlaceholder('Name').click();
-    await this.#page.getByPlaceholder('Name').fill(user);
-    await expect(this.#page.getByPlaceholder('Name')).toHaveValue(user);
+    await this.page.getByPlaceholder('Name').click();
+    await this.page.getByPlaceholder('Name').fill(user);
+    await expect(this.page.getByPlaceholder('Name')).toHaveValue(user);
 
-    await this.#page.getByPlaceholder('Email address').click();
-    await this.#page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
-    await expect(this.#page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
 
-    await this.#page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue with email' }).click();
   }
 
   async initiateSignupWithWebAuthn() {
     const user = UserManager.getUserForSignup();
-    this.#cdpClient = await initializeCDPSession(this.#page);
+    this.#cdpClient = await initializeCDPSession(this.page);
     this.#authenticatorId = await addWebAuthn(this.#cdpClient);
 
-    await this.#page.getByPlaceholder('Name').click();
-    await this.#page.getByPlaceholder('Name').fill(user);
-    await expect(this.#page.getByPlaceholder('Name')).toHaveValue(user);
+    await this.page.getByPlaceholder('Name').click();
+    await this.page.getByPlaceholder('Name').fill(user);
+    await expect(this.page.getByPlaceholder('Name')).toHaveValue(user);
 
-    await this.#page.getByPlaceholder('Email address').click();
-    await this.#page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
-    await expect(this.#page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
 
-    await this.#page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue with email' }).click();
   }
+
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
@@ -54,10 +55,15 @@ export class UISignupPage {
   }
 
   async fillOTP() {
-    await fillOtpCode(this.#page);
+    await fillOtpCode(this.page);
+  }
+
+  async createPasskey() {
+    await this.page.getByRole('button', { name: 'Create your account' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
   async checkSignUpSuccess() {
-    await expect(this.#page).toHaveURL('/');
+    await expect(this.page).toHaveURL('/');
   }
 }

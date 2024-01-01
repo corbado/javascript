@@ -1,10 +1,7 @@
 import type { CDPSession } from '@playwright/test';
 import { expect, type Page } from '@playwright/test';
 
-import { addWebAuthn } from '../utils/helperFunctions/addWebAuthn';
-import { fillOtpCode } from '../utils/helperFunctions/fillOtpCode';
-import { initializeCDPSession } from '../utils/helperFunctions/initializeCDPSession';
-import { removeWebAuthn } from '../utils/helperFunctions/removeWebAuthn';
+import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions/';
 import UserManager from '../utils/UserManager';
 
 export class UISignupPage {

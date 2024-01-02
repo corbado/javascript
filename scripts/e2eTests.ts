@@ -5,6 +5,14 @@ import { join, resolve } from 'path';
 import { pathToFileURL } from 'url';
 import { promisify } from 'util';
 
+//TODO: This solution is not working. We need to fix it to run the e2e tests locally in the playground apps or find an alternate way.
+//Till the script is fixed, we can run the e2e tests locally in the playground apps by following below steps:
+// Go the playground application you want to test and start the application by running `npm run serve` command.
+// Go to tests e2e package and change the config file's baseUrl to the application's url.
+// Based on the application you want to test, run the below command:
+// npm run e2e:ui - To run the e2e tests for UI application.
+// npm run e2e:sdk - To run the e2e tests for SDK application.
+
 const execAsync = promisify(exec);
 
 async function importEnv(appDir: URL) {

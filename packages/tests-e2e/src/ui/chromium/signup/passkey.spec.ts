@@ -1,4 +1,4 @@
-import { test } from '../../../fixtures/UISIgnupTest';
+import { test } from '../../../fixtures/UISignup';
 
 test.describe('Signup With Passkey', () => {
   test('when every input is valid', async ({ signupPage }) => {

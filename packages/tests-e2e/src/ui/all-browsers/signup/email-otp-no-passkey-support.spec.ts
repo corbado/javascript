@@ -1,4 +1,4 @@
-import { test } from '../../../fixtures/UISIgnupTest';
+import { test } from '../../../fixtures/UISignup';
 
 test.describe('Signup With Email OTP when no passkey support available', () => {
   test('when every input is valid', async ({ signupPage }) => {

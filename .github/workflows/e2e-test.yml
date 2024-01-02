@@ -55,9 +55,9 @@ jobs:
           - app: "react"
             url: ".react.korbado.com/"
             type: "ui"
-          - app: "react-sdk"
-            url: ".react-sdk.korbado.com/"
-            type: "sdk"
+          # - app: "react-sdk"
+          #   url: ".react-sdk.korbado.com/"
+          #   type: "sdk"
           # Add more playground apps as needed
 
     steps:

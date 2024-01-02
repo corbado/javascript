@@ -1,12 +1,21 @@
 node_modules/
-packages/*/node_modules/
-packages/*/dist/
-playground/*/node_modules/
-playground/*/yalc.lock
-playground/react-example-customised/
 dist
-
 .DS_Store
 .idea
 .yalc
 lerna-debug.log
+
+# Packages
+packages/*/node_modules/
+packages/*/dist/
+
+# Playground
+playground/*/node_modules/
+playground/*/yalc.lock
+playground/react-example-customised/
+
+#Tests
+packages/tests-e2e/test-results
+packages/tests-e2e/playwright-report
+packages/tests-e2e/blob-report
+packages/tests-e2e/playwright/.cach/

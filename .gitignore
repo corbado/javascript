@@ -4,6 +4,7 @@ dist
 .idea
 .yalc
 lerna-debug.log
+.nx
 
 # Packages
 packages/*/node_modules/

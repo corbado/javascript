@@ -13,6 +13,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   mode: 'production',
   externals: {
+    '@corbado/react': '@corbado/react',
     i18next: 'i18next',
     'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
     'react-i18next': 'react-i18next',

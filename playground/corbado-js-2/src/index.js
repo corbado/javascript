@@ -1,6 +1,7 @@
 import Corbado from '@corbado/corbado-js';
 
-console.log(Corbado.name);
-
 const app = document.getElementById('app');
-app.innerHTML = Corbado.name;
+Corbado.load({
+  projectId: 'pro-503401103218055321',
+});
+Corbado.mountAuthUI(app);

@@ -8,6 +8,7 @@
   "scripts": {
     "build": "lerna run build",
     "build:dev": "lerna run build:dev",
+    "build:bundler": "lerna run build:bundler",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix",
     "prettier:check": "prettier --check .",

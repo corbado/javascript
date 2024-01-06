@@ -6,5 +6,6 @@ examples
 package-lock.json
 packages/**/dist
 packages/**/webpack.*.js
+packages/**/esbuild.*.js
 webpack.common.js
 .eslintrc.js

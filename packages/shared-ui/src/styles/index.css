@@ -357,7 +357,7 @@
 .cb-finger-print-icon {
   width: 6.4375rem;
   height: 7.5625rem;
-  background-image: url('https://pngimg.com/d/fingerprint_PNG85.png'); /* TODO: Change URL to Corbado's server */
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/corbado-javascript-prod.appspot.com/o/img%2Ffingerprint.svg?alt=media'); /* TODO: Change URL to Corbado's server */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

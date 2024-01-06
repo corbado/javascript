@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My Corbado App</title>
+    <script
+      type="module"
+      src="./bundle/index.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="./bundle/index.css"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      const app = document.getElementById('app');
+      Corbado.load({
+        projectId: 'pro-503401103218055321',
+      });
+      Corbado.mountAuthUI(app, {
+        onLoggedIn: () => {
+          console.log('Logged in!');
+        },
+      });
+    </script>
+  </body>
+</html>

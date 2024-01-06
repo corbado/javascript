@@ -14,9 +14,6 @@
     "build:dev": {
       "dependsOn": ["^build:dev"]
     },
-    "build:bundler": {
-      "dependsOn": ["^build:bundler"]
-    },
     "lint": {
       "dependsOn": ["^lint"]
     },

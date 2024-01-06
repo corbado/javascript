@@ -27,8 +27,7 @@
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "generate:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi/spec.yaml -g typescript-axios -o ./src/api --additional-properties=supportsES6=true",
     "build": "webpack --config webpack.prod.js",
-    "build:dev": "npm run clean && tsc -b",
-    "build:bundler": "webpack --config webpack.bundler.js"
+    "build:dev": "npm run clean && tsc -b"
   },
   "bugs": {
     "url": "https://github.com/corbado/javascript/issues"

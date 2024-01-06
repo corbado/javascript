@@ -12,25 +12,3 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
-export const AssetsList = {
-  DeleteSVG: {
-    name: 'Delete',
-    url: 'http://localhost:4001/delete.svg',
-  },
-  FingerPrintPNG: {
-    name: 'FingerPrint',
-    url: 'http://localhost:4001/fingerprint.png',
-  },
-  GmailSVG: {
-    name: 'Gmail',
-    url: 'http://localhost:4001/gmail.svg',
-  },
-  OutlookSVG: {
-    name: 'Outlook',
-    url: 'http://localhost:4001/outlook.svg',
-  },
-  YahooSVG: {
-    name: 'Yahoo',
-    url: 'http://localhost:4001/yahoo.svg',
-  },
-};

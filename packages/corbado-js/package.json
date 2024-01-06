@@ -24,7 +24,8 @@
     "clean": "rimraf ./dist",
     "build": "webpack --config webpack.prod.js",
     "build:dev": "npm run clean && tsc -b",
-    "build:bundler": "webpack --config webpack.bundler.js",
+    "build:bundler": "node ./esbuild.config.js && npm run copy:bundle",
+    "copy:bundle": "cp -R ./bundle ../../playground/corbado-js-script/bundle",
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },

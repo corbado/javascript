@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import './styles/index.css';
 import './styles/error_page.css';
 import './styles/themes/dark.css';
@@ -13,7 +12,25 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
-export const deleteSVG = require('./assets/delete.svg');
-export const gmailSVG = require('./assets/gmail.svg');
-export const outlookSVG = require('./assets/outlook.svg');
-export const yahooSVG = require('./assets/yahoo.svg');
+export const AssetsList = {
+  DeleteSVG: {
+    name: 'Delete',
+    url: 'http://localhost:4001/delete.svg',
+  },
+  FingerPrintPNG: {
+    name: 'FingerPrint',
+    url: 'http://localhost:4001/fingerprint.png',
+  },
+  GmailSVG: {
+    name: 'Gmail',
+    url: 'http://localhost:4001/gmail.svg',
+  },
+  OutlookSVG: {
+    name: 'Outlook',
+    url: 'http://localhost:4001/outlook.svg',
+  },
+  YahooSVG: {
+    name: 'Yahoo',
+    url: 'http://localhost:4001/yahoo.svg',
+  },
+};

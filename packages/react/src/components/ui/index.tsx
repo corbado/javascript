@@ -1,6 +1,6 @@
 export * from './Button';
 export * from './HorizontalRule';
-export * from './icons';
+export * from './Icon';
 export * from './Input';
 export * from './FormInput';
 export * from './IconLink';

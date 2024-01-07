@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@corbado/corbado-js": "^0.1.0"
+    "@corbado/corbado-js": "^0.1.0",
+    "jwt-decode": "^4.0.0"
   }
 }

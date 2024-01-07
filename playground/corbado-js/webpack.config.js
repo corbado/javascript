@@ -2,21 +2,30 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    index: './src/scripts/index.js',
+    auth: './src/scripts/auth.js',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/pages/index.html',
+      filename: 'index.html',
+      chunks: ['index'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/pages/auth.html',
+      filename: 'auth.html',
+      chunks: ['auth'],
     }),
   ],
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
-    compress: true,
     port: 9000,
   },
 };

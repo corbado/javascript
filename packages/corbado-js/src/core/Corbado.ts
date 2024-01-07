@@ -1,10 +1,10 @@
-import type { CorbadoProviderProps } from '@corbado/react';
 import { CorbadoAuth, PasskeyList } from '@corbado/react';
 import type { CorbadoAuthConfig } from '@corbado/types';
 import type { FC } from 'react';
 
 import { CorbadoAppState } from '../models/CorbadoAppState';
-import { mountComponent } from '../utils/mountComponent';
+import type { CorbadoConfig } from '../types/core';
+import { mountComponent } from '../ui/mountComponent';
 
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
@@ -17,7 +17,7 @@ export class Corbado {
     return this.#corbadoAppState?.shortSession;
   }
 
-  load(options: CorbadoProviderProps) {
+  load(options: CorbadoConfig) {
     this.#corbadoAppState = new CorbadoAppState(options);
   }
 
@@ -27,6 +27,14 @@ export class Corbado {
 
   mountPasskeyListUI(element: HTMLElement) {
     this.#mountComponent(element, PasskeyList, {});
+  }
+
+  logout() {
+    if (!this.#corbadoAppState) {
+      throw new Error('Please call load() before logging out');
+    }
+
+    this.#corbadoAppState.logout();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

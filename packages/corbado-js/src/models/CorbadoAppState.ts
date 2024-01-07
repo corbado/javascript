@@ -1,10 +1,12 @@
 import type { CorbadoProviderProps } from '@corbado/react';
 import { CorbadoApp } from '@corbado/web-core';
 
+import type { CorbadoConfig } from '../types/core';
+
 export class CorbadoAppState {
   #corbadoProviderProps: CorbadoProviderProps;
 
-  constructor(corbadoAppProps: CorbadoProviderProps) {
+  constructor(corbadoAppProps: CorbadoConfig) {
     this.#corbadoProviderProps = corbadoAppProps;
     const corbadoApp = new CorbadoApp(corbadoAppProps);
     this.#corbadoProviderProps.corbadoAppInstance = corbadoApp;
@@ -19,7 +21,13 @@ export class CorbadoAppState {
 
     corbadoApp.globalErrors.subscribe(value => {
       this.#corbadoProviderProps.initialGlobalError = value;
+
+      if (corbadoAppProps.onError && value) {
+        corbadoAppProps.onError(value);
+      }
     });
+
+    corbadoApp.init();
   }
 
   get corbadoProviderProps() {
@@ -40,5 +48,15 @@ export class CorbadoAppState {
 
   get globalError() {
     return this.#corbadoProviderProps.initialGlobalError;
+  }
+
+  logout() {
+    if (!this.corbadoApp) {
+      throw new Error('Please call load() before logging out');
+    }
+
+    this.corbadoApp.authService.logout();
+    this.#corbadoProviderProps.initialUser = undefined;
+    this.#corbadoProviderProps.initialShortSession = undefined;
   }
 }

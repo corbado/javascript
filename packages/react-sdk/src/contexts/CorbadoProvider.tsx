@@ -1,26 +1,40 @@
-import type { SessionUser } from '@corbado/types';
+import type { CorbadoAppParams, SessionUser } from '@corbado/types';
 import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
-import type { FC } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { AppProviderParams, CorbadoContextProps } from './CorbadoContext';
+import type { CorbadoContextProps } from './CorbadoContext';
 import { CorbadoContext } from './CorbadoContext';
 
-export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoParams }) => {
-  const [corbadoApp] = useState(() => new CorbadoApp(corbadoParams));
-  const [shortSession, setShortSession] = useState<string | undefined>();
-  const [user, setUser] = useState<SessionUser | undefined>();
+export type CorbadoProviderParams = PropsWithChildren<
+  CorbadoAppParams & {
+    corbadoAppInstance?: CorbadoApp;
+    initialUser?: SessionUser;
+    initialShortSession?: string;
+    initialGlobalError?: NonRecoverableError;
+  }
+>;
+
+export const CorbadoProvider: FC<CorbadoProviderParams> = ({
+  children,
+  corbadoAppInstance,
+  initialGlobalError,
+  initialShortSession,
+  initialUser,
+  ...corbadoParams
+}) => {
+  const [corbadoApp] = useState(() => corbadoAppInstance ?? new CorbadoApp(corbadoParams));
+  const [shortSession, setShortSession] = useState(initialShortSession);
+  const [user, setUser] = useState(initialUser);
   const [loading, setLoading] = useState<boolean>(true);
-  const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
+  const [globalError, setGlobalError] = useState(initialGlobalError);
   const initialized = useRef(false);
 
   useEffect(() => {
     if (initialized.current) {
       return;
     }
-
-    initialized.current = true;
 
     setLoading(true);
     corbadoApp.authService.shortSessionChanges.subscribe(value => {
@@ -40,6 +54,8 @@ export const CorbadoProvider: FC<AppProviderParams> = ({ children, ...corbadoPar
     });
 
     corbadoApp.init();
+
+    initialized.current = true;
 
     setLoading(false);
   }, []);

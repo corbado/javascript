@@ -23,6 +23,7 @@ export class CorbadoApp {
   #projectService: ProjectService;
   #projectId: string;
   #globalErrors: Subject<NonRecoverableError | undefined> = new Subject();
+  #initialized = false;
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -53,16 +54,25 @@ export class CorbadoApp {
     return this.#globalErrors.asObservable();
   }
 
+  public get initialized() {
+    return this.#initialized;
+  }
+
   /**
    * Method to initialize the application.
    * It fetches the project configuration and initializes the services.
    */
   public init() {
+    if (this.#initialized) {
+      return;
+    }
+
     if (!this.#validateProjectId(this.#projectId)) {
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
     }
 
     this.#authService.init(true);
+    this.#initialized = true;
   }
 
   #validateProjectId(projectId: string): boolean {

@@ -108,6 +108,7 @@
     "invalidFullname": "Please enter a valid name",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use",
+    "passkeyAlreadyExists": "Passkey for this device already exists",
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid",
@@ -123,9 +124,12 @@
     "field_created": "Created: {{date}} with {{browser}} on {{os}}",
     "field_lastUsed": "Last used: ",
     "field_status": "Status: ",
-    "deleteDialog_header": "Delete Passkey",
-    "deleteDialog_body": "Are you sure you want to delete this passkey?",
-    "deleteDialog_cancelButton": "Cancel",
-    "deleteDialog_deleteButton": "Yes, Delete"
+    "dialogHeader_delete": "Delete Passkey",
+    "dialogBody_delete": "Are you sure you want to delete this passkey?",
+    "dialogCancelButton_delete": "Cancel",
+    "dialogConfirmButton_delete": "Yes, Delete",
+    "dialogHeader_passkeyAlreadyExists": "Passkey already exists",
+    "dialogBody_passkeyAlreadyExists": "A passkey for this device already exists. If you are facing issues with your passkey, please delete it and, then, create a new one.",
+    "dialogConfirmButton_passkeyAlreadyExists": "Ok"
   }
 }

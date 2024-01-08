@@ -99,6 +99,13 @@ export class CorbadoError extends Error {
           }
         }
 
+        if (firstError.field === 'sessionToken') {
+          switch (firstError.message) {
+            case 'user already exists':
+              return new UserAlreadyExistsError();
+          }
+        }
+
         break;
       }
       case 'not_found':
@@ -220,6 +227,13 @@ export class UserAlreadyExistsError extends RecoverableError {
   constructor() {
     super('User already exists');
     this.name = 'errors.userAlreadyExists';
+  }
+}
+
+export class PasskeyAlreadyExistsError extends RecoverableError {
+  constructor() {
+    super('Passkey for this device already exists');
+    this.name = 'errors.passkeyAlreadyExists';
   }
 }
 

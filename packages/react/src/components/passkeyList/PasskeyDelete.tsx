@@ -21,9 +21,9 @@ const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) =
     setDialogOpen(false);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
+    await onPasskeyDelete(passkeyId);
     closeDialog();
-    void onPasskeyDelete(passkeyId);
   };
 
   return (
@@ -39,10 +39,10 @@ const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) =
       <Dialog
         inverseButtonVariants
         isOpen={isDialogOpen}
-        header={t('deleteDialog_header')}
-        body={t('deleteDialog_body')}
-        confirmText={t('deleteDialog_deleteButton')}
-        cancelText={t('deleteDialog_cancelButton')}
+        header={t('dialogHeader_delete')}
+        body={t('dialogBody_delete')}
+        confirmText={t('dialogConfirmButton_delete')}
+        cancelText={t('dialogCancelButton_delete')}
         onClose={closeDialog}
         onConfirm={confirmDelete}
       />

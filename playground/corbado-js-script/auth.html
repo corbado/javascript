@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SignIn - My Corbado App</title>
+    <script src="./bundle/index.js"></script>
+    <link
+      rel="stylesheet"
+      href="../bundle/index.css"
+    />
+  </head>
+  <body>
+    <div id="corbado-auth"></div>
+
+    <script>
+      Corbado.load({
+        projectId: 'pro-503401103218055321',
+        darkMode: 'off',
+      });
+
+      const authElement = document.getElementById('corbado-auth');
+
+      Corbado.mountAuthUI(authElement, {
+        onLoggedIn: () => {
+          window.location.href = '/';
+        },
+      });
+    </script>
+  </body>
+</html>

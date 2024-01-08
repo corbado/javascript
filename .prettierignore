@@ -5,12 +5,15 @@ dist
 .idea
 .yalc
 .github
+.vercel
+
+docs
 
 packages/*/node_modules/
 packages/*/dist/
-pacakges/web-core/openapi
 packages/web-core/src/api
 playground/*/node_modules/
 playground/*/yalc.lock
+playground/*/build
 
 examples/*

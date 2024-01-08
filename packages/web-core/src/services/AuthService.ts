@@ -1,6 +1,6 @@
 import type { SessionUser } from '@corbado/types';
 import log from 'loglevel';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
@@ -38,9 +38,9 @@ export class AuthService {
   // TODO: remove this?
   #emailCodeIdRef = '';
 
-  #userChanges: Subject<SessionUser | undefined> = new Subject();
-  #shortSessionChanges: Subject<string | undefined> = new Subject();
-  #authStateChanges: Subject<AuthState> = new Subject();
+  #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
+  #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
@@ -76,22 +76,22 @@ export class AuthService {
   /**
    * Exposes changes to the user object
    */
-  get userChanges() {
-    return this.#userChanges.asObservable();
+  get userChanges(): BehaviorSubject<SessionUser | undefined> {
+    return this.#userChanges;
   }
 
   /**
    * Exposes changes to the shortSession
    */
-  get shortSessionChanges() {
-    return this.#shortSessionChanges.asObservable();
+  get shortSessionChanges(): BehaviorSubject<string | undefined> {
+    return this.#shortSessionChanges;
   }
 
   /**
    * Exposes changes to the auth state
    */
-  get authStateChanges() {
-    return this.#authStateChanges.asObservable();
+  get authStateChanges(): BehaviorSubject<AuthState> {
+    return this.#authStateChanges;
   }
 
   /**

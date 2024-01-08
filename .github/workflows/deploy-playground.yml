@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - main
-      - feature-102/vercel-deployment-for-examples
+      - web_component_test
 
 jobs:
   deploy:

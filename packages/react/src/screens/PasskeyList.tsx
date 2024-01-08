@@ -15,12 +15,13 @@ const PasskeyList: FC = () => {
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
 
   useEffect(() => {
+    console.log('fetch passkeys');
     if (!shortSession) {
       return;
     }
 
     void fetchPasskeys();
-  }, []);
+  }, [shortSession]);
 
   const fetchPasskeys = async () => {
     const result = await getPasskeys();

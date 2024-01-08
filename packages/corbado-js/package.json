@@ -1,5 +1,5 @@
 {
-  "name": "@corbado/corbado-js",
+  "name": "@corbado/web-js",
   "version": "0.1.0",
   "description": "This package allows VanillsJS users to add corbado functionality and UI components in their applications",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
@@ -26,7 +26,7 @@
     "build:dev": "npm run clean && tsc -b",
     "build:bundler": "node ./esbuild.config.js",
     "build:bundler:local": "node ./esbuild.config.js && npm run copy:bundle:local",
-    "copy:bundle:local": "cp -R ./bundle ../../playground/corbado-js-script",
+    "copy:bundle:local": "cp -R ./bundle ../../playground/web-js-script",
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },

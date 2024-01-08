@@ -1,4 +1,4 @@
-import Corbado from '@corbado/corbado-js';
+import Corbado from '@corbado/web-js';
 import { jwtDecode } from 'jwt-decode';
 
 Corbado.load({

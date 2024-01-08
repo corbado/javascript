@@ -1,4 +1,4 @@
-import Corbado from '@corbado/corbado-js';
+import Corbado from '@corbado/web-js';
 
 Corbado.load({
   projectId: 'pro-503401103218055321',

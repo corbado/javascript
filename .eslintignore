@@ -5,8 +5,7 @@ playground
 examples
 package-lock.json
 packages/**/dist
-packages/**/webpack.dev.js
-packages/**/webpack.common.js
-packages/**/webpack.prod.js
+packages/**/webpack.*.js
+packages/**/esbuild.*.js
 webpack.common.js
 .eslintrc.js

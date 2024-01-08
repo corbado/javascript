@@ -1,4 +1,4 @@
-import type { CorbadoAppParams, PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
+import type { PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   AuthMethodsListError,
@@ -15,10 +15,8 @@ import type {
   SignUpWithPasskeyError,
 } from '@corbado/web-core';
 import type { CorbadoApp } from '@corbado/web-core';
-import { createContext, type PropsWithChildren } from 'react';
+import { createContext } from 'react';
 import type { Result } from 'ts-results';
-
-export type AppProviderParams = PropsWithChildren<CorbadoAppParams>;
 
 export interface CorbadoContextProps {
   corbadoApp: CorbadoApp | undefined;

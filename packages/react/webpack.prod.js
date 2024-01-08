@@ -17,22 +17,4 @@ module.exports = merge(common, {
     'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
     'react-i18next': 'react-i18next',
   },
-  module: {
-    rules: [
-      {
-        test: /\.svg$/,
-        issuer: /\.[jt]sx?$/,
-        use: [
-          '@svgr/webpack',
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets',
-            },
-          },
-        ],
-      },
-    ],
-  },
 });

@@ -1,19 +1,25 @@
-import type { AnchorHTMLAttributes, FunctionComponent, ReactNode, SVGProps } from 'react';
+import type { AnchorHTMLAttributes, FunctionComponent, ReactNode } from 'react';
 import React from 'react';
 
+import { Icon, type IconProps } from './Icon';
+
 export interface IconLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-  Icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+  icon: IconProps;
   label: ReactNode;
 }
 
-export const IconLink: FunctionComponent<IconLinkProps> = ({ target = '_blank', className, Icon, label, ...rest }) => {
+export const IconLink: FunctionComponent<IconLinkProps> = ({ target = '_blank', className, icon, label, ...rest }) => {
   return (
     <a
       target={target}
-      className={`cb-link-icon ${className}`}
+      className={`cb-link-icon ${className ? className : ''}`}
       {...rest}
     >
-      <Icon className='cb-icon' /> <p className={``}>{label}</p>
+      <Icon
+        className='cb-icon'
+        {...icon}
+      />{' '}
+      <p>{label}</p>
     </a>
   );
 };

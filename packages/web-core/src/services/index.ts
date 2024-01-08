@@ -1,5 +1,5 @@
 import type { CorbadoAppParams } from '@corbado/types';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
@@ -22,7 +22,10 @@ export class CorbadoApp {
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
-  #globalErrors: Subject<NonRecoverableError | undefined> = new Subject();
+  #globalErrors: BehaviorSubject<NonRecoverableError | undefined> = new BehaviorSubject<
+    NonRecoverableError | undefined
+  >(undefined);
+  #initialized = false;
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -49,8 +52,12 @@ export class CorbadoApp {
     return this.#projectService;
   }
 
-  public get globalErrors() {
-    return this.#globalErrors.asObservable();
+  public get globalErrors(): BehaviorSubject<NonRecoverableError | undefined> {
+    return this.#globalErrors;
+  }
+
+  public get initialized() {
+    return this.#initialized;
   }
 
   /**
@@ -58,11 +65,16 @@ export class CorbadoApp {
    * It fetches the project configuration and initializes the services.
    */
   public init() {
+    if (this.#initialized) {
+      return;
+    }
+
     if (!this.#validateProjectId(this.#projectId)) {
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
     }
 
     this.#authService.init(true);
+    this.#initialized = true;
   }
 
   #validateProjectId(projectId: string): boolean {

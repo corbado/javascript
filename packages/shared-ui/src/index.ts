@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import './styles/index.css';
 import './styles/error_page.css';
 import './styles/themes/dark.css';
@@ -13,7 +12,3 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
-export const deleteSVG = require('./assets/delete.svg');
-export const gmailSVG = require('./assets/gmail.svg');
-export const outlookSVG = require('./assets/outlook.svg');
-export const yahooSVG = require('./assets/yahoo.svg');

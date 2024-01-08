@@ -7,9 +7,9 @@ import type { CorbadoConfig } from '../types/core';
 export class CorbadoAppState {
   #corbadoApp: CorbadoApp;
   #corbadoAppProps: CorbadoConfig;
-  #shortSession: string | undefined;
-  #user: SessionUser | undefined;
-  #globalError: NonRecoverableError | undefined;
+  #shortSession?: string;
+  #user?: SessionUser;
+  #globalError?: NonRecoverableError;
 
   constructor(corbadoAppProps: CorbadoConfig) {
     const corbadoApp = new CorbadoApp(corbadoAppProps);

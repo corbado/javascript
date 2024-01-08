@@ -25,9 +25,13 @@ export function mountComponent<T extends Record<string, any>>(
   };
 
   const root = createRoot(element);
+  const corbadoProviderProps: CorbadoProviderProps = {
+    corbadoAppInstance: corbadoAppState.corbadoApp,
+    ...corbadoAppState.corbadoAppProps,
+  };
   root.render(
     <ComponentWithContext
-      providerProps={{ corbadoAppInstance: corbadoAppState.corbadoApp, ...corbadoAppState.corbadoAppProps }}
+      providerProps={corbadoProviderProps}
       componentProps={componentOptions}
     />,
   );

@@ -1,8 +1,9 @@
 import Corbado from '@corbado/web-js';
 import { jwtDecode } from 'jwt-decode';
+import { CORBADO_PROJECT_ID } from './environment';
 
 Corbado.load({
-  projectId: 'pro-503401103218055321',
+  projectId: CORBADO_PROJECT_ID,
 });
 
 if (!Corbado.user) {

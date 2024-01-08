@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+const env = process.env.NODE_ENV;
 
 module.exports = {
   entry: {
@@ -20,6 +22,9 @@ module.exports = {
       template: './src/pages/auth.html',
       filename: 'auth.html',
       chunks: ['auth'],
+    }),
+    new Dotenv({
+      path: `./.env.${env}`,
     }),
   ],
   devServer: {

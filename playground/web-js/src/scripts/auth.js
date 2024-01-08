@@ -1,7 +1,8 @@
 import Corbado from '@corbado/web-js';
+import { CORBADO_PROJECT_ID } from './environment';
 
 Corbado.load({
-  projectId: 'pro-503401103218055321',
+  projectId: CORBADO_PROJECT_ID,
   darkMode: 'off',
 });
 

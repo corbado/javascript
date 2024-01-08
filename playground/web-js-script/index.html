@@ -39,8 +39,12 @@
     <script type="module">
       import { jwtDecode } from 'https://unpkg.com/jwt-decode@4.0.0/build/esm/index.js';
 
+      const projectID = window.location.href.includes('localhost')
+        ? 'pro-1743528526530787479'
+        : 'pro-3652881945085154854';
+
       Corbado.load({
-        projectId: 'pro-503401103218055321',
+        projectId: projectID,
       });
 
       if (!Corbado.user) {

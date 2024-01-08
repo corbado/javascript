@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --mode production"
+    "start": "NODE_ENV=local webpack-dev-server --open --mode development",
+    "build": "NODE_ENV=vercel webpack --mode production"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +13,8 @@
   "dependencies": {
     "@corbado/web-js": "*",
     "jwt-decode": "^4.0.0"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^8.0.1"
   }
 }

@@ -1,10 +1,10 @@
 import type { CDPSession } from '@playwright/test';
 import { expect, type Page } from '@playwright/test';
 
-import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions/';
+import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import UserManager from '../utils/UserManager';
 
-export class UISignupPage {
+export class UISignupFlow {
   readonly page: Page;
   #cdpClient: CDPSession | null = null;
   #authenticatorId = '';
@@ -65,5 +65,16 @@ export class UISignupPage {
 
   async checkSignUpSuccess() {
     await expect(this.page).toHaveURL('/');
+  }
+
+  async checkLandedOnPage(pageName: string) {
+    switch (pageName) {
+      case "InitiateSignup":
+        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
+        break;
+      case "EmailOTP":
+        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter code to create account');
+        break;
+    }
   }
 }

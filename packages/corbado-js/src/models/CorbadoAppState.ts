@@ -61,7 +61,5 @@ export class CorbadoAppState {
     }
 
     this.corbadoApp.authService.logout();
-    // this.#corbadoProviderProps.initialUser = undefined;
-    // this.#corbadoProviderProps.initialShortSession = undefined;
   }
 }

@@ -1,5 +1,5 @@
 import type { CorbadoAppParams } from '@corbado/types';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
@@ -22,7 +22,9 @@ export class CorbadoApp {
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
-  #globalErrors: Subject<NonRecoverableError | undefined> = new Subject();
+  #globalErrors: BehaviorSubject<NonRecoverableError | undefined> = new BehaviorSubject<
+    NonRecoverableError | undefined
+  >(undefined);
   #initialized = false;
 
   /**
@@ -50,8 +52,8 @@ export class CorbadoApp {
     return this.#projectService;
   }
 
-  public get globalErrors() {
-    return this.#globalErrors.asObservable();
+  public get globalErrors(): BehaviorSubject<NonRecoverableError | undefined> {
+    return this.#globalErrors;
   }
 
   public get initialized() {

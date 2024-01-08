@@ -7,28 +7,14 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CorbadoContextProps } from './CorbadoContext';
 import { CorbadoContext } from './CorbadoContext';
 
-export type CorbadoProviderParams = PropsWithChildren<
-  CorbadoAppParams & {
-    corbadoAppInstance?: CorbadoApp;
-    initialUser?: SessionUser;
-    initialShortSession?: string;
-    initialGlobalError?: NonRecoverableError;
-  }
->;
+export type CorbadoProviderParams = PropsWithChildren<CorbadoAppParams & { corbadoAppInstance?: CorbadoApp }>;
 
-export const CorbadoProvider: FC<CorbadoProviderParams> = ({
-  children,
-  corbadoAppInstance,
-  initialGlobalError,
-  initialShortSession,
-  initialUser,
-  ...corbadoParams
-}) => {
+export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAppInstance, ...corbadoParams }) => {
   const [corbadoApp] = useState(() => corbadoAppInstance ?? new CorbadoApp(corbadoParams));
-  const [shortSession, setShortSession] = useState(initialShortSession);
-  const [user, setUser] = useState(initialUser);
+  const [shortSession, setShortSession] = useState<string | undefined>();
+  const [user, setUser] = useState<SessionUser | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [globalError, setGlobalError] = useState(initialGlobalError);
+  const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -37,23 +23,22 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({
     }
 
     setLoading(true);
-    corbadoApp.authService.shortSessionChanges.subscribe(value => {
+    corbadoApp.init();
+    corbadoApp.authService.shortSessionChanges.subscribe((value: string | undefined) => {
       if (value !== undefined) {
         setShortSession(value);
       }
     });
 
-    corbadoApp.authService.userChanges.subscribe(value => {
+    corbadoApp.authService.userChanges.subscribe((value: SessionUser | undefined) => {
       if (value !== undefined) {
         setUser(value);
       }
     });
 
-    corbadoApp.globalErrors.subscribe(value => {
+    corbadoApp.globalErrors.subscribe((value: NonRecoverableError | undefined) => {
       setGlobalError(value);
     });
-
-    corbadoApp.init();
 
     initialized.current = true;
 

@@ -1,26 +1,29 @@
-import type { CorbadoProviderProps } from '@corbado/react';
+import type { SessionUser } from '@corbado/types';
+import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 
 import type { CorbadoConfig } from '../types/core';
 
 export class CorbadoAppState {
-  #corbadoProviderProps: CorbadoProviderProps;
+  #corbadoApp: CorbadoApp;
+  #corbadoAppProps: CorbadoConfig;
+  #shortSession: string | undefined;
+  #user: SessionUser | undefined;
+  #globalError: NonRecoverableError | undefined;
 
   constructor(corbadoAppProps: CorbadoConfig) {
-    this.#corbadoProviderProps = corbadoAppProps;
     const corbadoApp = new CorbadoApp(corbadoAppProps);
-    this.#corbadoProviderProps.corbadoAppInstance = corbadoApp;
 
     corbadoApp.authService.shortSessionChanges.subscribe(value => {
-      this.#corbadoProviderProps.initialShortSession = value;
+      this.#shortSession = value;
     });
 
     corbadoApp.authService.userChanges.subscribe(value => {
-      this.#corbadoProviderProps.initialUser = value;
+      this.#user = value;
     });
 
     corbadoApp.globalErrors.subscribe(value => {
-      this.#corbadoProviderProps.initialGlobalError = value;
+      this.#globalError = value;
 
       if (corbadoAppProps.onError && value) {
         corbadoAppProps.onError(value);
@@ -28,26 +31,28 @@ export class CorbadoAppState {
     });
 
     corbadoApp.init();
-  }
-
-  get corbadoProviderProps() {
-    return this.#corbadoProviderProps;
+    this.#corbadoApp = corbadoApp;
+    this.#corbadoAppProps = corbadoAppProps;
   }
 
   get corbadoApp() {
-    return this.#corbadoProviderProps.corbadoAppInstance;
+    return this.#corbadoApp;
+  }
+
+  get corbadoAppProps() {
+    return this.#corbadoAppProps;
   }
 
   get shortSession() {
-    return this.#corbadoProviderProps.initialShortSession;
+    return this.#shortSession;
   }
 
   get user() {
-    return this.#corbadoProviderProps.initialUser;
+    return this.#user;
   }
 
   get globalError() {
-    return this.#corbadoProviderProps.initialGlobalError;
+    return this.#globalError;
   }
 
   logout() {
@@ -56,7 +61,5 @@ export class CorbadoAppState {
     }
 
     this.corbadoApp.authService.logout();
-    this.#corbadoProviderProps.initialUser = undefined;
-    this.#corbadoProviderProps.initialShortSession = undefined;
   }
 }

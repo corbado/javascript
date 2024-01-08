@@ -20,7 +20,7 @@ const PasskeyList: FC = () => {
     }
 
     void fetchPasskeys();
-  }, []);
+  }, [shortSession]);
 
   const fetchPasskeys = async () => {
     const result = await getPasskeys();

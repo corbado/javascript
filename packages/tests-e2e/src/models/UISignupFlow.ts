@@ -67,12 +67,33 @@ export class UISignupFlow {
     await expect(this.page).toHaveURL('/');
   }
 
+  async createDummyAccount(): Promise<[name: string, email: string]> {
+    const name = UserManager.getUserForSignup();
+    const email = `${name}@corbado.com`
+
+    await this.page.getByPlaceholder('Name').click();
+    await this.page.getByPlaceholder('Name').fill(name);
+    await expect(this.page.getByPlaceholder('Name')).toHaveValue(name);
+
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(email);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
+
+    await this.page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.checkLandedOnPage('EmailOTP');
+
+    await this.page.getByRole('button', { name: 'Cancel' }).click();
+    await this.checkLandedOnPage('InitiateSignup');
+
+    return [name, email];
+  }
+
   async checkLandedOnPage(pageName: string) {
     switch (pageName) {
-      case "InitiateSignup":
+      case 'InitiateSignup':
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
         break;
-      case "EmailOTP":
+      case 'EmailOTP':
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter code to create account');
         break;
     }

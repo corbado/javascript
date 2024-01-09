@@ -390,7 +390,7 @@
 }
 
 /********** Dialog / Modal **********/
-.dialog {
+.cb-dialog {
   position: fixed;
   top: 0;
   left: 0;
@@ -403,30 +403,30 @@
   z-index: 1000;
 }
 
-.dialog-content {
+.cb-dialog-content {
   background: white;
   padding: 1.3rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.dialog-header {
+.cb-dialog-header {
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
-.dialog-body {
+.cb-dialog-body {
   margin-bottom: 1.5rem;
 }
 
-.dialog-footer {
+.cb-dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
-.dialog-x-button {
+.cb-dialog-x-button {
   float: right;
   font-family: 'Inter', 'Space Grotesk', sans-serif;
   font-weight: bold;
@@ -437,7 +437,7 @@
   font-size: 1rem;
 }
 
-.dialog-x-button:hover {
+.cb-dialog-x-button:hover {
   text-decoration: none;
   border: none;
   box-shadow: none;
@@ -445,8 +445,9 @@
   color: #ff4c51;
 }
 
-.dialog-button {
-  padding: 0.2rem 0.5rem;
+.cb-dialog-button {
+  padding: 0.5rem 0.7rem;
+  min-width: 7rem;
 }
 
 /********** Passkey List **********/
@@ -514,8 +515,9 @@
 }
 
 .cb-passkey-list-primary-button {
-  padding: 0.75rem;
-  margin-top: 1rem;
+  padding: 0.5rem;
+  margin: 1rem 0rem;
+  min-width: 10rem;
 }
 
 /***** Media Queries *****/

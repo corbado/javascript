@@ -18,39 +18,6 @@ export class UISignupFlow {
     // Note: The page will make an API call to fetch project config after navigation
   }
 
-  async initiateSignup() {
-    const user = UserManager.getUserForSignup();
-
-    await this.page.getByPlaceholder('Name').click();
-    await this.page.getByPlaceholder('Name').fill(user);
-    await expect(this.page.getByPlaceholder('Name')).toHaveValue(user);
-
-    await this.page.getByPlaceholder('Email address').click();
-    await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
-    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
-
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
-  }
-
-  async initiateSignupWithWebAuthn() {
-    this.#cdpClient = await initializeCDPSession(this.page);
-    this.#authenticatorId = await addWebAuthn(this.#cdpClient, true);
-    // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
-    this.page.reload();
-
-    const user = UserManager.getUserForSignup();
-
-    await this.page.getByPlaceholder('Name').click();
-    await this.page.getByPlaceholder('Name').fill(user);
-    await expect(this.page.getByPlaceholder('Name')).toHaveValue(user);
-
-    await this.page.getByPlaceholder('Email address').click();
-    await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
-    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
-
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
-  }
-
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
@@ -59,15 +26,6 @@ export class UISignupFlow {
 
   async fillOTP(incomplete: boolean = false, incorrect: boolean = false) {
     await fillOtpCode(this.page, incomplete, incorrect);
-  }
-
-  async createPasskey() {
-    await this.page.getByRole('button', { name: 'Create your account' }).click();
-    await this.page.getByRole('button', { name: 'Continue' }).click();
-  }
-
-  async checkSignUpSuccess() {
-    await expect(this.page).toHaveURL('/');
   }
 
   async navigateToPasskeySignupPage(webauthnSuccessful: boolean) {
@@ -131,7 +89,14 @@ export class UISignupFlow {
     await this.checkLandedOnPage('PasskeyAppend');
   }
 
-  async createDummyAccount(): Promise<[name: string, email: string]> {
+  async createAccount(passkeySupported: boolean, webauthnSuccessful: boolean = true): Promise<[name: string, email: string]> {
+    if (passkeySupported) {
+      this.#cdpClient = await initializeCDPSession(this.page);
+      this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
+      // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
+      this.page.reload();
+    }
+
     const name = UserManager.getUserForSignup();
     const email = `${name}@corbado.com`
 
@@ -144,6 +109,12 @@ export class UISignupFlow {
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
     await this.page.getByRole('button', { name: 'Continue with email' }).click();
+
+    return [name, email];
+  }
+
+  async createDummyAccount(): Promise<[name: string, email: string]> {
+    const [name, email] = await this.createAccount(false);
     await this.checkLandedOnPage('EmailOTP');
 
     await this.page.getByRole('button', { name: 'Cancel' }).click();
@@ -168,6 +139,9 @@ export class UISignupFlow {
         break;
       case 'PasskeyAppend':
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Log in even faster with');
+        break;
+      case 'PasskeyWelcome':
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case 'LoggedIn':
         await expect(this.page).toHaveURL('/');

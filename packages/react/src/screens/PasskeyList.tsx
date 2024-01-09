@@ -14,7 +14,6 @@ const PasskeyList: FC = () => {
   const { getPasskeys, appendPasskey, deletePasskey, shortSession } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
-  const [passkeyAppendError, setPasskeyAppendError] = useState<string | undefined>();
 
   useEffect(() => {
     if (!shortSession) {
@@ -36,15 +35,12 @@ const PasskeyList: FC = () => {
 
   const handleAppendPasskey = async () => {
     const result = await appendPasskey();
-    if (result.err) {
-      setPasskeyAppendError(result.val?.name);
-      return;
-    }
-    await fetchPasskeys();
-  };
 
-  const clearPasskeyAppendError = () => {
-    setPasskeyAppendError(undefined);
+    if (result.ok) {
+      await fetchPasskeys();
+    }
+
+    return result;
   };
 
   const handleDeletePasskey = async (id: string) => {
@@ -76,11 +72,7 @@ const PasskeyList: FC = () => {
         <Spinner />
       )}
       {passkeys && passkeys.passkeys.length === 0 ? <div>{t('message_noPasskeys')}</div> : null}
-      <PasskeyCreate
-        handlerPasskeyCreate={handleAppendPasskey}
-        passkeyCreateError={passkeyAppendError}
-        clearPasskeyCreateError={clearPasskeyAppendError}
-      />
+      <PasskeyCreate handlerPasskeyCreate={handleAppendPasskey} />
     </div>
   );
 };

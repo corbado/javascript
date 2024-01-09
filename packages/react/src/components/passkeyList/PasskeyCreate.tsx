@@ -1,29 +1,19 @@
+import type { AppendPasskeyError } from '@corbado/web-core';
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { Result } from 'ts-results';
 
 import { Button, Dialog } from '../';
 
 export interface PasskeyCreateProps {
-  handlerPasskeyCreate: () => Promise<void>;
-  passkeyCreateError?: string;
-  clearPasskeyCreateError: () => void;
+  handlerPasskeyCreate: () => Promise<Result<void, AppendPasskeyError | undefined>>;
 }
 
-const PasskeyCreate: FC<PasskeyCreateProps> = ({
-  passkeyCreateError,
-  handlerPasskeyCreate,
-  clearPasskeyCreateError,
-}) => {
+const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (passkeyCreateError === 'errors.passkeyAlreadyExists') {
-      openDialog();
-    }
-  }, [passkeyCreateError]);
 
   const openDialog = () => {
     setDialogOpen(true);
@@ -31,13 +21,16 @@ const PasskeyCreate: FC<PasskeyCreateProps> = ({
 
   const closeDialog = () => {
     setDialogOpen(false);
-    clearPasskeyCreateError();
   };
 
   const createPasskey = async () => {
     setLoading(true);
-    await handlerPasskeyCreate();
+    const result = await handlerPasskeyCreate();
     setLoading(false);
+
+    if (result.err && result.val?.name === 'errors.passkeyAlreadyExists') {
+      openDialog();
+    }
   };
 
   return (
@@ -53,9 +46,9 @@ const PasskeyCreate: FC<PasskeyCreateProps> = ({
       </Button>
       <Dialog
         isOpen={isDialogOpen}
-        header={t('dialogHeader_passkeyAlreadyExists')}
-        body={t('dialogBody_passkeyAlreadyExists')}
-        confirmText={t('dialogConfirmButton_passkeyAlreadyExists')}
+        header={t('dialog_passkeyAlreadyExists.header')}
+        body={t('dialog_passkeyAlreadyExists.body')}
+        confirmText={t('dialog_passkeyAlreadyExists.button_confirm')}
         onClose={closeDialog}
         onConfirm={closeDialog}
       />

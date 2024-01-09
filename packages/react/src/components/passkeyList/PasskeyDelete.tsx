@@ -10,7 +10,7 @@ export interface PasskeyDeleteProps {
 }
 
 const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList.dialog_delete' });
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = () => {
@@ -39,10 +39,10 @@ const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) =
       <Dialog
         inverseButtonVariants
         isOpen={isDialogOpen}
-        header={t('dialogHeader_delete')}
-        body={t('dialogBody_delete')}
-        confirmText={t('dialogConfirmButton_delete')}
-        cancelText={t('dialogCancelButton_delete')}
+        header={t('header')}
+        body={t('body')}
+        confirmText={t('button_confirm')}
+        cancelText={t('button_cancel')}
         onClose={closeDialog}
         onConfirm={confirmDelete}
       />

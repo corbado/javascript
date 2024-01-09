@@ -37,7 +37,7 @@ const PasskeyList: FC = () => {
   const handleAppendPasskey = async () => {
     const result = await appendPasskey();
     if (result.err) {
-      setPasskeyAppendError(result.val?.message);
+      setPasskeyAppendError(result.val?.name);
       return;
     }
     await fetchPasskeys();

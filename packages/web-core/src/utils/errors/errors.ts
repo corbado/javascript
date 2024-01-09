@@ -102,7 +102,7 @@ export class CorbadoError extends Error {
         if (firstError.field === 'sessionToken') {
           switch (firstError.message) {
             case 'user already exists':
-              return new UserAlreadyExistsError();
+              return new PasskeyAlreadyExistsError();
           }
         }
 

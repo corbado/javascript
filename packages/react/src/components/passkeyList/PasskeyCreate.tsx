@@ -20,7 +20,7 @@ const PasskeyCreate: FC<PasskeyCreateProps> = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (passkeyCreateError) {
+    if (passkeyCreateError === 'errors.passkeyAlreadyExists') {
       openDialog();
     }
   }, [passkeyCreateError]);

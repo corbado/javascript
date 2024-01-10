@@ -8,7 +8,13 @@ function App() {
   return (
     <div
       className='App'
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh' }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100dvh',
+        margin: '0.5rem 1rem',
+      }}
     >
       <CorbadoProvider
         projectId={process.env.REACT_APP_CORBADO_PROJECT_ID!}

@@ -4,8 +4,9 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, Spinner } from '../components';
+import { Spinner } from '../components';
 import PasskeyAgentIcon from '../components/passkeyList/PasskeyAgentIcon';
+import PasskeyCreate from '../components/passkeyList/PasskeyCreate';
 import PasskeyDelete from '../components/passkeyList/PasskeyDelete';
 import PasskeyDetails from '../components/passkeyList/PasskeyDetails';
 
@@ -33,8 +34,13 @@ const PasskeyList: FC = () => {
   };
 
   const handleAppendPasskey = async () => {
-    await appendPasskey();
-    await fetchPasskeys();
+    const result = await appendPasskey();
+
+    if (result.ok) {
+      await fetchPasskeys();
+    }
+
+    return result;
   };
 
   const handleDeletePasskey = async (id: string) => {
@@ -66,13 +72,7 @@ const PasskeyList: FC = () => {
         <Spinner />
       )}
       {passkeys && passkeys.passkeys.length === 0 ? <div>{t('message_noPasskeys')}</div> : null}
-      <Button
-        variant='primary'
-        className='cb-passkey-list-primary-button'
-        onClick={() => void handleAppendPasskey()}
-      >
-        {t('button_createPasskey')}
-      </Button>
+      <PasskeyCreate handlerPasskeyCreate={handleAppendPasskey} />
     </div>
   );
 };

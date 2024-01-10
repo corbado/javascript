@@ -1,33 +1,34 @@
 <!doctype html>
 <html>
+  <head>
+    <title>SignIn - My Corbado App</title>
+    <script src="./bundle/index.js"></script>
+    <link
+      rel="stylesheet"
+      href="./bundle/index.css"
+    />
+  </head>
 
-<head>
-  <title>SignIn - My Corbado App</title>
-  <script src="./bundle/index.js"></script>
-  <link rel="stylesheet" href="./bundle/index.css" />
-</head>
+  <body>
+    <div id="corbado-auth"></div>
 
-<body>
-  <div id="corbado-auth"></div>
+    <script>
+      const projectID = window.location.href.includes('localhost')
+        ? 'pro-1743528526530787479'
+        : 'pro-3652881945085154854';
 
-  <script>
-    const projectID = window.location.href.includes('localhost')
-      ? 'pro-1743528526530787479'
-      : 'pro-3652881945085154854';
+      Corbado.load({
+        projectId: projectID,
+        darkMode: 'off',
+      });
 
-    Corbado.load({
-      projectId: projectID,
-      darkMode: 'off',
-    });
+      const authElement = document.getElementById('corbado-auth');
 
-    const authElement = document.getElementById('corbado-auth');
-
-    Corbado.mountAuthUI(authElement, {
-      onLoggedIn: () => {
-        window.location.href = '/';
-      },
-    });
-  </script>
-</body>
-
+      Corbado.mountAuthUI(authElement, {
+        onLoggedIn: () => {
+          window.location.href = '/';
+        },
+      });
+    </script>
+  </body>
 </html>

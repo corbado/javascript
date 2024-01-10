@@ -1,33 +1,33 @@
 <!doctype html>
 <html>
-  <head>
-    <title>SignIn - My Corbado App</title>
-    <script src="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.css"
-    />
-  </head>
-  <body>
-    <div id="corbado-auth"></div>
 
-    <script>
-      const projectID = window.location.href.includes('localhost')
-        ? 'pro-1743528526530787479'
-        : 'pro-3652881945085154854';
+<head>
+  <title>SignIn - My Corbado App</title>
+  <script src="./bundle/index.js"></script>
+  <link rel="stylesheet" href="./bundle/index.css" />
+</head>
 
-      Corbado.load({
-        projectId: projectID,
-        darkMode: 'off',
-      });
+<body>
+  <div id="corbado-auth"></div>
 
-      const authElement = document.getElementById('corbado-auth');
+  <script>
+    const projectID = window.location.href.includes('localhost')
+      ? 'pro-1743528526530787479'
+      : 'pro-3652881945085154854';
 
-      Corbado.mountAuthUI(authElement, {
-        onLoggedIn: () => {
-          window.location.href = '/';
-        },
-      });
-    </script>
-  </body>
+    Corbado.load({
+      projectId: projectID,
+      darkMode: 'off',
+    });
+
+    const authElement = document.getElementById('corbado-auth');
+
+    Corbado.mountAuthUI(authElement, {
+      onLoggedIn: () => {
+        window.location.href = '/';
+      },
+    });
+  </script>
+</body>
+
 </html>

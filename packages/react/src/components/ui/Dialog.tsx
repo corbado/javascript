@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 import React from 'react';
 
 import { PrimaryButton, SecondaryButton } from './buttons/Button';
+import { CancelIcon } from './icons/Icons';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -56,16 +57,15 @@ export const Dialog: FC<DialogProps> = ({
       >
         <div className='cb-dialog-header'>
           {header}
-          <div
-            className='cb-dialog-x-button'
+          <CancelIcon
+            className={'cb-dialog-x-button'}
             onClick={() => void closeAction()}
-          >
-            X
-          </div>
+          />
         </div>
         {body ? <div className='cb-dialog-body'>{body}</div> : null}
         <div className='cb-dialog-footer'>
           <PrimaryButton
+            className={'cb-dialog-button'}
             isLoading={loadingConfirmAction}
             disabled={loadingCloseAction}
             onClick={() => void confirmAction()}
@@ -74,6 +74,7 @@ export const Dialog: FC<DialogProps> = ({
           </PrimaryButton>
           {cancelText ? (
             <SecondaryButton
+              className={'cb-dialog-button'}
               isLoading={loadingCloseAction}
               disabled={loadingCloseAction}
               onClick={() => void closeAction()}

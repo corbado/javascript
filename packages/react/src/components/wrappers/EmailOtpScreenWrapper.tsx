@@ -2,7 +2,7 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, Button, Header, IconLink, OtpInputGroup } from '../ui';
+import { Body, Header, IconLink, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
 import { GmailIcon, OutlookIcon, YahooIcon } from '../ui/icons/Icons';
 
 export interface EmailOtpScreenProps {
@@ -84,24 +84,18 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
 
-      <Button
-        type='submit'
+      <PrimaryButton
         ref={submitButtonRef}
-        variant='primary'
         isLoading={loading}
-        disabled={loading}
       >
         {verificationButtonText}
-      </Button>
-
-      <Button
-        type='button'
+      </PrimaryButton>
+      <TertiaryButton
         onClick={onBackButtonClick}
-        variant='tertiary'
         disabled={loading}
       >
         {backButtonText}
-      </Button>
+      </TertiaryButton>
     </form>
   );
 };

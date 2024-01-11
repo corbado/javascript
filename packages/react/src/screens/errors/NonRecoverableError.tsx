@@ -2,6 +2,8 @@ import type { NonRecoverableError as ErrorType } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
+import { PrimaryButton } from '../../components';
+
 const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: ErrorType }) => {
   return (
     <div className='container'>
@@ -32,14 +34,14 @@ const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: Error
         <div className='error-detail-value'>{error.requestId}</div>
       </div>
       {error.details && (
-        <button
+        <PrimaryButton
           className='error-button'
           onClick={() => {
             window.open(error.details, '_blank');
           }}
         >
           See browser console for more details
-        </button>
+        </PrimaryButton>
       )}
     </div>
   );

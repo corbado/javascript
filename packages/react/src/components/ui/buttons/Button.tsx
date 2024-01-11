@@ -27,10 +27,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export const PrimaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, disabled, children, ...rest }, ref) => {
+  ({ isLoading, disabled, className, children, ...rest }, ref) => {
     return (
       <Button
-        className={'cb-button-primary'}
+        className={`${className} cb-button-primary`}
         isLoading={isLoading}
         disabled={disabled}
         ref={ref}
@@ -42,10 +42,25 @@ export const PrimaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export const SecondaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, disabled, children, ...rest }, ref) => {
+  ({ isLoading, disabled, className, children, ...rest }, ref) => {
     return (
       <Button
-        className={'cb-button-secondary'}
+        className={`${className} cb-button-secondary`}
+        isLoading={isLoading}
+        disabled={disabled}
+        ref={ref}
+        children={children}
+        {...rest}
+      />
+    );
+  },
+);
+
+export const TertiaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ isLoading, disabled, className, children, ...rest }, ref) => {
+    return (
+      <Button
+        className={`${className} cb-button-tertiary`}
         isLoading={isLoading}
         disabled={disabled}
         ref={ref}

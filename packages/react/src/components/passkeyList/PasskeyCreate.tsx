@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Result } from 'ts-results';
 
-import { Button, Dialog } from '../';
+import { Dialog, PrimaryButton } from '../';
 
 export interface PasskeyCreateProps {
   handlerPasskeyCreate: () => Promise<Result<void, AppendPasskeyError | undefined>>;
@@ -35,15 +35,13 @@ const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
 
   return (
     <div>
-      <Button
-        variant='primary'
-        className='cb-passkey-list-primary-button'
+      <PrimaryButton
+        className={'cb-passkey-list-primary-button'}
         isLoading={loading}
-        disabled={loading}
         onClick={() => void createPasskey()}
       >
         {t('button_createPasskey')}
-      </Button>
+      </PrimaryButton>
       <Dialog
         isOpen={isDialogOpen}
         header={t('dialog_passkeyAlreadyExists.header')}

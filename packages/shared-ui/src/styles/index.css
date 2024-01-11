@@ -2,9 +2,6 @@
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
   border-radius: 0.5rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(143, 155, 191, 0.5);
   width: 30rem;
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
@@ -77,6 +74,10 @@
 
 .cb-text-secondary {
   color: #59acff;
+}
+
+.cb-text-bold {
+  font-weight: bold;
 }
 
 .cb-horizontal-divider {
@@ -384,6 +385,10 @@
   height: 1.5rem;
 }
 
+.cb-pointer {
+  cursor: pointer;
+}
+
 /********** Dialog / Modal **********/
 .cb-dialog {
   position: fixed;
@@ -403,6 +408,7 @@
   padding: 1.3rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
 }
 
 .cb-dialog-header {
@@ -423,26 +429,13 @@
 
 .cb-dialog-x-button {
   float: right;
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: bold;
-  background: none;
-  border: none;
-  padding: 0;
   cursor: pointer;
   font-size: 1rem;
 }
 
-.cb-dialog-x-button:hover {
-  text-decoration: none;
-  border: none;
-  box-shadow: none;
-  outline: none;
-  color: #ff4c51;
-}
-
 .cb-dialog-button {
-  padding: 0.5rem 0.7rem;
-  min-width: 7rem;
+  padding: 0 0.5rem;
+  min-width: 10rem;
 }
 
 /********** Passkey List **********/
@@ -511,8 +504,8 @@
 
 .cb-passkey-list-primary-button {
   padding: 0.5rem;
-  margin: 1rem 0rem;
-  min-width: 10rem;
+  margin: 1rem 0;
+  min-width: 12rem;
 }
 
 /***** Media Queries *****/

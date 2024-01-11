@@ -1,3 +1,4 @@
+import cancelSrc from '@corbado/shared-ui/assets/cancel.svg';
 import deleteSrc from '@corbado/shared-ui/assets/delete.svg';
 import fingerprintSrc from '@corbado/shared-ui/assets/fingerprint.svg';
 import gmailSrc from '@corbado/shared-ui/assets/gmail.svg';
@@ -68,6 +69,16 @@ export const FingerprintIcon = (props: Props) => {
     <Icon
       src={fingerprintSrc}
       alt='fingerprint'
+      {...props}
+    />
+  );
+};
+
+export const CancelIcon = (props: Props) => {
+  return (
+    <Icon
+      src={cancelSrc}
+      alt='cancel'
       {...props}
     />
   );

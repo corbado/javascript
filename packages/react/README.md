@@ -12,18 +12,18 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [🚀 Getting Started](#getting-started)
+- [🚀 Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Setting up the package](#setting-up-the-package)
-- [📌 Usage](#usage)
+- [📌 Usage](#-usage)
   - [Accessing Authentication State](#accessing-authentication-state)
   - [Using PasskeyList Component](#using-passkeylist-component)
   - [Integrating CorbadoAuth for Authentication](#integrating-corbadoauth-for-authentication)
   - [Logging Out](#logging-out)
-- [💡 Example Application](#example-application)
-- [📄 Documentation and Support](#documentation-and-support)
-- [🔒 License](#license)
+- [💡 Example Application](#-example-application)
+- [📄 Documentation & Support](#-documentation--support)
+- [🔒 License](#-license)
 
 ---
 
@@ -142,7 +142,7 @@ const handleLogout = () => {
 
 ---
 
-## 📄 Documentation and Support
+## 📄 Documentation & Support
 
 For support and questions please visit our [Slack channel](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ).
 For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/overview/welcome).

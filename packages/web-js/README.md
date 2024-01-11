@@ -12,15 +12,15 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [🚀 Getting Started](#getting-started)
+- [🚀 Getting Started](#-getting-started)
   - [Option 1: Using NPM](#option-1-using-npm)
   - [Option 2: Using Script and Style Tags](#option-2-using-script-and-style-tags)
-- [📌 Usage](#usage)
+- [📌 Usage](#-usage)
   - [Using with NPM](#using-with-npm)
   - [Using in HTML with Script and Style Tags](#using-in-html-with-script-and-style-tags)
-- [💡 Example Applications](#example-applications)
-- [📄 Documentation & Support](#documentation--support)
-- [🔒 License](#license)
+- [💡 Example Applications](#-example-applications)
+- [📄 Documentation & Support](#-documentation--support)
+- [🔒 License](#-license)
 
 ---
 

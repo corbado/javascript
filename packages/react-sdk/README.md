@@ -12,11 +12,11 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [🚀 Getting Started](#getting-started)
+- [🚀 Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Setting up the package](#setting-up-the-package)
-- [📌 Usage](#usage)
+- [📌 Usage](#-usage)
   - [Accessing Authentication State](#accessing-authentication-state)
   - [Implementing Custom Authentication Flows](#implementing-custom-authentication-flows)
     - [Login with Passkey](#login-with-passkey)
@@ -24,9 +24,9 @@
     - [Signup with Email OTP](#signup-with-email-otp)
     - [Conditional UI Login](#conditional-ui-login)
   - [Handling Authentication Errors](#handling-authentication-errors)
-- [💡 Example Application](#example-application)
-- [📄 Documentation & Support](#documentation--support)
-- [🔒 License](#license)
+- [💡 Example Application](#-example-application)
+- [📄 Documentation & Support](#-documentation--support)
+- [🔒 License](#-license)
 
 ---
 

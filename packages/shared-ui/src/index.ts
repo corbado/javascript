@@ -12,3 +12,19 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
+
+import deleteIcon from './assets/delete.svg';
+import fingerprintIcon from './assets/fingerprint.svg';
+import gmailIcon from './assets/gmail.svg';
+import outlookIcon from './assets/outlook.svg';
+import passkeyDefaultIcon from './assets/passkey-default.svg';
+import yahooIcon from './assets/yahoo.svg';
+
+export const assets = {
+  deleteIcon,
+  passkeyDefaultIcon,
+  yahooIcon,
+  gmailIcon,
+  outlookIcon,
+  fingerprintIcon,
+};

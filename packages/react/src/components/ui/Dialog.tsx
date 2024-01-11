@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
-import { Button } from './Button';
+import { PrimaryButton, SecondaryButton } from './buttons/Button';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -9,7 +9,6 @@ export interface DialogProps {
   body?: ReactNode;
   confirmText?: string;
   cancelText?: string;
-  inverseButtonVariants?: boolean;
   onClose: () => Promise<void> | void;
   onConfirm: () => Promise<void> | void;
 }
@@ -20,7 +19,6 @@ export const Dialog: FC<DialogProps> = ({
   body,
   confirmText = 'Yes',
   cancelText,
-  inverseButtonVariants = false,
   onClose,
   onConfirm,
 }) => {
@@ -67,25 +65,21 @@ export const Dialog: FC<DialogProps> = ({
         </div>
         {body ? <div className='cb-dialog-body'>{body}</div> : null}
         <div className='cb-dialog-footer'>
-          <Button
-            variant={inverseButtonVariants ? 'close' : 'primary'}
-            className='cb-dialog-button'
+          <PrimaryButton
             isLoading={loadingConfirmAction}
-            disabled={loadingConfirmAction || loadingCloseAction}
+            disabled={loadingCloseAction}
             onClick={() => void confirmAction()}
           >
             {confirmText}
-          </Button>
+          </PrimaryButton>
           {cancelText ? (
-            <Button
-              variant={inverseButtonVariants ? 'primary' : 'close'}
-              className='cb-dialog-button'
+            <SecondaryButton
               isLoading={loadingCloseAction}
-              disabled={loadingConfirmAction || loadingCloseAction}
+              disabled={loadingCloseAction}
               onClick={() => void closeAction()}
             >
               {cancelText}
-            </Button>
+            </SecondaryButton>
           ) : null}
         </div>
       </div>

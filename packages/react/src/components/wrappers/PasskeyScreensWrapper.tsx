@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 import React from 'react';
 
 import { Body, Button, Header, HorizontalRule, SubHeader } from '../ui';
+import { FingerprintIcon } from '../ui/icons/Icons';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
@@ -42,7 +43,7 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
 
       {subHeader && <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>}
 
-      {!hideFingerPrintIcon && <div className='cb-finger-print-icon'></div>}
+      {!hideFingerPrintIcon && <FingerprintIcon className={'cb-finger-print-icon'} />}
 
       {secondaryHeader && <Header className='cb-secondary-header-spacing'>{secondaryHeader}</Header>}
 

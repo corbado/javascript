@@ -16,6 +16,6 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@corbado/web-js": "^0.1.1-alpha.2"
+    "@corbado/web-js": "^0.1.1-alpha.3"
   }
 }

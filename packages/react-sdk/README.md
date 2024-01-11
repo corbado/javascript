@@ -2,7 +2,7 @@
 
 # @corbado/react-sdk
 
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE)
 [![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/overview/welcome)
 [![Slack](https://img.shields.io/badge/slack-community-blueviolet)](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
 [![npm version](https://img.shields.io/npm/v/@corbado/react)](https://www.npmjs.com/package/@corbado/react)
@@ -19,11 +19,11 @@
 - [📌 Usage](#-usage)
   - [Accessing Authentication State](#accessing-authentication-state)
   - [Implementing Custom Authentication Flows](#implementing-custom-authentication-flows)
-    - [Login with Passkey](#login-with-passkey)
     - [Signup with Passkey](#signup-with-passkey)
     - [Signup with Email OTP](#signup-with-email-otp)
+    - [Login with Passkey](#login-with-passkey)
     - [Conditional UI Login](#conditional-ui-login)
-  - [Handling Authentication Errors](#handling-authentication-errors)
+    - [Logging Out](#logging-out)
 - [💡 Example Application](#-example-application)
 - [📄 Documentation & Support](#-documentation--support)
 - [🔒 License](#-license)
@@ -73,45 +73,32 @@ export default App;
 
 ### Accessing Authentication State
 
-Utilize the `useCorbado` hook to access authentication states like `user` and `shortSession`:
+Utilize the `useCorbado` hook to access authentication states like `user` and `shortSession`.:
 
 ```tsx
 import { useCorbado } from '@corbado/react-sdk';
 
 const HomePage = () => {
-  const { user, shortSession, logout } = useCorbado();
+  const { user, shortSession, loading } = useCorbado();
+
+  if (loading) {
+    // Render loading state
+  }
+
+  if (user) {
+    // Render authenticated state
+  }
   // Additional implementation
 };
 
 export default HomePage;
 ```
 
+**Remember to check `loading` state of the hook before using authentication states**
+
 ### Implementing Custom Authentication Flows
 
 The `@corbado/react-sdk` allows for the implementation of custom authentication flows, including login, signup, and conditional UI logic.
-
-#### Login with Passkey
-
-To implement a login flow using a passkey, use the `loginWithPasskey` method:
-
-```tsx
-import { useCorbado } from '@corbado/react-sdk';
-
-const LoginPage = () => {
-  const { loginWithPasskey } = useCorbado();
-
-  const handleLogin = async (email: string) => {
-    const result = await loginWithPasskey(email);
-    if (!result.err) {
-      // Handle successful login
-    } else {
-      // Handle login error
-    }
-  };
-
-  // Render your login form here
-};
-```
 
 #### Signup with Passkey
 
@@ -148,7 +135,7 @@ const CompleteEmailOtpSignup = () => {
 
   const handleInitSignup = async (email: string, username: string) => {
     const result = await initSignUpWithEmailOTP(email, username);
-    // Handle init response
+    //Handle init response, e.g. by rendering an input field where the user can enter the code he has just received.
   };
 
   const handleCompleteSignup = async (otpCode: string) => {
@@ -157,6 +144,29 @@ const CompleteEmailOtpSignup = () => {
   };
 
   // Render form to input OTP
+};
+```
+
+#### Login with Passkey
+
+To implement a login flow using a passkey, use the `loginWithPasskey` method:
+
+```tsx
+import { useCorbado } from '@corbado/react-sdk';
+
+const LoginPage = () => {
+  const { loginWithPasskey } = useCorbado();
+
+  const handleLogin = async (email: string) => {
+    const result = await loginWithPasskey(email);
+    if (!result.err) {
+      // Handle successful login
+    } else {
+      // Handle login error
+    }
+  };
+
+  // Render your login form here
 };
 ```
 
@@ -181,33 +191,34 @@ const ConditionalLoginPage = () => {
     }
   };
 
-  // Optionally, render a button to initiate conditional login
+  // Render your login form here and call handleConditionalLogin in useEffect
 };
+```
+
+### Logging Out
+
+Implement logout functionality easily with the `logout` method from the `useCorbado` hook:
+
+```tsx
+import { useCorbado } from '@corbado/react-sdk';
+
+const LogoutButton = () => {
+  const { logout } = useCorbado();
+
+  const handleLogout = () => {
+    logout();
+    // Redirect or perform additional actions after logout
+  };
+
+  // UI logic and styling for logout button
+};
+
+export default LogoutButton;
 ```
 
 In each of these examples, you're calling different authentication methods provided by `@corbado/react-sdk`. These methods return a result object that indicates whether the operation was successful (`err` property) and provides additional details or error information (`val` property).
 
 Remember to replace the example logic with real implementations that fit the specific needs of your application. The rendering of forms and the handling of form inputs are not covered here, as they can vary greatly depending on your UI library or custom components.
-
-### Handling Authentication Errors
-
-Manage authentication errors by interpreting the error objects returned by SDK methods:
-
-```tsx
-import { useCorbado, InvalidPasskeyError } from '@corbado/react-sdk';
-
-const ErrorHandlingComponent = () => {
-  const { globalError } = useCorbado();
-
-  // Handle global errors
-  if (globalError instanceof InvalidPasskeyError) {
-    // Specific error handling
-  }
-  // Additional error handling logic
-};
-
-export default ErrorHandlingComponent;
-```
 
 ---
 
@@ -226,4 +237,4 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🔒 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE) file for details.

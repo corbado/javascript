@@ -2,7 +2,7 @@
 
 # @corbado/react
 
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE)
 [![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/overview/welcome)
 [![Slack](https://img.shields.io/badge/slack-community-blueviolet)](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
 [![npm version](https://img.shields.io/npm/v/@corbado/react)](https://www.npmjs.com/package/@corbado/react)
@@ -70,19 +70,28 @@ export default App;
 
 ### Accessing Authentication State
 
-You can access authentication states such as `shortSession` and `user` using the `useCorbado` hook:
+Utilize the `useCorbado` hook to access authentication states like `user` and `shortSession`.:
 
 ```tsx
-import { useCorbado } from '@corbado/react';
+import { useCorbado } from '@corbado/react-sdk';
 
 const HomePage = () => {
-  const { user, logout } = useCorbado();
+  const { user, shortSession, loading } = useCorbado();
 
-  // Render your components based on authentication state
+  if (loading) {
+    // Render loading state
+  }
+
+  if (user) {
+    // Render authenticated state
+  }
+  // Additional implementation
 };
 
 export default HomePage;
 ```
+
+**Remember to check `loading` state of the hook before using authentication states**
 
 ### Using PasskeyList Component
 
@@ -96,7 +105,6 @@ const PasskeysView = () => {
 
   return (
     <div>
-      {/* Render PasskeyList here */}
       <PasskeyList />
     </div>
   );
@@ -128,10 +136,20 @@ export default AuthPage;
 Implement logout functionality easily with the `logout` method from the `useCorbado` hook:
 
 ```tsx
-const handleLogout = () => {
-  logout();
-  // Redirect or perform additional actions after logout
+import { useCorbado } from '@corbado/react-sdk';
+
+const LogoutButton = () => {
+  const { logout } = useCorbado();
+
+  const handleLogout = () => {
+    logout();
+    // Redirect or perform additional actions after logout
+  };
+
+  // UI logic and styling for logout button
 };
+
+export default LogoutButton;
 ```
 
 ---
@@ -151,4 +169,4 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🔒 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE) file for details.

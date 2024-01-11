@@ -2,7 +2,7 @@
 
 # Corbado JavaScript SDKs
 
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE)
 [![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/overview/welcome)
 [![Slack](https://img.shields.io/badge/slack-community-blueviolet)](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
 
@@ -39,4 +39,4 @@ For more detailed information and advanced configuration options, please visit o
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE) file for details.

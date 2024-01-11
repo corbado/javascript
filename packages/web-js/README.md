@@ -2,7 +2,7 @@
 
 # @corbado/web-js
 
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE)
 [![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/overview/welcome)
 [![Slack](https://img.shields.io/badge/slack-community-blueviolet)](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
 [![npm version](https://img.shields.io/npm/v/@corbado/web-js)](https://www.npmjs.com/package/@corbado/web-js)
@@ -17,7 +17,13 @@
   - [Option 2: Using Script and Style Tags](#option-2-using-script-and-style-tags)
 - [📌 Usage](#-usage)
   - [Using with NPM](#using-with-npm)
+    - [Initialization](#initialization)
+    - [Authentication UI](#authentication-ui)
+    - [Handling Passkey List UI](#handling-passkey-list-ui)
+    - [Handling Logout](#handling-logout)
   - [Using in HTML with Script and Style Tags](#using-in-html-with-script-and-style-tags)
+    - [Initialization](#initialization-1)
+    - [Handling User Authentication State](#handling-user-authentication-state)
 - [💡 Example Applications](#-example-applications)
 - [📄 Documentation & Support](#-documentation--support)
 - [🔒 License](#-license)
@@ -60,68 +66,93 @@ Replace `@version` with the specific version number you intend to use.
 
 ### Using with NPM
 
-1. **Initialization**:
+#### Initialization:
 
-   Import and initialize Corbado in your main JavaScript or TypeScript file:
+Import and initialize Corbado in your main JavaScript or TypeScript file:
 
-   ```typescript
-   import Corbado from '@corbado/web-js';
+```typescript
+import Corbado from '@corbado/web-js';
 
-   Corbado.load({
-     projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
-     customTranslations: {
-       /* your translations */
-     },
-   });
-   ```
+Corbado.load({
+  projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
+});
+```
 
-2. **Authentication UI**:
+**Note**: It's important to initialize Corbado before using any of its functionalities.
 
-   Mount the authentication UI and passkey list UI:
+#### Authentication UI
 
-   ```typescript
-   // In your authentication file
-   Corbado.mountAuthUI(document.getElementById('auth-element'), {
-     onLoggedIn: () => {
-       /* handle login */
-     },
-   });
+Mount the authentication UI to your HTML element:
 
-   // In your main app file
-   if (Corbado.user) {
-     Corbado.mountPasskeyListUI(document.getElementById('passkey-list'));
-   }
-   ```
+```typescript
+// In your authentication page's JavaScript or TypeScript file after initializing Corbado
+Corbado.mountAuthUI(authHTMLElement, {
+  onLoggedIn: () => {
+    /* handle login */
+  },
+});
+```
+
+#### Handling Passkey List UI:
+
+Use the `Corbado.user` object to check if the user is logged in and to mount the passkey list UI:
+
+```typescript
+// In your JavaScript or TypeScript file after initializing Corbado
+if (Corbado.user) {
+  Corbado.mountPasskeyListUI(passkeyListHTMLElement);
+}
+```
+
+#### Handling Logout:
+
+Use the `Corbado.user` object to check if the user is logged in and to handle logout:
+
+```typescript
+// In your JavaScript or TypeScript file after initializing Corbado
+if (Corbado.user) {
+  logoutButton.addEventListener('click', () => {
+    Corbado.logout();
+  });
+}
+```
 
 ### Using in HTML with Script and Style Tags
 
-1. **Initialization**:
+#### Initialization:
 
-   Initialize Corbado in a `<script>` tag within your HTML:
+Initialize Corbado in a `<script>` tag within your HTML:
 
-   ```html
-   <script type="module">
-     Corbado.load({
-       projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
-     });
+```html
+<script type="module">
+  Corbado.load({
+    projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
+  });
 
-     // Additional JavaScript to manage UI
-   </script>
-   ```
+  // Additional JavaScript to manage UI
+</script>
+```
 
-2. **Handling User Authentication State**:
+**Note**: It's important to initialize Corbado before using any of its functionalities.
 
-   Use JavaScript to manage login/logout states and to mount the passkey list UI:
+#### Handling User Authentication State:
 
-   ```html
-   <script type="module">
-     if (!Corbado.user) {
-       // Handle login state
-     } else {
-       // Handle logout state and mount passkey list
-     }
-   </script>
-   ```
+Use JavaScript to manage login/logout states and to mount the passkey list UI:
+
+```html
+<script type="module">
+  if (!Corbado.user) {
+    // Handle login state
+  } else {
+    // Handle logout state and mount passkey list
+  }
+</script>
+```
+
+**Note**:
+
+- The use of the `type="module"` attribute is necessary to use ES6 modules in the browser. For more information, please refer to [this article](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- Use of Corbado with `<script>` tag is similar to using it with NPM, except that you don't need to import the package and you can use the `Corbado` object directly from the global scope.
 
 ---
 
@@ -141,4 +172,4 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🔒 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE) file for details.

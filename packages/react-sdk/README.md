@@ -9,13 +9,34 @@
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [🚀 Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Setting up the package](#setting-up-the-package)
+- [📌 Usage](#usage)
+  - [Accessing Authentication State](#accessing-authentication-state)
+  - [Implementing Custom Authentication Flows](#implementing-custom-authentication-flows)
+    - [Login with Passkey](#login-with-passkey)
+    - [Signup with Passkey](#signup-with-passkey)
+    - [Signup with Email OTP](#signup-with-email-otp)
+    - [Conditional UI Login](#conditional-ui-login)
+  - [Handling Authentication Errors](#handling-authentication-errors)
+- [💡 Example Application](#example-application)
+- [📄 Documentation & Support](#documentation--support)
+- [🔒 License](#license)
+
+---
+
 ## Overview
 
 The `@corbado/react-sdk` package is tailored for React applications that require more control over authentication flows, providing a flexible and robust solution for managing authentication states without prebuilt UI components.
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -48,7 +69,7 @@ export default App;
 
 ---
 
-## Usage
+## 📌 Usage
 
 ### Accessing Authentication State
 
@@ -190,13 +211,19 @@ export default ErrorHandlingComponent;
 
 ---
 
-## Documentation & Support
+## 💡 Example Application
+
+- For a detailed example using the `@corbado/react-sdk` package checkout the [example application](react-sdk-example.korbado.com) and its [source code](https://github.com/corbado/javascript/tree/main/examples/react-sdk)
+
+---
+
+## 📄 Documentation & Support
 
 For support and questions please visit our [Slack channel](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ).
 For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/overview/welcome).
 
 ---
 
-## License
+## 🔒 License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/tree/readme_documentation?tab=License-1-ov-file) file for details.

@@ -34,8 +34,8 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/react": "*",
-    "@corbado/web-core": "*",
+    "@corbado/react": "0.1.1-alpha.3",
+    "@corbado/web-core": "0.1.7-alpha.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

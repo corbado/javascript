@@ -224,7 +224,7 @@ Remember to replace the example logic with real implementations that fit the spe
 
 ## 💡 Example Application
 
-- For a detailed example using the `@corbado/react-sdk` package checkout the [example application](react-sdk-example.korbado.com) and its [source code](https://github.com/corbado/javascript/tree/main/examples/react-sdk)
+- For a detailed example using the `@corbado/react-sdk` package checkout the [example application](https://react-sdk.demo.corbado.io) and its [source code](https://github.com/corbado/javascript/tree/main/examples/react-sdk)
 
 ---
 

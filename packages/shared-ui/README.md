@@ -11,7 +11,8 @@
 
 ## Overview
 
-This package contains shared files for all the complete packages of Corbado for VanillaJS, React, Angular, Vue, etc. Since, this is an internal package, it is not needed to be installed separately.
+This package contains shared files for all the UI component packages of Corbado for VanillaJS, React, Angular, Vue, etc.
+Since, this is an internal package, you don't have to install it separately.
 
 ---
 

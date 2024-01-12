@@ -14,14 +14,14 @@
 - [Overview](#overview)
 - [🚀 Getting Started](#-getting-started)
   - [Option 1: Using NPM](#option-1-using-npm)
-  - [Option 2: Using Script and Style Tags](#option-2-using-script-and-style-tags)
+  - [Option 2: Using script and style Tags](#option-2-using-script-and-style-tags)
 - [📌 Usage](#-usage)
-  - [Using with NPM](#using-with-npm)
+  - [Usage with NPM](#usage-with-npm)
     - [Initialization](#initialization)
     - [Authentication UI](#authentication-ui)
     - [Handling Passkey List UI](#handling-passkey-list-ui)
     - [Handling Logout](#handling-logout)
-  - [Using in HTML with Script and Style Tags](#using-in-html-with-script-and-style-tags)
+  - [Usage in HTML with script and style Tags](#usage-in-html-with-script-and-style-tags)
     - [Initialization](#initialization-1)
     - [Handling User Authentication State](#handling-user-authentication-state)
 - [💡 Example Applications](#-example-applications)
@@ -32,7 +32,8 @@
 
 ## Overview
 
-The `@corbado/web-js` package enables easy integration of Corbado's authentication functionalities into web projects. It can be used either by installing the package from NPM or by directly including it in your HTML files through script and style tags.
+The `@corbado/web-js` package enables easy integration of Corbado's authentication functionalities into web projects. 
+It can be used either by installing the package from NPM or by directly including it in your HTML files through script and style tags.
 
 ---
 
@@ -46,9 +47,9 @@ Install the package via NPM:
 npm install @corbado/web-js
 ```
 
-### Option 2: Using Script and Style Tags
+### Option 2: Using script and style Tags
 
-Include the script and style directly in your HTML:
+Include the script and styles directly in your HTML:
 
 ```html
 <link
@@ -64,7 +65,7 @@ Replace `@version` with the specific version number you intend to use.
 
 ## 📌 Usage
 
-### Using with NPM
+### Usage with NPM
 
 #### Initialization:
 
@@ -84,24 +85,42 @@ Corbado.load({
 
 Mount the authentication UI to your HTML element:
 
-```typescript
-// In your authentication page's JavaScript or TypeScript file after initializing Corbado
-Corbado.mountAuthUI(authHTMLElement, {
+```html
+<script>
+const authElement = document.getElementById('corbado-auth');
+
+// In your JavaScript or TypeScript file after initializing Corbado
+Corbado.mountAuthUI(authElement, {
   onLoggedIn: () => {
-    /* handle login */
+    window.location.href = '/';
   },
 });
+</script>
+
+<div id="corbado-auth"></div>
 ```
 
 #### Handling Passkey List UI:
 
 Use the `Corbado.user` object to check if the user is logged in and to mount the passkey list UI:
 
-```typescript
+```html
 // In your JavaScript or TypeScript file after initializing Corbado
 if (Corbado.user) {
   Corbado.mountPasskeyListUI(passkeyListHTMLElement);
 }
+
+<script>
+const passkeyListElement = document.getElementById('passkey-list');
+
+// In your JavaScript or TypeScript file after initializing Corbado
+if (Corbado.user) {
+  Corbado.mountPasskeyListUI(passkeyListElement);
+}
+</script>
+
+<div id="passkey-list"></div>
+
 ```
 
 #### Handling Logout:
@@ -117,7 +136,7 @@ if (Corbado.user) {
 }
 ```
 
-### Using in HTML with Script and Style Tags
+### Usage in HTML with script and style Tags
 
 #### Initialization:
 
@@ -158,8 +177,8 @@ Use JavaScript to manage login/logout states and to mount the passkey list UI:
 
 ## 💡 Example Applications
 
-- For a detailed example using the package from NPM checkout the [example application](web-js-example.korbado.com) and its [source code](https://github.com/corbado/javascript/tree/main/examples/web-js)
-- For an example using script and style tags directly in HTML checkout the [example application](web-js-sdk-example.korbado.com) and its [source code](https://github.com/corbado/javascript/tree/main/examples/web-js-script)
+- For a detailed example using the package from NPM checkout the [example application](https://web-js.demo.corbado.io/src/pages/auth.html) and its [source code](https://github.com/corbado/javascript/tree/main/examples/web-js)
+- For an example using script and style tags directly in HTML checkout the [example application](https://web-js-script.demo.corbado.io) and its [source code](https://github.com/corbado/javascript/tree/main/examples/web-js-script)
 
 ---
 

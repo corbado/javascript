@@ -17,9 +17,9 @@
   - [Installation](#installation)
   - [Setting up the package](#setting-up-the-package)
 - [📌 Usage](#-usage)
+  - [CorbadoAuth component](#corbadoauth-component)
+  - [PasskeyList component](#passkeylist-component)
   - [Accessing Authentication State](#accessing-authentication-state)
-  - [Using PasskeyList Component](#using-passkeylist-component)
-  - [Integrating CorbadoAuth for Authentication](#integrating-corbadoauth-for-authentication)
   - [Logging Out](#logging-out)
 - [💡 Example Application](#-example-application)
 - [📄 Documentation & Support](#-documentation--support)
@@ -29,7 +29,8 @@
 
 ## Overview
 
-The `@corbado/react` package provides a comprehensive solution for integrating passkey-based authentication in React applications. It simplifies the process of managing authentication states and user sessions with easy-to-use hooks and components.
+The `@corbado/react` package provides a comprehensive solution for integrating passkey-based authentication in React applications. 
+It simplifies the process of managing authentication states and user sessions with easy-to-use hooks and UI components.
 
 ---
 
@@ -68,9 +69,53 @@ export default App;
 
 ## 📌 Usage
 
+### CorbadoAuth component
+
+Adding SignUp/Login screens is simple with `@corbado/react`. 
+The `CorbadoAuth` component allows your users to signUp and login with their passkeys.
+Additionally, it provides fallback options like email one-time passcode for users who don't have a passkey yet.
+
+```tsx
+import { CorbadoAuth } from '@corbado/react';
+
+const AuthPage = () => {
+  const onLoggedIn = () => {
+    // Navigate or perform actions after successful login
+  };
+
+  return <CorbadoAuth onLoggedIn={onLoggedIn} />;
+};
+
+export default AuthPage;
+```
+
+### PasskeyList component
+
+Users that are logged in want to see a list of all their existing passkeys and they want to manage them.
+You can make this possible by using the `PasskeyList` component.
+It shows all passkeys of the currently logged in user and allows them to add and remove passkeys.
+
+```tsx
+import { PasskeyList } from '@corbado/react';
+
+const PasskeysView = () => {
+  // Additional logic or styling
+
+  return (
+    <div>
+      <PasskeyList />
+    </div>
+  );
+};
+
+export default PasskeysView;
+```
+
 ### Accessing Authentication State
 
-Utilize the `useCorbado` hook to access authentication states like `user` and `shortSession`.:
+Utilize the `useCorbado` hook to access authentication states like `user` and `shortSession`.
+Use `user` to show information about the currently logged in user (e.g. name and email). If the user is not logged in this value is `undefined`.
+Use `shortSession` as a token to authenticate against your backend API (if you have one).
 
 ```tsx
 import { useCorbado } from '@corbado/react-sdk';
@@ -91,45 +136,7 @@ const HomePage = () => {
 export default HomePage;
 ```
 
-**Remember to check `loading` state of the hook before using authentication states**
-
-### Using PasskeyList Component
-
-Corbado provides a convenient built-in UI component to display a list of all passkeys the current user has registered, using the `PasskeyList` component:
-
-```tsx
-import { PasskeyList } from '@corbado/react';
-
-const PasskeysView = () => {
-  // Additional logic or styling
-
-  return (
-    <div>
-      <PasskeyList />
-    </div>
-  );
-};
-
-export default PasskeysView;
-```
-
-### Integrating CorbadoAuth for Authentication
-
-Adding SignUp/Login screens are very simple with `@corbado/react`. Just use the `CorbadoAuth` component for handling user authentication:
-
-```tsx
-import { CorbadoAuth } from '@corbado/react';
-
-const AuthPage = () => {
-  const onLoggedIn = () => {
-    // Navigate or perform actions after successful login
-  };
-
-  return <CorbadoAuth onLoggedIn={onLoggedIn} />;
-};
-
-export default AuthPage;
-```
+**Remember to check `loading` state of the hook before using authentication states.**
 
 ### Logging Out
 
@@ -156,7 +163,7 @@ export default LogoutButton;
 
 ## 💡 Example Application
 
-- For a detailed example using the `@corbado/react` package checkout the [example application](react-example.korbado.com) and its [source code](https://github.com/corbado/javascript/tree/main/examples/react)
+- For a detailed example using the `@corbado/react` package checkout the [example application](https://react.demo.corbado.io) and its [source code](https://github.com/corbado/javascript/tree/main/examples/react)
 
 ---
 

@@ -5,10 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const InitiateLogin = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.start' });
-  const { emitEvent, currentUserState } = useFlowHandler();
-  // const { loginWithPasskey, loginWithConditionalUI, getUserAuthMethods } = useCorbado();
+export const Start = () => {
+  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.login.${currentFlow}.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);

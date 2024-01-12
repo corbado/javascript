@@ -23,6 +23,11 @@ export interface SignupFlowOptions {
 }
 
 /**
+ * Union type of all possible flow names for sign-up and login processes.
+ */
+export type FlowStyles = 'PasskeyWithEmailOTPFallback' | 'EmailOtpSignup';
+
+/**
  * Configuration settings for a project.
  * @interface ProjectConfig
  * @property {boolean} allowUserRegistration - Indicates if user registration is allowed.
@@ -45,8 +50,8 @@ export interface ProjectConfig {
   userFullNameRequired: boolean;
   webComponentDebug: boolean;
   environment: string;
-  loginFlow: string;
+  loginFlow: FlowStyles;
   loginFlowOptions: LoginFlowOptions;
-  signupFlow: string;
+  signupFlow: FlowStyles;
   signupFlowOptions: SignupFlowOptions;
 }

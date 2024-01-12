@@ -29,7 +29,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         }
 
         return state.passkeysSupported
-          ? FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey, {
+          ? FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyCreate, {
               ...eventOptions?.userStateUpdate,
             })
           : await sendEmailOTP(state.corbadoApp, email, fullName, true);
@@ -39,7 +39,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
     return undefined;
   },
 
-  [PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey]: async (state, event) => {
+  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyCreate]: async (state, event) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -157,7 +157,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
     return;
   },
 
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: (_, event): Promise<FlowUpdate | undefined> => {
+  [PasskeySignupWithEmailOtpFallbackScreens.PasskeySuccess]: (_, event): Promise<FlowUpdate | undefined> => {
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
         return Promise.resolve(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.End));

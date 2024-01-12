@@ -23,6 +23,7 @@ import type {
   SignUpWithPasskeyError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
+import { mapToProjectConfig } from '../utils/helperFunctions/mapProjectConfig';
 
 // TODO: does this work also without npm start? (e.g. vite js)
 const packageVersion = '0';
@@ -281,7 +282,7 @@ export class ApiService {
     return Result.wrapAsync(async () => {
       const r = await this.projectsApi.projectConfig();
 
-      return r.data.data;
+      return mapToProjectConfig(r.data.data);
     });
   }
 

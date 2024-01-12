@@ -7,8 +7,8 @@ import { EmailOtpScreenWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.emailOtp' });
-  const { emitEvent, currentUserState } = useFlowHandler();
+  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.login.${currentFlow}.emailOtp` });
 
   const header = t('header');
   const body = (

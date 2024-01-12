@@ -3,7 +3,7 @@ import type { RecoverableError } from '@corbado/web-core';
 
 import type {
   CommonScreens,
-  EmailOtpSignupScreens,
+  EmailOtpSignupWithPasskeyScreens,
   FlowHandlerEvents,
   LoginFlowNames,
   PasskeyLoginWithEmailOtpFallbackScreens,
@@ -44,7 +44,7 @@ export type FlowNames = SignUpFlowNames | LoginFlowNames;
  */
 export type ScreenNames =
   | CommonScreens
-  | EmailOtpSignupScreens
+  | EmailOtpSignupWithPasskeyScreens
   | PasskeySignupWithEmailOtpFallbackScreens
   | PasskeyLoginWithEmailOtpFallbackScreens;
 

@@ -1,19 +1,19 @@
 import { PasskeySignupWithEmailOtpFallbackScreens } from '@corbado/shared-ui';
 
 import { EmailOTP } from '../screens/signup/EmailOTP';
-import { InitiateSignup } from '../screens/signup/InitiateSignup';
 import { PasskeyAppend } from '../screens/signup/PasskeyAppend';
 import { PasskeyBenefits } from '../screens/signup/PasskeyBenefits';
+import { PasskeyCreate } from '../screens/signup/PasskeyCreate';
 import { PasskeyError } from '../screens/signup/PasskeyError';
-import { PasskeySignup } from '../screens/signup/PasskeySignup';
-import { PasskeyWelcome } from '../screens/signup/PasskeyWelcome';
+import { PasskeySuccess } from '../screens/signup/PasskeySuccess';
+import { Start } from '../screens/signup/Start';
 
 export const PasskeySignupWithEmailOTPFallbackFlow = {
-  [PasskeySignupWithEmailOtpFallbackScreens.Start]: InitiateSignup,
-  [PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey]: PasskeySignup,
+  [PasskeySignupWithEmailOtpFallbackScreens.Start]: Start,
+  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyCreate]: PasskeyCreate,
   [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: EmailOTP,
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend]: PasskeyAppend,
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits]: PasskeyBenefits,
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: PasskeyWelcome,
+  [PasskeySignupWithEmailOtpFallbackScreens.PasskeySuccess]: PasskeySuccess,
   [PasskeySignupWithEmailOtpFallbackScreens.PasskeyError]: PasskeyError,
 };

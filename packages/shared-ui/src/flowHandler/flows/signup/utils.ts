@@ -106,7 +106,7 @@ export const createPasskey = async (
 ): Promise<Result<FlowUpdate, SignUpWithPasskeyError | undefined>> => {
   const res = await corbadoApp.authService.signUpWithPasskey(email, fullName);
   if (res.ok) {
-    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
+    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeySuccess));
   }
 
   return res;
@@ -117,7 +117,7 @@ export const appendPasskey = async (
 ): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
   const res = await corbadoApp.authService.appendPasskey();
   if (res.ok) {
-    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
+    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeySuccess));
   }
 
   return res;

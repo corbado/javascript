@@ -5,6 +5,7 @@ import { PasskeySignupWithEmailOTPFallbackFlow } from './signup/passkeySignupWit
 
 export const flows: Flows = {
   [SignUpFlowNames.PasskeySignupWithEmailOTPFallback]: PasskeySignupWithEmailOTPFallbackFlow,
+  [SignUpFlowNames.EmailOtpSignupWithPasskey]: PasskeySignupWithEmailOTPFallbackFlow,
   [LoginFlowNames.PasskeyLoginWithEmailOTPFallback]: PasskeyLoginWithEmailOTPFallbackFlow,
 };
 export * from './signup/passkeySignupWithOtpFlow';

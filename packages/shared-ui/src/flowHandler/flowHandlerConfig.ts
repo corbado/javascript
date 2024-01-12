@@ -3,6 +3,9 @@ import type { ProjectConfig } from '@corbado/types';
 import { FlowNameByFlowStyle, FlowType } from './constants';
 import type { FlowNames, FlowOptions } from './types';
 
+// The FlowHandlerConfig class is responsible for managing the configuration of an authentication flow.
+// It holds the current state of the flow, including the type of flow (sign up or login),
+// the specific flow name, and any options associated with the flow.
 export class FlowHandlerConfig {
   #onLoggedIn: () => void;
   #flowType: FlowType;
@@ -34,6 +37,8 @@ export class FlowHandlerConfig {
     return this.#flowOptions;
   }
 
+  // The update method allows the type of flow to be changed,
+  // and updates the flow name and options accordingly.
   update(flowType: FlowType) {
     this.#flowType = flowType;
     this.#flowName = this.#getCurrentFlowName();

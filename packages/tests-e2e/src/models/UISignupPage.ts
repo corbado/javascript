@@ -29,7 +29,7 @@ export class UISignupPage {
     await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
 
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
   async initiateSignupWithWebAuthn() {
@@ -45,7 +45,7 @@ export class UISignupPage {
     await this.page.getByPlaceholder('Email address').fill(`${user}@corbado.com`);
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(`${user}@corbado.com`);
 
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
   async removeWebAuthn() {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const navigate = useNavigate();
-  const isDevMode = process.env.NODE_ENV === 'development';
 
   const onLoggedIn = () => {
     navigate('/');
@@ -12,7 +11,7 @@ const AuthPage = () => {
   return (
     <CorbadoAuth
       onLoggedIn={onLoggedIn}
-      isDevMode={isDevMode}
+      isDevMode={true}
       customerSupportEmail='dev@test.com'
     />
   );

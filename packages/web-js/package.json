@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-js",
-  "version": "0.1.1-alpha.2",
+  "version": "0.1.1-alpha.5",
   "description": "This package allows VanillsJS users to add corbado functionality and UI components in their applications",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -22,11 +22,11 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js && npm run build:bundler",
     "build:dev": "npm run clean && tsc -b",
     "build:bundler": "node ./esbuild.config.js",
     "build:bundler:local": "node ./esbuild.config.js && npm run copy:bundle:local",
-    "copy:bundle:local": "cp -R ./bundle ../../playground/web-js-script",
+    "copy:bundle:local": "cp -R ./dist/bundle ../../playground/web-js-script",
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
@@ -34,13 +34,13 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/react": "*",
-    "@corbado/web-core": "*",
+    "@corbado/react": "0.1.1-alpha.3",
+    "@corbado/web-core": "0.1.7-alpha.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@corbado/types": "*",
+    "@corbado/types": "^0.1.1-alpha.3",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.0",
     "typescript": "^5.2.2"

@@ -5,7 +5,7 @@
         "header": "Create your account",
         "subheader": "You already have an account? ",
         "button_login": "Log in",
-        "button_submit": "Continue with email",
+        "button_submit": "Continue",
         "textField_name": "Name",
         "textField_email": "Email address"
       },
@@ -14,7 +14,7 @@
         "body": "We'll create an account for ",
         "button_showPasskeyBenefits": "Passkeys",
         "button_start": "Create your account",
-        "button_emailOtp": "Send email one time code",
+        "button_emailOtp": "Send email one-time passcode",
         "button_back": "Back"
       },
       "passkeyBenefits": {
@@ -28,17 +28,17 @@
         "header": "Welcome!",
         "subheader": "Passkey created",
         "body_text1": "You can now confirm your identity using your ",
-        "body_text2": "passkey or via email one time code",
+        "body_text2": "passkey or via email one-time passcode",
         "body_text3": " when you log in.",
         "button": "Continue"
       },
       "passkeyError": {
         "header": "Let's get you set up",
         "body_errorMessage1": "Creating your account was not possible with ",
-        "body_errorMessage2": ". Try again or sign up with email one time code.",
+        "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
         "button_showPasskeyBenefits": "passkeys",
         "button_retry": "Try again",
-        "button_emailOtp": "Send email one time code",
+        "button_emailOtp": "Send email one-time passcode",
         "button_back": "Back",
         "button_cancel": "Cancel"
       },
@@ -49,11 +49,11 @@
         "button_skip": "Maybe later"
       },
       "emailOtp": {
-        "header": "Enter code to create account",
-        "body_text1": "We just sent a one time code to ",
-        "body_text2": ". The code expires shortly, so please enter it soon.",
+        "header": "Enter one-time passcode to create account",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
         "button_verify": "Continue",
-        "button_sendOtpAgain": "Send one time code again",
+        "button_sendOtpAgain": "Send one-time passcode again",
         "button_back": "Cancel"
       }
     },
@@ -62,23 +62,23 @@
         "header": "Welcome back!",
         "subheader": "Don't have and account yet? ",
         "button_signup": "Create account",
-        "button_submit": "Continue with email",
+        "button_submit": "Continue",
         "textField_email": "Email address"
       },
       "passkeyError": {
         "header": "Log in with Passkeys",
-        "body": "Login with passkeys not possible. Try again or log in with email one time code.",
+        "body": "Login with passkeys not possible. Try again or log in with email one-time passcode.",
         "button_retry": "Try again",
-        "button_emailOtp": "Send email one time code",
+        "button_emailOtp": "Send email one-time passcode",
         "button_back": "Back",
         "button_cancel": "Cancel"
       },
       "emailOtp": {
-        "header": "Enter code to log in",
-        "body_text1": "We just sent a one time code to ",
-        "body_text2": ". The code expires shortly, so please enter it soon.",
+        "header": "Enter one-time passcode to log in",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
         "button_verify": "Continue",
-        "button_sendOtpAgain": "Send one time code again",
+        "button_sendOtpAgain": "Send one-time passcode again",
         "button_back": "Cancel"
       },
       "passkeyPrompt": {
@@ -112,7 +112,7 @@
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid",
-    "invalidOtp": "The provided OTP is not valid",
+    "invalidOtp": "The provided one-time passcode is not valid",
     "unknownError": "Something went wrong. Please try again later"
   },
   "passkeysList": {
@@ -128,11 +128,11 @@
       "header": "Delete Passkey",
       "body": "Are you sure you want to delete this passkey?",
       "button_cancel": "Cancel",
-      "button_confirm": "Yes, Delete"
+      "button_confirm": "Yes, delete"
     },
     "dialog_passkeyAlreadyExists": {
       "header": "Passkey already exists",
-      "body": "A passkey for this device already exists. If you are facing issues with your passkey, please delete it and, then, create a new one.",
+      "body": "A passkey for this device already exists. If you are facing issues with your passkey, please delete it and create a new one.",
       "button_confirm": "Ok"
     }
   }

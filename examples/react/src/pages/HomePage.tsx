@@ -36,7 +36,7 @@ const HomePage = () => {
   return (
     <div className='font-eloquent text-black bg-white min-h-screen flex flex-col'>
       <header className='bg-lightBrown text-white p-4 flex justify-between items-center'>
-        <h1 className='text-2xl md:text-4xl'>Corbado Test</h1>
+        <h1 className='text-2xl md:text-4xl'>Corbado React Test</h1>
         {user ? logoutButton : loginButton}
       </header>
       {user ? (

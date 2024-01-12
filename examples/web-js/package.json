@@ -1,0 +1,22 @@
+{
+  "name": "web-js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build --mode=vercel",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@corbado/types": "^0.1.1-alpha.3",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "@corbado/web-js": "^0.1.1-alpha.5"
+  }
+}

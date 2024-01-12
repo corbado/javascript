@@ -12,8 +12,7 @@ function App() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100dvh',
-        margin: '0.5rem 1rem',
+        margin: '5rem 1rem',
       }}
     >
       <CorbadoProvider

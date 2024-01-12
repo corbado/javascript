@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - main
-      - web_component_test
+      - feature-121/ui-fixes
 
 jobs:
   deploy:

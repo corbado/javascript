@@ -2,7 +2,7 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React from 'react';
 
 import type { CustomizableComponent } from '../../types/common';
-import { Button } from '../ui/Button';
+import { PrimaryButton } from '../ui/buttons/Button';
 
 export interface AuthFormScreenWrapperProps extends CustomizableComponent {
   onSubmit: () => void;
@@ -29,14 +29,12 @@ export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
       onSubmit={handleSubmit}
     >
       <div className='cb-form-body'>{children}</div>
-      <Button
-        variant='primary'
-        className='cb-form-button'
+      <PrimaryButton
         disabled={disableSubmitButton}
         isLoading={loading}
       >
         {submitButtonText}
-      </Button>
+      </PrimaryButton>
     </form>
   );
 };

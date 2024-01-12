@@ -5,7 +5,7 @@ esbuild
     entryPoints: ['src/index.script.ts'],
     bundle: true,
     minify: true,
-    outfile: 'bundle/index.js',
+    outfile: 'dist/bundle/index.js',
     format: 'esm',
     platform: 'browser',
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],

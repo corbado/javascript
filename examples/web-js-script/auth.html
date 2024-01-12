@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>SignIn - Corbado's WebJS (script) App</title>
+  <script src="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.css" />
+</head>
+
+<body>
+  <div id="corbado-auth"></div>
+
+  <script>
+    const projectID = window.location.href.includes('localhost')
+      ? 'pro-1743528526530787479'
+      : 'pro-523751808285927805';
+
+    Corbado.load({
+      projectId: projectID,
+      darkMode: 'off',
+    });
+
+    const authElement = document.getElementById('corbado-auth');
+
+    Corbado.mountAuthUI(authElement, {
+      onLoggedIn: () => {
+        window.location.href = '/';
+      },
+    });
+  </script>
+</body>
+
+</html>

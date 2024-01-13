@@ -32,7 +32,7 @@
 
 ## Overview
 
-The `@corbado/web-js` package enables easy integration of Corbado's authentication functionalities into web projects. 
+The `@corbado/web-js` package enables easy integration of Corbado's authentication functionalities into web projects.
 It can be used either by installing the package from NPM or by directly including it in your HTML files through script and style tags.
 
 ---
@@ -87,14 +87,14 @@ Mount the authentication UI to your HTML element:
 
 ```html
 <script>
-const authElement = document.getElementById('corbado-auth');
+  const authElement = document.getElementById('corbado-auth');
 
-// In your JavaScript or TypeScript file after initializing Corbado
-Corbado.mountAuthUI(authElement, {
-  onLoggedIn: () => {
-    window.location.href = '/';
-  },
-});
+  // In your JavaScript or TypeScript file after initializing Corbado
+  Corbado.mountAuthUI(authElement, {
+    onLoggedIn: () => {
+      window.location.href = '/';
+    },
+  });
 </script>
 
 <div id="corbado-auth"></div>
@@ -105,22 +105,19 @@ Corbado.mountAuthUI(authElement, {
 Use the `Corbado.user` object to check if the user is logged in and to mount the passkey list UI:
 
 ```html
-// In your JavaScript or TypeScript file after initializing Corbado
-if (Corbado.user) {
-  Corbado.mountPasskeyListUI(passkeyListHTMLElement);
-}
+// In your JavaScript or TypeScript file after initializing Corbado if (Corbado.user) {
+Corbado.mountPasskeyListUI(passkeyListHTMLElement); }
 
 <script>
-const passkeyListElement = document.getElementById('passkey-list');
+  const passkeyListElement = document.getElementById('passkey-list');
 
-// In your JavaScript or TypeScript file after initializing Corbado
-if (Corbado.user) {
-  Corbado.mountPasskeyListUI(passkeyListElement);
-}
+  // In your JavaScript or TypeScript file after initializing Corbado
+  if (Corbado.user) {
+    Corbado.mountPasskeyListUI(passkeyListElement);
+  }
 </script>
 
 <div id="passkey-list"></div>
-
 ```
 
 #### Handling Logout:

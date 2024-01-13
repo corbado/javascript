@@ -11,7 +11,7 @@
 
 ## Overview
 
-This package contains core functionalities which are used by all the SDKs and UI packages of the `@corbado` JavaScript library. 
+This package contains core functionalities which are used by all the SDKs and UI packages of the `@corbado` JavaScript library.
 Since, this is an internal package, it is not needed to be installed separately.
 
 ---

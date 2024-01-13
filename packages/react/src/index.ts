@@ -1,8 +1,17 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { CorbadoThemes } from '@corbado/shared-ui';
+import type { CorbadoAuthConfig } from '@corbado/types';
 
-import CorbadoProvider, { CorbadoProviderProps } from './hocs/CorbadoProvider';
+import CorbadoProvider, { type CorbadoProviderProps } from './hocs/CorbadoProvider';
 import CorbadoAuth from './screens/CorbadoAuth';
 import PasskeyList from './screens/PasskeyList';
 
-export { CorbadoProvider, useCorbado, CorbadoAuth, PasskeyList, CorbadoThemes, CorbadoProviderProps };
+export {
+  CorbadoProvider,
+  useCorbado,
+  CorbadoAuth,
+  PasskeyList,
+  CorbadoThemes,
+  CorbadoProviderProps,
+  CorbadoAuthConfig,
+};

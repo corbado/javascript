@@ -24,7 +24,7 @@ export const FlowNameByFlowStyle: Record<FlowStyles, { SignUp: SignUpFlowNames; 
     SignUp: SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
     Login: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
   },
-  EmailOtpSignup: {
+  EmailOTPSignup: {
     SignUp: SignUpFlowNames.EmailOtpSignupWithPasskey,
     Login: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
   },
@@ -38,6 +38,7 @@ export enum CommonScreens {
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',
+  PasskeySuccess = 'passkey-success',
 }
 
 // Enum representing the sequence of screens in the email OTP sign up flow

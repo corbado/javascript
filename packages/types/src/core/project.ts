@@ -25,7 +25,7 @@ export interface SignupFlowOptions {
 /**
  * Union type of all possible flow names for sign-up and login processes.
  */
-export type FlowStyles = 'PasskeyWithEmailOTPFallback' | 'EmailOtpSignup';
+export type FlowStyles = 'PasskeyWithEmailOTPFallback' | 'EmailOTPSignup';
 
 /**
  * Configuration settings for a project.

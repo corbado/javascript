@@ -9,7 +9,7 @@ import {
 } from '@corbado/web-core';
 import { Err, Ok, type Result } from 'ts-results';
 
-import { PasskeyLoginWithEmailOtpFallbackScreens } from '../../constants';
+import { CommonScreens } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
 import type { UserState } from '../../types';
@@ -21,15 +21,13 @@ export const validateEmail = (userStateIn?: UserState, onStartScreen = false): R
 
   const userState: UserState = { emailError: new InvalidEmailError(), email: userStateIn?.email };
 
-  return onStartScreen
-    ? Err(FlowUpdate.state(userState))
-    : Err(FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.Start, userState));
+  return onStartScreen ? Err(FlowUpdate.state(userState)) : Err(FlowUpdate.navigate(CommonScreens.Start, userState));
 };
 
 export const validateUserAuthState = (state: FlowHandlerState): Result<undefined, FlowUpdate> => {
   if (!state.user) {
     return Err(
-      FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.Start, {
+      FlowUpdate.navigate(CommonScreens.Start, {
         emailError: new UnknownError(),
         email: state.userState.email,
       }),
@@ -43,7 +41,7 @@ export const sendEmailOTP = async (authService: AuthService, email: string): Pro
   const res = await authService.initLoginWithEmailOTP(email);
 
   if (res.ok) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.EnterOtp, {
+    return FlowUpdate.navigate(CommonScreens.EnterOtp, {
       emailOTPState: { lastMailSent: new Date() },
       email,
     });
@@ -54,7 +52,7 @@ export const sendEmailOTP = async (authService: AuthService, email: string): Pro
 
 export const initPasskeyAppend = async (state: FlowHandlerState, email: string): Promise<FlowUpdate | undefined> => {
   if (!state.flowOptions.passkeyAppend) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End, { email });
+    return FlowUpdate.navigate(CommonScreens.End, { email });
   }
 
   const authMethods = await state.corbadoApp.authService.authMethods(email);
@@ -65,21 +63,21 @@ export const initPasskeyAppend = async (state: FlowHandlerState, email: string):
 
   const userHasPasskey = authMethods.val.selectedMethods.includes('webauthn');
   if (!userHasPasskey) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyAppend, { email });
+    return FlowUpdate.navigate(CommonScreens.PasskeyAppend, { email });
   }
 
-  return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End, { email });
+  return FlowUpdate.navigate(CommonScreens.End, { email });
 };
 
 export const loginWithPasskey = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const userState: UserState = { email };
   const res = await authService.loginWithPasskey(email);
   if (res.ok) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End, userState);
+    return FlowUpdate.navigate(CommonScreens.End, userState);
   }
 
   if (res.val instanceof UnknownUserError) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.Start, {
+    return FlowUpdate.navigate(CommonScreens.Start, {
       ...userState,
       emailError: res.val,
     });
@@ -93,7 +91,7 @@ export const loginWithPasskey = async (authService: AuthService, email: string):
     return sendEmailOTP(authService, email);
   }
 
-  return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.PasskeyError, userState);
+  return FlowUpdate.navigate(CommonScreens.PasskeyError, userState);
 };
 
 export const loginWithEmailOTP = async (
@@ -129,10 +127,10 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
     return FlowUpdate.ignore();
   }
 
-  return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End);
+  return FlowUpdate.navigate(CommonScreens.End);
 };
 
 export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {
   await authService.appendPasskey();
-  return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End);
+  return FlowUpdate.navigate(CommonScreens.End);
 };

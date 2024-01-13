@@ -96,9 +96,7 @@
           "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
           "button_showPasskeyBenefits": "passkeys",
           "button_retry": "Try again",
-          "button_emailOtp": "Send email one-time passcode",
-          "button_back": "Back",
-          "button_cancel": "Cancel"
+          "button_cancel": "Back"
         },
         "passkeyAppend": {
           "header": "Log in even faster with ",

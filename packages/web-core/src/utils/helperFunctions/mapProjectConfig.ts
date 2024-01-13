@@ -3,7 +3,7 @@ import type { FlowStyles, LoginFlowOptions, ProjectConfig, SignupFlowOptions } f
 import type { ProjectConfigRspAllOfData } from '../../api';
 
 export function isFlowStyle(value: string): value is FlowStyles {
-  return value === 'PasskeyWithEmailOTPFallback' || value === 'EmailOtpSignup';
+  return value === 'PasskeyWithEmailOTPFallback' || value === 'EmailOTPSignup';
 }
 
 export function mapToProjectConfig(apiResponse: ProjectConfigRspAllOfData): ProjectConfig {

@@ -29,7 +29,7 @@
 
 ## Overview
 
-The `@corbado/react` package provides a comprehensive solution for integrating passkey-based authentication in React applications. 
+The `@corbado/react` package provides a comprehensive solution for integrating passkey-based authentication in React applications.
 It simplifies the process of managing authentication states and user sessions with easy-to-use hooks and UI components.
 
 ---
@@ -71,7 +71,7 @@ export default App;
 
 ### CorbadoAuth component
 
-Adding SignUp/Login screens is simple with `@corbado/react`. 
+Adding SignUp/Login screens is simple with `@corbado/react`.
 The `CorbadoAuth` component allows your users to signUp and login with their passkeys.
 Additionally, it provides fallback options like email one-time passcode for users who don't have a passkey yet.
 

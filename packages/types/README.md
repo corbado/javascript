@@ -11,7 +11,7 @@
 
 ## Overview
 
-This package provides the TypeScript type declarations for Corbado libraries. 
+This package provides the TypeScript type declarations for Corbado libraries.
 Corbado packages automatically include their type declarations when installed so adding this package manually is not required.
 
 ---

@@ -186,6 +186,8 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
       }
       case FlowHandlerEvents.SecondaryButton:
         return await sendEmailOTP(state.corbadoApp, email, fullName);
+      case FlowHandlerEvents.CancelPasskey:
+        return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.End);
     }
 
     return;

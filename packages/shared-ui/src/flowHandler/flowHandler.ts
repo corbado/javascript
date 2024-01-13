@@ -69,6 +69,10 @@ export class FlowHandler {
     return this.#config.flowName;
   }
 
+  get currentFlowStyle() {
+    return this.#config.flowStyle;
+  }
+
   /**
    * Method to add a callback function to be called when the current screen changes.
    * @param cb The callback function to be called when the current screen changes.

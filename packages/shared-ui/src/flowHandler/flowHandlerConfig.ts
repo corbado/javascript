@@ -37,6 +37,10 @@ export class FlowHandlerConfig {
     return this.#flowOptions;
   }
 
+  get flowStyle() {
+    return this.#flowType === FlowType.SignUp ? this.#projectConfig.signupFlow : this.#projectConfig.loginFlow;
+  }
+
   // The update method allows the type of flow to be changed,
   // and updates the flow name and options accordingly.
   update(flowType: FlowType) {

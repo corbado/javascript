@@ -1,6 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
 import { CommonScreens, FlowHandler, SignUpFlowNames } from '@corbado/shared-ui';
+import type { FlowStyles } from '@corbado/types';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -18,6 +19,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
+  const [currentFlowStyle, setCurrentFlowStyle] = useState<FlowStyles>('PasskeyWithEmailOTPFallback');
   const [initialized, setInitialized] = useState(false);
   const onScreenChangeCbId = useRef<number>(0);
   const onFlowChangeCbId = useRef<number>(0);
@@ -37,7 +39,10 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
+        setCurrentFlow(value);
+        setCurrentFlowStyle(flowHandler.currentFlowStyle);
+      });
       onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
         setCurrentUserState(value);
       });
@@ -78,6 +83,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       currentFlow,
       currentScreen,
       currentUserState,
+      currentFlowStyle,
       initialized,
       navigateBack,
       emitEvent,

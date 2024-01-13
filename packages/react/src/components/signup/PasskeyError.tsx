@@ -1,5 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
+import type { FC } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,9 +8,16 @@ import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const PasskeyError = () => {
-  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.signup.${currentFlow}.passkeyError` });
+export interface PasskeyErrorProps {
+  showSecondaryButton?: boolean;
+  navigateBackOnCancel?: boolean;
+}
+
+export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
+  const { navigateBack, emitEvent, currentFlowStyle } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authenticationFlows.signup.${currentFlowStyle}.passkeyError`,
+  });
   const { shortSession } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
@@ -34,18 +42,18 @@ export const PasskeyError = () => {
 
   const primaryButton = useMemo(() => t('button_retry'), [t]);
   const secondaryButton = useMemo(() => {
-    if (shortSession) {
+    if (!showSecondaryButton) {
       return '';
     }
 
     return t('button_emailOtp');
   }, [t]);
   const tertiaryButton = useMemo(() => {
-    if (shortSession) {
-      return t('button_cancel');
+    if (navigateBackOnCancel) {
+      return t('button_back');
     }
 
-    return t('button_back');
+    return t('button_cancel');
   }, [t, shortSession]);
 
   const handleClick = useCallback(
@@ -58,7 +66,7 @@ export const PasskeyError = () => {
           setSecondaryLoading(true);
           return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return navigateBack();
+          return navigateBackOnCancel ? navigateBack() : emitEvent(FlowHandlerEvents.CancelPasskey);
       }
     },
     [navigateBack, emitEvent],

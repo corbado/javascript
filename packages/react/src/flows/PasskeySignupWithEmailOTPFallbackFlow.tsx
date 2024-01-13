@@ -4,7 +4,7 @@ import { EmailOTP } from '../screens/signup/EmailOTP';
 import { PasskeyAppend } from '../screens/signup/PasskeyAppend';
 import { PasskeyBenefits } from '../screens/signup/PasskeyBenefits';
 import { PasskeyCreate } from '../screens/signup/PasskeyCreate';
-import { PasskeyError } from '../screens/signup/PasskeyError';
+import { PasskeyError } from '../screens/signup/passkeySignupWithEmailOtpFallback/PasskeyError';
 import { PasskeySuccess } from '../screens/signup/PasskeySuccess';
 import { Start } from '../screens/signup/Start';
 

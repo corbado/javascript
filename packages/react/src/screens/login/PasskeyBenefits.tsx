@@ -7,9 +7,9 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyBenefits = () => {
-  const { emitEvent, currentFlow } = useFlowHandler();
+  const { emitEvent, currentFlowStyle } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.login.${currentFlow}.passkeyBenefits`,
+    keyPrefix: `authenticationFlows.login.${currentFlowStyle}.passkeyBenefits`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 

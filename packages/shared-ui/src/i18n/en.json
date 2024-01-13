@@ -1,7 +1,7 @@
 {
   "authenticationFlows": {
     "signup": {
-      "PasskeySignupWithEmailOTPFallback": {
+      "PasskeyWithEmailOTPFallback": {
         "start": {
           "header": "Create your account",
           "subheader": "You already have an account? ",
@@ -58,7 +58,7 @@
           "button_back": "Cancel"
         }
       },
-      "EmailOtpSignupWithPasskey": {
+      "EmailOTPSignup": {
         "start": {
           "header": "Create your account",
           "subheader": "You already have an account? ",
@@ -96,7 +96,7 @@
           "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
           "button_showPasskeyBenefits": "passkeys",
           "button_retry": "Try again",
-          "button_cancel": "Back"
+          "button_cancel": "Cancel"
         },
         "passkeyAppend": {
           "header": "Log in even faster with ",
@@ -115,7 +115,7 @@
       }
     },
     "login": {
-      "PasskeyLoginWithEmailOTPFallback": {
+      "PasskeyWithEmailOTPFallback": {
         "start": {
           "header": "Welcome back!",
           "subheader": "Don't have and account yet? ",

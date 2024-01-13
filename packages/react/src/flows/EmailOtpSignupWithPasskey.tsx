@@ -1,9 +1,9 @@
 import { EmailOtpSignupWithPasskeyScreens } from '@corbado/shared-ui';
 
 import { EmailOTP } from '../screens/signup/EmailOTP';
+import { PasskeyError } from '../screens/signup/emailOtpSignupWithPasskey/PasskeyError';
 import { PasskeyAppend } from '../screens/signup/PasskeyAppend';
 import { PasskeyBenefits } from '../screens/signup/PasskeyBenefits';
-import { PasskeyError } from '../screens/signup/PasskeyError';
 import { PasskeySuccess } from '../screens/signup/PasskeySuccess';
 import { Start } from '../screens/signup/Start';
 

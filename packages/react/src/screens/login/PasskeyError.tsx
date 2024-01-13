@@ -8,8 +8,10 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyError = () => {
-  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.login.${currentFlow}.passkeyError` });
+  const { navigateBack, emitEvent, currentFlowStyle } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authenticationFlows.login.${currentFlowStyle}.passkeyError`,
+  });
   const { shortSession } = useCorbado();
   const [loading, setLoading] = useState<boolean>(false);
 

@@ -137,7 +137,7 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
 
         return;
       }
-      case FlowHandlerEvents.SecondaryButton:
+      case FlowHandlerEvents.CancelPasskey:
         return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
     }
 

@@ -23,8 +23,8 @@ const createFormTemplate = (email?: string, fullName?: string) => ({
 });
 
 export const Start = () => {
-  const { currentUserState, emitEvent, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.signup.${currentFlow}.start` });
+  const { currentUserState, emitEvent, currentFlowStyle } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.signup.${currentFlowStyle}.start` });
 
   const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,

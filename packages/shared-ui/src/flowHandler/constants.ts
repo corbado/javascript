@@ -78,6 +78,7 @@ export enum PasskeyLoginWithEmailOtpFallbackScreens {
 export enum FlowHandlerEvents {
   ShowBenefits = 'show-benefits',
   CancelOtp = 'cancel-otp',
+  CancelPasskey = 'cancel-passkey',
   ChangeFlow = 'change-flow',
   PrimaryButton = 'primary-button',
   SecondaryButton = 'secondary-button',

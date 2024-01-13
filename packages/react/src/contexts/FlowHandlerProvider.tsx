@@ -1,5 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
+import type { FlowHandlerEventOptions, FlowNames, FlowType, ScreenNames, UserState } from '@corbado/shared-ui';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
 import { CommonScreens, FlowHandler, SignUpFlowNames } from '@corbado/shared-ui';
 import type { FlowStyles } from '@corbado/types';
 import i18n from 'i18next';
@@ -11,9 +12,16 @@ import FlowHandlerContext from './FlowHandlerContext';
 
 type Props = {
   onLoggedIn: () => void;
+  navigateFromFlow?: () => void;
+  initialFlowType?: FlowType;
 };
 
-export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
+export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
+  children,
+  initialFlowType,
+  onLoggedIn,
+  navigateFromFlow,
+}) => {
   const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
@@ -36,7 +44,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         // currently there are no errors that can be thrown here
         return;
       }
-      const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
+      const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
       onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
@@ -78,6 +86,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     [flowHandler],
   );
 
+  const changeFlow = useCallback(() => {
+    if (initialFlowType === undefined) {
+      void emitEvent(FlowHandlerEvents.ChangeFlow);
+    }
+
+    navigateFromFlow?.();
+  }, [initialFlowType, navigateFromFlow, emitEvent]);
+
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
       currentFlow,
@@ -87,6 +103,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       initialized,
       navigateBack,
       emitEvent,
+      changeFlow,
     }),
     [currentFlow, currentScreen, currentUserState, initialized, navigateBack],
   );

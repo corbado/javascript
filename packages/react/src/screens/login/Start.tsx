@@ -6,7 +6,7 @@ import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../compo
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { emitEvent, currentUserState, currentFlowStyle } = useFlowHandler();
+  const { emitEvent, currentUserState, currentFlowStyle, changeFlow } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.login.${currentFlowStyle}.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export const Start = () => {
         {t('subheader')}
         <span
           className='cb-link-secondary'
-          onClick={() => void emitEvent(FlowHandlerEvents.ChangeFlow)}
+          onClick={changeFlow}
         >
           {t('button_signup')}
         </span>

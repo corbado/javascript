@@ -3,7 +3,8 @@ import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
-import type { FlowHandlerEvents, FlowType } from './constants';
+import type { FlowHandlerEvents } from './constants';
+import { FlowType } from './constants';
 import { CommonScreens } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
@@ -29,8 +30,8 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: ProjectConfig, onLoggedIn: () => void) {
-    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig);
+  constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
+    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, initialFlowType);
     this.#screenHistory = [];
     this.#currentScreen = CommonScreens.Start;
   }

@@ -1,4 +1,4 @@
-import { EmailOtpSignupWithPasskeyScreens, FlowHandlerEvents, FlowType } from '../../constants';
+import { FlowHandlerEvents, FlowType, ScreenNames } from '../../constants';
 import { FlowUpdate } from '../../flowUpdate';
 import type { Flow } from '../../types';
 import {
@@ -11,7 +11,7 @@ import {
 } from './utils';
 
 export const EmailOtpSignupWithPasskeyFlow: Flow = {
-  [EmailOtpSignupWithPasskeyScreens.Start]: async (state, event, eventOptions) => {
+  [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
         return FlowUpdate.changeFlow(FlowType.Login);
@@ -34,7 +34,7 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
     return undefined;
   },
 
-  [EmailOtpSignupWithPasskeyScreens.EnterOtp]: async (state, event, eventOptions) => {
+  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -48,19 +48,19 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
         }
 
         if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
-          return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+          return FlowUpdate.navigate(ScreenNames.End);
         }
 
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.PasskeyAppend);
+        return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
       }
       case FlowHandlerEvents.SecondaryButton:
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.Start);
+        return FlowUpdate.navigate(ScreenNames.Start);
     }
 
     return;
   },
 
-  [EmailOtpSignupWithPasskeyScreens.PasskeyAppend]: async (state, event) => {
+  [ScreenNames.PasskeyAppend]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {
       return validations.val;
@@ -74,19 +74,19 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
         }
 
         return state.flowOptions.retryPasskeyOnError
-          ? FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.PasskeyError)
-          : FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
+          : FlowUpdate.navigate(ScreenNames.End);
       }
       case FlowHandlerEvents.SecondaryButton:
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+        return FlowUpdate.navigate(ScreenNames.End);
       case FlowHandlerEvents.ShowBenefits:
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.PasskeyBenefits);
+        return FlowUpdate.navigate(ScreenNames.PasskeyBenefits);
     }
 
     return undefined;
   },
 
-  [EmailOtpSignupWithPasskeyScreens.PasskeyBenefits]: async (state, event) => {
+  [ScreenNames.PasskeyBenefits]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {
       return validations.val;
@@ -100,27 +100,27 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
         }
 
         return state.flowOptions.retryPasskeyOnError
-          ? FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.PasskeyError)
-          : FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
+          : FlowUpdate.navigate(ScreenNames.End);
       }
       case FlowHandlerEvents.SecondaryButton: {
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+        return FlowUpdate.navigate(ScreenNames.End);
       }
     }
 
     return;
   },
 
-  [EmailOtpSignupWithPasskeyScreens.PasskeySuccess]: (_, event): Promise<FlowUpdate | undefined> => {
+  [ScreenNames.PasskeySuccess]: (_, event): Promise<FlowUpdate | undefined> => {
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return Promise.resolve(FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End));
+        return Promise.resolve(FlowUpdate.navigate(ScreenNames.End));
     }
 
     return Promise.resolve(undefined);
   },
 
-  [EmailOtpSignupWithPasskeyScreens.PasskeyError]: async (state, event) => {
+  [ScreenNames.PasskeyError]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {
       return validations.val;
@@ -128,7 +128,7 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.ShowBenefits:
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.PasskeyBenefits);
+        return FlowUpdate.navigate(ScreenNames.PasskeyBenefits);
       case FlowHandlerEvents.PrimaryButton: {
         const res = await appendPasskey(state.corbadoApp);
         if (res.ok) {
@@ -138,7 +138,7 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
         return;
       }
       case FlowHandlerEvents.CancelPasskey:
-        return FlowUpdate.navigate(EmailOtpSignupWithPasskeyScreens.End);
+        return FlowUpdate.navigate(ScreenNames.End);
     }
 
     return;

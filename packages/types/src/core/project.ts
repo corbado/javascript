@@ -1,32 +1,3 @@
-//TODO: make the properties compulsory and remove the question mark (waiting on BE support)
-/**
- * Options for the login flow.
- * @interface LoginFlowOptions
- * @property {boolean} passkeyAppend - Whether to append a passkey.
- * @property {boolean} retryPasskeyOnError - Whether to retry passkey on error.
- */
-export interface LoginFlowOptions {
-  passkeyAppend?: boolean;
-  retryPasskeyOnError?: boolean;
-}
-
-//TODO: make the properties compulsory and remove the question mark (waiting on BE support)
-/**
- * Options for the signup flow.
- * @interface SignupFlowOptions
- * @property {boolean} passkeyAppend - Whether to append a passkey.
- * @property {boolean} retryPasskeyOnError - Whether to retry passkey on error.
- */
-export interface SignupFlowOptions {
-  passkeyAppend?: boolean;
-  retryPasskeyOnError?: boolean;
-}
-
-/**
- * Union type of all possible flow names for sign-up and login processes.
- */
-export type FlowStyles = 'PasskeyWithEmailOTPFallback' | 'EmailOTPSignup';
-
 /**
  * Configuration settings for a project.
  * @interface ProjectConfig
@@ -50,8 +21,8 @@ export interface ProjectConfig {
   userFullNameRequired: boolean;
   webComponentDebug: boolean;
   environment: string;
-  loginFlow: FlowStyles;
-  loginFlowOptions: LoginFlowOptions;
-  signupFlow: FlowStyles;
-  signupFlowOptions: SignupFlowOptions;
+  loginFlow: string;
+  loginFlowOptions: object;
+  signupFlow: string;
+  signupFlowOptions: object;
 }

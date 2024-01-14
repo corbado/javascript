@@ -2,12 +2,12 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { emitEvent, currentUserState, currentFlowStyle } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.login.${currentFlowStyle}.start` });
+  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.${currentFlow}.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);

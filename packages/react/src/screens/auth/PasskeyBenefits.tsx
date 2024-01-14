@@ -7,12 +7,11 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyBenefits = () => {
-  const { navigateBack, emitEvent, currentFlowStyle } = useFlowHandler();
+  const { emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.signup.${currentFlowStyle}.passkeyBenefits`,
+    keyPrefix: `authenticationFlows.${currentFlow}.passkeyBenefits`,
   });
-  const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
-  const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
   const body = useMemo(
@@ -28,19 +27,15 @@ export const PasskeyBenefits = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleClick = useCallback(
-    (btn: ButtonType) => {
-      switch (btn) {
-        case 'primary':
-          setPrimaryLoading(true);
-          return emitEvent(FlowHandlerEvents.PrimaryButton);
-        case 'secondary':
-          setSecondaryLoading(true);
-          return emitEvent(FlowHandlerEvents.SecondaryButton);
-        case 'tertiary':
-          return navigateBack();
+    async (btn: ButtonType) => {
+      if (btn === 'primary') {
+        setLoading(true);
+        return emitEvent(FlowHandlerEvents.PrimaryButton);
       }
+
+      return emitEvent(FlowHandlerEvents.SecondaryButton);
     },
-    [navigateBack, emitEvent],
+    [emitEvent, setLoading],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
@@ -49,11 +44,10 @@ export const PasskeyBenefits = () => {
       body,
       primaryButton,
       secondaryButton,
-      primaryLoading,
-      secondaryLoading,
+      primaryLoading: loading,
       onClick: handleClick,
     }),
-    [body, header, primaryButton, secondaryButton, primaryLoading, secondaryLoading, handleClick],
+    [body, header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

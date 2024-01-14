@@ -2,14 +2,14 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
-import { PasskeyScreensWrapper } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import type { ButtonType, PasskeyScreensWrapperProps } from '../../../../components';
+import { PasskeyScreensWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyCreate = () => {
-  const { navigateBack, currentUserState, emitEvent, currentFlowStyle } = useFlowHandler();
+  const { navigateBack, currentUserState, emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.signup.${currentFlowStyle}.passkeyCreate`,
+    keyPrefix: `authenticationFlows.${currentFlow}.passkeyCreate`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);

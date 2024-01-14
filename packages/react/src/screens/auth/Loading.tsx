@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import { Spinner } from '../components';
+import { Spinner } from '../../components';
 
 const Loading: FC = () => {
   return (

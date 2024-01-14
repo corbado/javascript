@@ -1,157 +1,153 @@
 {
   "authenticationFlows": {
-    "signup": {
-      "PasskeyWithEmailOTPFallback": {
-        "start": {
-          "header": "Create your account",
-          "subheader": "You already have an account? ",
-          "button_login": "Log in",
-          "button_submit": "Continue",
-          "textField_name": "Name",
-          "textField_email": "Email address"
-        },
-        "passkeyCreate": {
-          "header": "Let's get you set up with ",
-          "body": "We'll create an account for ",
-          "button_showPasskeyBenefits": "Passkeys",
-          "button_start": "Create your account",
-          "button_emailOtp": "Send email one-time passcode",
-          "button_back": "Back"
-        },
-        "passkeyBenefits": {
-          "header": "Passkeys",
-          "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-          "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-          "button_start": "Create passkey",
-          "button_skip": "Maybe later"
-        },
-        "passkeySuccess": {
-          "header": "Welcome!",
-          "subheader": "Passkey created",
-          "body_text1": "You can now confirm your identity using your ",
-          "body_text2": "passkey or via email one-time passcode",
-          "body_text3": " when you log in.",
-          "button": "Continue"
-        },
-        "passkeyError": {
-          "header": "Let's get you set up",
-          "body_errorMessage1": "Creating your account was not possible with ",
-          "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
-          "button_showPasskeyBenefits": "passkeys",
-          "button_retry": "Try again",
-          "button_emailOtp": "Send email one-time passcode",
-          "button_back": "Back",
-          "button_cancel": "Cancel"
-        },
-        "passkeyAppend": {
-          "header": "Log in even faster with ",
-          "button_showPasskeyBenefits": "Passkeys",
-          "button_start": "Activate",
-          "button_skip": "Maybe later"
-        },
-        "emailOtp": {
-          "header": "Enter one-time passcode to create account",
-          "body_text1": "We just sent a one-time passcode to ",
-          "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-          "button_verify": "Continue",
-          "button_sendOtpAgain": "Send one-time passcode again",
-          "button_back": "Cancel"
-        }
+    "PasskeySignupWithEmailOTPFallback": {
+      "start": {
+        "header": "Create your account",
+        "subheader": "You already have an account? ",
+        "button_login": "Log in",
+        "button_submit": "Continue",
+        "textField_name": "Name",
+        "textField_email": "Email address"
       },
-      "EmailOTPSignup": {
-        "start": {
-          "header": "Create your account",
-          "subheader": "You already have an account? ",
-          "button_login": "Log in",
-          "button_submit": "Continue",
-          "textField_name": "Name",
-          "textField_email": "Email address"
-        },
-        "passkeyCreate": {
-          "header": "Let's get you set up with ",
-          "body": "We'll create an account for ",
-          "button_showPasskeyBenefits": "Passkeys",
-          "button_start": "Create your account",
-          "button_emailOtp": "Send email one-time passcode",
-          "button_back": "Back"
-        },
-        "passkeyBenefits": {
-          "header": "Passkeys",
-          "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-          "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-          "button_start": "Create passkey",
-          "button_skip": "Maybe later"
-        },
-        "passkeySuccess": {
-          "header": "Welcome!",
-          "subheader": "Passkey created",
-          "body_text1": "You can now confirm your identity using your ",
-          "body_text2": "passkey or via email one-time passcode",
-          "body_text3": " when you log in.",
-          "button": "Continue"
-        },
-        "passkeyError": {
-          "header": "Let's get you set up",
-          "body_errorMessage1": "Creating your account was not possible with ",
-          "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
-          "button_showPasskeyBenefits": "passkeys",
-          "button_retry": "Try again",
-          "button_cancel": "Cancel"
-        },
-        "passkeyAppend": {
-          "header": "Log in even faster with ",
-          "button_showPasskeyBenefits": "Passkeys",
-          "button_start": "Activate",
-          "button_skip": "Maybe later"
-        },
-        "emailOtp": {
-          "header": "Enter one-time passcode to create account",
-          "body_text1": "We just sent a one-time passcode to ",
-          "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-          "button_verify": "Continue",
-          "button_sendOtpAgain": "Send one-time passcode again",
-          "button_back": "Cancel"
-        }
+      "passkeyCreate": {
+        "header": "Let's get you set up with ",
+        "body": "We'll create an account for ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Create your account",
+        "button_emailOtp": "Send email one-time passcode",
+        "button_back": "Back"
+      },
+      "passkeyBenefits": {
+        "header": "Passkeys",
+        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+        "button_start": "Create passkey",
+        "button_skip": "Maybe later"
+      },
+      "passkeySuccess": {
+        "header": "Welcome!",
+        "subheader": "Passkey created",
+        "body_text1": "You can now confirm your identity using your ",
+        "body_text2": "passkey or via email one-time passcode",
+        "body_text3": " when you log in.",
+        "button": "Continue"
+      },
+      "passkeyError": {
+        "header": "Let's get you set up",
+        "body_errorMessage1": "Creating your account was not possible with ",
+        "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
+        "button_showPasskeyBenefits": "passkeys",
+        "button_retry": "Try again",
+        "button_emailOtp": "Send email one-time passcode",
+        "button_back": "Back",
+        "button_cancel": "Cancel"
+      },
+      "passkeyAppend": {
+        "header": "Log in even faster with ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Activate",
+        "button_skip": "Maybe later"
+      },
+      "emailOtp": {
+        "header": "Enter one-time passcode to create account",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
+        "button_verify": "Continue",
+        "button_sendOtpAgain": "Send one-time passcode again",
+        "button_back": "Cancel"
       }
     },
-    "login": {
-      "PasskeyWithEmailOTPFallback": {
-        "start": {
-          "header": "Welcome back!",
-          "subheader": "Don't have and account yet? ",
-          "button_signup": "Create account",
-          "button_submit": "Continue",
-          "textField_email": "Email address"
-        },
-        "passkeyError": {
-          "header": "Log in with Passkeys",
-          "body": "Login with passkeys not possible. Try again or log in with email one-time passcode.",
-          "button_retry": "Try again",
-          "button_emailOtp": "Send email one-time passcode",
-          "button_back": "Back",
-          "button_cancel": "Cancel"
-        },
-        "emailOtp": {
-          "header": "Enter one-time passcode to log in",
-          "body_text1": "We just sent a one-time passcode to ",
-          "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-          "button_verify": "Continue",
-          "button_sendOtpAgain": "Send one-time passcode again",
-          "button_back": "Cancel"
-        },
-        "passkeyAppend": {
-          "header": "Log in even faster with ",
-          "button_showPasskeyBenefits": "Passkeys",
-          "button_start": "Activate",
-          "button_skip": "Maybe later"
-        },
-        "passkeyBenefits": {
-          "header": "Passkeys",
-          "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-          "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-          "button_start": "Create passkey",
-          "button_skip": "Maybe later"
-        }
+    "EmailOTPSignupWithPasskey": {
+      "start": {
+        "header": "Create your account",
+        "subheader": "You already have an account? ",
+        "button_login": "Log in",
+        "button_submit": "Continue",
+        "textField_name": "Name",
+        "textField_email": "Email address"
+      },
+      "passkeyCreate": {
+        "header": "Let's get you set up with ",
+        "body": "We'll create an account for ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Create your account",
+        "button_emailOtp": "Send email one-time passcode",
+        "button_back": "Back"
+      },
+      "passkeyBenefits": {
+        "header": "Passkeys",
+        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+        "button_start": "Create passkey",
+        "button_skip": "Maybe later"
+      },
+      "passkeySuccess": {
+        "header": "Welcome!",
+        "subheader": "Passkey created",
+        "body_text1": "You can now confirm your identity using your ",
+        "body_text2": "passkey or via email one-time passcode",
+        "body_text3": " when you log in.",
+        "button": "Continue"
+      },
+      "passkeyError": {
+        "header": "Let's get you set up",
+        "body_errorMessage1": "Creating your account was not possible with ",
+        "body_errorMessage2": ". Try again or sign up with email one-time passcode.",
+        "button_showPasskeyBenefits": "passkeys",
+        "button_retry": "Try again",
+        "button_cancel": "Cancel"
+      },
+      "passkeyAppend": {
+        "header": "Log in even faster with ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Activate",
+        "button_skip": "Maybe later"
+      },
+      "emailOtp": {
+        "header": "Enter one-time passcode to create account",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
+        "button_verify": "Continue",
+        "button_sendOtpAgain": "Send one-time passcode again",
+        "button_back": "Cancel"
+      }
+    },
+    "PasskeyLoginWithEmailOTPFallback": {
+      "start": {
+        "header": "Welcome back!",
+        "subheader": "Don't have and account yet? ",
+        "button_signup": "Create account",
+        "button_submit": "Continue",
+        "textField_email": "Email address"
+      },
+      "passkeyError": {
+        "header": "Log in with Passkeys",
+        "body": "Login with passkeys not possible. Try again or log in with email one-time passcode.",
+        "button_retry": "Try again",
+        "button_emailOtp": "Send email one-time passcode",
+        "button_back": "Back",
+        "button_cancel": "Cancel"
+      },
+      "emailOtp": {
+        "header": "Enter one-time passcode to log in",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
+        "button_verify": "Continue",
+        "button_sendOtpAgain": "Send one-time passcode again",
+        "button_back": "Cancel"
+      },
+      "passkeyAppend": {
+        "header": "Log in even faster with ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "button_start": "Activate",
+        "button_skip": "Maybe later"
+      },
+      "passkeyBenefits": {
+        "header": "Passkeys",
+        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+        "button_start": "Create passkey",
+        "button_skip": "Maybe later"
       }
     },
     "unexpectedError": {

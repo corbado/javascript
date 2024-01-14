@@ -31,8 +31,6 @@ export const AuthFlow: FC<AuthFlowProps> = ({ isDevMode, customerSupportEmail })
     return EndComponentScreen ? <EndComponentScreen /> : null;
   }, [componentMap]);
 
-  console.log('AuthFlow', { currentFlow, currentScreen, initialized, ScreenComponent, EndComponent });
-
   // Render the component if it exists, otherwise a fallback or null
   return (
     <ErrorBoundary

@@ -1,10 +1,10 @@
 import { ScreenNames } from '@corbado/shared-ui';
 
-import { EmailOTP } from '../screens/auth/EmailOTP';
-import { PasskeyError } from '../screens/auth/flows/passkeyLoginWithEmailOTPFallback/PasskeyError';
-import { Start } from '../screens/auth/flowtypes/login/Start';
-import { PasskeyAppend } from '../screens/auth/PasskeyAppend';
-import { PasskeyBenefits } from '../screens/auth/PasskeyBenefits';
+import { EmailOTP } from '../screens/authentication/EmailOTP';
+import { PasskeyError } from '../screens/authentication/flows/passkeyLoginWithEmailOTPFallback/PasskeyError';
+import { Start } from '../screens/authentication/flowtypes/login/Start';
+import { PasskeyAppend } from '../screens/authentication/PasskeyAppend';
+import { PasskeyBenefits } from '../screens/authentication/PasskeyBenefits';
 
 export const PasskeyLoginWithEmailOTPFallbackFlow = {
   [ScreenNames.Start]: Start,

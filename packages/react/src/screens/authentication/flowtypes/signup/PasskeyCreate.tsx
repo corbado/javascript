@@ -9,7 +9,7 @@ import useFlowHandler from '../../../../hooks/useFlowHandler';
 export const PasskeyCreate = () => {
   const { navigateBack, currentUserState, emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.${currentFlow}.passkeyCreate`,
+    keyPrefix: `authentication.${currentFlow}.passkeyCreate`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);

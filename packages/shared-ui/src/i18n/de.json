@@ -1,5 +1,5 @@
 {
-  "authenticationFlows": {
+  "authentication": {
     "signup": {
       "start": {
         "header": "Erstellen Sie Ihr Konto",

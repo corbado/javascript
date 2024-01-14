@@ -16,7 +16,7 @@ export interface PasskeyErrorProps {
 export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
   const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.${currentFlow}.passkeyError`,
+    keyPrefix: `authentication.${currentFlow}.passkeyError`,
   });
   const { shortSession } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);

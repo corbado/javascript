@@ -6,19 +6,24 @@ import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const PasskeyBenefits = () => {
+export const PasskeyAppend = () => {
   const { emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.${currentFlow}.passkeyBenefits`,
+    keyPrefix: `authentication.${currentFlow}.passkeyAppend`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const header = useMemo(() => t('header'), [t]);
-  const body = useMemo(
+  const header = useMemo(
     () => (
-      <>
-        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>
-      </>
+      <span>
+        {t('header')}
+        <span
+          className='cb-link-primary'
+          onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
+        >
+          {t('button_showPasskeyBenefits')}
+        </span>
+      </span>
     ),
     [t],
   );
@@ -27,7 +32,7 @@ export const PasskeyBenefits = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleClick = useCallback(
-    async (btn: ButtonType) => {
+    (btn: ButtonType) => {
       if (btn === 'primary') {
         setLoading(true);
         return emitEvent(FlowHandlerEvents.PrimaryButton);
@@ -35,19 +40,18 @@ export const PasskeyBenefits = () => {
 
       return emitEvent(FlowHandlerEvents.SecondaryButton);
     },
-    [emitEvent, setLoading],
+    [emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
-      body,
       primaryButton,
       secondaryButton,
       primaryLoading: loading,
       onClick: handleClick,
     }),
-    [body, header, primaryButton, secondaryButton, loading, handleClick],
+    [header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

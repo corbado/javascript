@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ScreenMap } from '../../flows';
 import { flowScreensMap } from '../../flows';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import Loading from '../../screens/auth/Loading';
+import Loading from '../../screens/authentication/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface AuthFlowProps {

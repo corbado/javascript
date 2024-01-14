@@ -7,7 +7,7 @@ import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
   const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.${currentFlow}.start` });
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);

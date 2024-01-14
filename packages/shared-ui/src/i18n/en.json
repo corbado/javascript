@@ -1,5 +1,5 @@
 {
-  "authenticationFlows": {
+  "authentication": {
     "PasskeySignupWithEmailOTPFallback": {
       "start": {
         "header": "Create your account",

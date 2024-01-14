@@ -8,7 +8,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
   const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authenticationFlows.${currentFlow}.emailOtp` });
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.emailOtp` });
 
   const header = t('header');
   const body = (

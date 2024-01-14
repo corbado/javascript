@@ -9,7 +9,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 export const PasskeySuccess = () => {
   const { emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.${currentFlow}.passkeySuccess`,
+    keyPrefix: `authentication.${currentFlow}.passkeySuccess`,
   });
 
   const header = useMemo(() => t('header'), [t]);

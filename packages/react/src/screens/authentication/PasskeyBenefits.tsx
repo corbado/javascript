@@ -6,24 +6,19 @@ import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const PasskeyAppend = () => {
-  const { emitEvent, currentFlowStyle } = useFlowHandler();
+export const PasskeyBenefits = () => {
+  const { emitEvent, currentFlow } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authenticationFlows.signup.${currentFlowStyle}.passkeyAppend`,
+    keyPrefix: `authentication.${currentFlow}.passkeyBenefits`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const header = useMemo(
+  const header = useMemo(() => t('header'), [t]);
+  const body = useMemo(
     () => (
-      <span>
-        {t('header')}
-        <span
-          className='cb-link-primary'
-          onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
-        >
-          {t('button_showPasskeyBenefits')}
-        </span>
-      </span>
+      <>
+        {t('body_introduction')} <strong>{t('body_loginMethods')}</strong>
+      </>
     ),
     [t],
   );
@@ -32,7 +27,7 @@ export const PasskeyAppend = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleClick = useCallback(
-    (btn: ButtonType) => {
+    async (btn: ButtonType) => {
       if (btn === 'primary') {
         setLoading(true);
         return emitEvent(FlowHandlerEvents.PrimaryButton);
@@ -40,18 +35,19 @@ export const PasskeyAppend = () => {
 
       return emitEvent(FlowHandlerEvents.SecondaryButton);
     },
-    [emitEvent],
+    [emitEvent, setLoading],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
+      body,
       primaryButton,
       secondaryButton,
+      primaryLoading: loading,
       onClick: handleClick,
-      loading,
     }),
-    [header, primaryButton, secondaryButton, loading, handleClick],
+    [body, header, primaryButton, secondaryButton, loading, handleClick],
   );
 
   return (

@@ -1,13 +1,11 @@
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
-import { CommonScreens, LoginFlowNames } from '@corbado/shared-ui';
-import type { FlowStyles } from '@corbado/types';
+import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, UserState } from '@corbado/shared-ui';
+import { LoginFlowNames, ScreenNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
   currentFlow: FlowNames;
   currentScreen: ScreenNames;
   currentUserState: UserState;
-  currentFlowStyle: FlowStyles;
   initialized: boolean;
   navigateBack: () => ScreenNames;
   emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
@@ -15,11 +13,10 @@ export interface FlowHandlerContextProps {
 
 export const initialContext: FlowHandlerContextProps = {
   currentFlow: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
-  currentScreen: CommonScreens.Start,
-  currentFlowStyle: 'PasskeyWithEmailOTPFallback',
+  currentScreen: ScreenNames.Start,
   currentUserState: {},
   initialized: false,
-  navigateBack: () => CommonScreens.Start,
+  navigateBack: () => ScreenNames.Start,
   emitEvent: () => Promise.reject(),
 };
 

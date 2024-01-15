@@ -2,8 +2,8 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
-import useFlowHandler from '../../../../hooks/useFlowHandler';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../components';
+import useFlowHandler from '../../../hooks/useFlowHandler';
 
 export const Start = () => {
   const { emitEvent, currentUserState, currentFlow } = useFlowHandler();

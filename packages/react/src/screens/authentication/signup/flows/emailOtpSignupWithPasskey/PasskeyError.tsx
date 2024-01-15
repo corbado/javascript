@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PasskeyError as PasskeyErrorBase } from '../../../../components/signup/PasskeyError';
+import { PasskeyError as PasskeyErrorBase } from '../../../../../components/wrappers/PasskeyError';
 
 export const PasskeyError = () => {
   return (

@@ -1,10 +1,9 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
+import type { ButtonVariants } from '../ui';
 import { Body, Header, HorizontalRule, PrimaryButton, SecondaryButton, SubHeader, TertiaryButton } from '../ui';
 import { FingerprintIcon } from '../ui/icons/Icons';
-
-export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
 export interface PasskeyScreensWrapperProps {
   header: ReactNode;
@@ -15,9 +14,7 @@ export interface PasskeyScreensWrapperProps {
   secondaryButton?: string;
   tertiaryButton?: string;
   showHorizontalRule?: boolean;
-
-  onClick(btn: ButtonType): void;
-
+  onClick(btn: ButtonVariants): void;
   primaryLoading?: boolean;
   secondaryLoading?: boolean;
   hideFingerPrintIcon?: boolean;

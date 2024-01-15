@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 
 import { Spinner } from '../Spinner';
 
-type ButtonVariants = 'primary' | 'secondary' | 'tertiary' | 'close';
+export type ButtonVariants = 'primary' | 'secondary' | 'tertiary' | 'close';
 
 interface AdditionalProps {
   variant?: ButtonVariants;

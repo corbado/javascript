@@ -4,11 +4,11 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Spinner } from '../components';
-import PasskeyAgentIcon from '../components/passkeyList/PasskeyAgentIcon';
-import PasskeyCreate from '../components/passkeyList/PasskeyCreate';
-import PasskeyDelete from '../components/passkeyList/PasskeyDelete';
-import PasskeyDetails from '../components/passkeyList/PasskeyDetails';
+import { Spinner } from '../../components';
+import PasskeyAgentIcon from '../../components/passkeyList/PasskeyAgentIcon';
+import PasskeyCreate from '../../components/passkeyList/PasskeyCreate';
+import PasskeyDelete from '../../components/passkeyList/PasskeyDelete';
+import PasskeyDetails from '../../components/passkeyList/PasskeyDetails';
 
 const PasskeyList: FC = () => {
   const { getPasskeys, appendPasskey, deletePasskey, shortSession } = useCorbado();

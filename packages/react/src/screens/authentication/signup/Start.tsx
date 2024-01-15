@@ -4,8 +4,8 @@ import type { ChangeEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
-import useFlowHandler from '../../../../hooks/useFlowHandler';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../components';
+import useFlowHandler from '../../../hooks/useFlowHandler';
 
 interface SignupForm {
   name: string;

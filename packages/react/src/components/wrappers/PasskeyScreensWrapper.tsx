@@ -1,7 +1,8 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
-import { Body, Button, Header, HorizontalRule, SubHeader } from '../ui';
+import { Body, Header, HorizontalRule, PrimaryButton, SecondaryButton, SubHeader, TertiaryButton } from '../ui';
+import { FingerprintIcon } from '../ui/icons/Icons';
 
 export type ButtonType = 'primary' | 'secondary' | 'tertiary';
 
@@ -42,44 +43,40 @@ export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
 
       {subHeader && <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>}
 
-      {!hideFingerPrintIcon && <div className='cb-finger-print-icon'></div>}
+      {!hideFingerPrintIcon && <FingerprintIcon className={'cb-finger-print-icon'} />}
 
       {secondaryHeader && <Header className='cb-secondary-header-spacing'>{secondaryHeader}</Header>}
 
       {body && <Body className='cb-body-spacing'>{body}</Body>}
 
       {primaryButton && (
-        <Button
-          variant='primary'
+        <PrimaryButton
           onClick={() => onClick('primary')}
           isLoading={primaryLoading}
-          disabled={primaryLoading || secondaryLoading}
+          disabled={secondaryLoading}
         >
           {primaryButton}
-        </Button>
+        </PrimaryButton>
       )}
 
       {showHorizontalRule && <HorizontalRule>or</HorizontalRule>}
 
       {secondaryButton && (
-        <Button
-          variant='secondary'
+        <SecondaryButton
           onClick={() => onClick('secondary')}
           isLoading={secondaryLoading}
-          disabled={primaryLoading || secondaryLoading}
+          disabled={primaryLoading}
         >
           {secondaryButton}
-        </Button>
+        </SecondaryButton>
       )}
-
       {tertiaryButton && (
-        <Button
-          variant='tertiary'
+        <TertiaryButton
           onClick={() => onClick('tertiary')}
           disabled={primaryLoading || secondaryLoading}
         >
           {tertiaryButton}
-        </Button>
+        </TertiaryButton>
       )}
     </div>
   );

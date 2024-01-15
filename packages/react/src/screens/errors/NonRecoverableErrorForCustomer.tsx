@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { PrimaryButton } from '../../components';
+
 const NonRecoverableErrorForCustomer = (customerSupportEmail: { customerSupportEmail: string }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.unexpectedError' });
   return (
@@ -13,12 +15,7 @@ const NonRecoverableErrorForCustomer = (customerSupportEmail: { customerSupportE
             {customerSupportEmail ? t('body_withCustomerSupport', customerSupportEmail) : t('body_noCustomerSupport')}
           </div>
         </div>
-        <button
-          className='prod-error-button'
-          onClick={() => window.location.reload()}
-        >
-          {t('button')}
-        </button>
+        <PrimaryButton onClick={() => window.location.reload()}>{t('button')}</PrimaryButton>
       </div>
     </div>
   );

@@ -8,6 +8,8 @@
   "scripts": {
     "build": "lerna run build",
     "build:dev": "lerna run build:dev",
+    "build:bundler": "lerna run build:bundler",
+    "build:bundler:local": "lerna run build:bundler:local",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix",
     "prettier:check": "prettier --check .",
@@ -26,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "5.58.0",
     "@typescript-eslint/parser": "5.58.0",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.19.11",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-simple-import-sort": "10.0.0",

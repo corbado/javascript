@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My Corbado App</title>
+    <script src="./bundle/index.js"></script>
+    <link
+      rel="stylesheet"
+      href="./bundle/index.css"
+    />
+  </head>
+
+  <body>
+    <div id="corbado-app">
+      <h1 id="header"></h1>
+      <div>
+        <h3>This is your short session</h3>
+        <p id="short-session"></p>
+      </div>
+      <button
+        id="logout"
+        style="margin: 2rem 0.2rem"
+      >
+        Logout
+      </button>
+      <div>
+        <h3>Passkey Lists</h3>
+        <div id="passkey-list"></div>
+      </div>
+    </div>
+    <div id="fallback-ui">
+      <p>This is the fallback UI. You should not see this unless you are not logged in.</p>
+      <button
+        id="login"
+        style="margin: 2rem 0.2rem"
+      >
+        Login
+      </button>
+    </div>
+
+    <script type="module">
+      import { jwtDecode } from 'https://unpkg.com/jwt-decode@4.0.0/build/esm/index.js';
+
+      const projectID = window.location.href.includes('localhost')
+        ? 'pro-1743528526530787479'
+        : 'pro-3652881945085154854';
+
+      Corbado.load({
+        projectId: projectID,
+      });
+
+      if (!Corbado.user) {
+        const corbadoAppElement = document.getElementById('corbado-app');
+        corbadoAppElement.style.display = 'none';
+        const corbadoAuthElement = document.getElementById('login');
+        corbadoAuthElement.onclick = () => {
+          window.location.href = '/auth.html';
+        };
+      } else {
+        const fallbackUI = document.getElementById('fallback-ui');
+        fallbackUI.style.display = 'none';
+
+        const header = document.getElementById('header');
+        header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
+
+        const decodedShortSession = jwtDecode(Corbado.shortSession);
+        const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);
+        const shortSession = document.getElementById('short-session');
+        shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
+
+        const logoutButton = document.getElementById('logout');
+        logoutButton.addEventListener('click', () => {
+          Corbado.logout();
+          window.location.href = '/auth.html';
+        });
+
+        const passkeyList = document.getElementById('passkey-list');
+        Corbado.mountPasskeyListUI(passkeyList);
+      }
+    </script>
+  </body>
+</html>

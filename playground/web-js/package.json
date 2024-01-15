@@ -1,0 +1,20 @@
+{
+  "name": "web-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=local webpack-dev-server --open --mode development",
+    "build": "cross-env NODE_ENV=vercel webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@corbado/web-js": "*",
+    "jwt-decode": "^4.0.0"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^8.0.1"
+  }
+}

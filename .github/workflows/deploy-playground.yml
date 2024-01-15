@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - main
-      - feature-102/vercel-deployment-for-examples
+      - feature-121/ui-fixes
 
 jobs:
   deploy:
@@ -51,6 +51,7 @@ jobs:
       - name: Build SDKs
         run: |
           npm run build
+          npm run build:bundler:local
 
       - name: Normalize branch name
         run: |
@@ -63,7 +64,7 @@ jobs:
           npm install
           npm run build
           url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react-sdk.korbado.com
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react-sdk.playground.corbado.io
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK_PLAYGROUND }}
 
@@ -73,6 +74,26 @@ jobs:
           npm install
           npm run build
           url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.korbado.com
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_PLAYGROUND }}
+
+      - name: Deploy web-js playground to Vercel
+        run: |
+          cd playground/web-js
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_PLAYGROUND }}
+
+      - name: Deploy web-js-script playground to Vercel
+        run: |
+          cd playground/web-js-script
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js-script.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_SCRIPT_PLAYGROUND }}

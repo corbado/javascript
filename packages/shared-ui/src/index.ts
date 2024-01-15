@@ -1,9 +1,15 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import './styles/index.css';
 import './styles/error_page.css';
 import './styles/themes/dark.css';
 import './styles/themes/emerald-funk.css';
 
+import cancelIcon from './assets/cancel.svg';
+import deleteIcon from './assets/delete.svg';
+import fingerprintIcon from './assets/fingerprint.svg';
+import gmailIcon from './assets/gmail.svg';
+import outlookIcon from './assets/outlook.svg';
+import passkeyDefaultIcon from './assets/passkey-default.svg';
+import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
 
@@ -13,7 +19,13 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
-export const deleteSVG = require('./assets/delete.svg');
-export const gmailSVG = require('./assets/gmail.svg');
-export const outlookSVG = require('./assets/outlook.svg');
-export const yahooSVG = require('./assets/yahoo.svg');
+
+export const assets = {
+  deleteIcon,
+  passkeyDefaultIcon,
+  yahooIcon,
+  gmailIcon,
+  outlookIcon,
+  fingerprintIcon,
+  cancelIcon,
+};

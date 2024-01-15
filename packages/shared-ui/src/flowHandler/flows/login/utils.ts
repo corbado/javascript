@@ -79,7 +79,7 @@ export const loginWithPasskey = async (authService: AuthService, email: string):
   }
 
   if (res.val instanceof UnknownUserError) {
-    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.End, {
+    return FlowUpdate.navigate(PasskeyLoginWithEmailOtpFallbackScreens.Start, {
       ...userState,
       emailError: res.val,
     });

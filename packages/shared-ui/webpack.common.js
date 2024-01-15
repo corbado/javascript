@@ -14,22 +14,16 @@ module.exports = merge(common, {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.svg$/,
-        use: [
-          '@svgr/webpack',
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets',
-            },
-          },
-        ],
-      },
-      {
         test: /\.json$/,
         type: 'json',
         include: /i18n/,
+      },
+      {
+        test: /\.svg$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name][ext]',
+        },
       },
     ],
   },

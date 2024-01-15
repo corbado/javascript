@@ -4,15 +4,18 @@ dist
 .idea
 .yalc
 lerna-debug.log
+.nx
 
 # Packages
 packages/*/node_modules/
 packages/*/dist/
+packages/*/bundle/
 
 # Playground
 playground/*/node_modules/
 playground/*/yalc.lock
 playground/react-example-customised/
+playground/*/bundle/
 
 #Tests
 packages/tests-e2e/test-results

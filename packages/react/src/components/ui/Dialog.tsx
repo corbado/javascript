@@ -1,17 +1,17 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
-import { Button } from './Button';
+import { PrimaryButton, SecondaryButton } from './buttons/Button';
+import { CancelIcon } from './icons/Icons';
 
 export interface DialogProps {
   isOpen: boolean;
   header: string;
-  body: ReactNode;
+  body?: ReactNode;
   confirmText?: string;
   cancelText?: string;
-  inverseButtonVariants?: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  onClose: () => Promise<void> | void;
+  onConfirm: () => Promise<void> | void;
 }
 
 export const Dialog: FC<DialogProps> = ({
@@ -19,49 +19,69 @@ export const Dialog: FC<DialogProps> = ({
   header,
   body,
   confirmText = 'Yes',
-  cancelText = 'Cancel',
-  inverseButtonVariants = false,
+  cancelText,
   onClose,
   onConfirm,
 }) => {
+  const [loadingCloseAction, setLoadingCloseAction] = React.useState(false);
+  const [loadingConfirmAction, setLoadingConfirmAction] = React.useState(false);
+
   if (!isOpen) {
     return null;
   }
 
+  const closeAction = async () => {
+    if (onClose) {
+      setLoadingCloseAction(true);
+      await onClose();
+      setLoadingCloseAction(false);
+    }
+  };
+
+  const confirmAction = async () => {
+    if (onConfirm) {
+      setLoadingConfirmAction(true);
+      await onConfirm();
+      setLoadingConfirmAction(false);
+    }
+  };
+
   return (
     <div
-      className='dialog'
-      onClick={onClose}
+      className='cb-dialog'
+      onClick={() => void closeAction()}
     >
       <div
-        className='dialog-content'
+        className='cb-dialog-content'
         onClick={e => e.stopPropagation()}
       >
-        <div className='dialog-header'>
+        <div className='cb-dialog-header'>
           {header}
-          <div
-            className='dialog-x-button'
-            onClick={onClose}
-          >
-            X
-          </div>
+          <CancelIcon
+            className={'cb-dialog-x-button'}
+            onClick={() => void closeAction()}
+          />
         </div>
-        <div className='dialog-body'>{body}</div>
-        <div className='dialog-footer'>
-          <Button
-            variant={inverseButtonVariants ? 'close' : 'primary'}
-            className='dialog-button'
-            onClick={onConfirm}
+        {body ? <div className='cb-dialog-body'>{body}</div> : null}
+        <div className='cb-dialog-footer'>
+          <PrimaryButton
+            className={'cb-dialog-button'}
+            isLoading={loadingConfirmAction}
+            disabled={loadingCloseAction}
+            onClick={() => void confirmAction()}
           >
             {confirmText}
-          </Button>
-          <Button
-            variant={inverseButtonVariants ? 'primary' : 'close'}
-            className='dialog-button'
-            onClick={onClose}
-          >
-            {cancelText}
-          </Button>
+          </PrimaryButton>
+          {cancelText ? (
+            <SecondaryButton
+              className={'cb-dialog-button'}
+              isLoading={loadingCloseAction}
+              disabled={loadingCloseAction}
+              onClick={() => void closeAction()}
+            >
+              {cancelText}
+            </SecondaryButton>
+          ) : null}
         </div>
       </div>
     </div>

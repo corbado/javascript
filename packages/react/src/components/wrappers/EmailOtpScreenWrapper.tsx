@@ -2,7 +2,8 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, Button, Gmail, Header, IconLink, OtpInputGroup, Outlook, Yahoo } from '../ui';
+import { Body, Header, IconLink, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
+import { GmailIcon, OutlookIcon, YahooIcon } from '../ui/icons/Icons';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
@@ -60,17 +61,17 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       <div className='cb-email-links'>
         <IconLink
-          Icon={Gmail}
+          icon={<GmailIcon />}
           label='Google'
           href='https://mail.google.com/mail/u/0/#search/from%3A%40corbado+in%3Aanywhere'
         />
         <IconLink
-          Icon={Yahoo}
+          icon={<YahooIcon />}
           label='Yahoo'
           href='https://mail.yahoo.com/d/search/keyword=corbado.com'
         />
         <IconLink
-          Icon={Outlook}
+          icon={<OutlookIcon />}
           label='Outlook'
           href='https://outlook.office.com/mail/0/inbox'
         />
@@ -83,24 +84,18 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
 
-      <Button
-        type='submit'
+      <PrimaryButton
         ref={submitButtonRef}
-        variant='primary'
         isLoading={loading}
-        disabled={loading}
       >
         {verificationButtonText}
-      </Button>
-
-      <Button
-        type='button'
+      </PrimaryButton>
+      <TertiaryButton
         onClick={onBackButtonClick}
-        variant='tertiary'
         disabled={loading}
       >
         {backButtonText}
-      </Button>
+      </TertiaryButton>
     </form>
   );
 };

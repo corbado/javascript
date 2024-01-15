@@ -9,6 +9,11 @@ module.exports = merge(common, {
   },
   devtool: 'source-map',
   mode: 'production',
+  resolve: {
+    alias: {
+      '@corbado/shared-ui/assets': path.resolve(__dirname, '../../node_modules/@corbado/shared-ui/dist/assets'),
+    },
+  },
   externals: {
     '@corbado/react-sdk': '@corbado/react-sdk',
     '@corbado/shared-ui': '@corbado/shared-ui',
@@ -21,17 +26,7 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.svg$/,
-        issuer: /\.[jt]sx?$/,
-        use: [
-          '@svgr/webpack',
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'assets',
-            },
-          },
-        ],
+        type: 'asset/inline',
       },
     ],
   },

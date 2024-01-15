@@ -20,7 +20,7 @@ const HomePage = () => {
         <p>Hi {user?.orig}, you are logged in.</p>
         <div className='mt-3 mb-3'>
           <p>This is your shortSession:</p>
-          <pre className='break-words'>{serializedDecodedShortSession}</pre>
+          <pre style={{ textWrap: 'pretty' }}>{serializedDecodedShortSession}</pre>
         </div>
         <button
           onClick={async () => {

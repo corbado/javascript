@@ -14,7 +14,7 @@ export const EmailOTP = () => {
   const body = (
     <>
       {t('body_text1')}
-      <span className='cb-text-secondary'>{currentUserState.email}</span>
+      <span className='cb-text-secondary cb-text-bold'>{currentUserState.email}</span>
       {t('body_text2')}
     </>
   );

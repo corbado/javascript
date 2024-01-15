@@ -5,7 +5,7 @@ test.describe('Signup with email OTP proper user behavior', () => {
     await signupFlow.createAccount(true);
     await signupFlow.checkLandedOnPage('PasskeySignup');
 
-    await page.getByRole('button', { name: 'Send email one time code' }).click();
+    await page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await signupFlow.checkLandedOnPage('EmailOTP');
 
     await signupFlow.fillOTP();

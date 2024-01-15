@@ -4,7 +4,7 @@ test.describe('PasskeySignup unproductive user behavior', () => {
   test('change to OTP method', async ({ signupFlow, page }) => {
     await signupFlow.navigateToPasskeySignupPage(true);
 
-    await page.getByRole('button', { name: 'Send email one time code' }).click();
+    await page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await signupFlow.checkLandedOnPage('EmailOTP');
   });
 

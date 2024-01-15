@@ -10,7 +10,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
     await page.getByPlaceholder('Email address').fill(validEmail);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(validEmail);
 
-    await page.getByRole('button', { name: 'Continue with email' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
 
     await signupFlow.checkLandedOnPage('InitiateSignup');
     await expect(page.getByText('Please enter a valid name')).toBeVisible();
@@ -41,7 +41,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await expect(page.getByPlaceholder('Email address')).toHaveValue('');
 
-    await page.getByRole('button', { name: 'Continue with email' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
 
     await signupFlow.checkLandedOnPage('InitiateSignup');
     await expect(page.getByText('Please enter a valid email')).toBeVisible();
@@ -60,7 +60,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
     await page.getByPlaceholder('Email address').fill(invalidEmail);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(invalidEmail);
 
-    await page.getByRole('button', { name: 'Continue with email' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
 
     await signupFlow.checkLandedOnPage('InitiateSignup');
     await expect(page.getByText('Please enter a valid email')).toBeVisible();
@@ -79,7 +79,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
     await page.getByPlaceholder('Email address').fill(email);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(email);
 
-    await page.getByRole('button', { name: 'Continue with email' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
 
     await signupFlow.checkLandedOnPage('InitiateSignup');
     await expect(page.getByText('Email address is already in use')).toBeVisible();

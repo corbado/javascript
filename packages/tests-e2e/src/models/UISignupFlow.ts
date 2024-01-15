@@ -45,7 +45,7 @@ export class UISignupFlow {
     await this.page.getByPlaceholder('Email address').fill(email);
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
     await this.checkLandedOnPage('PasskeySignup');
   }
 
@@ -60,7 +60,7 @@ export class UISignupFlow {
     if (passkeySupported) {
       this.navigateToPasskeySignupPage(webauthnSuccessful);
 
-      await this.page.getByRole('button', { name: 'Send email one time code' }).click();
+      await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
       await this.checkLandedOnPage('EmailOTP');
     } else {
       const name = UserManager.getUserForSignup();
@@ -74,7 +74,7 @@ export class UISignupFlow {
       await this.page.getByPlaceholder('Email address').fill(email);
       await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
-      await this.page.getByRole('button', { name: 'Continue with email' }).click();
+      await this.page.getByRole('button', { name: 'Continue' }).click();
       await this.checkLandedOnPage('EmailOTP');
     }
   }
@@ -82,7 +82,7 @@ export class UISignupFlow {
   async navigateToPasskeyAppendPage(webauthnSuccessful: boolean) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
-    await this.page.getByRole('button', { name: 'Send email one time code' }).click();
+    await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await this.checkLandedOnPage('EmailOTP');
 
     await this.fillOTP();
@@ -111,7 +111,7 @@ export class UISignupFlow {
     await this.page.getByPlaceholder('Email address').fill(email);
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
-    await this.page.getByRole('button', { name: 'Continue with email' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
 
     return [name, email];
   }
@@ -132,7 +132,7 @@ export class UISignupFlow {
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
         break;
       case 'EmailOTP':
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter code to create account');
+        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter one-time passcode to create account');
         break;
       case 'PasskeySignup':
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");

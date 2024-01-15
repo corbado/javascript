@@ -14,14 +14,14 @@ test.describe('EmailOTP unproductive user behavior', () => {
     await signupFlow.fillOTP(true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnPage('EmailOTP');
-    await expect(page.getByText('The provided OTP is not valid')).toBeVisible();
+    await expect(page.getByText('The provided one-time passcode is not valid')).toBeVisible();
   });
 
   test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
     await signupFlow.navigateToEmailOTPPage(false, false);
 
     await signupFlow.fillOTP(false, true);
-    await expect(page.getByText('The provided OTP is not valid')).toBeVisible();
+    await expect(page.getByText('The provided one-time passcode is not valid')).toBeVisible();
     await signupFlow.checkLandedOnPage('EmailOTP');
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnPage('EmailOTP');

@@ -1,53 +1,60 @@
+import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import type { FC } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
 import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
-export const PasskeySignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkey' });
-  const { navigateBack, currentUserState, emitEvent } = useFlowHandler();
+export interface PasskeyErrorProps {
+  showSecondaryButton?: boolean;
+  navigateBackOnCancel?: boolean;
+}
+
+export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
+  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authentication.${currentFlow}.passkeyError`,
+  });
+  const { shortSession } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    setPrimaryLoading(false);
-    setSecondaryLoading(false);
-  }, [currentUserState]);
+  const header = useMemo(() => t('header'), [t]);
 
-  const header = useMemo(
+  const body = useMemo(
     () => (
       <span>
-        {t('header')}
+        {t('body_errorMessage1')}
         <span
           className='cb-link-primary'
           onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
+        {t('body_errorMessage2')}
       </span>
     ),
     [t],
   );
 
-  const subHeader = useMemo(
-    () => (
-      <span>
-        {t('body')} <span className='cb-text-secondary'>{currentUserState.email}</span>.
-      </span>
-    ),
-    [t],
-  );
+  const primaryButton = useMemo(() => t('button_retry'), [t]);
+  const secondaryButton = useMemo(() => {
+    if (!showSecondaryButton) {
+      return '';
+    }
 
-  const primaryButton = useMemo(() => t('button_start'), [t]);
-  const secondaryButton = useMemo(() => t('button_emailOtp'), [t]);
-  const tertiaryButton = useMemo(() => t('button_back'), [t]);
+    return t('button_emailOtp');
+  }, [t]);
+  const tertiaryButton = useMemo(() => {
+    if (navigateBackOnCancel) {
+      return t('button_back');
+    }
 
-  const handleBack = useCallback(() => {
-    return navigateBack();
-  }, [navigateBack]);
+    return t('button_cancel');
+  }, [t, shortSession]);
 
   const handleClick = useCallback(
     (btn: ButtonType) => {
@@ -59,25 +66,24 @@ export const PasskeySignup = () => {
           setSecondaryLoading(true);
           return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return navigateBack();
+          return navigateBackOnCancel ? navigateBack() : emitEvent(FlowHandlerEvents.CancelPasskey);
       }
     },
-    [handleBack],
+    [navigateBack, emitEvent],
   );
 
   const props: PasskeyScreensWrapperProps = useMemo(
     () => ({
       header,
-      subHeader,
+      body,
       primaryButton,
-      showHorizontalRule: true,
       secondaryButton,
       tertiaryButton,
       primaryLoading,
       secondaryLoading,
       onClick: handleClick,
     }),
-    [header, subHeader, primaryButton, secondaryButton, tertiaryButton, primaryLoading, secondaryLoading, handleClick],
+    [body, handleClick, header, primaryButton, secondaryButton, primaryLoading, secondaryButton, tertiaryButton],
   );
 
   return (

@@ -7,8 +7,10 @@ import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const PasskeyAppend = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.passkeyPrompt' });
-  const { emitEvent } = useFlowHandler();
+  const { emitEvent, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authentication.${currentFlow}.passkeyAppend`,
+  });
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(

@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
-import { CommonScreens, FlowHandler, SignUpFlowNames } from '@corbado/shared-ui';
+import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, UserState } from '@corbado/shared-ui';
+import { FlowHandler, ScreenNames, SignUpFlowNames } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,7 +15,7 @@ type Props = {
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
   const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(ScreenNames.Start);
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
   const [initialized, setInitialized] = useState(false);
@@ -37,7 +37,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
       const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
+        setCurrentFlow(value);
+      });
       onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
         setCurrentUserState(value);
       });
@@ -63,7 +65,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
-    return flowHandler?.navigateBack() ?? CommonScreens.Start;
+    return flowHandler?.navigateBack() ?? ScreenNames.Start;
   }, [flowHandler]);
 
   const emitEvent = useCallback(

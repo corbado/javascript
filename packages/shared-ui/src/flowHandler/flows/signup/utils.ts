@@ -9,7 +9,7 @@ import {
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import { PasskeySignupWithEmailOtpFallbackScreens } from '../../constants';
+import { ScreenNames } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
 import type { UserState } from '../../types';
@@ -34,15 +34,13 @@ export const validateEmailAndFullName = (
 
   userState = { ...userState, email: userStateIn?.email, fullName: userStateIn?.fullName };
 
-  return onStartScreen
-    ? Err(FlowUpdate.state(userState))
-    : Err(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, userState));
+  return onStartScreen ? Err(FlowUpdate.state(userState)) : Err(FlowUpdate.navigate(ScreenNames.Start, userState));
 };
 
 export const validateUserAuthState = (state: FlowHandlerState): Result<undefined, FlowUpdate> => {
   if (!state.user) {
     return Err(
-      FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, {
+      FlowUpdate.navigate(ScreenNames.Start, {
         emailError: new UnknownError(),
         fullName: state.userState.fullName,
         email: state.userState.email,
@@ -87,7 +85,7 @@ export const sendEmailOTP = async (
   const updatedState: UserState = { email, fullName };
 
   if (res.ok) {
-    return FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.EnterOtp, {
+    return FlowUpdate.navigate(ScreenNames.EnterOTP, {
       ...updatedState,
       emailOTPState: { lastMailSent: new Date() },
     });
@@ -96,7 +94,7 @@ export const sendEmailOTP = async (
   const unknownErrorState = { ...updatedState, emailError: new UnknownError() };
   return onStartScreen
     ? FlowUpdate.state(unknownErrorState)
-    : FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.Start, unknownErrorState);
+    : FlowUpdate.navigate(ScreenNames.Start, unknownErrorState);
 };
 
 export const createPasskey = async (
@@ -106,7 +104,7 @@ export const createPasskey = async (
 ): Promise<Result<FlowUpdate, SignUpWithPasskeyError | undefined>> => {
   const res = await corbadoApp.authService.signUpWithPasskey(email, fullName);
   if (res.ok) {
-    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
+    return Ok(FlowUpdate.navigate(ScreenNames.PasskeySuccess));
   }
 
   return res;
@@ -117,7 +115,7 @@ export const appendPasskey = async (
 ): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
   const res = await corbadoApp.authService.appendPasskey();
   if (res.ok) {
-    return Ok(FlowUpdate.navigate(PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome));
+    return Ok(FlowUpdate.navigate(ScreenNames.PasskeySuccess));
   }
 
   return res;

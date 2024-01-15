@@ -1,63 +1,37 @@
+// Enum representing the type of user flow, either sign up or login
 export enum FlowType {
   SignUp,
   Login,
 }
 
+// Enum representing the names of different sign up flows
 export enum SignUpFlowNames {
   PasskeySignupWithEmailOTPFallback = 'PasskeySignupWithEmailOTPFallback',
+  EmailOTPSignupWithPasskey = 'EmailOTPSignupWithPasskey',
 }
 
+// Enum representing the names of different login flows
 export enum LoginFlowNames {
   PasskeyLoginWithEmailOTPFallback = 'PasskeyLoginWithEmailOTPFallback',
 }
 
-export const FlowNameByFlowStyle: Record<string, { SignUp: SignUpFlowNames; Login: LoginFlowNames }> = {
-  PasskeyWithEmailOTPFallback: {
-    SignUp: SignUpFlowNames.PasskeySignupWithEmailOTPFallback,
-    Login: LoginFlowNames.PasskeyLoginWithEmailOTPFallback,
-  },
-};
-
-export enum CommonScreens {
+// Enum representing common screens that are used in multiple flows
+export enum ScreenNames {
   Start = 'start',
   End = 'end',
-  EnterOtp = 'enter-otp',
-  PasskeyError = 'passkey-error',
-}
-
-export enum EmailOtpSignupScreens {
-  Start = 'start',
-  EnterOtp = 'enter-otp',
-  PasskeyOption = 'passkey-option',
-  PasskeyBenefits = 'passkey-benefits',
-  PasskeyWelcome = 'passkey-welcome',
-  PasskeyError = 'passkey-error',
-  End = 'end',
-}
-
-export enum PasskeySignupWithEmailOtpFallbackScreens {
-  Start = 'start',
-  CreatePasskey = 'create-passkey',
-  EnterOtp = 'enter-otp',
-  PasskeyBenefits = 'passkey-benefits',
-  PasskeyError = 'passkey-error',
-  PasskeyWelcome = 'passkey-welcome',
-  PasskeyAppend = 'passkey-append',
-  End = 'end',
-}
-
-export enum PasskeyLoginWithEmailOtpFallbackScreens {
-  Start = 'start',
-  EnterOtp = 'enter-otp',
+  EnterOTP = 'enter-otp',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',
-  End = 'end',
+  PasskeySuccess = 'passkey-success',
+  PasskeyCreate = 'passkey-create',
 }
 
+// Enum representing different events that can occur during the flow handling process
 export enum FlowHandlerEvents {
   ShowBenefits = 'show-benefits',
-  CancelOtp = 'cancel-otp',
+  CancelOTP = 'cancel-otp',
+  CancelPasskey = 'cancel-passkey',
   ChangeFlow = 'change-flow',
   PrimaryButton = 'primary-button',
   SecondaryButton = 'secondary-button',

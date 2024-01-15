@@ -1,5 +1,5 @@
 const en = {
-  authenticationFlows: {
+  authentication: {
     signup: {
       start: {
         header: "Let's create an account to check Corbado Test App",

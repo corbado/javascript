@@ -7,8 +7,8 @@ import { EmailOtpScreenWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.emailOtp' });
-  const { emitEvent, currentUserState } = useFlowHandler();
+  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.emailOtp` });
 
   const header = t('header');
   const body = (
@@ -21,7 +21,7 @@ export const EmailOTP = () => {
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelOtp), []);
+  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelOTP), []);
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading) => {

@@ -2,9 +2,9 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { EmailOtpScreenProps } from '../../../components';
-import { EmailOtpScreenWrapper } from '../../../components';
-import useFlowHandler from '../../../hooks/useFlowHandler';
+import type { EmailOtpScreenProps } from '../../../../components';
+import { EmailOtpScreenWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
   const { emitEvent, currentUserState, currentFlow } = useFlowHandler();

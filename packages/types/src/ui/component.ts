@@ -24,10 +24,42 @@ export interface CorbadoUIConfig {
  * @interface CorbadoAuthConfig
  * @property {() => void} onLoggedIn - A callback function that is called when the user is logged in.
  * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
- * @property {string} [customerSupportEmail] - The email address to be used for customer support. Defaults to '
+ * @property {string} [customerSupportEmail] - The email address to be used for customer support.
  */
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
   isDevMode?: boolean;
   customerSupportEmail?: string;
+}
+
+/**
+ * Interface for the properties accepted by the Corbado's Sign Up component.
+ *
+ * @interface CorbadoSignUpConfig
+ * @property {() => void} onSignedUp - A callback function that is called when the user is signed up.
+ * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
+ * @property {string} [customerSupportEmail] - The email address to be used for customer support.
+ * @property {() => void} [navigateToLogin] - A callback function that is called when the user clicks the login link. If not provided, the user will not be able to navigate to the login screen.
+ */
+export interface CorbadoSignUpConfig {
+  onSignedUp: () => void;
+  isDevMode?: boolean;
+  customerSupportEmail?: string;
+  navigateToLogin?: () => void;
+}
+
+/**
+ * Interface for the properties accepted by the Corbado's Login component.
+ *
+ * @interface CorbadoLoginConfig
+ * @property {() => void} onLoggedIn - A callback function that is called when the user is logged in.
+ * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
+ * @property {string} [customerSupportEmail] - The email address to be used for customer support.
+ * @property {() => void} [navigateToSignUp] - A callback function that is called when the user clicks the sign up link. If not provided, the user will not be able to navigate to the sign up screen.
+ */
+export interface CorbadoLoginConfig {
+  onLoggedIn: () => void;
+  isDevMode?: boolean;
+  customerSupportEmail?: string;
+  navigateToSignUp?: () => void;
 }

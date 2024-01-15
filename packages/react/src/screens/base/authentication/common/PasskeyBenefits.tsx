@@ -2,9 +2,9 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../components';
-import { PasskeyScreensWrapper } from '../../../components';
-import useFlowHandler from '../../../hooks/useFlowHandler';
+import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
+import { PasskeyScreensWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyBenefits = () => {
   const { emitEvent, currentFlow } = useFlowHandler();

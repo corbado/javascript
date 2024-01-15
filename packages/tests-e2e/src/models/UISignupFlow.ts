@@ -132,7 +132,9 @@ export class UISignupFlow {
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
         break;
       case 'EmailOTP':
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter one-time passcode to create account');
+        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(
+          'Enter one-time passcode to create account',
+        );
         break;
       case 'PasskeySignup':
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");

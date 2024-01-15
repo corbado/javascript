@@ -7,7 +7,14 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   if (!user || !shortSession) {
-    return <div className='h-screen flex flex-col items-center justify-center'>You are not logged in.</div>;
+    return (
+      <div className='h-screen flex flex-col items-center justify-center'>
+        <h2>You are not logged in. You can use the below auth pages to authenticate the user</h2>
+        <button onClick={() => navigate('/auth')}>Auth Page (with complete auth component)</button>
+        <button onClick={() => navigate('/signup')}>SignUp Page</button>
+        <button onClick={() => navigate('/login')}>Login Page</button>
+      </div>
+    );
   }
 
   const decodedShortSession = jwtDecode(shortSession);

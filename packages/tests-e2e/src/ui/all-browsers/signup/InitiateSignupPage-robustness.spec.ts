@@ -2,7 +2,7 @@ import { test, expect } from '../../../fixtures/UISignupTest';
 
 test.describe('InitiateSignup unproductive user behavior', () => {
   test('with empty name', async ({ signupFlow, page }) => {
-    const validEmail = "bob@corbado.com";
+    const validEmail = 'bob@corbado.com';
 
     await expect(page.getByPlaceholder('Name')).toHaveValue('');
 
@@ -18,8 +18,8 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
   // TODO: add when (if?) new restrictions are added to Name
   test.skip('with invalid name', async ({ page }) => {
-    const invalidName = "$$$";
-    const validEmail = "bob@corbado.com";
+    const invalidName = '$$$';
+    const validEmail = 'bob@corbado.com';
 
     await page.getByPlaceholder('Name').click();
     await page.getByPlaceholder('Name').fill(invalidName);
@@ -33,7 +33,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
   });
 
   test('with empty email', async ({ signupFlow, page }) => {
-    const validName = "Bob";
+    const validName = 'Bob';
 
     await page.getByPlaceholder('Name').click();
     await page.getByPlaceholder('Name').fill(validName);
@@ -49,8 +49,8 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
   // TODO: add when restrictions are added to Email
   test.skip('with invalid email', async ({ signupFlow, page }) => {
-    const validName = "Bob";
-    const invalidEmail = "bob@bob";
+    const validName = 'Bob';
+    const invalidEmail = 'bob@bob';
 
     await page.getByPlaceholder('Name').click();
     await page.getByPlaceholder('Name').fill(validName);

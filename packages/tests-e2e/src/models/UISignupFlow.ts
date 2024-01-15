@@ -60,11 +60,11 @@ export class UISignupFlow {
     if (passkeySupported) {
       this.navigateToPasskeySignupPage(webauthnSuccessful);
 
-      await this.page.getByRole('button', { name: 'Send email one time code'}).click();
+      await this.page.getByRole('button', { name: 'Send email one time code' }).click();
       await this.checkLandedOnPage('EmailOTP');
     } else {
       const name = UserManager.getUserForSignup();
-      const email = `${name}@corbado.com`
+      const email = `${name}@corbado.com`;
 
       await this.page.getByPlaceholder('Name').click();
       await this.page.getByPlaceholder('Name').fill(name);
@@ -89,7 +89,10 @@ export class UISignupFlow {
     await this.checkLandedOnPage('PasskeyAppend');
   }
 
-  async createAccount(passkeySupported: boolean, webauthnSuccessful: boolean = true): Promise<[name: string, email: string]> {
+  async createAccount(
+    passkeySupported: boolean,
+    webauthnSuccessful: boolean = true,
+  ): Promise<[name: string, email: string]> {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);
       this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
@@ -98,7 +101,7 @@ export class UISignupFlow {
     }
 
     const name = UserManager.getUserForSignup();
-    const email = `${name}@corbado.com`
+    const email = `${name}@corbado.com`;
 
     await this.page.getByPlaceholder('Name').click();
     await this.page.getByPlaceholder('Name').fill(name);

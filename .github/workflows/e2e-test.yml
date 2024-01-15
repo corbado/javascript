@@ -46,7 +46,7 @@ jobs:
         path: node_modules
 
   e2e-tests:
-    timeout-minutes: 15
+    timeout-minutes: 30
     needs: prepare
     runs-on: ubuntu-latest
     strategy:

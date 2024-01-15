@@ -9,6 +9,7 @@ export interface FlowHandlerContextProps {
   initialized: boolean;
   navigateBack: () => ScreenNames;
   emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
+  changeFlow: () => void;
 }
 
 export const initialContext: FlowHandlerContextProps = {
@@ -18,6 +19,7 @@ export const initialContext: FlowHandlerContextProps = {
   initialized: false,
   navigateBack: () => ScreenNames.Start,
   emitEvent: () => Promise.reject(),
+  changeFlow: () => void 0,
 };
 
 const FlowHandlerContext = createContext<FlowHandlerContextProps>(initialContext);

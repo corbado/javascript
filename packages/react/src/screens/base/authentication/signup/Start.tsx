@@ -23,7 +23,7 @@ const createFormTemplate = (email?: string, fullName?: string) => ({
 });
 
 export const Start = () => {
-  const { currentUserState, emitEvent, currentFlow } = useFlowHandler();
+  const { currentUserState, emitEvent, currentFlow, changeFlow } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.start` });
 
   const [signupData, setSignupData] = useState<SignupForm>({
@@ -67,7 +67,7 @@ export const Start = () => {
         {t('subheader')}
         <span
           className='cb-link-secondary'
-          onClick={() => void emitEvent(FlowHandlerEvents.ChangeFlow)}
+          onClick={changeFlow}
         >
           {t('button_login')}
         </span>

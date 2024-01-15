@@ -1,11 +1,11 @@
 import { ScreenNames } from '@corbado/shared-ui';
 
-import { EmailOTP } from '../screens/authentication/EmailOTP';
-import { PasskeyError } from '../screens/authentication/flows/emailOtpSignupWithPasskey/PasskeyError';
-import { Start } from '../screens/authentication/flowtypes/signup/Start';
-import { PasskeyAppend } from '../screens/authentication/PasskeyAppend';
-import { PasskeyBenefits } from '../screens/authentication/PasskeyBenefits';
-import { PasskeySuccess } from '../screens/authentication/PasskeySuccess';
+import { EmailOTP } from '../screens/base/authentication/common/EmailOTP';
+import { PasskeyAppend } from '../screens/base/authentication/common/PasskeyAppend';
+import { PasskeyBenefits } from '../screens/base/authentication/common/PasskeyBenefits';
+import { PasskeySuccess } from '../screens/base/authentication/common/PasskeySuccess';
+import { PasskeyError } from '../screens/base/authentication/signup/flows/emailOtpSignupWithPasskey/PasskeyError';
+import { Start } from '../screens/base/authentication/signup/Start';
 
 export const EmailOTPSignupWithPasskeyFlow = {
   [ScreenNames.Start]: Start,

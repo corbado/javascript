@@ -4,9 +4,10 @@ import type { FC } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
-import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import type { ButtonVariants } from '../ui';
+import type { PasskeyScreensWrapperProps } from './PasskeyScreensWrapper';
+import { PasskeyScreensWrapper } from './PasskeyScreensWrapper';
 
 export interface PasskeyErrorProps {
   showSecondaryButton?: boolean;
@@ -57,7 +58,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
   }, [t, shortSession]);
 
   const handleClick = useCallback(
-    (btn: ButtonType) => {
+    (btn: ButtonVariants) => {
       switch (btn) {
         case 'primary':
           setPrimaryLoading(true);
@@ -68,6 +69,8 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
         case 'tertiary':
           return navigateBackOnCancel ? navigateBack() : emitEvent(FlowHandlerEvents.CancelPasskey);
       }
+
+      return;
     },
     [navigateBack, emitEvent],
   );

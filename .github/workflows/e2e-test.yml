@@ -3,8 +3,8 @@ env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
-  # pull_request:
-  #   branches: [ main ]
+  pull_request:
+    branches: [ main ]
   push:
     branches:
       - playwright_setup

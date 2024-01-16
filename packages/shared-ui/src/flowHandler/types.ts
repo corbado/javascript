@@ -1,15 +1,8 @@
 import type { SessionUser } from '@corbado/types';
 import type { RecoverableError } from '@corbado/web-core';
 
-import type {
-  CommonScreens,
-  EmailOtpSignupScreens,
-  FlowHandlerEvents,
-  LoginFlowNames,
-  PasskeyLoginWithEmailOtpFallbackScreens,
-  PasskeySignupWithEmailOtpFallbackScreens,
-  SignUpFlowNames,
-} from './constants';
+import type { FlowHandlerEvents, LoginFlowNames, SignUpFlowNames } from './constants';
+import type { ScreenNames } from './constants';
 import type { FlowHandlerState } from './flowHandlerState';
 import type { FlowUpdate } from './flowUpdate';
 
@@ -38,15 +31,6 @@ export type FlowOptions = SignupOptions | LoginOptions;
  * Union type of all possible flow names for sign-up and login processes.
  */
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
-
-/**
- * Union type of all possible screen names within the authentication flows.
- */
-export type ScreenNames =
-  | CommonScreens
-  | EmailOtpSignupScreens
-  | PasskeySignupWithEmailOtpFallbackScreens
-  | PasskeyLoginWithEmailOtpFallbackScreens;
 
 export interface FlowHandlerEventOptions {
   // Whether the user has a passkey already set up

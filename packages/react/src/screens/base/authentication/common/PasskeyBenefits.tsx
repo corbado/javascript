@@ -2,13 +2,15 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
-import { PasskeyScreensWrapper } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
+import { PasskeyScreensWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyBenefits = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.passkeyBenefits' });
-  const { emitEvent } = useFlowHandler();
+  const { emitEvent, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authentication.${currentFlow}.passkeyBenefits`,
+  });
   const [loading, setLoading] = useState<boolean>(false);
 
   const header = useMemo(() => t('header'), [t]);
@@ -25,7 +27,7 @@ export const PasskeyBenefits = () => {
   const secondaryButton = useMemo(() => t('button_skip'), [t]);
 
   const handleClick = useCallback(
-    async (btn: ButtonType) => {
+    async (btn: ButtonVariants) => {
       if (btn === 'primary') {
         setLoading(true);
         return emitEvent(FlowHandlerEvents.PrimaryButton);

@@ -1,5 +1,5 @@
 const fr = {
-  authenticationFlows: {
+  authentication: {
     signup: {
       start: {
         header: 'Créez votre compte',

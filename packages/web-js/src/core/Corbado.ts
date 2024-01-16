@@ -1,5 +1,5 @@
-import { CorbadoAuth, PasskeyList } from '@corbado/react';
-import type { CorbadoAuthConfig } from '@corbado/types';
+import { CorbadoAuth, Login, PasskeyList, SignUp } from '@corbado/react';
+import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
 
 import { CorbadoAppState } from '../models/CorbadoAppState';
@@ -23,6 +23,14 @@ export class Corbado {
 
   mountAuthUI(element: HTMLElement, options: CorbadoAuthConfig) {
     this.#mountComponent(element, CorbadoAuth, options);
+  }
+
+  mountSignUpUI(element: HTMLElement, options: CorbadoSignUpConfig) {
+    this.#mountComponent(element, SignUp, options);
+  }
+
+  mountLoginUI(element: HTMLElement, options: CorbadoLoginConfig) {
+    this.#mountComponent(element, Login, options);
   }
 
   mountPasskeyListUI(element: HTMLElement) {

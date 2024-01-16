@@ -2,13 +2,15 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
-import { PasskeyScreensWrapper } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
+import { PasskeyScreensWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-export const PasskeySignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkey' });
-  const { navigateBack, currentUserState, emitEvent } = useFlowHandler();
+export const PasskeyCreate = () => {
+  const { navigateBack, currentUserState, emitEvent, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authentication.${currentFlow}.passkeyCreate`,
+  });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
 
@@ -50,7 +52,7 @@ export const PasskeySignup = () => {
   }, [navigateBack]);
 
   const handleClick = useCallback(
-    (btn: ButtonType) => {
+    (btn: ButtonVariants) => {
       switch (btn) {
         case 'primary':
           setPrimaryLoading(true);
@@ -61,6 +63,8 @@ export const PasskeySignup = () => {
         case 'tertiary':
           return navigateBack();
       }
+
+      return;
     },
     [handleBack],
   );

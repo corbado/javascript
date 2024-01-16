@@ -1,16 +1,25 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
+import type { FC } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonType, PasskeyScreensWrapperProps } from '../../components';
-import { PasskeyScreensWrapper } from '../../components';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import type { ButtonVariants } from '../ui';
+import type { PasskeyScreensWrapperProps } from './PasskeyScreensWrapper';
+import { PasskeyScreensWrapper } from './PasskeyScreensWrapper';
 
-export const PasskeyError = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.passkeyError' });
+export interface PasskeyErrorProps {
+  showSecondaryButton?: boolean;
+  navigateBackOnCancel?: boolean;
+}
+
+export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
+  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', {
+    keyPrefix: `authentication.${currentFlow}.passkeyError`,
+  });
   const { shortSession } = useCorbado();
-  const { navigateBack, emitEvent } = useFlowHandler();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
 
@@ -34,22 +43,22 @@ export const PasskeyError = () => {
 
   const primaryButton = useMemo(() => t('button_retry'), [t]);
   const secondaryButton = useMemo(() => {
-    if (shortSession) {
+    if (!showSecondaryButton) {
       return '';
     }
 
     return t('button_emailOtp');
   }, [t]);
   const tertiaryButton = useMemo(() => {
-    if (shortSession) {
-      return t('button_cancel');
+    if (navigateBackOnCancel) {
+      return t('button_back');
     }
 
-    return t('button_back');
+    return t('button_cancel');
   }, [t, shortSession]);
 
   const handleClick = useCallback(
-    (btn: ButtonType) => {
+    (btn: ButtonVariants) => {
       switch (btn) {
         case 'primary':
           setPrimaryLoading(true);
@@ -58,8 +67,10 @@ export const PasskeyError = () => {
           setSecondaryLoading(true);
           return emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return navigateBack();
+          return navigateBackOnCancel ? navigateBack() : emitEvent(FlowHandlerEvents.CancelPasskey);
       }
+
+      return;
     },
     [navigateBack, emitEvent],
   );

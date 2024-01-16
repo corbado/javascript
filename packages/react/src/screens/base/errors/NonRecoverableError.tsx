@@ -2,7 +2,7 @@ import type { NonRecoverableError as ErrorType } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
-import { PrimaryButton } from '../../components';
+import { PrimaryButton } from '../../../components';
 
 const NonRecoverableError: FC<{ error: ErrorType }> = ({ error }: { error: ErrorType }) => {
   return (

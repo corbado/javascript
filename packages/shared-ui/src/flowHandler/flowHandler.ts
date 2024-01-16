@@ -3,12 +3,14 @@ import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
-import type { FlowHandlerEvents, FlowType } from './constants';
-import { CommonScreens } from './constants';
+import type { FlowHandlerEvents } from './constants';
+import { FlowType } from './constants';
+import { ScreenNames } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
-import type { FlowHandlerEventOptions, FlowHandlerStateUpdate, FlowNames, ScreenNames, UserState } from './types';
+import { UIProjectConfig } from './projectConfig';
+import type { FlowHandlerEventOptions, FlowHandlerStateUpdate, FlowNames, UserState } from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -29,10 +31,11 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: ProjectConfig, onLoggedIn: () => void) {
-    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig);
+  constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
+    const uiProjectConfig = UIProjectConfig.fromProjectConfig(projectConfig);
+    this.#config = new FlowHandlerConfig(onLoggedIn, uiProjectConfig, initialFlowType);
     this.#screenHistory = [];
-    this.#currentScreen = CommonScreens.Start;
+    this.#currentScreen = ScreenNames.Start;
   }
 
   /**
@@ -170,7 +173,7 @@ export class FlowHandler {
     }
 
     if (flowUpdate?.nextScreen) {
-      if (flowUpdate.nextScreen === CommonScreens.End) {
+      if (flowUpdate.nextScreen === ScreenNames.End) {
         return void this.#config.onLoggedIn();
       }
 
@@ -192,10 +195,10 @@ export class FlowHandler {
    */
   navigateBack() {
     if (!this.#screenHistory.length) {
-      return CommonScreens.Start;
+      return ScreenNames.Start;
     }
 
-    this.#currentScreen = this.#screenHistory.pop() || CommonScreens.Start;
+    this.#currentScreen = this.#screenHistory.pop() || ScreenNames.Start;
 
     if (this.#onScreenUpdateCallbacks.length) {
       this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
@@ -221,7 +224,7 @@ export class FlowHandler {
    * @param screen - The new current screen.
    * @returns The new current screen.
    */
-  #changeFlow(flowType?: FlowType, screen: CommonScreens = CommonScreens.Start) {
+  #changeFlow(flowType?: FlowType, screen: ScreenNames = ScreenNames.Start) {
     if (flowType !== undefined) {
       this.#config.update(flowType);
     }

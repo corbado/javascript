@@ -1,6 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, ScreenNames, UserState } from '@corbado/shared-ui';
-import { CommonScreens, FlowHandler, SignUpFlowNames } from '@corbado/shared-ui';
+import type { FlowHandlerEventOptions, FlowNames, FlowType, UserState } from '@corbado/shared-ui';
+import { FlowHandlerEvents } from '@corbado/shared-ui';
+import { FlowHandler, ScreenNames, SignUpFlowNames } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,12 +11,19 @@ import FlowHandlerContext from './FlowHandlerContext';
 
 type Props = {
   onLoggedIn: () => void;
+  onChangeFlow?: () => void;
+  initialFlowType?: FlowType;
 };
 
-export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ...props }) => {
+export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
+  children,
+  initialFlowType,
+  onLoggedIn,
+  onChangeFlow,
+}) => {
   const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(CommonScreens.Start);
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(ScreenNames.Start);
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
   const [initialized, setInitialized] = useState(false);
@@ -34,10 +42,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
         // currently there are no errors that can be thrown here
         return;
       }
-      const flowHandler = new FlowHandler(projectConfig.val, props.onLoggedIn);
+      const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
 
       onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => setCurrentFlow(value));
+      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
+        setCurrentFlow(value);
+      });
       onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
         setCurrentUserState(value);
       });
@@ -63,7 +73,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
   }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
-    return flowHandler?.navigateBack() ?? CommonScreens.Start;
+    return flowHandler?.navigateBack() ?? ScreenNames.Start;
   }, [flowHandler]);
 
   const emitEvent = useCallback(
@@ -73,12 +83,21 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, ..
     [flowHandler],
   );
 
+  const changeFlow = useCallback(() => {
+    if (onChangeFlow === undefined) {
+      void emitEvent(FlowHandlerEvents.ChangeFlow);
+    }
+
+    onChangeFlow?.();
+  }, [initialFlowType, onChangeFlow, emitEvent]);
+
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
       currentFlow,
       currentScreen,
       currentUserState,
       initialized,
+      changeFlow,
       navigateBack,
       emitEvent,
     }),

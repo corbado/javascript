@@ -2,13 +2,13 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { EmailOtpScreenProps } from '../../components';
-import { EmailOtpScreenWrapper } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import type { EmailOtpScreenProps } from '../../../../components';
+import { EmailOtpScreenWrapper } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.emailOtp' });
-  const { emitEvent, currentUserState } = useFlowHandler();
+  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.emailOtp` });
 
   const header = t('header');
   const body = (
@@ -21,7 +21,7 @@ export const EmailOTP = () => {
   const verificationButtonText = t('button_verify');
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelOtp), []);
+  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelOTP), []);
 
   const handleOTPVerification: EmailOtpScreenProps['onVerificationButtonClick'] = useCallback(
     async (otp: string, setLoading) => {

@@ -1,5 +1,6 @@
 import type { FlowType } from './constants';
-import type { ScreenNames, UserState } from './types';
+import type { ScreenNames } from './constants';
+import type { UserState } from './types';
 
 export class FlowUpdate {
   nextFlow: FlowType | null;

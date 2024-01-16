@@ -4,8 +4,8 @@ import type { ChangeEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 interface SignupForm {
   name: string;
@@ -22,9 +22,9 @@ const createFormTemplate = (email?: string, fullName?: string) => ({
   fullName: fullName || '',
 });
 
-export const InitiateSignup = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.signup.start' });
-  const { currentUserState, emitEvent } = useFlowHandler();
+export const Start = () => {
+  const { currentUserState, emitEvent, currentFlow, changeFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.start` });
 
   const [signupData, setSignupData] = useState<SignupForm>({
     ...defaultFormTemplate,
@@ -67,7 +67,7 @@ export const InitiateSignup = () => {
         {t('subheader')}
         <span
           className='cb-link-secondary'
-          onClick={() => void emitEvent(FlowHandlerEvents.ChangeFlow)}
+          onClick={changeFlow}
         >
           {t('button_login')}
         </span>

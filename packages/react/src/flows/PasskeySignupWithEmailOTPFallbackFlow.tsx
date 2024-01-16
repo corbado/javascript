@@ -1,19 +1,19 @@
-import { PasskeySignupWithEmailOtpFallbackScreens } from '@corbado/shared-ui';
+import { ScreenNames } from '@corbado/shared-ui';
 
-import { EmailOTP } from '../screens/signup/EmailOTP';
-import { InitiateSignup } from '../screens/signup/InitiateSignup';
-import { PasskeyAppend } from '../screens/signup/PasskeyAppend';
-import { PasskeyBenefits } from '../screens/signup/PasskeyBenefits';
-import { PasskeyError } from '../screens/signup/PasskeyError';
-import { PasskeySignup } from '../screens/signup/PasskeySignup';
-import { PasskeyWelcome } from '../screens/signup/PasskeyWelcome';
+import { EmailOTP } from '../screens/base/authentication/common/EmailOTP';
+import { PasskeyAppend } from '../screens/base/authentication/common/PasskeyAppend';
+import { PasskeyBenefits } from '../screens/base/authentication/common/PasskeyBenefits';
+import { PasskeySuccess } from '../screens/base/authentication/common/PasskeySuccess';
+import { PasskeyError } from '../screens/base/authentication/signup/flows/passkeySignupWithEmailOtpFallback/PasskeyError';
+import { PasskeyCreate } from '../screens/base/authentication/signup/PasskeyCreate';
+import { Start } from '../screens/base/authentication/signup/Start';
 
 export const PasskeySignupWithEmailOTPFallbackFlow = {
-  [PasskeySignupWithEmailOtpFallbackScreens.Start]: InitiateSignup,
-  [PasskeySignupWithEmailOtpFallbackScreens.CreatePasskey]: PasskeySignup,
-  [PasskeySignupWithEmailOtpFallbackScreens.EnterOtp]: EmailOTP,
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyAppend]: PasskeyAppend,
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyBenefits]: PasskeyBenefits,
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyWelcome]: PasskeyWelcome,
-  [PasskeySignupWithEmailOtpFallbackScreens.PasskeyError]: PasskeyError,
+  [ScreenNames.Start]: Start,
+  [ScreenNames.PasskeyCreate]: PasskeyCreate,
+  [ScreenNames.EnterOTP]: EmailOTP,
+  [ScreenNames.PasskeyAppend]: PasskeyAppend,
+  [ScreenNames.PasskeyBenefits]: PasskeyBenefits,
+  [ScreenNames.PasskeySuccess]: PasskeySuccess,
+  [ScreenNames.PasskeyError]: PasskeyError,
 };

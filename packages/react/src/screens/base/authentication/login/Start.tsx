@@ -2,12 +2,12 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../components';
-import useFlowHandler from '../../hooks/useFlowHandler';
+import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
+import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-export const InitiateLogin = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'authenticationFlows.login.start' });
-  const { emitEvent, currentUserState } = useFlowHandler();
+export const Start = () => {
+  const { emitEvent, currentUserState, currentFlow, changeFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
@@ -42,7 +42,7 @@ export const InitiateLogin = () => {
         {t('subheader')}
         <span
           className='cb-link-secondary'
-          onClick={() => void emitEvent(FlowHandlerEvents.ChangeFlow)}
+          onClick={changeFlow}
         >
           {t('button_signup')}
         </span>

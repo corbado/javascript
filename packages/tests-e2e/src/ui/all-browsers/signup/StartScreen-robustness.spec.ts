@@ -1,4 +1,5 @@
 import { test, expect } from '../../../fixtures/UISignupTest';
+import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitiateSignup unproductive user behavior', () => {
   test('with empty name', async ({ signupFlow, page }) => {
@@ -12,7 +13,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await page.getByRole('button', { name: 'Continue' }).click();
 
-    await signupFlow.checkLandedOnPage('InitiateSignup');
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Please enter a valid name')).toBeVisible();
   });
 
@@ -43,7 +44,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await page.getByRole('button', { name: 'Continue' }).click();
 
-    await signupFlow.checkLandedOnPage('InitiateSignup');
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Please enter a valid email')).toBeVisible();
   });
 
@@ -62,7 +63,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await page.getByRole('button', { name: 'Continue' }).click();
 
-    await signupFlow.checkLandedOnPage('InitiateSignup');
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Please enter a valid email')).toBeVisible();
   });
 
@@ -81,7 +82,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await page.getByRole('button', { name: 'Continue' }).click();
 
-    await signupFlow.checkLandedOnPage('InitiateSignup');
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Email address is already in use')).toBeVisible();
   });
 });

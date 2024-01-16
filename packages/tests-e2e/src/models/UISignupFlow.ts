@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import UserManager from '../utils/UserManager';
+import { OtpType, ScreenNames } from '../utils/constants';
 
 export class UISignupFlow {
   readonly page: Page;
@@ -24,8 +25,8 @@ export class UISignupFlow {
     }
   }
 
-  async fillOTP(incomplete: boolean = false, incorrect: boolean = false) {
-    await fillOtpCode(this.page, incomplete, incorrect);
+  async fillOTP(otpType: OtpType = OtpType.Correct) {
+    await fillOtpCode(this.page, otpType);
   }
 
   async navigateToPasskeySignupPage(webauthnSuccessful: boolean) {
@@ -46,14 +47,14 @@ export class UISignupFlow {
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
     await this.page.getByRole('button', { name: 'Continue' }).click();
-    await this.checkLandedOnPage('PasskeySignup');
+    await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
   }
 
   async navigateToPasskeyBenefitsPage(webauthnSuccessful: boolean) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByText('Passkeys').click();
-    await this.checkLandedOnPage('PasskeyBenefits');
+    await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
   }
 
   async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful: boolean) {
@@ -61,7 +62,7 @@ export class UISignupFlow {
       await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
       await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
-      await this.checkLandedOnPage('EmailOTP');
+      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
     } else {
       const name = UserManager.getUserForSignup();
       const email = `${name}@corbado.com`;
@@ -75,7 +76,7 @@ export class UISignupFlow {
       await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
       await this.page.getByRole('button', { name: 'Continue' }).click();
-      await this.checkLandedOnPage('EmailOTP');
+      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
     }
   }
 
@@ -83,10 +84,10 @@ export class UISignupFlow {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
-    await this.checkLandedOnPage('EmailOTP');
+    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
 
     await this.fillOTP();
-    await this.checkLandedOnPage('PasskeyAppend');
+    await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
   }
 
   async createAccount(
@@ -118,37 +119,37 @@ export class UISignupFlow {
 
   async createDummyAccount(): Promise<[name: string, email: string]> {
     const [name, email] = await this.createAccount(false);
-    await this.checkLandedOnPage('EmailOTP');
+    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
 
     await this.page.getByRole('button', { name: 'Cancel' }).click();
-    await this.checkLandedOnPage('InitiateSignup');
+    await this.checkLandedOnScreen(ScreenNames.Start);
 
     return [name, email];
   }
 
-  async checkLandedOnPage(pageName: string) {
-    switch (pageName) {
-      case 'InitiateSignup':
+  async checkLandedOnScreen(screenName: ScreenNames) {
+    switch (screenName) {
+      case ScreenNames.Start:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
         break;
-      case 'EmailOTP':
+      case ScreenNames.EnterOtp:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(
           'Enter one-time passcode to create account',
         );
         break;
-      case 'PasskeySignup':
+      case ScreenNames.PasskeyCreate:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
         break;
-      case 'PasskeyBenefits':
+      case ScreenNames.PasskeyBenefits:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');
         break;
-      case 'PasskeyAppend':
+      case ScreenNames.PasskeyAppend:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Log in even faster with');
         break;
-      case 'PasskeyWelcome':
+      case ScreenNames.PasskeySuccess:
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
-      case 'LoggedIn':
+      case ScreenNames.End:
         await expect(this.page).toHaveURL('/');
         break;
     }

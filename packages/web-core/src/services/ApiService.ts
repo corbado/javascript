@@ -11,11 +11,15 @@ import { AuthenticationResponse } from '../models/auth';
 import type {
   AppendPasskeyError,
   AuthMethodsListError,
+  CompleteLoginWithEmailLinkError,
   CompleteLoginWithEmailOTPError,
+  CompleteSignupWithEmailLinkError,
   CompleteSignupWithEmailOTPError,
   GetProjectConfigError,
   InitAutocompletedLoginWithPasskeyError,
+  InitLoginWithEmailLinkError,
   InitLoginWithEmailOTPError,
+  InitSignUpWithEmailLinkError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   PasskeyDeleteError,
@@ -261,6 +265,50 @@ export class ApiService {
       const r = await this.usersApi.emailCodeConfirm({
         emailCodeID: emailCodeId,
         code: otpCode,
+      });
+
+      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
+    });
+  }
+
+  public emailLinkRegisterStart(
+    email: string,
+    username: string,
+  ): Promise<Result<string, InitSignUpWithEmailLinkError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailLinkRegisterStart({
+        email: email,
+        username: username,
+      });
+
+      return r.data.data.emailLinkID;
+    });
+  }
+
+  public emailLinkLoginStart(email: string): Promise<Result<string, InitLoginWithEmailLinkError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailLinkLoginStart({
+        username: email,
+      });
+
+      return r.data.data.emailLinkID;
+    });
+  }
+
+  public async emailLinkConfirm(
+    emailLinkID: string,
+    token: string,
+  ): Promise<
+    Result<AuthenticationResponse, CompleteSignupWithEmailLinkError | CompleteLoginWithEmailLinkError | undefined>
+  > {
+    if (emailLinkID === '') {
+      return Err(CorbadoError.illegalState('email magic link challenge has not been started', ''));
+    }
+
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.emailLinkConfirm({
+        emailLinkID: emailLinkID,
+        token: token,
       });
 
       return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);

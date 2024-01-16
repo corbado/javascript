@@ -1,1 +1,4 @@
-export * from './errors';
+export * from './types';
+export * from './CorbadoError';
+export * from './RecoverableErrors';
+export * from './NonRecoverableErrors';

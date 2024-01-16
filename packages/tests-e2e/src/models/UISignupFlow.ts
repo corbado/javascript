@@ -33,7 +33,7 @@ export class UISignupFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
     this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
     // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
-    this.page.reload();
+    await this.page.reload();
 
     const name = UserManager.getUserForSignup();
     const email = `${name}@corbado.com`;
@@ -98,7 +98,7 @@ export class UISignupFlow {
       this.#cdpClient = await initializeCDPSession(this.page);
       this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
       // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
-      this.page.reload();
+      await this.page.reload();
     }
 
     const name = UserManager.getUserForSignup();

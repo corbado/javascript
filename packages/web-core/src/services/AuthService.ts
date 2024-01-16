@@ -8,9 +8,13 @@ import type { AuthenticationResponse } from '../models/auth';
 import type { ShortSession } from '../models/session';
 import type {
   AppendPasskeyError,
+  CompleteLoginWithEmailLinkError,
   CompleteLoginWithEmailOTPError,
+  CompleteSignupWithEmailLinkError,
   CompleteSignupWithEmailOTPError,
+  InitLoginWithEmailLinkError,
   InitLoginWithEmailOTPError,
+  InitSignUpWithEmailLinkError,
   InitSignUpWithEmailOTPError,
   LoginWithPasskeyError,
   RecoverableError,
@@ -35,8 +39,10 @@ export class AuthService {
   #sessionService: SessionService;
 
   // state for an ongoing email OTP flow (signup or login)
-  // TODO: remove this?
   #emailCodeIdRef = '';
+
+  // state for an ongoing email link flow (signup or login)
+  #emailLinkIdRef = '';
 
   #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
   #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
@@ -49,6 +55,27 @@ export class AuthService {
     this.#apiService = apiService;
     this.#webAuthnService = webAuthnService;
     this.#sessionService = sessionService;
+  }
+
+  /**
+   * Exposes changes to the user object
+   */
+  get userChanges(): BehaviorSubject<SessionUser | undefined> {
+    return this.#userChanges;
+  }
+
+  /**
+   * Exposes changes to the shortSession
+   */
+  get shortSessionChanges(): BehaviorSubject<string | undefined> {
+    return this.#shortSessionChanges;
+  }
+
+  /**
+   * Exposes changes to the auth state
+   */
+  get authStateChanges(): BehaviorSubject<AuthState> {
+    return this.#authStateChanges;
   }
 
   init(isDebug = false) {
@@ -74,27 +101,6 @@ export class AuthService {
   }
 
   /**
-   * Exposes changes to the user object
-   */
-  get userChanges(): BehaviorSubject<SessionUser | undefined> {
-    return this.#userChanges;
-  }
-
-  /**
-   * Exposes changes to the shortSession
-   */
-  get shortSessionChanges(): BehaviorSubject<string | undefined> {
-    return this.#shortSessionChanges;
-  }
-
-  /**
-   * Exposes changes to the auth state
-   */
-  get authStateChanges(): BehaviorSubject<AuthState> {
-    return this.#authStateChanges;
-  }
-
-  /**
    * Method to start registration of a user by sending an email with an OTP.
    */
   async initSignUpWithEmailOTP(
@@ -102,6 +108,37 @@ export class AuthService {
     username: string,
   ): Promise<Result<void, InitSignUpWithEmailOTPError | undefined>> {
     const resp = await this.#apiService.emailCodeRegisterStart(email, username);
+    if (resp.err) {
+      return resp;
+    }
+
+    this.#emailCodeIdRef = resp.val;
+
+    return Ok(void 0);
+  }
+
+  /**
+   * Completes an ongoing email OTP signUp flow.
+   * Afterward, the user is logged in.
+   *
+   * @param otp 6-digit OTP code that was sent to the user's email
+   */
+  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>> {
+    const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
+    if (resp.err) {
+      return resp;
+    }
+
+    this.#executeOnAuthenticationSuccessCallbacks(resp.val);
+
+    return Ok(void 0);
+  }
+
+  /**
+   * Method to log in with an email OTP.
+   */
+  async initLoginWithEmailOTP(email: string): Promise<Result<void, InitLoginWithEmailOTPError | undefined>> {
+    const resp = await this.#apiService.emailCodeLoginStart(email);
     if (resp.err) {
       return resp;
     }
@@ -129,13 +166,63 @@ export class AuthService {
   }
 
   /**
-   * Completes an ongoing email OTP signUp flow.
+   * Method to start registration of a user by sending an email with a link.
+   */
+  async initSignUpWithEmailLink(
+    email: string,
+    username: string,
+  ): Promise<Result<void, InitSignUpWithEmailLinkError | undefined>> {
+    const resp = await this.#apiService.emailLinkRegisterStart(email, username);
+    if (resp.err) {
+      return resp;
+    }
+
+    this.#emailLinkIdRef = resp.val;
+
+    return Ok(void 0);
+  }
+
+  /**
+   * Completes an ongoing email link signUp flow.
    * Afterward, the user is logged in.
    *
-   * @param otp 6-digit OTP code that was sent to the user's email
+   * @param token token that was sent to the user's email
    */
-  async completeSignupWithEmailOTP(otp: string): Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>> {
-    const resp = await this.#apiService.emailCodeConfirm(this.#emailCodeIdRef, otp);
+  async completeSignupWithEmailLink(
+    token: string,
+  ): Promise<Result<void, CompleteSignupWithEmailLinkError | undefined>> {
+    const resp = await this.#apiService.emailLinkConfirm(this.#emailLinkIdRef, token);
+    if (resp.err) {
+      return resp;
+    }
+
+    this.#executeOnAuthenticationSuccessCallbacks(resp.val);
+
+    return Ok(void 0);
+  }
+
+  /**
+   * Method to log in with an email link.
+   */
+  async initLoginWithEmailLink(email: string): Promise<Result<void, InitLoginWithEmailLinkError | undefined>> {
+    const resp = await this.#apiService.emailLinkLoginStart(email);
+    if (resp.err) {
+      return resp;
+    }
+
+    this.#emailLinkIdRef = resp.val;
+
+    return Ok(void 0);
+  }
+
+  /**
+   * Completes an ongoing email link login flow.
+   * Afterward, the user is logged in.
+   *
+   * @param token token that was sent to the user's email
+   */
+  async completeLoginWithEmailLink(token: string): Promise<Result<void, CompleteLoginWithEmailLinkError | undefined>> {
+    const resp = await this.#apiService.emailCodeConfirm(this.#emailLinkIdRef, token);
     if (resp.err) {
       return resp;
     }
@@ -173,6 +260,19 @@ export class AuthService {
   }
 
   /**
+   * Method to log in with a passkey.
+   *
+   * @param email
+   */
+  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError | undefined>> {
+    return this.#loginWithPasskey(email, false);
+  }
+
+  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError | undefined>> {
+    return this.#loginWithPasskey('', true);
+  }
+
+  /**
    * Method to append a passkey.
    * User needs to be logged in to use this method.
    */
@@ -195,17 +295,41 @@ export class AuthService {
     return Ok(void 0);
   }
 
-  /**
-   * Method to log in with a passkey.
-   * If conditional is true, conditional UI will be invoked.
-   */
-  async loginWithPasskey(email: string): Promise<Result<void, LoginWithPasskeyError | undefined>> {
-    return this.#loginWithPasskey(email, false);
+  async passkeyList() {
+    const resp = await this.#apiService.passkeyList();
+    return resp;
   }
 
-  async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError | undefined>> {
-    return this.#loginWithPasskey('', true);
+  async passkeyDelete(id: string) {
+    const resp = await this.#apiService.passkeyDelete(id);
+    return resp;
   }
+
+  async authMethods(email: string) {
+    const resp = await this.#apiService.authMethodsList(email);
+
+    return resp;
+  }
+
+  async userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
+    const resp = await this.#apiService.authMethodsList(email);
+    if (resp.err) {
+      return Ok(false);
+    }
+
+    return Ok(resp.ok);
+  }
+
+  logout() {
+    return this.#sessionService.logout();
+  }
+
+  /**
+   * Method to execute all the callbacks registered for authentication success.
+   */
+  #executeOnAuthenticationSuccessCallbacks = (value: AuthenticationResponse) => {
+    this.#sessionService.setSession(value.shortSession, value.longSession);
+  };
 
   async #loginWithPasskey(
     email: string,
@@ -236,54 +360,4 @@ export class AuthService {
 
     return Ok(void 0);
   }
-
-  async passkeyList() {
-    const resp = await this.#apiService.passkeyList();
-    return resp;
-  }
-
-  async passkeyDelete(id: string) {
-    const resp = await this.#apiService.passkeyDelete(id);
-    return resp;
-  }
-
-  /**
-   * Method to log in with an email OTP.
-   */
-  async initLoginWithEmailOTP(email: string): Promise<Result<void, InitLoginWithEmailOTPError | undefined>> {
-    const resp = await this.#apiService.emailCodeLoginStart(email);
-    if (resp.err) {
-      return resp;
-    }
-
-    this.#emailCodeIdRef = resp.val;
-
-    return Ok(void 0);
-  }
-
-  async authMethods(email: string) {
-    const resp = await this.#apiService.authMethodsList(email);
-
-    return resp;
-  }
-
-  async userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
-    const resp = await this.#apiService.authMethodsList(email);
-    if (resp.err) {
-      return Ok(false);
-    }
-
-    return Ok(resp.ok);
-  }
-
-  logout() {
-    return this.#sessionService.logout();
-  }
-
-  /**
-   * Method to execute all the callbacks registered for authentication success.
-   */
-  #executeOnAuthenticationSuccessCallbacks = (value: AuthenticationResponse) => {
-    this.#sessionService.setSession(value.shortSession, value.longSession);
-  };
 }

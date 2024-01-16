@@ -45,6 +45,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     setLoading(false);
   }, []);
 
+  /** Passkey Authentication APIs */
   const signUpWithPasskey = useCallback(
     (email: string, username: string) => {
       return corbadoApp.authService.signUpWithPasskey(email, username);
@@ -67,6 +68,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     return corbadoApp.authService.appendPasskey();
   }, [corbadoApp]);
 
+  /** Passkey Management APIs */
   const getPasskeys = useCallback(() => {
     return corbadoApp.authService.passkeyList();
   }, [corbadoApp]);
@@ -78,6 +80,36 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     [corbadoApp],
   );
 
+  /** Email Link APIs */
+  const initLoginWithEmailLink = useCallback(
+    (email: string) => {
+      return corbadoApp.authService.initLoginWithEmailLink(email);
+    },
+    [corbadoApp],
+  );
+
+  const completeLoginWithEmailLink = useCallback(
+    (code: string) => {
+      return corbadoApp.authService.completeLoginWithEmailLink(code);
+    },
+    [corbadoApp],
+  );
+
+  const initSignUpWithEmailLink = useCallback(
+    (email: string, username: string) => {
+      return corbadoApp.authService.initSignUpWithEmailLink(email, username);
+    },
+    [corbadoApp],
+  );
+
+  const completeSignUpWithEmailLink = useCallback(
+    (code: string) => {
+      return corbadoApp.authService.completeSignupWithEmailLink(code);
+    },
+    [corbadoApp],
+  );
+
+  /** Email OTP APIs */
   const initLoginWithEmailOTP = useCallback(
     (email: string) => {
       return corbadoApp.authService.initLoginWithEmailOTP(email);
@@ -91,12 +123,6 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     },
     [corbadoApp],
   );
-
-  const logout = useCallback(() => {
-    corbadoApp.authService.logout();
-    setShortSession(undefined);
-    setUser(undefined);
-  }, [corbadoApp]);
 
   const initSignUpWithEmailOTP = useCallback(
     (email: string, username: string) => {
@@ -112,6 +138,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     [corbadoApp],
   );
 
+  /** Other APIs */
   const getUserAuthMethods = useCallback(
     (email: string) => {
       return corbadoApp.authService.authMethods(email);
@@ -130,6 +157,12 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     return corbadoApp.projectService.getProjectConfig();
   }, [corbadoApp]);
 
+  const logout = useCallback(() => {
+    corbadoApp.authService.logout();
+    setShortSession(undefined);
+    setUser(undefined);
+  }, [corbadoApp]);
+
   const contextValue = useMemo<CorbadoContextProps>(() => {
     return {
       corbadoApp,
@@ -142,15 +175,19 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
       loginWithConditionalUI,
       initLoginWithEmailOTP,
       completeLoginWithEmailOTP,
-      logout,
       initSignUpWithEmailOTP,
       completeSignUpWithEmailOTP,
+      initLoginWithEmailLink,
+      completeLoginWithEmailLink,
+      initSignUpWithEmailLink,
+      completeSignUpWithEmailLink,
       appendPasskey,
       getPasskeys,
       deletePasskey,
       getUserAuthMethods,
       getProjectConfig,
       userExists,
+      logout,
     };
   }, [
     corbadoApp,
@@ -158,14 +195,18 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     user,
     globalError,
     loading,
+    logout,
     signUpWithPasskey,
     loginWithPasskey,
     loginWithConditionalUI,
     initLoginWithEmailOTP,
     completeLoginWithEmailOTP,
-    logout,
     initSignUpWithEmailOTP,
     completeSignUpWithEmailOTP,
+    initLoginWithEmailLink,
+    completeLoginWithEmailLink,
+    initSignUpWithEmailLink,
+    completeSignUpWithEmailLink,
     appendPasskey,
     getPasskeys,
     deletePasskey,

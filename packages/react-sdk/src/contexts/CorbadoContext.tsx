@@ -24,24 +24,40 @@ export interface CorbadoContextProps {
   user: SessionUser | undefined;
   globalError: NonRecoverableError | undefined;
   loading: boolean;
-  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError | undefined>>;
-  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError | undefined>>;
-  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError | undefined>>;
-  initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError | undefined>>;
-  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError | undefined>>;
-  logout: () => void;
+
+  /** Email OTP APIs */
   initSignUpWithEmailOTP: (
     email: string,
     username: string,
   ) => Promise<Result<void, InitSignUpWithEmailOTPError | undefined>>;
   completeSignUpWithEmailOTP: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>>;
+  initLoginWithEmailOTP: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError | undefined>>;
+  completeLoginWithEmailOTP: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError | undefined>>;
+
+  /** Email Link APIs */
+  initSignUpWithEmailLink: (
+    email: string,
+    username: string,
+  ) => Promise<Result<void, InitSignUpWithEmailOTPError | undefined>>;
+  completeSignUpWithEmailLink: (code: string) => Promise<Result<void, CompleteSignupWithEmailOTPError | undefined>>;
+  initLoginWithEmailLink: (email: string) => Promise<Result<void, InitLoginWithEmailOTPError | undefined>>;
+  completeLoginWithEmailLink: (code: string) => Promise<Result<void, CompleteLoginWithEmailOTPError | undefined>>;
+
+  /** Passkey Authentication APIs */
+  signUpWithPasskey: (email: string, username: string) => Promise<Result<void, SignUpWithPasskeyError | undefined>>;
+  loginWithPasskey: (email: string) => Promise<Result<void, LoginWithPasskeyError | undefined>>;
+  loginWithConditionalUI: () => Promise<Result<void, LoginWithPasskeyError | undefined>>;
   appendPasskey: () => Promise<Result<void, AppendPasskeyError | undefined>>;
-  getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>>;
+
+  /** Passkey Management APIs */
   getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
-  getProjectConfig: () => Promise<Result<ProjectConfig, GetProjectConfigError | undefined>>;
 
+  /** Other APIs */
+  getProjectConfig: () => Promise<Result<ProjectConfig, GetProjectConfigError | undefined>>;
+  getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>>;
   userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>>;
+  logout: () => void;
 }
 
 const missingImplementation = (): never => {
@@ -62,6 +78,10 @@ export const initialContext: CorbadoContextProps = {
   logout: missingImplementation,
   initSignUpWithEmailOTP: missingImplementation,
   completeSignUpWithEmailOTP: missingImplementation,
+  initSignUpWithEmailLink: missingImplementation,
+  completeSignUpWithEmailLink: missingImplementation,
+  initLoginWithEmailLink: missingImplementation,
+  completeLoginWithEmailLink: missingImplementation,
   appendPasskey: missingImplementation,
   getPasskeys: missingImplementation,
   deletePasskey: missingImplementation,

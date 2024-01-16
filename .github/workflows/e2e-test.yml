@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - playwright_setup
+      - playwright
 
 jobs:
   prepare:

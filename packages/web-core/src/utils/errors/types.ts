@@ -3,6 +3,7 @@ import type {
   InvalidFullnameError,
   InvalidOtpInputError,
   InvalidPasskeyError,
+  InvalidTokenInputError,
   PasskeyChallengeCancelledError,
   UnknownError,
   UnknownUserError,
@@ -36,13 +37,13 @@ export type CompleteAutocompletedLoginWithPasskeyError =
 export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
 export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
 export type InitLoginWithEmailOTPError = InvalidEmailError | UnknownError;
-export type CompleteLoginWithEmailOTPError = InvalidEmailError | UnknownError;
+export type CompleteLoginWithEmailOTPError = InvalidOtpInputError | UnknownError;
 
 /** Email Link Errors */
 export type InitSignUpWithEmailLinkError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
-export type CompleteSignupWithEmailLinkError = UnknownError;
+export type CompleteSignupWithEmailLinkError = InvalidTokenInputError | UnknownError;
 export type InitLoginWithEmailLinkError = InvalidEmailError | UnknownError;
-export type CompleteLoginWithEmailLinkError = InvalidEmailError | UnknownError;
+export type CompleteLoginWithEmailLinkError = InvalidTokenInputError | UnknownError;
 
 /** Passkey Management Errors */
 export type PasskeyListError = UnknownError;

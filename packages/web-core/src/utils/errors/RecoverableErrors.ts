@@ -78,6 +78,13 @@ export class InvalidOtpInputError extends RecoverableError {
   }
 }
 
+export class InvalidTokenInputError extends RecoverableError {
+  constructor() {
+    super('The provided token is no longer valid');
+    this.name = 'errors.invalidToken';
+  }
+}
+
 export class UnknownError extends RecoverableError {
   constructor() {
     super('An unknown error occurred');

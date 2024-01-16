@@ -27,7 +27,7 @@ export const EmailOTP = () => {
     async (otp: string, setLoading) => {
       setLoading(true);
 
-      await emitEvent(FlowHandlerEvents.PrimaryButton, { emailOTPCode: otp });
+      await emitEvent(FlowHandlerEvents.PrimaryButton, { verificationCode: otp });
     },
     [],
   );

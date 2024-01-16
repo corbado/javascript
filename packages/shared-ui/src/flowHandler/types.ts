@@ -12,6 +12,7 @@ import type { FlowUpdate } from './flowUpdate';
 export interface SignupOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
+  verificationMethod: 'emailLink' | 'emailOtp' | 'smsOtp';
 }
 
 /**
@@ -20,6 +21,7 @@ export interface SignupOptions {
 export interface LoginOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
+  verificationMethod: 'emailLink' | 'emailOtp' | 'smsOtp';
 }
 
 /**
@@ -32,11 +34,13 @@ export type FlowOptions = SignupOptions | LoginOptions;
  */
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
 
+/**
+ * Type definition for a function that represents a step in an authentication flow.
+ */
 export interface FlowHandlerEventOptions {
-  // Whether the user has a passkey already set up
   userHasPasskey?: boolean;
   userStateUpdate?: UserState;
-  emailOTPCode?: string;
+  verificationCode?: string;
 }
 
 /**
@@ -67,7 +71,6 @@ export type Flows = Record<FlowNames, Flow>;
  */
 export type UserState = {
   email?: string;
-  emailOTPState?: EmailOTPState;
   fullName?: string;
   emailError?: RecoverableError;
   userNameError?: RecoverableError;
@@ -81,8 +84,4 @@ export type FlowHandlerStateUpdate = {
   userState?: UserState;
   user?: SessionUser;
   flowOptions?: Partial<FlowOptions>;
-};
-
-export type EmailOTPState = {
-  lastMailSent: Date;
 };

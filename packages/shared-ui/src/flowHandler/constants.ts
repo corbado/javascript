@@ -20,6 +20,8 @@ export enum ScreenNames {
   Start = 'start',
   End = 'end',
   EnterOTP = 'enter-otp',
+  EmailLinkSent = 'email-link-sent',
+  EmailLinkVerifying = 'email-link-verifying',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',

@@ -2,6 +2,7 @@ import type { AuthService } from '@corbado/web-core';
 import {
   InvalidEmailError,
   InvalidOtpInputError,
+  InvalidTokenInputError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownError,
@@ -12,7 +13,9 @@ import { Err, Ok, type Result } from 'ts-results';
 import { ScreenNames } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
-import type { UserState } from '../../types';
+import type { FlowOptions, UserState } from '../../types';
+
+/********** Validation Utils *********/
 
 export const validateEmail = (userStateIn?: UserState, onStartScreen = false): Result<string, FlowUpdate> => {
   if (userStateIn?.email) {
@@ -37,18 +40,103 @@ export const validateUserAuthState = (state: FlowHandlerState): Result<undefined
   return Ok(undefined);
 };
 
-export const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate> => {
+/********** Validation Utils *********/
+
+export const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const res = await authService.initLoginWithEmailOTP(email);
 
   if (res.ok) {
     return FlowUpdate.navigate(ScreenNames.EnterOTP, {
-      emailOTPState: { lastMailSent: new Date() },
       email,
     });
   }
 
-  return FlowUpdate.state({ emailError: new UnknownError(), email });
+  return;
 };
+
+export const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+  const res = await authService.initLoginWithEmailOTP(email);
+
+  if (res.ok) {
+    return FlowUpdate.navigate(ScreenNames.EmailLinkSent, {
+      email,
+    });
+  }
+
+  return;
+};
+
+export const initLoginWithVerificationMethod = async (
+  authService: AuthService,
+  flowOptions: FlowOptions,
+  email: string,
+): Promise<FlowUpdate> => {
+  let res: FlowUpdate | undefined;
+  if (flowOptions.verificationMethod === 'emailLink') {
+    res = await sendEmailLink(authService, email);
+  } else {
+    res = await sendEmailOTP(authService, email);
+  }
+
+  return res ?? FlowUpdate.state({ emailError: new UnknownError(), email });
+};
+
+export const loginWithEmailOTP = async (
+  authService: AuthService,
+  userState: UserState,
+  otp?: string,
+): Promise<Result<undefined, FlowUpdate>> => {
+  if (!otp || otp.length !== 6) {
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidOtpInputError() }));
+  }
+
+  const res = await authService.completeLoginWithEmailOTP(otp);
+  if (res.ok) {
+    return Ok(undefined);
+  }
+
+  if (res.val instanceof InvalidOtpInputError) {
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
+  }
+
+  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
+};
+
+export const loginWithEmailLink = async (
+  authService: AuthService,
+  userState: UserState,
+  token?: string,
+): Promise<Result<undefined, FlowUpdate>> => {
+  if (!token) {
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidTokenInputError() }));
+  }
+
+  const res = await authService.completeLoginWithEmailOTP(token);
+  if (res.ok) {
+    return Ok(undefined);
+  }
+
+  if (res.val instanceof InvalidTokenInputError) {
+    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
+  }
+
+  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
+};
+
+export const completeLoginWithVerificationMethod = async (
+  authService: AuthService,
+  flowOptions: FlowOptions,
+  userState: UserState,
+  verificationCode?: string,
+): Promise<Result<undefined, FlowUpdate>> => {
+  if (flowOptions.verificationMethod === 'emailLink') {
+    return loginWithEmailLink(authService, userState, verificationCode);
+  }
+
+  return loginWithEmailOTP(authService, userState, verificationCode);
+};
+
+/********** Passkey Utils *********/
 
 export const initPasskeyAppend = async (state: FlowHandlerState, email: string): Promise<FlowUpdate | undefined> => {
   if (!state.flowOptions.passkeyAppend) {
@@ -92,27 +180,6 @@ export const loginWithPasskey = async (authService: AuthService, email: string):
   }
 
   return FlowUpdate.navigate(ScreenNames.PasskeyError, userState);
-};
-
-export const loginWithEmailOTP = async (
-  authService: AuthService,
-  userState: UserState,
-  otp?: string,
-): Promise<Result<undefined, FlowUpdate>> => {
-  if (!otp || otp.length !== 6) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidOtpInputError() }));
-  }
-
-  const res = await authService.completeLoginWithEmailOTP(otp);
-  if (res.ok) {
-    return Ok(undefined);
-  }
-
-  if (res.val instanceof InvalidOtpInputError) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
-  }
-
-  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
 };
 
 export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUpdate | undefined> => {

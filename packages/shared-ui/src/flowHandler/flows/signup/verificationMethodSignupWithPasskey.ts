@@ -4,14 +4,13 @@ import type { Flow } from '../../types';
 import {
   appendPasskey,
   checkUserExists,
-  createPasskey,
-  sendEmailOTP,
-  signupWithEmailOTP,
+  completeSignupWithVerificationMethod,
+  initSignupWithVerificationMethod,
   validateEmailAndFullName,
   validateUserAuthState,
 } from './utils';
 
-export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
+export const VerificationMethodSignupWithPasskeyFlow: Flow = {
   [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
@@ -28,46 +27,13 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
           return userExistsError.val;
         }
 
-        return state.passkeysSupported
-          ? FlowUpdate.navigate(ScreenNames.PasskeyCreate, {
-              ...eventOptions?.userStateUpdate,
-            })
-          : await sendEmailOTP(state.corbadoApp, email, fullName, true);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName, true);
       }
     }
 
     return undefined;
   },
 
-  [ScreenNames.PasskeyCreate]: async (state, event) => {
-    const validations = validateEmailAndFullName(state.userState);
-    if (validations.err) {
-      return validations.val;
-    }
-    const { email, fullName } = validations.val;
-
-    switch (event) {
-      case FlowHandlerEvents.ShowBenefits:
-        return FlowUpdate.navigate(ScreenNames.PasskeyBenefits);
-      case FlowHandlerEvents.PrimaryButton: {
-        const res = await createPasskey(state.corbadoApp, email, fullName);
-        if (res.ok) {
-          return res.val;
-        }
-
-        if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
-        }
-
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
-      }
-      case FlowHandlerEvents.SecondaryButton: {
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
-      }
-    }
-
-    return;
-  },
   [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
@@ -76,7 +42,12 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.emailOTPCode);
+        const res = await completeSignupWithVerificationMethod(
+          state.corbadoApp,
+          state.flowOptions,
+          state.userState,
+          eventOptions?.verificationCode,
+        );
         if (res.err) {
           return res.val;
         }
@@ -93,6 +64,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
 
     return;
   },
+
   [ScreenNames.PasskeyAppend]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {
@@ -120,37 +92,24 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   },
 
   [ScreenNames.PasskeyBenefits]: async (state, event) => {
-    const validations = validateEmailAndFullName(state.userState);
+    const validations = validateUserAuthState(state);
     if (validations.err) {
       return validations.val;
     }
-    const { email, fullName } = validations.val;
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        if (state.user) {
-          const res = await appendPasskey(state.corbadoApp);
-
-          return res.ok ? res.val : FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        const res = await createPasskey(state.corbadoApp, email, fullName);
+        const res = await appendPasskey(state.corbadoApp);
         if (res.ok) {
           return res.val;
         }
 
-        if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
-        }
-
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return state.flowOptions.retryPasskeyOnError
+          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
+          : FlowUpdate.navigate(ScreenNames.End);
       }
       case FlowHandlerEvents.SecondaryButton: {
-        if (state.user) {
-          return FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return FlowUpdate.navigate(ScreenNames.End);
       }
     }
 
@@ -167,25 +126,22 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
   },
 
   [ScreenNames.PasskeyError]: async (state, event) => {
-    const validations = validateEmailAndFullName(state.userState);
+    const validations = validateUserAuthState(state);
     if (validations.err) {
       return validations.val;
     }
-    const { email, fullName } = validations.val;
 
     switch (event) {
       case FlowHandlerEvents.ShowBenefits:
         return FlowUpdate.navigate(ScreenNames.PasskeyBenefits);
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await createPasskey(state.corbadoApp, email, fullName);
+        const res = await appendPasskey(state.corbadoApp);
         if (res.ok) {
           return res.val;
         }
 
         return;
       }
-      case FlowHandlerEvents.SecondaryButton:
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
       case FlowHandlerEvents.CancelPasskey:
         return FlowUpdate.navigate(ScreenNames.End);
     }

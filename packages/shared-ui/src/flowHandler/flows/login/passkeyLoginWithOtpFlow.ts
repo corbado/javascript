@@ -3,11 +3,11 @@ import { FlowUpdate } from '../../flowUpdate';
 import type { Flow } from '../../types';
 import {
   appendPasskey,
+  completeLoginWithVerificationMethod,
   initConditionalUI,
+  initLoginWithVerificationMethod,
   initPasskeyAppend,
-  loginWithEmailOTP,
   loginWithPasskey,
-  sendEmailOTP,
   validateEmail,
   validateUserAuthState,
 } from './utils';
@@ -25,7 +25,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
         const email = validations.val;
 
         if (!state.passkeysSupported) {
-          return await sendEmailOTP(state.corbadoApp.authService, email);
+          return await initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
         }
 
         return loginWithPasskey(state.corbadoApp.authService, email);
@@ -46,7 +46,12 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await loginWithEmailOTP(state.corbadoApp.authService, state.userState, eventOptions?.emailOTPCode);
+        const res = await completeLoginWithVerificationMethod(
+          state.corbadoApp.authService,
+          state.flowOptions,
+          state.userState,
+          eventOptions?.verificationCode,
+        );
         if (res.err) {
           return res.val;
         }
@@ -91,7 +96,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
       case FlowHandlerEvents.PrimaryButton:
         return loginWithPasskey(state.corbadoApp.authService, email);
       case FlowHandlerEvents.SecondaryButton:
-        return sendEmailOTP(state.corbadoApp.authService, email);
+        return initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
     }
     return FlowUpdate.state({});
   },

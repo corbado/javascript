@@ -50,7 +50,7 @@ export class UISignupFlow {
   }
 
   async navigateToPasskeyBenefitsPage(webauthnSuccessful: boolean) {
-    this.navigateToPasskeySignupPage(webauthnSuccessful);
+    await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByText('Passkeys').click();
     await this.checkLandedOnPage('PasskeyBenefits');
@@ -58,7 +58,7 @@ export class UISignupFlow {
 
   async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful: boolean) {
     if (passkeySupported) {
-      this.navigateToPasskeySignupPage(webauthnSuccessful);
+      await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
       await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
       await this.checkLandedOnPage('EmailOTP');

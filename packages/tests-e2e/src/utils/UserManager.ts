@@ -10,7 +10,7 @@ class UserManager {
   public static getUserForSignup(): string {
     const timestamp = Date.now();
     const randomness = Math.floor(Math.random() * 1000);
-    const user = `integration-test-${timestamp}${randomness}${this.#index}`;
+    const user = `integration-test+${timestamp}${randomness}${this.#index}`;
     this.#userList.push(user);
     this.#index++;
     return user;

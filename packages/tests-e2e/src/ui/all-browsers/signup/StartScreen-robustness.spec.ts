@@ -1,7 +1,7 @@
 import { test, expect } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
-test.describe('InitiateSignup unproductive user behavior', () => {
+test.describe('StartScreen unproductive user behavior', () => {
   test('with empty name', async ({ signupFlow, page }) => {
     const validEmail = 'bob@corbado.com';
 

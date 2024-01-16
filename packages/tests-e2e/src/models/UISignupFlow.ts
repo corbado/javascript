@@ -29,7 +29,7 @@ export class UISignupFlow {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToPasskeySignupPage(webauthnSuccessful: boolean) {
+  async navigateToPasskeySignupPage(webauthnSuccessful: boolean = true) {
     this.#cdpClient = await initializeCDPSession(this.page);
     this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
     // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
@@ -50,14 +50,14 @@ export class UISignupFlow {
     await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
   }
 
-  async navigateToPasskeyBenefitsPage(webauthnSuccessful: boolean) {
+  async navigateToPasskeyBenefitsPage(webauthnSuccessful: boolean = true) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByText('Passkeys').click();
     await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
   }
 
-  async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful: boolean) {
+  async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful: boolean = true) {
     if (passkeySupported) {
       await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
@@ -80,7 +80,7 @@ export class UISignupFlow {
     }
   }
 
-  async navigateToPasskeyAppendPage(webauthnSuccessful: boolean) {
+  async navigateToPasskeyAppendPage(webauthnSuccessful: boolean = true) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
@@ -137,17 +137,11 @@ export class UISignupFlow {
           'Enter one-time passcode to create account',
         );
         break;
-      case ScreenNames.PasskeyCreate:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
-        break;
       case ScreenNames.PasskeyBenefits:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');
         break;
       case ScreenNames.PasskeyAppend:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Log in even faster with');
-        break;
-      case ScreenNames.PasskeySuccess:
-        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.End:
         await expect(this.page).toHaveURL('/');

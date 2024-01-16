@@ -1,7 +1,7 @@
 import { test, expect } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
-test.describe('EmailOTP unproductive user behavior', () => {
+test.describe('EnterOtpScreen unproductive user behavior', () => {
   test('go back to InitiateSignup', async ({ signupFlow, page }) => {
     await signupFlow.navigateToEmailOTPPage(false, false);
 

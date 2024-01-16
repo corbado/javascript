@@ -1,23 +1,23 @@
 import { test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
-test.describe('PasskeySignup unproductive user behavior', () => {
+test.describe('PasskeyCreateScreen unproductive user behavior', () => {
   test('change to OTP method', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToPasskeySignupPage(true);
+    await signupFlow.navigateToPasskeySignupPage();
 
     await page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EnterOtp);
   });
 
   test('go back to InitiateSignup', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToPasskeySignupPage(true);
+    await signupFlow.navigateToPasskeySignupPage();
 
     await page.getByRole('button', { name: 'Back' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.Start);
   });
 
   test('go to PasskeyBenefits', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToPasskeySignupPage(true);
+    await signupFlow.navigateToPasskeySignupPage();
 
     await page.getByText('Passkeys').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyBenefits);

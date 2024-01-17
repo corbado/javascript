@@ -1,23 +1,33 @@
-import { FlowType } from './constants';
-import type { UIProjectConfig } from './projectConfig';
-import type { FlowNames, FlowOptions } from './types';
+import type { ProjectConfig } from '@corbado/types';
+
+import { FlowType, LoginFlowNames, ScreenNames, SignUpFlowNames } from './constants';
+import type { FlowNames, FlowOptions, LoginOptions, SignupOptions } from './types';
 
 // The FlowHandlerConfig class is responsible for managing the configuration of an authentication flow.
-// It holds the current state of the flow, including the type of flow (sign up or login),
-// the specific flow name, and any options associated with the flow.
+// It holds the processed version of the information from the project config, and other inputs of the FlowHandler.
 export class FlowHandlerConfig {
   readonly #onLoggedIn: () => void;
-  readonly #projectConfig: UIProjectConfig;
+  readonly #projectConfig: ProjectConfig;
+  readonly #initialScreenName: ScreenNames;
   #flowType: FlowType;
   #flowName: FlowNames;
-  #flowOptions: Partial<FlowOptions>;
+  #flowOptions: FlowOptions;
 
-  constructor(onLoggedIn: () => void, projectConfig: UIProjectConfig, initialFlowType: FlowType = FlowType.SignUp) {
+  constructor(onLoggedIn: () => void, projectConfig: ProjectConfig, initialFlowType: FlowType = FlowType.SignUp) {
     this.#onLoggedIn = onLoggedIn;
     this.#flowType = initialFlowType;
     this.#projectConfig = projectConfig;
     this.#flowName = this.#getCurrentFlowName();
     this.#flowOptions = this.#getCurrentFlowOptions();
+    this.#initialScreenName = ScreenNames.Start;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const token = searchParams.get('corbadoToken');
+
+    if (token) {
+      this.update(FlowType.Login);
+      this.#initialScreenName = ScreenNames.EmailLinkVerification;
+    }
   }
 
   get onLoggedIn() {
@@ -36,6 +46,10 @@ export class FlowHandlerConfig {
     return this.#flowOptions;
   }
 
+  get initialScreenName() {
+    return this.#initialScreenName;
+  }
+
   // The update method allows the type of flow to be changed,
   // and updates the flow name and options accordingly.
   update(flowType: FlowType) {
@@ -44,13 +58,19 @@ export class FlowHandlerConfig {
     this.#flowOptions = this.#getCurrentFlowOptions();
   }
 
-  #getCurrentFlowOptions(): Partial<FlowOptions> {
+  #getCurrentFlowOptions(): FlowOptions {
     return this.#flowType === FlowType.SignUp
-      ? this.#projectConfig.signupFlowOptions
-      : this.#projectConfig.loginFlowOptions;
+      ? (this.#projectConfig.signupFlowOptions as SignupOptions)
+      : (this.#projectConfig.loginFlowOptions as LoginOptions);
   }
 
   #getCurrentFlowName(): FlowNames {
-    return this.#flowType === FlowType.SignUp ? this.#projectConfig.signupFlow : this.#projectConfig.loginFlow;
+    if (this.#flowType === FlowType.SignUp) {
+      return this.#projectConfig.signupFlow === 'EmailOTPSignup'
+        ? SignUpFlowNames.EmailOTPSignupWithPasskey
+        : SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+    }
+
+    return LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
   }
 }

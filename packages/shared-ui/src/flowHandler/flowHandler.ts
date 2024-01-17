@@ -9,7 +9,6 @@ import { ScreenNames } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
-import { UIProjectConfig } from './projectConfig';
 import type { FlowHandlerEventOptions, FlowHandlerStateUpdate, FlowNames, UserState } from './types';
 
 /**
@@ -32,10 +31,9 @@ export class FlowHandler {
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
   constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
-    const uiProjectConfig = UIProjectConfig.fromProjectConfig(projectConfig);
-    this.#config = new FlowHandlerConfig(onLoggedIn, uiProjectConfig, initialFlowType);
+    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, initialFlowType);
     this.#screenHistory = [];
-    this.#currentScreen = ScreenNames.Start;
+    this.#currentScreen = this.#config.initialScreenName;
   }
 
   /**

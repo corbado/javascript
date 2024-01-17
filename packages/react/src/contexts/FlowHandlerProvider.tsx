@@ -52,6 +52,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         setCurrentUserState(value);
       });
 
+      setCurrentFlow(flowHandler.currentFlowName);
+      setCurrentScreen(flowHandler.currentScreenName);
       await flowHandler.init(corbadoApp, i18n);
       setFlowHandler(flowHandler);
       setInitialized(true);

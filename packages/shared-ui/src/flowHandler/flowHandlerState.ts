@@ -18,6 +18,7 @@ const defaultFlowOptions: FlowOptions = {
 
 /**
  * Internal state of the FlowHandler.
+ * This class is responsible for managing the state which is sent to all the flow steps.
  */
 export class FlowHandlerState {
   #flowOptions: FlowOptions;

@@ -1,3 +1,5 @@
 export * from './PasskeyScreensWrapper';
 export * from './AuthFormScreenWrapper';
-export * from './EmailOtpScreenWrapper';
+export * from './EmailOtpScreen';
+export * from './EmailLinkSentScreen';
+export * from './EmailLinkVerificationScreen';

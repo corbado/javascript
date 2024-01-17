@@ -50,7 +50,7 @@ export type StepFunction = (
   state: FlowHandlerState,
   event?: FlowHandlerEvents,
   eventOptions?: FlowHandlerEventOptions,
-) => Promise<FlowUpdate | undefined>;
+) => Promise<FlowUpdate | undefined> | FlowUpdate | undefined;
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.

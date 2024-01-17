@@ -4,9 +4,10 @@ import type { Flow } from '../../types';
 import {
   appendPasskey,
   checkUserExists,
-  completeSignupWithVerificationMethod,
   createPasskey,
   initSignupWithVerificationMethod,
+  signupWithEmailLink,
+  signupWithEmailOTP,
   validateEmailAndFullName,
   validateUserAuthState,
 } from './utils';
@@ -76,12 +77,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await completeSignupWithVerificationMethod(
-          state.corbadoApp,
-          state.flowOptions,
-          state.userState,
-          eventOptions?.verificationCode,
-        );
+        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.verificationCode);
         if (res.err) {
           return res.val;
         }
@@ -93,6 +89,48 @@ export const PasskeySignupWithFallbackFlow: Flow = {
         return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
       }
       case FlowHandlerEvents.SecondaryButton:
+        return FlowUpdate.navigate(ScreenNames.Start);
+    }
+
+    return;
+  },
+  [ScreenNames.EmailLinkSent]: (state, event) => {
+    const validations = validateEmailAndFullName(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
+    switch (event) {
+      case FlowHandlerEvents.PrimaryButton: {
+        // resend email
+        return;
+      }
+      case FlowHandlerEvents.CancelEmailLink:
+        return FlowUpdate.navigate(ScreenNames.Start);
+    }
+
+    return;
+  },
+  [ScreenNames.EmailLinkVerification]: async (state, event, eventOptions) => {
+    const validations = validateEmailAndFullName(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
+    switch (event) {
+      case FlowHandlerEvents.VerifyLink: {
+        const res = await signupWithEmailLink(state.corbadoApp, state.userState, eventOptions?.verificationCode);
+        if (res.err) {
+          return res.val;
+        }
+
+        if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
+          return FlowUpdate.navigate(ScreenNames.End);
+        }
+
+        return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
+      }
+      case FlowHandlerEvents.CancelEmailLink:
         return FlowUpdate.navigate(ScreenNames.Start);
     }
 

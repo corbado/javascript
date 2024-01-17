@@ -21,7 +21,7 @@ export enum ScreenNames {
   End = 'end',
   EnterOTP = 'enter-otp',
   EmailLinkSent = 'email-link-sent',
-  EmailLinkVerifying = 'email-link-verifying',
+  EmailLinkVerification = 'email-link-verification',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',
@@ -33,6 +33,8 @@ export enum ScreenNames {
 export enum FlowHandlerEvents {
   ShowBenefits = 'show-benefits',
   CancelOTP = 'cancel-otp',
+  CancelEmailLink = 'cancel-email-link',
+  VerifyLink = 'verify-link',
   CancelPasskey = 'cancel-passkey',
   ChangeFlow = 'change-flow',
   PrimaryButton = 'primary-button',

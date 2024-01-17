@@ -123,19 +123,6 @@ export const loginWithEmailLink = async (
   return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
 };
 
-export const completeLoginWithVerificationMethod = async (
-  authService: AuthService,
-  flowOptions: FlowOptions,
-  userState: UserState,
-  verificationCode?: string,
-): Promise<Result<undefined, FlowUpdate>> => {
-  if (flowOptions.verificationMethod === 'emailLink') {
-    return loginWithEmailLink(authService, userState, verificationCode);
-  }
-
-  return loginWithEmailOTP(authService, userState, verificationCode);
-};
-
 /********** Passkey Utils *********/
 
 export const initPasskeyAppend = async (state: FlowHandlerState, email: string): Promise<FlowUpdate | undefined> => {

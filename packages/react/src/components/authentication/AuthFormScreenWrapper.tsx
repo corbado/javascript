@@ -5,10 +5,10 @@ import type { CustomizableComponent } from '../../types/common';
 import { PrimaryButton } from '../ui/buttons/Button';
 
 export interface AuthFormScreenWrapperProps extends CustomizableComponent {
-  onSubmit: () => void;
   submitButtonText: ReactNode;
   disableSubmitButton?: boolean;
   loading: boolean;
+  onSubmit: () => void;
 }
 
 export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({

@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { EmailOtpScreenProps } from '../../../../components';
-import { EmailOtpScreenWrapper } from '../../../../components';
+import { EmailOtpScreen } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
@@ -53,5 +53,5 @@ export const EmailOTP = () => {
     ],
   );
 
-  return <EmailOtpScreenWrapper {...props} />;
+  return <EmailOtpScreen {...props} />;
 };

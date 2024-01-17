@@ -175,19 +175,6 @@ export const signupWithEmailLink = async (
   return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
 };
 
-export const completeSignupWithVerificationMethod = async (
-  corbadoApp: CorbadoApp,
-  flowOption: FlowOptions,
-  userState: UserState,
-  verificationCode?: string,
-): Promise<Result<undefined, FlowUpdate>> => {
-  if (flowOption.verificationMethod === 'emailLink') {
-    return signupWithEmailLink(corbadoApp, userState, verificationCode);
-  } else {
-    return signupWithEmailOTP(corbadoApp, userState, verificationCode);
-  }
-};
-
 /********** Passkey Utils *********/
 
 export const createPasskey = async (

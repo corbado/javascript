@@ -3,10 +3,11 @@ import { FlowUpdate } from '../../flowUpdate';
 import type { Flow } from '../../types';
 import {
   appendPasskey,
-  completeLoginWithVerificationMethod,
   initConditionalUI,
   initLoginWithVerificationMethod,
   initPasskeyAppend,
+  loginWithEmailLink,
+  loginWithEmailOTP,
   loginWithPasskey,
   validateEmail,
   validateUserAuthState,
@@ -46,9 +47,8 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await completeLoginWithVerificationMethod(
+        const res = await loginWithEmailOTP(
           state.corbadoApp.authService,
-          state.flowOptions,
           state.userState,
           eventOptions?.verificationCode,
         );
@@ -67,6 +67,51 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
     }
     return FlowUpdate.state({});
   },
+
+  [ScreenNames.EmailLinkSent]: (state, event) => {
+    const validations = validateEmail(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
+    switch (event) {
+      case FlowHandlerEvents.PrimaryButton: {
+        // resend email
+        return;
+      }
+      case FlowHandlerEvents.CancelEmailLink:
+        return FlowUpdate.navigate(ScreenNames.Start);
+    }
+
+    return;
+  },
+
+  [ScreenNames.EmailLinkVerification]: async (state, event, eventOptions) => {
+    const validations = validateEmail(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+    const email = validations.val;
+
+    switch (event) {
+      case FlowHandlerEvents.VerifyLink: {
+        const res = await loginWithEmailLink(
+          state.corbadoApp.authService,
+          state.userState,
+          eventOptions?.verificationCode,
+        );
+        if (res.err) {
+          return res.val;
+        }
+
+        return initPasskeyAppend(state, email);
+      }
+      case FlowHandlerEvents.CancelEmailLink:
+        return FlowUpdate.navigate(ScreenNames.Start, { email });
+    }
+    return FlowUpdate.state({});
+  },
+
   [ScreenNames.PasskeyAppend]: async (state, event): Promise<FlowUpdate | undefined> => {
     const validations = validateUserAuthState(state);
     if (validations.err) {

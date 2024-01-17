@@ -2,21 +2,18 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, Header, IconLink, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
-import { GmailIcon, OutlookIcon, YahooIcon } from '../ui/icons/Icons';
+import { Body, EmailLinks, Header, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
   body?: ReactNode;
   verificationButtonText: string;
   backButtonText: string;
-
   onVerificationButtonClick(otp: string, setLoading: (newLoadingState: boolean) => void): Promise<void>;
-
   onBackButtonClick(): void;
 }
 
-export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
+export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
   header,
   body,
   verificationButtonText,
@@ -59,23 +56,7 @@ export const EmailOtpScreenWrapper: FC<EmailOtpScreenProps> = ({
 
       <Body>{body}</Body>
 
-      <div className='cb-email-links'>
-        <IconLink
-          icon={<GmailIcon />}
-          label='Google'
-          href='https://mail.google.com/mail/u/0/#search/from%3A%40corbado+in%3Aanywhere'
-        />
-        <IconLink
-          icon={<YahooIcon />}
-          label='Yahoo'
-          href='https://mail.yahoo.com/d/search/keyword=corbado.com'
-        />
-        <IconLink
-          icon={<OutlookIcon />}
-          label='Outlook'
-          href='https://outlook.office.com/mail/0/inbox'
-        />
-      </div>
+      <EmailLinks />
 
       <OtpInputGroup
         emittedOTP={handleOtpChange}

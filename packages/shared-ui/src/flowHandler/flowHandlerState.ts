@@ -13,6 +13,7 @@ const defaultErrors = {
 const defaultFlowOptions: FlowOptions = {
   passkeyAppend: true,
   retryPasskeyOnError: true,
+  verificationMethod: 'emailOtp',
 };
 
 /**

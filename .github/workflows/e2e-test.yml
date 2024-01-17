@@ -3,11 +3,12 @@ env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
-  # pull_request:
-  #   branches: [ main ]
+  pull_request:
+    branches: [ main ]
   push:
     branches:
       - playwright_setup
+      - playwright
 
 jobs:
   prepare:
@@ -46,14 +47,14 @@ jobs:
         path: node_modules
 
   e2e-tests:
-    timeout-minutes: 5
+    timeout-minutes: 30
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - app: "react"
-            url: ".react.korbado.com/"
+            url: ".react.playground.corbado.io/"
             type: "ui"
           # - app: "react-sdk"
           #   url: ".react-sdk.korbado.com/"

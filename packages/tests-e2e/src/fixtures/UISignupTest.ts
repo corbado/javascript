@@ -1,12 +1,12 @@
 import { test as base } from '@playwright/test';
 
-import { UISignupPage } from '../models/UISignupPage';
+import { UISignupFlow } from '../models/UISignupFlow';
 
-export const test = base.extend<{ signupPage: UISignupPage }>({
-  signupPage: async ({ page }, use) => {
-    const signupPage = new UISignupPage(page);
-    await signupPage.goto();
-    await use(signupPage);
+export const test = base.extend<{ signupFlow: UISignupFlow }>({
+  signupFlow: async ({ page }, use) => {
+    const signupFlow = new UISignupFlow(page);
+    await signupFlow.goto();
+    await use(signupFlow);
   },
 });
 

@@ -88,7 +88,11 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
         return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
       }
-      case FlowHandlerEvents.SecondaryButton:
+      case FlowHandlerEvents.SecondaryButton: {
+        // TODO: add OTP resend
+        return undefined;
+      }
+      case FlowHandlerEvents.CancelOTP:
         return FlowUpdate.navigate(ScreenNames.Start);
     }
 

@@ -157,13 +157,8 @@ export const signupWithEmailOTP = async (
 export const signupWithEmailLink = async (
   corbadoApp: CorbadoApp,
   userState: UserState,
-  token?: string,
 ): Promise<Result<undefined, FlowUpdate>> => {
-  if (!token) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidTokenInputError() }));
-  }
-
-  const res = await corbadoApp.authService.completeSignupWithEmailLink(token);
+  const res = await corbadoApp.authService.completeSignupWithEmailLink();
   if (res.ok) {
     return Ok(undefined);
   }

@@ -168,7 +168,7 @@
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid",
     "invalidOtp": "The provided one-time passcode is not valid",
-    "invalidToken": "The provided token is no longer valid",
+    "invalidToken": "The provided token is not valid for user verification",
     "unknownError": "Something went wrong. Please try again later"
   },
   "passkeysList": {

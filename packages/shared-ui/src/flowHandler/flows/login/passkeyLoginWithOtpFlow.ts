@@ -29,7 +29,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
           return await initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
         }
 
-        return loginWithPasskey(state.corbadoApp.authService, email);
+        return loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
       }
       case FlowHandlerEvents.InitConditionalUI: {
         return initConditionalUI(state);
@@ -86,7 +86,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
     return;
   },
 
-  [ScreenNames.EmailLinkVerification]: async (state, event, eventOptions) => {
+  [ScreenNames.EmailLinkVerification]: async (state, event) => {
     const validations = validateEmail(state.userState);
     if (validations.err) {
       return validations.val;
@@ -95,11 +95,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.VerifyLink: {
-        const res = await loginWithEmailLink(
-          state.corbadoApp.authService,
-          state.userState,
-          eventOptions?.verificationCode,
-        );
+        const res = await loginWithEmailLink(state.corbadoApp.authService, state.userState);
         if (res.err) {
           return res.val;
         }
@@ -139,7 +135,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return loginWithPasskey(state.corbadoApp.authService, email);
+        return loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
       case FlowHandlerEvents.SecondaryButton:
         return initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
     }

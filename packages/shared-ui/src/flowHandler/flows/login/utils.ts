@@ -55,7 +55,7 @@ export const sendEmailOTP = async (authService: AuthService, email: string): Pro
 };
 
 export const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
-  const res = await authService.initLoginWithEmailOTP(email);
+  const res = await authService.initLoginWithEmailLink(email);
 
   if (res.ok) {
     return FlowUpdate.navigate(ScreenNames.EmailLinkSent, {
@@ -105,13 +105,8 @@ export const loginWithEmailOTP = async (
 export const loginWithEmailLink = async (
   authService: AuthService,
   userState: UserState,
-  token?: string,
 ): Promise<Result<undefined, FlowUpdate>> => {
-  if (!token) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidTokenInputError() }));
-  }
-
-  const res = await authService.completeLoginWithEmailOTP(token);
+  const res = await authService.completeLoginWithEmailLink();
   if (res.ok) {
     return Ok(undefined);
   }
@@ -144,7 +139,11 @@ export const initPasskeyAppend = async (state: FlowHandlerState, email: string):
   return FlowUpdate.navigate(ScreenNames.End, { email });
 };
 
-export const loginWithPasskey = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+export const loginWithPasskey = async (
+  authService: AuthService,
+  flowOptions: FlowOptions,
+  email: string,
+): Promise<FlowUpdate | undefined> => {
   const userState: UserState = { email };
   const res = await authService.loginWithPasskey(email);
   if (res.ok) {
@@ -158,12 +157,8 @@ export const loginWithPasskey = async (authService: AuthService, email: string):
     });
   }
 
-  if (res.val instanceof NoPasskeyAvailableError) {
-    return sendEmailOTP(authService, email);
-  }
-
-  if (res.val instanceof PasskeyChallengeCancelledError) {
-    return sendEmailOTP(authService, email);
+  if (res.val instanceof NoPasskeyAvailableError || res.val instanceof PasskeyChallengeCancelledError) {
+    return initLoginWithVerificationMethod(authService, flowOptions, email);
   }
 
   return FlowUpdate.navigate(ScreenNames.PasskeyError, userState);

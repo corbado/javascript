@@ -111,7 +111,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     return;
   },
-  [ScreenNames.EmailLinkVerification]: async (state, event, eventOptions) => {
+  [ScreenNames.EmailLinkVerification]: async (state, event) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -119,7 +119,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.VerifyLink: {
-        const res = await signupWithEmailLink(state.corbadoApp, state.userState, eventOptions?.verificationCode);
+        const res = await signupWithEmailLink(state.corbadoApp, state.userState);
         if (res.err) {
           return res.val;
         }

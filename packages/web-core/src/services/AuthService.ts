@@ -20,7 +20,7 @@ import type {
   RecoverableError,
   SignUpWithPasskeyError,
 } from '../utils';
-import { AuthState } from '../utils';
+import { AuthState, getEmailLinkToken } from '../utils';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
 import type { WebAuthnService } from './WebAuthnService';
@@ -40,9 +40,6 @@ export class AuthService {
 
   // state for an ongoing email OTP flow (signup or login)
   #emailCodeIdRef = '';
-
-  // state for an ongoing email link flow (signup or login)
-  #emailLinkIdRef = '';
 
   #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
   #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
@@ -177,8 +174,6 @@ export class AuthService {
       return resp;
     }
 
-    this.#emailLinkIdRef = resp.val;
-
     return Ok(void 0);
   }
 
@@ -188,10 +183,14 @@ export class AuthService {
    *
    * @param token token that was sent to the user's email
    */
-  async completeSignupWithEmailLink(
-    token: string,
-  ): Promise<Result<void, CompleteSignupWithEmailLinkError | undefined>> {
-    const resp = await this.#apiService.emailLinkConfirm(this.#emailLinkIdRef, token);
+  async completeSignupWithEmailLink(): Promise<Result<void, CompleteSignupWithEmailLinkError | undefined>> {
+    const tokenDetails = getEmailLinkToken();
+    if (tokenDetails.err) {
+      return tokenDetails;
+    }
+
+    const { emailLinkId, token } = tokenDetails.val;
+    const resp = await this.#apiService.emailLinkConfirm(emailLinkId, token);
     if (resp.err) {
       return resp;
     }
@@ -210,8 +209,6 @@ export class AuthService {
       return resp;
     }
 
-    this.#emailLinkIdRef = resp.val;
-
     return Ok(void 0);
   }
 
@@ -221,8 +218,14 @@ export class AuthService {
    *
    * @param token token that was sent to the user's email
    */
-  async completeLoginWithEmailLink(token: string): Promise<Result<void, CompleteLoginWithEmailLinkError | undefined>> {
-    const resp = await this.#apiService.emailCodeConfirm(this.#emailLinkIdRef, token);
+  async completeLoginWithEmailLink(): Promise<Result<void, CompleteLoginWithEmailLinkError | undefined>> {
+    const tokenDetails = getEmailLinkToken();
+    if (tokenDetails.err) {
+      return tokenDetails;
+    }
+
+    const { emailLinkId, token } = tokenDetails.val;
+    const resp = await this.#apiService.emailCodeConfirm(emailLinkId, token);
     if (resp.err) {
       return resp;
     }

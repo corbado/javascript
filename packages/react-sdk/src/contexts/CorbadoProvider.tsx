@@ -88,12 +88,9 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     [corbadoApp],
   );
 
-  const completeLoginWithEmailLink = useCallback(
-    (code: string) => {
-      return corbadoApp.authService.completeLoginWithEmailLink(code);
-    },
-    [corbadoApp],
-  );
+  const completeLoginWithEmailLink = useCallback(() => {
+    return corbadoApp.authService.completeLoginWithEmailLink();
+  }, [corbadoApp]);
 
   const initSignUpWithEmailLink = useCallback(
     (email: string, username: string) => {
@@ -102,12 +99,9 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     [corbadoApp],
   );
 
-  const completeSignUpWithEmailLink = useCallback(
-    (code: string) => {
-      return corbadoApp.authService.completeSignupWithEmailLink(code);
-    },
-    [corbadoApp],
-  );
+  const completeSignUpWithEmailLink = useCallback(() => {
+    return corbadoApp.authService.completeSignupWithEmailLink();
+  }, [corbadoApp]);
 
   /** Email OTP APIs */
   const initLoginWithEmailOTP = useCallback(

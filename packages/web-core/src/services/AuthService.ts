@@ -225,7 +225,7 @@ export class AuthService {
     }
 
     const { emailLinkId, token } = tokenDetails.val;
-    const resp = await this.#apiService.emailCodeConfirm(emailLinkId, token);
+    const resp = await this.#apiService.emailLinkConfirm(emailLinkId, token);
     if (resp.err) {
       return resp;
     }

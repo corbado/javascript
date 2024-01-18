@@ -1,41 +1,54 @@
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { EmailLinkVerificationScreenProps } from '../../../../components';
-import { EmailLinkVerificationScreen } from '../../../../components';
+import { Body, Header, PrimaryButton, TertiaryButton } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailLinkVerification = () => {
   const { emitEvent, currentUserState, currentFlowType } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlowType}.emailLinkVerification` });
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     void emitEvent(FlowHandlerEvents.VerifyLink);
   }, []);
 
+  useEffect(() => {
+    setLoading(false);
+  }, [currentUserState]);
+
   const header = t('header');
   const resendButtonText = t('button_sendLinkAgain');
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelEmailLink), []);
+  const handleCancel = useCallback(() => void emitEvent(FlowHandlerEvents.CancelEmailLink), []);
 
-  const handleResend: EmailLinkVerificationScreenProps['onResendButtonClick'] = useCallback(async setLoading => {
+  const handleResend = useCallback(() => {
     setLoading(true);
 
-    await emitEvent(FlowHandlerEvents.PrimaryButton);
+    void emitEvent(FlowHandlerEvents.PrimaryButton);
   }, []);
 
-  const props: EmailLinkVerificationScreenProps = useMemo(
-    () => ({
-      header,
-      resendButtonText,
-      backButtonText,
-      onResendButtonClick: handleResend,
-      onBackButtonClick: handleCancel,
-    }),
-    [t, currentUserState.email, handleResend, handleCancel, header, resendButtonText, backButtonText],
-  );
+  return (
+    <div className='cb-email-otp'>
+      <Header>{header}</Header>
 
-  return <EmailLinkVerificationScreen {...props} />;
+      <Body>{currentUserState.emailOTPError && currentUserState.emailOTPError.translatedMessage}</Body>
+
+      <PrimaryButton
+        onClick={handleResend}
+        isLoading={loading}
+        disabled={loading}
+      >
+        {resendButtonText}
+      </PrimaryButton>
+      <TertiaryButton
+        onClick={handleCancel}
+        disabled={loading}
+      >
+        {backButtonText}
+      </TertiaryButton>
+    </div>
+  );
 };

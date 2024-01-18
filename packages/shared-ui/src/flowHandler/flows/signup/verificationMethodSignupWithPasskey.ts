@@ -5,7 +5,6 @@ import {
   appendPasskey,
   checkUserExists,
   initSignupWithVerificationMethod,
-  signupWithEmailLink,
   signupWithEmailOTP,
   validateEmailAndFullName,
   validateUserAuthState,
@@ -71,32 +70,6 @@ export const VerificationMethodSignupWithPasskeyFlow: Flow = {
       case FlowHandlerEvents.PrimaryButton: {
         // resend email
         return;
-      }
-      case FlowHandlerEvents.CancelEmailLink:
-        return FlowUpdate.navigate(ScreenNames.Start);
-    }
-
-    return;
-  },
-
-  [ScreenNames.EmailLinkVerification]: async (state, event) => {
-    const validations = validateEmailAndFullName(state.userState);
-    if (validations.err) {
-      return validations.val;
-    }
-
-    switch (event) {
-      case FlowHandlerEvents.VerifyLink: {
-        const res = await signupWithEmailLink(state.corbadoApp, state.userState);
-        if (res.err) {
-          return res.val;
-        }
-
-        if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
-          return FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
       }
       case FlowHandlerEvents.CancelEmailLink:
         return FlowUpdate.navigate(ScreenNames.Start);

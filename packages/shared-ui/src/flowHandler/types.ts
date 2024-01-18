@@ -1,4 +1,4 @@
-import type { SessionUser, VerificationMethods } from '@corbado/types';
+import type { FlowTypes, SessionUser, VerificationMethods } from '@corbado/types';
 import type { RecoverableError } from '@corbado/web-core';
 
 import type { FlowHandlerEvents, LoginFlowNames, SignUpFlowNames } from './constants';
@@ -85,3 +85,10 @@ export type FlowHandlerStateUpdate = {
   user?: SessionUser;
   flowOptions?: Partial<FlowOptions>;
 };
+
+export interface FlowHandlerUpdates {
+  flowType?: FlowTypes;
+  flowName?: FlowNames;
+  screenName?: ScreenNames;
+  verificationMethod?: VerificationMethods;
+}

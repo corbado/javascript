@@ -87,12 +87,6 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
   },
 
   [ScreenNames.EmailLinkVerification]: async (state, event) => {
-    const validations = validateEmail(state.userState);
-    if (validations.err) {
-      return validations.val;
-    }
-    const email = validations.val;
-
     switch (event) {
       case FlowHandlerEvents.VerifyLink: {
         const res = await loginWithEmailLink(state.corbadoApp.authService, state.userState);
@@ -100,10 +94,13 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
           return res.val;
         }
 
-        return initPasskeyAppend(state, email);
+        console.log('res', res);
+        break;
+        //return initPasskeyAppend(state, email);
       }
       case FlowHandlerEvents.CancelEmailLink:
-        return FlowUpdate.navigate(ScreenNames.Start, { email });
+        window.location.search = '';
+        return FlowUpdate.navigate(ScreenNames.Start);
     }
     return FlowUpdate.state({});
   },

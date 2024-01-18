@@ -19,7 +19,6 @@ export class FlowHandlerConfig {
     this.#projectConfig = projectConfig;
     this.#flowName = this.#getCurrentFlowName();
     this.#flowOptions = this.#getCurrentFlowOptions();
-    this.#initialScreenName = ScreenNames.Start;
 
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get('corbadoToken');
@@ -27,6 +26,8 @@ export class FlowHandlerConfig {
     if (token) {
       this.update(FlowType.Login);
       this.#initialScreenName = ScreenNames.EmailLinkVerification;
+    } else {
+      this.#initialScreenName = ScreenNames.Start;
     }
   }
 

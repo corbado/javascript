@@ -133,6 +133,10 @@ export class CorbadoError extends Error {
         if (errorResp.details === 'Email code not valid') {
           return new InvalidOtpInputError();
         }
+
+        if (errorResp.details === 'Email link not valid') {
+          return new InvalidTokenInputError();
+        }
     }
 
     return NonRecoverableError.unknown();

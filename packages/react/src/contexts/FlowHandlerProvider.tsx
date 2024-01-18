@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { FlowHandlerEventOptions, FlowNames, FlowType, UserState } from '@corbado/shared-ui';
-import { FlowHandler, FlowHandlerEvents, ScreenNames, SignUpFlowNames } from '@corbado/shared-ui';
+import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
 import type { FlowTypes, VerificationMethods } from '@corbado/types';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
@@ -23,13 +23,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
 }) => {
   const { corbadoApp, getProjectConfig, user } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(ScreenNames.Start);
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
-  const currentFlowType = useRef<FlowTypes>(initialFlowType ? 'login' : 'signup');
-  const verificationMethod = useRef<VerificationMethods>('emailOtp');
+  const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
-  const onScreenChangeCbId = useRef<number>(0);
+  const currentFlowType = useRef<FlowTypes>();
+  const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
   const onUserStateChangeCbId = useRef<number>(0);
 
@@ -46,20 +45,22 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       }
       const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
 
-      onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
-        setCurrentFlow(value);
-        currentFlowType.current = flowHandler.currentFlowTypeText;
-        verificationMethod.current = flowHandler.currentVerificationMethod;
+      onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
+        updates.flowName && setCurrentFlow(updates.flowName);
+        updates.screenName && setCurrentScreen(updates.screenName);
+
+        if (updates.flowType) {
+          currentFlowType.current = updates.flowType;
+        }
+
+        if (updates.verificationMethod) {
+          verificationMethod.current = updates.verificationMethod;
+        }
       });
+
       onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
         setCurrentUserState(value);
       });
-
-      setCurrentFlow(flowHandler.currentFlowName);
-      setCurrentScreen(flowHandler.currentScreenName);
-      currentFlowType.current = flowHandler.currentFlowTypeText;
-      verificationMethod.current = flowHandler.currentVerificationMethod;
 
       await flowHandler.init(corbadoApp, i18n);
       setFlowHandler(flowHandler);
@@ -68,7 +69,6 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
 
     return () => {
       flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-      flowHandler?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
       flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
     };
   }, []);

@@ -121,8 +121,8 @@ export const loginWithEmailLink = async (
 /********** Passkey Utils *********/
 
 export const initPasskeyAppend = async (state: FlowHandlerState, email: string): Promise<FlowUpdate | undefined> => {
-  if (!state.flowOptions.passkeyAppend) {
-    return FlowUpdate.navigate(ScreenNames.End, { email });
+  if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
+    return FlowUpdate.navigate(ScreenNames.End);
   }
 
   const authMethods = await state.corbadoApp.authService.authMethods(email);

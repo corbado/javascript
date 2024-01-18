@@ -1,4 +1,4 @@
-import type { ProjectConfig, SessionUser } from '@corbado/types';
+import type { FlowTypes, ProjectConfig, SessionUser } from '@corbado/types';
 import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
@@ -68,6 +68,14 @@ export class FlowHandler {
 
   get currentFlowName() {
     return this.#config.flowName;
+  }
+
+  get currentFlowTypeText(): FlowTypes {
+    return this.#config.flowType === FlowType.SignUp ? 'signup' : 'login';
+  }
+
+  get currentVerificationMethod() {
+    return this.#config.verificationMethod;
   }
 
   /**

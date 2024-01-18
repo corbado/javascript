@@ -1,4 +1,4 @@
-import type { ProjectConfig } from '@corbado/types';
+import type { ProjectConfig, VerificationMethods } from '@corbado/types';
 
 import { FlowType, LoginFlowNames, ScreenNames, SignUpFlowNames } from './constants';
 import type { FlowNames, FlowOptions, LoginOptions, SignupOptions } from './types';
@@ -48,6 +48,10 @@ export class FlowHandlerConfig {
 
   get initialScreenName() {
     return this.#initialScreenName;
+  }
+
+  get verificationMethod(): VerificationMethods {
+    return this.#flowOptions.verificationMethod ?? 'emailOtp';
   }
 
   // The update method allows the type of flow to be changed,

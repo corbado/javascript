@@ -1,4 +1,4 @@
-import type { SessionUser } from '@corbado/types';
+import type { SessionUser, VerificationMethods } from '@corbado/types';
 import type { RecoverableError } from '@corbado/web-core';
 
 import type { FlowHandlerEvents, LoginFlowNames, SignUpFlowNames } from './constants';
@@ -12,7 +12,7 @@ import type { FlowUpdate } from './flowUpdate';
 export interface SignupOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
-  verificationMethod: 'emailLink' | 'emailOtp' | 'smsOtp';
+  verificationMethod: VerificationMethods;
 }
 
 /**
@@ -21,7 +21,7 @@ export interface SignupOptions {
 export interface LoginOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
-  verificationMethod: 'emailLink' | 'emailOtp' | 'smsOtp';
+  verificationMethod: VerificationMethods;
 }
 
 /**

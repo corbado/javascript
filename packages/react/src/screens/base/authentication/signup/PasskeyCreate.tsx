@@ -7,9 +7,9 @@ import { PasskeyScreensWrapper } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyCreate = () => {
-  const { navigateBack, currentUserState, emitEvent, currentFlow } = useFlowHandler();
+  const { navigateBack, currentUserState, emitEvent, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeyCreate`,
+    keyPrefix: `authentication.signup.passkeyCreate`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export const PasskeyCreate = () => {
   );
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
-  const secondaryButton = useMemo(() => t('button_emailOtp'), [t]);
+  const secondaryButton = useMemo(() => t(`${currentVerificationMethod}.button_switchToAlternate`), [t]);
   const tertiaryButton = useMemo(() => t('button_back'), [t]);
 
   const handleBack = useCallback(() => {

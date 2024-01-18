@@ -2,11 +2,10 @@ import type { FC, ReactNode } from 'react';
 import React, { useEffect, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, EmailLinks, Header, PrimaryButton, TertiaryButton } from '../ui';
+import { Body, Header, PrimaryButton, TertiaryButton } from '../ui';
 
 export interface EmailLinkVerificationScreenProps {
   header: ReactNode;
-  body?: ReactNode;
   resendButtonText: string;
   backButtonText: string;
   onResendButtonClick(setLoading: (newLoadingState: boolean) => void): Promise<void>;
@@ -15,7 +14,6 @@ export interface EmailLinkVerificationScreenProps {
 
 export const EmailLinkVerificationScreen: FC<EmailLinkVerificationScreenProps> = ({
   header,
-  body,
   resendButtonText,
   backButtonText,
   onResendButtonClick,
@@ -36,11 +34,11 @@ export const EmailLinkVerificationScreen: FC<EmailLinkVerificationScreenProps> =
     <div className='cb-email-otp'>
       <Header>{header}</Header>
 
-      <Body>{body}</Body>
-
-      <EmailLinks />
-
-      {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
+      <Body>
+        {currentUserState.emailOTPError && (
+          <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>
+        )}
+      </Body>
 
       <PrimaryButton
         onClick={handleResend}

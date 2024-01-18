@@ -7,22 +7,15 @@ import { EmailLinkVerificationScreen } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailLinkVerification = () => {
-  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.emailLinkSent` });
+  const { emitEvent, currentUserState, currentFlowType } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlowType}.emailLinkVerification` });
 
   useEffect(() => {
     void emitEvent(FlowHandlerEvents.VerifyLink);
   }, []);
 
   const header = t('header');
-  const body = (
-    <>
-      {t('body_text1')}
-      <span className='cb-text-secondary cb-text-bold'>{currentUserState.email}</span>
-      {t('body_text2')}
-    </>
-  );
-  const resendButtonText = t('button_resend');
+  const resendButtonText = t('button_sendLinkAgain');
   const backButtonText = t('button_back');
 
   const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelEmailLink), []);
@@ -36,13 +29,12 @@ export const EmailLinkVerification = () => {
   const props: EmailLinkVerificationScreenProps = useMemo(
     () => ({
       header,
-      body,
       resendButtonText,
       backButtonText,
       onResendButtonClick: handleResend,
       onBackButtonClick: handleCancel,
     }),
-    [t, currentUserState.email, handleResend, handleCancel, header, body, resendButtonText, backButtonText],
+    [t, currentUserState.email, handleResend, handleCancel, header, resendButtonText, backButtonText],
   );
 
   return <EmailLinkVerificationScreen {...props} />;

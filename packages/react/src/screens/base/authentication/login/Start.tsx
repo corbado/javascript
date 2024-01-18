@@ -6,8 +6,8 @@ import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../..
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { emitEvent, currentUserState, currentFlow, changeFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.start` });
+  const { emitEvent, currentUserState, changeFlow } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.login.start` });
   const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);

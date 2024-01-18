@@ -15,9 +15,9 @@ export interface PasskeyErrorProps {
 }
 
 export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
-  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
+  const { navigateBack, emitEvent, currentFlowType, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeyError`,
+    keyPrefix: `authentication.${currentFlowType}.passkeyError`,
   });
   const { shortSession } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
@@ -25,21 +25,24 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
 
   const header = useMemo(() => t('header'), [t]);
 
-  const body = useMemo(
-    () => (
+  const body = useMemo(() => {
+    if (currentFlowType === 'login') {
+      return t(`${currentVerificationMethod}.body`);
+    }
+
+    return (
       <span>
-        {t('body_errorMessage1')}
+        {t('body_errorMessage')}
         <span
           className='cb-link-primary'
           onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
-        {t('body_errorMessage2')}
+        {t(`${currentVerificationMethod}.body_tryAgainMessage`)}
       </span>
-    ),
-    [t],
-  );
+    );
+  }, [t]);
 
   const primaryButton = useMemo(() => t('button_retry'), [t]);
   const secondaryButton = useMemo(() => {
@@ -47,7 +50,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
       return '';
     }
 
-    return t('button_emailOtp');
+    return t(`${currentVerificationMethod}.button_switchToAlternate`);
   }, [t]);
   const tertiaryButton = useMemo(() => {
     if (navigateBackOnCancel) {

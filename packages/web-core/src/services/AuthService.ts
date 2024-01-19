@@ -2,7 +2,7 @@ import type { SessionUser } from '@corbado/types';
 import log from 'loglevel';
 import { BehaviorSubject } from 'rxjs';
 import type { Result } from 'ts-results';
-import { Ok } from 'ts-results';
+import { Err, Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../models/auth';
 import type { ShortSession } from '../models/session';
@@ -19,6 +19,7 @@ import type {
   LoginWithPasskeyError,
   RecoverableError,
   SignUpWithPasskeyError,
+  ConditionalUiNotSupportedError,
 } from '../utils';
 import { AuthState, getEmailLinkToken } from '../utils';
 import type { ApiService } from './ApiService';
@@ -272,6 +273,11 @@ export class AuthService {
   }
 
   async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError | undefined>> {
+    const conditionalUiAvailable = await PublicKeyCredential.isConditionalMediationAvailable();
+    if (!conditionalUiAvailable) {
+      return Err(new ConditionalUiNotSupportedError());
+    }
+
     return this.#loginWithPasskey('', true);
   }
 

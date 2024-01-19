@@ -19,6 +19,8 @@ export type LoginWithPasskeyError =
   | InvalidEmailError
   | InvalidPasskeyError
   | PasskeyChallengeCancelledError
+  | InitAutocompletedLoginWithPasskeyError
+  | ConditionalUiNotSupportedError
   | UnknownError;
 export type InitAutocompletedLoginWithPasskeyError = UnknownError;
 export type CompleteAutocompletedLoginWithPasskeyError =
@@ -307,6 +309,13 @@ export class InvalidTokenInputError extends RecoverableError {
   constructor() {
     super('The provided token is not valid for user verification');
     this.name = 'errors.invalidToken';
+  }
+}
+
+export class ConditionalUiNotSupportedError extends RecoverableError {
+  constructor() {
+    super('Conditional UI is not supported by your device');
+    this.name = 'errors.noConditionalUiSupport';
   }
 }
 

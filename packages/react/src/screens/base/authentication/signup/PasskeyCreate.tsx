@@ -27,7 +27,7 @@ export const PasskeyCreate = () => {
           className='cb-link-primary'
           onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
-          {t('button_showPasskeyBenefits')}
+          {t('headerButton_showPasskeyBenefits')}
         </span>
       </span>
     ),

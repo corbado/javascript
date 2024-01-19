@@ -21,7 +21,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   onLoggedIn,
   onChangeFlow,
 }) => {
-  const { corbadoApp, getProjectConfig, user } = useCorbado();
+  const { corbadoApp, getProjectConfig } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
@@ -72,14 +72,6 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
     };
   }, []);
-
-  useEffect(() => {
-    if (!initialized || !user) {
-      return;
-    }
-
-    flowHandler?.update(user);
-  }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
     return flowHandler?.navigateBack() ?? ScreenNames.Start;

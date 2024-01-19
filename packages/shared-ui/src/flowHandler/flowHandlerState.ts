@@ -44,6 +44,10 @@ export class FlowHandlerState {
     this.#passkeysSupported = passkeysSupported;
     this.#corbadoApp = corbadoApp;
     this.#i18next = i18next;
+
+    corbadoApp.authService.userChanges.subscribe(user => {
+      this.update({ user });
+    });
   }
 
   get user(): SessionUser | undefined {

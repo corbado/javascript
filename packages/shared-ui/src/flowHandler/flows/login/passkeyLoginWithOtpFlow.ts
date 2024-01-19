@@ -94,13 +94,18 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
           return res.val;
         }
 
-        console.log('res', res);
-        break;
-        //return initPasskeyAppend(state, email);
+        return initPasskeyAppend(state, state.user?.email ?? '');
       }
       case FlowHandlerEvents.CancelEmailLink:
         window.location.search = '';
         return FlowUpdate.navigate(ScreenNames.Start);
+      //TODO: remove this once we fix the flow
+      case FlowHandlerEvents.PrimaryButton:
+        return await appendPasskey(state.corbadoApp.authService);
+      case FlowHandlerEvents.SecondaryButton:
+        return Promise.resolve(FlowUpdate.navigate(ScreenNames.End));
+      case FlowHandlerEvents.ShowBenefits:
+        return Promise.resolve(FlowUpdate.navigate(ScreenNames.PasskeyBenefits));
     }
     return FlowUpdate.state({});
   },
@@ -124,17 +129,32 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
   },
 
   [ScreenNames.PasskeyError]: async (state, event) => {
-    const validations = validateEmail(state.userState);
-    if (validations.err) {
-      return validations.val;
-    }
-    const email = validations.val;
-
     switch (event) {
-      case FlowHandlerEvents.PrimaryButton:
+      case FlowHandlerEvents.PrimaryButton: {
+        if (state.user) {
+          return await appendPasskey(state.corbadoApp.authService);
+        }
+        const validations = validateEmail(state.userState);
+        if (validations.err) {
+          return validations.val;
+        }
+        const email = validations.val;
+
         return loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
-      case FlowHandlerEvents.SecondaryButton:
+      }
+      case FlowHandlerEvents.SecondaryButton: {
+        if (state.user) {
+          return FlowUpdate.navigate(ScreenNames.End);
+        }
+
+        const validations = validateEmail(state.userState);
+        if (validations.err) {
+          return validations.val;
+        }
+        const email = validations.val;
+
         return initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
+      }
     }
     return FlowUpdate.state({});
   },

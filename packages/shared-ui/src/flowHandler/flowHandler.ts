@@ -4,8 +4,7 @@ import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
 import type { FlowHandlerEvents } from './constants';
-import { FlowType } from './constants';
-import { ScreenNames } from './constants';
+import { FlowType, ScreenNames } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';

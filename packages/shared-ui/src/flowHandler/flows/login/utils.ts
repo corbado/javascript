@@ -107,6 +107,10 @@ export const loginWithEmailLink = async (
   userState: UserState,
 ): Promise<Result<undefined, FlowUpdate>> => {
   const res = await authService.completeLoginWithEmailLink();
+
+  const updatedURL = window.location.origin + window.location.pathname;
+  history.pushState({}, '', updatedURL);
+
   if (res.ok) {
     return Ok(undefined);
   }

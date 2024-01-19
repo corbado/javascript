@@ -54,6 +54,10 @@ export class SessionService {
     this.#refreshIntervalId = setInterval(() => {
       void this.#handleRefreshRequest();
     }, shortSessionRefreshIntervalMs);
+
+    document.addEventListener('visibilitychange', () => {
+      this.#handleVisibilityChange();
+    });
   }
 
   /**
@@ -195,6 +199,8 @@ export class SessionService {
   async #handleRefreshRequest() {
     // no shortSession => user is not logged in => nothing to refresh
     if (!this.#shortSession) {
+      log.debug('session refresh: no refresh, user not logged in');
+
       return;
     }
 
@@ -204,11 +210,13 @@ export class SessionService {
     }
 
     // nothing to do for now
-    log.debug('no refresh, token still valid');
+    log.debug('no refresh, no refresh, token still valid');
     return;
   }
 
   async #refresh() {
+    log.debug('session refresh: starting refresh');
+
     try {
       const options: AxiosRequestConfig = {
         headers: {
@@ -233,6 +241,20 @@ export class SessionService {
       // for all other errors, we should log out the user
       log.warn(e);
       this.logout();
+    }
+  }
+
+  #handleVisibilityChange() {
+    if (document.hidden) {
+      log.debug('session refresh: no refresh, page is hidden');
+
+      return;
+    }
+
+    try {
+      void this.#handleRefreshRequest();
+    } catch (e) {
+      log.error(e);
     }
   }
 }

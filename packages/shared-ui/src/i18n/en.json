@@ -34,11 +34,9 @@
         "headerButton_showPasskeyBenefits": "Passkeys",
         "body": "We'll create an account for ",
         "button_start": "Create your account",
-        "emailOtp": {
-          "button_switchToAlternate": "Send email one-time passcode"
-        },
-        "emailLink": {
-          "button_switchToAlternate": "Send email magic link"
+        "button_switchToAlternate": {
+          "emailOtp": "Send email one-time passcode",
+          "emailLink": "Send email magic link"
         },
         "button_back": "Back"
       },
@@ -46,13 +44,13 @@
         "header": "Let's get you set up",
         "body_errorMessage": "Creating your account was not possible with ",
         "button_showPasskeyBenefits": "passkeys",
-        "emailOtp": {
-          "body_tryAgainMessage": ". Try again or sign up with email one-time passcode.",
-          "button_switchToAlternate": "Send email one-time passcode"
+        "body_tryAgainMessage": {
+          "emailOtp": ". Try again or sign up with email one-time passcode.",
+          "emailLink": ". Try again or sign up with email magic link."
         },
-        "emailLink": {
-          "body_tryAgainMessage": ". Try again or sign up with email magic link.",
-          "button_switchToAlternate": "Send email magic link"
+        "button_switchToAlternate": {
+          "emailOtp": "Send email one-time passcode",
+          "emailLink": "Send email magic link"
         },
         "button_retry": "Try again",
         "button_back": "Back",
@@ -62,11 +60,9 @@
         "header": "Welcome!",
         "subheader": "Passkey created",
         "body_text1": "You can now confirm your identity using your ",
-        "emailOtp": {
-          "body_text2": "passkey or via email one-time passcode"
-        },
-        "emailLink": {
-          "body_text2": "passkey or via email magic link"
+        "body_text2": {
+          "emailOtp": "passkey or via email one-time passcode",
+          "emailLink": "passkey or via email magic link"
         },
         "body_text3": " when you log in.",
         "button": "Continue"
@@ -115,13 +111,13 @@
       },
       "passkeyError": {
         "header": "Log in with Passkeys",
-        "emailOtp": {
-          "body": "Login with passkeys not possible. Try again or log in with email one-time passcode.",
-          "button_switchToAlternate": "Send email one-time passcode"
+        "body": {
+          "emailOtp": "Log in with passkeys not possible. Try again or log in with email one-time passcode.",
+          "emailLink": "Log in with passkeys not possible. Try again or log in with email magic link."
         },
-        "emailLink": {
-          "body": "Login with passkeys not possible. Try again or log in with email magic link.",
-          "button_switchToAlternate": "Send email magic link"
+        "button_switchToAlternate": {
+          "emailOtp": "Send email one-time passcode",
+          "emailLink": "Send email magic link"
         },
         "button_retry": "Try again",
         "button_back": "Back",

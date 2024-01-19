@@ -13,7 +13,7 @@ import {
   validateUserAuthState,
 } from './utils';
 
-export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
+export const PasskeyLoginWithFallbackFlow: Flow = {
   [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
@@ -38,7 +38,7 @@ export const PasskeyLoginWithEmailOTPFallbackFlow: Flow = {
 
     return;
   },
-  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
+  [ScreenNames.EmailOTPVerification]: async (state, event, eventOptions) => {
     const validations = validateEmail(state.userState);
     if (validations.err) {
       return validations.val;

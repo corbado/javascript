@@ -8,9 +8,9 @@ import { PasskeyBenefits } from '../screens/base/authentication/common/PasskeyBe
 import { PasskeyError } from '../screens/base/authentication/login/flows/passkeyLoginWithEmailOTPFallback/PasskeyError';
 import { Start } from '../screens/base/authentication/login/Start';
 
-export const PasskeyLoginWithEmailOTPFallbackFlow = {
+export const PasskeyLoginWithFallbackFlow = {
   [ScreenNames.Start]: Start,
-  [ScreenNames.EnterOTP]: EmailOTP,
+  [ScreenNames.EmailOTPVerification]: EmailOTP,
   [ScreenNames.EmailLinkSent]: EmailLinkSent,
   [ScreenNames.EmailLinkVerification]: EmailLinkVerification,
   [ScreenNames.PasskeyAppend]: PasskeyAppend,

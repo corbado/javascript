@@ -10,10 +10,10 @@ import { PasskeyCreate } from '../screens/base/authentication/signup/PasskeyCrea
 import { PasskeySuccess } from '../screens/base/authentication/signup/PasskeySuccess';
 import { Start } from '../screens/base/authentication/signup/Start';
 
-export const PasskeySignupWithEmailOTPFallbackFlow = {
+export const PasskeySignupWithFallbackFlow = {
   [ScreenNames.Start]: Start,
   [ScreenNames.PasskeyCreate]: PasskeyCreate,
-  [ScreenNames.EnterOTP]: EmailOTP,
+  [ScreenNames.EmailOTPVerification]: EmailOTP,
   [ScreenNames.EmailLinkSent]: EmailLinkSent,
   [ScreenNames.EmailLinkVerification]: EmailLinkVerification,
   [ScreenNames.PasskeyAppend]: PasskeyAppend,

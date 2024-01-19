@@ -10,7 +10,7 @@ import {
   validateUserAuthState,
 } from './utils';
 
-export const VerificationMethodSignupWithPasskeyFlow: Flow = {
+export const SignupWithPasskeyAppendFlow: Flow = {
   [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
@@ -34,7 +34,7 @@ export const VerificationMethodSignupWithPasskeyFlow: Flow = {
     return undefined;
   },
 
-  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
+  [ScreenNames.EmailOTPVerification]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -76,6 +76,11 @@ export const VerificationMethodSignupWithPasskeyFlow: Flow = {
     }
 
     return;
+  },
+
+  [ScreenNames.EmailLinkVerification]: () => {
+    // We don't need to do anything here, the user will be redirected to the login flow for email link verification
+    return FlowUpdate.state({});
   },
 
   [ScreenNames.PasskeyAppend]: async (state, event) => {

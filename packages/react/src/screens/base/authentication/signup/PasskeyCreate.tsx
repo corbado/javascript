@@ -2,8 +2,8 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
-import { PasskeyScreensWrapper } from '../../../../components';
+import type { ButtonVariants, PasskeyScreensBaseProps } from '../../../../components';
+import { PasskeyScreensBase } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyCreate = () => {
@@ -44,7 +44,7 @@ export const PasskeyCreate = () => {
   );
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
-  const secondaryButton = useMemo(() => t(`${currentVerificationMethod}.button_switchToAlternate`), [t]);
+  const secondaryButton = useMemo(() => t(`button_switchToAlternate.${currentVerificationMethod}`), [t]);
   const tertiaryButton = useMemo(() => t('button_back'), [t]);
 
   const handleBack = useCallback(() => {
@@ -69,7 +69,7 @@ export const PasskeyCreate = () => {
     [handleBack],
   );
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       subHeader,
@@ -86,7 +86,7 @@ export const PasskeyCreate = () => {
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

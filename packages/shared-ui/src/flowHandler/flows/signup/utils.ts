@@ -3,7 +3,6 @@ import {
   InvalidEmailError,
   InvalidFullnameError,
   InvalidOtpInputError,
-  InvalidTokenInputError,
   UnknownError,
   UserAlreadyExistsError,
 } from '@corbado/web-core';
@@ -80,7 +79,7 @@ export const checkUserExists = async (
 
 /********** Verification Method Utils *********/
 
-export const sendEmailOTP = async (
+const sendEmailOTP = async (
   corbadoApp: CorbadoApp,
   email: string,
   fullName: string,
@@ -88,13 +87,13 @@ export const sendEmailOTP = async (
   const res = await corbadoApp.authService.initSignUpWithEmailOTP(email, fullName);
 
   if (res.ok) {
-    return FlowUpdate.navigate(ScreenNames.EnterOTP, { email, fullName });
+    return FlowUpdate.navigate(ScreenNames.EmailOTPVerification, { email, fullName });
   }
 
   return;
 };
 
-export const sendEmailLink = async (
+const sendEmailLink = async (
   corbadoApp: CorbadoApp,
   email: string,
   fullName: string,
@@ -148,22 +147,6 @@ export const signupWithEmailOTP = async (
   }
 
   if (res.val instanceof InvalidOtpInputError) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
-  }
-
-  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
-};
-
-export const signupWithEmailLink = async (
-  corbadoApp: CorbadoApp,
-  userState: UserState,
-): Promise<Result<undefined, FlowUpdate>> => {
-  const res = await corbadoApp.authService.completeSignupWithEmailLink();
-  if (res.ok) {
-    return Ok(undefined);
-  }
-
-  if (res.val instanceof InvalidTokenInputError) {
     return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
   }
 

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { IconLink } from './icons/IconLink';
-import { GmailIcon, OutlookIcon, YahooIcon } from './icons/Icons';
+import { IconLink } from '../icons/IconLink';
+import { GmailIcon, OutlookIcon, YahooIcon } from '../icons/Icons';
 
-export const EmailLinks = () => {
+export const EmailProviderButtons = () => {
   return (
     <div className='cb-email-links'>
       <IconLink

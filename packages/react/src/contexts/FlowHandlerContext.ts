@@ -1,10 +1,16 @@
-import type { FlowHandlerEventOptions, FlowHandlerEvents, FlowNames, UserState } from '@corbado/shared-ui';
+import type {
+  FlowHandlerEventOptions,
+  FlowHandlerEvents,
+  FlowNames,
+  FlowTypeText,
+  UserState,
+  VerificationMethods,
+} from '@corbado/shared-ui';
 import { ScreenNames } from '@corbado/shared-ui';
-import type { FlowTypes, VerificationMethods } from '@corbado/types';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
-  currentFlowType: FlowTypes | undefined;
+  currentFlowType: FlowTypeText | undefined;
   currentFlow: FlowNames | undefined;
   currentScreen: ScreenNames | undefined;
   currentUserState: UserState;

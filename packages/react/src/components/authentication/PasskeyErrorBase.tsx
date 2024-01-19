@@ -6,15 +6,15 @@ import { useTranslation } from 'react-i18next';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
 import type { ButtonVariants } from '../ui';
-import type { PasskeyScreensWrapperProps } from './PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from './PasskeyScreensWrapper';
+import type { PasskeyScreensBaseProps } from './PasskeyScreensBase';
+import { PasskeyScreensBase } from './PasskeyScreensBase';
 
-export interface PasskeyErrorProps {
+export interface PasskeyErrorBaseProps {
   showSecondaryButton?: boolean;
   navigateBackOnCancel?: boolean;
 }
 
-export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
+export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
   const { navigateBack, emitEvent, currentFlowType, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
     keyPrefix: `authentication.${currentFlowType}.passkeyError`,
@@ -27,7 +27,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
 
   const body = useMemo(() => {
     if (currentFlowType === 'login') {
-      return t(`${currentVerificationMethod}.body`);
+      return t(`body.${currentVerificationMethod}`);
     }
 
     return (
@@ -39,7 +39,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
         >
           {t('button_showPasskeyBenefits')}
         </span>
-        {t(`${currentVerificationMethod}.body_tryAgainMessage`)}
+        {t(`body_tryAgainMessage.${currentVerificationMethod}`)}
       </span>
     );
   }, [t]);
@@ -50,7 +50,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
       return '';
     }
 
-    return t(`${currentVerificationMethod}.button_switchToAlternate`);
+    return t(`button_switchToAlternate.${currentVerificationMethod}`);
   }, [t]);
   const tertiaryButton = useMemo(() => {
     if (navigateBackOnCancel) {
@@ -78,7 +78,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
     [navigateBack, emitEvent],
   );
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       body,
@@ -94,7 +94,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

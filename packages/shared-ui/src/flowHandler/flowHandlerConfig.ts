@@ -1,34 +1,26 @@
-import type { ProjectConfig, VerificationMethods } from '@corbado/types';
+import type { ProjectConfig } from '@corbado/types';
 
 import { FlowType, LoginFlowNames, ScreenNames, SignUpFlowNames } from './constants';
-import type { FlowNames, FlowOptions, LoginOptions, SignupOptions } from './types';
+import type { LoginOptions, SignupOptions, VerificationMethods } from './types';
+
+interface FlowDetails {
+  [FlowType.SignUp]: { name: SignUpFlowNames; options: SignupOptions };
+  [FlowType.Login]: { name: LoginFlowNames; options: LoginOptions };
+}
 
 // The FlowHandlerConfig class is responsible for managing the configuration of an authentication flow.
 // It holds the processed version of the information from the project config, and other inputs of the FlowHandler.
 export class FlowHandlerConfig {
   readonly #onLoggedIn: () => void;
-  readonly #projectConfig: ProjectConfig;
   readonly #initialScreenName: ScreenNames;
+  readonly #flowDetails: FlowDetails;
   #flowType: FlowType;
-  #flowName: FlowNames;
-  #flowOptions: FlowOptions;
 
   constructor(onLoggedIn: () => void, projectConfig: ProjectConfig, initialFlowType: FlowType = FlowType.SignUp) {
     this.#onLoggedIn = onLoggedIn;
     this.#flowType = initialFlowType;
-    this.#projectConfig = projectConfig;
-    this.#flowName = this.#getCurrentFlowName();
-    this.#flowOptions = this.#getCurrentFlowOptions();
-
-    const searchParams = new URLSearchParams(window.location.search);
-    const token = searchParams.get('corbadoToken');
-
-    if (token) {
-      this.update(FlowType.Login);
-      this.#initialScreenName = ScreenNames.EmailLinkVerification;
-    } else {
-      this.#initialScreenName = ScreenNames.Start;
-    }
+    this.#flowDetails = this.#getFlowDetails(projectConfig);
+    this.#initialScreenName = this.#getInitialScreenName();
   }
 
   get onLoggedIn() {
@@ -40,11 +32,11 @@ export class FlowHandlerConfig {
   }
 
   get flowName() {
-    return this.#flowName;
+    return this.#flowDetails[this.#flowType].name;
   }
 
   get flowOptions() {
-    return this.#flowOptions;
+    return this.#flowDetails[this.#flowType].options;
   }
 
   get initialScreenName() {
@@ -52,30 +44,40 @@ export class FlowHandlerConfig {
   }
 
   get verificationMethod(): VerificationMethods {
-    return this.#flowOptions.verificationMethod ?? 'emailOtp';
+    return this.flowOptions.verificationMethod;
   }
 
   // The update method allows the type of flow to be changed,
   // and updates the flow name and options accordingly.
   update(flowType: FlowType) {
     this.#flowType = flowType;
-    this.#flowName = this.#getCurrentFlowName();
-    this.#flowOptions = this.#getCurrentFlowOptions();
   }
 
-  #getCurrentFlowOptions(): FlowOptions {
-    return this.#flowType === FlowType.SignUp
-      ? (this.#projectConfig.signupFlowOptions as SignupOptions)
-      : (this.#projectConfig.loginFlowOptions as LoginOptions);
+  #getFlowDetails(projectConfig: ProjectConfig) {
+    return {
+      [FlowType.SignUp]: {
+        name:
+          projectConfig.signupFlow === 'EmailOTPSignup'
+            ? SignUpFlowNames.SignupWithPasskeyAppend
+            : SignUpFlowNames.PasskeySignupWithFallback,
+        options: projectConfig.signupFlowOptions as SignupOptions,
+      },
+      [FlowType.Login]: {
+        name: LoginFlowNames.PasskeyLoginWithFallback,
+        options: projectConfig.loginFlowOptions as LoginOptions,
+      },
+    };
   }
 
-  #getCurrentFlowName(): FlowNames {
-    if (this.#flowType === FlowType.SignUp) {
-      return this.#projectConfig.signupFlow === 'EmailOTPSignup'
-        ? SignUpFlowNames.EmailOTPSignupWithPasskey
-        : SignUpFlowNames.PasskeySignupWithEmailOTPFallback;
+  #getInitialScreenName() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const token = searchParams.get('corbadoToken');
+
+    if (token) {
+      this.update(FlowType.Login);
+      return ScreenNames.EmailLinkVerification;
+    } else {
+      return ScreenNames.Start;
     }
-
-    return LoginFlowNames.PasskeyLoginWithEmailOTPFallback;
   }
 }

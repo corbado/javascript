@@ -1,7 +1,13 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowHandlerEventOptions, FlowNames, FlowType, UserState } from '@corbado/shared-ui';
+import type {
+  FlowHandlerEventOptions,
+  FlowNames,
+  FlowType,
+  FlowTypeText,
+  UserState,
+  VerificationMethods,
+} from '@corbado/shared-ui';
 import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
-import type { FlowTypes, VerificationMethods } from '@corbado/types';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -27,7 +33,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
-  const currentFlowType = useRef<FlowTypes>();
+  const currentFlowType = useRef<FlowTypeText>();
   const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
   const onUserStateChangeCbId = useRef<number>(0);

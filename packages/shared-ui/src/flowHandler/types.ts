@@ -1,10 +1,14 @@
-import type { FlowTypes, SessionUser, VerificationMethods } from '@corbado/types';
+import type { SessionUser } from '@corbado/types';
 import type { RecoverableError } from '@corbado/web-core';
 
 import type { FlowHandlerEvents, LoginFlowNames, SignUpFlowNames } from './constants';
 import type { ScreenNames } from './constants';
 import type { FlowHandlerState } from './flowHandlerState';
 import type { FlowUpdate } from './flowUpdate';
+
+export type FlowTypeText = 'signup' | 'login';
+
+export type VerificationMethods = 'emailLink' | 'emailOtp' | 'smsOtp';
 
 /**
  * Configuration options for the passkey sign-up with email OTP fallback flow.
@@ -87,7 +91,7 @@ export type FlowHandlerStateUpdate = {
 };
 
 export interface FlowHandlerUpdates {
-  flowType?: FlowTypes;
+  flowType?: FlowTypeText;
   flowName?: FlowNames;
   screenName?: ScreenNames;
   verificationMethod?: VerificationMethods;

@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import React, { useEffect, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, EmailLinks, Header, PrimaryButton, TertiaryButton } from '../ui';
+import { Body, EmailProviderButtons, Header, PrimaryButton, TertiaryButton } from '../ui';
 
 export interface EmailLinkSentScreenProps {
   header: ReactNode;
@@ -38,7 +38,7 @@ export const EmailLinkSentScreen: FC<EmailLinkSentScreenProps> = ({
 
       <Body>{body}</Body>
 
-      <EmailLinks />
+      <EmailProviderButtons />
 
       {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
 

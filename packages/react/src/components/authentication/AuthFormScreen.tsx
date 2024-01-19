@@ -4,14 +4,14 @@ import React from 'react';
 import type { CustomizableComponent } from '../../types/common';
 import { PrimaryButton } from '../ui/buttons/Button';
 
-export interface AuthFormScreenWrapperProps extends CustomizableComponent {
+export interface AuthFormScreenProps extends CustomizableComponent {
   submitButtonText: ReactNode;
   disableSubmitButton?: boolean;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
+export const AuthFormScreen: FC<AuthFormScreenProps> = ({
   children,
   onSubmit,
   submitButtonText,
@@ -39,4 +39,4 @@ export const AuthFormScreenWrapper: FC<AuthFormScreenWrapperProps> = ({
   );
 };
 
-export default AuthFormScreenWrapper;
+export default AuthFormScreen;

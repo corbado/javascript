@@ -68,7 +68,8 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     return;
   },
-  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
+
+  [ScreenNames.EmailOTPVerification]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -97,6 +98,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     return;
   },
+
   [ScreenNames.EmailLinkSent]: (state, event) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
@@ -114,6 +116,12 @@ export const PasskeySignupWithFallbackFlow: Flow = {
 
     return;
   },
+
+  [ScreenNames.EmailLinkVerification]: () => {
+    // We don't need to do anything here, the user will be redirected to the login flow for email link verification
+    return FlowUpdate.state({});
+  },
+
   [ScreenNames.PasskeyAppend]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {

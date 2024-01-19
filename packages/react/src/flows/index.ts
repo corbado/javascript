@@ -2,9 +2,9 @@ import type { ScreenNames } from '@corbado/shared-ui';
 import { type FlowNames, LoginFlowNames, SignUpFlowNames } from '@corbado/shared-ui';
 import type React from 'react';
 
-import { EmailOTPSignupWithPasskeyFlow } from './EmailOTPSignupWithPasskey';
-import { PasskeyLoginWithEmailOTPFallbackFlow } from './PasskeyLoginWithEmailOTPFallbackFlow';
-import { PasskeySignupWithEmailOTPFallbackFlow } from './PasskeySignupWithEmailOTPFallbackFlow';
+import { PasskeyLoginWithFallbackFlow } from './PasskeyLoginWithFallbackFlow';
+import { PasskeySignupWithFallbackFlow } from './PasskeySignupWithFallbackFlow';
+import { SignupWithPasskeyAppendFlow } from './SignupWithPasskeyAppend';
 
 export type ScreenMap = {
   [K in ScreenNames]?: () => React.ReactNode;
@@ -15,7 +15,7 @@ export type FlowScreensMap = {
 };
 
 export const flowScreensMap: FlowScreensMap = {
-  [SignUpFlowNames.PasskeySignupWithEmailOTPFallback]: PasskeySignupWithEmailOTPFallbackFlow,
-  [SignUpFlowNames.EmailOTPSignupWithPasskey]: EmailOTPSignupWithPasskeyFlow,
-  [LoginFlowNames.PasskeyLoginWithEmailOTPFallback]: PasskeyLoginWithEmailOTPFallbackFlow,
+  [SignUpFlowNames.PasskeySignupWithFallback]: PasskeySignupWithFallbackFlow,
+  [SignUpFlowNames.SignupWithPasskeyAppend]: SignupWithPasskeyAppendFlow,
+  [LoginFlowNames.PasskeyLoginWithFallback]: PasskeyLoginWithFallbackFlow,
 };

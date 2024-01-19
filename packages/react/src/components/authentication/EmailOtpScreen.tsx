@@ -2,7 +2,7 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, EmailLinks, Header, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
+import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
@@ -56,7 +56,7 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
 
       <Body>{body}</Body>
 
-      <EmailLinks />
+      <EmailProviderButtons />
 
       <OtpInputGroup
         emittedOTP={handleOtpChange}

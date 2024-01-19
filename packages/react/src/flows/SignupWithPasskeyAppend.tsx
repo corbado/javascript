@@ -9,9 +9,9 @@ import { PasskeyError } from '../screens/base/authentication/signup/flows/emailO
 import { PasskeySuccess } from '../screens/base/authentication/signup/PasskeySuccess';
 import { Start } from '../screens/base/authentication/signup/Start';
 
-export const EmailOTPSignupWithPasskeyFlow = {
+export const SignupWithPasskeyAppendFlow = {
   [ScreenNames.Start]: Start,
-  [ScreenNames.EnterOTP]: EmailOTP,
+  [ScreenNames.EmailOTPVerification]: EmailOTP,
   [ScreenNames.EmailLinkSent]: EmailLinkSent,
   [ScreenNames.EmailLinkVerification]: EmailLinkVerification,
   [ScreenNames.PasskeyAppend]: PasskeyAppend,

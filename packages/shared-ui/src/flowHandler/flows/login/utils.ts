@@ -42,11 +42,11 @@ export const validateUserAuthState = (state: FlowHandlerState): Result<undefined
 
 /********** Validation Utils *********/
 
-export const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const res = await authService.initLoginWithEmailOTP(email);
 
   if (res.ok) {
-    return FlowUpdate.navigate(ScreenNames.EnterOTP, {
+    return FlowUpdate.navigate(ScreenNames.EmailOTPVerification, {
       email,
     });
   }
@@ -54,7 +54,7 @@ export const sendEmailOTP = async (authService: AuthService, email: string): Pro
   return;
 };
 
-export const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const res = await authService.initLoginWithEmailLink(email);
 
   if (res.ok) {

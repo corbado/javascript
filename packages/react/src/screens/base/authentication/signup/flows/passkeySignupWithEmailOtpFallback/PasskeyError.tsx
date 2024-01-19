@@ -1,7 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import React from 'react';
 
-import { PasskeyError as PasskeyErrorBase } from '../../../../../../components/authentication/PasskeyError';
+import { PasskeyErrorBase } from '../../../../../../components';
 
 export const PasskeyError = () => {
   const { shortSession } = useCorbado();

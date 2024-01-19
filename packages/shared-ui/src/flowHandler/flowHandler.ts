@@ -1,4 +1,4 @@
-import type { FlowTypes, ProjectConfig, SessionUser } from '@corbado/types';
+import type { ProjectConfig, SessionUser } from '@corbado/types';
 import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
@@ -8,7 +8,13 @@ import { FlowType, ScreenNames } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
-import type { FlowHandlerEventOptions, FlowHandlerStateUpdate, FlowHandlerUpdates, UserState } from './types';
+import type {
+  FlowHandlerEventOptions,
+  FlowHandlerStateUpdate,
+  FlowHandlerUpdates,
+  FlowTypeText,
+  UserState,
+} from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -68,7 +74,7 @@ export class FlowHandler {
     return this.#config.flowName;
   }
 
-  get currentFlowTypeText(): FlowTypes {
+  get currentFlowTypeText(): FlowTypeText {
     return this.#config.flowType === FlowType.SignUp ? 'signup' : 'login';
   }
 

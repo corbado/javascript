@@ -2,7 +2,7 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
+import { AuthFormScreen, FormInput, Header, SubHeader } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
@@ -47,7 +47,7 @@ export const Start = () => {
           {t('button_signup')}
         </span>
       </SubHeader>
-      <AuthFormScreenWrapper
+      <AuthFormScreen
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
         loading={loading}
@@ -61,7 +61,7 @@ export const Start = () => {
           value={formEmail}
           error={currentUserState.emailError?.translatedMessage}
         />
-      </AuthFormScreenWrapper>
+      </AuthFormScreen>
     </>
   );
 };

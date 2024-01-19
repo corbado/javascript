@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreenWrapper, FormInput, Header, SubHeader } from '../../../../components';
+import { AuthFormScreen, FormInput, Header, SubHeader } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 interface SignupForm {
@@ -72,7 +72,7 @@ export const Start = () => {
           {t('button_login')}
         </span>
       </SubHeader>
-      <AuthFormScreenWrapper
+      <AuthFormScreen
         onSubmit={handleSubmit}
         submitButtonText={t('button_submit')}
         disableSubmitButton={loading}
@@ -94,7 +94,7 @@ export const Start = () => {
           value={signupData.name}
           error={emailError?.translatedMessage}
         />
-      </AuthFormScreenWrapper>
+      </AuthFormScreen>
     </>
   );
 };

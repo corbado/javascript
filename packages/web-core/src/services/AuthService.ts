@@ -76,26 +76,16 @@ export class AuthService {
     return this.#authStateChanges;
   }
 
-  init(isDebug = false) {
+  init(isDebug = false, useSessionManagement: boolean) {
     if (isDebug) {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
     }
 
-    this.#sessionService.init((shortSession: ShortSession | undefined) => {
-      const user = this.#sessionService.getUser();
-
-      if (user && shortSession) {
-        this.#shortSessionChanges.next(shortSession.value);
-        this.#authStateChanges.next(AuthState.LoggedIn);
-        this.#userChanges.next(user);
-      } else {
-        this.#shortSessionChanges.next(undefined);
-        this.#authStateChanges.next(AuthState.LoggedOut);
-        this.#userChanges.next(undefined);
-      }
-    });
+    if (useSessionManagement) {
+      this.#setupSessionManagement();
+    }
   }
 
   /**
@@ -364,4 +354,20 @@ export class AuthService {
 
     return Ok(void 0);
   }
+
+  #setupSessionManagement = () => {
+    this.#sessionService.init((shortSession: ShortSession | undefined) => {
+      const user = this.#sessionService.getUser();
+
+      if (user && shortSession) {
+        this.#shortSessionChanges.next(shortSession.value);
+        this.#authStateChanges.next(AuthState.LoggedIn);
+        this.#userChanges.next(user);
+      } else {
+        this.#shortSessionChanges.next(undefined);
+        this.#authStateChanges.next(AuthState.LoggedOut);
+        this.#userChanges.next(undefined);
+      }
+    });
+  };
 }

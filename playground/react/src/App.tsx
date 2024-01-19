@@ -22,6 +22,7 @@ function App() {
           en: englishTranslations,
         }}
         darkMode={'off'}
+        isDevMode={true}
       >
         <RouteProvider />
       </CorbadoProvider>

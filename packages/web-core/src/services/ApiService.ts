@@ -25,6 +25,7 @@ import type {
   PasskeyDeleteError,
   PasskeyListError,
   SignUpWithPasskeyError,
+  UserExistsError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
 
@@ -346,6 +347,17 @@ export class ApiService {
       await this.#usersApi.currentUserPassKeyDelete(passkeyId);
 
       return void 0;
+    });
+  }
+
+  public async userExists(email: string): Promise<Result<boolean, UserExistsError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.userExists({
+        loginIdentifierType: 'email',
+        loginIdentifier: email,
+      });
+
+      return r.data.exists;
     });
   }
 }

@@ -2138,6 +2138,70 @@ export interface UserEmail {
 
 
 /**
+ * 
+ * @export
+ * @interface UserExistsReq
+ */
+export interface UserExistsReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserExistsReq
+     */
+    'loginIdentifier': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof UserExistsReq
+     */
+    'loginIdentifierType': LoginIdentifierType;
+    /**
+     * Unique ID of request, you can provide your own while making the request, if not the ID will be randomly generated on server side
+     * @type {string}
+     * @memberof UserExistsReq
+     */
+    'requestID'?: string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface UserExistsRsp
+ */
+export interface UserExistsRsp {
+    /**
+     * HTTP status code of operation
+     * @type {number}
+     * @memberof UserExistsRsp
+     */
+    'httpStatusCode': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserExistsRsp
+     */
+    'message': string;
+    /**
+     * 
+     * @type {RequestData}
+     * @memberof UserExistsRsp
+     */
+    'requestData': RequestData;
+    /**
+     * Runtime in seconds for this request
+     * @type {number}
+     * @memberof UserExistsRsp
+     */
+    'runtime': number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserExistsRsp
+     */
+    'exists': boolean;
+}
+/**
  * User\'s phone number
  * @export
  * @interface UserPhoneNumber
@@ -3661,6 +3725,48 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Checks if a confirmed user exists for provided login identifier
+         * @param {UserExistsReq} userExistsReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userExists: async (userExistsReq: UserExistsReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userExistsReq' is not null or undefined
+            assertParamExists('userExists', 'userExistsReq', userExistsReq)
+            const localVarPath = `/v1/users/exists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(userExistsReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3899,6 +4005,16 @@ export const UsersApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.password(passwordVerifyReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Checks if a confirmed user exists for provided login identifier
+         * @param {UserExistsReq} userExistsReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async userExists(userExistsReq: UserExistsReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserExistsRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userExists(userExistsReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -4113,6 +4229,15 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          */
         password(passwordVerifyReq: PasswordVerifyReq, options?: any): AxiosPromise<PasswordVerifyRsp> {
             return localVarFp.password(passwordVerifyReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Checks if a confirmed user exists for provided login identifier
+         * @param {UserExistsReq} userExistsReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userExists(userExistsReq: UserExistsReq, options?: any): AxiosPromise<UserExistsRsp> {
+            return localVarFp.userExists(userExistsReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4373,6 +4498,17 @@ export class UsersApi extends BaseAPI {
      */
     public password(passwordVerifyReq: PasswordVerifyReq, options?: AxiosRequestConfig) {
         return UsersApiFp(this.configuration).password(passwordVerifyReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Checks if a confirmed user exists for provided login identifier
+     * @param {UserExistsReq} userExistsReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public userExists(userExistsReq: UserExistsReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).userExists(userExistsReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -43,6 +43,7 @@ export type CompleteLoginWithEmailLinkError = InvalidTokenInputError | UnknownEr
 /** Passkey Management Errors */
 export type PasskeyListError = UnknownError;
 export type PasskeyDeleteError = UnknownError;
+export type UserExistsError = UnknownError;
 
 export class CorbadoError extends Error {
   #translatedMessage?: string;

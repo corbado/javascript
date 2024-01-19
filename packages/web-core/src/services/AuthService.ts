@@ -320,13 +320,8 @@ export class AuthService {
     return resp;
   }
 
-  async userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
-    const resp = await this.#apiService.authMethodsList(email);
-    if (resp.err) {
-      return Ok(false);
-    }
-
-    return Ok(resp.ok);
+  userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
+    return this.#apiService.userExists(email);
   }
 
   logout() {

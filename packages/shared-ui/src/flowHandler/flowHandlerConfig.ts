@@ -44,7 +44,7 @@ export class FlowHandlerConfig {
   }
 
   get verificationMethod(): VerificationMethods {
-    return this.flowOptions.verificationMethod;
+    return this.#flowDetails[this.#flowType].options.verificationMethod ?? 'emailOtp';
   }
 
   // The update method allows the type of flow to be changed,

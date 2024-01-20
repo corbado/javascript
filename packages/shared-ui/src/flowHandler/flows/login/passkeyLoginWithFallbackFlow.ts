@@ -129,35 +129,22 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
   },
 
   [ScreenNames.PasskeyError]: async (state, event) => {
+    const validations = validateEmail(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+    const email = validations.val;
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        if (state.user) {
-          return await appendPasskey(state.corbadoApp.authService);
-        }
-        const validations = validateEmail(state.userState);
-        if (validations.err) {
-          return validations.val;
-        }
-        const email = validations.val;
-
         return loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
       }
       case FlowHandlerEvents.SecondaryButton: {
-        if (state.user) {
-          return FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        const validations = validateEmail(state.userState);
-        if (validations.err) {
-          return validations.val;
-        }
-        const email = validations.val;
-
         return initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
       }
     }
     return FlowUpdate.state({});
   },
+
   [ScreenNames.PasskeyBenefits]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {

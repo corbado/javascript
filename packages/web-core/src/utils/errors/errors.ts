@@ -3,6 +3,11 @@ import log from 'loglevel';
 
 import type { ErrorRsp } from '../../api';
 
+/** General Errors */
+export type AuthMethodsListError = UnknownUserError | UnknownError;
+export type GetProjectConfigError = UnknownError;
+
+/** Passkey Authentication Errors */
 export type SignUpWithPasskeyError =
   | UserAlreadyExistsError
   | InvalidEmailError
@@ -20,12 +25,20 @@ export type CompleteAutocompletedLoginWithPasskeyError =
   | InvalidPasskeyError
   | PasskeyChallengeCancelledError
   | UnknownError;
+
+/** Email OTP Errors */
 export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
 export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
 export type InitLoginWithEmailOTPError = InvalidEmailError | UnknownError;
-export type CompleteLoginWithEmailOTPError = InvalidEmailError | UnknownError;
-export type AuthMethodsListError = UnknownUserError | UnknownError;
-export type GetProjectConfigError = UnknownError;
+export type CompleteLoginWithEmailOTPError = InvalidOtpInputError | UnknownError;
+
+/** Email Link Errors */
+export type InitSignUpWithEmailLinkError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
+export type CompleteSignupWithEmailLinkError = InvalidTokenInputError | UnknownError;
+export type InitLoginWithEmailLinkError = InvalidEmailError | UnknownError;
+export type CompleteLoginWithEmailLinkError = InvalidTokenInputError | UnknownError;
+
+/** Passkey Management Errors */
 export type PasskeyListError = UnknownError;
 export type PasskeyDeleteError = UnknownError;
 
@@ -119,6 +132,10 @@ export class CorbadoError extends Error {
 
         if (errorResp.details === 'Email code not valid') {
           return new InvalidOtpInputError();
+        }
+
+        if (errorResp.details === 'Email link not valid') {
+          return new InvalidTokenInputError();
         }
     }
 
@@ -283,6 +300,13 @@ export class InvalidOtpInputError extends RecoverableError {
   constructor() {
     super('The provided OTP is no longer valid');
     this.name = 'errors.invalidOtp';
+  }
+}
+
+export class InvalidTokenInputError extends RecoverableError {
+  constructor() {
+    super('The provided token is not valid for user verification');
+    this.name = 'errors.invalidToken';
   }
 }
 

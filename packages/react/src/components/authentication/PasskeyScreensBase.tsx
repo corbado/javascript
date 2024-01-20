@@ -5,7 +5,7 @@ import type { ButtonVariants } from '../ui';
 import { Body, Header, HorizontalRule, PrimaryButton, SecondaryButton, SubHeader, TertiaryButton } from '../ui';
 import { FingerprintIcon } from '../ui/icons/Icons';
 
-export interface PasskeyScreensWrapperProps {
+export interface PasskeyScreensBaseProps {
   header: ReactNode;
   subHeader?: ReactNode;
   secondaryHeader?: ReactNode;
@@ -20,7 +20,7 @@ export interface PasskeyScreensWrapperProps {
   hideFingerPrintIcon?: boolean;
 }
 
-export const PasskeyScreensWrapper: FC<PasskeyScreensWrapperProps> = ({
+export const PasskeyScreensBase: FC<PasskeyScreensBaseProps> = ({
   header,
   subHeader,
   secondaryHeader,

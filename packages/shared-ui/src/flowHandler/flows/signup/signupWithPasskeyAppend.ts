@@ -4,13 +4,13 @@ import type { Flow } from '../../types';
 import {
   appendPasskey,
   checkUserExists,
-  sendEmailOTP,
+  initSignupWithVerificationMethod,
   signupWithEmailOTP,
   validateEmailAndFullName,
   validateUserAuthState,
 } from './utils';
 
-export const EmailOtpSignupWithPasskeyFlow: Flow = {
+export const SignupWithPasskeyAppendFlow: Flow = {
   [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
@@ -27,14 +27,14 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
           return userExistsError.val;
         }
 
-        return await sendEmailOTP(state.corbadoApp, email, fullName, true);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName, true);
       }
     }
 
     return undefined;
   },
 
-  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
+  [ScreenNames.EmailOTPVerification]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -42,7 +42,7 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.emailOTPCode);
+        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.verificationCode);
         if (res.err) {
           return res.val;
         }
@@ -58,6 +58,29 @@ export const EmailOtpSignupWithPasskeyFlow: Flow = {
     }
 
     return;
+  },
+
+  [ScreenNames.EmailLinkSent]: (state, event) => {
+    const validations = validateEmailAndFullName(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
+    switch (event) {
+      case FlowHandlerEvents.PrimaryButton: {
+        // resend email
+        return;
+      }
+      case FlowHandlerEvents.CancelEmailLink:
+        return FlowUpdate.navigate(ScreenNames.Start);
+    }
+
+    return;
+  },
+
+  [ScreenNames.EmailLinkVerification]: () => {
+    // We don't need to do anything here, the user will be redirected to the login flow for email link verification
+    return FlowUpdate.state({});
   },
 
   [ScreenNames.PasskeyAppend]: async (state, event) => {

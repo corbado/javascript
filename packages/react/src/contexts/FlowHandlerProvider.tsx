@@ -1,7 +1,13 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowHandlerEventOptions, FlowNames, FlowType, UserState } from '@corbado/shared-ui';
-import { FlowHandlerEvents } from '@corbado/shared-ui';
-import { FlowHandler, ScreenNames, SignUpFlowNames } from '@corbado/shared-ui';
+import type {
+  FlowHandlerEventOptions,
+  FlowNames,
+  FlowType,
+  FlowTypeText,
+  UserState,
+  VerificationMethods,
+} from '@corbado/shared-ui';
+import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -21,13 +27,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   onLoggedIn,
   onChangeFlow,
 }) => {
-  const { corbadoApp, getProjectConfig, user } = useCorbado();
+  const { corbadoApp, getProjectConfig } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
-  const [currentScreen, setCurrentScreen] = useState<ScreenNames>(ScreenNames.Start);
+  const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>(SignUpFlowNames.PasskeySignupWithEmailOTPFallback);
+  const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
-  const onScreenChangeCbId = useRef<number>(0);
+  const currentFlowType = useRef<FlowTypeText>();
+  const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
   const onUserStateChangeCbId = useRef<number>(0);
 
@@ -44,10 +51,19 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       }
       const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
 
-      onScreenChangeCbId.current = flowHandler.onScreenChange((value: ScreenNames) => setCurrentScreen(value));
-      onFlowChangeCbId.current = flowHandler.onFlowChange((value: FlowNames) => {
-        setCurrentFlow(value);
+      onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
+        updates.flowName && setCurrentFlow(updates.flowName);
+        updates.screenName && setCurrentScreen(updates.screenName);
+
+        if (updates.flowType) {
+          currentFlowType.current = updates.flowType;
+        }
+
+        if (updates.verificationMethod) {
+          verificationMethod.current = updates.verificationMethod;
+        }
       });
+
       onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
         setCurrentUserState(value);
       });
@@ -59,18 +75,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
 
     return () => {
       flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-      flowHandler?.removeOnScreenChangeCallback(onScreenChangeCbId.current);
       flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
     };
   }, []);
-
-  useEffect(() => {
-    if (!initialized || !user) {
-      return;
-    }
-
-    flowHandler?.update(user);
-  }, [initialized, user]);
 
   const navigateBack = useCallback(() => {
     return flowHandler?.navigateBack() ?? ScreenNames.Start;
@@ -93,15 +100,25 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
 
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
+      currentFlowType: currentFlowType.current,
       currentFlow,
       currentScreen,
       currentUserState,
+      currentVerificationMethod: verificationMethod.current,
       initialized,
       changeFlow,
       navigateBack,
       emitEvent,
     }),
-    [currentFlow, currentScreen, currentUserState, initialized, navigateBack],
+    [
+      currentFlowType.current,
+      verificationMethod.current,
+      currentFlow,
+      currentScreen,
+      currentUserState,
+      initialized,
+      navigateBack,
+    ],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

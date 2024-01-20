@@ -1,13 +1,13 @@
 import { LoginFlowNames, SignUpFlowNames } from '../constants';
 import type { Flows } from '../types';
-import { PasskeyLoginWithEmailOTPFallbackFlow } from './login/passkeyLoginWithOtpFlow';
-import { EmailOtpSignupWithPasskeyFlow } from './signup/emailOtpSignupWithPasskey';
-import { PasskeySignupWithEmailOTPFallbackFlow } from './signup/passkeySignupWithOtpFlow';
+import { PasskeyLoginWithFallbackFlow } from './login/passkeyLoginWithFallbackFlow';
+import { PasskeySignupWithFallbackFlow } from './signup/passkeySignupWithFallbackFlow';
+import { SignupWithPasskeyAppendFlow } from './signup/signupWithPasskeyAppend';
 
 export const flows: Flows = {
-  [SignUpFlowNames.PasskeySignupWithEmailOTPFallback]: PasskeySignupWithEmailOTPFallbackFlow,
-  [SignUpFlowNames.EmailOTPSignupWithPasskey]: EmailOtpSignupWithPasskeyFlow,
-  [LoginFlowNames.PasskeyLoginWithEmailOTPFallback]: PasskeyLoginWithEmailOTPFallbackFlow,
+  [SignUpFlowNames.PasskeySignupWithFallback]: PasskeySignupWithFallbackFlow,
+  [SignUpFlowNames.SignupWithPasskeyAppend]: SignupWithPasskeyAppendFlow,
+  [LoginFlowNames.PasskeyLoginWithFallback]: PasskeyLoginWithFallbackFlow,
 };
-export * from './signup/passkeySignupWithOtpFlow';
-export * from './login/passkeyLoginWithOtpFlow';
+export * from './signup/passkeySignupWithFallbackFlow';
+export * from './login/passkeyLoginWithFallbackFlow';

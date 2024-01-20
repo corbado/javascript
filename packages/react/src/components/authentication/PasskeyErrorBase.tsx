@@ -6,18 +6,18 @@ import { useTranslation } from 'react-i18next';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
 import type { ButtonVariants } from '../ui';
-import type { PasskeyScreensWrapperProps } from './PasskeyScreensWrapper';
-import { PasskeyScreensWrapper } from './PasskeyScreensWrapper';
+import type { PasskeyScreensBaseProps } from './PasskeyScreensBase';
+import { PasskeyScreensBase } from './PasskeyScreensBase';
 
-export interface PasskeyErrorProps {
+export interface PasskeyErrorBaseProps {
   showSecondaryButton?: boolean;
   navigateBackOnCancel?: boolean;
 }
 
-export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
-  const { navigateBack, emitEvent, currentFlow } = useFlowHandler();
+export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButton, navigateBackOnCancel }) => {
+  const { navigateBack, emitEvent, currentFlowType, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeyError`,
+    keyPrefix: `authentication.${currentFlowType}.passkeyError`,
   });
   const { shortSession } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
@@ -25,21 +25,24 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
 
   const header = useMemo(() => t('header'), [t]);
 
-  const body = useMemo(
-    () => (
+  const body = useMemo(() => {
+    if (currentFlowType === 'login') {
+      return t(`body.${currentVerificationMethod}`);
+    }
+
+    return (
       <span>
-        {t('body_errorMessage1')}
+        {t('body_errorMessage')}
         <span
           className='cb-link-primary'
           onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
           {t('button_showPasskeyBenefits')}
         </span>
-        {t('body_errorMessage2')}
+        {t(`body_tryAgainMessage.${currentVerificationMethod}`)}
       </span>
-    ),
-    [t],
-  );
+    );
+  }, [t]);
 
   const primaryButton = useMemo(() => t('button_retry'), [t]);
   const secondaryButton = useMemo(() => {
@@ -47,7 +50,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
       return '';
     }
 
-    return t('button_emailOtp');
+    return t(`button_switchToAlternate.${currentVerificationMethod}`);
   }, [t]);
   const tertiaryButton = useMemo(() => {
     if (navigateBackOnCancel) {
@@ -75,7 +78,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
     [navigateBack, emitEvent],
   );
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       body,
@@ -91,7 +94,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ showSecondaryButton, navig
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

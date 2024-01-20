@@ -6,12 +6,17 @@ import type { ScreenNames } from './constants';
 import type { FlowHandlerState } from './flowHandlerState';
 import type { FlowUpdate } from './flowUpdate';
 
+export type FlowTypeText = 'signup' | 'login';
+
+export type VerificationMethods = 'emailLink' | 'emailOtp' | 'smsOtp';
+
 /**
  * Configuration options for the passkey sign-up with email OTP fallback flow.
  */
 export interface SignupOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
+  verificationMethod: VerificationMethods;
 }
 
 /**
@@ -20,6 +25,7 @@ export interface SignupOptions {
 export interface LoginOptions {
   passkeyAppend: boolean;
   retryPasskeyOnError: boolean;
+  verificationMethod: VerificationMethods;
 }
 
 /**
@@ -32,11 +38,13 @@ export type FlowOptions = SignupOptions | LoginOptions;
  */
 export type FlowNames = SignUpFlowNames | LoginFlowNames;
 
+/**
+ * Type definition for a function that represents a step in an authentication flow.
+ */
 export interface FlowHandlerEventOptions {
-  // Whether the user has a passkey already set up
   userHasPasskey?: boolean;
   userStateUpdate?: UserState;
-  emailOTPCode?: string;
+  verificationCode?: string;
 }
 
 /**
@@ -46,7 +54,7 @@ export type StepFunction = (
   state: FlowHandlerState,
   event?: FlowHandlerEvents,
   eventOptions?: FlowHandlerEventOptions,
-) => Promise<FlowUpdate | undefined>;
+) => Promise<FlowUpdate | undefined> | FlowUpdate | undefined;
 
 /**
  * Type representing a dictionary of step functions for each screen in a flow.
@@ -67,7 +75,6 @@ export type Flows = Record<FlowNames, Flow>;
  */
 export type UserState = {
   email?: string;
-  emailOTPState?: EmailOTPState;
   fullName?: string;
   emailError?: RecoverableError;
   userNameError?: RecoverableError;
@@ -83,6 +90,9 @@ export type FlowHandlerStateUpdate = {
   flowOptions?: Partial<FlowOptions>;
 };
 
-export type EmailOTPState = {
-  lastMailSent: Date;
-};
+export interface FlowHandlerUpdates {
+  flowType?: FlowTypeText;
+  flowName?: FlowNames;
+  screenName?: ScreenNames;
+  verificationMethod?: VerificationMethods;
+}

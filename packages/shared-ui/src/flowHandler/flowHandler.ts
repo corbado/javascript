@@ -4,13 +4,17 @@ import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
 import type { FlowHandlerEvents } from './constants';
-import { FlowType } from './constants';
-import { ScreenNames } from './constants';
+import { FlowType, ScreenNames } from './constants';
 import { FlowHandlerConfig } from './flowHandlerConfig';
 import { FlowHandlerState } from './flowHandlerState';
 import { flows } from './flows';
-import { UIProjectConfig } from './projectConfig';
-import type { FlowHandlerEventOptions, FlowHandlerStateUpdate, FlowNames, UserState } from './types';
+import type {
+  FlowHandlerEventOptions,
+  FlowHandlerStateUpdate,
+  FlowHandlerUpdates,
+  FlowTypeText,
+  UserState,
+} from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -23,8 +27,7 @@ export class FlowHandler {
   #config: FlowHandlerConfig;
   #state: FlowHandlerState | undefined;
 
-  #onScreenUpdateCallbacks: Array<(screen: ScreenNames) => void> = [];
-  #onFlowUpdateCallbacks: Array<(flow: FlowNames) => void> = [];
+  #onFlowUpdateCallbacks: Array<(updates: FlowHandlerUpdates) => void> = [];
   #onUserStateChangeCallbacks: Array<(v: UserState) => void> = [];
 
   /**
@@ -32,10 +35,9 @@ export class FlowHandler {
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
   constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
-    const uiProjectConfig = UIProjectConfig.fromProjectConfig(projectConfig);
-    this.#config = new FlowHandlerConfig(onLoggedIn, uiProjectConfig, initialFlowType);
+    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, initialFlowType);
     this.#screenHistory = [];
-    this.#currentScreen = ScreenNames.Start;
+    this.#currentScreen = this.#config.initialScreenName;
   }
 
   /**
@@ -72,32 +74,12 @@ export class FlowHandler {
     return this.#config.flowName;
   }
 
-  /**
-   * Method to add a callback function to be called when the current screen changes.
-   * @param cb The callback function to be called when the current screen changes.
-   * @returns The callback id.
-   */
-  onScreenChange(cb: (screen: ScreenNames) => void) {
-    const cbId = this.#onScreenUpdateCallbacks.push(cb) - 1;
-
-    return cbId;
+  get currentFlowTypeText(): FlowTypeText {
+    return this.#config.flowType === FlowType.SignUp ? 'signup' : 'login';
   }
 
-  /**
-   * Method to remove a callback function that was registered with onScreenChange.
-   * @param cbId The callback id returned by onScreenChange.
-   */
-  removeOnScreenChangeCallback(cbId: number) {
-    this.#onScreenUpdateCallbacks.splice(cbId, 1);
-  }
-
-  /**
-   * Method to replace a callback function that was registered with onScreenChange.
-   * @param cbId The callback id returned by onScreenChange.
-   * @param cb The new callback function.
-   */
-  replaceOnScreenChangeCallback(cbId: number, cb: (screen: ScreenNames) => void) {
-    this.#onScreenUpdateCallbacks[cbId] = cb;
+  get currentVerificationMethod() {
+    return this.#config.verificationMethod;
   }
 
   /**
@@ -105,7 +87,7 @@ export class FlowHandler {
    * @param cb The callback function to be called when the current flow changes.
    * @returns The callback id.
    */
-  onFlowChange(cb: (flow: FlowNames) => void) {
+  onFlowChange(cb: (updates: FlowHandlerUpdates) => void) {
     const cbId = this.#onFlowUpdateCallbacks.push(cb) - 1;
 
     return cbId;
@@ -117,15 +99,6 @@ export class FlowHandler {
    */
   removeOnFlowChangeCallback(cbId: number) {
     this.#onFlowUpdateCallbacks.splice(cbId, 1);
-  }
-
-  /**
-   * Method to replace a callback function that was registered with onFlowChange.
-   * @param cbId The callback id returned by onFlowChange.
-   * @param cb The new callback function.
-   */
-  replaceOnFlowChangeCallback(cbId: number, cb: (flow: FlowNames) => void) {
-    this.#onFlowUpdateCallbacks[cbId] = cb;
   }
 
   /**
@@ -180,9 +153,7 @@ export class FlowHandler {
       this.#screenHistory.push(this.#currentScreen);
       this.#currentScreen = flowUpdate.nextScreen;
 
-      if (this.#onScreenUpdateCallbacks.length) {
-        this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
-      }
+      this.#onFlowUpdateCallbacks.forEach(cb => cb({ screenName: this.#currentScreen }));
     }
   }
 
@@ -200,9 +171,7 @@ export class FlowHandler {
 
     this.#currentScreen = this.#screenHistory.pop() || ScreenNames.Start;
 
-    if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
-    }
+    this.#onFlowUpdateCallbacks.forEach(cb => cb({ screenName: this.#currentScreen }));
 
     return this.#currentScreen;
   }
@@ -224,28 +193,30 @@ export class FlowHandler {
    * @param screen - The new current screen.
    * @returns The new current screen.
    */
-  #changeFlow(flowType?: FlowType, screen: ScreenNames = ScreenNames.Start) {
+  #changeFlow(flowType?: FlowType, screen?: ScreenNames) {
     if (flowType !== undefined) {
       this.#config.update(flowType);
     }
 
     const flowName = this.#config.flowName;
     const flowOptions = this.#config.flowOptions;
+    const updatedScreen = screen || this.#config.initialScreenName;
 
     this.#changeState({ flowOptions });
 
-    this.#currentScreen = screen;
+    this.#currentScreen = updatedScreen;
     this.#screenHistory = [];
 
-    if (this.#onFlowUpdateCallbacks.length) {
-      this.#onFlowUpdateCallbacks.forEach(cb => cb(flowName));
-    }
+    this.#onFlowUpdateCallbacks.forEach(cb =>
+      cb({
+        flowName,
+        flowType: this.currentFlowTypeText,
+        verificationMethod: this.currentVerificationMethod,
+        screenName: updatedScreen,
+      }),
+    );
 
-    if (this.#onScreenUpdateCallbacks.length) {
-      this.#onScreenUpdateCallbacks.forEach(cb => cb(this.#currentScreen));
-    }
-
-    return screen;
+    return updatedScreen;
   }
 
   #changeState(update: FlowHandlerStateUpdate) {

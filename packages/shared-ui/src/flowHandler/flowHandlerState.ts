@@ -13,10 +13,12 @@ const defaultErrors = {
 const defaultFlowOptions: FlowOptions = {
   passkeyAppend: true,
   retryPasskeyOnError: true,
+  verificationMethod: 'emailOtp',
 };
 
 /**
  * Internal state of the FlowHandler.
+ * This class is responsible for managing the state which is sent to all the flow steps.
  */
 export class FlowHandlerState {
   #flowOptions: FlowOptions;
@@ -42,6 +44,10 @@ export class FlowHandlerState {
     this.#passkeysSupported = passkeysSupported;
     this.#corbadoApp = corbadoApp;
     this.#i18next = i18next;
+
+    corbadoApp.authService.userChanges.subscribe(user => {
+      this.update({ user });
+    });
   }
 
   get user(): SessionUser | undefined {

@@ -2,14 +2,14 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
-import { PasskeyScreensWrapper } from '../../../../components';
+import type { ButtonVariants, PasskeyScreensBaseProps } from '../../../../components';
+import { PasskeyScreensBase } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyCreate = () => {
-  const { navigateBack, currentUserState, emitEvent, currentFlow } = useFlowHandler();
+  const { navigateBack, currentUserState, emitEvent, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeyCreate`,
+    keyPrefix: `authentication.signup.passkeyCreate`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
@@ -27,7 +27,7 @@ export const PasskeyCreate = () => {
           className='cb-link-primary'
           onClick={() => void emitEvent(FlowHandlerEvents.ShowBenefits)}
         >
-          {t('button_showPasskeyBenefits')}
+          {t('headerButton_showPasskeyBenefits')}
         </span>
       </span>
     ),
@@ -44,7 +44,7 @@ export const PasskeyCreate = () => {
   );
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
-  const secondaryButton = useMemo(() => t('button_emailOtp'), [t]);
+  const secondaryButton = useMemo(() => t(`button_switchToAlternate.${currentVerificationMethod}`), [t]);
   const tertiaryButton = useMemo(() => t('button_back'), [t]);
 
   const handleBack = useCallback(() => {
@@ -69,7 +69,7 @@ export const PasskeyCreate = () => {
     [handleBack],
   );
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       subHeader,
@@ -86,7 +86,7 @@ export const PasskeyCreate = () => {
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

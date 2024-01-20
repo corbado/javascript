@@ -20,11 +20,21 @@ export const AuthFlow: FC<AuthFlowProps> = ({ isDevMode, customerSupportEmail })
   const [componentMap, setComponentMap] = useState<ScreenMap>({});
 
   useEffect(() => {
+    if (!currentFlow) {
+      return;
+    }
+
     const screensMap = flowScreensMap[currentFlow];
     setComponentMap(screensMap ?? {});
   }, [currentFlow]);
 
-  const ScreenComponent = useMemo(() => componentMap[currentScreen], [componentMap, currentScreen]);
+  const ScreenComponent = useMemo(() => {
+    if (!currentScreen) {
+      return null;
+    }
+
+    return componentMap[currentScreen];
+  }, [componentMap, currentScreen]);
 
   const EndComponent = useCallback(() => {
     const EndComponentScreen = componentMap[ScreenNames.End];

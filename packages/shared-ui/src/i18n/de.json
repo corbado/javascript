@@ -7,18 +7,65 @@
         "button_login": "Einloggen",
         "button_submit": "Weiter mit E-Mail",
         "textField_name": "Name",
-        "textField_email": "E-Mail-Adresse",
-        "validationError_name": "Bitte geben Sie einen Namen ein",
-        "validationError_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-        "validationError_emailExists": "E-Mail-Adresse wird bereits verwendet."
+        "textField_email": "E-Mail-Adresse"
       },
-      "passkey": {
-        "header": "Richten wir Sie ein mit ",
-        "body": "Wir erstellen ein Konto für ",
-        "button_showPasskeyBenefits": "Passkeys",
-        "button_start": "Ihr Konto erstellen",
-        "button_emailOtp": "Einmalkennwort senden",
+      "emailOtp": {
+        "header": "Einmalkennwort eingeben, um Konto zu erstellen",
+        "body_text1": "Wir haben gerade ein Einmalkennwort an ",
+        "body_text2": " gesendet. Das Einmalkennwort läuft bald ab, bitte geben Sie es bald ein.",
+        "button_verify": "Fortfahren",
+        "button_sendOtpAgain": "Einmalkennwort erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "emailLinkSent": {
+        "header": "Prüfen Sie Ihr Email Postfach",
+        "body_text1": "Wir haben ihnen eine E-Mail an ",
+        "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
+        "button_sendLinkAgain": "Link erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "emailLinkVerification": {
+        "header": "Verifizierung läuft...",
+        "button_sendLinkAgain": "Link erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "passkeyCreate": {
+        "header": "Starten Sie mit ",
+        "headerButton_showPasskeyBenefits": "Passkeys",
+        "body": "Wir erstellen einen Account für ",
+        "button_start": "Account erstellen",
+        "button_switchToAlternate": {
+          "emailOtp": "E-Mail-Einmalkennwort senden",
+          "emailLink": "E-Mail-Link senden"
+        },
         "button_back": "Zurück"
+      },
+      "passkeyError": {
+        "header": "Starten Sie mit",
+        "body_errorMessage": "Ihr Konto konnte nicht erstellt werden mit ",
+        "button_showPasskeyBenefits": "Passkeys",
+        "body_tryAgainMessage": {
+          "emailOtp": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Einmalkennwort an.",
+          "emailLink": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Links an."
+        },
+        "button_switchToAlternate": {
+          "emailOtp": "E-Mail-Einmalkennwort senden",
+          "emailLink": "E-Mail-Link senden"
+        },
+        "button_retry": "Erneut versuchen",
+        "button_back": "Zurück",
+        "button_cancel": "Abbrechen"
+      },
+      "passkeySuccess": {
+        "header": "Willkommen!",
+        "subheader": "Passkey wurde erstellt",
+        "body_text1": "Sie können jetzt Ihre Identität mit Ihrem ",
+        "body_text2": {
+          "emailOtp": "Passkey oder per E-Mail-Einmalkennwort",
+          "emailLink": "Passkey oder per E-Mail-Link"
+        },
+        "body_text3": " beim Einloggen bestätigen.",
+        "button": "Weiter"
       },
       "passkeyBenefits": {
         "header": "Passkeys",
@@ -27,38 +74,11 @@
         "button_start": "Passkey erstellen",
         "button_skip": "Vielleicht später"
       },
-      "passkeySuccess": {
-        "header": "Willkommen!",
-        "subheader": "Passkey erstellt",
-        "body_text1": "Sie können jetzt Ihre Identität mit Ihrem ",
-        "body_text2": "Passkey oder per E-Mail-Einmalkennwort",
-        "body_text3": " beim Einloggen bestätigen.",
-        "button": "Weiter"
-      },
-      "passkeyError": {
-        "header": "Richten wir Sie ein",
-        "body_errorMessage1": "Ihr Konto konnte nicht erstellt werden mit ",
-        "body_errorMessage2": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Einmalkennwort an.",
-        "button_showPasskeyBenefits": "Passkeys",
-        "button_retry": "Erneut versuchen",
-        "button_emailOtp": "Einmalkennwort senden",
-        "button_back": "Zurück",
-        "button_cancel": "Abbrechen"
-      },
       "passkeyPrompt": {
         "header": "Schneller einloggen mit ",
         "button_showPasskeyBenefits": "Passkeys",
         "button_start": "Aktivieren",
         "button_skip": "Vielleicht später"
-      },
-      "emailOtp": {
-        "header": "Einmalkennwort eingeben, um Konto zu erstellen",
-        "body_text1": "Wir haben gerade ein Einmalkennwort an ",
-        "body_text2": " gesendet. Das Einmalkennwort läuft bald ab, bitte geben Sie es bald ein.",
-        "validationError_otp": "Einmalkennwort ist falsch",
-        "button_verify": "Fortfahren",
-        "button_sendOtpAgain": "Einmalkennwort erneut senden",
-        "button_back": "Abbrechen"
       }
     },
     "login": {
@@ -67,27 +87,43 @@
         "subheader": "Noch kein Konto? ",
         "button_signup": "Konto erstellen",
         "button_submit": "Weiter",
-        "textField_email": "E-Mail-Adresse",
-        "validationError_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
-      },
-      "passkeyError": {
-        "header": "Einloggen mit Passkeys",
-        "body": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich per E-Mail-Einmalkennwort an.",
-        "button_retry": "Erneut versuchen",
-        "button_emailOtp": "Einmalkennwort senden",
-        "button_back": "Zurück",
-        "button_cancel": "Abbrechen"
+        "textField_email": "E-Mail-Adresse"
       },
       "emailOtp": {
         "header": "Einmalkennwort zum Login eingeben",
         "body_text1": "Wir haben gerade ein Einmalkennwort an ",
         "body_text2": " gesendet. Das Einmalkennwort läuft bald ab, bitte geben Sie es bald ein.",
-        "validationError_otp": "Einmalkennwort ist falsch",
         "button_verify": "Weiter",
         "button_sendOtpAgain": "Einmalkennwort erneut senden",
         "button_back": "Abbrechen"
       },
-      "passkeyPrompt": {
+      "emailLinkSent": {
+        "header": "Prüfen Sie Ihr E-Mail Postfach",
+        "body_text1": "Wir haben ihnen eine E-Mail an ",
+        "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
+        "button_sendLinkAgain": "Link erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "emailLinkVerification": {
+        "header": "Verifizierung läuft...",
+        "button_sendLinkAgain": "Link erneut senden",
+        "button_back": "Abbrechen"
+      },
+      "passkeyError": {
+        "header": "Mit Passkeys anmelden",
+        "body": {
+          "emailOtp": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich per E-Mail-Einmalkennwort an.",
+          "emailLink": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich per E-Mail-Link an."
+        },
+        "button_switchToAlternate": {
+          "emailOtp": "Einmalkennwort senden",
+          "emailLink": "Link senden"
+        },
+        "button_retry": "Erneut versuchen",
+        "button_back": "Zurück",
+        "button_cancel": "Abbrechen"
+      },
+      "passkeyAppend": {
         "header": "Schneller einloggen mit ",
         "button_showPasskeyBenefits": "Passkeys",
         "button_start": "Aktivieren",
@@ -114,10 +150,12 @@
     "invalidFullname": "Bitte geben Sie einen Namen ein",
     "passkeyChallengeCancelled": "Passkey Challenge abgebrochen",
     "userAlreadyExists": "E-Mail-Adresse wird bereits verwendet",
+    "passkeyAlreadyExists": "Für dieses Gerät wurde bereits ein Passkey erstellt",
     "unknownUser": "Benutzer existiert nicht",
     "noPasskeyAvailable": "Kein Passkey verfügbar",
     "invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
     "invalidOtp": "Der eingegebene Code ist nicht gültig",
+    "invalidToken": "Der bereitgestellte Token ist nicht mehr gültig",
     "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
   },
   "passkeysList": {
@@ -129,9 +167,16 @@
     "field_created": "Erstellt: {{date}} mit {{browser}} am {{os}}",
     "field_lastUsed": "Zuletzt verwendet: ",
     "field_status": "Status: ",
-    "deleteDialog_header": "Passkey löschen",
-    "deleteDialog_body": "Sind Sie sicher, dass Sie diesen Passkey löschen möchten?",
-    "deleteDialog_cancelButton": "Abbrechen",
-    "deleteDialog_deleteButton": "Ja, löschen"
+    "dialog_delete": {
+      "header": "Passkey löschen",
+      "body": "Sind Sie sicher, dass Sie diesen Passkey löschen möchten?",
+      "button_cancel": "Abbrechen",
+      "button_delete": "Ja, löschen"
+    },
+    "dialog_passkeyAlreadyExists": {
+      "header": "Passkey bereits vorhanden",
+      "body": "Für dieses Gerät wurde bereits ein Passkey erstellt. Sie können diesen Passkey löschen und einen neuen erstellen.",
+      "button_confirm": "Ok"
+    }
   }
 }

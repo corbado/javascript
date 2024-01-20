@@ -5,13 +5,13 @@ import {
   appendPasskey,
   checkUserExists,
   createPasskey,
-  sendEmailOTP,
+  initSignupWithVerificationMethod,
   signupWithEmailOTP,
   validateEmailAndFullName,
   validateUserAuthState,
 } from './utils';
 
-export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
+export const PasskeySignupWithFallbackFlow: Flow = {
   [ScreenNames.Start]: async (state, event, eventOptions) => {
     switch (event) {
       case FlowHandlerEvents.ChangeFlow:
@@ -32,7 +32,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
           ? FlowUpdate.navigate(ScreenNames.PasskeyCreate, {
               ...eventOptions?.userStateUpdate,
             })
-          : await sendEmailOTP(state.corbadoApp, email, fullName, true);
+          : await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName, true);
       }
     }
 
@@ -59,16 +59,17 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
           return FlowUpdate.navigate(ScreenNames.PasskeyError);
         }
 
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }
       case FlowHandlerEvents.SecondaryButton: {
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }
     }
 
     return;
   },
-  [ScreenNames.EnterOTP]: async (state, event, eventOptions) => {
+
+  [ScreenNames.EmailOTPVerification]: async (state, event, eventOptions) => {
     const validations = validateEmailAndFullName(state.userState);
     if (validations.err) {
       return validations.val;
@@ -76,7 +77,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.emailOTPCode);
+        const res = await signupWithEmailOTP(state.corbadoApp, state.userState, eventOptions?.verificationCode);
         if (res.err) {
           return res.val;
         }
@@ -97,6 +98,30 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
 
     return;
   },
+
+  [ScreenNames.EmailLinkSent]: (state, event) => {
+    const validations = validateEmailAndFullName(state.userState);
+    if (validations.err) {
+      return validations.val;
+    }
+
+    switch (event) {
+      case FlowHandlerEvents.PrimaryButton: {
+        // resend email
+        return;
+      }
+      case FlowHandlerEvents.CancelEmailLink:
+        return FlowUpdate.navigate(ScreenNames.Start);
+    }
+
+    return;
+  },
+
+  [ScreenNames.EmailLinkVerification]: () => {
+    // We don't need to do anything here, the user will be redirected to the login flow for email link verification
+    return FlowUpdate.state({});
+  },
+
   [ScreenNames.PasskeyAppend]: async (state, event) => {
     const validations = validateUserAuthState(state);
     if (validations.err) {
@@ -147,14 +172,14 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
           return FlowUpdate.navigate(ScreenNames.PasskeyError);
         }
 
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }
       case FlowHandlerEvents.SecondaryButton: {
         if (state.user) {
           return FlowUpdate.navigate(ScreenNames.End);
         }
 
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }
     }
 
@@ -189,7 +214,7 @@ export const PasskeySignupWithEmailOTPFallbackFlow: Flow = {
         return;
       }
       case FlowHandlerEvents.SecondaryButton:
-        return await sendEmailOTP(state.corbadoApp, email, fullName);
+        return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       case FlowHandlerEvents.CancelPasskey:
         return FlowUpdate.navigate(ScreenNames.End);
     }

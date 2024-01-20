@@ -2,14 +2,14 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { ButtonVariants, PasskeyScreensWrapperProps } from '../../../../components';
-import { PasskeyScreensWrapper } from '../../../../components';
+import type { ButtonVariants, PasskeyScreensBaseProps } from '../../../../components';
+import { PasskeyScreensBase } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeyAppend = () => {
-  const { emitEvent, currentFlow } = useFlowHandler();
+  const { emitEvent, currentFlowType } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeyAppend`,
+    keyPrefix: `authentication.${currentFlowType}.passkeyAppend`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,7 +43,7 @@ export const PasskeyAppend = () => {
     [emitEvent],
   );
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       primaryButton,
@@ -56,7 +56,7 @@ export const PasskeyAppend = () => {
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

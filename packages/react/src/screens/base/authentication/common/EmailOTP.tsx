@@ -3,12 +3,12 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { EmailOtpScreenProps } from '../../../../components';
-import { EmailOtpScreenWrapper } from '../../../../components';
+import { EmailOtpScreen } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailOTP = () => {
-  const { emitEvent, currentUserState, currentFlow } = useFlowHandler();
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlow}.emailOtp` });
+  const { emitEvent, currentUserState, currentFlowType } = useFlowHandler();
+  const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlowType}.emailOtp` });
 
   const header = t('header');
   const body = (
@@ -27,7 +27,7 @@ export const EmailOTP = () => {
     async (otp: string, setLoading) => {
       setLoading(true);
 
-      await emitEvent(FlowHandlerEvents.PrimaryButton, { emailOTPCode: otp });
+      await emitEvent(FlowHandlerEvents.PrimaryButton, { verificationCode: otp });
     },
     [],
   );
@@ -53,5 +53,5 @@ export const EmailOTP = () => {
     ],
   );
 
-  return <EmailOtpScreenWrapper {...props} />;
+  return <EmailOtpScreen {...props} />;
 };

@@ -2,14 +2,14 @@ import { FlowHandlerEvents } from '@corbado/shared-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { PasskeyScreensWrapperProps } from '../../../../components';
-import { PasskeyScreensWrapper } from '../../../../components';
+import type { PasskeyScreensBaseProps } from '../../../../components';
+import { PasskeyScreensBase } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const PasskeySuccess = () => {
-  const { emitEvent, currentFlow } = useFlowHandler();
+  const { emitEvent, currentVerificationMethod } = useFlowHandler();
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${currentFlow}.passkeySuccess`,
+    keyPrefix: `authentication.signup.passkeySuccess`,
   });
 
   const header = useMemo(() => t('header'), [t]);
@@ -17,7 +17,7 @@ export const PasskeySuccess = () => {
   const body = useMemo(
     () => (
       <span>
-        {t('body_text1')} <strong>{t('body_text2')}</strong> {t('body_text3')}
+        {t('body_text1')} <strong>{t(`body_text2.${currentVerificationMethod}`)}</strong> {t('body_text3')}
       </span>
     ),
     [t],
@@ -29,7 +29,7 @@ export const PasskeySuccess = () => {
     void emitEvent(FlowHandlerEvents.PrimaryButton);
   }, [emitEvent]);
 
-  const props: PasskeyScreensWrapperProps = useMemo(
+  const props: PasskeyScreensBaseProps = useMemo(
     () => ({
       header,
       secondaryHeader,
@@ -42,7 +42,7 @@ export const PasskeySuccess = () => {
 
   return (
     <>
-      <PasskeyScreensWrapper {...props} />
+      <PasskeyScreensBase {...props} />
     </>
   );
 };

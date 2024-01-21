@@ -1,4 +1,5 @@
 import type { AuthService } from '@corbado/web-core';
+import { InvalidPasskeyError } from '@corbado/web-core';
 import {
   InvalidEmailError,
   InvalidOtpInputError,
@@ -170,17 +171,23 @@ export const loginWithPasskey = async (
 
 export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUpdate | undefined> => {
   if (!state.passkeysSupported) {
-    // TODO: distinguish between an explicit and an implicit cancellation here
     return FlowUpdate.ignore();
   }
 
   const response = await state.corbadoApp.authService.loginWithConditionalUI();
-  if (response.err) {
-    // TODO: distinguish between an explicit and an implicit cancellation here
+  if (response.ok) {
+    return FlowUpdate.navigate(ScreenNames.End);
+  }
+
+  if (response.val instanceof PasskeyChallengeCancelledError) {
     return FlowUpdate.ignore();
   }
 
-  return FlowUpdate.navigate(ScreenNames.End);
+  if (response.val instanceof InvalidPasskeyError) {
+    return FlowUpdate.state({ emailError: new InvalidPasskeyError() });
+  }
+
+  return FlowUpdate.ignore();
 };
 
 export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {

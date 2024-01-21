@@ -1,6 +1,6 @@
 {
   "name": "@corbado/types",
-  "version": "0.1.1-alpha.3",
+  "version": "0.1.1-alpha.4",
   "description": "Comprehensive TypeScript type definitions to seamlessly integrate with Corbado. Designed to empower developers with strong typing for enhanced code quality and autocompletion in supported IDEs. Perfect for ensuring type safety and consistency across JavaScript and TypeScript projects.",
   "keywords": [
     "TypeScript",

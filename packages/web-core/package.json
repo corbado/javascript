@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-core",
-  "version": "0.1.7-alpha.3",
+  "version": "0.1.7-alpha.4",
   "description": "This package contains core functionalities which are exported by all the SDKs and UI packages of our JavaScript library",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -40,7 +40,7 @@
     "ts-results": "^3.3.0"
   },
   "devDependencies": {
-    "@corbado/types": "^0.1.1-alpha.3"
+    "@corbado/types": "^0.1.1-alpha.4"
   },
   "gitHead": "fe41b23e7cd2a949b5585b93feb98602c37d73c2"
 }

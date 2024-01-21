@@ -79,18 +79,14 @@ export const checkUserExists = async (
 
 /********** Verification Method Utils *********/
 
-const sendEmailOTP = async (
-  corbadoApp: CorbadoApp,
-  email: string,
-  fullName: string,
-): Promise<FlowUpdate | undefined> => {
+const sendEmailOTP = async (corbadoApp: CorbadoApp, email: string, fullName: string): Promise<FlowUpdate> => {
   const res = await corbadoApp.authService.initSignUpWithEmailOTP(email, fullName);
 
   if (res.ok) {
     return FlowUpdate.navigate(ScreenNames.EmailOTPVerification, { email, fullName });
   }
 
-  return;
+  return FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: res.val });
 };
 
 const sendEmailLink = async (

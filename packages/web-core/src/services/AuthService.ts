@@ -19,9 +19,8 @@ import type {
   LoginWithPasskeyError,
   RecoverableError,
   SignUpWithPasskeyError,
-  ConditionalUiNotSupportedError,
 } from '../utils';
-import { AuthState, getEmailLinkToken } from '../utils';
+import { AuthState, ConditionalUiNotSupportedError, getEmailLinkToken } from '../utils';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
 import type { WebAuthnService } from './WebAuthnService';

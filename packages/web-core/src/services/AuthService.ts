@@ -2,7 +2,7 @@ import type { SessionUser } from '@corbado/types';
 import log from 'loglevel';
 import { BehaviorSubject } from 'rxjs';
 import type { Result } from 'ts-results';
-import { Ok } from 'ts-results';
+import { Err, Ok } from 'ts-results';
 
 import type { AuthenticationResponse } from '../models/auth';
 import type { ShortSession } from '../models/session';
@@ -20,7 +20,7 @@ import type {
   RecoverableError,
   SignUpWithPasskeyError,
 } from '../utils';
-import { AuthState, getEmailLinkToken } from '../utils';
+import { AuthState, ConditionalUiNotSupportedError, getEmailLinkToken } from '../utils';
 import type { ApiService } from './ApiService';
 import type { SessionService } from './SessionService';
 import type { WebAuthnService } from './WebAuthnService';
@@ -75,26 +75,16 @@ export class AuthService {
     return this.#authStateChanges;
   }
 
-  init(isDebug = false) {
+  init(isDebug = false, useSessionManagement: boolean) {
     if (isDebug) {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
     }
 
-    this.#sessionService.init((shortSession: ShortSession | undefined) => {
-      const user = this.#sessionService.getUser();
-
-      if (user && shortSession) {
-        this.#shortSessionChanges.next(shortSession.value);
-        this.#authStateChanges.next(AuthState.LoggedIn);
-        this.#userChanges.next(user);
-      } else {
-        this.#shortSessionChanges.next(undefined);
-        this.#authStateChanges.next(AuthState.LoggedOut);
-        this.#userChanges.next(undefined);
-      }
-    });
+    if (useSessionManagement) {
+      this.#setupSessionManagement();
+    }
   }
 
   /**
@@ -272,6 +262,11 @@ export class AuthService {
   }
 
   async loginWithConditionalUI(): Promise<Result<void, LoginWithPasskeyError | undefined>> {
+    const conditionalUiAvailable = await PublicKeyCredential.isConditionalMediationAvailable();
+    if (!conditionalUiAvailable) {
+      return Err(new ConditionalUiNotSupportedError());
+    }
+
     return this.#loginWithPasskey('', true);
   }
 
@@ -314,13 +309,8 @@ export class AuthService {
     return resp;
   }
 
-  async userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
-    const resp = await this.#apiService.authMethodsList(email);
-    if (resp.err) {
-      return Ok(false);
-    }
-
-    return Ok(resp.ok);
+  userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
+    return this.#apiService.userExists('email', email);
   }
 
   logout() {
@@ -363,4 +353,20 @@ export class AuthService {
 
     return Ok(void 0);
   }
+
+  #setupSessionManagement = () => {
+    this.#sessionService.init((shortSession: ShortSession | undefined) => {
+      const user = this.#sessionService.getUser();
+
+      if (user && shortSession) {
+        this.#shortSessionChanges.next(shortSession.value);
+        this.#authStateChanges.next(AuthState.LoggedIn);
+        this.#userChanges.next(user);
+      } else {
+        this.#shortSessionChanges.next(undefined);
+        this.#authStateChanges.next(AuthState.LoggedOut);
+        this.#userChanges.next(undefined);
+      }
+    });
+  };
 }

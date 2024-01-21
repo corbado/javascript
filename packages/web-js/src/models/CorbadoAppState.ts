@@ -47,6 +47,14 @@ export class CorbadoAppState {
     return this.#shortSession;
   }
 
+  get shortSessionChanges() {
+    return this.#corbadoApp.authService.shortSessionChanges;
+  }
+
+  get userChanges() {
+    return this.#corbadoApp.authService.userChanges;
+  }
+
   get user() {
     return this.#user;
   }

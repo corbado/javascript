@@ -10,11 +10,19 @@ export class Corbado {
   #corbadoAppState?: CorbadoAppState;
 
   get user() {
-    return this.#corbadoAppState?.user;
+    return this.#getCorbadoAppState().user;
   }
 
   get shortSession() {
-    return this.#corbadoAppState?.shortSession;
+    return this.#getCorbadoAppState().shortSession;
+  }
+
+  get shortSessionChanges() {
+    return this.#getCorbadoAppState().shortSessionChanges;
+  }
+
+  get userChanges() {
+    return this.#getCorbadoAppState().userChanges;
   }
 
   load(options: CorbadoConfig) {
@@ -52,5 +60,13 @@ export class Corbado {
     }
 
     mountComponent(this.#corbadoAppState, element, Component, componentOptions);
+  };
+
+  #getCorbadoAppState = (): CorbadoAppState => {
+    if (!this.#corbadoAppState) {
+      throw new Error('Please call load() before using this library');
+    }
+
+    return this.#corbadoAppState;
   };
 }

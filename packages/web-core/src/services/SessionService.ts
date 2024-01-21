@@ -54,6 +54,10 @@ export class SessionService {
     this.#refreshIntervalId = setInterval(() => {
       void this.#handleRefreshRequest();
     }, shortSessionRefreshIntervalMs);
+
+    document.addEventListener('visibilitychange', () => {
+      this.#handleVisibilityChange();
+    });
   }
 
   /**
@@ -139,12 +143,31 @@ export class SessionService {
    * Gets the short term session token.
    */
   static #getShortTermSessionToken(): ShortSession | undefined {
-    const v = localStorage.getItem(shortSessionKey);
-    if (!v) {
-      return;
+    const localStorageValue = localStorage.getItem(shortSessionKey);
+    if (localStorageValue) {
+      return new ShortSession(localStorageValue);
     }
 
-    return new ShortSession(v);
+    // we currently only add this here to be backwards compatible with the legacy webcomponent
+    // the idea is that a user can log into an application that uses the legacy webcomponent
+    // the webcomponent will set the short term session token in a cookie and this package can then take it from there
+    // as soon as the legacy webcomponent is removed, this can be removed as well
+    const cookieValue = this.#getCookieValue(shortSessionKey);
+    if (cookieValue) {
+      return new ShortSession(cookieValue);
+    }
+
+    return undefined;
+  }
+
+  static #getCookieValue(name: string): string | undefined {
+    const regex = new RegExp(`(^| )${name}=([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      return match[2];
+    }
+
+    return undefined;
   }
 
   /**
@@ -195,6 +218,8 @@ export class SessionService {
   async #handleRefreshRequest() {
     // no shortSession => user is not logged in => nothing to refresh
     if (!this.#shortSession) {
+      log.debug('session refresh: no refresh, user not logged in');
+
       return;
     }
 
@@ -204,11 +229,13 @@ export class SessionService {
     }
 
     // nothing to do for now
-    log.debug('no refresh, token still valid');
+    log.debug('no refresh, no refresh, token still valid');
     return;
   }
 
   async #refresh() {
+    log.debug('session refresh: starting refresh');
+
     try {
       const options: AxiosRequestConfig = {
         headers: {
@@ -233,6 +260,20 @@ export class SessionService {
       // for all other errors, we should log out the user
       log.warn(e);
       this.logout();
+    }
+  }
+
+  #handleVisibilityChange() {
+    if (document.hidden) {
+      log.debug('session refresh: no refresh, page is hidden');
+
+      return;
+    }
+
+    try {
+      void this.#handleRefreshRequest();
+    } catch (e) {
+      log.error(e);
     }
   }
 }

@@ -499,6 +499,28 @@ paths:
   ############
   ### MISC ###
   ############
+  /v1/users/exists:
+    put:
+      description: Checks if a confirmed user exists for provided login identifier
+      operationId: UserExists
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userExistsReq'
+      responses:
+        '200':
+          description: User existence check completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userExistsRsp'
+        default:
+          $ref: '#/components/responses/error'
+
   /v1/users/logintoken:
     post:
       description: Performs login for given token
@@ -745,8 +767,8 @@ components:
           description: Timestamp of when the entity was last used in yyyy-MM-dd'T'HH:mm:ss format
         status:
           type: string
-          enum: ['pending', 'active']
-          description: 'Status'
+          enum: [ 'pending', 'active' ]
+          description: "Status"
         created:
           $ref: 'common.yml#/components/schemas/created'
 
@@ -877,6 +899,7 @@ components:
                   type: string
               required:
                 - redirectURL
+
 
     passKeyMediationStartReq:
       type: object
@@ -1144,6 +1167,29 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/authenticationRsp'
+
+    userExistsReq:
+      type: object
+      required:
+        - loginIdentifier
+        - loginIdentifierType
+      properties:
+        loginIdentifier:
+          type: string
+        loginIdentifierType:
+          $ref: 'common.yml#/components/schemas/loginIdentifierType'
+        requestID:
+          $ref: 'common.yml#/components/schemas/requestID'
+
+    userExistsRsp:
+      allOf:
+        - $ref: 'common.yml#/components/schemas/genericRsp'
+        - type: object
+          required:
+            - exists
+          properties:
+            exists:
+              type: boolean
 
     loginTokenReq:
       type: object
@@ -1445,5 +1491,5 @@ components:
             $ref: 'common.yml#/components/schemas/errorRsp'
 
 security:
-  - bearerAuth: []
-  - projectID: []
+  - bearerAuth: [ ]
+  - projectID: [ ]

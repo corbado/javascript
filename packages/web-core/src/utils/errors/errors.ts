@@ -19,6 +19,8 @@ export type LoginWithPasskeyError =
   | InvalidEmailError
   | InvalidPasskeyError
   | PasskeyChallengeCancelledError
+  | InitAutocompletedLoginWithPasskeyError
+  | ConditionalUiNotSupportedError
   | UnknownError;
 export type InitAutocompletedLoginWithPasskeyError = UnknownError;
 export type CompleteAutocompletedLoginWithPasskeyError =
@@ -41,6 +43,7 @@ export type CompleteLoginWithEmailLinkError = InvalidTokenInputError | UnknownEr
 /** Passkey Management Errors */
 export type PasskeyListError = UnknownError;
 export type PasskeyDeleteError = UnknownError;
+export type UserExistsError = UnknownError;
 
 export class CorbadoError extends Error {
   #translatedMessage?: string;
@@ -307,6 +310,13 @@ export class InvalidTokenInputError extends RecoverableError {
   constructor() {
     super('The provided token is not valid for user verification');
     this.name = 'errors.invalidToken';
+  }
+}
+
+export class ConditionalUiNotSupportedError extends RecoverableError {
+  constructor() {
+    super('Conditional UI is not supported by your device');
+    this.name = 'errors.noConditionalUiSupport';
   }
 }
 

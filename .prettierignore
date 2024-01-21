@@ -12,6 +12,7 @@ docs
 packages/*/node_modules/
 packages/*/dist/
 packages/web-core/src/api
+packages/web-core/openapi/
 playground/*/node_modules/
 playground/*/yalc.lock
 playground/*/build

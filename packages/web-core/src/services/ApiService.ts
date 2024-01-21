@@ -1,5 +1,5 @@
-import type { PassKeyList } from '@corbado/types';
 import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
+import type { PassKeyList, UserIdentifier } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
@@ -25,6 +25,7 @@ import type {
   PasskeyDeleteError,
   PasskeyListError,
   SignUpWithPasskeyError,
+  UserExistsError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
 
@@ -48,17 +49,26 @@ export class ApiService {
   // Private fields for project ID and default timeout for API calls.
   #projectId: string;
   #timeout: number;
+  #frontendApiUrl: string;
 
   /**
    * Constructs the ApiService with a project ID and an optional timeout.
    * It initializes the API instances with a short term session token, if available.
+   * @param globalErrors Subscribe to this subject to receive global errors that can not be handled by the component)
    * @param projectId The project ID for the current application instance.
    * @param timeout Optional timeout for API requests, defaulting to 30 seconds.
+   * @param frontendApiUrl Optional URL for the frontend API, defaulting to https://<projectId>.frontendapi.corbado.io.
    */
-  constructor(globalErrors: Subject<NonRecoverableError | undefined>, projectId: string, timeout: number = 30 * 1000) {
+  constructor(
+    globalErrors: Subject<NonRecoverableError | undefined>,
+    projectId: string,
+    timeout: number = 30 * 1000,
+    frontendApiUrl?: string,
+  ) {
     this.#globalErrors = globalErrors;
     this.#projectId = projectId;
     this.#timeout = timeout;
+    this.#frontendApiUrl = frontendApiUrl || `https://${this.#projectId}.frontendapi.corbado.io`;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -125,18 +135,17 @@ export class ApiService {
    * @param token - The authentication token to be used for API requests.
    */
   #setApis(token: string): void {
-    const basePath = `https://${this.#projectId}.frontendapi.corbado.io`;
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath,
+      basePath: this.#frontendApiUrl,
       accessToken: token,
     });
     const axiosInstance = this.#createAxiosInstance(token);
 
-    this.#usersApi = new UsersApi(config, basePath, axiosInstance);
-    this.#assetsApi = new AssetsApi(config, basePath, axiosInstance);
-    this.#projectsApi = new ProjectsApi(config, basePath, axiosInstance);
-    this.#sessionsApi = new SessionsApi(config, basePath, axiosInstance);
+    this.#usersApi = new UsersApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#assetsApi = new AssetsApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#projectsApi = new ProjectsApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#sessionsApi = new SessionsApi(config, this.#frontendApiUrl, axiosInstance);
   }
 
   /**
@@ -346,6 +355,20 @@ export class ApiService {
       await this.#usersApi.currentUserPassKeyDelete(passkeyId);
 
       return void 0;
+    });
+  }
+
+  public async userExists(
+    userIdentifierType: UserIdentifier,
+    identifier: string,
+  ): Promise<Result<boolean, UserExistsError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.usersApi.userExists({
+        loginIdentifierType: userIdentifierType,
+        loginIdentifier: identifier,
+      });
+
+      return r.data.exists;
     });
   }
 }

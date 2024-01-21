@@ -2,17 +2,14 @@ import type { CorbadoAuthConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
 
-import { AuthFlow } from '../../components/authentication/AuthFlow';
+import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn, isDevMode = false, customerSupportEmail = '' }) => {
+const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn }) => {
   return (
     <div className='cb-container'>
       <FlowHandlerProvider onLoggedIn={onLoggedIn}>
-        <AuthFlow
-          isDevMode={isDevMode}
-          customerSupportEmail={customerSupportEmail}
-        />
+        <AuthFlow />
       </FlowHandlerProvider>
     </div>
   );

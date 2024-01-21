@@ -23,7 +23,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     }
 
     setLoading(true);
-    corbadoApp.init();
+    void corbadoApp.init();
     corbadoApp.authService.shortSessionChanges.subscribe((value: string | undefined) => {
       if (value !== undefined) {
         setShortSession(value);

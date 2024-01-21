@@ -334,7 +334,7 @@ export class ApiService {
     });
   }
 
-  public async getProjectConfig(): Promise<Result<ProjectConfig, GetProjectConfigError | undefined>> {
+  public async getProjectConfig(): Promise<Result<ProjectConfig, GetProjectConfigError>> {
     return Result.wrapAsync(async () => {
       const r = await this.projectsApi.projectConfig();
 

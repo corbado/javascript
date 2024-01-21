@@ -16,8 +16,6 @@ const LoginPage = () => {
     <Login
       onLoggedIn={onLoggedIn}
       navigateToSignUp={navigateToSignup}
-      isDevMode={true}
-      customerSupportEmail='dev@test.com'
     />
   );
 };

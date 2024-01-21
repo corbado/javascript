@@ -3,15 +3,10 @@ import type { CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
 
-import { AuthFlow } from '../../components/authentication/AuthFlow';
+import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const SignUp: FC<CorbadoSignUpConfig> = ({
-  onSignedUp,
-  isDevMode = false,
-  customerSupportEmail = '',
-  navigateToLogin,
-}) => {
+const SignUp: FC<CorbadoSignUpConfig> = ({ onSignedUp, navigateToLogin }) => {
   return (
     <div className='cb-container'>
       <FlowHandlerProvider
@@ -19,10 +14,7 @@ const SignUp: FC<CorbadoSignUpConfig> = ({
         onChangeFlow={navigateToLogin}
         initialFlowType={FlowType.SignUp}
       >
-        <AuthFlow
-          isDevMode={isDevMode}
-          customerSupportEmail={customerSupportEmail}
-        />
+        <AuthFlow />
       </FlowHandlerProvider>
     </div>
   );

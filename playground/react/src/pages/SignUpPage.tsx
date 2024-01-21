@@ -16,8 +16,6 @@ const SignUpPage = () => {
     <SignUp
       onSignedUp={onSignedUp}
       navigateToLogin={navigateToLogin}
-      isDevMode={true}
-      customerSupportEmail='dev@test.com'
     />
   );
 };

@@ -1,5 +1,5 @@
-import type { PassKeyList } from '@corbado/types';
 import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
+import type { PassKeyList, UserIdentifier } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
@@ -68,12 +68,7 @@ export class ApiService {
     this.#globalErrors = globalErrors;
     this.#projectId = projectId;
     this.#timeout = timeout;
-
-    if (frontendApiUrl) {
-      this.#frontendApiUrl = frontendApiUrl;
-    } else {
-      this.#frontendApiUrl = `https://${this.#projectId}.frontendapi.corbado.io`;
-    }
+    this.#frontendApiUrl = frontendApiUrl || `https://${this.#projectId}.frontendapi.corbado.io`;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -363,11 +358,14 @@ export class ApiService {
     });
   }
 
-  public async userExists(email: string): Promise<Result<boolean, UserExistsError | undefined>> {
+  public async userExists(
+    userIdentifierType: UserIdentifier,
+    identifier: string,
+  ): Promise<Result<boolean, UserExistsError | undefined>> {
     return Result.wrapAsync(async () => {
       const r = await this.usersApi.userExists({
-        loginIdentifierType: 'email',
-        loginIdentifier: email,
+        loginIdentifierType: userIdentifierType,
+        loginIdentifier: identifier,
       });
 
       return r.data.exists;

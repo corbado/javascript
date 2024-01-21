@@ -310,7 +310,7 @@ export class AuthService {
   }
 
   userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>> {
-    return this.#apiService.userExists(email);
+    return this.#apiService.userExists('email', email);
   }
 
   logout() {

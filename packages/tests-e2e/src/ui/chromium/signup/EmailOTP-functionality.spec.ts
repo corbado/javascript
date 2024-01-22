@@ -3,7 +3,11 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with email OTP proper user behavior', () => {
   test('with passkey support', async ({ signupFlow, page }) => {
-    await signupFlow.createAccount(true);
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(true);
+    await signupFlow.loadAuth();
+
+    await signupFlow.createAccount();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyCreate);
 
     await page.getByRole('button', { name: 'Send email one-time passcode' }).click();
@@ -14,5 +18,6 @@ test.describe('Signup with email OTP proper user behavior', () => {
 
     await page.getByRole('button', { name: 'Maybe later' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
+    await signupFlow.checkNoPasskeyRegistered();
   });
 });

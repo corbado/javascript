@@ -3,6 +3,10 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('PasskeyCreateScreen unproductive user behavior', () => {
   test('change to OTP method', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(true);
+    await signupFlow.loadAuth();
+
     await signupFlow.navigateToPasskeySignupScreen();
 
     await page.getByRole('button', { name: 'Send email one-time passcode' }).click();
@@ -10,6 +14,10 @@ test.describe('PasskeyCreateScreen unproductive user behavior', () => {
   });
 
   test('go back to InitiateSignup', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(true);
+    await signupFlow.loadAuth();
+
     await signupFlow.navigateToPasskeySignupScreen();
 
     await page.getByRole('button', { name: 'Back' }).click();
@@ -17,6 +25,10 @@ test.describe('PasskeyCreateScreen unproductive user behavior', () => {
   });
 
   test('go to PasskeyBenefits', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(true);
+    await signupFlow.loadAuth();
+
     await signupFlow.navigateToPasskeySignupScreen();
 
     await page.getByText('Passkeys').click();
@@ -26,7 +38,11 @@ test.describe('PasskeyCreateScreen unproductive user behavior', () => {
   // TODO: add when the fix is implemented where cancelling the passkey input doesn't redirect to InitiateSignup page
   test.skip('cancelling passkey input remains on same page', async ({ signupFlow, page }) => {
     // Set up virtual passkey authenticator that will fail (simulates user cancelling the passkey operation)
-    await signupFlow.navigateToPasskeySignupScreen(false);
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(false);
+    await signupFlow.loadAuth();
+
+    await signupFlow.navigateToPasskeySignupScreen();
 
     // Passkey input operation is automatically processed by this click.
     // However, this click doesn't wait for the page load triggered by the passkey operation to complete.

@@ -4,7 +4,7 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 test.describe('EnterOtpScreen unproductive user behavior', () => {
   test('go back to Start', async ({ loginFlow, page }) => {
     const [, email] = await loginFlow.createAccount(false);
-    await loginFlow.navigateToEnterOtpScreen(email, false);
+    await loginFlow.navigateToEnterOtpScreen(email);
 
     await page.getByRole('button', { name: 'Cancel' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.Start);
@@ -12,7 +12,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
 
   test('try to continue with incomplete OTP', async ({ loginFlow, page }) => {
     const [, email] = await loginFlow.createAccount(false);
-    await loginFlow.navigateToEnterOtpScreen(email, false);
+    await loginFlow.navigateToEnterOtpScreen(email);
 
     await loginFlow.fillOTP(OtpType.Incomplete);
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -22,7 +22,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
 
   test('try to continue with incorrect OTP', async ({ loginFlow, page }) => {
     const [, email] = await loginFlow.createAccount(false);
-    await loginFlow.navigateToEnterOtpScreen(email, false);
+    await loginFlow.navigateToEnterOtpScreen(email);
 
     await loginFlow.fillOTP(OtpType.Incorrect);
     await loginFlow.checkLandedOnScreen(ScreenNames.EnterOtp);
@@ -33,7 +33,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
 
   test('click external links', async ({ loginFlow, page }) => {
     const [, email] = await loginFlow.createAccount(false);
-    await loginFlow.navigateToEnterOtpScreen(email, false);
+    await loginFlow.navigateToEnterOtpScreen(email);
 
     const newTabPromise1 = page.waitForEvent('popup');
     await page.getByRole('link', { name: 'Google' }).click();

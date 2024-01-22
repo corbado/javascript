@@ -5,7 +5,7 @@ import { UISignupFlow } from '../models/UISignupFlow';
 export const test = base.extend<{ signupFlow: UISignupFlow }>({
   signupFlow: async ({ page }, use) => {
     const signupFlow = new UISignupFlow(page);
-    await signupFlow.goto();
+    await signupFlow.loadAuth();
     await use(signupFlow);
   },
 });

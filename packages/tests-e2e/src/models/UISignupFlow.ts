@@ -2,9 +2,9 @@ import type { CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { OtpType, ScreenNames } from '../utils/constants';
-import { fillOtpCode, removeWebAuthn } from '../utils/helperFunctions';
-import { enableVirtualAuthenticator } from '../utils/helperFunctions/enableVirtualAuthenticator';
-import { gotoAuth } from '../utils/helperFunctions/gotoAuth';
+import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
+import { loadAuth } from '../utils/helperFunctions/loadAuth';
+import { setWebAuthnUserVerified } from '../utils/helperFunctions/setWebAuthnUserVerified';
 import UserManager from '../utils/UserManager';
 
 export class UISignupFlow {
@@ -16,8 +16,26 @@ export class UISignupFlow {
     this.page = page;
   }
 
-  async goto() {
-    await gotoAuth(this.page);
+  // must be called after every update to WebAuthn
+  // because Corbado checks for WebAuthn support on page load
+  async loadAuth() {
+    await loadAuth(this.page);
+  }
+
+  async initializeCDPSession() {
+    this.#cdpClient = await initializeCDPSession(this.page);
+  }
+
+  async addWebAuthn(successful: boolean) {
+    if (this.#cdpClient) {
+      this.#authenticatorId = await addWebAuthn(this.#cdpClient, successful);
+    }
+  }
+
+  async setWebAuthnUserVerified(successful: boolean) {
+    if (this.#cdpClient) {
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, successful);
+    }
   }
 
   async removeWebAuthn() {
@@ -30,9 +48,7 @@ export class UISignupFlow {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToPasskeySignupScreen(webauthnSuccessful = true) {
-    [this.#cdpClient, this.#authenticatorId] = await enableVirtualAuthenticator(this.page, webauthnSuccessful);
-
+  async navigateToPasskeySignupScreen() {
     const name = UserManager.getUserForSignup();
     const email = `${name}@corbado.com`;
 
@@ -48,16 +64,16 @@ export class UISignupFlow {
     await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
   }
 
-  async navigateToPasskeyBenefitsScreen(webauthnSuccessful = true) {
-    await this.navigateToPasskeySignupScreen(webauthnSuccessful);
+  async navigateToPasskeyBenefitsScreen() {
+    await this.navigateToPasskeySignupScreen();
 
     await this.page.getByText('Passkeys').click();
     await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
   }
 
-  async navigateToEnterOtpScreen(passkeySupported: boolean, webauthnSuccessful = true) {
+  async navigateToEnterOtpScreen(passkeySupported: boolean) {
     if (passkeySupported) {
-      await this.navigateToPasskeySignupScreen(webauthnSuccessful);
+      await this.navigateToPasskeySignupScreen();
 
       await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
       await this.checkLandedOnScreen(ScreenNames.EnterOtp);
@@ -78,8 +94,8 @@ export class UISignupFlow {
     }
   }
 
-  async navigateToPasskeyAppendScreen(webauthnSuccessful = true) {
-    await this.navigateToPasskeySignupScreen(webauthnSuccessful);
+  async navigateToPasskeyAppendScreen() {
+    await this.navigateToPasskeySignupScreen();
 
     await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await this.checkLandedOnScreen(ScreenNames.EnterOtp);
@@ -88,11 +104,7 @@ export class UISignupFlow {
     await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
   }
 
-  async createAccount(passkeySupported: boolean, webauthnSuccessful = true): Promise<[name: string, email: string]> {
-    if (passkeySupported) {
-      [this.#cdpClient, this.#authenticatorId] = await enableVirtualAuthenticator(this.page, webauthnSuccessful);
-    }
-
+  async createAccount(): Promise<[name: string, email: string]> {
     const name = UserManager.getUserForSignup();
     const email = `${name}@corbado.com`;
 
@@ -110,13 +122,21 @@ export class UISignupFlow {
   }
 
   async createDummyAccount(): Promise<[name: string, email: string]> {
-    const [name, email] = await this.createAccount(false);
+    const [name, email] = await this.createAccount();
     await this.checkLandedOnScreen(ScreenNames.EnterOtp);
 
     await this.page.getByRole('button', { name: 'Cancel' }).click();
     await this.checkLandedOnScreen(ScreenNames.Start);
 
     return [name, email];
+  }
+
+  async checkPasskeyRegistered() {
+    await expect(this.page.locator('.cb-passkey-list-card')).toHaveCount(1);
+  }
+
+  async checkNoPasskeyRegistered() {
+    await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 
   async checkLandedOnScreen(screenName: ScreenNames) {

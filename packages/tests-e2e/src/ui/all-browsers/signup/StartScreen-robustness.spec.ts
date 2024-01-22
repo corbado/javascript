@@ -18,7 +18,9 @@ test.describe('StartScreen unproductive user behavior', () => {
   });
 
   // TODO: add when (if?) new restrictions are added to Name
-  test.skip('with invalid name', async ({ page }) => {
+  test.skip('with invalid name', async ({ signupFlow, page }) => {
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
+
     const invalidName = '$$$';
     const validEmail = 'bob@corbado.com';
 
@@ -84,5 +86,13 @@ test.describe('StartScreen unproductive user behavior', () => {
 
     await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Email address is already in use')).toBeVisible();
+  });
+
+  test('switch to Login flow', async ({ signupFlow, page }) => {
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
+
+    await page.getByText('Log in').click();
+
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome back!');
   });
 });

@@ -4,14 +4,17 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Spinner } from '../../components';
-import PasskeyAgentIcon from '../../components/passkeyList/PasskeyAgentIcon';
-import PasskeyCreate from '../../components/passkeyList/PasskeyCreate';
-import PasskeyDelete from '../../components/passkeyList/PasskeyDelete';
-import PasskeyDetails from '../../components/passkeyList/PasskeyDetails';
+import {
+  PasskeyAgentIcon,
+  PasskeyCreate,
+  PasskeyDelete,
+  PasskeyDetails,
+  PasskeyListErrorBoundary,
+  Spinner,
+} from '../../components';
 
 const PasskeyList: FC = () => {
-  const { getPasskeys, appendPasskey, deletePasskey, shortSession } = useCorbado();
+  const { getPasskeys, appendPasskey, deletePasskey, shortSession, globalError } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
 
@@ -53,7 +56,7 @@ const PasskeyList: FC = () => {
   }
 
   return (
-    <div>
+    <PasskeyListErrorBoundary globalError={globalError}>
       {passkeys ? (
         passkeys.passkeys.map(passkey => (
           <div
@@ -73,7 +76,7 @@ const PasskeyList: FC = () => {
       )}
       {passkeys && passkeys.passkeys.length === 0 ? <div>{t('message_noPasskeys')}</div> : null}
       <PasskeyCreate handlerPasskeyCreate={handleAppendPasskey} />
-    </div>
+    </PasskeyListErrorBoundary>
   );
 };
 

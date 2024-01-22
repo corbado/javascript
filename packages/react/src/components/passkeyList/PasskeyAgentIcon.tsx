@@ -7,7 +7,7 @@ export interface PasskeyAgentIconProps {
   aaguid: string;
 }
 
-const PasskeyAgentIcon = ({ aaguid }: PasskeyAgentIconProps) => {
+export const PasskeyAgentIcon = ({ aaguid }: PasskeyAgentIconProps) => {
   const iconData = aaguidMappings[aaguid];
   const iconSrc = hasDarkMode() ? iconData?.iconDark ?? iconData?.icon : iconData?.icon;
 
@@ -24,5 +24,3 @@ const PasskeyAgentIcon = ({ aaguid }: PasskeyAgentIconProps) => {
     </div>
   );
 };
-
-export default PasskeyAgentIcon;

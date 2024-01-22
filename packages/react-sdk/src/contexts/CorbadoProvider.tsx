@@ -155,6 +155,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     corbadoApp.authService.logout();
     setShortSession(undefined);
     setUser(undefined);
+    setGlobalError(undefined);
   }, [corbadoApp]);
 
   const contextValue = useMemo<CorbadoContextProps>(() => {

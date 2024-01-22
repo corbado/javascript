@@ -1,4 +1,4 @@
-import type { AuthService } from '@corbado/web-core';
+import type { AppendPasskeyError, AuthService, CorbadoApp } from '@corbado/web-core';
 import { InvalidPasskeyError } from '@corbado/web-core';
 import {
   InvalidEmailError,
@@ -190,7 +190,13 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
   return FlowUpdate.ignore();
 };
 
-export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {
-  await authService.appendPasskey();
-  return FlowUpdate.navigate(ScreenNames.End);
+export const appendPasskey = async (
+  corbadoApp: CorbadoApp,
+): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
+  const res = await corbadoApp.authService.appendPasskey();
+  if (res.ok) {
+    return Ok(FlowUpdate.navigate(ScreenNames.End));
+  }
+
+  return res;
 };

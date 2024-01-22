@@ -3,7 +3,7 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('StartScreen unproductive user behavior', () => {
   test('with unregistered email', async ({ loginFlow, page }) => {
-    await loginFlow.navigateToStartPage(false, false);
+    await loginFlow.navigateToStartPage(false);
 
     const unregisteredEmail = 'unregistered_wtf@corbado.com';
 

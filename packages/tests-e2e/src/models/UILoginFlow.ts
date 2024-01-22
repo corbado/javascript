@@ -29,7 +29,7 @@ export class UILoginFlow {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToStartPage(passkeySupported: boolean, webauthnSuccessful: boolean) {
+  async navigateToStartPage(passkeySupported: boolean, webauthnSuccessful = true) {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);
       this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
@@ -39,6 +39,20 @@ export class UILoginFlow {
 
     await this.page.getByText('Log in').click();
     await this.checkLandedOnScreen(ScreenNames.Start);
+  }
+
+  async navigateToPasskeyAppendPage(email: string, webauthnSuccessful = true) {
+    await this.navigateToStartPage(true, webauthnSuccessful);
+
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(email);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
+
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+
+    await this.fillOTP();
+    await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
   }
 
   async createAccount(passkeySupported: boolean, registerPasskey = true): Promise<[name: string, email: string]> {

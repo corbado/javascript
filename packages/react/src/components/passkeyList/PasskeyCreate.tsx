@@ -10,7 +10,7 @@ export interface PasskeyCreateProps {
   handlerPasskeyCreate: () => Promise<Result<void, AppendPasskeyError | undefined>>;
 }
 
-const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
+export const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,5 +53,3 @@ const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
     </div>
   );
 };
-
-export default PasskeyCreate;

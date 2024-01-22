@@ -8,7 +8,7 @@ export interface PasskeyDetailsProps {
   passkey: PassKeyItem;
 }
 
-const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
+export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const userAgent = getParsedUA(passkey.userAgent);
   const title = aaguidMappings[passkey.aaguid]?.name ?? 'Passkey';
@@ -45,5 +45,3 @@ const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
     </div>
   );
 };
-
-export default PasskeyDetails;

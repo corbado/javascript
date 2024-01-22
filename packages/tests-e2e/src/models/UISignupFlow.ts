@@ -1,9 +1,9 @@
-import type { Page, CDPSession } from '@playwright/test';
+import type { CDPSession,Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
+import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import UserManager from '../utils/UserManager';
-import { OtpType, ScreenNames } from '../utils/constants';
 
 export class UISignupFlow {
   readonly page: Page;
@@ -29,7 +29,7 @@ export class UISignupFlow {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToPasskeySignupPage(webauthnSuccessful: boolean = true) {
+  async navigateToPasskeySignupPage(webauthnSuccessful = true) {
     this.#cdpClient = await initializeCDPSession(this.page);
     this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);
     // Corbado backend checks for passkey availability upon page load, so reloading the page prevents race condition
@@ -50,14 +50,14 @@ export class UISignupFlow {
     await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
   }
 
-  async navigateToPasskeyBenefitsPage(webauthnSuccessful: boolean = true) {
+  async navigateToPasskeyBenefitsPage(webauthnSuccessful = true) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByText('Passkeys').click();
     await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
   }
 
-  async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful: boolean = true) {
+  async navigateToEmailOTPPage(passkeySupported: boolean, webauthnSuccessful = true) {
     if (passkeySupported) {
       await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
@@ -80,7 +80,7 @@ export class UISignupFlow {
     }
   }
 
-  async navigateToPasskeyAppendPage(webauthnSuccessful: boolean = true) {
+  async navigateToPasskeyAppendPage(webauthnSuccessful = true) {
     await this.navigateToPasskeySignupPage(webauthnSuccessful);
 
     await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
@@ -92,7 +92,7 @@ export class UISignupFlow {
 
   async createAccount(
     passkeySupported: boolean,
-    webauthnSuccessful: boolean = true,
+    webauthnSuccessful = true,
   ): Promise<[name: string, email: string]> {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);

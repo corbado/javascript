@@ -1,8 +1,8 @@
-import { CDPSession, Page } from "@playwright/test";
+import type { CDPSession, Page } from "@playwright/test";
 import { expect } from '@playwright/test';
 
-import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from "../utils/helperFunctions";
 import { OtpType, ScreenNames } from "../utils/constants";
+import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from "../utils/helperFunctions";
 import UserManager from "../utils/UserManager";
 
 export class UILoginFlow {
@@ -43,7 +43,7 @@ export class UILoginFlow {
   
   async createAccount(
     passkeySupported: boolean,
-    registerPasskey: boolean = true,
+    registerPasskey = true,
   ): Promise<[name: string, email: string]> {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);

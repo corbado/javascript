@@ -1,4 +1,4 @@
-import { test, expect } from '../../../fixtures/UISignupTest';
+import { expect,test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('StartScreen unproductive user behavior', () => {
@@ -70,7 +70,7 @@ test.describe('StartScreen unproductive user behavior', () => {
   test('with duplicate email', async ({ signupFlow, page }) => {
     const validName = 'Bob';
 
-    const [_, email] = await signupFlow.createDummyAccount();
+    const [, email] = await signupFlow.createDummyAccount();
 
     await page.getByPlaceholder('Name').click();
     await page.getByPlaceholder('Name').fill(validName);

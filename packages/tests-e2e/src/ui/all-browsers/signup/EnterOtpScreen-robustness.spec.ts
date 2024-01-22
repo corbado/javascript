@@ -1,4 +1,4 @@
-import { expect,test } from '../../../fixtures/UISignupTest';
+import { expect, test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {

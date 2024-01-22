@@ -1,4 +1,4 @@
-import type { CDPSession,Page } from '@playwright/test';
+import type { CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { OtpType, ScreenNames } from '../utils/constants';
@@ -90,10 +90,7 @@ export class UISignupFlow {
     await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
   }
 
-  async createAccount(
-    passkeySupported: boolean,
-    webauthnSuccessful = true,
-  ): Promise<[name: string, email: string]> {
+  async createAccount(passkeySupported: boolean, webauthnSuccessful = true): Promise<[name: string, email: string]> {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);
       this.#authenticatorId = await addWebAuthn(this.#cdpClient, webauthnSuccessful);

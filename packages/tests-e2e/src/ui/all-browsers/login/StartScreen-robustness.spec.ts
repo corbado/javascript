@@ -1,4 +1,4 @@
-import { expect,test } from '../../../fixtures/UILoginTest';
+import { expect, test } from '../../../fixtures/UILoginTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('StartScreen unproductive user behavior', () => {

@@ -1,9 +1,9 @@
-import type { CDPSession, Page } from "@playwright/test";
+import type { CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { OtpType, ScreenNames } from "../utils/constants";
-import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from "../utils/helperFunctions";
-import UserManager from "../utils/UserManager";
+import { OtpType, ScreenNames } from '../utils/constants';
+import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
+import UserManager from '../utils/UserManager';
 
 export class UILoginFlow {
   readonly page: Page;
@@ -18,7 +18,7 @@ export class UILoginFlow {
     await this.page.goto('/auth');
     // Note: The page will make an API call to fetch project config after navigation
   }
-  
+
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
@@ -40,11 +40,8 @@ export class UILoginFlow {
     await this.page.getByText('Log in').click();
     await this.checkLandedOnScreen(ScreenNames.Start);
   }
-  
-  async createAccount(
-    passkeySupported: boolean,
-    registerPasskey = true,
-  ): Promise<[name: string, email: string]> {
+
+  async createAccount(passkeySupported: boolean, registerPasskey = true): Promise<[name: string, email: string]> {
     if (passkeySupported) {
       this.#cdpClient = await initializeCDPSession(this.page);
       this.#authenticatorId = await addWebAuthn(this.#cdpClient, true);
@@ -67,7 +64,7 @@ export class UILoginFlow {
 
     if (passkeySupported) {
       await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
-      
+
       if (registerPasskey) {
         await this.page.getByRole('button', { name: 'Create your account' }).click();
         await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);

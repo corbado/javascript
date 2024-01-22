@@ -13,3 +13,5 @@ export enum OtpType {
   Incomplete = '15091',
   Incorrect = '150918',
 }
+
+export const waitAfterLoad = 200; // remove after repetitive refreshing is fixed

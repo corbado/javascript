@@ -3,14 +3,14 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
   test('go back to InitiateSignup', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToEmailOTPPage(false, false);
+    await signupFlow.navigateToEnterOtpScreen(false, false);
 
     await page.getByRole('button', { name: 'Cancel' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.Start);
   });
 
   test('try to continue with incomplete OTP', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToEmailOTPPage(false, false);
+    await signupFlow.navigateToEnterOtpScreen(false, false);
 
     await signupFlow.fillOTP(OtpType.Incomplete);
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -19,7 +19,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   });
 
   test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToEmailOTPPage(false, false);
+    await signupFlow.navigateToEnterOtpScreen(false, false);
 
     await signupFlow.fillOTP(OtpType.Incorrect);
     await expect(page.getByText('The provided one-time passcode is not valid')).toBeVisible();
@@ -29,7 +29,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   });
 
   test('click external links', async ({ signupFlow, page }) => {
-    await signupFlow.navigateToEmailOTPPage(false, false);
+    await signupFlow.navigateToEnterOtpScreen(false, false);
 
     const newTabPromise1 = page.waitForEvent('popup');
     await page.getByRole('link', { name: 'Google' }).click();

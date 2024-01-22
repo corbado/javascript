@@ -55,9 +55,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
-        if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
-        }
+        // for now, as passkey operations are not repeatable in signUp we directly go to fallback
+        // if (state.flowOptions.retryPasskeyOnError) {
+        //   return FlowUpdate.navigate(ScreenNames.PasskeyError);
+        // }
 
         return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }
@@ -135,9 +136,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
-        return state.flowOptions.retryPasskeyOnError
-          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
-          : FlowUpdate.navigate(ScreenNames.End);
+        return FlowUpdate.navigate(ScreenNames.End);
       }
       case FlowHandlerEvents.SecondaryButton:
         return FlowUpdate.navigate(ScreenNames.End);
@@ -168,9 +167,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
-        if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
-        }
+        // for now, as passkey operations are not repeatable in signUp we directly go to fallback
+        // if (state.flowOptions.retryPasskeyOnError) {
+        //   return FlowUpdate.navigate(ScreenNames.PasskeyError);
+        // }
 
         return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
       }

@@ -161,6 +161,10 @@ export const createPasskey = async (
     return Ok(FlowUpdate.navigate(ScreenNames.PasskeySuccess));
   }
 
+  if (res.val instanceof UserAlreadyExistsError) {
+    return Ok(FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: res.val }));
+  }
+
   return res;
 };
 

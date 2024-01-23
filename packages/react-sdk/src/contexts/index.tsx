@@ -24,7 +24,10 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     }
 
     setLoading(true);
-    corbadoApp.init();
+    corbadoApp.init().then(() => {
+      initialized.current = true;
+      setLoading(false);
+    });
 
     corbadoApp.authService.userChanges.subscribe(value => {
       setUser(value);
@@ -41,10 +44,6 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     corbadoApp.authService.shortSessionChanges.subscribe((value: string | undefined) => {
       setShortSession(value);
     });
-
-    initialized.current = true;
-
-    setLoading(false);
   }, []);
 
   return (

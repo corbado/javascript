@@ -89,7 +89,7 @@ const HomePage = () => {
   if (isAuthenticated) {
     // Render authenticated state
   }
-  
+
   // Additional implementation
 };
 
@@ -104,11 +104,11 @@ import { useCorbadoSession } from '@corbado/react-sdk';
 
 const HomePage = () => {
   const { loading, user } = useCorbadoSession();
-  
+
   if (loading) {
     // Render loading state
   }
-  
+
   if (user) {
     // Render authenticated state
   }
@@ -116,7 +116,6 @@ const HomePage = () => {
 
 export default HomePage;
 ```
-
 
 **Remember to check `loading` state of the hook before using authentication states.**
 

@@ -40,7 +40,10 @@ export class UILoginFlow {
 
   async setWebAuthnAutomaticPresenceSimulation(automatic: boolean) {
     if (this.#cdpClient) {
-      await this.#cdpClient.send('WebAuthn.setAutomaticPresenceSimulation', { authenticatorId: this.#authenticatorId, enabled: automatic });
+      await this.#cdpClient.send('WebAuthn.setAutomaticPresenceSimulation', {
+        authenticatorId: this.#authenticatorId,
+        enabled: automatic,
+      });
     }
   }
 

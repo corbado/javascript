@@ -1,4 +1,5 @@
 import type { AuthService } from '@corbado/web-core';
+import { ConditionalUiUnconfirmedCredential } from '@corbado/web-core';
 import { InvalidPasskeyError } from '@corbado/web-core';
 import {
   InvalidEmailError,
@@ -183,8 +184,8 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
     return FlowUpdate.ignore();
   }
 
-  if (response.val instanceof InvalidPasskeyError) {
-    return FlowUpdate.state({ emailError: new InvalidPasskeyError() });
+  if (response.val instanceof InvalidPasskeyError || response.val instanceof ConditionalUiUnconfirmedCredential) {
+    return FlowUpdate.state({ emailError: response.val });
   }
 
   return FlowUpdate.ignore();

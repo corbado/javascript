@@ -126,7 +126,7 @@ export class CorbadoError extends Error {
 
         break;
       }
-      case 'not_found':
+      case 'not_found': {
         if (errorResp.details === "user doesn't exist") {
           return new UnknownUserError();
         }
@@ -142,6 +142,16 @@ export class CorbadoError extends Error {
         if (errorResp.details === 'Email link not valid') {
           return new InvalidTokenInputError();
         }
+
+        break;
+      }
+      case 'client_error': {
+        if (errorResp.details === 'Unconfirmed credential') {
+          return new ConditionalUiUnconfirmedCredential();
+        }
+
+        break;
+      }
     }
 
     return NonRecoverableError.unknown();
@@ -319,6 +329,13 @@ export class ConditionalUiNotSupportedError extends RecoverableError {
   constructor() {
     super('Conditional UI is not supported by your device');
     this.name = 'errors.noConditionalUiSupport';
+  }
+}
+
+export class ConditionalUiUnconfirmedCredential extends RecoverableError {
+  constructor() {
+    super('Unconfirmed credential');
+    this.name = 'errors.conditionalUiUnconfirmedCredential';
   }
 }
 

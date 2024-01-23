@@ -8,6 +8,7 @@ export class CorbadoAppState {
   #corbadoApp: CorbadoApp;
   #corbadoAppProps: CorbadoConfig;
   #shortSession?: string;
+  #isAuthenticated?: boolean;
   #user?: SessionUser;
   #globalError?: NonRecoverableError;
 
@@ -30,6 +31,10 @@ export class CorbadoAppState {
       }
     });
 
+    corbadoApp.authService.authStateChanges.subscribe(value => {
+      this.#isAuthenticated = !!value;
+    });
+
     void corbadoApp.init();
     this.#corbadoApp = corbadoApp;
     this.#corbadoAppProps = corbadoAppProps;
@@ -49,6 +54,14 @@ export class CorbadoAppState {
 
   get shortSessionChanges() {
     return this.#corbadoApp.authService.shortSessionChanges;
+  }
+
+  get isAuthenticated() {
+    return this.#isAuthenticated;
+  }
+
+  get authStateChanges() {
+    return this.#corbadoApp.authService.authStateChanges;
   }
 
   get userChanges() {

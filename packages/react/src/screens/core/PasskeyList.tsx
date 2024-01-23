@@ -1,32 +1,27 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { PassKeyList } from '@corbado/types';
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  PasskeyAgentIcon,
-  PasskeyCreate,
-  PasskeyDelete,
-  PasskeyDetails,
-  PasskeyListErrorBoundary,
-  Spinner,
-} from '../../components';
+import { PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem, Spinner } from '../../components';
 
 const PasskeyList: FC = () => {
-  const { getPasskeys, appendPasskey, deletePasskey, shortSession, globalError } = useCorbado();
+  const { getPasskeys, globalError, isAuthenticated } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!shortSession) {
+    if (!isAuthenticated) {
       return;
     }
 
     void fetchPasskeys();
-  }, [shortSession]);
+  }, [isAuthenticated]);
 
-  const fetchPasskeys = async () => {
+  const fetchPasskeys = useCallback(async () => {
+    setLoading(true);
     const result = await getPasskeys();
 
     if (result.err) {
@@ -34,48 +29,27 @@ const PasskeyList: FC = () => {
     }
 
     setPasskeys(result.val);
-  };
+    setLoading(false);
+  }, [getPasskeys]);
 
-  const handleAppendPasskey = async () => {
-    const result = await appendPasskey();
-
-    if (result.ok) {
-      await fetchPasskeys();
-    }
-
-    return result;
-  };
-
-  const handleDeletePasskey = async (id: string) => {
-    await deletePasskey(id);
-    await fetchPasskeys();
-  };
-
-  if (!shortSession) {
+  if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
+  }
+
+  if (loading) {
+    return <Spinner />;
   }
 
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
-      {passkeys ? (
-        passkeys.passkeys.map(passkey => (
-          <div
-            key={passkey.id}
-            className='cb-passkey-list-card'
-          >
-            <PasskeyAgentIcon aaguid={passkey.aaguid} />
-            <PasskeyDetails passkey={passkey} />
-            <PasskeyDelete
-              passkeyId={passkey.id}
-              onPasskeyDelete={handleDeletePasskey}
-            />
-          </div>
-        ))
-      ) : (
-        <Spinner />
-      )}
-      {passkeys && passkeys.passkeys.length === 0 ? <div>{t('message_noPasskeys')}</div> : null}
-      <PasskeyCreate handlerPasskeyCreate={handleAppendPasskey} />
+      {passkeys?.passkeys.map(passkey => (
+        <PasskeyListItem
+          key={passkey.aaguid}
+          passkey={passkey}
+          fetchPasskeys={fetchPasskeys}
+        ></PasskeyListItem>
+      )) ?? <div>{t('message_noPasskeys')}</div>}
+      <PasskeyCreate fetchPasskeys={fetchPasskeys} />
     </PasskeyListErrorBoundary>
   );
 };

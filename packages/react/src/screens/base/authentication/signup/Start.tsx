@@ -1,98 +1,63 @@
 import { FlowHandlerEvents } from '@corbado/shared-ui';
 import type { RecoverableError } from '@corbado/web-core';
-import type { ChangeEvent } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreen, FormInput, Header, SubHeader } from '../../../../components';
+import { AuthFormScreen, FormInput } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-interface SignupForm {
-  name: string;
-  fullName: string;
-}
-
-const defaultFormTemplate: SignupForm = {
-  name: '',
-  fullName: '',
-};
-
-const createFormTemplate = (email?: string, fullName?: string) => ({
-  name: email || '',
-  fullName: fullName || '',
-});
-
 export const Start = () => {
-  const { currentUserState, emitEvent, changeFlow } = useFlowHandler();
+  const { currentUserState, emitEvent } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.signup.start` });
-
-  const [signupData, setSignupData] = useState<SignupForm>({
-    ...defaultFormTemplate,
-  });
   const [emailError, setEmailError] = useState<RecoverableError | null>(null);
   const [userNameError, setUserNameError] = useState<RecoverableError | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const emailRef = useRef<HTMLInputElement>();
+  const fullNameRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     setLoading(false);
-    setSignupData(createFormTemplate(currentUserState.email, currentUserState.fullName));
-    setEmailError(null);
-    setUserNameError(null);
-
-    if (currentUserState.emailError) {
-      setEmailError(currentUserState.emailError);
-    }
-
-    if (currentUserState.userNameError) {
-      setUserNameError(currentUserState.userNameError);
-    }
+    setEmailError(currentUserState.emailError ?? null);
+    setUserNameError(currentUserState.userNameError ?? null);
   }, [currentUserState]);
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = event.target;
-    setSignupData(prevData => ({ ...prevData, [name]: value }));
-  };
+  const headerText = useMemo(() => t('header'), [t]);
+  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const flowChangeButtonText = useMemo(() => t('button_login'), [t]);
+  const submitButtonText = useMemo(() => t('button_submit'), [t]);
+  const nameFieldLabel = useMemo(() => t('textField_name'), [t]);
+  const emailFieldLabel = useMemo(() => t('textField_email'), [t]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     setLoading(true);
     void emitEvent(FlowHandlerEvents.PrimaryButton, {
-      userStateUpdate: { email: signupData.name, fullName: signupData.fullName },
+      userStateUpdate: { email: emailRef.current?.value, fullName: fullNameRef.current?.value },
     });
-  };
+  }, [emitEvent]);
 
   return (
     <>
-      <Header>{t('header')}</Header>
-      <SubHeader>
-        {t('subheader')}
-        <span
-          className='cb-link-secondary'
-          onClick={changeFlow}
-        >
-          {t('button_login')}
-        </span>
-      </SubHeader>
       <AuthFormScreen
+        headerText={headerText}
+        subHeaderText={subHeaderText}
+        flowChangeButtonText={flowChangeButtonText}
         onSubmit={handleSubmit}
-        submitButtonText={t('button_submit')}
-        disableSubmitButton={loading}
+        submitButtonText={submitButtonText}
         loading={loading}
       >
         <FormInput
           name='fullName'
-          label={t('textField_name')}
-          onChange={onChange}
-          value={signupData.fullName}
+          label={nameFieldLabel}
           error={userNameError?.translatedMessage}
+          ref={el => el && (fullNameRef.current = el)}
         />
         <FormInput
           name='name'
           type='email'
           autoComplete='email'
-          label={t('textField_email')}
-          onChange={onChange}
-          value={signupData.name}
+          label={emailFieldLabel}
           error={emailError?.translatedMessage}
+          ref={el => el && (emailRef.current = el)}
         />
       </AuthFormScreen>
     </>

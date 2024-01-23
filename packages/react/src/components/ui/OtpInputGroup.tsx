@@ -1,8 +1,8 @@
 import { notANumberRegex, numberRegex } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 
-import { Input } from './Input';
+import { OtpInput } from './inputs/OtpInput';
 
 interface Props {
   numberOfDigits?: number;
@@ -11,104 +11,110 @@ interface Props {
   error?: string;
 }
 
-export const OtpInputGroup: FC<Props> = ({ emittedOTP, numberOfDigits = 6, loading = false, error }) => {
-  const [otp, setOtp] = useState(new Array<string>(numberOfDigits).fill(''));
+export const OtpInputGroup: FC<Props> = memo(({ emittedOTP, numberOfDigits = 6, loading = false, error }) => {
+  const [otpState, setOtpState] = useState(new Array<string>(numberOfDigits).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const otpRef = useRef(new Array<string>(numberOfDigits).fill(''));
 
-  useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-    }
-  }, []);
+  const updateOtp = useCallback(
+    (otp: string[]) => {
+      otpRef.current = otp;
+      emittedOTP(otp);
+      setOtpState(otp);
+    },
+    [emittedOTP],
+  );
 
-  useEffect(() => {
-    emittedOTP(otp);
-  }, [otp]);
-
-  const handleOtpChange = (element: HTMLInputElement, index: number) => {
-    const value = element.value;
-    if (notANumberRegex.test(value)) {
-      return;
-    }
-
-    const newIndex = index + 1;
-
-    if (otp[index]) {
-      if (newIndex >= otp.length) {
+  const handleOtpChange = useCallback(
+    (element: HTMLInputElement, index: number) => {
+      const value = element.value;
+      if (notANumberRegex.test(value)) {
         return;
       }
 
-      setOtp(otp.map((d, idx) => (idx === newIndex ? value : d)));
+      const newIndex = index + 1;
+      const otp = otpRef.current;
 
-      if (newIndex + 1 < otp.length) {
-        inputRefs.current[newIndex + 1].focus();
+      if (otp[index]) {
+        if (newIndex >= otp.length) {
+          return;
+        }
+
+        updateOtp(otp.map((d, idx) => (idx === newIndex ? value : d)));
+
+        if (newIndex + 1 < otp.length) {
+          inputRefs.current[newIndex + 1].focus();
+        }
+      } else {
+        updateOtp(otp.map((d, idx) => (idx === index ? value : d)));
+
+        if (newIndex < otp.length && value) {
+          inputRefs.current[newIndex].focus();
+        }
       }
-    } else {
-      setOtp(otp.map((d, idx) => (idx === index ? value : d)));
+    },
+    [updateOtp],
+  );
 
-      if (newIndex < otp.length && value) {
-        inputRefs.current[newIndex].focus();
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, index: number) => {
+      const otp = otpRef.current;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          if (index > 0) {
+            inputRefs.current[index - 1].focus();
+          }
+          break;
+        case 'ArrowRight':
+          if (index < otp.length - 1) {
+            inputRefs.current[index + 1].focus();
+          }
+          break;
+        case 'Backspace':
+          if (otp[index]) {
+            updateOtp(otp.map((d, idx) => (idx === index ? '' : d)));
+          } else if (index > 0) {
+            inputRefs.current[index - 1].focus();
+            updateOtp(otp.map((d, idx) => (idx === index - 1 ? '' : d)));
+          }
+          break;
+        default:
+          break;
       }
-    }
-  };
+    },
+    [updateOtp],
+  );
 
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    switch (e.key) {
-      case 'ArrowLeft':
-        if (index > 0) {
-          inputRefs.current[index - 1].focus();
-        }
-        break;
-      case 'ArrowRight':
-        if (index < otp.length - 1) {
-          inputRefs.current[index + 1].focus();
-        }
-        break;
-      case 'Backspace':
-        if (otp[index]) {
-          setOtp(otp.map((d, idx) => (idx === index ? '' : d)));
-        } else if (index > 0) {
-          inputRefs.current[index - 1].focus();
-          setOtp(otp.map((d, idx) => (idx === index - 1 ? '' : d)));
-        }
-        break;
-      default:
-        break;
-    }
-  };
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
-    if (pasteData.every(d => numberRegex.test(d))) {
-      setOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
-      inputRefs.current[pasteData.length - 1].focus();
-    }
-  };
+      const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
+
+      if (pasteData.every(d => numberRegex.test(d))) {
+        updateOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
+        inputRefs.current[pasteData.length - 1].focus();
+      }
+    },
+    [updateOtp],
+  );
 
   return (
     <div className='cb-email-otp-input-container'>
-      {otp.map((data, index) => {
-        return (
-          <Input
-            key={index}
-            ref={el => el && (inputRefs.current[index] = el)}
-            id={`otp-${index}`}
-            value={data}
-            type='tel'
-            inputMode='numeric'
-            pattern='[0-9]*'
-            maxLength={1}
-            onChange={e => handleOtpChange(e.target, index)}
-            onKeyDown={e => handleKeyDown(e, index)}
-            onPaste={handlePaste}
-            disabled={loading}
-            className='cb-email-otp-input'
-            autoFocus={index === 0}
-            error={error}
-          />
-        );
-      })}
+      {otpState.map((data, index) => (
+        <OtpInput
+          key={index}
+          index={index}
+          value={data}
+          handleOtpChange={handleOtpChange}
+          handleKeyDown={handleKeyDown}
+          handlePaste={handlePaste}
+          ref={el => el && (inputRefs.current[index] = el)}
+          disabled={loading}
+          error={error}
+        />
+      ))}
     </div>
   );
-};
+});

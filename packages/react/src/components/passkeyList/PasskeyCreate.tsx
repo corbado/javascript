@@ -1,19 +1,29 @@
-import type { AppendPasskeyError } from '@corbado/web-core';
+import { useCorbado } from '@corbado/react-sdk';
 import type { FC } from 'react';
-import React, { useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Result } from 'ts-results';
 
 import { Dialog, PrimaryButton } from '../';
 
 export interface PasskeyCreateProps {
-  handlerPasskeyCreate: () => Promise<Result<void, AppendPasskeyError | undefined>>;
+  fetchPasskeys: () => Promise<void>;
 }
 
-export const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) => {
+export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { appendPasskey } = useCorbado();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const translatedTexts = useMemo(
+    () => ({
+      buttonText: t('button_createPasskey'),
+      dialogHeader: t('dialog_passkeyAlreadyExists.header'),
+      dialogBody: t('dialog_passkeyAlreadyExists.body'),
+      dialogConfirmText: t('dialog_passkeyAlreadyExists.button_confirm'),
+    }),
+    [t],
+  );
 
   const openDialog = () => {
     setDialogOpen(true);
@@ -25,12 +35,15 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) 
 
   const createPasskey = async () => {
     setLoading(true);
-    const result = await handlerPasskeyCreate();
-    setLoading(false);
+    const result = await appendPasskey();
 
-    if (result.err && result.val?.name === 'errors.passkeyAlreadyExists') {
+    if (result.ok) {
+      await fetchPasskeys();
+    } else if (result.val?.name === 'errors.passkeyAlreadyExists') {
       openDialog();
     }
+
+    setLoading(false);
   };
 
   return (
@@ -40,16 +53,16 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = ({ handlerPasskeyCreate }) 
         isLoading={loading}
         onClick={() => void createPasskey()}
       >
-        {t('button_createPasskey')}
+        {translatedTexts.buttonText}
       </PrimaryButton>
       <Dialog
         isOpen={isDialogOpen}
-        header={t('dialog_passkeyAlreadyExists.header')}
-        body={t('dialog_passkeyAlreadyExists.body')}
-        confirmText={t('dialog_passkeyAlreadyExists.button_confirm')}
+        header={translatedTexts.dialogHeader}
+        body={translatedTexts.dialogBody}
+        confirmText={translatedTexts.dialogConfirmText}
         onClose={closeDialog}
         onConfirm={closeDialog}
       />
     </div>
   );
-};
+});

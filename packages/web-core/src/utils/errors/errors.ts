@@ -1,11 +1,13 @@
 import type { AxiosError } from 'axios';
 import log from 'loglevel';
+import type { BehaviorSubject } from 'rxjs';
 
 import type { ErrorRsp } from '../../api';
 
 /** General Errors */
 export type AuthMethodsListError = UnknownUserError | UnknownError;
 export type GetProjectConfigError = UnknownError;
+export type GlobalError = BehaviorSubject<NonRecoverableError | undefined>;
 
 /** Passkey Authentication Errors */
 export type SignUpWithPasskeyError =

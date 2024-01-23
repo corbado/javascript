@@ -2,7 +2,8 @@ import type { FC, FormEvent, ReactNode } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
+import { OtpInputGroup, PrimaryButton, TertiaryButton } from '../ui';
+import { EmailScreenBase } from './EmailScreensBase';
 
 export interface EmailOtpScreenProps {
   header: ReactNode;
@@ -21,10 +22,9 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
   onVerificationButtonClick,
   onBackButtonClick,
 }) => {
-  const [otp, setOTP] = useState<string>('');
   const { currentUserState } = useFlowHandler();
   const [loading, setLoading] = useState<boolean>(false);
-  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const otpRef = useRef<string>('');
 
   useEffect(() => {
     setLoading(false);
@@ -33,44 +33,36 @@ export const EmailOtpScreen: FC<EmailOtpScreenProps> = ({
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
       const newOtp = userOtp.join('');
-      setOTP(newOtp);
+      otpRef.current = newOtp;
 
       if (newOtp.length === 6) {
         void onVerificationButtonClick(newOtp, setLoading);
       }
     },
-    [setOTP],
+    [onVerificationButtonClick],
   );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    void onVerificationButtonClick(otp, setLoading);
+    void onVerificationButtonClick(otpRef.current, setLoading);
   };
 
   return (
     <form
-      className='cb-email-otp'
+      className='cb-email-screen'
       onSubmit={handleSubmit}
     >
-      <Header>{header}</Header>
-
-      <Body>{body}</Body>
-
-      <EmailProviderButtons />
-
-      <OtpInputGroup
-        emittedOTP={handleOtpChange}
-        error={currentUserState.emailOTPError?.translatedMessage}
-      />
-
-      {currentUserState.emailOTPError && <p className='cb-error'>{currentUserState.emailOTPError.translatedMessage}</p>}
-
-      <PrimaryButton
-        ref={submitButtonRef}
-        isLoading={loading}
+      <EmailScreenBase
+        header={header}
+        body={body}
       >
-        {verificationButtonText}
-      </PrimaryButton>
+        <OtpInputGroup
+          emittedOTP={handleOtpChange}
+          error={currentUserState.verificationError?.translatedMessage}
+        />
+      </EmailScreenBase>
+
+      <PrimaryButton isLoading={loading}>{verificationButtonText}</PrimaryButton>
       <TertiaryButton
         onClick={onBackButtonClick}
         disabled={loading}

@@ -2,8 +2,8 @@
 
 # @corbado/web-js
 
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE)
-[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/overview/welcome)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/corbado/javascript/blob/main/LICENSE)
+[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen)](https://docs.corbado.com/frontend-integration/vanilla-js)
 [![Slack](https://img.shields.io/badge/slack-community-blueviolet)](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ)
 [![npm version](https://img.shields.io/npm/v/@corbado/web-js)](https://www.npmjs.com/package/@corbado/web-js)
 
@@ -54,12 +54,12 @@ Include the script and styles directly in your HTML:
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@corbado/web-js@version/dist/bundle/index.css"
+  href="https://unpkg.com/@corbado/web-js@latest/dist/bundle/index.css"
 />
-<script src="https://unpkg.com/@corbado/web-js@version/dist/bundle/index.js"></script>
+<script src="https://unpkg.com/@corbado/web-js@latest/dist/bundle/index.js"></script>
 ```
 
-Replace `@version` with the specific version number you intend to use.
+Replace `@latest` with the specific version number you intend to use.
 
 ---
 
@@ -74,7 +74,7 @@ Import and initialize Corbado in your main JavaScript or TypeScript file:
 ```typescript
 import Corbado from '@corbado/web-js';
 
-Corbado.load({
+await Corbado.load({
   projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
 });
 ```
@@ -141,7 +141,7 @@ Initialize Corbado in a `<script>` tag within your HTML:
 
 ```html
 <script type="module">
-  Corbado.load({
+  await Corbado.load({
     projectId: 'pro-XXXXXXXXXXXXXXXXXXXX',
   });
 
@@ -182,10 +182,10 @@ Use JavaScript to manage login/logout states and to mount the passkey list UI:
 ## 📄 Documentation & Support
 
 For support and questions please visit our [Slack channel](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ).
-For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/overview/welcome).
+For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/frontend-integration/vanilla-js).
 
 ---
 
 ## 🔒 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/readme_documentation/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/corbado/javascript/blob/main/LICENSE) file for details.

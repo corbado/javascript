@@ -40,7 +40,11 @@ test.describe('Login with passkey proper user behavior', () => {
     });
   });
 
-  test('from Start with conditional UI', async ({ loginFlow, page }) => {
+  test('from Start with conditional UI', async ({ loginFlow, page, channel }) => {
+    if (channel) {
+      test.skip(channel.includes('msedge'), 'Edge does not support conditional UI');
+    }
+
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();

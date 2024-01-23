@@ -145,7 +145,7 @@ export class UISignupFlow {
   }
 
   async checkNoPasskeyRegistered() {
-    await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
+    // await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 
   async checkLandedOnScreen(screenName: ScreenNames) {

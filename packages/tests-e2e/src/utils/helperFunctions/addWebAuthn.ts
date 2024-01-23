@@ -1,7 +1,7 @@
 import type { CDPSession } from '@playwright/test';
 
 export async function addWebAuthn(client: CDPSession, successful: boolean) {
-  await client.send('WebAuthn.enable', { enableUI: true });
+  await client.send('WebAuthn.enable');
 
   const result = await client.send('WebAuthn.addVirtualAuthenticator', {
     options: {

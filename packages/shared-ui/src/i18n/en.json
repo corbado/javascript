@@ -157,6 +157,7 @@
     "invalidOtp": "The provided one-time passcode is not valid",
     "invalidToken": "The provided token is not valid for user verification",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
+    "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
     "unknownError": "Something went wrong. Please try again later"
   },
   "passkeysList": {

@@ -157,6 +157,7 @@
     "invalidOtp": "Der eingegebene Code ist nicht gültig",
     "invalidToken": "Der bereitgestellte Token ist nicht mehr gültig",
     "noConditionalUiSupport": "Conditional UI wird auf diesem Gerät nicht unterstützt",
+    "conditionalUiUnconfirmedCredential": "Dieser Passkey kann noch nicht verwendet werden. Bitte bestätigen Sie Ihr Konto, indem Sie sich mit Ihrer E-Mail-Adresse anmelden.",
     "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
   },
   "passkeysList": {

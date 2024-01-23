@@ -320,6 +320,13 @@ export class ConditionalUiNotSupportedError extends RecoverableError {
   }
 }
 
+export class ConfitionalUiUnconfirmedCredential extends RecoverableError {
+  constructor() {
+    super('Unconfirmed credential');
+    this.name = 'errors.conditionalUiUnconfirmedCredential';
+  }
+}
+
 export class UnknownError extends RecoverableError {
   constructor() {
     super('An unknown error occurred');

@@ -149,7 +149,7 @@
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
-    "userAlreadyExists": "Email address is already in use",
+    "userAlreadyExists": "Email address is already in use. If this account is yours, please log in instead.",
     "passkeyAlreadyExists": "Passkey for this device already exists",
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",

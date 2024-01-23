@@ -5,18 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 export const withAuthRequired = <P extends object>(Component: ComponentType<P>): FC<P> => {
   return function WithAuthenticationRequired(props: P) {
-    const { user, loading } = useCorbado();
+    const { isAuthenticated, loading } = useCorbado();
     const navigate = useNavigate();
 
     useEffect(() => {
-      console.log(loading, user);
-      if (loading || user) {
+      if (loading || isAuthenticated) {
         return;
       }
 
       navigate('/auth');
-    }, [loading, user]);
+    }, [loading, isAuthenticated]);
 
-    return user ? <Component {...props} /> : <></>;
+    return isAuthenticated ? <Component {...props} /> : <></>;
   };
 };

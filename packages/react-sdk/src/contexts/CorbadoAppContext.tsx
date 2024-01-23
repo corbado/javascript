@@ -1,4 +1,4 @@
-import type { PassKeyList, ProjectConfig, SessionUser, UserAuthMethods } from '@corbado/types';
+import type { PassKeyList, ProjectConfig, UserAuthMethods } from '@corbado/types';
 import type {
   AppendPasskeyError,
   AuthMethodsListError,
@@ -18,12 +18,11 @@ import type { CorbadoApp } from '@corbado/web-core';
 import { createContext } from 'react';
 import type { Result } from 'ts-results';
 
-export interface CorbadoContextProps {
+export interface CorbadoAppContextProps {
   corbadoApp: CorbadoApp | undefined;
-  shortSession: string | undefined;
-  user: SessionUser | undefined;
   globalError: NonRecoverableError | undefined;
   loading: boolean;
+  isAuthenticated: boolean;
 
   /** Email OTP APIs */
   initSignUpWithEmailOTP: (
@@ -64,12 +63,11 @@ const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <CorbadoProvider/>');
 };
 
-export const initialContext: CorbadoContextProps = {
+export const initialContext: CorbadoAppContextProps = {
   corbadoApp: undefined,
-  shortSession: undefined,
-  user: undefined,
   globalError: undefined,
   loading: false,
+  isAuthenticated: false,
   signUpWithPasskey: missingImplementation,
   loginWithPasskey: missingImplementation,
   loginWithConditionalUI: missingImplementation,
@@ -90,4 +88,4 @@ export const initialContext: CorbadoContextProps = {
   userExists: missingImplementation,
 };
 
-export const CorbadoContext = createContext<CorbadoContextProps>(initialContext);
+export const CorbadoAppContext = createContext<CorbadoAppContextProps>(initialContext);

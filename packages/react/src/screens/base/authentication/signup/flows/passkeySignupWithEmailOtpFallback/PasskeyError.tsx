@@ -4,11 +4,11 @@ import React from 'react';
 import { PasskeyErrorBase } from '../../../../../../components';
 
 export const PasskeyError = () => {
-  const { shortSession } = useCorbado();
+  const { isAuthenticated } = useCorbado();
   return (
     <PasskeyErrorBase
-      showSecondaryButton={!shortSession}
-      navigateBackOnCancel={!shortSession}
+      showSecondaryButton={!isAuthenticated}
+      navigateBackOnCancel={!isAuthenticated}
     />
   );
 };

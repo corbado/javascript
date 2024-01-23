@@ -25,6 +25,14 @@ export class Corbado {
     return this.#getCorbadoAppState().userChanges;
   }
 
+  get isAuthenticated() {
+    return this.#getCorbadoAppState().isAuthenticated;
+  }
+
+  get authStateChanges() {
+    return this.#getCorbadoAppState().authStateChanges;
+  }
+
   load(options: CorbadoConfig) {
     this.#corbadoAppState = new CorbadoAppState(options);
   }

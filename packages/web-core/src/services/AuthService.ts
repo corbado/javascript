@@ -12,6 +12,7 @@ import type {
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailLinkError,
   CompleteSignupWithEmailOTPError,
+  GlobalError,
   InitLoginWithEmailLinkError,
   InitLoginWithEmailOTPError,
   InitSignUpWithEmailLinkError,
@@ -22,8 +23,8 @@ import type {
 } from '../utils';
 import { AuthState, ConditionalUiNotSupportedError, getEmailLinkToken } from '../utils';
 import type { ApiService } from './ApiService';
-import type { SessionService } from './SessionService';
-import type { WebAuthnService } from './WebAuthnService';
+import { SessionService } from './SessionService';
+import { WebAuthnService } from './WebAuthnService';
 
 /**
  * AuthService is a class that handles authentication related operations.
@@ -48,10 +49,10 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, sessionService: SessionService, webAuthnService: WebAuthnService) {
+  constructor(apiService: ApiService, globalErrors: GlobalError) {
     this.#apiService = apiService;
-    this.#webAuthnService = webAuthnService;
-    this.#sessionService = sessionService;
+    this.#webAuthnService = new WebAuthnService(globalErrors);
+    this.#sessionService = new SessionService(apiService);
   }
 
   /**
@@ -360,13 +361,40 @@ export class AuthService {
 
       if (user && shortSession) {
         this.#shortSessionChanges.next(shortSession.value);
-        this.#authStateChanges.next(AuthState.LoggedIn);
-        this.#userChanges.next(user);
+        this.#updateAuthState(AuthState.LoggedIn);
+        this.#updateUser(user);
       } else {
         this.#shortSessionChanges.next(undefined);
-        this.#authStateChanges.next(AuthState.LoggedOut);
-        this.#userChanges.next(undefined);
+        this.#updateAuthState(AuthState.LoggedOut);
+        this.#updateUser(undefined);
       }
     });
+  };
+
+  #updateUser = (user: SessionUser | undefined) => {
+    const currentUser = this.#userChanges.value;
+
+    if (currentUser === user) {
+      return;
+    }
+
+    if (
+      currentUser?.email === user?.email &&
+      currentUser?.name === user?.name &&
+      currentUser?.orig === user?.orig &&
+      currentUser?.sub === user?.sub
+    ) {
+      return;
+    }
+
+    this.#userChanges.next(user);
+  };
+
+  #updateAuthState = (authState: AuthState) => {
+    if (this.#authStateChanges.value === authState) {
+      return;
+    }
+
+    this.#authStateChanges.next(authState);
   };
 }

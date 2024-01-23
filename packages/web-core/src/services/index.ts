@@ -1,12 +1,11 @@
 import type { CorbadoAppParams } from '@corbado/types';
 import { BehaviorSubject } from 'rxjs';
 
+import type { GlobalError } from '../utils';
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
 import { AuthService } from './AuthService';
 import { ProjectService } from './ProjectService';
-import { SessionService } from './SessionService';
-import { WebAuthnService } from './WebAuthnService';
 
 export type { ProjectService } from './ProjectService';
 export type { AuthService } from './AuthService';
@@ -24,9 +23,7 @@ export class CorbadoApp {
   #projectId: string;
   #useSessionManagement: boolean;
   #isDevMode: boolean;
-  #globalErrors: BehaviorSubject<NonRecoverableError | undefined> = new BehaviorSubject<
-    NonRecoverableError | undefined
-  >(undefined);
+  #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
   #initialized = false;
 
   /**
@@ -44,9 +41,7 @@ export class CorbadoApp {
     this.#isDevMode = isDevMode;
     this.#useSessionManagement = useSessionManagement;
     this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
-    const sessionService = new SessionService(this.#apiService);
-    const authenticatorService = new WebAuthnService(this.#globalErrors);
-    this.#authService = new AuthService(this.#apiService, sessionService, authenticatorService);
+    this.#authService = new AuthService(this.#apiService, this.#globalErrors);
     this.#projectService = new ProjectService(this.#apiService);
   }
 
@@ -88,10 +83,13 @@ export class CorbadoApp {
   }
 
   #validateProjectId(projectId: string): boolean {
-    if (!projectId.match(/^pro-\d+$/)) {
-      return false;
-    }
+    return /^pro-\d+$/.test(projectId);
+  }
 
-    return true;
+  /**
+   * Method to clear the global errors.
+   */
+  clearGlobalErrors() {
+    this.#globalErrors.next(undefined);
   }
 }

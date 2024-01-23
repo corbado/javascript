@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
 import type { ButtonVariants } from '../ui';
-import type { PasskeyScreensBaseProps } from './PasskeyScreensBase';
 import { PasskeyScreensBase } from './PasskeyScreensBase';
 
 export interface PasskeyErrorBaseProps {
@@ -19,7 +18,7 @@ export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButto
   const { t } = useTranslation('translation', {
     keyPrefix: `authentication.${currentFlowType}.passkeyError`,
   });
-  const { shortSession } = useCorbado();
+  const { isAuthenticated } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
 
@@ -58,19 +57,19 @@ export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButto
     }
 
     return t('button_cancel');
-  }, [t, shortSession]);
+  }, [t, isAuthenticated]);
 
   const handleClick = useCallback(
     (btn: ButtonVariants) => {
       switch (btn) {
         case 'primary':
           setPrimaryLoading(true);
-          return emitEvent(FlowHandlerEvents.PrimaryButton);
+          return void emitEvent(FlowHandlerEvents.PrimaryButton);
         case 'secondary':
           setSecondaryLoading(true);
-          return emitEvent(FlowHandlerEvents.SecondaryButton);
+          return void emitEvent(FlowHandlerEvents.SecondaryButton);
         case 'tertiary':
-          return navigateBackOnCancel ? navigateBack() : emitEvent(FlowHandlerEvents.CancelPasskey);
+          return navigateBackOnCancel ? navigateBack() : void emitEvent(FlowHandlerEvents.CancelPasskey);
       }
 
       return;
@@ -78,23 +77,21 @@ export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButto
     [navigateBack, emitEvent],
   );
 
-  const props: PasskeyScreensBaseProps = useMemo(
-    () => ({
-      header,
-      body,
-      primaryButton,
-      secondaryButton,
-      tertiaryButton,
-      primaryLoading,
-      secondaryLoading,
-      onClick: handleClick,
-    }),
+  const passkeyScreensBase = useMemo(
+    () => (
+      <PasskeyScreensBase
+        header={header}
+        body={body}
+        primaryButton={primaryButton}
+        secondaryButton={secondaryButton}
+        tertiaryButton={tertiaryButton}
+        onClick={handleClick}
+        primaryLoading={primaryLoading}
+        secondaryLoading={secondaryLoading}
+      />
+    ),
     [body, handleClick, header, primaryButton, secondaryButton, primaryLoading, secondaryButton, tertiaryButton],
   );
 
-  return (
-    <>
-      <PasskeyScreensBase {...props} />
-    </>
-  );
+  return passkeyScreensBase;
 };

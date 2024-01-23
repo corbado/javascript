@@ -29,12 +29,12 @@ export default defineConfig({
     },
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { ...devices['Pixel 7'] },
       testMatch: ['ui/**/*.*'],
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12 Pro'] },
+      use: { ...devices['iPhone 14 Pro Max'] },
       testMatch: ['ui/all-browsers/**/*.*'],
     },
     {

@@ -10,7 +10,7 @@ test.describe('Login with passkey proper user behavior', () => {
     const [, email] = await loginFlow.createAccount(true);
 
     await loginFlow.navigateToStartScreen();
-    
+
     await page.getByPlaceholder('Email address').click();
     await page.getByPlaceholder('Email address').fill(email);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(email);

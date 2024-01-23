@@ -6,7 +6,7 @@ test.describe('PasskeyBenefitsScreen unproductive user behavior', () => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
-    
+
     await signupFlow.navigateToPasskeyBenefitsScreen();
 
     await page.getByRole('button', { name: 'Maybe later' }).click();

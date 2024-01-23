@@ -28,7 +28,7 @@ test.describe('PasskeyAppendScreen unproductive user behavior', () => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
-    
+
     await signupFlow.navigateToPasskeyAppendScreen();
 
     await page.getByRole('button', { name: 'Maybe later' }).click();

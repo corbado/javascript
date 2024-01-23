@@ -32,7 +32,7 @@ test.describe('PasskeyAppendScreen unproductive user behavior', () => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
-    
+
     const [, email] = await loginFlow.createAccount(true, false);
 
     await loginFlow.navigateToPasskeyAppendScreen(email);

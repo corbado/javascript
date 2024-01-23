@@ -38,6 +38,12 @@ export class UILoginFlow {
     }
   }
 
+  async setWebAuthnAutomaticPresenceSimulation(automatic: boolean) {
+    if (this.#cdpClient) {
+      await this.#cdpClient.send('WebAuthn.setAutomaticPresenceSimulation', { authenticatorId: this.#authenticatorId, enabled: automatic });
+    }
+  }
+
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
@@ -108,8 +114,9 @@ export class UILoginFlow {
 
         await this.page.getByRole('button', { name: 'Continue' }).click();
         await this.checkLandedOnScreen(ScreenNames.End);
-
         await this.checkPasskeyRegistered();
+
+        await this.page.getByRole('button', { name: 'Logout' }).click();
       } else {
         await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
         await this.checkLandedOnScreen(ScreenNames.EnterOtp);

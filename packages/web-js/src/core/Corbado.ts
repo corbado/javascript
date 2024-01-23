@@ -33,8 +33,11 @@ export class Corbado {
     return this.#getCorbadoAppState().authStateChanges;
   }
 
-  load(options: CorbadoConfig) {
-    this.#corbadoAppState = new CorbadoAppState(options);
+  async load(options: CorbadoConfig) {
+    const corbadoAppState = new CorbadoAppState(options);
+    await corbadoAppState.init();
+
+    this.#corbadoAppState = corbadoAppState;
   }
 
   mountAuthUI(element: HTMLElement, options: CorbadoAuthConfig) {

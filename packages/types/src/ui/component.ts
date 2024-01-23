@@ -9,6 +9,8 @@ import type { CustomThemes } from './theme';
  * @property {Record<string, object> | null} [customTranslations] - An object containing custom translations. Each key should be a language code and each value should be an object containing the translations for that language.
  * @property {'on' | 'off' | 'auto'} [darkMode] - A string indicating the dark mode preference. Defaults to 'auto' if not provided.
  * @property {string | CustomThemes} [theme] - A string or an object indicating the theme preference. If it's a string, it should be a predefined theme name. If it's an object, it should be an CustomThemes object containing custom light and dark themes.
+ * @property {string} [customerSupportEmail] - The email address to be used for customer support.
+ * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
  */
 export interface CorbadoUIConfig {
   defaultLanguage?: string;
@@ -16,6 +18,8 @@ export interface CorbadoUIConfig {
   customTranslations?: Record<string, object> | null;
   darkMode?: 'on' | 'off' | 'auto';
   theme?: string | CustomThemes;
+  customerSupportEmail?: string;
+  isDevMode?: boolean;
 }
 
 /**
@@ -23,13 +27,9 @@ export interface CorbadoUIConfig {
  *
  * @interface CorbadoAuthConfig
  * @property {() => void} onLoggedIn - A callback function that is called when the user is logged in.
- * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
- * @property {string} [customerSupportEmail] - The email address to be used for customer support.
  */
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
-  isDevMode?: boolean;
-  customerSupportEmail?: string;
 }
 
 /**
@@ -37,14 +37,10 @@ export interface CorbadoAuthConfig {
  *
  * @interface CorbadoSignUpConfig
  * @property {() => void} onSignedUp - A callback function that is called when the user is signed up.
- * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
- * @property {string} [customerSupportEmail] - The email address to be used for customer support.
  * @property {() => void} [navigateToLogin] - A callback function that is called when the user clicks the login link. If not provided, the user will not be able to navigate to the login screen.
  */
 export interface CorbadoSignUpConfig {
   onSignedUp: () => void;
-  isDevMode?: boolean;
-  customerSupportEmail?: string;
   navigateToLogin?: () => void;
 }
 
@@ -53,13 +49,9 @@ export interface CorbadoSignUpConfig {
  *
  * @interface CorbadoLoginConfig
  * @property {() => void} onLoggedIn - A callback function that is called when the user is logged in.
- * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
- * @property {string} [customerSupportEmail] - The email address to be used for customer support.
  * @property {() => void} [navigateToSignUp] - A callback function that is called when the user clicks the sign up link. If not provided, the user will not be able to navigate to the sign up screen.
  */
 export interface CorbadoLoginConfig {
   onLoggedIn: () => void;
-  isDevMode?: boolean;
-  customerSupportEmail?: string;
   navigateToSignUp?: () => void;
 }

@@ -7,7 +7,7 @@ Corbado.load({
   customTranslations: {
     en: englishTranslations,
   },
-  theme:'eloquent-corbado-test'
+  theme: 'eloquent-corbado-test',
 });
 
 const authElement = document.getElementById('corbado-auth');
@@ -16,5 +16,4 @@ Corbado.mountAuthUI(authElement!, {
   onLoggedIn: () => {
     window.location.href = '/';
   },
-  isDevMode: true,
 });

@@ -12,6 +12,7 @@ import type {
   CompleteLoginWithEmailOTPError,
   CompleteSignupWithEmailLinkError,
   CompleteSignupWithEmailOTPError,
+  GetProjectConfigError,
   GlobalError,
   InitLoginWithEmailLinkError,
   InitLoginWithEmailOTPError,
@@ -76,16 +77,25 @@ export class AuthService {
     return this.#authStateChanges;
   }
 
-  init(isDebug = false, useSessionManagement: boolean) {
+  async init(isDebug = false): Promise<Result<void, GetProjectConfigError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
     }
 
-    if (useSessionManagement) {
+    const projectConfig = await this.#apiService.getProjectConfig();
+    if (projectConfig.err) {
+      return Err(projectConfig.val);
+    }
+
+    // The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be removed
+    const useCorbadoSessionManagement = true;
+    if (useCorbadoSessionManagement) {
       this.#setupSessionManagement();
     }
+
+    return Ok(void 0);
   }
 
   /**

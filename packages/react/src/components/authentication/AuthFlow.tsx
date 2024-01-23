@@ -5,16 +5,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { ScreenMap } from '../../flows';
 import { flowScreensMap } from '../../flows';
+import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import Loading from '../ui/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
-interface AuthFlowProps {
-  isDevMode: boolean;
-  customerSupportEmail: string;
-}
-
-export const AuthFlow: FC<AuthFlowProps> = ({ isDevMode, customerSupportEmail }) => {
+export const AuthFlow: FC = () => {
+  const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentFlow, currentScreen, initialized } = useFlowHandler();
   const { globalError } = useCorbado();
   const [componentMap, setComponentMap] = useState<ScreenMap>({});

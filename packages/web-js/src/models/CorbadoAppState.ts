@@ -35,7 +35,7 @@ export class CorbadoAppState {
       this.#isAuthenticated = !!value;
     });
 
-    corbadoApp.init();
+    void corbadoApp.init();
     this.#corbadoApp = corbadoApp;
     this.#corbadoAppProps = corbadoAppProps;
   }

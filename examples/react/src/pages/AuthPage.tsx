@@ -10,10 +10,7 @@ const AuthPage = () => {
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-lightBrown'>
-      <CorbadoAuth
-        onLoggedIn={onLoggedIn}
-        customerSupportEmail='dev@test.com'
-      />
+      <CorbadoAuth onLoggedIn={onLoggedIn} />
     </div>
   );
 };

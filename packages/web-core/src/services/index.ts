@@ -21,7 +21,6 @@ export class CorbadoApp {
   #authService: AuthService;
   #projectService: ProjectService;
   #projectId: string;
-  #useSessionManagement: boolean;
   #isDevMode: boolean;
   #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
   #initialized = false;
@@ -30,16 +29,9 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: CorbadoAppParams) {
-    const {
-      projectId,
-      apiTimeout = defaultTimeout,
-      useSessionManagement = true,
-      frontendApiUrl,
-      isDevMode = false,
-    } = corbadoParams;
+    const { projectId, apiTimeout = defaultTimeout, frontendApiUrl, isDevMode = false } = corbadoParams;
     this.#projectId = projectId;
     this.#isDevMode = isDevMode;
-    this.#useSessionManagement = useSessionManagement;
     this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
     this.#authService = new AuthService(this.#apiService, this.#globalErrors);
     this.#projectService = new ProjectService(this.#apiService);
@@ -69,7 +61,7 @@ export class CorbadoApp {
    * Method to initialize the application.
    * It fetches the project configuration and initializes the services.
    */
-  public init() {
+  public async init() {
     if (this.#initialized) {
       return;
     }
@@ -78,7 +70,7 @@ export class CorbadoApp {
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
     }
 
-    this.#authService.init(this.#isDevMode, this.#useSessionManagement);
+    await this.#authService.init(this.#isDevMode);
     this.#initialized = true;
   }
 

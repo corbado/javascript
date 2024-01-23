@@ -19,14 +19,12 @@ test.describe('Login with passkey proper user behavior', () => {
     await page.getByPlaceholder('Email address').fill(email);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(email);
 
-    // click away from the textbox to deselect it
-    await page.getByRole('heading', { level: 1 }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
 
     // enable automatic passkey input after conditional UI is gone
     await loginFlow.setWebAuthnAutomaticPresenceSimulation(true);
 
     // first login requires OTP
-    await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.EnterOtp);
     await loginFlow.fillOTP();
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
@@ -41,11 +39,11 @@ test.describe('Login with passkey proper user behavior', () => {
     await page.getByPlaceholder('Email address').click();
     await page.getByPlaceholder('Email address').fill(email);
     await expect(page.getByPlaceholder('Email address')).toHaveValue(email);
-    await page.getByRole('heading', { level: 1 }).click();
+
+    await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.setWebAuthnAutomaticPresenceSimulation(true);
 
     // second login does not require OTP
-    await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
     await loginFlow.checkPasskeyRegistered();
   });

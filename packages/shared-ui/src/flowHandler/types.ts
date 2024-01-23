@@ -78,7 +78,7 @@ export type UserState = {
   fullName?: string;
   emailError?: RecoverableError;
   userNameError?: RecoverableError;
-  emailOTPError?: RecoverableError;
+  verificationError?: RecoverableError;
 };
 
 /**

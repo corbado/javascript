@@ -4,10 +4,10 @@ import type { i18n } from 'i18next';
 
 import type { FlowHandlerStateUpdate, FlowOptions, UserState } from './types';
 
-const defaultErrors = {
+const defaultErrors: UserState = {
   emailError: undefined,
   userNameError: undefined,
-  emailOTPError: undefined,
+  verificationError: undefined,
 };
 
 const defaultFlowOptions: FlowOptions = {
@@ -96,8 +96,8 @@ export class FlowHandlerState {
       userState.userNameError.translatedMessage = this.#i18next.t(userState.userNameError.name);
     }
 
-    if (userState.emailOTPError) {
-      userState.emailOTPError.translatedMessage = this.#i18next.t(userState.emailOTPError.name);
+    if (userState.verificationError) {
+      userState.verificationError.translatedMessage = this.#i18next.t(userState.verificationError.name);
     }
 
     return userState;

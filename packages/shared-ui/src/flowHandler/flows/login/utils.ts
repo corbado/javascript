@@ -88,7 +88,7 @@ export const loginWithEmailOTP = async (
   otp?: string,
 ): Promise<Result<undefined, FlowUpdate>> => {
   if (!otp || otp.length !== 6) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: new InvalidOtpInputError() }));
+    return Err(FlowUpdate.state({ ...userState, verificationError: new InvalidOtpInputError() }));
   }
 
   const res = await authService.completeLoginWithEmailOTP(otp);
@@ -97,10 +97,10 @@ export const loginWithEmailOTP = async (
   }
 
   if (res.val instanceof InvalidOtpInputError) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
+    return Err(FlowUpdate.state({ ...userState, verificationError: res.val }));
   }
 
-  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
+  return Err(FlowUpdate.state({ ...userState, verificationError: new UnknownError() }));
 };
 
 export const loginWithEmailLink = async (
@@ -117,10 +117,10 @@ export const loginWithEmailLink = async (
   }
 
   if (res.val instanceof InvalidTokenInputError) {
-    return Err(FlowUpdate.state({ ...userState, emailOTPError: res.val }));
+    return Err(FlowUpdate.state({ ...userState, verificationError: res.val }));
   }
 
-  return Err(FlowUpdate.state({ ...userState, emailOTPError: new UnknownError() }));
+  return Err(FlowUpdate.state({ ...userState, verificationError: new UnknownError() }));
 };
 
 /********** Passkey Utils *********/

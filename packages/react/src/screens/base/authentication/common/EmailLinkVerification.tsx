@@ -31,10 +31,10 @@ export const EmailLinkVerification = () => {
   }, []);
 
   return (
-    <div className='cb-email-otp'>
+    <div className='cb-email-screen'>
       <Header>{header}</Header>
 
-      <Body>{currentUserState.emailOTPError && currentUserState.emailOTPError.translatedMessage}</Body>
+      <Body>{currentUserState.verificationError && currentUserState.verificationError.translatedMessage}</Body>
 
       <PrimaryButton
         onClick={handleResend}

@@ -1,16 +1,16 @@
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthFormScreen, FormInput, Header, SubHeader } from '../../../../components';
+import { AuthFormScreen, FormInput } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { emitEvent, currentUserState, changeFlow } = useFlowHandler();
+  const { emitEvent, currentUserState } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.login.start` });
-  const [formEmail, setFormEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
+  const emailRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     if (initialized.current) {
@@ -26,39 +26,33 @@ export const Start = () => {
     setLoading(false);
   }, [currentUserState]);
 
-  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormEmail(event.target.value);
-  }, []);
+  const headerText = useMemo(() => t('header'), [t]);
+  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const flowChangeButtonText = useMemo(() => t('button_signup'), [t]);
+  const emailFieldLabel = useMemo(() => t('textField_email'), [t]);
+  const submitButtonText = useMemo(() => t('button_submit'), [t]);
 
   const handleSubmit = useCallback(() => {
     setLoading(true);
-    void emitEvent(FlowHandlerEvents.PrimaryButton, { userStateUpdate: { email: formEmail } });
-  }, [formEmail, emitEvent]);
+    void emitEvent(FlowHandlerEvents.PrimaryButton, { userStateUpdate: { email: emailRef.current?.value } });
+  }, [emitEvent]);
 
   return (
     <>
-      <Header>{t('header')}</Header>
-      <SubHeader>
-        {t('subheader')}
-        <span
-          className='cb-link-secondary'
-          onClick={changeFlow}
-        >
-          {t('button_signup')}
-        </span>
-      </SubHeader>
       <AuthFormScreen
+        headerText={headerText}
+        subHeaderText={subHeaderText}
+        flowChangeButtonText={flowChangeButtonText}
         onSubmit={handleSubmit}
-        submitButtonText={t('button_submit')}
+        submitButtonText={submitButtonText}
         loading={loading}
       >
         <FormInput
           name='username'
           type='email'
           autoComplete='email webauthn'
-          label={t('textField_email')}
-          onChange={onChange}
-          value={formEmail}
+          label={emailFieldLabel}
+          ref={el => el && (emailRef.current = el)}
           error={currentUserState.emailError?.translatedMessage}
         />
       </AuthFormScreen>

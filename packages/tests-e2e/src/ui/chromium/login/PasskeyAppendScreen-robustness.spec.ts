@@ -25,7 +25,10 @@ test.describe('PasskeyAppendScreen unproductive user behavior', () => {
     await loginFlow.navigateToPasskeyAppendScreen(email);
 
     await page.getByRole('button', { name: 'Activate' }).click();
-    await loginFlow.checkLandedOnScreen(ScreenNames.End);
+    await loginFlow.inputPasskey(async () => {
+      await loginFlow.checkLandedOnScreen(ScreenNames.End);
+      await loginFlow.checkNoPasskeyRegistered();
+    });
   });
 
   test('declining goes to LoggedIn', async ({ loginFlow, page }) => {
@@ -39,5 +42,6 @@ test.describe('PasskeyAppendScreen unproductive user behavior', () => {
 
     await page.getByRole('button', { name: 'Maybe later' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
+    await loginFlow.checkNoPasskeyRegistered();
   });
 });

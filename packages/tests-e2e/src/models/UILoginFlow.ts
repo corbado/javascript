@@ -4,6 +4,7 @@ import { expect } from '@playwright/test';
 import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { loadAuth } from '../utils/helperFunctions/loadAuth';
+import { setWebAuthnAutomaticPresenceSimulation } from '../utils/helperFunctions/setWebAuthnAutomaticPresenceSimulation';
 import { setWebAuthnUserVerified } from '../utils/helperFunctions/setWebAuthnUserVerified';
 import UserManager from '../utils/UserManager';
 
@@ -38,18 +39,17 @@ export class UILoginFlow {
     }
   }
 
-  async setWebAuthnAutomaticPresenceSimulation(automatic: boolean) {
-    if (this.#cdpClient) {
-      await this.#cdpClient.send('WebAuthn.setAutomaticPresenceSimulation', {
-        authenticatorId: this.#authenticatorId,
-        enabled: automatic,
-      });
-    }
-  }
-
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
+    }
+  }
+
+  async inputPasskey(check: () => Promise<void>) {
+    if (this.#cdpClient) {
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      await check();
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
   }
 
@@ -113,7 +113,9 @@ export class UILoginFlow {
 
       if (registerPasskey) {
         await this.page.getByRole('button', { name: 'Create your account' }).click();
-        await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);
+        await this.inputPasskey(async () => {
+          await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);
+        });
 
         await this.page.getByRole('button', { name: 'Continue' }).click();
         await this.checkLandedOnScreen(ScreenNames.End);

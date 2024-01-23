@@ -4,6 +4,7 @@ import { expect } from '@playwright/test';
 import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { loadAuth } from '../utils/helperFunctions/loadAuth';
+import { setWebAuthnAutomaticPresenceSimulation } from '../utils/helperFunctions/setWebAuthnAutomaticPresenceSimulation';
 import { setWebAuthnUserVerified } from '../utils/helperFunctions/setWebAuthnUserVerified';
 import UserManager from '../utils/UserManager';
 
@@ -41,6 +42,14 @@ export class UISignupFlow {
   async removeWebAuthn() {
     if (this.#cdpClient) {
       await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
+    }
+  }
+
+  async inputPasskey(check: () => Promise<void>) {
+    if (this.#cdpClient) {
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      await check();
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
   }
 
@@ -147,11 +156,17 @@ export class UISignupFlow {
       case ScreenNames.EnterOtp:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Enter one-time passcode to');
         break;
+      case ScreenNames.PasskeyCreate:
+        await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
+        break;
       case ScreenNames.PasskeyBenefits:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');
         break;
       case ScreenNames.PasskeyAppend:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Log in even faster with');
+        break;
+      case ScreenNames.PasskeySuccess:
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.End:
         await expect(this.page).toHaveURL('/');

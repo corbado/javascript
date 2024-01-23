@@ -84,7 +84,7 @@
     "login": {
       "start": {
         "header": "Welcome back!",
-        "subheader": "Don't have and account yet? ",
+        "subheader": "Don't have an account yet? ",
         "button_signup": "Create account",
         "button_submit": "Continue",
         "textField_email": "Email address"

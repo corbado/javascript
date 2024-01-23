@@ -8,13 +8,7 @@ const AuthPage = () => {
     navigate('/');
   };
 
-  return (
-    <CorbadoAuth
-      onLoggedIn={onLoggedIn}
-      isDevMode={true}
-      customerSupportEmail='dev@test.com'
-    />
-  );
+  return <CorbadoAuth onLoggedIn={onLoggedIn} />;
 };
 
 export default AuthPage;

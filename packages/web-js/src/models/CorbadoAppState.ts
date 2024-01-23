@@ -30,7 +30,7 @@ export class CorbadoAppState {
       }
     });
 
-    corbadoApp.init();
+    void corbadoApp.init();
     this.#corbadoApp = corbadoApp;
     this.#corbadoAppProps = corbadoAppProps;
   }

@@ -136,6 +136,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
+        // for now, as passkey operations are not repeatable in signUp we directly go to the end and not offer a retry
+        // return state.flowOptions.retryPasskeyOnError
+        //   ? FlowUpdate.navigate(ScreenNames.PasskeyError)
+        //   : FlowUpdate.navigate(ScreenNames.End);
         return FlowUpdate.navigate(ScreenNames.End);
       }
       case FlowHandlerEvents.SecondaryButton:

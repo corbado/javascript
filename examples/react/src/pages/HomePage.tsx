@@ -1,5 +1,5 @@
 import { Header } from '../components/Header';
-import { UserDetails } from '../components/userDetails';
+import { UserDetails } from '../components/UserDetails';
 
 const HomePage = () => {
   return (

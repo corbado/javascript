@@ -7,7 +7,7 @@ Corbado.load({
   customTranslations: {
     en: englishTranslations,
   },
-  theme:'eloquent-corbado-test'
+  theme: 'eloquent-corbado-test',
 });
 
 const createButton = (text: string, clickHandler: ((this: GlobalEventHandlers, ev: MouseEvent) => any) | null) => {
@@ -15,20 +15,20 @@ const createButton = (text: string, clickHandler: ((this: GlobalEventHandlers, e
   buttonElement.innerHTML = text;
   buttonElement.onclick = clickHandler;
   return buttonElement;
-  }
+};
 
 const addLoginButton = () => {
   return createButton('Login', () => {
     window.location.href = '/auth.html';
-  })
-  }
+  });
+};
 
 const addLogoutButton = () => {
   return createButton('Logout', () => {
     Corbado.logout();
     window.location.href = '/auth.html';
-  })
-  }
+  });
+};
 
 if (!Corbado.user) {
   const corbadoAppElement = document.getElementById('corbado-app');

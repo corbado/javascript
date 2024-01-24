@@ -6,8 +6,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/pages/index.html'),
-        auth: resolve(__dirname, 'src/pages/auth.html')
-      }
-    }
-  }
-})
+        auth: resolve(__dirname, 'src/pages/auth.html'),
+      },
+    },
+  },
+});

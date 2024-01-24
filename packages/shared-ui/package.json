@@ -32,7 +32,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
-    "@corbado/types": "^0.1.1-alpha.8",
+    "@corbado/types": "^1.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/ua-parser-js": "^0.7.39",
     "copy-webpack-plugin": "^11.0.0",

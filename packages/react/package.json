@@ -38,7 +38,7 @@
     "react-i18next": "13.2.2"
   },
   "devDependencies": {
-    "@corbado/types": "^0.1.1-alpha.8",
+    "@corbado/types": "^1.0.0",
     "@corbado/web-core": "^1.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.0",

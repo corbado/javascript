@@ -24,7 +24,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     }
 
     setLoading(true);
-    corbadoApp.init().then(() => {
+    void corbadoApp.init().then(() => {
       initialized.current = true;
       setLoading(false);
     });

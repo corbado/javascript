@@ -147,6 +147,7 @@ export class FlowHandler {
 
     if (flowUpdate?.nextScreen) {
       if (flowUpdate.nextScreen === ScreenNames.End) {
+        this.#state.corbadoApp.clearGlobalErrors();
         return void this.#config.onLoggedIn();
       }
 

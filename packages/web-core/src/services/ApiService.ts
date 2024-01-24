@@ -29,8 +29,8 @@ import type {
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
 
-// TODO: does this work also without npm start? (e.g. vite js)
-const packageVersion = '0';
+// TODO: set this version
+const packageVersion = '0.0.0';
 
 /**
  * ApiService class encapsulates API handling for the Corbado Application.
@@ -98,9 +98,14 @@ export class ApiService {
    * @returns The configured AxiosInstance object.
    */
   #createAxiosInstance(token: string): AxiosInstance {
+    const corbadoVersion = {
+      name: 'web-core',
+      sdkVersion: packageVersion,
+    };
+
     const headers = {
       'Content-Type': 'application/json',
-      'X-Corbado-WC-Version': token ? `Bearer ${token}` : packageVersion, // Example default version
+      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
     };
 
     const out = axios.create({

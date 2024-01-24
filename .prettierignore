@@ -13,8 +13,15 @@ packages/*/node_modules/
 packages/*/dist/
 packages/web-core/src/api
 packages/web-core/openapi/
-playground/*/node_modules/
-playground/*/yalc.lock
-playground/*/build
 
-examples/*
+playground/*/node_modules/
+playground/*/package-lock.json
+playground/*/yalc.lock
+playground/*/build/
+examples/*/dist/
+
+examples/*/node_modules/
+examples/*/package-lock.json
+examples/*/yalc.lock
+examples/*/build/
+examples/*/dist/

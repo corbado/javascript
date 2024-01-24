@@ -1,29 +1,44 @@
 <!doctype html>
 <html>
+  <head>
+    <title>Corbado's WebJS Test</title>
+    <link
+      rel="stylesheet"
+      href="../style.css"
+    />
+  </head>
 
-<head>
-  <title>Corbado's WebJS Test</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div className='font-eloquent text-black bg-white min-h-screen flex flex-col'>
-    <header className='bg-lightBrown text-white p-4 flex justify-between items-center'>
-      <h1 className='text-2xl md:text-4xl'>Corbado's WebJS Test</h1>
-      <button id="auth-button"
-        class='bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors'></button>
-    </header>
-    <main id="corbado-app" className='flex-grow p-4'>
-      <div className='font-eloquent text-black bg-white'>
-        <h1 className='text-darkBrown' id="welcome-message">Hi {user?.orig},</h1>
-        <p className='text-lightBrown'>Welcome to Corbado's WebJS test application</p>
-      </div>
-      <div>
-        <h3>Passkey Lists</h3>
-        <div id="passkey-list"></div>
-      </div>
-    </main>
-    <script type="module" src="../scripts/index.ts"></script>
-</body>
-
+  <body>
+    <div className="font-eloquent text-black bg-white min-h-screen flex flex-col">
+      <header className="bg-lightBrown text-white p-4 flex justify-between items-center">
+        <h1 className="text-2xl md:text-4xl">Corbado's WebJS Test</h1>
+        <button
+          id="auth-button"
+          class="bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors"
+        ></button>
+      </header>
+      <main
+        id="corbado-app"
+        className="flex-grow p-4"
+      >
+        <div className="font-eloquent text-black bg-white">
+          <h1
+            className="text-darkBrown"
+            id="welcome-message"
+          >
+            Hi {user?.orig},
+          </h1>
+          <p className="text-lightBrown">Welcome to Corbado's WebJS test application</p>
+        </div>
+        <div>
+          <h3>Passkey Lists</h3>
+          <div id="passkey-list"></div>
+        </div>
+      </main>
+    </div>
+    <script
+      type="module"
+      src="../scripts/index.ts"
+    ></script>
+  </body>
 </html>

@@ -1,49 +1,66 @@
 <!doctype html>
 <html>
-
-<head>
-  <title>Corbado's WebJS (script) App</title>
-  <link rel="stylesheet" href="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            eloquent: 'var(--font-eloquent)',
-          },
-          colors: {
-            lightBrown: 'var(--color-light-brown)',
-            darkBrown: 'var(--color-dark-brown)',
-            white: 'var(--color-white)',
-            black: 'var(--color-black)',
+  <head>
+    <title>Corbado's WebJS (script) App</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              eloquent: 'var(--font-eloquent)',
+            },
+            colors: {
+              lightBrown: 'var(--color-light-brown)',
+              darkBrown: 'var(--color-dark-brown)',
+              white: 'var(--color-white)',
+              black: 'var(--color-black)',
+            },
           },
         },
-      }
-    }
-  </script>
-  <script src="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.js"></script>
+      };
+    </script>
+    <script src="https://unpkg.com/@corbado/web-js@0.1.1-alpha.2/dist/bundle/index.js"></script>
 
-  <link type="text/tailwindcss" rel="stylesheet" href="./style.css" />
-</head>
+    <link
+      type="text/tailwindcss"
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
 
-<body>
-  <div className='font-eloquent text-black bg-white min-h-screen flex flex-col'>
-    <header className='bg-lightBrown text-white p-4 flex justify-between items-center'>
-      <h1 className='text-2xl md:text-4xl'>Corbado's WebJS (script) Test</h1>
-      <button id="auth-button"
-        class='bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors'></button>
-    </header>
-    <main id="corbado-app" className='flex-grow p-4'>
-      <div className='font-eloquent text-black bg-white'>
-        <h1 className='text-darkBrown' id="welcome-message">Hi {user?.orig},</h1>
-        <p className='text-lightBrown'>Welcome to Corbado's WebJS (script) test application</p>
-      </div>
-      <div>
-        <h3>Passkey Lists</h3>
-        <div id="passkey-list"></div>
-      </div>
-    </main>
+  <body>
+    <div className="font-eloquent text-black bg-white min-h-screen flex flex-col">
+      <header className="bg-lightBrown text-white p-4 flex justify-between items-center">
+        <h1 className="text-2xl md:text-4xl">Corbado's WebJS (script) Test</h1>
+        <button
+          id="auth-button"
+          class="bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors"
+        ></button>
+      </header>
+      <main
+        id="corbado-app"
+        className="flex-grow p-4"
+      >
+        <div className="font-eloquent text-black bg-white">
+          <h1
+            className="text-darkBrown"
+            id="welcome-message"
+          >
+            Hi {user?.orig},
+          </h1>
+          <p className="text-lightBrown">Welcome to Corbado's WebJS (script) test application</p>
+        </div>
+        <div>
+          <h3>Passkey Lists</h3>
+          <div id="passkey-list"></div>
+        </div>
+      </main>
+    </div>
 
     <script type="module">
       const projectID = window.location.href.includes('localhost')
@@ -53,7 +70,7 @@
       Corbado.load({
         projectId: projectID,
         darkMode: 'off',
-        theme: 'eloquent-corbado-test'
+        theme: 'eloquent-corbado-test',
       });
 
       const createButton = (text, clickHandler) => {
@@ -61,20 +78,20 @@
         buttonElement.innerHTML = text;
         buttonElement.onclick = clickHandler;
         return buttonElement;
-      }
+      };
 
       const addLoginButton = () => {
         return createButton('Login', () => {
           window.location.href = '/auth.html';
-        })
-      }
+        });
+      };
 
       const addLogoutButton = () => {
         return createButton('Logout', () => {
           Corbado.logout();
           window.location.href = '/auth.html';
-        })
-      }
+        });
+      };
 
       if (!Corbado.user) {
         const corbadoAppElement = document.getElementById('corbado-app');
@@ -90,6 +107,5 @@
         Corbado.mountPasskeyListUI(passkeyList);
       }
     </script>
-</body>
-
+  </body>
 </html>

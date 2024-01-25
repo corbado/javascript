@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        eloquent: 'var(--font-eloquent)',
+        roboto: 'var(--font-roboto)',
       },
       colors: {
-        lightBrown: 'var(--color-light-brown)',
-        darkBrown: 'var(--color-dark-brown)',
+        lightBrown: 'var(--color-light-indigo)',
+        darkBrown: 'var(--color-dark-indigo)',
         white: 'var(--color-white)',
         black: 'var(--color-black)',
       },

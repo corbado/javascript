@@ -1,0 +1,54 @@
+.corbado-custom-theme {
+  .cb-container {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-color: var(--color-dark-indigo);
+  }
+
+  .cb-header,
+  .cb-subheader,
+  .cb-body {
+    font-family: var(--font-roboto);
+    color: var(--color-black);
+  }
+
+  .cb-link-primary {
+    color: var(--color-light-indigo);
+  }
+
+  .cb-link-secondary {
+    color: var(--color-dark-indigo);
+  }
+
+  .cb-error {
+    color: var(--color-light-indigo);
+  }
+
+  .cb-form-input label {
+    color: var(--color-light-indigo);
+  }
+
+  .cb-button-primary {
+    background-color: var(--color-dark-indigo);
+    color: var(--color-white);
+  }
+
+  .cb-button-primary:hover {
+    background-color: var(--color-black);
+  }
+
+  .cb-button-secondary {
+    border-color: var(--color-light-indigo);
+    color: var(--color-light-indigo);
+    background-color: var(--color-white);
+  }
+
+  .cb-button-secondary:hover {
+    background-color: var(--color-dark-indigo);
+  }
+
+  .cb-finger-print-icon {
+    background-color: var(--color-light-indigo);
+    border-radius: 3.5rem;
+  }
+}

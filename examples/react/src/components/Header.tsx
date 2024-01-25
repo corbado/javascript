@@ -35,8 +35,8 @@ export const Header = () => {
           className='px-3'
           target='_blank'
           href='https://github.com/corbado/javascript/tree/main/packages/react'
-          onMouseEnter={() => onMouseIn(setBounceGithub)}
-          onMouseOut={() => onMouseOut(setBounceGithub)}
+          onPointerEnter={() => onMouseIn(setBounceGithub)}
+          onPointerOut={() => onMouseOut(setBounceGithub)}
         >
           <FontAwesomeIcon
             icon={faGithub}
@@ -48,8 +48,8 @@ export const Header = () => {
           className='px-3'
           target='_blank'
           href='https://docs.corbado.com/frontend-integration/react?pk_vid=39aa19b26331c63f17061661133d1eca'
-          onMouseEnter={() => onMouseIn(setBounceDocumentation)}
-          onMouseOut={() => onMouseOut(setBounceDocumentation)}
+          onPointerEnter={() => onMouseIn(setBounceDocumentation)}
+          onPointerOut={() => onMouseOut(setBounceDocumentation)}
         >
           {' '}
           <FontAwesomeIcon

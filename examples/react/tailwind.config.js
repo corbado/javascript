@@ -7,8 +7,8 @@ export default {
         roboto: 'var(--font-roboto)',
       },
       colors: {
-        lightIndigo: 'var(--color-light-indigo)',
-        darkIndigo: 'var(--color-dark-indigo)',
+        lightBrown: 'var(--color-light-brown)',
+        darkBrown: 'var(--color-dark-brown)',
         white: 'var(--color-white)',
         black: 'var(--color-black)',
       },

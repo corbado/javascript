@@ -6,7 +6,6 @@ import { CustomizationsContext } from './contexts/CustomizationsContext';
 function App() {
   const { customTheme, darkMode, customTranslation } = useContext(CustomizationsContext);
 
-  console.log(customTheme, darkMode, customTranslation);
   return (
     <CorbadoProvider
       projectId={import.meta.env.VITE_CORBADO_PROJECT_ID}

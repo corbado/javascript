@@ -37,17 +37,20 @@ export class SessionService {
    *
    * @param onShortSessionChange
    */
-  init(onShortSessionChange: (value: ShortSession | undefined) => void) {
+  async init(onShortSessionChange: (value: ShortSession | undefined) => void) {
     this.#onShortSessionChange = onShortSessionChange;
 
-    const shortSession = SessionService.#getShortTermSessionToken();
-    if (shortSession) {
-      this.#shortSession = shortSession;
-      this.#onShortSessionChange(shortSession);
-      this.#apiService.setInstanceWithToken(shortSession.value);
-    }
-
     this.#longSession = SessionService.#getLongSessionToken();
+    this.#shortSession = SessionService.#getShortTermSessionToken();
+
+    // if the session is valid, we emit it
+    if (this.#shortSession && this.#shortSession.isValidForXMoreSeconds(0)) {
+      log.debug('emit shortsession', this.#shortSession);
+      this.#onShortSessionChange(this.#shortSession);
+      this.#apiService.setInstanceWithToken(this.#shortSession.value);
+    } else {
+      await this.#handleRefreshRequest();
+    }
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers

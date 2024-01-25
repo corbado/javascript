@@ -92,7 +92,7 @@ export class AuthService {
     // The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be removed
     const useCorbadoSessionManagement = true;
     if (useCorbadoSessionManagement) {
-      this.#setupSessionManagement();
+      await this.#setupSessionManagement();
     }
 
     return Ok(void 0);
@@ -365,8 +365,8 @@ export class AuthService {
     return Ok(void 0);
   }
 
-  #setupSessionManagement = () => {
-    this.#sessionService.init((shortSession: ShortSession | undefined) => {
+  #setupSessionManagement = async () => {
+    await this.#sessionService.init((shortSession: ShortSession | undefined) => {
       const user = this.#sessionService.getUser();
 
       if (user && shortSession) {

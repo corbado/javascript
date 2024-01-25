@@ -15,7 +15,7 @@
     "prettier:check": "prettier --check .",
     "format": "prettier --write .",
     "release:build": "lerna run build --scope \"@corbado/*\" --skip-nx-cache",
-    "release:version": "lerna version prerelease --no-push --yes --no-private",
+    "release:version": "lerna version --no-push --yes --no-private",
     "release:publish": "lerna publish from-package --no-private",
     "test:e2e:local": "ts-node-esm ./scripts/e2eTests.ts",
     "test:e2e:sdk": "lerna run e2e:sdk",

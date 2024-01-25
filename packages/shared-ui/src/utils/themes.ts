@@ -11,8 +11,17 @@ const loadTheme = (theme: string | CustomThemes, isDarkMode: boolean) => {
   classList.add(newClass);
 };
 
+const removeTheme = (theme: string | CustomThemes) => {
+  const classList = document.body.classList;
+  const newClass = typeof theme === 'string' ? theme : theme.dark;
+
+  if (classList.contains(newClass)) {
+    classList.remove(newClass);
+  }
+};
+
 export const hasDarkMode = () => {
-  return document.body.classList.contains('dark');
+  return document.body.classList.contains('cb-dark');
 };
 
 const addDarkMode = () => {
@@ -20,11 +29,11 @@ const addDarkMode = () => {
     return;
   }
 
-  document.body.classList.add('dark');
+  document.body.classList.add('cb-dark');
 };
 
 const removeDarkMode = () => {
-  document.body.classList.remove('dark');
+  document.body.classList.remove('cb-dark');
 };
 
 const autoDetectSystemTheme = (customTheme?: string | CustomThemes) => {
@@ -84,6 +93,10 @@ export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: str
   }
 
   return () => {
+    if (customTheme) {
+      removeTheme(customTheme);
+    }
+
     if (darkMode === 'auto' && removeDarkModeListener) {
       removeDarkModeListener();
     }

@@ -17,13 +17,6 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
 
   useEffect(() => {
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
-    const themesCleanup = handleTheming(darkMode ?? 'auto', theme);
-
-    return themesCleanup;
-  }, []);
-
-  useEffect(() => {
-    handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
   }, [autoDetectLanguage, defaultLanguage, customTranslations]);
 
   useEffect(() => {

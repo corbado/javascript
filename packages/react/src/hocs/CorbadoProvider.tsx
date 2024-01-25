@@ -22,6 +22,16 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
     return themesCleanup;
   }, []);
 
+  useEffect(() => {
+    handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
+  }, [autoDetectLanguage, defaultLanguage, customTranslations]);
+
+  useEffect(() => {
+    const themesCleanup = handleTheming(darkMode ?? 'auto', theme);
+
+    return themesCleanup;
+  }, [darkMode, theme]);
+
   return (
     <CorbadoSDKProvider {...providerConfig}>
       <ErrorHandlingProvider

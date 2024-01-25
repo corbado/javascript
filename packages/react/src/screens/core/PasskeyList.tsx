@@ -44,7 +44,7 @@ const PasskeyList: FC = () => {
     <PasskeyListErrorBoundary globalError={globalError}>
       {passkeys?.passkeys.map(passkey => (
         <PasskeyListItem
-          key={passkey.aaguid}
+          key={passkey.id}
           passkey={passkey}
           fetchPasskeys={fetchPasskeys}
         ></PasskeyListItem>

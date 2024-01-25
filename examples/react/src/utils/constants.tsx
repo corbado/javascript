@@ -1,4 +1,4 @@
-export const authGuideHeader = `Easiest Passkey Based Authentication with Corbado`;
+export const authGuideHeader = `Setup Passkey-based Authentication in 3 Steps`;
 export const passkeyGuideHeader = 'How about we check your list of Passkeys?';
 export const authComponentBody = (
   <>

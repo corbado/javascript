@@ -22,3 +22,11 @@
 .subheading {
   @apply text-2xl font-semibold text-gray-700;
 }
+
+.dot {
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .dot {
+  transform: translateX(100%);
+}

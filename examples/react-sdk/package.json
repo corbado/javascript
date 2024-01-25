@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@corbado/react-sdk": "^0.1.7-alpha.8",
+    "@corbado/react-sdk": "^1.0.2",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,42 +1,64 @@
-import { useCorbado } from '@corbado/react';
-import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCorbadoSession } from '@corbado/react';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import 'prismjs/themes/prism-tomorrow.min.css';
+import { useState } from 'react';
 
 export const Header = () => {
-  const { isAuthenticated, logout, loading } = useCorbado();
-  const navigate = useNavigate();
+  const { user, isAuthenticated } = useCorbadoSession();
+  const [bounceGihub, setBounceGithub] = useState(false);
+  const [bounceDocumentation, setBounceDocumentation] = useState(false);
 
-  const handleLogout = useCallback(async () => {
-    logout();
-    navigate('/auth');
-  }, [logout, navigate]);
+  const onMouseIn = (setBounce: (value: boolean) => void) => {
+    setBounce(true);
+  };
 
-  const logoutButton = useMemo(() => {
-    return (
-      <button
-        className='bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors'
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
-    );
-  }, [handleLogout]);
-
-  const loginButton = useMemo(() => {
-    return (
-      <button
-        className='bg-darkBrown text-white px-4 py-2 rounded hover:bg-black transition-colors'
-        onClick={() => navigate('/auth')}
-      >
-        Login
-      </button>
-    );
-  }, [navigate]);
+  const onMouseOut = (setBounce: (value: boolean) => void) => {
+    setBounce(false);
+  };
 
   return (
-    <header className='bg-lightBrown text-white p-4 flex justify-between items-center'>
-      <h1 className='text-2xl md:text-4xl'>Corbado React Test</h1>
-      {loading ? null : isAuthenticated ? logoutButton : loginButton}
+    <header className='bg-amber-700 text-white p-2 flex justify-between items-center'>
+      <h1 className='text-2xl md:text-4xl'>
+        {' '}
+        {isAuthenticated ? (
+          `Hi ${user?.name ?? user?.orig} 👋`
+        ) : (
+          <>
+            Welcome to <code className='language-ts'>@corbado/react</code> 👋
+          </>
+        )}
+      </h1>
+      <p className='flex justify-between gap-4 font-bold mr-5 text-2xl'>
+        <a
+          className='px-3'
+          target='_blank'
+          href='https://github.com/corbado/javascript/tree/main/packages/react'
+          onPointerEnter={() => onMouseIn(setBounceGithub)}
+          onPointerOut={() => onMouseOut(setBounceGithub)}
+        >
+          <FontAwesomeIcon
+            icon={faGithub}
+            bounce={bounceGihub}
+          />{' '}
+          Github
+        </a>
+        <a
+          className='px-3'
+          target='_blank'
+          href='https://docs.corbado.com/frontend-integration/react?pk_vid=39aa19b26331c63f17061661133d1eca'
+          onPointerEnter={() => onMouseIn(setBounceDocumentation)}
+          onPointerOut={() => onMouseOut(setBounceDocumentation)}
+        >
+          {' '}
+          <FontAwesomeIcon
+            icon={faBook}
+            bounce={bounceDocumentation}
+          />{' '}
+          Documentation
+        </a>
+      </p>
     </header>
   );
 };

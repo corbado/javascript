@@ -1,0 +1,64 @@
+.corbado-custom-theme {
+  .cb-container {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-color: var(--color-dark-brown);
+  }
+
+  .cb-header,
+  .cb-subheader,
+  .cb-body {
+    font-family: var(--font-roboto);
+    color: var(--color-black);
+  }
+
+  .cb-link-primary {
+    color: var(--color-light-brown);
+  }
+
+  .cb-link-secondary {
+    color: var(--color-dark-brown);
+  }
+
+  .cb-error {
+    color: var(--color-light-brown);
+  }
+
+  .cb-form-input label {
+    color: var(--color-light-brown);
+  }
+
+  .cb-button-primary {
+    background-color: var(--color-light-brown);
+    color: var(--color-white);
+  }
+
+  .cb-button-primary:hover {
+    background-color: var(--color-dark-brown);
+    color: var(--color-white);
+  }
+
+  .cb-button-secondary {
+    border-color: var(--color-light-brown);
+    color: var(--color-light-brown);
+    background-color: var(--color-white);
+  }
+
+  .cb-button-secondary:hover {
+    background-color: var(--color-dark-brown);
+  }
+
+  .cb-finger-print-icon {
+    background-color: var(--color-light-brown);
+    border-radius: 3.5rem;
+  }
+
+  .cb-passkey-list-card {
+    background-color: var(--color-dark-brown);
+    color: var(--color-white);
+  }
+
+  .cb-dialog {
+    color: var(--color-black);
+  }
+}

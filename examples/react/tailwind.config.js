@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        eloquent: 'var(--font-eloquent)',
+        roboto: 'var(--font-roboto)',
       },
       colors: {
         lightBrown: 'var(--color-light-brown)',

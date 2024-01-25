@@ -1,11 +1,11 @@
-import { useCorbadoSession } from '@corbado/react';
-
 export const WelcomeMessage = () => {
-  const { user, isAuthenticated } = useCorbadoSession();
-  return isAuthenticated ? (
-    <div className='font-eloquent text-black bg-white'>
-      <h1 className='text-darkBrown'>Hi {user?.orig},</h1>
-      <p className='text-lightBrown'>Welcome to Corbado React's test application</p>
-    </div>
-  ) : null;
+  return (
+    <>
+      <p className='paragraph'>
+        The <code className='language-bash'>@corbado/react</code> package provides a comprehensive solution for
+        integrating passkey-based authentication in React applications. It simplifies the process of managing
+        authentication states and user sessions with easy-to-use hooks and UI components.
+      </p>
+    </>
+  );
 };

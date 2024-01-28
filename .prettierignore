@@ -18,7 +18,6 @@ playground/*/node_modules/
 playground/*/package-lock.json
 playground/*/yalc.lock
 playground/*/build/
-examples/*/dist/
 
 examples/*/node_modules/
 examples/*/package-lock.json

@@ -1,7 +1,7 @@
 import Corbado from '@corbado/web-js';
 import englishTranslations from '../translations/en';
 
-Corbado.load({
+await Corbado.load({
   projectId: import.meta.env.VITE_CORBADO_PROJECT_ID,
   darkMode: 'off',
   customTranslations: {

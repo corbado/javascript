@@ -14,4 +14,4 @@ export enum OtpType {
   Incorrect = '150918',
 }
 
-export const waitAfterLoad = 600; // remove after repetitive refreshing is fixed
+export const waitAfterLoad = 0; // remove after repetitive refreshing is fixed

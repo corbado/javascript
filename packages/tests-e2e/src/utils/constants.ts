@@ -14,4 +14,4 @@ export enum OtpType {
   Incorrect = '150918',
 }
 
-export const waitAfterLoad = 600; // remove after repetitive refreshing is fixed
+export const waitAfterLoad = 100; // timeout after each page load reduces flakiness (increase if flakiness becomes a problem in the pipeline)

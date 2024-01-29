@@ -4,7 +4,7 @@
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
   border-radius: 0.5rem;
-  width: 30rem;
+  width: min(30rem, 100%);
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
 }
@@ -475,6 +475,7 @@
   flex-direction: column;
   justify-content: left;
   font-size: 1rem;
+  text-align: left;
   line-height: normal;
   font-weight: 500;
   gap: 0.5rem;

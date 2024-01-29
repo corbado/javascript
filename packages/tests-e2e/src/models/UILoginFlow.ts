@@ -8,7 +8,7 @@ import { setWebAuthnAutomaticPresenceSimulation } from '../utils/helperFunctions
 import { setWebAuthnUserVerified } from '../utils/helperFunctions/setWebAuthnUserVerified';
 import UserManager from '../utils/UserManager';
 
-export class UISignupFlow {
+export class UILoginFlow {
   readonly page: Page;
   #cdpClient: CDPSession | null = null;
   #authenticatorId = '';
@@ -57,63 +57,44 @@ export class UISignupFlow {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToPasskeySignupScreen() {
-    const name = UserManager.getUserForSignup();
-    const email = `${name}@corbado.com`;
+  async navigateToStartScreen() {
+    await this.page.getByText('Log in').click();
+    await this.checkLandedOnScreen(ScreenNames.Start);
+  }
 
-    await this.page.getByPlaceholder('Name').click();
-    await this.page.getByPlaceholder('Name').fill(name);
-    await expect(this.page.getByPlaceholder('Name')).toHaveValue(name);
+  async navigateToPasskeyAppendScreen(email: string) {
+    await this.navigateToStartScreen();
 
     await this.page.getByPlaceholder('Email address').click();
     await this.page.getByPlaceholder('Email address').fill(email);
     await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
 
     await this.page.getByRole('button', { name: 'Continue' }).click();
-    await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
-  }
-
-  async navigateToPasskeyBenefitsScreen() {
-    await this.navigateToPasskeySignupScreen();
-
-    await this.page.getByText('Passkeys').click();
-    await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
-  }
-
-  async navigateToEnterOtpScreen(passkeySupported: boolean) {
-    if (passkeySupported) {
-      await this.navigateToPasskeySignupScreen();
-
-      await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
-      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-    } else {
-      const name = UserManager.getUserForSignup();
-      const email = `${name}@corbado.com`;
-
-      await this.page.getByPlaceholder('Name').click();
-      await this.page.getByPlaceholder('Name').fill(name);
-      await expect(this.page.getByPlaceholder('Name')).toHaveValue(name);
-
-      await this.page.getByPlaceholder('Email address').click();
-      await this.page.getByPlaceholder('Email address').fill(email);
-      await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
-
-      await this.page.getByRole('button', { name: 'Continue' }).click();
-      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-    }
-  }
-
-  async navigateToPasskeyAppendScreen() {
-    await this.navigateToPasskeySignupScreen();
-
-    await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
     await this.checkLandedOnScreen(ScreenNames.EnterOtp);
 
     await this.fillOTP();
     await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
   }
 
-  async createAccount(): Promise<[name: string, email: string]> {
+  async navigateToPasskeyBenefitsScreen(email: string) {
+    await this.navigateToPasskeyAppendScreen(email);
+
+    await this.page.getByText('Passkeys').click();
+    await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
+  }
+
+  async navigateToEnterOtpScreen(email: string) {
+    await this.navigateToStartScreen();
+
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(email);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
+
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+  }
+
+  async createAccount(passkeySupported: boolean, registerPasskey = true): Promise<[name: string, email: string]> {
     const name = UserManager.getUserForSignup();
     const email = `${name}@corbado.com`;
 
@@ -127,15 +108,29 @@ export class UISignupFlow {
 
     await this.page.getByRole('button', { name: 'Continue' }).click();
 
-    return [name, email];
-  }
+    if (passkeySupported) {
+      await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
 
-  async createDummyAccount(): Promise<[name: string, email: string]> {
-    const [name, email] = await this.createAccount();
-    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+      if (registerPasskey) {
+        await this.page.getByRole('button', { name: 'Create your account' }).click();
+        await this.inputPasskey(async () => {
+          await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);
+        });
 
-    await this.page.getByRole('button', { name: 'Cancel' }).click();
-    await this.checkLandedOnScreen(ScreenNames.Start);
+        await this.page.getByRole('button', { name: 'Continue' }).click();
+        await this.checkLandedOnScreen(ScreenNames.End);
+        await this.checkPasskeyRegistered();
+
+        await this.page.getByRole('button', { name: 'Logout' }).click();
+      } else {
+        await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
+        await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+      }
+    } else {
+      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+    }
+
+    await loadAuth(this.page);
 
     return [name, email];
   }
@@ -151,13 +146,10 @@ export class UISignupFlow {
   async checkLandedOnScreen(screenName: ScreenNames) {
     switch (screenName) {
       case ScreenNames.Start:
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
+        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Welcome back!');
         break;
       case ScreenNames.EnterOtp:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Enter one-time passcode to');
-        break;
-      case ScreenNames.PasskeyCreate:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
         break;
       case ScreenNames.PasskeyBenefits:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');

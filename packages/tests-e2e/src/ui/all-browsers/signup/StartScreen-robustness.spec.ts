@@ -1,7 +1,7 @@
-import { test, expect } from '../../../fixtures/UISignupTest';
+import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
-test.describe('InitiateSignup unproductive user behavior', () => {
+test.describe('StartScreen unproductive user behavior', () => {
   test('with empty name', async ({ signupFlow, page }) => {
     const validEmail = 'bob@corbado.com';
 
@@ -18,7 +18,9 @@ test.describe('InitiateSignup unproductive user behavior', () => {
   });
 
   // TODO: add when (if?) new restrictions are added to Name
-  test.skip('with invalid name', async ({ page }) => {
+  test.skip('with invalid name', async ({ signupFlow, page }) => {
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
+
     const invalidName = '$$$';
     const validEmail = 'bob@corbado.com';
 
@@ -70,7 +72,7 @@ test.describe('InitiateSignup unproductive user behavior', () => {
   test('with duplicate email', async ({ signupFlow, page }) => {
     const validName = 'Bob';
 
-    const [_, email] = await signupFlow.createDummyAccount();
+    const [, email] = await signupFlow.createDummyAccount();
 
     await page.getByPlaceholder('Name').click();
     await page.getByPlaceholder('Name').fill(validName);
@@ -84,5 +86,13 @@ test.describe('InitiateSignup unproductive user behavior', () => {
 
     await signupFlow.checkLandedOnScreen(ScreenNames.Start);
     await expect(page.getByText('Email address is already in use')).toBeVisible();
+  });
+
+  test('switch to Login flow', async ({ signupFlow, page }) => {
+    await signupFlow.checkLandedOnScreen(ScreenNames.Start);
+
+    await page.getByText('Log in').click();
+
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome back!');
   });
 });

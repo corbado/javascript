@@ -9,6 +9,7 @@ export async function addWebAuthn(client: CDPSession, successful: boolean) {
       transport: 'internal',
       hasResidentKey: true,
       hasUserVerification: true,
+      automaticPresenceSimulation: false,
       isUserVerified: successful,
     },
   });

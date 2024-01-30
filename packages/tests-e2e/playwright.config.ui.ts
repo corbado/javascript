@@ -12,35 +12,112 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    ////////////////////////////////////////////
+    // default configs:
+    // - doubleOptIn: true
+    // - signupFlow: PasskeyWithEmailOTPFallback
+    // - allowUserRegistration: true
+    // - userFullNameRequired: true
     {
-      name: 'chromium',
+      name: 'default-setup',
+      testMatch: ['ui/default/setup.ts'],
+    },
+    {
+      name: 'default-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/**/*.*'],
+      testMatch: ['ui/default/**/*.*'],
+      dependencies: ['default-setup'],
     },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
-    //   testMatch: ['ui/all-browsers/**/*.*'],
+    //   testMatch: ['ui/default/all-browsers/**/*.*'],
     // },
     {
-      name: 'webkit',
+      name: 'default-webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: ['ui/all-browsers/**/*.*'],
+      testMatch: ['ui/default/all-browsers/**/*.*'],
+      dependencies: ['default-setup'],
     },
     {
-      name: 'Mobile Chrome',
+      name: 'default-mobileChrome',
       use: { ...devices['Pixel 7'] },
-      testMatch: ['ui/**/*.*'],
+      testMatch: ['ui/default/**/*.*'],
+      dependencies: ['default-setup'],
     },
     {
-      name: 'Mobile Safari',
+      name: 'default-mobileSafari',
       use: { ...devices['iPhone 14 Pro Max'] },
-      testMatch: ['ui/all-browsers/**/*.*'],
+      testMatch: ['ui/default/all-browsers/**/*.*'],
+      dependencies: ['default-setup'],
     },
     {
-      name: 'Microsoft Edge',
+      name: 'default-msedge',
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
-      testMatch: ['ui/**/*.*'],
+      testMatch: ['ui/default/**/*.*'],
+      dependencies: ['default-setup'],
+    },
+    ////////////////////////////////////////////
+    // changed config:
+    // - doubleOptIn: false
+    {
+      name: 'noVerification-setup',
+      testMatch: ['ui/noVerification/setup.ts'],
+      dependencies: [
+        'default-chromium',
+        'default-webkit',
+        'default-mobileChrome',
+        'default-mobileSafari',
+        'default-msedge',
+      ],
+    },
+    {
+      name: 'noVerification-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/noVerification/**/*.*'],
+      dependencies: ['noVerification-setup'],
+    },
+    ////////////////////////////////////////////
+    // changed config:
+    // - signupFlow: EmailOTPSignup
+    {
+      name: 'verificationAtSignup-setup',
+      testMatch: ['ui/verificationAtSignup/setup.ts'],
+      dependencies: ['noVerification-chromium'],
+    },
+    {
+      name: 'verificationAtSignup-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/verificationAtSignup/**/*.*'],
+      dependencies: ['verificationAtSignup-setup'],
+    },
+    ////////////////////////////////////////////
+    // changed config:
+    // - allowUserRegistration: false
+    {
+      name: 'noSignup-setup',
+      testMatch: ['ui/noSignup/setup.ts'],
+      dependencies: ['verificationAtSignup-chromium'],
+    },
+    {
+      name: 'noSignup-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/noSignup/**/*.*'],
+      dependencies: ['noSignup-setup'],
+    },
+    ////////////////////////////////////////////
+    // changed config:
+    // - userFullNameRequired: false
+    {
+      name: 'noName-setup',
+      testMatch: ['ui/noName/setup.ts'],
+      dependencies: ['noSignup-chromium'],
+    },
+    {
+      name: 'noName-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/noName/**/*.*'],
+      dependencies: ['noName-setup'],
     },
   ],
 });

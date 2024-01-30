@@ -88,6 +88,8 @@ jobs:
           fi
         env:
           PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_PLAYGROUND }}
+          API_SECRET: ${{ secrets.VERCEL_API_SECRET_REACT_PLAYGROUND }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

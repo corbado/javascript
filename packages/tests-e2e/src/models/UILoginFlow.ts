@@ -135,6 +135,56 @@ export class UILoginFlow {
     return [name, email];
   }
 
+  // only for "Verification at sign up" config
+  async createAccountWithVerificationAtSignup(
+    passkeySupported: boolean,
+    registerPasskey = true,
+  ): Promise<[name: string, email: string]> {
+    const name = UserManager.getUserForSignup();
+    const email = `${name}@corbado.com`;
+
+    await this.page.getByPlaceholder('Name').click();
+    await this.page.getByPlaceholder('Name').fill(name);
+    await expect(this.page.getByPlaceholder('Name')).toHaveValue(name);
+
+    await this.page.getByPlaceholder('Email address').click();
+    await this.page.getByPlaceholder('Email address').fill(email);
+    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
+
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+
+    await this.fillOTP();
+
+    if (passkeySupported) {
+      await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
+
+      if (registerPasskey) {
+        await this.page.getByRole('button', { name: 'Activate' }).click();
+        await this.inputPasskey(async () => {
+          await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);
+        });
+
+        await this.page.getByRole('button', { name: 'Continue' }).click();
+        await this.checkLandedOnScreen(ScreenNames.End);
+        await this.checkPasskeyRegistered();
+      } else {
+        await this.page.getByRole('button', { name: 'Maybe later' }).click();
+        await this.checkLandedOnScreen(ScreenNames.End);
+        await this.checkNoPasskeyRegistered();
+      }
+
+      await this.page.getByRole('button', { name: 'Logout' }).click();
+    } else {
+      await this.checkLandedOnScreen(ScreenNames.End);
+      await this.checkNoPasskeyRegistered();
+    }
+
+    await loadAuth(this.page);
+
+    return [name, email];
+  }
+
   async checkPasskeyRegistered() {
     await expect(this.page.locator('.cb-passkey-list-card')).toHaveCount(1);
   }
@@ -150,6 +200,9 @@ export class UILoginFlow {
         break;
       case ScreenNames.EnterOtp:
         await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Enter one-time passcode to');
+        break;
+      case ScreenNames.PasskeyCreate:
+        await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
         break;
       case ScreenNames.PasskeyBenefits:
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');

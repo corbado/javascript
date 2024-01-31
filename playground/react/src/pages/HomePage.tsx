@@ -8,25 +8,40 @@ const HomePage = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className='h-screen flex flex-col items-center justify-center'>
+      <div className='unauthorized-component'>
         <h2>You are not logged in. You can use the below auth pages to authenticate the user</h2>
-        <button onClick={() => navigate('/auth')}>Auth Page (with complete auth component)</button>
-        <button onClick={() => navigate('/signup')}>SignUp Page</button>
-        <button onClick={() => navigate('/login')}>Login Page</button>
+        <button
+          style={{ width: '20%' }}
+          onClick={() => navigate('/auth')}
+        >
+          Auth Page (with complete auth component)
+        </button>
+        <button
+          style={{ width: '20%' }}
+          onClick={() => navigate('/signup')}
+        >
+          SignUp Page
+        </button>
+        <button
+          style={{ width: '20%' }}
+          onClick={() => navigate('/login')}
+        >
+          Login Page
+        </button>
       </div>
     );
   }
 
   return (
-    <div className='h-screen flex flex-col items-center justify-center'>
-      <div className='w-1/2'>
-        <p className='font-bold text-2xl'>Welcome</p>
+    <div className='component'>
+      <div>
+        <p>Welcome</p>
         <UserDetails />
         <button
           onClick={async () => {
-            await logout();
+            logout();
 
-            // this should be covered by a guard (then we can remove it)
+            // TODO: this should be covered by a guard (then we can remove it)
             navigate('/auth');
           }}
         >

@@ -1,5 +1,6 @@
 import { SignUp } from '@corbado/react';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -13,10 +14,15 @@ const SignUpPage = () => {
   };
 
   return (
-    <SignUp
-      onSignedUp={onSignedUp}
-      navigateToLogin={navigateToLogin}
-    />
+    <>
+      <Header />
+      <div className='component'>
+        <SignUp
+          onSignedUp={onSignedUp}
+          navigateToLogin={navigateToLogin}
+        />
+      </div>
+    </>
   );
 };
 

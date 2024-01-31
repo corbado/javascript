@@ -3,20 +3,16 @@ import { CorbadoProvider } from '@corbado/react';
 import RouteProvider from './routes';
 import frenchTranslations from './translations/fr';
 import englishTranslations from './translations/en';
+import { useContext } from 'react';
+import { ProjectIdContext } from './contexts/ProjectIdContext';
 
 function App() {
+  const { projectId } = useContext(ProjectIdContext);
+
   return (
-    <div
-      className='App'
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: '5rem 1rem',
-      }}
-    >
+    <div key={projectId}>
       <CorbadoProvider
-        projectId={process.env.REACT_APP_CORBADO_PROJECT_ID!}
+        projectId={projectId}
         customTranslations={{
           fr: frenchTranslations,
           en: englishTranslations,

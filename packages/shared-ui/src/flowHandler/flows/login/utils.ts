@@ -56,7 +56,7 @@ const sendEmailOTP = async (authService: AuthService, email: string): Promise<Fl
   return;
 };
 
-const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+export const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const res = await authService.initLoginWithEmailLink(email);
 
   if (res.ok) {

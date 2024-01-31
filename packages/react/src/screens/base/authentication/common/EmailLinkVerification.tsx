@@ -15,7 +15,9 @@ export const EmailLinkVerification = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(false);
+    if (currentUserState.verificationError) {
+      setLoading(false);
+    }
   }, [currentUserState]);
 
   const header = t('header');

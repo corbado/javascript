@@ -8,12 +8,14 @@ import 'prismjs/components/prism-bash';
 import { insertGuide } from './components/guide';
 import { insertDemo } from './components/demo';
 
-await Corbado.load({
-  projectId: import.meta.env.VITE_CORBADO_PROJECT_ID,
-});
+(async () => {
+  await Corbado.load({
+    projectId: import.meta.env.VITE_CORBADO_PROJECT_ID,
+  });
 
-insertHeader(!!Corbado.isAuthenticated, Corbado.user);
-insertGuide(!!Corbado.isAuthenticated);
-insertDemo(Corbado);
+  insertHeader(!!Corbado.isAuthenticated, Corbado.user);
+  insertGuide(!!Corbado.isAuthenticated);
+  insertDemo(Corbado);
 
-Prism.highlightAll();
+  Prism.highlightAll();
+})();

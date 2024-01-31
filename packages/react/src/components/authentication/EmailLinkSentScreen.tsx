@@ -8,8 +8,9 @@ import { EmailScreenBase } from './EmailScreensBase';
 export interface EmailLinkSentScreenProps {
   header: ReactNode;
   body?: ReactNode;
-  resendButtonText: string;
-  backButtonText: string;
+  resendButtonText: string | JSX.Element;
+  backButtonText: string | JSX.Element;
+  disableResendButton?: boolean;
   onResendButtonClick(setLoading: (newLoadingState: boolean) => void): Promise<void>;
   onBackButtonClick(): void;
 }
@@ -19,6 +20,7 @@ export const EmailLinkSentScreen: FC<EmailLinkSentScreenProps> = ({
   body,
   resendButtonText,
   backButtonText,
+  disableResendButton,
   onResendButtonClick,
   onBackButtonClick,
 }) => {
@@ -43,6 +45,7 @@ export const EmailLinkSentScreen: FC<EmailLinkSentScreenProps> = ({
       <PrimaryButton
         onClick={handleResend}
         isLoading={loading}
+        disabled={disableResendButton}
       >
         {resendButtonText}
       </PrimaryButton>

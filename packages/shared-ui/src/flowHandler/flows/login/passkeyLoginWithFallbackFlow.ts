@@ -90,7 +90,6 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
     switch (event) {
       case FlowHandlerEvents.VerifyLink: {
         const res = await loginWithEmailLink(state.corbadoApp.authService, state.userState);
-        window.location.search = '';
         if (res.err) {
           return res.val;
         }

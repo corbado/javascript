@@ -237,6 +237,15 @@
   font-family: 'Space Grotesk', sans-serif;
 }
 
+.cb-button-primary[disabled] {
+  background-color: #3165ff;
+  cursor: initial;
+}
+
+.cb-button-primary[disabled]:hover {
+  background-color: #3165ff;
+}
+
 .cb-button-primary:hover {
   background-color: #1145df;
 }

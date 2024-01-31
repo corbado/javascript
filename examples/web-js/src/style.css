@@ -27,6 +27,6 @@
   transition: all 0.3s ease-in-out;
 }
 
-input:checked~.dot {
+input:checked ~ .dot {
   transform: translateX(100%);
 }

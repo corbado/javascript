@@ -13,7 +13,7 @@ export const DarkModeOptions = () => {
     <div className='flex mt-8 flex-col gap-2'>
       <label
         className='subheading'
-        htmlFor='theme'
+        htmlFor='dark-mode'
       >
         Change Dark Mode
       </label>

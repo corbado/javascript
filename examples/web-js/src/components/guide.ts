@@ -8,6 +8,11 @@ import {
 } from '../utils/constants';
 
 const guideHtml = `
+ <p class='paragraph'>
+          The <code class='language-bash'>@corbado/react</code> package provides a comprehensive solution for
+          integrating passkey-based authentication in React applications. It simplifies the process of managing
+          authentication states and user sessions with easy-to-use hooks and UI components.
+        </p>
     <h2 id="guide-header" class='heading mt-7'></h2>
     <p id="guide-body" class='paragraph mb-3'></p>
     <ol>

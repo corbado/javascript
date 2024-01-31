@@ -1,24 +1,47 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge"
+    />
+    <title>Corbado WebJS example</title>
+    <script
+      src="https://kit.fontawesome.com/fe9dcc7772.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="./src/style.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Corbado WebJS example</title>
-  <script src="https://kit.fontawesome.com/fe9dcc7772.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="./src/style.css" />
-</head>
-
-<body>
-  <header id="header" class="bg-amber-700 text-white p-2 flex justify-between items-center"></header>
-  <div id="main" class='flex'>
-    <div id="guide" class='w-2/3 p-10 bg-gray-200'>
+  <body>
+    <header
+      id="header"
+      class="bg-amber-700 text-white p-2 flex justify-between items-center"
+    ></header>
+    <div
+      id="main"
+      class="flex"
+    >
+      <div
+        id="guide"
+        class="w-2/3 p-10 bg-gray-200"
+      ></div>
+      <div
+        id="right-section"
+        class="w-1/3 mt-8 flex items-start justify-around"
+      ></div>
     </div>
-    <div id="right-section" class='w-1/3 mt-8 flex items-start justify-around'>
-    </div>
-  </div>
-  <script type="module" src="./src/main.ts"></script>
-</body>
-
+    <script
+      type="module"
+      src="./src/main.ts"
+    ></script>
+  </body>
 </html>

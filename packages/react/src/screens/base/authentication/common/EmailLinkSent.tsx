@@ -63,6 +63,7 @@ export const EmailLinkSent = () => {
 
     await emitEvent(FlowHandlerEvents.PrimaryButton);
 
+    setRemainingTime(60);
     startTimer();
     setLoading(false);
   }, []);

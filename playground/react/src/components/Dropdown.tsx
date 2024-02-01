@@ -1,28 +1,28 @@
-import { useContext } from 'react';
-import { ProjectIdContext, ProjectIdTypeEnum } from '../contexts/ProjectIdContext';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Dropdown = () => {
-  const { updateProjectId, projectIdType } = useContext(ProjectIdContext);
+  const navigate = useNavigate();
+  const { projectId } = useParams<{ projectId: string }>();
 
   const dropdownItems = [
-    { id: ProjectIdTypeEnum.PasskeyWithEmailOtpFallback, label: 'Passkey With Email Otp Fallback' },
-    { id: ProjectIdTypeEnum.PasskeyWithEmailLinkFallback, label: 'Passkey With Email Link Fallback' },
-    { id: ProjectIdTypeEnum.EmailOtpWithPasskeyAppend, label: 'Email Otp With Passkey Append' },
-    { id: ProjectIdTypeEnum.EmailLinkWithPasskeyAppend, label: 'Email Link With Passkey Append' },
+    { id: 'pro-503401103218055321', label: 'Email OTP' },
+    { id: 'pro-423122463392265807', label: 'Email Link' },
   ];
 
-  const handleItemClick = (type: ProjectIdTypeEnum) => {
-    updateProjectId(type);
+  const handleItemClick = (id: string) => {
+    if (projectId === id) return;
+
+    navigate(`/auth/${id}`);
   };
 
   return (
     <div className='dropdown'>
-      <button className='dropbtn'>Change Auth Flow</button>
+      <button className='dropbtn'>Change Verification Method</button>
       <div className='dropdown-content'>
         {dropdownItems.map(item => (
           <span
             key={item.id}
-            className={`dropdown-item ${projectIdType === item.id ? 'active' : ''}`}
+            className={`dropdown-item ${projectId === item.id ? 'active' : ''}`}
             onClick={() => handleItemClick(item.id)}
           >
             {item.label}

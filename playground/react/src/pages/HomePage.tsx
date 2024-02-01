@@ -1,10 +1,12 @@
 import { PasskeyList, useCorbado } from '@corbado/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { UserDetails } from '../components/UserDetails';
+import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const HomePage = () => {
   const { isAuthenticated, logout } = useCorbado();
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   if (!isAuthenticated) {
     return (
@@ -12,19 +14,19 @@ const HomePage = () => {
         <h2>You are not logged in. You can use the below auth pages to authenticate the user</h2>
         <button
           style={{ width: '20%' }}
-          onClick={() => navigate('/auth')}
+          onClick={() => navigate(`/auth/${projectId}`)}
         >
           Auth Page (with complete auth component)
         </button>
         <button
           style={{ width: '20%' }}
-          onClick={() => navigate('/signup')}
+          onClick={() => navigate(`/signup/${projectId}`)}
         >
           SignUp Page
         </button>
         <button
           style={{ width: '20%' }}
-          onClick={() => navigate('/login')}
+          onClick={() => navigate(`/login/${projectId}`)}
         >
           Login Page
         </button>
@@ -42,7 +44,7 @@ const HomePage = () => {
             logout();
 
             // TODO: this should be covered by a guard (then we can remove it)
-            navigate('/auth');
+            navigate(`/auth/${projectId}`);
           }}
         >
           Logout
@@ -53,4 +55,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default withCorbadoProvider(HomePage);

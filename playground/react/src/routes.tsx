@@ -7,16 +7,20 @@ import LoginPage from './pages/LoginPage';
 const RouteProvider = () => {
   const routes = [
     {
-      path: '/auth',
+      path: '/auth/:projectId',
       element: <AuthPage />,
     },
     {
-      path: '/signup',
+      path: '/signup/:projectId',
       element: <SignUpPage />,
     },
     {
-      path: '/login',
+      path: '/login/:projectId',
       element: <LoginPage />,
+    },
+    {
+      path: '/:projectId',
+      element: <HomePage />,
     },
     {
       path: '/',

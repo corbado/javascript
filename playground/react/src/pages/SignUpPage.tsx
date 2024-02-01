@@ -1,16 +1,18 @@
 import { SignUp } from '@corbado/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const onSignedUp = () => {
-    navigate('/');
+    navigate(`/${projectId}`);
   };
 
   const navigateToLogin = () => {
-    navigate('/login');
+    navigate(`/login/${projectId}`);
   };
 
   return (
@@ -26,4 +28,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default withCorbadoProvider(SignUpPage);

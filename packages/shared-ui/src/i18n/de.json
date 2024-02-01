@@ -21,7 +21,7 @@
         "header": "Prüfen Sie Ihr Email Postfach",
         "body_text1": "Wir haben ihnen eine E-Mail an ",
         "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
-        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}})",
+        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}} sec)",
         "button_sendLinkAgain": "Link erneut senden",
         "button_back": "Abbrechen"
       },
@@ -101,7 +101,7 @@
         "header": "Prüfen Sie Ihr E-Mail Postfach",
         "body_text1": "Wir haben ihnen eine E-Mail an ",
         "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
-        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}})",
+        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}} sec)",
         "button_sendLinkAgain": "Link erneut senden",
         "button_back": "Abbrechen"
       },

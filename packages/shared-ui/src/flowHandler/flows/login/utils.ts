@@ -56,7 +56,7 @@ const sendEmailOTP = async (authService: AuthService, email: string): Promise<Fl
   return;
 };
 
-export const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
   const res = await authService.initLoginWithEmailLink(email);
 
   if (res.ok) {
@@ -66,6 +66,12 @@ export const sendEmailLink = async (authService: AuthService, email: string): Pr
   }
 
   return;
+};
+
+export const sendEmailLinkAgain = async (authService: AuthService, email: string): Promise<FlowUpdate> => {
+  const res = await sendEmailLink(authService, email);
+
+  return res ?? FlowUpdate.navigate(ScreenNames.EmailLinkSent, { emailError: new UnknownError(), email });
 };
 
 export const initLoginWithVerificationMethod = async (

@@ -103,6 +103,20 @@ const sendEmailLink = async (
   return;
 };
 
+export const sendEmailLinkAgain = async (
+  corbadoApp: CorbadoApp,
+  email: string,
+  fullName: string,
+): Promise<FlowUpdate> => {
+  const res = await corbadoApp.authService.initLoginWithEmailLink(email);
+
+  if (res.ok) {
+    return FlowUpdate.ignore();
+  }
+
+  return FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: new UnknownError() });
+};
+
 export const initSignupWithVerificationMethod = async (
   corbadoApp: CorbadoApp,
   flowOption: FlowOptions,

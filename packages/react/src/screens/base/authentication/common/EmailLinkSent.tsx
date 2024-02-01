@@ -1,22 +1,28 @@
 import { FlowHandlerEvents } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import type { EmailLinkSentScreenProps } from '../../../../components';
-import { EmailLinkSentScreen } from '../../../../components';
+import { EmailScreenBase, PrimaryButton, TertiaryButton } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const EmailLinkSent = () => {
   const { emitEvent, currentUserState, currentFlowType } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.${currentFlowType}.emailLinkSent` });
-  const [remainingTime, setRemainingTime] = React.useState(30);
+  const [remainingTime, setRemainingTime] = useState(30);
+  const [loading, setLoading] = useState<boolean>(false);
   const resendTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
+    const timer = startTimer();
+
+    return () => clearInterval(timer);
+  }, []);
+
+  function startTimer() {
     resendTimer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
 
-    return () => clearInterval(resendTimer.current);
-  }, []);
+    return resendTimer.current;
+  }
 
   const header = t('header');
   const body = useMemo(
@@ -50,25 +56,38 @@ export const EmailLinkSent = () => {
   }, [remainingTime]);
   const backButtonText = t('button_back');
 
-  const handleCancel = useCallback(() => emitEvent(FlowHandlerEvents.CancelEmailLink), []);
+  const handleCancel = useCallback(() => void emitEvent(FlowHandlerEvents.CancelEmailLink), []);
 
-  const handleResend: EmailLinkSentScreenProps['onResendButtonClick'] = useCallback(async setLoading => {
+  const handleResend = useCallback(async () => {
     setLoading(true);
 
     await emitEvent(FlowHandlerEvents.PrimaryButton);
+
+    startTimer();
+    setLoading(false);
   }, []);
 
-  const props: EmailLinkSentScreenProps = useMemo(
-    () => ({
-      header,
-      body,
-      resendButtonText,
-      backButtonText,
-      onResendButtonClick: handleResend,
-      onBackButtonClick: handleCancel,
-    }),
-    [t, currentUserState.email, handleResend, handleCancel, header, body, resendButtonText, backButtonText],
-  );
+  return (
+    <div className='cb-email-screen'>
+      <EmailScreenBase
+        header={header}
+        body={body}
+      />
 
-  return <EmailLinkSentScreen {...props} />;
+      <PrimaryButton
+        onClick={() => void handleResend()}
+        isLoading={loading}
+        disabled={remainingTime > 0}
+      >
+        {resendButtonText}
+      </PrimaryButton>
+
+      <TertiaryButton
+        onClick={handleCancel}
+        disabled={loading}
+      >
+        {backButtonText}
+      </TertiaryButton>
+    </div>
+  );
 };

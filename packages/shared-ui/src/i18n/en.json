@@ -27,8 +27,6 @@
       },
       "emailLinkVerification": {
         "header": "Verifying your email address",
-        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}})",
-        "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "passkeyCreate": {
@@ -109,8 +107,6 @@
       },
       "emailLinkVerification": {
         "header": "Verifying your email address",
-        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}})",
-        "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "passkeyError": {

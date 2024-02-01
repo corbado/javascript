@@ -238,12 +238,12 @@
 }
 
 .cb-button-primary[disabled] {
-  background-color: #3165ff;
-  cursor: initial;
+  background-color: #7586b9;
+  cursor: not-allowed;
 }
 
 .cb-button-primary[disabled]:hover {
-  background-color: #3165ff;
+  background-color: #7586b9;
 }
 
 .cb-button-primary:hover {

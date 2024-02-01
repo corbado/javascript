@@ -35,6 +35,10 @@ export class FlowHandler {
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
   constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
+    if (!projectConfig.allowUserRegistration) {
+      initialFlowType = FlowType.Login;
+    }
+
     this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, initialFlowType);
     this.#screenHistory = [];
     this.#currentScreen = this.#config.initialScreenName;

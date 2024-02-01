@@ -8,6 +8,7 @@ import type {
   VerificationMethods,
 } from '@corbado/shared-ui';
 import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
+import type { ProjectConfig } from '@corbado/types';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -33,6 +34,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
+  const [projectConfig, setProjectConfig] = useState<ProjectConfig | undefined>(undefined);
   const currentFlowType = useRef<FlowTypeText>();
   const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
@@ -44,12 +46,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
     }
 
     void (async () => {
-      const projectConfig = await getProjectConfig();
-      if (projectConfig.err) {
+      const projectConfigResult = await getProjectConfig();
+      if (projectConfigResult.err) {
         // currently there are no errors that can be thrown here
         return;
       }
-      const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
+
+      const projectConfig = projectConfigResult.val;
+      const flowHandler = new FlowHandler(projectConfig, onLoggedIn, initialFlowType);
 
       onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
         updates.flowName && setCurrentFlow(updates.flowName);
@@ -69,6 +73,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       });
 
       await flowHandler.init(corbadoApp, i18n);
+
+      setProjectConfig(projectConfig);
       setFlowHandler(flowHandler);
       setInitialized(true);
     })();
@@ -106,6 +112,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       currentUserState,
       currentVerificationMethod: verificationMethod.current,
       initialized,
+      projectConfig,
       changeFlow,
       navigateBack,
       emitEvent,

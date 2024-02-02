@@ -18,9 +18,7 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
 
     useEffect(() => {
       if (!projectId || !/pro-*/.test(projectId)) {
-        navigate(
-          `${location.pathname === '/' ? '' : location.pathname}/${process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp}`,
-        );
+        navigate(`/${process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp}${location.pathname}`);
       }
     });
 

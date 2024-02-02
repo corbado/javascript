@@ -12,7 +12,7 @@ const Dropdown = () => {
   const handleItemClick = (id: string) => {
     if (projectId === id) return;
 
-    navigate(`/auth/${id}`);
+    navigate(`/${id}/auth`);
   };
 
   return (

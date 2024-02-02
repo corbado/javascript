@@ -12,7 +12,7 @@ const LoginPage = () => {
   };
 
   const navigateToSignup = () => {
-    navigate(`/signup${projectId}`);
+    navigate(`/${projectId}/signup`);
   };
 
   return (

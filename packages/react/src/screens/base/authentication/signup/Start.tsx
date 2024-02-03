@@ -7,7 +7,7 @@ import { AuthFormScreen, FormInput } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { currentUserState, emitEvent } = useFlowHandler();
+  const { currentUserState, userNameRequired, emitEvent } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.signup.start` });
   const [emailError, setEmailError] = useState<RecoverableError | null>(null);
   const [userNameError, setUserNameError] = useState<RecoverableError | null>(null);
@@ -30,8 +30,11 @@ export const Start = () => {
 
   const handleSubmit = useCallback(() => {
     setLoading(true);
+
+    const fullName = userNameRequired ? fullNameRef.current?.value : emailRef.current?.value;
+
     void emitEvent(FlowHandlerEvents.PrimaryButton, {
-      userStateUpdate: { email: emailRef.current?.value, fullName: fullNameRef.current?.value },
+      userStateUpdate: { email: emailRef.current?.value, fullName },
     });
   }, [emitEvent]);
 
@@ -45,12 +48,14 @@ export const Start = () => {
         submitButtonText={submitButtonText}
         loading={loading}
       >
-        <FormInput
-          name='fullName'
-          label={nameFieldLabel}
-          error={userNameError?.translatedMessage}
-          ref={el => el && (fullNameRef.current = el)}
-        />
+        {userNameRequired && (
+          <FormInput
+            name='fullName'
+            label={nameFieldLabel}
+            error={userNameError?.translatedMessage}
+            ref={el => el && (fullNameRef.current = el)}
+          />
+        )}
         <FormInput
           name='name'
           type='email'

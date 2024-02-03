@@ -20,6 +20,11 @@ const en = {
       },
     },
   },
+  passkeysList: {
+    button_createPasskey: 'You can create passkeys here.',
+    field_credentialId: 'ID: ',
+    field_status: 'Status of Passkey: ',
+  },
 };
 
 export default en;

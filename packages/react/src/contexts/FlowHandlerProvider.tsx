@@ -33,6 +33,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
+  const [userNameRequired, setUserNameRequired] = useState(true);
+  const [allowUserRegistration, setAllowUserRegistration] = useState(true);
   const currentFlowType = useRef<FlowTypeText>();
   const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
@@ -44,12 +46,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
     }
 
     void (async () => {
-      const projectConfig = await getProjectConfig();
-      if (projectConfig.err) {
+      const projectConfigResult = await getProjectConfig();
+      if (projectConfigResult.err) {
         // currently there are no errors that can be thrown here
         return;
       }
-      const flowHandler = new FlowHandler(projectConfig.val, onLoggedIn, initialFlowType);
+
+      const projectConfig = projectConfigResult.val;
+      const flowHandler = new FlowHandler(corbadoApp, projectConfig, onLoggedIn, initialFlowType);
 
       onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
         updates.flowName && setCurrentFlow(updates.flowName);
@@ -68,8 +72,11 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         setCurrentUserState(value);
       });
 
-      await flowHandler.init(corbadoApp, i18n);
+      await flowHandler.init(i18n);
+
       setFlowHandler(flowHandler);
+      setUserNameRequired(flowHandler.userNameRequired);
+      setAllowUserRegistration(flowHandler.allowUserRegistration);
       setInitialized(true);
     })();
 
@@ -106,6 +113,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       currentUserState,
       currentVerificationMethod: verificationMethod.current,
       initialized,
+      userNameRequired,
+      allowUserRegistration,
       changeFlow,
       navigateBack,
       emitEvent,

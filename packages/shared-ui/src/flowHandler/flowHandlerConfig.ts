@@ -14,11 +14,13 @@ export class FlowHandlerConfig {
   readonly #onLoggedIn: () => void;
   readonly #initialScreenName: ScreenNames;
   readonly #flowDetails: FlowDetails;
+  readonly #projectConfig: ProjectConfig;
   #flowType: FlowType;
 
   constructor(onLoggedIn: () => void, projectConfig: ProjectConfig, initialFlowType: FlowType = FlowType.SignUp) {
     this.#onLoggedIn = onLoggedIn;
     this.#flowType = initialFlowType;
+    this.#projectConfig = projectConfig;
     this.#flowDetails = this.#getFlowDetails(projectConfig);
     this.#initialScreenName = this.#getInitialScreenName();
   }
@@ -45,6 +47,14 @@ export class FlowHandlerConfig {
 
   get verificationMethod(): VerificationMethods {
     return this.#flowDetails[this.#flowType].options.verificationMethod ?? 'emailOtp';
+  }
+
+  get userNameRequired() {
+    return this.#projectConfig.userFullNameRequired;
+  }
+
+  get allowUserRegistration() {
+    return this.#projectConfig.allowUserRegistration;
   }
 
   // The update method allows the type of flow to be changed,

@@ -16,6 +16,8 @@ export interface FlowHandlerContextProps {
   currentUserState: UserState;
   currentVerificationMethod: VerificationMethods | undefined;
   initialized: boolean;
+  userNameRequired: boolean;
+  allowUserRegistration: boolean;
   navigateBack: () => ScreenNames;
   emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
   changeFlow: () => void;
@@ -28,6 +30,8 @@ export const initialContext: FlowHandlerContextProps = {
   currentUserState: {},
   currentVerificationMethod: undefined,
   initialized: false,
+  userNameRequired: true,
+  allowUserRegistration: true,
   navigateBack: () => ScreenNames.Start,
   emitEvent: () => Promise.reject(),
   changeFlow: () => void 0,

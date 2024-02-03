@@ -9,10 +9,11 @@ type CorbadoAppProviderParams = PropsWithChildren<{
   loading: boolean;
   isAuthenticated: boolean;
   globalError: NonRecoverableError | undefined;
+  setGlobalError: (error: NonRecoverableError | undefined) => void;
 }>;
 
 export const CorbadoAppProvider: FC<CorbadoAppProviderParams> = memo(
-  ({ children, corbadoApp, loading, globalError, isAuthenticated }) => {
+  ({ children, corbadoApp, loading, globalError, isAuthenticated, setGlobalError }) => {
     /** Passkey Authentication APIs */
     const signUpWithPasskey = useCallback(
       (email: string, username: string) => {
@@ -149,6 +150,7 @@ export const CorbadoAppProvider: FC<CorbadoAppProviderParams> = memo(
           getProjectConfig,
           userExists,
           logout,
+          setGlobalError,
         }}
       >
         {children}

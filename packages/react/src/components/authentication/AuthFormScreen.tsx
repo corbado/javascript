@@ -9,7 +9,7 @@ import { PrimaryButton } from '../ui/buttons/Button';
 export interface AuthFormScreenProps extends CustomizableComponent {
   headerText: string;
   subHeaderText: string;
-  flowChangeButtonText: string;
+  flowChangeButtonText?: string;
   submitButtonText: ReactNode;
   loading: boolean;
   onSubmit: () => void;
@@ -26,15 +26,19 @@ export const AuthFormScreen: FC<AuthFormScreenProps> = memo(
     return (
       <>
         <Header>{headerText}</Header>
-        <SubHeader>
-          {subHeaderText}
-          <span
-            className='cb-link-secondary'
-            onClick={changeFlow}
-          >
-            {flowChangeButtonText}
-          </span>
-        </SubHeader>
+
+        {flowChangeButtonText ? (
+          <SubHeader>
+            {subHeaderText}
+            <span
+              className='cb-link-secondary'
+              onClick={changeFlow}
+            >
+              {flowChangeButtonText}
+            </span>
+          </SubHeader>
+        ) : null}
+
         <form
           className='cb-form'
           onSubmit={handleSubmit}

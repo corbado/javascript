@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - web_js_publish
+      - web_js_example_improvements
 
 jobs:
   deploy:

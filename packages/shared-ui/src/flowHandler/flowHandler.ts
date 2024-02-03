@@ -1,5 +1,5 @@
 import type { ProjectConfig, SessionUser } from '@corbado/types';
-import { type CorbadoApp,NonRecoverableError } from '@corbado/web-core';
+import { type CorbadoApp, NonRecoverableError } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
@@ -35,16 +35,20 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(corbadoApp: CorbadoApp | undefined, projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType?: FlowType) {
+  constructor(
+    corbadoApp: CorbadoApp | undefined,
+    projectConfig: ProjectConfig,
+    onLoggedIn: () => void,
+    initialFlowType?: FlowType,
+  ) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
     let flowType = initialFlowType;
-    
-    if (projectConfig.allowUserRegistration === false) {
+    if (!projectConfig.allowUserRegistration) {
       if (initialFlowType === FlowType.SignUp) {
-      corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed())
+        corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
       } else {
         flowType = FlowType.Login;
       }

@@ -28,10 +28,7 @@ export const Start = () => {
 
   const headerText = useMemo(() => t('header'), [t]);
   const subHeaderText = useMemo(() => t('subheader'), [t]);
-  const flowChangeButtonText = useMemo(
-    () => (allowUserRegistration ? t('button_signup') : undefined),
-    [t],
-  );
+  const flowChangeButtonText = useMemo(() => (allowUserRegistration ? t('button_signup') : undefined), [t]);
   const emailFieldLabel = useMemo(() => t('textField_email'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
 

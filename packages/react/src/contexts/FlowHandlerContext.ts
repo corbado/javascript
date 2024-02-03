@@ -6,7 +6,7 @@ import type {
   UserState,
   VerificationMethods,
 } from '@corbado/shared-ui';
-import { ScreenNames } from '@corbado/shared-ui'
+import { ScreenNames } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {

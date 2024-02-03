@@ -13,7 +13,7 @@ const AuthPage = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className='component'>
         <CorbadoAuth onLoggedIn={onLoggedIn} />
       </div>

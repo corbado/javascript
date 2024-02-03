@@ -6,8 +6,7 @@ import type {
   UserState,
   VerificationMethods,
 } from '@corbado/shared-ui';
-import { ScreenNames } from '@corbado/shared-ui';
-import type { ProjectConfig } from '@corbado/types';
+import { ScreenNames } from '@corbado/shared-ui'
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
@@ -17,7 +16,8 @@ export interface FlowHandlerContextProps {
   currentUserState: UserState;
   currentVerificationMethod: VerificationMethods | undefined;
   initialized: boolean;
-  projectConfig: ProjectConfig | undefined;
+  userNameRequired: boolean;
+  allowUserRegistration: boolean;
   navigateBack: () => ScreenNames;
   emitEvent: (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => Promise<void> | undefined;
   changeFlow: () => void;
@@ -30,7 +30,8 @@ export const initialContext: FlowHandlerContextProps = {
   currentUserState: {},
   currentVerificationMethod: undefined,
   initialized: false,
-  projectConfig: undefined,
+  userNameRequired: true,
+  allowUserRegistration: true,
   navigateBack: () => ScreenNames.Start,
   emitEvent: () => Promise.reject(),
   changeFlow: () => void 0,

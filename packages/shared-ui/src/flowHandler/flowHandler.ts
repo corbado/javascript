@@ -1,5 +1,5 @@
 import type { ProjectConfig, SessionUser } from '@corbado/types';
-import type { CorbadoApp } from '@corbado/web-core';
+import { type CorbadoApp,NonRecoverableError } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import { canUsePasskeys } from '../utils';
@@ -26,6 +26,7 @@ export class FlowHandler {
   #screenHistory: ScreenNames[];
   #config: FlowHandlerConfig;
   #state: FlowHandlerState | undefined;
+  #corbadoApp: CorbadoApp;
 
   #onFlowUpdateCallbacks: Array<(updates: FlowHandlerUpdates) => void> = [];
   #onUserStateChangeCallbacks: Array<(v: UserState) => void> = [];
@@ -34,12 +35,23 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType: FlowType = FlowType.SignUp) {
-    if (!projectConfig.allowUserRegistration) {
-      initialFlowType = FlowType.Login;
+  constructor(corbadoApp: CorbadoApp | undefined, projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType?: FlowType) {
+    if (!corbadoApp) {
+      throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
-    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, initialFlowType);
+    let flowType = initialFlowType;
+    
+    if (projectConfig.allowUserRegistration === false) {
+      if (initialFlowType === FlowType.SignUp) {
+      corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed())
+      } else {
+        flowType = FlowType.Login;
+      }
+    }
+
+    this.#corbadoApp = corbadoApp;
+    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, flowType);
     this.#screenHistory = [];
     this.#currentScreen = this.#config.initialScreenName;
   }
@@ -48,11 +60,7 @@ export class FlowHandler {
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(corbadoApp: CorbadoApp | undefined, i18next: i18n) {
-    if (!corbadoApp) {
-      throw new Error('corbadoApp is undefined. This should not happen.');
-    }
-
+  async init(i18next: i18n) {
     const passkeysSupported = await canUsePasskeys();
 
     this.#state = new FlowHandlerState(
@@ -63,7 +71,7 @@ export class FlowHandler {
         emailError: undefined,
       },
       passkeysSupported,
-      corbadoApp,
+      this.#corbadoApp,
       i18next,
     );
 
@@ -84,6 +92,14 @@ export class FlowHandler {
 
   get currentVerificationMethod() {
     return this.#config.verificationMethod;
+  }
+
+  get userNameRequired() {
+    return this.#config.userNameRequired;
+  }
+
+  get allowUserRegistration() {
+    return this.#config.allowUserRegistration;
   }
 
   /**

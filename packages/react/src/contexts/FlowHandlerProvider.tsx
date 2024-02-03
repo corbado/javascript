@@ -8,7 +8,6 @@ import type {
   VerificationMethods,
 } from '@corbado/shared-ui';
 import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
-import type { ProjectConfig } from '@corbado/types';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -34,7 +33,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
   const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
-  const [projectConfig, setProjectConfig] = useState<ProjectConfig | undefined>(undefined);
+  const [userNameRequired, setUserNameRequired] = useState(true);
+  const [allowUserRegistration, setAllowUserRegistration] = useState(true);
   const currentFlowType = useRef<FlowTypeText>();
   const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
@@ -53,7 +53,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       }
 
       const projectConfig = projectConfigResult.val;
-      const flowHandler = new FlowHandler(projectConfig, onLoggedIn, initialFlowType);
+      const flowHandler = new FlowHandler(corbadoApp, projectConfig, onLoggedIn, initialFlowType);
 
       onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
         updates.flowName && setCurrentFlow(updates.flowName);
@@ -72,10 +72,11 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         setCurrentUserState(value);
       });
 
-      await flowHandler.init(corbadoApp, i18n);
+      await flowHandler.init(i18n);
 
-      setProjectConfig(projectConfig);
       setFlowHandler(flowHandler);
+      setUserNameRequired(flowHandler.userNameRequired);
+      setAllowUserRegistration(flowHandler.allowUserRegistration);
       setInitialized(true);
     })();
 
@@ -112,7 +113,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
       currentUserState,
       currentVerificationMethod: verificationMethod.current,
       initialized,
-      projectConfig,
+      userNameRequired,
+      allowUserRegistration,
       changeFlow,
       navigateBack,
       emitEvent,

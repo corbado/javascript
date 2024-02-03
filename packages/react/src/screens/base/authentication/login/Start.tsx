@@ -6,7 +6,7 @@ import { AuthFormScreen, FormInput } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { emitEvent, currentUserState, projectConfig } = useFlowHandler();
+  const { emitEvent, currentUserState, allowUserRegistration } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.login.start` });
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
@@ -29,7 +29,7 @@ export const Start = () => {
   const headerText = useMemo(() => t('header'), [t]);
   const subHeaderText = useMemo(() => t('subheader'), [t]);
   const flowChangeButtonText = useMemo(
-    () => (projectConfig?.allowUserRegistration ? t('button_signup') : undefined),
+    () => (allowUserRegistration ? t('button_signup') : undefined),
     [t],
   );
   const emailFieldLabel = useMemo(() => t('textField_email'), [t]);

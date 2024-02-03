@@ -7,7 +7,7 @@ import { AuthFormScreen, FormInput } from '../../../../components';
 import useFlowHandler from '../../../../hooks/useFlowHandler';
 
 export const Start = () => {
-  const { currentUserState, projectConfig, emitEvent } = useFlowHandler();
+  const { currentUserState, userNameRequired, emitEvent } = useFlowHandler();
   const { t } = useTranslation('translation', { keyPrefix: `authentication.signup.start` });
   const [emailError, setEmailError] = useState<RecoverableError | null>(null);
   const [userNameError, setUserNameError] = useState<RecoverableError | null>(null);
@@ -31,7 +31,7 @@ export const Start = () => {
   const handleSubmit = useCallback(() => {
     setLoading(true);
 
-    const fullName = projectConfig?.userFullNameRequired ? fullNameRef.current?.value : emailRef.current?.value;
+    const fullName = userNameRequired ? fullNameRef.current?.value : emailRef.current?.value;
 
     void emitEvent(FlowHandlerEvents.PrimaryButton, {
       userStateUpdate: { email: emailRef.current?.value, fullName },
@@ -48,7 +48,7 @@ export const Start = () => {
         submitButtonText={submitButtonText}
         loading={loading}
       >
-        {projectConfig?.userFullNameRequired && (
+        {userNameRequired && (
           <FormInput
             name='fullName'
             label={nameFieldLabel}

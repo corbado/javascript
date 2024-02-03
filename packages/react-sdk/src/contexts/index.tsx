@@ -13,7 +13,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
   const [corbadoApp] = useState(() => corbadoAppInstance ?? new CorbadoApp(corbadoParams));
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<SessionUser | undefined>();
-  const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
+  const [globalError, setGlobalErrorState] = useState<NonRecoverableError | undefined>();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [shortSession, setShortSession] = useState<string | undefined>();
   const initialized = useRef(false);
@@ -34,7 +34,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     });
 
     corbadoApp.globalErrors.subscribe(value => {
-      setGlobalError(value);
+      setGlobalErrorState(value);
     });
 
     corbadoApp.authService.authStateChanges.subscribe(value => {
@@ -45,6 +45,10 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
       setShortSession(value);
     });
   }, []);
+
+  const setGlobalError = (error: NonRecoverableError | undefined) => {
+    corbadoApp.globalErrors.next(error);
+  };
 
   return (
     <CorbadoSessionProvider
@@ -58,6 +62,7 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
         loading={loading}
         isAuthenticated={isAuthenticated}
         globalError={globalError}
+        setGlobalError={setGlobalError}
       >
         {children}
       </CorbadoAppProvider>

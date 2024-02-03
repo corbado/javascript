@@ -253,6 +253,14 @@ export class NonRecoverableError extends CorbadoError {
   static client(message: string, link: string) {
     return new NonRecoverableError('client', message, link);
   }
+
+  static userRegistrationNotAllowed() {
+    return new NonRecoverableError(
+      'server',
+      'User registration is not allowed for this project',
+      'https://docs.corbado.com/overview/sign-up-and-login-with-passkeys/user-flow-configuration#id-2.-public-sign-ups',
+    );
+  }
 }
 
 export class UserAlreadyExistsError extends RecoverableError {

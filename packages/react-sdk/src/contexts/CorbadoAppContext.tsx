@@ -57,6 +57,7 @@ export interface CorbadoAppContextProps {
   getUserAuthMethods: (email: string) => Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>>;
   userExists(email: string): Promise<Result<boolean, RecoverableError | undefined>>;
   logout: () => void;
+  setGlobalError: (error: NonRecoverableError | undefined) => void;
 }
 
 const missingImplementation = (): never => {
@@ -86,6 +87,7 @@ export const initialContext: CorbadoAppContextProps = {
   getUserAuthMethods: missingImplementation,
   getProjectConfig: missingImplementation,
   userExists: missingImplementation,
+  setGlobalError: missingImplementation,
 };
 
 export const CorbadoAppContext = createContext<CorbadoAppContextProps>(initialContext);

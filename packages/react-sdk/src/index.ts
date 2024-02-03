@@ -3,6 +3,7 @@ import {
   InvalidFullnameError,
   InvalidOtpInputError,
   InvalidPasskeyError,
+  NonRecoverableError,
   NoPasskeyAvailableError,
   PasskeyChallengeCancelledError,
   UnknownUserError,
@@ -20,4 +21,5 @@ export {
   UserAlreadyExistsError,
   InvalidFullnameError,
   InvalidEmailError,
+  NonRecoverableError,
 };

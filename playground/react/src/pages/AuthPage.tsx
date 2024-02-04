@@ -1,6 +1,6 @@
 import { CorbadoAuth } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
-// import Header from '../components/Header';
+import Header from '../components/Header';
 import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const AuthPage = () => {
@@ -13,7 +13,7 @@ const AuthPage = () => {
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <div className='component'>
         <CorbadoAuth onLoggedIn={onLoggedIn} />
       </div>

@@ -16,7 +16,7 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 5rem 1rem;
+  margin: 5rem 0.1rem;
   width: 100%;
   height: 100%;
 }
@@ -29,7 +29,7 @@ code {
 }
 
 .primary-auth-button {
-  width: 25%;
+  width: 18rem;
   background-color: #4caf50;
   color: white;
   padding: 10px;
@@ -63,6 +63,46 @@ code {
   font-weight: bold;
 }
 
+.menu-icon {
+  display: none;
+}
+
+.desktop-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-sidebar {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.sidebar-header {
+  color: white;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-icon {
+  color: white;
+  background-color: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  border: none;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -73,7 +113,7 @@ code {
   color: white;
   padding: 10px;
   font-size: 16px;
-  border-radius: 10%;
+  border-radius: 15px;
   cursor: pointer;
 }
 
@@ -109,4 +149,36 @@ code {
 
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+@media (max-width: 768px) {
+  .sticky-header {
+    background-color: #333;
+    color: white;
+    padding: 3px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .menu-icon {
+    color: white;
+    background-color: transparent;
+    font-size: 1.3rem;
+    cursor: pointer;
+    border: none;
+    display: block;
+  }
+
+  .desktop-header {
+    display: none;
+  }
+
+  .mobile-sidebar {
+    display: block;
+  }
+
+  .mobile-dropdown {
+    display: block;
+  }
 }

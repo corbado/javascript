@@ -57,6 +57,10 @@ export class FlowHandlerConfig {
     return this.#projectConfig.allowUserRegistration;
   }
 
+  get passkeyAppendInterval() {
+    return this.#projectConfig.passkeyAppendInterval;
+  }
+
   // The update method allows the type of flow to be changed,
   // and updates the flow name and options accordingly.
   update(flowType: FlowType) {

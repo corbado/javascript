@@ -5,6 +5,7 @@ import {
   appendPasskey,
   checkUserExists,
   createPasskey,
+  initPasskeyAppend,
   initSignupWithVerificationMethod,
   signupWithEmailOTP,
   validateEmailAndFullName,
@@ -83,11 +84,7 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
-        if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
-          return FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
+        return initPasskeyAppend(state.shouldAppendPasskey);
       }
       case FlowHandlerEvents.SecondaryButton: {
         // TODO: add OTP resend

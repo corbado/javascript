@@ -1,6 +1,6 @@
 import type { ProjectConfig } from '@corbado/types';
 
-import { FlowType, LoginFlowNames, passkeyAppendIntervalMap,ScreenNames, SignUpFlowNames } from './constants';
+import { FlowType, LoginFlowNames, passkeyAppendIntervalMap, ScreenNames, SignUpFlowNames } from './constants';
 import type { LoginOptions, SignupOptions, VerificationMethods } from './types';
 
 interface FlowDetails {

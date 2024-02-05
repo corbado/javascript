@@ -2,7 +2,7 @@ import type { SessionUser } from '@corbado/types';
 import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
-import { passkeyAppendAskTSKey, passkeyAppendIntervalMap } from './constants';
+import { passkeyAppendAskTSKey } from './constants';
 import type { FlowHandlerStateUpdate, FlowOptions, UserState } from './types';
 
 const defaultUserState: UserState = {
@@ -39,7 +39,7 @@ export class FlowHandlerState {
   constructor(
     flowOptions: Partial<FlowOptions>,
     passkeysSupported: boolean,
-    passkeyAppendInterval: string,
+    passkeyAppendInterval: number,
     corbadoApp: CorbadoApp,
     i18next: i18n,
   ) {
@@ -116,8 +116,7 @@ export class FlowHandlerState {
     return userState;
   }
 
-  #checkPasskeyAppendIntervalPassed(intervalParam: string) {
-    const interval = passkeyAppendIntervalMap[intervalParam] ?? 0;
+  #checkPasskeyAppendIntervalPassed(interval: number) {
     const lastShownTS = localStorage.getItem(passkeyAppendAskTSKey);
 
     if (!(lastShownTS && interval)) {

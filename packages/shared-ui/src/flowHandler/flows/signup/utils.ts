@@ -187,17 +187,12 @@ export const initPasskeyAppend = (shouldAppendPasskey: boolean): FlowUpdate => {
   return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
 };
 
-export const appendPasskey = async (
-  corbadoApp: CorbadoApp,
-  retryPasskeyOnError: boolean
-): Promise<FlowUpdate> => {
+export const appendPasskey = async (corbadoApp: CorbadoApp, retryPasskeyOnError: boolean): Promise<FlowUpdate> => {
   const res = await corbadoApp.authService.appendPasskey();
 
-   if (res.ok) {
-    return FlowUpdate.navigate(ScreenNames.PasskeySuccess)
-   }
-  
-  return retryPasskeyOnError
-          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
-          : FlowUpdate.navigate(ScreenNames.End);
+  if (res.ok) {
+    return FlowUpdate.navigate(ScreenNames.PasskeySuccess);
+  }
+
+  return retryPasskeyOnError ? FlowUpdate.navigate(ScreenNames.PasskeyError) : FlowUpdate.navigate(ScreenNames.End);
 };

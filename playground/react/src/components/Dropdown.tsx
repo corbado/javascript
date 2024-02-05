@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const dropdownItems = [
-  { id: 'pro-503401103218055321', label: 'Email OTP' },
-  { id: 'pro-423122463392265807', label: 'Email Link' },
+  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp!, label: 'Email OTP' },
+  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_EmailLink!, label: 'Email Link' },
 ];
 
 const Dropdown = () => {

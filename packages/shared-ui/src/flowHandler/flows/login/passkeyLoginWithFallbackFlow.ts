@@ -112,7 +112,7 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return await appendPasskey(state.corbadoApp.authService);
+        return await appendPasskey(state.corbadoApp.authService, state.flowOptions);
       case FlowHandlerEvents.SecondaryButton:
         return Promise.resolve(FlowUpdate.navigate(ScreenNames.End));
       case FlowHandlerEvents.ShowBenefits:
@@ -147,7 +147,7 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        return await appendPasskey(state.corbadoApp.authService);
+        return await appendPasskey(state.corbadoApp.authService, state.flowOptions);
       }
       case FlowHandlerEvents.SecondaryButton:
         return FlowUpdate.navigate(ScreenNames.End);

@@ -89,14 +89,7 @@ export const SignupWithPasskeyAppendFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await appendPasskey(state.corbadoApp);
-        if (res.ok) {
-          return res.val;
-        }
-
-        return state.flowOptions.retryPasskeyOnError
-          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
-          : FlowUpdate.navigate(ScreenNames.End);
+        return await appendPasskey(state.corbadoApp, state.flowOptions.retryPasskeyOnError);
       }
       case FlowHandlerEvents.SecondaryButton:
         return FlowUpdate.navigate(ScreenNames.End);
@@ -115,14 +108,7 @@ export const SignupWithPasskeyAppendFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await appendPasskey(state.corbadoApp);
-        if (res.ok) {
-          return res.val;
-        }
-
-        return state.flowOptions.retryPasskeyOnError
-          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
-          : FlowUpdate.navigate(ScreenNames.End);
+        return await appendPasskey(state.corbadoApp, state.flowOptions.retryPasskeyOnError);
       }
       case FlowHandlerEvents.SecondaryButton: {
         return FlowUpdate.navigate(ScreenNames.End);
@@ -151,12 +137,7 @@ export const SignupWithPasskeyAppendFlow: Flow = {
       case FlowHandlerEvents.ShowBenefits:
         return FlowUpdate.navigate(ScreenNames.PasskeyBenefits);
       case FlowHandlerEvents.PrimaryButton: {
-        const res = await appendPasskey(state.corbadoApp);
-        if (res.ok) {
-          return res.val;
-        }
-
-        return;
+        return await appendPasskey(state.corbadoApp, state.flowOptions.retryPasskeyOnError);
       }
       case FlowHandlerEvents.CancelPasskey:
         return FlowUpdate.navigate(ScreenNames.End);

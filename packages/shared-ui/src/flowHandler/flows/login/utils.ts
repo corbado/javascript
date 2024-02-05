@@ -165,7 +165,11 @@ export const loginWithPasskey = async (
     });
   }
 
-  if (res.val instanceof NoPasskeyAvailableError || res.val instanceof PasskeyChallengeCancelledError) {
+  if (
+    res.val instanceof NoPasskeyAvailableError ||
+    res.val instanceof PasskeyChallengeCancelledError ||
+    !flowOptions.retryPasskeyOnError
+  ) {
     return initLoginWithVerificationMethod(authService, flowOptions, email);
   }
 
@@ -193,8 +197,12 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
   return FlowUpdate.ignore();
 };
 
-export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {
-  await authService.appendPasskey();
+export const appendPasskey = async (authService: AuthService, flowOptions: FlowOptions): Promise<FlowUpdate> => {
+  const res = await authService.appendPasskey();
 
-  return FlowUpdate.navigate(ScreenNames.End);
+  if (res.ok || !flowOptions.retryPasskeyOnError) {
+    return FlowUpdate.navigate(ScreenNames.End);
+  }
+
+  return FlowUpdate.navigate(ScreenNames.PasskeyError);
 };

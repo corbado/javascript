@@ -1,4 +1,4 @@
-import type { AppendPasskeyError, CorbadoApp, SignUpWithPasskeyError } from '@corbado/web-core';
+import type { CorbadoApp, SignUpWithPasskeyError } from '@corbado/web-core';
 import {
   InvalidEmailError,
   InvalidFullnameError,
@@ -189,11 +189,15 @@ export const initPasskeyAppend = (shouldAppendPasskey: boolean): FlowUpdate => {
 
 export const appendPasskey = async (
   corbadoApp: CorbadoApp,
-): Promise<Result<FlowUpdate, AppendPasskeyError | undefined>> => {
+  retryPasskeyOnError: boolean
+): Promise<FlowUpdate> => {
   const res = await corbadoApp.authService.appendPasskey();
-  if (res.ok) {
-    return Ok(FlowUpdate.navigate(ScreenNames.PasskeySuccess));
-  }
 
-  return res;
+   if (res.ok) {
+    return FlowUpdate.navigate(ScreenNames.PasskeySuccess)
+   }
+  
+  return retryPasskeyOnError
+          ? FlowUpdate.navigate(ScreenNames.PasskeyError)
+          : FlowUpdate.navigate(ScreenNames.End);
 };

@@ -1,23 +1,31 @@
 import { Login } from '@corbado/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Header from '../components/Header';
+import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const onLoggedIn = () => {
-    navigate('/');
+    navigate(`/${projectId}`);
   };
 
   const navigateToSignup = () => {
-    navigate('/signup');
+    navigate(`/${projectId}/signup`);
   };
 
   return (
-    <Login
-      onLoggedIn={onLoggedIn}
-      navigateToSignUp={navigateToSignup}
-    />
+    <>
+      <Header />
+      <div className='component'>
+        <Login
+          onLoggedIn={onLoggedIn}
+          navigateToSignUp={navigateToSignup}
+        />
+      </div>
+    </>
   );
 };
 
-export default LoginPage;
+export default withCorbadoProvider(LoginPage);

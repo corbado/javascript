@@ -23,7 +23,7 @@
     "test:e2e:report": "lerna run e2e:report"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.1",
+    "@playwright/test": "^1.41.2",
     "@types/node": "^20.8.7",
     "@typescript-eslint/eslint-plugin": "5.58.0",
     "@typescript-eslint/parser": "5.58.0",

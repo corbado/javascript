@@ -9,6 +9,7 @@ import {
   loginWithEmailLink,
   loginWithEmailOTP,
   loginWithPasskey,
+  sendEmailLinkAgain,
   validateEmail,
   validateUserAuthState,
 } from './utils';
@@ -73,11 +74,11 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
     if (validations.err) {
       return validations.val;
     }
+    const email = validations.val;
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        // resend email
-        return;
+        return sendEmailLinkAgain(state.corbadoApp.authService, email);
       }
       case FlowHandlerEvents.CancelEmailLink:
         return FlowUpdate.navigate(ScreenNames.Start);

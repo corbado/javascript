@@ -10,6 +10,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_URL,
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {

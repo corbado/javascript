@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - main
-      - bugfix-conditional-ui-unconfirmed-credential
 
 jobs:
   deploy:

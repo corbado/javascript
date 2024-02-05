@@ -7,6 +7,7 @@ import {
   createPasskey,
   initPasskeyAppend,
   initSignupWithVerificationMethod,
+  sendEmailLinkAgain,
   signupWithEmailOTP,
   validateEmailAndFullName,
   validateUserAuthState,
@@ -102,11 +103,11 @@ export const PasskeySignupWithFallbackFlow: Flow = {
     if (validations.err) {
       return validations.val;
     }
+    const { email, fullName } = validations.val;
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        // resend email
-        return;
+        return sendEmailLinkAgain(state.corbadoApp, email, fullName);
       }
       case FlowHandlerEvents.CancelEmailLink:
         return FlowUpdate.navigate(ScreenNames.Start);

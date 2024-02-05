@@ -11,3 +11,174 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5rem 0.1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 5rem 3rem;
+}
+
+.primary-auth-button {
+  width: 18rem;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.primary-auth-button:hover {
+  background-color: #3e8e41;
+}
+
+.sticky-header {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.menu-icon {
+  display: none;
+}
+
+.desktop-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-sidebar {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.sidebar-header {
+  color: white;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-icon {
+  color: white;
+  background-color: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-item {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.dropdown-item.active {
+  background-color: #b8ceb0;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+@media (max-width: 768px) {
+  .sticky-header {
+    background-color: #333;
+    color: white;
+    padding: 3px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .menu-icon {
+    color: white;
+    background-color: transparent;
+    font-size: 1.3rem;
+    cursor: pointer;
+    border: none;
+    display: block;
+  }
+
+  .desktop-header {
+    display: none;
+  }
+
+  .mobile-sidebar {
+    display: block;
+  }
+
+  .mobile-dropdown {
+    display: block;
+  }
+}

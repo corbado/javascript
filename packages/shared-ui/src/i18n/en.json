@@ -21,12 +21,12 @@
         "header": "Check your inbox to create your account",
         "body_text1": "We just sent you a magic link to ",
         "body_text2": ". Click on the link in the email to finish setting up your account.",
+        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
         "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "emailLinkVerification": {
         "header": "Verifying your email address",
-        "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "passkeyCreate": {
@@ -101,12 +101,12 @@
         "header": "Check your inbox to login",
         "body_text1": "We just sent you a magic link to ",
         "body_text2": ". Click on the link in the email to login to your account.",
+        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
         "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "emailLinkVerification": {
         "header": "Verifying your email address",
-        "button_sendLinkAgain": "Send email again",
         "button_back": "Cancel"
       },
       "passkeyError": {

@@ -1,14 +1,24 @@
 import { CorbadoAuth } from '@corbado/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Header from '../components/Header';
+import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const onLoggedIn = () => {
-    navigate('/');
+    navigate(`/${projectId}`);
   };
 
-  return <CorbadoAuth onLoggedIn={onLoggedIn} />;
+  return (
+    <>
+      <Header />
+      <div className='component'>
+        <CorbadoAuth onLoggedIn={onLoggedIn} />
+      </div>
+    </>
+  );
 };
 
-export default AuthPage;
+export default withCorbadoProvider(AuthPage);

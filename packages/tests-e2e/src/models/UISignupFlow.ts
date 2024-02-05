@@ -169,7 +169,7 @@ export class UISignupFlow {
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL('/');
+        await expect(this.page).toHaveURL(/\/pro-*/);
         break;
     }
   }

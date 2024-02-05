@@ -44,7 +44,7 @@ export const validateUserAuthState = (state: FlowHandlerState): Result<undefined
 
 /********** Validation Utils *********/
 
-const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+const sendEmailOTP = async (authService: AuthService, email: string): Promise<FlowUpdate> => {
   const res = await authService.initLoginWithEmailOTP(email);
 
   if (res.ok) {
@@ -53,10 +53,10 @@ const sendEmailOTP = async (authService: AuthService, email: string): Promise<Fl
     });
   }
 
-  return;
+  return FlowUpdate.state({ emailError: res.val, email });
 };
 
-const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate | undefined> => {
+const sendEmailLink = async (authService: AuthService, email: string): Promise<FlowUpdate> => {
   const res = await authService.initLoginWithEmailLink(email);
 
   if (res.ok) {
@@ -65,7 +65,13 @@ const sendEmailLink = async (authService: AuthService, email: string): Promise<F
     });
   }
 
-  return;
+  return FlowUpdate.state({ emailError: res.val, email });
+};
+
+export const sendEmailLinkAgain = async (authService: AuthService, email: string): Promise<FlowUpdate> => {
+  const res = await sendEmailLink(authService, email);
+
+  return res ?? FlowUpdate.navigate(ScreenNames.EmailLinkSent, { emailError: new UnknownError(), email });
 };
 
 export const initLoginWithVerificationMethod = async (
@@ -73,14 +79,9 @@ export const initLoginWithVerificationMethod = async (
   flowOptions: FlowOptions,
   email: string,
 ): Promise<FlowUpdate> => {
-  let res: FlowUpdate | undefined;
-  if (flowOptions.verificationMethod === 'emailLink') {
-    res = await sendEmailLink(authService, email);
-  } else {
-    res = await sendEmailOTP(authService, email);
-  }
-
-  return res ?? FlowUpdate.state({ emailError: new UnknownError(), email });
+  return flowOptions.verificationMethod === 'emailLink'
+    ? await sendEmailLink(authService, email)
+    : await sendEmailOTP(authService, email);
 };
 
 export const loginWithEmailOTP = async (

@@ -89,18 +89,28 @@ const sendEmailOTP = async (corbadoApp: CorbadoApp, email: string, fullName: str
   return FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: res.val });
 };
 
-const sendEmailLink = async (
-  corbadoApp: CorbadoApp,
-  email: string,
-  fullName: string,
-): Promise<FlowUpdate | undefined> => {
+const sendEmailLink = async (corbadoApp: CorbadoApp, email: string, fullName: string): Promise<FlowUpdate> => {
   const res = await corbadoApp.authService.initSignUpWithEmailLink(email, fullName);
 
   if (res.ok) {
     return FlowUpdate.navigate(ScreenNames.EmailLinkSent, { email, fullName });
   }
 
-  return;
+  return FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: res.val });
+};
+
+export const sendEmailLinkAgain = async (
+  corbadoApp: CorbadoApp,
+  email: string,
+  fullName: string,
+): Promise<FlowUpdate> => {
+  const res = await corbadoApp.authService.initLoginWithEmailLink(email);
+
+  if (res.ok) {
+    return FlowUpdate.ignore();
+  }
+
+  return FlowUpdate.navigate(ScreenNames.Start, { email, fullName, emailError: res.val });
 };
 
 export const initSignupWithVerificationMethod = async (

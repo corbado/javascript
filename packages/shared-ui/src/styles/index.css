@@ -237,6 +237,15 @@
   font-family: 'Space Grotesk', sans-serif;
 }
 
+.cb-button-primary[disabled] {
+  background-color: #7586b9;
+  cursor: not-allowed;
+}
+
+.cb-button-primary[disabled]:hover {
+  background-color: #7586b9;
+}
+
 .cb-button-primary:hover {
   background-color: #1145df;
 }
@@ -511,6 +520,11 @@
 
 /***** Media Queries *****/
 @media screen and (max-width: 768px) {
+  .cb-container {
+    width: 95%;
+    padding: 2.5rem 1.3rem 1.25rem 1.3rem;
+  }
+
   .cb-email-links {
     display: flex;
     flex-direction: column;

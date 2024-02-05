@@ -100,13 +100,6 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
       case FlowHandlerEvents.CancelEmailLink:
         window.location.search = '';
         return FlowUpdate.navigate(ScreenNames.Start);
-      //TODO: remove this once we fix the flow
-      case FlowHandlerEvents.PrimaryButton:
-        return await appendPasskey(state.corbadoApp.authService);
-      case FlowHandlerEvents.SecondaryButton:
-        return Promise.resolve(FlowUpdate.navigate(ScreenNames.End));
-      case FlowHandlerEvents.ShowBenefits:
-        return Promise.resolve(FlowUpdate.navigate(ScreenNames.PasskeyBenefits));
     }
     return FlowUpdate.state({});
   },

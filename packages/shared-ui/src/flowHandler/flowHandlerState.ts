@@ -2,7 +2,14 @@ import type { SessionUser } from '@corbado/types';
 import type { CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
+import { passkeyAppendAskTSKey } from './constants';
 import type { FlowHandlerStateUpdate, FlowOptions, UserState } from './types';
+
+const defaultUserState: UserState = {
+  email: undefined,
+  fullName: undefined,
+  emailError: undefined,
+};
 
 const defaultErrors: UserState = {
   emailError: undefined,
@@ -21,17 +28,18 @@ const defaultFlowOptions: FlowOptions = {
  * This class is responsible for managing the state which is sent to all the flow steps.
  */
 export class FlowHandlerState {
+  readonly #passkeysSupported: boolean;
+  readonly #corbadoApp: CorbadoApp;
+  readonly #i18next: i18n;
+  readonly #hasPasskeyAppendIntervalPassed: boolean;
   #flowOptions: FlowOptions;
   #userState: UserState;
-  #passkeysSupported: boolean;
   #user?: SessionUser;
-  #corbadoApp: CorbadoApp;
-  #i18next: i18n;
 
   constructor(
     flowOptions: Partial<FlowOptions>,
-    userState: UserState,
     passkeysSupported: boolean,
+    passkeyAppendInterval: number,
     corbadoApp: CorbadoApp,
     i18next: i18n,
   ) {
@@ -40,10 +48,11 @@ export class FlowHandlerState {
       ...defaultFlowOptions,
       ...flowOptions,
     };
-    this.#userState = userState;
+    this.#userState = defaultUserState;
     this.#passkeysSupported = passkeysSupported;
     this.#corbadoApp = corbadoApp;
     this.#i18next = i18next;
+    this.#hasPasskeyAppendIntervalPassed = this.#checkPasskeyAppendIntervalPassed(passkeyAppendInterval);
 
     corbadoApp.authService.userChanges.subscribe(user => {
       this.update({ user });
@@ -66,6 +75,10 @@ export class FlowHandlerState {
 
   get corbadoApp(): CorbadoApp {
     return this.#corbadoApp;
+  }
+
+  get shouldAppendPasskey(): boolean {
+    return this.#passkeysSupported && this.#flowOptions.passkeyAppend && this.#hasPasskeyAppendIntervalPassed;
   }
 
   /**
@@ -101,5 +114,20 @@ export class FlowHandlerState {
     }
 
     return userState;
+  }
+
+  #checkPasskeyAppendIntervalPassed(interval: number) {
+    const lastShownTS = localStorage.getItem(passkeyAppendAskTSKey);
+
+    if (!(lastShownTS && interval)) {
+      return true;
+    }
+
+    const lastShownDate = new Date(lastShownTS);
+    const today = new Date();
+    const diffInTimeStamp = today.getTime() - lastShownDate.getTime();
+    const diffInDays = Math.ceil(diffInTimeStamp / (1000 * 3600 * 24));
+
+    return diffInDays > interval;
   }
 }

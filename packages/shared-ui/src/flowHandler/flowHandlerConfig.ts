@@ -1,6 +1,6 @@
 import type { ProjectConfig } from '@corbado/types';
 
-import { FlowType, LoginFlowNames, ScreenNames, SignUpFlowNames } from './constants';
+import { FlowType, LoginFlowNames, passkeyAppendIntervalMap, ScreenNames, SignUpFlowNames } from './constants';
 import type { LoginOptions, SignupOptions, VerificationMethods } from './types';
 
 interface FlowDetails {
@@ -55,6 +55,10 @@ export class FlowHandlerConfig {
 
   get allowUserRegistration() {
     return this.#projectConfig.allowUserRegistration;
+  }
+
+  get passkeyAppendInterval() {
+    return passkeyAppendIntervalMap[this.#projectConfig.passkeyAppendInterval] ?? 0;
   }
 
   // The update method allows the type of flow to be changed,

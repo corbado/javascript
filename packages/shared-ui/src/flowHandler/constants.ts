@@ -41,3 +41,16 @@ export enum FlowHandlerEvents {
   SecondaryButton = 'secondary-button',
   InitConditionalUI = 'init-conditional-ui',
 }
+
+// Map of passkey append intervals to their respective number of days
+export const passkeyAppendIntervalMap: { [key: string]: number } = {
+  '0d': 0,
+  '1d': 1,
+  '3d': 3,
+  '1w': 7,
+  '3w': 21,
+  '1m': 30,
+  '3m': 90,
+};
+
+export const passkeyAppendAskTSKey = 'corbado_passkeyAppendAskTS';

@@ -4,6 +4,7 @@ import type { Flow } from '../../types';
 import {
   appendPasskey,
   checkUserExists,
+  initPasskeyAppend,
   initSignupWithVerificationMethod,
   sendEmailLinkAgain,
   signupWithEmailOTP,
@@ -48,11 +49,7 @@ export const SignupWithPasskeyAppendFlow: Flow = {
           return res.val;
         }
 
-        if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
-          return FlowUpdate.navigate(ScreenNames.End);
-        }
-
-        return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
+        return initPasskeyAppend(state.shouldAppendPasskey);
       }
       case FlowHandlerEvents.SecondaryButton:
         return FlowUpdate.navigate(ScreenNames.Start);

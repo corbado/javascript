@@ -12,7 +12,7 @@ import {
 } from '@corbado/web-core';
 import { Err, Ok, type Result } from 'ts-results';
 
-import { ScreenNames } from '../../constants';
+import { passkeyAppendAskTSKey, ScreenNames } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
 import type { FlowOptions, UserState } from '../../types';
@@ -128,7 +128,7 @@ export const loginWithEmailLink = async (
 /********** Passkey Utils *********/
 
 export const initPasskeyAppend = async (state: FlowHandlerState, email: string): Promise<FlowUpdate | undefined> => {
-  if (!state.flowOptions.passkeyAppend || !state.passkeysSupported) {
+  if (!state.shouldAppendPasskey) {
     return FlowUpdate.navigate(ScreenNames.End);
   }
 
@@ -140,6 +140,7 @@ export const initPasskeyAppend = async (state: FlowHandlerState, email: string):
 
   const userHasPasskey = authMethods.val.selectedMethods.includes('webauthn');
   if (!userHasPasskey) {
+    localStorage.setItem(passkeyAppendAskTSKey, Date.now().toString());
     return FlowUpdate.navigate(ScreenNames.PasskeyAppend, { email });
   }
 
@@ -194,5 +195,6 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
 
 export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {
   await authService.appendPasskey();
+
   return FlowUpdate.navigate(ScreenNames.End);
 };

@@ -9,7 +9,7 @@ import {
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import { ScreenNames } from '../../constants';
+import { passkeyAppendAskTSKey, ScreenNames } from '../../constants';
 import type { FlowHandlerState } from '../../flowHandlerState';
 import { FlowUpdate } from '../../flowUpdate';
 import type { FlowOptions, UserState } from '../../types';
@@ -176,6 +176,15 @@ export const createPasskey = async (
   }
 
   return res;
+};
+
+export const initPasskeyAppend = (shouldAppendPasskey: boolean): FlowUpdate => {
+  if (!shouldAppendPasskey) {
+    return FlowUpdate.navigate(ScreenNames.End);
+  }
+
+  localStorage.setItem(passkeyAppendAskTSKey, Date.now().toString());
+  return FlowUpdate.navigate(ScreenNames.PasskeyAppend);
 };
 
 export const appendPasskey = async (

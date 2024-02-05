@@ -46,6 +46,7 @@ export class FlowHandler {
     }
 
     let flowType = initialFlowType;
+
     if (!projectConfig.allowUserRegistration) {
       if (initialFlowType === FlowType.SignUp) {
         corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
@@ -69,12 +70,8 @@ export class FlowHandler {
 
     this.#state = new FlowHandlerState(
       this.#config.flowOptions,
-      {
-        email: undefined,
-        fullName: undefined,
-        emailError: undefined,
-      },
       passkeysSupported,
+      this.#config.passkeyAppendInterval,
       this.#corbadoApp,
       i18next,
     );

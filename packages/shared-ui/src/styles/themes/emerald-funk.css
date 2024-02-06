@@ -2,24 +2,24 @@
   --cb-primary-color: #21ba45;
   --cb-secondary-color: #b5ff7d;
   --cb-background-color: #1b1d1b;
-  --cb-text-color: #ffffff;
+  --cb-primary-text-color: #ffffff;
   --cb-border-color: #21ba45;
   --cb-error-color: #ff6b6b;
   --cb-horizontal-divider-color: #555;
   --cb-input-color: #e0e0e0;
-  --cb-funky-font: 'Comic Sans MS', cursive, sans-serif;
+  --cb-font: 'Comic Sans MS', cursive, sans-serif;
 
   .cb-container {
     background-color: var(--cb-background-color);
     border-color: var(--cb-border-color);
-    color: var(--cb-text-color);
+    color: var(--cb-primary-text-color);
   }
 
   .cb-header,
   .cb-subheader,
   .cb-body {
-    font-family: var(--cb-funky-font);
-    color: var(--cb-text-color);
+    font-family: var(--cb-font);
+    color: var(--cb-primary-text-color);
   }
 
   .cb-link-primary,
@@ -71,7 +71,7 @@
 
   .cb-button-primary {
     background-color: var(--cb-primary-color);
-    color: var(--cb-text-color);
+    color: var(--cb-primary-text-color);
   }
 
   .cb-button-primary:hover {

@@ -2,19 +2,22 @@ import cancelSrc from '@corbado/shared-ui/assets/cancel.svg';
 import deleteSrc from '@corbado/shared-ui/assets/delete.svg';
 import fingerprintSrc from '@corbado/shared-ui/assets/fingerprint.svg';
 import gmailSrc from '@corbado/shared-ui/assets/gmail.svg';
+import corbadoLogoSrc from '@corbado/shared-ui/assets/logo.svg';
 import outlookSrc from '@corbado/shared-ui/assets/outlook.svg';
 import passkeyDefaultSrc from '@corbado/shared-ui/assets/passkey-default.svg';
 import yahooSrc from '@corbado/shared-ui/assets/yahoo.svg';
+import type { CSSProperties } from 'react';
 import React from 'react';
 
 import { Icon } from './Icon';
 
-type Props = {
+export type IconProps = {
   onClick?: () => void;
   className?: string;
+  style?: CSSProperties;
 };
 
-export const DeleteIcon = (props: Props) => {
+export const DeleteIcon = (props: IconProps) => {
   return (
     <Icon
       src={deleteSrc}
@@ -24,7 +27,7 @@ export const DeleteIcon = (props: Props) => {
   );
 };
 
-export const PasskeyDefaultIcon = (props: Props) => {
+export const PasskeyDefaultIcon = (props: IconProps) => {
   return (
     <Icon
       src={passkeyDefaultSrc}
@@ -34,7 +37,7 @@ export const PasskeyDefaultIcon = (props: Props) => {
   );
 };
 
-export const YahooIcon = (props: Props) => {
+export const YahooIcon = (props: IconProps) => {
   return (
     <Icon
       src={yahooSrc}
@@ -44,7 +47,7 @@ export const YahooIcon = (props: Props) => {
   );
 };
 
-export const GmailIcon = (props: Props) => {
+export const GmailIcon = (props: IconProps) => {
   return (
     <Icon
       src={gmailSrc}
@@ -54,7 +57,7 @@ export const GmailIcon = (props: Props) => {
   );
 };
 
-export const OutlookIcon = (props: Props) => {
+export const OutlookIcon = (props: IconProps) => {
   return (
     <Icon
       src={outlookSrc}
@@ -64,7 +67,7 @@ export const OutlookIcon = (props: Props) => {
   );
 };
 
-export const FingerprintIcon = (props: Props) => {
+export const FingerprintIcon = (props: IconProps) => {
   return (
     <Icon
       src={fingerprintSrc}
@@ -74,11 +77,21 @@ export const FingerprintIcon = (props: Props) => {
   );
 };
 
-export const CancelIcon = (props: Props) => {
+export const CancelIcon = (props: IconProps) => {
   return (
     <Icon
       src={cancelSrc}
       alt='cancel'
+      {...props}
+    />
+  );
+};
+
+export const CorbadoLogoIcon = (props: IconProps) => {
+  return (
+    <Icon
+      src={corbadoLogoSrc}
+      alt='corbado-logo'
       {...props}
     />
   );

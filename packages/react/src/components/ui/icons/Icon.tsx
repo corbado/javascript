@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { CSSProperties, FC } from 'react';
 import React from 'react';
 
 import type { CustomizableComponent } from '../../../types';
@@ -8,14 +8,16 @@ export interface Props extends Omit<CustomizableComponent, 'children'> {
   alt?: string;
   onClick?: () => void;
   className?: string;
+  style?: CSSProperties;
 }
 
-export const Icon: FC<Props> = ({ src, alt = '', onClick, className = '' }) => {
+export const Icon: FC<Props> = ({ src, style, alt = '', onClick, className = '' }) => {
   return (
     <img
       src={src}
       alt={alt}
       onClick={onClick}
+      style={style}
       className={`cb-icon ${onClick ? 'cb-pointer' : ''} ${className}`}
     ></img>
   );

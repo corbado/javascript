@@ -11,3 +11,4 @@ export * from './SubHeader';
 export * from './Body';
 export * from './Dialog';
 export * from './buttons/EmailProviderButtons';
+export * from './FreemiumBadge';

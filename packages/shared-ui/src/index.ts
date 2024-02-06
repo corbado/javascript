@@ -7,6 +7,7 @@ import cancelIcon from './assets/cancel.svg';
 import deleteIcon from './assets/delete.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import gmailIcon from './assets/gmail.svg';
+import logoIcon from './assets/logo.svg';
 import outlookIcon from './assets/outlook.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
 import yahooIcon from './assets/yahoo.svg';
@@ -28,4 +29,5 @@ export const assets = {
   outlookIcon,
   fingerprintIcon,
   cancelIcon,
+  logoIcon,
 };

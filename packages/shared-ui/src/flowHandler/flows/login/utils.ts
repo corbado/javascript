@@ -173,7 +173,10 @@ export const loginWithPasskey = async (
     return initLoginWithVerificationMethod(authService, flowOptions, email);
   }
 
-  return FlowUpdate.navigate(ScreenNames.PasskeyError, userState);
+  return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+    ...userState,
+    lastPasskeyRetryTimeStamp: Date.now(),
+  });
 };
 
 export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUpdate | undefined> => {
@@ -197,12 +200,14 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
   return FlowUpdate.ignore();
 };
 
-export const appendPasskey = async (authService: AuthService, flowOptions: FlowOptions): Promise<FlowUpdate> => {
+export const appendPasskey = async (authService: AuthService, retryPasskeyOnError: boolean): Promise<FlowUpdate> => {
   const res = await authService.appendPasskey();
 
-  if (res.ok || !flowOptions.retryPasskeyOnError) {
+  if (res.ok || !retryPasskeyOnError) {
     return FlowUpdate.navigate(ScreenNames.End);
   }
 
-  return FlowUpdate.navigate(ScreenNames.PasskeyError);
+  return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+    lastPasskeyRetryTimeStamp: Date.now(),
+  });
 };

@@ -194,5 +194,9 @@ export const appendPasskey = async (corbadoApp: CorbadoApp, retryPasskeyOnError:
     return FlowUpdate.navigate(ScreenNames.PasskeySuccess);
   }
 
-  return retryPasskeyOnError ? FlowUpdate.navigate(ScreenNames.PasskeyError) : FlowUpdate.navigate(ScreenNames.End);
+  return retryPasskeyOnError
+    ? FlowUpdate.navigate(ScreenNames.PasskeyError, {
+        lastPasskeyRetryTimeStamp: Date.now(),
+      })
+    : FlowUpdate.navigate(ScreenNames.End);
 };

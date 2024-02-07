@@ -58,7 +58,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
         }
 
         if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
+          return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+            ...state.userState,
+            lastPasskeyRetryTimeStamp: Date.now(),
+          });
         }
 
         return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);
@@ -158,7 +161,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
         }
 
         if (state.flowOptions.retryPasskeyOnError) {
-          return FlowUpdate.navigate(ScreenNames.PasskeyError);
+          return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+            ...state.userState,
+            lastPasskeyRetryTimeStamp: Date.now(),
+          });
         }
 
         return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);

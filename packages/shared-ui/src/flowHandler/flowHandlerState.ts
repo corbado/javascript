@@ -15,6 +15,7 @@ const defaultErrors: UserState = {
   emailError: undefined,
   userNameError: undefined,
   verificationError: undefined,
+  lastPasskeyRetryTimeStamp: undefined,
 };
 
 const defaultFlowOptions: FlowOptions = {

@@ -206,7 +206,10 @@ export const PasskeySignupWithFallbackFlow: Flow = {
           return res.val;
         }
 
-        return;
+        return FlowUpdate.state({
+          ...state.userState,
+          lastPasskeyRetryTimeStamp: Date.now(),
+        });
       }
       case FlowHandlerEvents.SecondaryButton:
         return await initSignupWithVerificationMethod(state.corbadoApp, state.flowOptions, email, fullName);

@@ -40,12 +40,7 @@ export class ProjectService {
     const projConfig = await this.#apiService.getProjectConfig();
 
     if (projConfig.ok) {
-      const tempProj = {
-        ...projConfig.val,
-        signupFlowOptions: { ...projConfig.val.signupFlowOptions, retryPasskeyOnError: true },
-        loginFlowOptions: { ...projConfig.val.loginFlowOptions, retryPasskeyOnError: true },
-      };
-      this.#projConfig = tempProj;
+      this.#projConfig = projConfig.val;
       return Ok(this.#projConfig);
     }
 

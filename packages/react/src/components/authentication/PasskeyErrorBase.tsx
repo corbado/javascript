@@ -1,7 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { FlowHandlerEvents } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
@@ -21,16 +21,10 @@ export const PasskeyErrorBase: FC<PasskeyErrorBaseProps> = ({ showSecondaryButto
   const { isAuthenticated } = useCorbado();
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
-  const lastPasskeyRetryTimeStamp = useRef<number>(0);
 
   useEffect(() => {
-    if (currentUserState.lastPasskeyRetryTimeStamp === lastPasskeyRetryTimeStamp.current) {
-      return;
-    }
-
-    lastPasskeyRetryTimeStamp.current = currentUserState.lastPasskeyRetryTimeStamp ?? 0;
     setPrimaryLoading(false);
-  }, [currentUserState]);
+  }, [currentUserState.lastPasskeyRetryTimeStamp]);
 
   const header = useMemo(() => t('header'), [t]);
 

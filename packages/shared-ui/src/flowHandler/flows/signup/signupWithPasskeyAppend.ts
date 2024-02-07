@@ -51,7 +51,7 @@ export const SignupWithPasskeyAppendFlow: Flow = {
 
         return initPasskeyAppend(state.shouldAppendPasskey);
       }
-      case FlowHandlerEvents.SecondaryButton:
+      case FlowHandlerEvents.CancelOTP:
         return FlowUpdate.navigate(ScreenNames.Start);
     }
 

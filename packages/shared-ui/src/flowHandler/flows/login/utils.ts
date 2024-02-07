@@ -165,11 +165,18 @@ export const loginWithPasskey = async (
     });
   }
 
-  if (res.val instanceof NoPasskeyAvailableError || res.val instanceof PasskeyChallengeCancelledError) {
+  if (
+    res.val instanceof NoPasskeyAvailableError ||
+    res.val instanceof PasskeyChallengeCancelledError ||
+    !flowOptions.retryPasskeyOnError
+  ) {
     return initLoginWithVerificationMethod(authService, flowOptions, email);
   }
 
-  return FlowUpdate.navigate(ScreenNames.PasskeyError, userState);
+  return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+    ...userState,
+    lastPasskeyRetryTimeStamp: Date.now(),
+  });
 };
 
 export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUpdate | undefined> => {
@@ -193,8 +200,14 @@ export const initConditionalUI = async (state: FlowHandlerState): Promise<FlowUp
   return FlowUpdate.ignore();
 };
 
-export const appendPasskey = async (authService: AuthService): Promise<FlowUpdate> => {
-  await authService.appendPasskey();
+export const appendPasskey = async (authService: AuthService, retryPasskeyOnError: boolean): Promise<FlowUpdate> => {
+  const res = await authService.appendPasskey();
 
-  return FlowUpdate.navigate(ScreenNames.End);
+  if (res.ok || !retryPasskeyOnError) {
+    return FlowUpdate.navigate(ScreenNames.End);
+  }
+
+  return FlowUpdate.navigate(ScreenNames.PasskeyError, {
+    lastPasskeyRetryTimeStamp: Date.now(),
+  });
 };

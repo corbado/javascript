@@ -112,7 +112,7 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton:
-        return await appendPasskey(state.corbadoApp.authService);
+        return await appendPasskey(state.corbadoApp.authService, state.flowOptions.retryPasskeyOnError);
       case FlowHandlerEvents.SecondaryButton:
         return Promise.resolve(FlowUpdate.navigate(ScreenNames.End));
       case FlowHandlerEvents.ShowBenefits:
@@ -123,18 +123,39 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
   },
 
   [ScreenNames.PasskeyError]: async (state, event) => {
-    const validations = validateEmail(state.userState);
-    if (validations.err) {
-      return validations.val;
-    }
-    const email = validations.val;
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        return loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
+        if (state.user) {
+          return await appendPasskey(state.corbadoApp.authService, state.flowOptions.retryPasskeyOnError);
+        }
+
+        const credValRes = validateEmail(state.userState);
+
+        if (credValRes.err) {
+          return credValRes.val;
+        }
+
+        const email = credValRes.val;
+
+        return await loginWithPasskey(state.corbadoApp.authService, state.flowOptions, email);
       }
       case FlowHandlerEvents.SecondaryButton: {
-        return initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
+        if (state.user) {
+          return FlowUpdate.navigate(ScreenNames.End);
+        }
+
+        const credValRes = validateEmail(state.userState);
+
+        if (credValRes.err) {
+          return credValRes.val;
+        }
+
+        const email = credValRes.val;
+
+        return await initLoginWithVerificationMethod(state.corbadoApp.authService, state.flowOptions, email);
       }
+      case FlowHandlerEvents.CancelPasskey:
+        return FlowUpdate.navigate(ScreenNames.End);
     }
     return FlowUpdate.state({});
   },
@@ -147,7 +168,7 @@ export const PasskeyLoginWithFallbackFlow: Flow = {
 
     switch (event) {
       case FlowHandlerEvents.PrimaryButton: {
-        return await appendPasskey(state.corbadoApp.authService);
+        return await appendPasskey(state.corbadoApp.authService, state.flowOptions.retryPasskeyOnError);
       }
       case FlowHandlerEvents.SecondaryButton:
         return FlowUpdate.navigate(ScreenNames.End);

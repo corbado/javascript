@@ -79,6 +79,7 @@ export type UserState = {
   emailError?: RecoverableError;
   userNameError?: RecoverableError;
   verificationError?: RecoverableError;
+  lastPasskeyRetryTimeStamp?: number;
 };
 
 /**

@@ -8,9 +8,9 @@ export const FreemiumBadge: FC = () => {
     <div
       style={{
         backgroundColor: 'var(--cb-primary-color)',
-        borderRadius: ' 0 0 2.2rem 2.2rem',
-        height: '2.5rem',
-        width: '13.5rem',
+        borderRadius: ' 0 0 1.5rem 1.5rem',
+        height: '2rem',
+        width: '11rem',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -19,10 +19,10 @@ export const FreemiumBadge: FC = () => {
     >
       <div
         style={{
-          color: '#ffffff',
+          color: 'var(--cb-white)',
           fontFamily: 'var(--cb-font)',
-          fontSize: '0.8rem',
-          fontWeight: 500,
+          fontSize: '0.6rem',
+          fontWeight: 700,
           letterSpacing: '0.03rem',
         }}
       >

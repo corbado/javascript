@@ -10,7 +10,8 @@
   --cb-black: #000;
   --cb-horizontal-divider-color: #d9d9d9;
   --cb-input-color: #090f1f;
-  --cb-font: 'Space Grotesk', sans-serif;
+  --cb-primary-font: 'Space Grotesk', sans-serif;
+  --cb-secondary-font: Inter, sans-serif;
 }
 
 /***** Main *****/
@@ -31,7 +32,7 @@
 
 /********** Typography **********/
 .cb-header {
-  font-family: var(--cb-font);
+  font-family: var(--cb-primary-font);
   color: var(--cb-primary-text-color);
   font-size: 1.88rem;
   margin-top: 0;
@@ -50,7 +51,7 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  font-family: var(--cb-font);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-body {
@@ -61,7 +62,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  font-family: Inter, sans-serif;
+  font-family: var(--cb-secondary-font);
 }
 
 .cb-link-primary {
@@ -217,7 +218,7 @@
   transition: 0.3s;
   z-index: 1;
   opacity: 1;
-  font-family: var(--cb-font);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-form-input.cb-has-content label,
@@ -249,7 +250,7 @@
   transition:
     background-color 0.3s,
     color 0.3s;
-  font-family: var(--cb-font);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-button-primary[disabled] {
@@ -277,7 +278,7 @@
   transition:
     background-color 0.3s,
     color 0.3s;
-  font-family: var(--cb-font);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-button-secondary:hover {
@@ -285,7 +286,7 @@
 }
 
 .cb-button-tertiary {
-  font-family: 'Inter', var(--cb-font);
+  font-family: 'Inter', var(--cb-primary-font);
   font-weight: bold;
   background: none;
   border: none;
@@ -373,7 +374,7 @@
   border-radius: 1.75rem;
   font-size: 1rem;
   text-align: center;
-  font-family: Inter, sans-serif;
+  font-family: var(--cb-secondary-font);
   padding: 0;
 }
 
@@ -397,7 +398,7 @@
   border-radius: 9999px;
   text-decoration: none;
   color: var(--cb-primary-text-color);
-  font-family: Inter, sans-serif;
+  font-family: var(--cb-secondary-font);
   cursor: pointer;
 }
 

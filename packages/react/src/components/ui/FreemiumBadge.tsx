@@ -20,7 +20,7 @@ export const FreemiumBadge: FC = () => {
       <div
         style={{
           color: 'var(--cb-white)',
-          fontFamily: 'var(--cb-font)',
+          fontFamily: 'var(--cb-primary-font)',
           fontSize: '0.6rem',
           fontWeight: 700,
           letterSpacing: '0.03rem',

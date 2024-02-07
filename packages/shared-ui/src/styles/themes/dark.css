@@ -8,16 +8,10 @@
   --cb-black: #ffffff;
   --cb-horizontal-divider-color: #555;
   --cb-input-color: #e0e0e0;
-  --cb-font: 'Space Grotesk', sans-serif;
+  --cb-primary-font: 'Space Grotesk', sans-serif;
 
   .cb-container {
     border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .cb-header,
-  .cb-subheader,
-  .cb-body {
-    color: var(--cb-primary-text-color);
   }
 
   .cb-input {

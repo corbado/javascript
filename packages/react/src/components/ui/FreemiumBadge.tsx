@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import { CorbadoLogoIcon } from './icons/Icons';
+import { CorbadoLogoIcon } from './icons/CorbadoLogoIcon';
 
 export const FreemiumBadge: FC = () => {
   return (
@@ -19,7 +19,7 @@ export const FreemiumBadge: FC = () => {
     >
       <div
         style={{
-          color: 'var(--cb-white)',
+          color: 'var(--cb-secondary-text-color)',
           fontFamily: 'var(--cb-primary-font)',
           fontSize: '0.6rem',
           fontWeight: 700,
@@ -30,7 +30,7 @@ export const FreemiumBadge: FC = () => {
       </div>
       <CorbadoLogoIcon
         style={{
-          height: '1.4rem',
+          height: '1.1rem',
           paddingLeft: '0.4rem',
         }}
       />

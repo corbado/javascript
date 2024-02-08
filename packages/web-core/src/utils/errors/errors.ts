@@ -170,7 +170,7 @@ export class CorbadoError extends Error {
         );
       default:
         log.warn('unhandled DOM exception', e.name, e.message);
-        return NonRecoverableError.unknown();
+        return NonRecoverableError.client(e.message);
     }
   }
 
@@ -215,7 +215,7 @@ export class RecoverableError extends CorbadoError {
  */
 export class NonRecoverableError extends CorbadoError {
   readonly type: 'client' | 'server';
-  readonly link: string;
+  readonly link?: string;
   readonly details?: string;
   readonly detailedType?: string;
   readonly requestId?: string;
@@ -223,7 +223,7 @@ export class NonRecoverableError extends CorbadoError {
   constructor(
     type: 'client' | 'server',
     message: string,
-    link: string,
+    link?: string,
     details?: string,
     detailedType?: string,
     requestId?: string,
@@ -250,7 +250,7 @@ export class NonRecoverableError extends CorbadoError {
     return new NonRecoverableError('server', message, link, details, detailedType, requestId);
   }
 
-  static client(message: string, link: string) {
+  static client(message: string, link?: string) {
     return new NonRecoverableError('client', message, link);
   }
 

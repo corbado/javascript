@@ -281,6 +281,10 @@ export class AuthService {
     return this.#loginWithPasskey('', true);
   }
 
+  abortOngoingPasskeyOperation() {
+    this.#webAuthnService.abortOngoingOperation();
+  }
+
   /**
    * Method to append a passkey.
    * User needs to be logged in to use this method.

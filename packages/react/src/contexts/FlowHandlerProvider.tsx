@@ -41,19 +41,17 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const onUserStateChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    if (initialized) {
-      return;
-    }
-
+    const flowHandler = new FlowHandler(corbadoApp);
     void (async () => {
+      if (initialized) {
+        return;
+      }
+
       const projectConfigResult = await getProjectConfig();
       if (projectConfigResult.err) {
         // currently there are no errors that can be thrown here
         return;
       }
-
-      const projectConfig = projectConfigResult.val;
-      const flowHandler = new FlowHandler(corbadoApp, projectConfig, onLoggedIn, initialFlowType);
 
       onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
         updates.flowName && setCurrentFlow(updates.flowName);
@@ -72,7 +70,8 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         setCurrentUserState(value);
       });
 
-      await flowHandler.init(i18n);
+      const projectConfig = projectConfigResult.val;
+      await flowHandler.init(i18n, projectConfig, onLoggedIn, initialFlowType);
 
       setFlowHandler(flowHandler);
       setUserNameRequired(flowHandler.userNameRequired);
@@ -81,8 +80,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
     })();
 
     return () => {
-      flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-      flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
+      flowHandler.dispose();
+      flowHandler.removeOnFlowChangeCallback(onFlowChangeCbId.current);
+      flowHandler.removeOnUserStateChange(onUserStateChangeCbId.current);
     };
   }, []);
 

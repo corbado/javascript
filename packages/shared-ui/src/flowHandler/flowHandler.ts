@@ -22,9 +22,9 @@ import type {
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
 export class FlowHandler {
-  #currentScreen: ScreenNames;
+  #currentScreen!: ScreenNames;
   #screenHistory: ScreenNames[];
-  #config: FlowHandlerConfig;
+  #config!: FlowHandlerConfig;
   #state: FlowHandlerState | undefined;
   #corbadoApp: CorbadoApp;
 
@@ -35,37 +35,33 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
    */
-  constructor(
-    corbadoApp: CorbadoApp | undefined,
-    projectConfig: ProjectConfig,
-    onLoggedIn: () => void,
-    initialFlowType?: FlowType,
-  ) {
+  constructor(corbadoApp: CorbadoApp | undefined) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
-    let flowType = initialFlowType;
-
-    if (!projectConfig.allowUserRegistration) {
-      if (initialFlowType === FlowType.SignUp) {
-        corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
-      } else {
-        flowType = FlowType.Login;
-      }
-    }
-
     this.#corbadoApp = corbadoApp;
-    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, flowType);
     this.#screenHistory = [];
-    this.#currentScreen = this.#config.initialScreenName;
   }
 
   /**
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(i18next: i18n) {
+  async init(i18next: i18n, projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType?: FlowType) {
+    let flowType = initialFlowType;
+
+    if (!projectConfig.allowUserRegistration) {
+      if (initialFlowType === FlowType.SignUp) {
+        this.#corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
+      } else {
+        flowType = FlowType.Login;
+      }
+    }
+
+    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, flowType);
+    this.#currentScreen = this.#config.initialScreenName;
+
     const passkeysSupported = await canUsePasskeys();
 
     this.#state = new FlowHandlerState(
@@ -77,6 +73,10 @@ export class FlowHandler {
     );
 
     this.#changeFlow();
+  }
+
+  dispose() {
+    this.#corbadoApp.authService.abortOngoingPasskeyOperation();
   }
 
   get currentScreenName() {

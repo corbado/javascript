@@ -1,5 +1,5 @@
-import type { CSSProperties, FC } from 'react';
-import React from 'react';
+import type { CSSProperties } from 'react';
+import React, { forwardRef } from 'react';
 
 import type { CustomizableComponent } from '../../../types';
 
@@ -11,14 +11,15 @@ export interface Props extends Omit<CustomizableComponent, 'children'> {
   style?: CSSProperties;
 }
 
-export const Icon: FC<Props> = ({ src, style, alt = '', onClick, className = '' }) => {
+export const Icon = forwardRef<HTMLImageElement, Props>(({ src, style, alt = '', onClick, className = '' }, ref) => {
   return (
     <img
       src={src}
+      ref={ref}
       alt={alt}
       onClick={onClick}
       style={style}
       className={`cb-icon ${onClick ? 'cb-pointer' : ''} ${className}`}
     ></img>
   );
-};
+})

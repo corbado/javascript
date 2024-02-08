@@ -22,4 +22,4 @@ export const Icon = forwardRef<HTMLImageElement, Props>(({ src, style, alt = '',
       className={`cb-icon ${onClick ? 'cb-pointer' : ''} ${className}`}
     ></img>
   );
-})
+});

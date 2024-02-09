@@ -28,12 +28,18 @@ export const FreemiumBadge: FC = () => {
       >
         Secured by
       </div>
-      <CorbadoLogoIcon
-        style={{
-          height: '1.1rem',
-          paddingLeft: '0.4rem',
-        }}
-      />
+      <a
+        href='https://www.corbado.com'
+        target='_blank'
+        rel='noreferrer'
+      >
+        <CorbadoLogoIcon
+          style={{
+            height: '1.1rem',
+            paddingLeft: '0.4rem',
+          }}
+        />
+      </a>
     </div>
   );
 };

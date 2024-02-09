@@ -27,7 +27,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   onLoggedIn,
   onChangeFlow,
 }) => {
-  const { corbadoApp, getProjectConfig } = useCorbado();
+  const { corbadoApp } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
@@ -44,12 +44,6 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
     const flowHandler = new FlowHandler(corbadoApp);
     void (async () => {
       if (initialized) {
-        return;
-      }
-
-      const projectConfigResult = await getProjectConfig();
-      if (projectConfigResult.err) {
-        // currently there are no errors that can be thrown here
         return;
       }
 
@@ -70,8 +64,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         setCurrentUserState(value);
       });
 
-      const projectConfig = projectConfigResult.val;
-      await flowHandler.init(i18n, projectConfig, onLoggedIn, initialFlowType);
+      await flowHandler.init(i18n, onLoggedIn, initialFlowType);
 
       setFlowHandler(flowHandler);
       setUserNameRequired(flowHandler.userNameRequired);

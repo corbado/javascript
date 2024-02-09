@@ -74,6 +74,10 @@ export class CorbadoApp {
     this.#initialized = true;
   }
 
+  public dispose() {
+    this.#authService.abortOngoingPasskeyOperation();
+  }
+
   #validateProjectId(projectId: string): boolean {
     return /^pro-\d+$/.test(projectId);
   }

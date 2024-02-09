@@ -1,4 +1,4 @@
-import type { ProjectConfig, SessionUser } from '@corbado/types';
+import type { SessionUser } from '@corbado/types';
 import { type CorbadoApp, NonRecoverableError } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
@@ -48,9 +48,16 @@ export class FlowHandler {
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(i18next: i18n, projectConfig: ProjectConfig, onLoggedIn: () => void, initialFlowType?: FlowType) {
+  async init(i18next: i18n, onLoggedIn: () => void, initialFlowType?: FlowType) {
     let flowType = initialFlowType;
 
+    const projectConfigResult = await this.#corbadoApp.projectService.getProjectConfig();
+    if (projectConfigResult.err) {
+      // currently there are no errors that can be thrown here
+      return;
+    }
+
+    const projectConfig = projectConfigResult.val;
     if (!projectConfig.allowUserRegistration) {
       if (initialFlowType === FlowType.SignUp) {
         this.#corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
@@ -76,7 +83,7 @@ export class FlowHandler {
   }
 
   dispose() {
-    this.#corbadoApp.authService.abortOngoingPasskeyOperation();
+    this.#corbadoApp.dispose();
   }
 
   get currentScreenName() {

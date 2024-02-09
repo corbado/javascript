@@ -42,31 +42,27 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
 
   useEffect(() => {
     const flowHandler = new FlowHandler(corbadoApp);
-    void (async () => {
-      if (initialized) {
-        return;
+    setFlowHandler(flowHandler);
+
+    onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
+      updates.flowName && setCurrentFlow(updates.flowName);
+      updates.screenName && setCurrentScreen(updates.screenName);
+
+      if (updates.flowType) {
+        currentFlowType.current = updates.flowType;
       }
 
-      onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
-        updates.flowName && setCurrentFlow(updates.flowName);
-        updates.screenName && setCurrentScreen(updates.screenName);
+      if (updates.verificationMethod) {
+        verificationMethod.current = updates.verificationMethod;
+      }
+    });
 
-        if (updates.flowType) {
-          currentFlowType.current = updates.flowType;
-        }
+    onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
+      setCurrentUserState(value);
+    });
 
-        if (updates.verificationMethod) {
-          verificationMethod.current = updates.verificationMethod;
-        }
-      });
-
-      onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
-        setCurrentUserState(value);
-      });
-
+    void (async () => {
       await flowHandler.init(i18n, onLoggedIn, initialFlowType);
-
-      setFlowHandler(flowHandler);
       setUserNameRequired(flowHandler.userNameRequired);
       setAllowUserRegistration(flowHandler.allowUserRegistration);
       setInitialized(true);

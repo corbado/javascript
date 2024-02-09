@@ -21,7 +21,7 @@ export class WebAuthnService {
   public createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     return this.#handleWithGlobalErrors(async () => {
       try {
-        this.#abortController?.abort();
+        this.abortOngoingOperation();
 
         const challenge = JSON.parse(serializedChallenge);
         const abortController = new AbortController();
@@ -45,7 +45,7 @@ export class WebAuthnService {
   public async login(serializedChallenge: string, conditional: boolean): Promise<Result<string, CorbadoError>> {
     return this.#handleWithGlobalErrors(async () => {
       try {
-        this.#abortController?.abort();
+        this.abortOngoingOperation();
 
         const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
         const abortController = new AbortController();
@@ -67,6 +67,10 @@ export class WebAuthnService {
         }
       }
     });
+  }
+
+  public abortOngoingOperation() {
+    this.#abortController?.abort();
   }
 
   // we don't want to expose NonRecoverableError to the caller, so we catch it here and emit it on the globalErrors subject

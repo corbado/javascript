@@ -1,6 +1,7 @@
+import AcmeLogo from '@/app/ui/acme-logo';
+import Image from 'next/image';
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
-import AcmeLogo from '@/app/ui/acme-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 
 export default function SideNav() {
@@ -10,7 +11,14 @@ export default function SideNav() {
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
         href="/"
       >
-        <div className="w-32 text-white md:w-40">
+        <div className="flex w-32 flex-col items-center text-white md:w-40">
+          <Image
+            src="/corbado-logo.svg"
+            width={200}
+            height={200}
+            alt="Acme logo"
+          ></Image>
+          <span className="px-2 text-3xl text-white md:text-5xl">+</span>
           <AcmeLogo />
         </div>
       </Link>

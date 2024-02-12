@@ -19,9 +19,7 @@ function validateSession(shortSession: string | undefined) {
   }
 
   const decodedShortSession = jwtDecode(shortSession);
-  return (
-    !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000
-  );
+  return !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000;
 }
 
 export async function middleware(request: NextRequest) {
@@ -44,10 +42,7 @@ export async function middleware(request: NextRequest) {
   const isSessionValid = validateSession(cookie?.value);
   const url = request.nextUrl.clone();
 
-  if (
-    isSessionValid &&
-    (url.pathname === '/login' || url.pathname === '/signup')
-  ) {
+  if (isSessionValid && (url.pathname === '/login' || url.pathname === '/signup')) {
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
   }

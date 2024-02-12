@@ -41,7 +41,7 @@ export async function fetchLatestInvoices() {
       ORDER BY invoices.date DESC
       LIMIT 5`;
 
-    const latestInvoices = data.rows.map((invoice) => ({
+    const latestInvoices = data.rows.map(invoice => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
     }));
@@ -64,11 +64,7 @@ export async function fetchCardData() {
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`;
 
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
-    ]);
+    const data = await Promise.all([invoiceCountPromise, customerCountPromise, invoiceStatusPromise]);
 
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
     const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
@@ -88,10 +84,7 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(
-  query: string,
-  currentPage: number,
-) {
+export async function fetchFilteredInvoices(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -156,7 +149,7 @@ export async function fetchInvoiceById(id: string) {
       WHERE invoices.id = ${id};
     `;
 
-    const invoice = data.rows.map((invoice) => ({
+    const invoice = data.rows.map(invoice => ({
       ...invoice,
       // Convert amount from cents to dollars
       amount: invoice.amount / 100,
@@ -207,7 +200,7 @@ export async function fetchFilteredCustomers(query: string) {
 		ORDER BY customers.name ASC
 	  `;
 
-    const customers = data.rows.map((customer) => ({
+    const customers = data.rows.map(customer => ({
       ...customer,
       total_pending: formatCurrency(customer.total_pending),
       total_paid: formatCurrency(customer.total_paid),

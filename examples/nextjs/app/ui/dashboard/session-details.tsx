@@ -1,5 +1,3 @@
-'use client';
-
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
 

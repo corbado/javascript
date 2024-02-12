@@ -50,10 +50,10 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, globalErrors: GlobalError) {
+  constructor(apiService: ApiService, globalErrors: GlobalError, setShortSessionCookie: boolean) {
     this.#apiService = apiService;
     this.#webAuthnService = new WebAuthnService(globalErrors);
-    this.#sessionService = new SessionService(apiService);
+    this.#sessionService = new SessionService(apiService, setShortSessionCookie);
   }
 
   /**

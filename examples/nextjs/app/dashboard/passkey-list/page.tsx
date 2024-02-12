@@ -1,3 +1,10 @@
+import { Providers } from '@/app/providers';
+import PasskeyList from '@/app/ui/dashboard/passkey-list';
+
 export default function Page() {
-  return <p>Passkey List Page</p>;
+  return (
+    <Providers>
+      <PasskeyList />
+    </Providers>
+  );
 }

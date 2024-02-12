@@ -1,6 +1,6 @@
 'use client';
 
-import { FingerPrintIcon, HomeIcon } from '@heroicons/react/24/outline';
+import { FingerPrintIcon, HomeIcon, DocumentIcon } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 
 const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Session Details', href: '/dashboard/session-details', icon: DocumentIcon },
   {
     name: 'Passkey List',
     href: '/dashboard/passkey-list',

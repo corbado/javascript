@@ -24,20 +24,6 @@ function validateSession(shortSession: string | undefined) {
 
 export async function middleware(request: NextRequest) {
   let cookie = request.cookies.get('cbo_short_session');
-  // const projectID = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!;
-  // const apiSecret = process.env.CORBADO_API_SECRET!;
-
-  // const config = new Config(projectID, apiSecret);
-  // const sdk = new SDK(config);
-  // const req = {
-  //   token: cookie?.value ?? '',
-  //   clientInfo: {
-  //     userAgent: request.headers.get('user-agent') ?? '',
-  //     remoteAddress: readUserIP(request),
-  //   },
-  // };
-
-  //await sdk.authTokens().validate(req);
 
   const isSessionValid = validateSession(cookie?.value);
   const url = request.nextUrl.clone();

@@ -1,5 +1,11 @@
-import SessionDetails from '../ui/dashboard/session-details';
+import { Suspense } from 'react';
+import CurrentUser from '../ui/dashboard/current-user';
+import Loading from '../ui/dashboard/loading';
 
 export default function Page() {
-  return <SessionDetails />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <CurrentUser />
+    </Suspense>
+  );
 }

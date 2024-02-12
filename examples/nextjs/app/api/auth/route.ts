@@ -19,4 +19,11 @@ const POST = async (req: Request) => {
   }
 };
 
-export { POST };
+const DELETE = async () => {
+  const response = NextResponse.json({ success: true });
+  response.cookies.delete('corbado_short_session');
+
+  return response;
+};
+
+export { POST, DELETE };

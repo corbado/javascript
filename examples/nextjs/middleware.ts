@@ -13,6 +13,17 @@ function readUserIP(request: NextRequest): string {
   // );
 }
 
+function validateSession(shortSession: string | undefined) {
+  if (!shortSession) {
+    return false;
+  }
+
+  const decodedShortSession = jwtDecode(shortSession);
+  return (
+    !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000
+  );
+}
+
 export async function middleware(request: NextRequest) {
   let cookie = request.cookies.get('corbado_short_session');
   // const projectID = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!;
@@ -30,9 +41,7 @@ export async function middleware(request: NextRequest) {
 
   //await sdk.authTokens().validate(req);
 
-  const decodedShortSession = jwtDecode(cookie?.value ?? '');
-  const isSessionValid =
-    !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000;
+  const isSessionValid = validateSession(cookie?.value);
   const url = request.nextUrl.clone();
 
   if (

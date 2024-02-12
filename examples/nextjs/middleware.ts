@@ -23,7 +23,7 @@ function validateSession(shortSession: string | undefined) {
 }
 
 export async function middleware(request: NextRequest) {
-  let cookie = request.cookies.get('corbado_short_session');
+  let cookie = request.cookies.get('cbo_short_session');
   // const projectID = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!;
   // const apiSecret = process.env.CORBADO_API_SECRET!;
 

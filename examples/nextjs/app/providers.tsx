@@ -7,6 +7,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <CorbadoProvider
       projectId={process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!}
       darkMode='off'
+      setShortSessionCookie={true}
     >
       {children}
     </CorbadoProvider>

@@ -10,15 +10,7 @@ export default function SignoutButton() {
 
   const handleSignout = async () => {
     logout();
-    const resp = await fetch('/api/auth', {
-      method: 'DELETE',
-    });
-
-    if (resp.ok) {
-      push('/');
-    } else {
-      console.error('Failed to signout', resp);
-    }
+    push('/');
   };
 
   return (

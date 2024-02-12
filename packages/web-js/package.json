@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-js",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "This package allows VanillsJS users to add corbado functionality and UI components in their applications",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -34,13 +34,13 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/react": "^1.1.0",
-    "@corbado/web-core": "^1.1.0",
+    "@corbado/react": "^1.1.2",
+    "@corbado/web-core": "^1.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@corbado/types": "^1.1.0",
+    "@corbado/types": "^1.1.2",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.0",
     "typescript": "^5.2.2"
@@ -49,5 +49,6 @@
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "react-i18next": "13.2.2"
-  }
+  },
+  "gitHead": "bdc9da96c3a34574545c5d9b522464ca9d3eca57"
 }

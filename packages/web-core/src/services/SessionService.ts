@@ -21,15 +21,17 @@ const shortSessionRefreshIntervalMs = 10_000;
  * The longSession should not be exposed from this service as it is only used for session refresh.
  */
 export class SessionService {
+  readonly #apiService: ApiService;
+  readonly #setShortSessionCookie: boolean;
   #shortSession: ShortSession | undefined;
   #longSession: string | undefined;
-  #apiService: ApiService;
   #onShortSessionChange?: (value: ShortSession | undefined) => void;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
-  constructor(apiService: ApiService) {
+  constructor(apiService: ApiService, setShortSessionCookie: boolean) {
     this.#apiService = apiService;
     this.#longSession = undefined;
+    this.#setShortSessionCookie = setShortSessionCookie;
   }
 
   /**
@@ -195,6 +197,10 @@ export class SessionService {
   #setShortTermSessionToken(value: ShortSession): void {
     localStorage.setItem(shortSessionKey, value.toString());
     this.#shortSession = value;
+
+    if (this.#setShortSessionCookie) {
+      document.cookie = `${shortSessionKey}=${value.toString()}; path=/;`;
+    }
   }
 
   /**
@@ -203,6 +209,10 @@ export class SessionService {
   #deleteShortTermSessionToken(): void {
     localStorage.removeItem(shortSessionKey);
     this.#shortSession = undefined;
+
+    if (this.#setShortSessionCookie) {
+      document.cookie = `${shortSessionKey}=; path=/; expires=${new Date().toUTCString()}`;
+    }
   }
 
   /**

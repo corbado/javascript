@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk');
 
+:root {
+  --cb-primary-color: #1953ff;
+  --cb-secondary-color: #59acff;
+  --cb-error-color: #e71919;
+  --cb-primary-text-color: #000;
+  --cb-secondary-text-color: #fff;
+  --cb-white: #fff;
+  --cb-black: #000;
+  --cb-horizontal-divider-color: #d9d9d9;
+  --cb-input-color: #090f1f;
+  --cb-primary-font: 'Space Grotesk', sans-serif;
+  --cb-secondary-font: Inter, sans-serif;
+}
+
 /***** Main *****/
 .cb-container {
   padding: 2.5rem 1.3rem 1.25rem 1.3rem;
@@ -7,6 +21,8 @@
   width: 30rem;
   box-sizing: border-box;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+  background-color: var(--cb-white);
+  color: var(--cb-primary-text-color);
 }
 
 .cb-loading {
@@ -16,8 +32,8 @@
 
 /********** Typography **********/
 .cb-header {
-  font-family: 'Space Grotesk', sans-serif;
-  color: #000;
+  font-family: var(--cb-primary-font);
+  color: var(--cb-primary-text-color);
   font-size: 1.88rem;
   margin-top: 0;
   margin-bottom: 0;
@@ -29,40 +45,40 @@
 
 .cb-subheader {
   margin-top: 0.5rem;
-  color: #000;
+  color: var(--cb-primary-text-color);
   text-align: center;
   font-size: 1rem;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--cb-primary-font);
 }
 
 .cb-body {
   margin-top: 0.5rem;
-  color: #000;
+  color: var(--cb-primary-text-color);
   text-align: center;
   font-size: 1rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  font-family: Inter, sans-serif;
+  font-family: var(--cb-secondary-font);
 }
 
 .cb-link-primary {
-  color: #1953ff;
+  color: var(--cb-primary-color);
   cursor: pointer;
   text-decoration: underline;
   font-weight: 700;
 }
 
 .cb-link-secondary {
-  color: #59acff;
+  color: var(--cb-secondary-color);
   cursor: pointer;
 }
 
 .cb-error {
-  color: #ff4c51;
+  color: var(--cb-error-color);
   margin: 0;
   font-size: 0.75rem;
   text-align: left;
@@ -70,11 +86,11 @@
 }
 
 .cb-text-primary {
-  color: #1953ff;
+  color: var(--cb-primary-color);
 }
 
 .cb-text-secondary {
-  color: #59acff;
+  color: var(--cb-secondary-color);
 }
 
 .cb-text-bold {
@@ -89,13 +105,13 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
   margin-left: -1.2rem;
-  color: #d9d9d9;
+  color: var(--cb-horizontal-divider-color);
 }
 
 .cb-horizontal-divider:before,
 .cb-horizontal-divider:after {
   content: '';
-  background: #d9d9d9;
+  background: var(--cb-horizontal-divider-color);
   display: inline-block;
   width: 40%;
   height: 1px;
@@ -129,7 +145,7 @@
 }
 
 .cb-input {
-  color: #090f1f;
+  color: var(--cb-input-color);
   font-size: 1rem;
   padding: 1rem 1.4rem;
   height: 3rem;
@@ -142,30 +158,30 @@
   background: transparent;
   z-index: 2;
   box-sizing: border-box;
-  -webkit-text-fill-color: #090f1f;
+  -webkit-text-fill-color: var(--cb-input-color);
   -webkit-background-clip: text !important;
   background-clip: text !important;
   line-height: 1;
 }
 
 .cb-input.cb-error {
-  border-color: #ff4c51;
+  border-color: var(--cb-error-color);
 }
 
 .cb-input[disabled] {
-  color: #090f1f;
+  color: var(--cb-input-color);
 }
 
 .cb-input:-webkit-autofill,
 .cb-input:-webkit-autofill:hover,
 .cb-input:-webkit-autofill:focus,
 .cb-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
-  box-shadow: 0 0 0 1000px white inset;
+  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset !important;
+  box-shadow: 0 0 0 1000px var(--cb-white) inset;
 }
 
 .cb-input:-webkit-autofill {
-  -webkit-text-fill-color: #090f1f !important;
+  -webkit-text-fill-color: var(--cb-input-color) !important;
 }
 
 .cb-input:focus {
@@ -195,14 +211,14 @@
 
 .cb-form-input label {
   font-weight: bold;
-  color: #59acff;
+  color: var(--cb-secondary-color);
   position: absolute;
   left: 1.4rem;
   top: 0.8rem;
   transition: 0.3s;
   z-index: 1;
   opacity: 1;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--cb-primary-font);
 }
 
 .cb-form-input.cb-has-content label,
@@ -223,8 +239,8 @@
 /********** Buttons **********/
 .cb-button-primary {
   border: none;
-  color: #ffffff;
-  background-color: #1953ff;
+  color: var(--cb-secondary-text-color);
+  background-color: var(--cb-primary-color);
   border-radius: 1.5rem;
   font-size: 1rem;
   height: 3rem;
@@ -234,7 +250,7 @@
   transition:
     background-color 0.3s,
     color 0.3s;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--cb-primary-font);
 }
 
 .cb-button-primary[disabled] {
@@ -251,9 +267,9 @@
 }
 
 .cb-button-secondary {
-  border: 2px solid #59acff;
-  background-color: #ffffff;
-  color: #59acff;
+  border: 2px solid var(--cb-secondary-color);
+  background-color: var(--cb-white);
+  color: var(--cb-secondary-color);
   border-radius: 1.5rem;
   font-size: 1rem;
   height: 3rem;
@@ -262,7 +278,7 @@
   transition:
     background-color 0.3s,
     color 0.3s;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--cb-primary-font);
 }
 
 .cb-button-secondary:hover {
@@ -270,11 +286,11 @@
 }
 
 .cb-button-tertiary {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  font-family: 'Inter', var(--cb-primary-font);
   font-weight: bold;
   background: none;
   border: none;
-  color: #59acff;
+  color: var(--cb-secondary-color);
   padding: 0;
   cursor: pointer;
   font-size: 1rem;
@@ -297,14 +313,14 @@
   height: 1.1rem;
   margin: auto;
   border: 0.25rem solid rgba(0, 0, 0, 0.55);
-  border-top-color: #ffffff;
+  border-top-color: var(--cb-white);
   border-radius: 100%;
   animation: cb-spin-animation 1s ease infinite;
 }
 
 .cb-spinner-secondary {
   border: 0.25rem solid rgba(0, 0, 0, 0.55);
-  border-top-color: #1953ff;
+  border-top-color: var(--cb-primary-color);
 }
 
 @keyframes cb-spin-animation {
@@ -358,7 +374,7 @@
   border-radius: 1.75rem;
   font-size: 1rem;
   text-align: center;
-  font-family: Inter, sans-serif;
+  font-family: var(--cb-secondary-font);
   padding: 0;
 }
 
@@ -381,8 +397,8 @@
   border: 1px solid #d9d9d9;
   border-radius: 9999px;
   text-decoration: none;
-  color: #000;
-  font-family: Inter, sans-serif;
+  color: var(--cb-primary-text-color);
+  font-family: var(--cb-secondary-font);
   cursor: pointer;
 }
 
@@ -414,7 +430,7 @@
 }
 
 .cb-dialog-content {
-  background: white;
+  background: var(--cb-white);
   padding: 1.3rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -454,7 +470,7 @@
   flex-direction: row;
   gap: 1rem;
   border-radius: 10px;
-  border: black 1px solid;
+  border: var(--cb-primary-text-color) 1px solid;
   margin: 0.5rem 0;
   padding: 0.5rem;
   font-family: 'Inter', sans-serif;
@@ -475,7 +491,7 @@
 .cb-passkey-list-icon svg {
   width: 2rem;
   height: 2rem;
-  fill: #000;
+  fill: var(--cb-primary-text-color);
 }
 
 .cb-passkey-list-details {
@@ -503,12 +519,12 @@
 
 .cb-passkey-list-header-badge {
   border-radius: 2rem;
-  border: black 1px solid;
+  border: var(--cb-black) 1px solid;
   padding: 0.5rem;
 }
 
 .cb-passkey-list-delete:hover {
-  fill: #ff4c51;
+  fill: var(--cb-error-color);
   cursor: pointer;
 }
 

@@ -27,7 +27,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   onLoggedIn,
   onChangeFlow,
 }) => {
-  const { corbadoApp, getProjectConfig } = useCorbado();
+  const { corbadoApp } = useCorbado();
   const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
   const [currentUserState, setCurrentUserState] = useState<UserState>({});
@@ -41,48 +41,37 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const onUserStateChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    if (initialized) {
-      return;
-    }
+    const flowHandler = new FlowHandler(corbadoApp);
+    setFlowHandler(flowHandler);
 
-    void (async () => {
-      const projectConfigResult = await getProjectConfig();
-      if (projectConfigResult.err) {
-        // currently there are no errors that can be thrown here
-        return;
+    onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
+      updates.flowName && setCurrentFlow(updates.flowName);
+      updates.screenName && setCurrentScreen(updates.screenName);
+
+      if (updates.flowType) {
+        currentFlowType.current = updates.flowType;
       }
 
-      const projectConfig = projectConfigResult.val;
-      const flowHandler = new FlowHandler(corbadoApp, projectConfig, onLoggedIn, initialFlowType);
+      if (updates.verificationMethod) {
+        verificationMethod.current = updates.verificationMethod;
+      }
+    });
 
-      onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
-        updates.flowName && setCurrentFlow(updates.flowName);
-        updates.screenName && setCurrentScreen(updates.screenName);
+    onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
+      setCurrentUserState(value);
+    });
 
-        if (updates.flowType) {
-          currentFlowType.current = updates.flowType;
-        }
-
-        if (updates.verificationMethod) {
-          verificationMethod.current = updates.verificationMethod;
-        }
-      });
-
-      onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
-        setCurrentUserState(value);
-      });
-
-      await flowHandler.init(i18n);
-
-      setFlowHandler(flowHandler);
+    void (async () => {
+      await flowHandler.init(i18n, onLoggedIn, initialFlowType);
       setUserNameRequired(flowHandler.userNameRequired);
       setAllowUserRegistration(flowHandler.allowUserRegistration);
       setInitialized(true);
     })();
 
     return () => {
-      flowHandler?.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-      flowHandler?.removeOnUserStateChange(onUserStateChangeCbId.current);
+      flowHandler.dispose();
+      flowHandler.removeOnFlowChangeCallback(onFlowChangeCbId.current);
+      flowHandler.removeOnUserStateChange(onUserStateChangeCbId.current);
     };
   }, []);
 

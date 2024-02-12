@@ -8,6 +8,7 @@ import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect } from 'react';
 
 import ErrorHandlingProvider from '../contexts/ErrorHandlingProvider';
+import { ThemeProvider } from '../contexts/ThemeProvider';
 import { handleDynamicLocaleSetup } from '../i18n';
 
 export type CorbadoProviderProps = PropsWithChildren<CorbadoUIConfig & CorbadoProviderParams>;
@@ -31,7 +32,12 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
         customerSupportEmail={config.customerSupportEmail ?? ''}
         isDevMode={config.isDevMode ?? false}
       >
-        {children}
+        <ThemeProvider
+          theme={theme}
+          darkMode={darkMode}
+        >
+          {children}
+        </ThemeProvider>
       </ErrorHandlingProvider>
     </CorbadoSDKProvider>
   );

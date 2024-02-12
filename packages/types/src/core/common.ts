@@ -9,4 +9,5 @@ export interface CorbadoAppParams {
   apiTimeout?: number;
   frontendApiUrl?: string;
   isDevMode?: boolean;
+  setShortSessionCookie?: boolean;
 }

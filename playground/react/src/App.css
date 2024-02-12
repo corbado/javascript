@@ -1,4 +1,6 @@
 .corbado-custom-theme-test {
+  --cb-secondary-text-color: #f1a;
+
   .cb-button-primary {
     border: none;
     color: #ffffff;
@@ -32,4 +34,8 @@
       background-position: 0% 50%;
     }
   }
+}
+
+.cb-dark.corbado-custom-theme-test {
+  --cb-secondary-text-color: #f1a;
 }

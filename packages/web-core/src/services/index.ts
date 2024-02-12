@@ -29,11 +29,17 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: CorbadoAppParams) {
-    const { projectId, apiTimeout = defaultTimeout, frontendApiUrl, isDevMode = false } = corbadoParams;
+    const {
+      projectId,
+      apiTimeout = defaultTimeout,
+      frontendApiUrl,
+      isDevMode = false,
+      setShortSessionCookie = false,
+    } = corbadoParams;
     this.#projectId = projectId;
     this.#isDevMode = isDevMode;
     this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
-    this.#authService = new AuthService(this.#apiService, this.#globalErrors);
+    this.#authService = new AuthService(this.#apiService, this.#globalErrors, setShortSessionCookie);
     this.#projectService = new ProjectService(this.#apiService);
   }
 
@@ -68,10 +74,23 @@ export class CorbadoApp {
 
     if (!this.#validateProjectId(this.#projectId)) {
       this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
+      return;
     }
+
+    /*
+    // we will need to pass this projectConfig to AuthService (e.g. to make decisions whether to use CorbadoSessionManagement or not)
+    const projectConfig = await this.#projectService.getProjectConfig();
+    if (projectConfig.err) {
+      this.#globalErrors.next(NonRecoverableError.invalidConfig('Config could not be loaded'));
+      return;
+    }*/
 
     await this.#authService.init(this.#isDevMode);
     this.#initialized = true;
+  }
+
+  public dispose() {
+    this.#authService.abortOngoingPasskeyOperation();
   }
 
   #validateProjectId(projectId: string): boolean {

@@ -50,10 +50,10 @@ export class AuthService {
   /**
    * The constructor initializes the AuthService with an instance of ApiService.
    */
-  constructor(apiService: ApiService, globalErrors: GlobalError) {
+  constructor(apiService: ApiService, globalErrors: GlobalError, setShortSessionCookie: boolean) {
     this.#apiService = apiService;
     this.#webAuthnService = new WebAuthnService(globalErrors);
-    this.#sessionService = new SessionService(apiService);
+    this.#sessionService = new SessionService(apiService, setShortSessionCookie);
   }
 
   /**
@@ -82,11 +82,6 @@ export class AuthService {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
-    }
-
-    const projectConfig = await this.#apiService.getProjectConfig();
-    if (projectConfig.err) {
-      return Err(projectConfig.val);
     }
 
     // The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be removed
@@ -279,6 +274,10 @@ export class AuthService {
     }
 
     return this.#loginWithPasskey('', true);
+  }
+
+  abortOngoingPasskeyOperation() {
+    this.#webAuthnService.abortOngoingOperation();
   }
 
   /**

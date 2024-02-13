@@ -1,36 +1,30 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtDecode } from 'jwt-decode';
-import createNodeSDK from './app/utils/createNodeSDK';
+import validateSession from './app/utils/validateSession';
 
-async function validateSession(shortSession: string | undefined) {
-  if (!shortSession) {
-    return false;
-  }
-
-  const sdk = createNodeSDK();
-  const verifiedSession = await sdk.sessions().validateShortSessionValue(shortSession);
-
-  if (!verifiedSession.isAuthenticated()) {
-    return false;
-  }
-
-  const decodedShortSession = jwtDecode(shortSession);
-  return !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000;
-}
+const routes = {
+  publicPaths: ['/'],
+  privatePaths: ['/dashboard'],
+  authPaths: ['/login', '/signup'],
+};
 
 export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+
+  if (routes.publicPaths.includes(url.pathname)) {
+    return NextResponse.next();
+  }
+
   const cookie = request.cookies.get('cbo_short_session');
   const shortSession = cookie?.value;
-  const url = request.nextUrl.clone();
   const isSessionValid = await validateSession(shortSession);
 
-  if (isSessionValid && (url.pathname === '/login' || url.pathname === '/signup')) {
+  if (isSessionValid && routes.authPaths.includes(url.pathname)) {
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
   }
 
-  if (!isSessionValid && url.pathname.startsWith('/dashboard')) {
+  if (!isSessionValid && routes.privatePaths.find(path => url.pathname.startsWith(path))) {
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }

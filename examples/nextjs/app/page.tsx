@@ -2,6 +2,8 @@ import AcmeLogo from '@/app/ui/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import RightIntroSection from './ui/right-intro-section';
 
 export default function Page() {
   return (
@@ -34,7 +36,7 @@ export default function Page() {
             increase security - regardless if you already have users or not.
           </p>
           <p>
-            Acme is the{' '}
+            This app is based on the example application that is built in the{' '}
             <a
               href='https://nextjs.org/learn/'
               className='text-blue-500'
@@ -61,7 +63,7 @@ export default function Page() {
             >
               {' '}
               Corbado's NodeJS SDK
-            </a>
+            </a>{' '}
             and integrate it with Next.js for a seamless user experience.
           </p>
           <Link
@@ -72,13 +74,19 @@ export default function Page() {
           </Link>
         </div>
         <div className='flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12'>
-          <Image
-            src='/flow-diagram.png'
-            width={1000}
-            height={760}
-            className='md:block'
-            alt='Corbado Flow Diagram'
-          />
+          <Suspense
+            fallback={
+              <Image
+                src='/flow-diagram.png'
+                width={1000}
+                height={760}
+                className='md:block'
+                alt='Corbado Flow Diagram'
+              />
+            }
+          >
+            <RightIntroSection />
+          </Suspense>
         </div>
       </div>
     </main>

@@ -1,20 +1,17 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { SDK, Config } from '@corbado/node-sdk';
 import { jwtDecode } from 'jwt-decode';
+import createNodeSDK from './app/utils/createNodeSDK';
 
-function readUserIP(request: NextRequest): string {
-  return '127.0.0.1';
-  // return (
-  //   request.ip ??
-  //   request.headers.get('x-real-ip') ??
-  //   request.headers.get('x-forwarded-for') ??
-  //   ''
-  // );
-}
-
-function validateSession(shortSession: string | undefined) {
+async function validateSession(shortSession: string | undefined) {
   if (!shortSession) {
+    return false;
+  }
+
+  const sdk = createNodeSDK();
+  const verifiedSession = await sdk.sessions().validateShortSessionValue(shortSession);
+
+  if (!verifiedSession.isAuthenticated()) {
     return false;
   }
 
@@ -23,17 +20,17 @@ function validateSession(shortSession: string | undefined) {
 }
 
 export async function middleware(request: NextRequest) {
-  let cookie = request.cookies.get('cbo_short_session');
-
-  const isSessionValid = validateSession(cookie?.value);
+  const cookie = request.cookies.get('cbo_short_session');
+  const shortSession = cookie?.value;
   const url = request.nextUrl.clone();
+  const isSessionValid = await validateSession(shortSession);
 
   if (isSessionValid && (url.pathname === '/login' || url.pathname === '/signup')) {
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
   }
 
-  if (!isSessionValid && url.pathname === '/dashboard') {
+  if (!isSessionValid && url.pathname.startsWith('/dashboard')) {
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }

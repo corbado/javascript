@@ -53,7 +53,7 @@ export default function Page() {
               className='text-blue-500'
               target='_blank'
             >
-              Corbado' React Package
+              Corbado&apos;s React Package
             </a>{' '}
             and
             <a
@@ -62,7 +62,7 @@ export default function Page() {
               target='_blank'
             >
               {' '}
-              Corbado's NodeJS SDK
+              Corbado&apos;s NodeJS SDK
             </a>{' '}
             and integrate it with Next.js for a seamless user experience.
           </p>

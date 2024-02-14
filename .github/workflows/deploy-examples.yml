@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - next_js_sample_application
 
 jobs:
   deploy:
@@ -18,6 +19,14 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
+
+      - name: Deploy Next example to Vercel
+        run: |
+          cd examples/nextjs
+          npx vercel pull -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prod -t $VERCEL_TOKEN)"
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_NEXT_EXAMPLE }}
 
       - name: Deploy React SDK example to Vercel
         run: |

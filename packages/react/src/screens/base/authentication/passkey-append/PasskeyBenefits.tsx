@@ -3,15 +3,12 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Body, Header, PrimaryButton } from '../../../../components';
-import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-export const PasskeyBenefits = () => {
-  const { block } = useFlowHandler();
+export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.${block?.type}.passkeyBenefits`,
+    keyPrefix: `authentication.passkey-append.passkey-benefits`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
-  const getTypedBlock = () => block as PasskeyAppendBlock;
 
   const header = useMemo(() => t('header'), [t]);
   const body = useMemo(
@@ -32,7 +29,7 @@ export const PasskeyBenefits = () => {
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);
-          return getTypedBlock().passkeyAppend();
+          return block.passkeyAppend();
         }}
         isLoading={primaryLoading}
       >

@@ -3,9 +3,12 @@ import type { BlockBody } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 
 import type { Block } from './blocks/Block';
+import { PasskeyAppendBlock } from './blocks/PasskeyAppendBlock';
+import { PasskeyAppendedBlock } from './blocks/PasskeyAppendedBlock';
 import { SignupInitBlock } from './blocks/SignupInitBlock';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
+import type { ScreenWithBlock } from './types';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -19,8 +22,7 @@ export class FlowHandler {
   #corbadoApp: CorbadoApp;
   #errorTranslator: ErrorTranslator;
 
-  #onScreenChangeCallbacks: Array<(v: ScreenNames) => void> = [];
-  #onBlockChangeCallbacks: Array<(v: Block<unknown>) => void> = [];
+  #onScreenChangeCallbacks: Array<(v: ScreenWithBlock) => void> = [];
 
   /**
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
@@ -82,14 +84,19 @@ export class FlowHandler {
   updateScreen(newScreen: ScreenNames) {
     this.#currentScreen = newScreen;
 
-    this.#onScreenChangeCallbacks.forEach(cb => cb(newScreen));
+    this.#onScreenChangeCallbacks.forEach(cb =>
+      cb({
+        screen: newScreen,
+        block: this.#currentBlock!,
+      }),
+    );
   }
 
   updateBlock(blockBody: BlockBody) {
     this.handleBlockData(blockBody);
   }
 
-  onScreenChange(cb: (value: ScreenNames) => void) {
+  onScreenChange(cb: (value: ScreenWithBlock) => void) {
     return this.#onScreenChangeCallbacks.push(cb) - 1;
   }
 
@@ -97,43 +104,36 @@ export class FlowHandler {
     this.#onScreenChangeCallbacks.splice(cbId, 1);
   }
 
-  onBlockChange(cb: (v: Block<any>) => void) {
-    return this.#onBlockChangeCallbacks.push(cb) - 1;
-  }
-
-  removeOnBlockChange(cbId: number) {
-    this.#onBlockChangeCallbacks.splice(cbId, 1);
-  }
-
   handleBlockData(blockBody: BlockBody) {
-    let newBlock: Block<any> = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+    let newBlock: Block<unknown>;
     switch (blockBody.block) {
       case 'passkey-append':
-        break;
-      case 'phone-verify':
+        newBlock = new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
       case 'signup-init':
         newBlock = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
       case 'passkey-appended':
+        newBlock = new PasskeyAppendedBlock(this.#corbadoApp, this);
         break;
-      case 'social-verify':
-        break;
-      case 'completed':
-        break;
-      case 'email-verify':
-        break;
-      case 'phone-collect':
-        break;
-      case 'username-collect':
+      default:
+        newBlock = new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
     }
 
-    if (this.#currentBlock == null || newBlock.type !== this.#currentBlock.type) {
-      this.updateScreen(newBlock.initialScreen);
+    console.log('newBlock', newBlock, blockBody);
+
+    const blockHasChanged = this.#currentBlock == null || newBlock.type !== this.#currentBlock.type;
+    if (blockHasChanged) {
+      this.#currentScreen = newBlock.initialScreen;
     }
 
     this.#currentBlock = newBlock;
-    this.#onBlockChangeCallbacks.forEach(cb => cb(newBlock));
+    this.#onScreenChangeCallbacks.forEach(cb =>
+      cb({
+        screen: this.#currentScreen,
+        block: this.#currentBlock!,
+      }),
+    );
   }
 }

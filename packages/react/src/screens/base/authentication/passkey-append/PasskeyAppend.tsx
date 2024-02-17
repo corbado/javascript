@@ -3,20 +3,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, PrimaryButton, SubHeader } from '../../../../components';
-import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-export const PasskeyAppend = () => {
-  const { block } = useFlowHandler();
+export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.signup.passkeyCreate`,
+    keyPrefix: `authentication.passkey-append.passkey-append`,
   });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string | undefined>(undefined);
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
-  const getTypedBlock = () => block as PasskeyAppendBlock;
 
   useEffect(() => {
-    setPasskeyUserHandle(getTypedBlock().data.userHandle);
+    setPasskeyUserHandle(block.data.userHandle);
 
     setPrimaryLoading(false);
     setSecondaryLoading(false);
@@ -29,7 +26,7 @@ export const PasskeyAppend = () => {
           {t('header')}
           <span
             className='cb-link-primary'
-            onClick={() => void getTypedBlock().showPasskeyBenefits()}
+            onClick={() => void block.showPasskeyBenefits()}
           >
             {t('headerButton_showPasskeyBenefits')}
           </span>
@@ -57,7 +54,7 @@ export const PasskeyAppend = () => {
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);
-          return getTypedBlock().passkeyAppend();
+          return block.passkeyAppend();
         }}
         isLoading={primaryLoading}
         disabled={secondaryLoading}

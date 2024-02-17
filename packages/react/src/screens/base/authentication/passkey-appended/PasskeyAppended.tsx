@@ -3,15 +3,11 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Body, Header, PrimaryButton } from '../../../../components';
-import useFlowHandler from '../../../../hooks/useFlowHandler';
 
-export const PasskeyAppended = () => {
-  const { block } = useFlowHandler();
+export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.signup.passkeySuccess`,
+    keyPrefix: `authentication.passkey-appended.passkey-appended`,
   });
-  const getTypedBlock = () => block as PasskeyAppendedBlock;
-
   const header = useMemo(() => t('header'), [t]);
   const secondaryHeader = useMemo(() => t('subheader'), [t]);
   const body = useMemo(
@@ -32,7 +28,7 @@ export const PasskeyAppended = () => {
       <Body className='cb-body-spacing'>{body}</Body>
       <PrimaryButton
         onClick={() => {
-          return getTypedBlock().continue();
+          return block.continue();
         }}
       >
         {primaryButton}

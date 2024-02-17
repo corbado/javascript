@@ -1,6 +1,8 @@
 import type { SessionUser } from '@corbado/types';
 import type { RecoverableError } from '@corbado/web-core';
 
+import type { Block } from './blocks/Block';
+import type { PasskeyAppendBlock } from './blocks/PasskeyAppendBlock';
 import type { SignupInitBlock } from './blocks/SignupInitBlock';
 import type { LoginFlowNames, ScreenNames, SignUpFlowNames } from './constants';
 
@@ -66,7 +68,7 @@ export interface FlowHandlerUpdates {
   verificationMethod?: VerificationMethods;
 }
 
-export type Blocks = SignupInitBlock;
+export type Blocks = SignupInitBlock | PasskeyAppendBlock;
 
 export type BlockDataSignupInit = {
   fullName: SignUpField | null;
@@ -102,4 +104,9 @@ export type LoginIdentifiers = {
   email?: string;
   phone?: string;
   userName?: string;
+};
+
+export type ScreenWithBlock = {
+  screen: ScreenNames;
+  block: Block<unknown>;
 };

@@ -1,16 +1,10 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type {
-  FlowHandlerEventOptions,
-  FlowNames,
-  FlowType,
-  FlowTypeText,
-  UserState,
-  VerificationMethods,
-} from '@corbado/shared-ui';
-import { FlowHandler, FlowHandlerEvents, ScreenNames } from '@corbado/shared-ui';
+import type { FlowType, ScreenNames } from '@corbado/shared-ui';
+import { FlowHandler } from '@corbado/shared-ui';
+import type { Block } from '@corbado/shared-ui/dist/flowHandler/blocks/Block';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
@@ -21,102 +15,44 @@ type Props = {
   initialFlowType?: FlowType;
 };
 
-export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
-  children,
-  initialFlowType,
-  onLoggedIn,
-  onChangeFlow,
-}) => {
+export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, onLoggedIn }) => {
   const { corbadoApp } = useCorbado();
-  const [flowHandler, setFlowHandler] = useState<FlowHandler>();
   const [currentScreen, setCurrentScreen] = useState<ScreenNames>();
-  const [currentUserState, setCurrentUserState] = useState<UserState>({});
-  const [currentFlow, setCurrentFlow] = useState<FlowNames>();
   const [initialized, setInitialized] = useState(false);
-  const [userNameRequired, setUserNameRequired] = useState(true);
-  const [allowUserRegistration, setAllowUserRegistration] = useState(true);
-  const currentFlowType = useRef<FlowTypeText>();
-  const verificationMethod = useRef<VerificationMethods>();
   const onFlowChangeCbId = useRef<number>(0);
   const onUserStateChangeCbId = useRef<number>(0);
+  const [block, setBlock] = useState<Block<unknown> | undefined>(undefined);
 
   useEffect(() => {
-    const flowHandler = new FlowHandler(corbadoApp);
-    setFlowHandler(flowHandler);
+    const flowHandler = new FlowHandler(i18n, corbadoApp);
 
-    onFlowChangeCbId.current = flowHandler.onFlowChange(updates => {
-      updates.flowName && setCurrentFlow(updates.flowName);
-      updates.screenName && setCurrentScreen(updates.screenName);
-
-      if (updates.flowType) {
-        currentFlowType.current = updates.flowType;
-      }
-
-      if (updates.verificationMethod) {
-        verificationMethod.current = updates.verificationMethod;
-      }
+    onFlowChangeCbId.current = flowHandler.onScreenChange(value => {
+      setCurrentScreen(value);
     });
 
-    onUserStateChangeCbId.current = flowHandler.onUserStateChange((value: UserState) => {
-      setCurrentUserState(value);
+    onUserStateChangeCbId.current = flowHandler.onBlockChange((value: Block<unknown>) => {
+      setBlock(value);
     });
 
     void (async () => {
-      await flowHandler.init(i18n, onLoggedIn, initialFlowType);
-      setUserNameRequired(flowHandler.userNameRequired);
-      setAllowUserRegistration(flowHandler.allowUserRegistration);
+      await flowHandler.init(onLoggedIn);
       setInitialized(true);
     })();
 
     return () => {
       flowHandler.dispose();
-      flowHandler.removeOnFlowChangeCallback(onFlowChangeCbId.current);
-      flowHandler.removeOnUserStateChange(onUserStateChangeCbId.current);
+      flowHandler.removeOnScreenChangeCallback(onFlowChangeCbId.current);
+      flowHandler.removeOnBlockChange(onUserStateChangeCbId.current);
     };
   }, []);
 
-  const navigateBack = useCallback(() => {
-    return flowHandler?.navigateBack() ?? ScreenNames.Start;
-  }, [flowHandler]);
-
-  const emitEvent = useCallback(
-    (event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) => {
-      return flowHandler?.handleStateUpdate(event, eventOptions);
-    },
-    [flowHandler],
-  );
-
-  const changeFlow = useCallback(() => {
-    if (onChangeFlow === undefined) {
-      void emitEvent(FlowHandlerEvents.ChangeFlow);
-    }
-
-    onChangeFlow?.();
-  }, [initialFlowType, onChangeFlow, emitEvent]);
-
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
-      currentFlowType: currentFlowType.current,
-      currentFlow,
       currentScreen,
-      currentUserState,
-      currentVerificationMethod: verificationMethod.current,
       initialized,
-      userNameRequired,
-      allowUserRegistration,
-      changeFlow,
-      navigateBack,
-      emitEvent,
+      block,
     }),
-    [
-      currentFlowType.current,
-      verificationMethod.current,
-      currentFlow,
-      currentScreen,
-      currentUserState,
-      initialized,
-      navigateBack,
-    ],
+    [currentScreen, initialized, block],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

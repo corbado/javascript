@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import type { GlobalError } from '../utils';
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ApiService } from './ApiService';
+import { AuthProcessService } from './AuthProcessService';
 import { AuthService } from './AuthService';
 import { ProjectService } from './ProjectService';
 
@@ -19,6 +20,7 @@ export type { SessionService } from './SessionService';
 export class CorbadoApp {
   #apiService: ApiService;
   #authService: AuthService;
+  #authProcessService: AuthProcessService;
   #projectService: ProjectService;
   #projectId: string;
   #isDevMode: boolean;
@@ -39,6 +41,7 @@ export class CorbadoApp {
     this.#projectId = projectId;
     this.#isDevMode = isDevMode;
     this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
+    this.#authProcessService = new AuthProcessService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
     this.#authService = new AuthService(this.#apiService, this.#globalErrors, setShortSessionCookie);
     this.#projectService = new ProjectService(this.#apiService);
   }
@@ -49,6 +52,10 @@ export class CorbadoApp {
 
   public get authService() {
     return this.#authService;
+  }
+
+  public get authProcessService() {
+    return this.#authProcessService;
   }
 
   public get projectService() {

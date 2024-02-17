@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import log from 'loglevel';
 import type { BehaviorSubject } from 'rxjs';
 
-import type { ErrorRsp } from '../../api';
+import type { ErrorRsp } from '../../api/v1';
 
 /** General Errors */
 export type AuthMethodsListError = UnknownUserError | UnknownError;

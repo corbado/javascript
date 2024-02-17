@@ -54,3 +54,11 @@ export const passkeyAppendIntervalMap: { [key: string]: number } = {
 };
 
 export const passkeyAppendAskTSKey = 'corbado_passkeyAppendAskTS';
+
+export enum BlockTypes {
+  SignupInit = 'signup-init',
+  EmailVerify = 'email-verify',
+  PasskeyAppend = 'passkey-append',
+  PasskeyAppended = 'passkey-appended',
+  Completed = 'completed',
+}

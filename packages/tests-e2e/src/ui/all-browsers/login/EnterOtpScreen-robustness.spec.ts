@@ -2,7 +2,7 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
-  test('go back to Start', async ({ loginFlow, page }) => {
+  test('go back to InitSignup', async ({ loginFlow, page }) => {
     const [, email] = await loginFlow.createAccount(false);
     await loginFlow.navigateToEnterOtpScreen(email);
 

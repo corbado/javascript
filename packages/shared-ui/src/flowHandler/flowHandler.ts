@@ -1,20 +1,11 @@
-import type { SessionUser } from '@corbado/types';
-import { type CorbadoApp, NonRecoverableError } from '@corbado/web-core';
+import { type CorbadoApp } from '@corbado/web-core';
+import type { BlockBody } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 
-import { canUsePasskeys } from '../utils';
-import type { FlowHandlerEvents } from './constants';
-import { FlowType, ScreenNames } from './constants';
-import { FlowHandlerConfig } from './flowHandlerConfig';
-import { FlowHandlerState } from './flowHandlerState';
-import { flows } from './flows';
-import type {
-  FlowHandlerEventOptions,
-  FlowHandlerStateUpdate,
-  FlowHandlerUpdates,
-  FlowTypeText,
-  UserState,
-} from './types';
+import type { Block } from './blocks/Block';
+import { SignupInitBlock } from './blocks/SignupInitBlock';
+import type { ScreenNames } from './constants';
+import { ErrorTranslator } from './errorTranslator';
 
 /**
  * FlowHandler is a class that manages the navigation flow of the application.
@@ -23,32 +14,38 @@ import type {
  */
 export class FlowHandler {
   #currentScreen!: ScreenNames;
-  #screenHistory: ScreenNames[];
-  #config!: FlowHandlerConfig;
-  #state: FlowHandlerState | undefined;
-  #corbadoApp: CorbadoApp;
+  #currentBlock: Block<unknown> | null = null;
 
-  #onFlowUpdateCallbacks: Array<(updates: FlowHandlerUpdates) => void> = [];
-  #onUserStateChangeCallbacks: Array<(v: UserState) => void> = [];
+  #corbadoApp: CorbadoApp;
+  #errorTranslator: ErrorTranslator;
+
+  #onScreenChangeCallbacks: Array<(v: ScreenNames) => void> = [];
+  #onBlockChangeCallbacks: Array<(v: Block<unknown>) => void> = [];
 
   /**
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
-   * It sets the current flow to the specified flow, the current screen to the Start screen, and initializes the screen history as an empty array.
+   * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
-  constructor(corbadoApp: CorbadoApp | undefined) {
+  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
+    const errorTranslator = new ErrorTranslator(i18next);
     this.#corbadoApp = corbadoApp;
-    this.#screenHistory = [];
+    this.#errorTranslator = errorTranslator;
   }
 
   /**
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(i18next: i18n, onLoggedIn: () => void, initialFlowType?: FlowType) {
+  async init(_: () => void) {
+    // get sID for flow type
+
+    // init flowHandler state
+
+    /*
     let flowType = initialFlowType;
 
     const projectConfigResult = await this.#corbadoApp.projectService.getProjectConfig();
@@ -65,21 +62,13 @@ export class FlowHandler {
         flowType = FlowType.Login;
       }
     }
+    */
 
-    this.#config = new FlowHandlerConfig(onLoggedIn, projectConfig, flowType);
-    this.#currentScreen = this.#config.initialScreenName;
+    const initialBlock = await this.#corbadoApp.authProcessService.init(false);
+    console.log('initialBlock', initialBlock);
+    this.handleBlockData(initialBlock);
 
-    const passkeysSupported = await canUsePasskeys();
-
-    this.#state = new FlowHandlerState(
-      this.#config.flowOptions,
-      passkeysSupported,
-      this.#config.passkeyAppendInterval,
-      this.#corbadoApp,
-      i18next,
-    );
-
-    this.#changeFlow();
+    // this.#changeFlow();
   }
 
   dispose() {
@@ -90,172 +79,61 @@ export class FlowHandler {
     return this.#currentScreen;
   }
 
-  get currentFlowName() {
-    return this.#config.flowName;
+  updateScreen(newScreen: ScreenNames) {
+    this.#currentScreen = newScreen;
+
+    this.#onScreenChangeCallbacks.forEach(cb => cb(newScreen));
   }
 
-  get currentFlowTypeText(): FlowTypeText {
-    return this.#config.flowType === FlowType.SignUp ? 'signup' : 'login';
+  updateBlock(blockBody: BlockBody) {
+    this.handleBlockData(blockBody);
   }
 
-  get currentVerificationMethod() {
-    return this.#config.verificationMethod;
+  onScreenChange(cb: (value: ScreenNames) => void) {
+    return this.#onScreenChangeCallbacks.push(cb) - 1;
   }
 
-  get userNameRequired() {
-    return this.#config.userNameRequired;
+  removeOnScreenChangeCallback(cbId: number) {
+    this.#onScreenChangeCallbacks.splice(cbId, 1);
   }
 
-  get allowUserRegistration() {
-    return this.#config.allowUserRegistration;
+  onBlockChange(cb: (v: Block<any>) => void) {
+    return this.#onBlockChangeCallbacks.push(cb) - 1;
   }
 
-  /**
-   * Method to add a callback function to be called when the current flow changes.
-   * @param cb The callback function to be called when the current flow changes.
-   * @returns The callback id.
-   */
-  onFlowChange(cb: (updates: FlowHandlerUpdates) => void) {
-    const cbId = this.#onFlowUpdateCallbacks.push(cb) - 1;
-
-    return cbId;
+  removeOnBlockChange(cbId: number) {
+    this.#onBlockChangeCallbacks.splice(cbId, 1);
   }
 
-  /**
-   * Method to remove a callback function that was registered with onFlowChange.
-   * @param cbId The callback id returned by onFlowChange.
-   */
-  removeOnFlowChangeCallback(cbId: number) {
-    this.#onFlowUpdateCallbacks.splice(cbId, 1);
-  }
-
-  /**
-   * Method to add a callback function to be called when the user state changes.
-   * @param cb The callback function to be called when the user state changes.
-   * @returns The callback id.
-   */
-  onUserStateChange(cb: (v: UserState) => void) {
-    const cbId = this.#onUserStateChangeCallbacks.push(cb) - 1;
-
-    return cbId;
-  }
-
-  /**
-   * Method to remove a callback function that was registered with onUserStateChange.
-   * @param cbId The callback id returned by onUserStateChange.
-   */
-  removeOnUserStateChange(cbId: number) {
-    this.#onUserStateChangeCallbacks.splice(cbId, 1);
-  }
-
-  /**
-   * Method to handle state updates. It calls the current flow's state updater with the current state, event, and event options.
-   * If the state updater returns a flow update, it changes the flow, updates the state, and changes the screen as specified by the flow update.
-   * @param event The event that triggered the state update.
-   * @param eventOptions The options for the event.
-   */
-  async handleStateUpdate(event?: FlowHandlerEvents, eventOptions?: FlowHandlerEventOptions) {
-    if (!this.#state) {
-      throw new Error('FlowHandler is not initialized');
+  handleBlockData(blockBody: BlockBody) {
+    let newBlock: Block<any> = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+    switch (blockBody.block) {
+      case 'passkey-append':
+        break;
+      case 'phone-verify':
+        break;
+      case 'signup-init':
+        newBlock = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+        break;
+      case 'passkey-appended':
+        break;
+      case 'social-verify':
+        break;
+      case 'completed':
+        break;
+      case 'email-verify':
+        break;
+      case 'phone-collect':
+        break;
+      case 'username-collect':
+        break;
     }
 
-    const stateUpdater = flows[this.#config.flowName][this.#currentScreen];
-    if (!stateUpdater) {
-      throw new Error('Invalid screen');
+    if (this.#currentBlock == null || newBlock.type !== this.#currentBlock.type) {
+      this.updateScreen(newBlock.initialScreen);
     }
 
-    const flowUpdate = await stateUpdater(this.#state, event, eventOptions);
-    if (flowUpdate && flowUpdate?.nextFlow !== null) {
-      this.#changeFlow(flowUpdate.nextFlow);
-    }
-
-    if (flowUpdate?.stateUpdate) {
-      this.#changeState({ userState: flowUpdate.stateUpdate });
-    }
-
-    if (flowUpdate?.nextScreen) {
-      if (flowUpdate.nextScreen === ScreenNames.End) {
-        this.#state.corbadoApp.clearGlobalErrors();
-        return void this.#config.onLoggedIn();
-      }
-
-      this.#screenHistory.push(this.#currentScreen);
-      this.#currentScreen = flowUpdate.nextScreen;
-
-      this.#onFlowUpdateCallbacks.forEach(cb => cb({ screenName: this.#currentScreen }));
-    }
-  }
-
-  //TODO: Remove navigateBack method and make it part as a state update as FlowHandlerEvents.Back
-  /**
-   * Method to navigate back to the previous screen.
-   * If there is no previous screen, it navigates to the Start screen.
-   * It sets the current screen to the last screen in the screen history, removes the last screen from the screen history, and calls any registered onScreenUpdate callbacks with the new current screen.
-   * @returns The new current screen.
-   */
-  navigateBack() {
-    if (!this.#screenHistory.length) {
-      return ScreenNames.Start;
-    }
-
-    this.#currentScreen = this.#screenHistory.pop() || ScreenNames.Start;
-
-    this.#onFlowUpdateCallbacks.forEach(cb => cb({ screenName: this.#currentScreen }));
-
-    return this.#currentScreen;
-  }
-
-  //TODO: Remove update method and make it part as a state update by adding a subscriber on corbadoApp.authService.userChanges in FlowHandlerState
-  /**
-   * Method to update the user state with a new user.
-   * @param user The new user.
-   */
-  update(user: SessionUser) {
-    this.#changeState({ user: user });
-  }
-
-  /**
-   * Method to change the current flow.
-   * It sets the current flow to the specified flow, resets the current screen to the Start screen, and clears the screen history.
-   * It calls any registered onFlowUpdate callbacks with the new flow, and any registered onScreenUpdate callbacks with the new current screen.
-   * @param flowType - The new flow.
-   * @param screen - The new current screen.
-   * @returns The new current screen.
-   */
-  #changeFlow(flowType?: FlowType, screen?: ScreenNames) {
-    if (flowType !== undefined) {
-      this.#config.update(flowType);
-    }
-
-    const flowName = this.#config.flowName;
-    const flowOptions = this.#config.flowOptions;
-    const updatedScreen = screen || this.#config.initialScreenName;
-
-    this.#changeState({ flowOptions });
-
-    this.#currentScreen = updatedScreen;
-    this.#screenHistory = [];
-
-    this.#onFlowUpdateCallbacks.forEach(cb =>
-      cb({
-        flowName,
-        flowType: this.currentFlowTypeText,
-        verificationMethod: this.currentVerificationMethod,
-        screenName: updatedScreen,
-      }),
-    );
-
-    return updatedScreen;
-  }
-
-  #changeState(update: FlowHandlerStateUpdate) {
-    if (!this.#state) {
-      throw new Error('FlowHandler is not initialized');
-    }
-
-    this.#state.update(update);
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.#onUserStateChangeCallbacks.forEach(cb => cb(this.#state!.userState));
+    this.#currentBlock = newBlock;
+    this.#onBlockChangeCallbacks.forEach(cb => cb(newBlock));
   }
 }

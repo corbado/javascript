@@ -1,0 +1,632 @@
+# Todos
+#
+# - Add examples
+openapi: 3.0.3
+
+###################################################################
+# General                                                         #
+###################################################################
+info:
+  version: 2.0.0
+  title: Corbado Frontend API
+  description: Overview of all Corbado Frontend API calls to implement passwordless authentication.
+  contact:
+    name: Corbado team
+    email: support@corbado.com
+    url: https://www.corbado.com
+
+servers:
+  - url: https://<project ID>.frontendapi.corbado.io
+
+tags:
+  - name: Users
+    description: All API calls to handle users
+
+  - name: Projects
+    description: All API calls to handle project
+
+  - name: Assets
+    description: All asset calls
+
+  - name: Sessions
+    description: All API calls to handle session management
+
+paths:
+  /v2/component-config:
+    post:
+      description: tbd
+      operationId: UpdateComponentConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateComponentConfigReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateComponentConfigRsp'
+
+
+  /v2/auth/session-init:
+    post:
+      description: tbd
+      operationId: InitSession
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/initSessionReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/initSessionRsp'
+
+  /v2/auth/session:
+    get:
+      description: tbd
+      operationId: GetSession
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blockBody'
+
+  /v2/auth/signup-init:
+    post:
+      description: tbd
+      operationId: InitSignup
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/initSignupReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/initSignupRsp'
+
+  /v2/auth/passkey/append/start:
+    post:
+      description: tbd
+      operationId: StartPasskeyAppend
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyAppendStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/passkeyAppendStartRsp'
+
+  /v2/auth/passkey/append/finish:
+    post:
+      description: tbd
+      operationId: FinishPasskeyAppend
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyAppendFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/passkeyAppendFinishRsp'
+
+  /v2/auth/email/verify/start:
+    post:
+      description: tbd
+      operationId: StartEmailVerify
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerifyStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emailVerifyStartRsp'
+
+  /v2/auth/email/verify/finish:
+    post:
+      description: tbd
+      operationId: FinishEmailVerify
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerifyFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emailVerifyFinishRsp'
+
+  /v2/auth/social/verify/start:
+    post:
+      description: tbd
+      operationId: StartSocialVerify
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/socialVerifyStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/socialVerifyStartRsp'
+
+  /v2/auth/social/verify/finish:
+    post:
+      description: tbd
+      operationId: FinishSocialVerify
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/socialVerifyFinishRsp'
+
+  /v2/auth/phone/collect:
+    post:
+      description: tbd
+      operationId: CollectPhone
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/phoneCollectReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/phoneCollectRsp'
+
+  /v2/auth/username/collect:
+    post:
+      description: tbd
+      operationId: CollectUsername
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usernameCollectReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usernameCollectRsp'
+
+components:
+  ###################################################################
+  # Security schemes                                                #
+  ###################################################################
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    projectID:
+      in: header
+      name: X-Corbado-ProjectID
+      type: apiKey
+
+  schemas:
+    updateComponentConfigReq:
+      type: object
+      description: tbd.
+      required:
+        - identifiers
+      properties:
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/loginIdentifierConfig'
+
+    updateComponentConfigRsp:
+      type: object
+      properties:
+        success:
+          type: boolean
+
+    initSessionReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+      properties:
+        clientInfo:
+          type: object
+
+    initSessionRsp:
+      type: object
+      description: tbd.
+      required:
+        - token
+        - expiresAt
+        - initialBlock
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: number
+        initialBlock:
+          $ref: '#/components/schemas/blockBody'
+
+    initSignupReq:
+      type: object
+      description: tbd.
+      required:
+        - identifiers
+      properties:
+        fullName:
+          type: string
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/loginIdentifier'
+
+    initSignupRsp:
+      allOf:
+        - $ref: '#/components/schemas/blockBody'
+
+    passkeyAppendStartReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+      properties:
+        clientInfo:
+          type: object
+
+    passkeyAppendStartRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    passkeyAppendFinishReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+        - signedChallenge
+      properties:
+        clientInfo:
+          type: object
+        signedChallenge:
+          type: string
+
+    passkeyAppendFinishRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    emailVerifyStartReq:
+      type: object
+      description: tbd.
+      required:
+        - verificationType
+      properties:
+        verificationType:
+          $ref: '#/components/schemas/verificationMethod'
+
+    emailVerifyStartRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    emailVerifyFinishReq:
+      type: object
+      required:
+        - clientInfo
+        - code
+        - verificationType
+      properties:
+        clientInfo:
+          type: object
+        code:
+          type: string
+        verificationType:
+          $ref: '#/components/schemas/verificationMethod'
+
+    emailVerifyFinishRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    usernameCollectReq:
+      type: object
+      required:
+        - clientInfo
+        - value
+      properties:
+        clientInfo:
+          type: object
+        value:
+          type: string
+
+    usernameCollectRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    phoneCollectReq:
+      type: object
+      required:
+        - clientInfo
+        - value
+      properties:
+        clientInfo:
+          type: object
+        value:
+          type: string
+
+    phoneCollectRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    socialVerifyStartReq:
+      type: object
+      required:
+        - clientInfo
+      properties:
+        clientInfo:
+          type: object
+
+    socialVerifyStartRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    socialVerifyFinishRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    verifyPasskeyRsp:
+      type: object
+      required:
+        - primary
+        - alternatives
+      properties:
+        primary:
+          type: object
+        alternatives:
+          type: object
+
+    verifyIdentifierRsp:
+      type: object
+      required:
+        - primary
+        - alternatives
+      properties:
+        primary:
+          type: object
+        alternatives:
+          type: object
+
+    loginIdentifierConfig:
+      type: object
+      required:
+        - type
+        - enforceVerification
+        - useAsLoginIdentifier
+      properties:
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        enforceVerification:
+          type: string
+          enum: [ none, signup, before-passkey-login ]
+        useAsLoginIdentifier:
+          type: boolean
+        metadata:
+          type: object
+
+    loginBlock:
+      type: string
+      enum: [ verify-passkey, verify-identifier, passkey-append, completed ]
+
+    blockBody:
+      type: object
+      required:
+        - block
+        - data
+      properties:
+        block:
+          $ref: '#/components/schemas/blockType'
+        data:
+          type: object
+          anyOf:
+            - $ref: '#/components/schemas/generalBlockPasskeyAppend'
+            - $ref: '#/components/schemas/generalBlockVerifyIdentifier'
+            - $ref: '#/components/schemas/generalBlockPasskeyAppended'
+            - $ref: '#/components/schemas/generalBlockCompleted'
+            - $ref: '#/components/schemas/generalBlockSignupInit'
+            - $ref: '#/components/schemas/generalBlockSocialVerify'
+            - $ref: '#/components/schemas/generalBlockUsernameCollect'
+            - $ref: '#/components/schemas/generalPhoneCollect'
+        alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/blockBody'
+        error:
+          $ref: '#/components/schemas/requestError'
+
+    loginIdentifier:
+      type: object
+      required:
+        - type
+        - identifier
+      properties:
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        identifier:
+          type: string
+
+    loginIdentifierWithError:
+      type: object
+      required:
+        - type
+        - identifier
+      properties:
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        identifier:
+          type: string
+        error:
+          $ref: '#/components/schemas/requestError'
+
+    loginIdentifierType:
+      type: string
+      enum: [ email, phone, username ]
+
+    blockType:
+      type: string
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect ]
+
+    verificationMethod:
+      type: string
+      enum: [ email-link, email-otp, sms-otp ]
+
+    generalBlockSignupInit:
+      type: object
+      required:
+        - identifiers
+      properties:
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/loginIdentifierWithError'
+        fullName:
+          type: object
+          required:
+            - value
+          properties:
+            value:
+              type: string
+            error:
+              $ref: '#/components/schemas/requestError'
+
+
+    generalBlockSocialVerify:
+      type: object
+
+    generalBlockUsernameCollect:
+      $ref: '#/components/schemas/loginIdentifierWithError'
+
+    generalPhoneCollect:
+      $ref: '#/components/schemas/loginIdentifierWithError'
+
+    generalBlockPasskeyAppend:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+
+    generalBlockPasskeyAppended:
+      type: object
+
+    generalBlockCompleted:
+      type: object
+      properties:
+        longSession:
+          type: string
+          description: Only given when project environment is dev
+        shortSession:
+          type: string
+
+    generalBlockVerifyIdentifier:
+      type: object
+      required:
+        - verificationMethod
+        - identifier
+        - alternativeVerificationMethods
+      properties:
+        verificationMethod:
+          $ref: '#/components/schemas/verificationMethod'
+        identifier:
+          type: string
+        retryNotBefore:
+          type: integer
+          format: int32
+        error:
+          $ref: '#/components/schemas/requestError'
+        alternativeVerificationMethods:
+          type: array
+          items:
+            type: object
+          required:
+            - verificationMethod
+            - identifier
+          properties:
+            verificationMethod:
+              $ref: '#/components/schemas/verificationMethod'
+            identifier:
+              type: string
+
+    requestError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+security:
+  - bearerAuth: [ ]
+  - projectID: [ ]

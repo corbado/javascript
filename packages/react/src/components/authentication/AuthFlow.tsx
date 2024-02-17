@@ -1,29 +1,37 @@
 import { useCorbado } from '@corbado/react-sdk';
 import { ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import type { ScreenMap } from '../../flows';
-import { flowScreensMap } from '../../flows';
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import { PasskeyAppend } from '../../screens/base/authentication/passkey-append/PasskeyAppend';
+import { PasskeyBenefits } from '../../screens/base/authentication/passkey-append/PasskeyBenefits';
+import { PasskeyAppended } from '../../screens/base/authentication/passkey-appended/PasskeyAppended';
+import { InitSignup } from '../../screens/base/authentication/signup-init/InitSignup';
 import Loading from '../ui/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
+export type ScreenMap = {
+  [K in ScreenNames]?: () => React.ReactNode;
+};
+
+const componentMap: ScreenMap = {
+  [ScreenNames.Start]: InitSignup,
+  [ScreenNames.PasskeyCreate]: PasskeyAppend,
+  [ScreenNames.EmailOTPVerification]: InitSignup,
+  [ScreenNames.EmailLinkSent]: InitSignup,
+  [ScreenNames.EmailLinkVerification]: InitSignup,
+  [ScreenNames.PasskeyAppend]: PasskeyAppend,
+  [ScreenNames.PasskeyBenefits]: PasskeyBenefits,
+  [ScreenNames.PasskeySuccess]: PasskeyAppended,
+  [ScreenNames.PasskeyError]: InitSignup,
+};
+
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
-  const { currentFlow, currentScreen, initialized } = useFlowHandler();
+  const { currentScreen, initialized } = useFlowHandler();
   const { globalError } = useCorbado();
-  const [componentMap, setComponentMap] = useState<ScreenMap>({});
-
-  useEffect(() => {
-    if (!currentFlow) {
-      return;
-    }
-
-    const screensMap = flowScreensMap[currentFlow];
-    setComponentMap(screensMap ?? {});
-  }, [currentFlow]);
 
   const ScreenComponent = useMemo(() => {
     if (!currentScreen) {

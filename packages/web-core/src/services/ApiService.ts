@@ -1,30 +1,16 @@
-import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
-import type { PassKeyList, UserIdentifier } from '@corbado/types';
+import type { PassKeyList, ProjectConfig, UserAuthMethods, UserIdentifier } from '@corbado/types';
 import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
 import type { Subject } from 'rxjs';
-import { Err, Result } from 'ts-results';
+import { Result } from 'ts-results';
 
-import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
-import { AuthenticationResponse } from '../models/auth';
+import { Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api/v1';
 import type {
-  AppendPasskeyError,
   AuthMethodsListError,
-  CompleteLoginWithEmailLinkError,
-  CompleteLoginWithEmailOTPError,
-  CompleteSignupWithEmailLinkError,
-  CompleteSignupWithEmailOTPError,
   GetProjectConfigError,
-  InitAutocompletedLoginWithPasskeyError,
-  InitLoginWithEmailLinkError,
-  InitLoginWithEmailOTPError,
-  InitSignUpWithEmailLinkError,
-  InitSignUpWithEmailOTPError,
-  LoginWithPasskeyError,
   PasskeyDeleteError,
   PasskeyListError,
-  SignUpWithPasskeyError,
   UserExistsError,
 } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
@@ -34,14 +20,13 @@ const packageVersion = '0.0.0';
 
 /**
  * ApiService class encapsulates API handling for the Corbado Application.
- * It manages API instances for users, assets, projects, and sessions, and configures them with
+ * It manages API instances for users, projects, and sessions, and configures them with
  * authentication tokens and default settings such as timeout and headers.
  * ApiService should completely abstract away the API layer from the rest of the application.
  */
 export class ApiService {
   // Private API instances for various services.
   #usersApi: UsersApi = new UsersApi();
-  #assetsApi: AssetsApi = new AssetsApi();
   #projectsApi: ProjectsApi = new ProjectsApi();
   #sessionsApi: SessionsApi = new SessionsApi();
   #globalErrors: Subject<NonRecoverableError | undefined>;
@@ -72,16 +57,12 @@ export class ApiService {
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
-    this.#setApis('');
+    this.#setApisV1('');
   }
 
   // Public getters for the API instances.
   get usersApi(): UsersApi {
     return this.#usersApi;
-  }
-
-  get assetsApi(): AssetsApi {
-    return this.#assetsApi;
   }
 
   get projectsApi(): ProjectsApi {
@@ -139,7 +120,7 @@ export class ApiService {
    * Sets up the API instances with the provided token and base path, reusing a common Axios instance.
    * @param token - The authentication token to be used for API requests.
    */
-  #setApis(token: string): void {
+  #setApisV1(token: string): void {
     const config = new Configuration({
       apiKey: this.#projectId,
       basePath: this.#frontendApiUrl,
@@ -148,7 +129,6 @@ export class ApiService {
     const axiosInstance = this.#createAxiosInstance(token);
 
     this.#usersApi = new UsersApi(config, this.#frontendApiUrl, axiosInstance);
-    this.#assetsApi = new AssetsApi(config, this.#frontendApiUrl, axiosInstance);
     this.#projectsApi = new ProjectsApi(config, this.#frontendApiUrl, axiosInstance);
     this.#sessionsApi = new SessionsApi(config, this.#frontendApiUrl, axiosInstance);
   }
@@ -158,175 +138,7 @@ export class ApiService {
    * @param token - The new authentication token.
    */
   public setInstanceWithToken(token: string): void {
-    this.#setApis(token);
-  }
-
-  public passKeyRegisterStart(
-    email: string,
-    username: string,
-  ): Promise<Result<string, SignUpWithPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyRegisterStart({
-        username: email,
-        fullName: username,
-      });
-
-      return r.data.data.challenge;
-    });
-  }
-
-  public passKeyRegisterFinish(
-    signedChallenge: string,
-  ): Promise<Result<AuthenticationResponse, SignUpWithPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyRegisterFinish({
-        signedChallenge: signedChallenge,
-      });
-
-      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
-    });
-  }
-
-  public passKeyAppendStart(): Promise<Result<string, AppendPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyAppendStart({});
-
-      return r.data.data.challenge;
-    });
-  }
-
-  public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, AppendPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      await this.usersApi.passKeyAppendFinish({
-        signedChallenge: signedChallenge,
-      });
-
-      return void 0;
-    });
-  }
-
-  public passKeyLoginStart(email: string): Promise<Result<string, LoginWithPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyLoginStart({
-        username: email,
-      });
-
-      if (r.data.data.challenge === '') {
-        return Promise.reject(CorbadoError.noPasskeyAvailable());
-      }
-
-      return r.data.data.challenge;
-    });
-  }
-
-  public passKeyLoginFinish(
-    signedChallenge: string,
-  ): Promise<Result<AuthenticationResponse, LoginWithPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyLoginFinish({
-        signedChallenge: signedChallenge,
-      });
-
-      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
-    });
-  }
-
-  public passKeyMediationStart(): Promise<Result<string, InitAutocompletedLoginWithPasskeyError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyMediationStart({
-        username: '',
-      });
-
-      return r.data.data.challenge;
-    });
-  }
-
-  public emailCodeRegisterStart(
-    email: string,
-    username: string,
-  ): Promise<Result<string, InitSignUpWithEmailOTPError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailCodeRegisterStart({
-        email: email,
-        username: username,
-      });
-
-      return r.data.data.emailCodeID;
-    });
-  }
-
-  public emailCodeLoginStart(email: string): Promise<Result<string, InitLoginWithEmailOTPError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailCodeLoginStart({
-        username: email,
-      });
-
-      return r.data.data.emailCodeID;
-    });
-  }
-
-  public async emailCodeConfirm(
-    emailCodeId: string,
-    otpCode: string,
-  ): Promise<
-    Result<AuthenticationResponse, CompleteSignupWithEmailOTPError | CompleteLoginWithEmailOTPError | undefined>
-  > {
-    if (emailCodeId === '') {
-      return Err(CorbadoError.illegalState('email OTP challenge has not been started', ''));
-    }
-
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailCodeConfirm({
-        emailCodeID: emailCodeId,
-        code: otpCode,
-      });
-
-      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
-    });
-  }
-
-  public emailLinkRegisterStart(
-    email: string,
-    username: string,
-  ): Promise<Result<string, InitSignUpWithEmailLinkError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailLinkRegisterStart({
-        email: email,
-        username: username,
-      });
-
-      return r.data.data.emailLinkID;
-    });
-  }
-
-  public emailLinkLoginStart(email: string): Promise<Result<string, InitLoginWithEmailLinkError | undefined>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailLinkLoginStart({
-        username: email,
-      });
-
-      return r.data.data.emailLinkID;
-    });
-  }
-
-  public async emailLinkConfirm(
-    emailLinkID: string,
-    token: string,
-  ): Promise<
-    Result<AuthenticationResponse, CompleteSignupWithEmailLinkError | CompleteLoginWithEmailLinkError | undefined>
-  > {
-    if (emailLinkID === '') {
-      return Err(CorbadoError.illegalState('email magic link challenge has not been started', ''));
-    }
-
-    return Result.wrapAsync(async () => {
-      const r = await this.usersApi.emailLinkConfirm({
-        emailLinkID: emailLinkID,
-        token: token,
-      });
-
-      return AuthenticationResponse.fromApiAuthenticationRsp(r.data.data);
-    });
+    this.#setApisV1(token);
   }
 
   public async authMethodsList(email: string): Promise<Result<UserAuthMethods, AuthMethodsListError | undefined>> {

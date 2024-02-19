@@ -11,7 +11,7 @@ on:
 jobs:
   prepare:
     # runs-on: ubuntu-latest
-    runs-on: [ self-hosted, "vm-deploy01" ]
+    runs-on: [ self-hosted, "Deploy" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:

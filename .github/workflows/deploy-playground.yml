@@ -10,6 +10,7 @@ on:
     branches:
       - main
       - develop
+      - playwright-runner
 
 jobs:
   deploy:

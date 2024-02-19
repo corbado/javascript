@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FormInput, Header, PrimaryButton, SubHeader } from '../../../../components';
+import { FormInput, Header, PrimaryButton, SubHeader } from '../../../components';
 
 export const InitSignup = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `authentication.signup-init.signup-init` });

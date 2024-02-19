@@ -85,6 +85,12 @@ export type BlockDataPasskeyAppend = {
 
 export type BlockDataPasskeyAppended = Record<string, never>;
 
+export type BlockDataEmailVerify = {
+  email: string;
+  translatedError?: string;
+  retryNotBefore?: number;
+};
+
 export type PasskeyFallback = {
   type: string;
 };

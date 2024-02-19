@@ -150,6 +150,12 @@ export class AuthProcessService {
     return r.data;
   }
 
+  async skipBlock(): Promise<BlockBody> {
+    const r = await this.#authApi.skipBlock();
+
+    return r.data;
+  }
+
   async startPasskeyAppend(): Promise<BlockBody> {
     const r = await this.#authApi.startPasskeyAppend({
       clientInfo: {},

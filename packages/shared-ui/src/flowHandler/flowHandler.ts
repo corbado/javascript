@@ -3,6 +3,7 @@ import type { BlockBody } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 
 import type { Block } from './blocks/Block';
+import { EmailVerifyBlock } from './blocks/EmailVerifyBlock';
 import { PasskeyAppendBlock } from './blocks/PasskeyAppendBlock';
 import { PasskeyAppendedBlock } from './blocks/PasskeyAppendedBlock';
 import { SignupInitBlock } from './blocks/SignupInitBlock';
@@ -115,6 +116,9 @@ export class FlowHandler {
         break;
       case 'passkey-appended':
         newBlock = new PasskeyAppendedBlock(this.#corbadoApp, this);
+        break;
+      case 'email-verify':
+        newBlock = new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
       default:
         newBlock = new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);

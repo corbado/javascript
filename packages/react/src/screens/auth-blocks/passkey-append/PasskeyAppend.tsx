@@ -2,7 +2,7 @@ import { type PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Header, PrimaryButton, SubHeader } from '../../../../components';
+import { Header, PrimaryButton, SubHeader } from '../../../components';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {

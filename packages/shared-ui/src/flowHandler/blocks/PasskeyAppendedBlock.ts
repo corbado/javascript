@@ -14,7 +14,10 @@ export class PasskeyAppendedBlock extends Block<BlockDataPasskeyAppended> {
     super(app, flowHandler);
   }
 
-  continue() {
+  async continue() {
+    const newBlock = await this.app.authProcessService.skipBlock();
+    this.flowHandler.updateBlock(newBlock);
+
     return;
   }
 }

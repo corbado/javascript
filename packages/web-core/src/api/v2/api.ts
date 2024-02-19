@@ -1026,6 +1026,42 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        skipBlock: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/skipBlock`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {EmailVerifyStartReq} emailVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1240,6 +1276,15 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async skipBlock(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.skipBlock(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {EmailVerifyStartReq} emailVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1347,6 +1392,14 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         initSignup(initSignupReq: InitSignupReq, options?: any): AxiosPromise<InitSignupRsp> {
             return localVarFp.initSignup(initSignupReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        skipBlock(options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.skipBlock(options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1469,6 +1522,16 @@ export class AuthApi extends BaseAPI {
      */
     public initSignup(initSignupReq: InitSignupReq, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).initSignup(initSignupReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public skipBlock(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).skipBlock(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

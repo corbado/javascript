@@ -82,6 +82,7 @@ jobs:
 
       - name: Run E2E Test for ${{ matrix.app }}
         run: |
+          ls
           if [ "${{ matrix.type }}" = "sdk" ]; then
             npm run test:e2e:sdk
           else

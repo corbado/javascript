@@ -7,9 +7,9 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   // workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
-  timeout: 15000,   // default: 30000ms
+  timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 3000,  // default: 5000ms
+    timeout: 3000, // default: 5000ms
   },
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_URL,

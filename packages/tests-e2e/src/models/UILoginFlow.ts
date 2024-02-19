@@ -136,7 +136,7 @@ export class UILoginFlow {
       await this.checkLandedOnScreen(ScreenNames.EnterOtp);
       await this.fillOTP();
       await this.checkLandedOnScreen(ScreenNames.End);
-      
+
       await this.page.getByRole('button', { name: 'Logout' }).click();
     }
 

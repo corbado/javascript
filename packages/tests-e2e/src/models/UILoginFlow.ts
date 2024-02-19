@@ -125,9 +125,19 @@ export class UILoginFlow {
       } else {
         await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
         await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+        await this.fillOTP();
+        await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
+        await this.page.getByRole('button', { name: 'Maybe later' }).click();
+        await this.checkLandedOnScreen(ScreenNames.End);
+
+        await this.page.getByRole('button', { name: 'Logout' }).click();
       }
     } else {
       await this.checkLandedOnScreen(ScreenNames.EnterOtp);
+      await this.fillOTP();
+      await this.checkLandedOnScreen(ScreenNames.End);
+      
+      await this.page.getByRole('button', { name: 'Logout' }).click();
     }
 
     await loadAuth(this.page);
@@ -161,7 +171,7 @@ export class UILoginFlow {
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-*/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);
         break;
     }
   }

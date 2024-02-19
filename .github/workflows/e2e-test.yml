@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: vm-deploy01
+    runs-on: [ self-hosted, "Deploy" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -47,7 +47,7 @@ jobs:
   e2e-tests:
     timeout-minutes: 60
     needs: prepare
-    runs-on: vm-deploy01
+    runs-on: [ self-hosted, "Deploy" ]
     strategy:
       matrix:
         include:

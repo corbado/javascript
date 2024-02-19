@@ -1,5 +1,5 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton } from '../../../components';
@@ -8,6 +8,10 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `authentication.email-verify.email-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const otpRef = useRef<string>('');
+
+  useEffect(() => {
+    setLoading(false);
+  }, [block]);
 
   const header = t('header');
   const body = (
@@ -33,7 +37,10 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   );
 
   return (
-    <form className='cb-email-screen'>
+    <form
+      className='cb-email-screen'
+      onSubmit={event => event.preventDefault()}
+    >
       <Header>{header}</Header>
       <Body>{body}</Body>
 
@@ -47,7 +54,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
 
       <PrimaryButton
         isLoading={loading}
-        onClick={block.resendCode}
+        onClick={() => block.resendCode()}
       >
         {resendButtonText}
       </PrimaryButton>

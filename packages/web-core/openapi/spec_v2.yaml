@@ -19,17 +19,8 @@ servers:
   - url: https://<project ID>.frontendapi.corbado.io
 
 tags:
-  - name: Users
-    description: All API calls to handle users
-
-  - name: Projects
-    description: All API calls to handle project
-
-  - name: Assets
-    description: All asset calls
-
-  - name: Sessions
-    description: All API calls to handle session management
+  - name: Auth
+    description: All API calls that are related to an authentication process.
 
 paths:
   /v2/component-config:
@@ -51,10 +42,10 @@ paths:
                 $ref: '#/components/schemas/updateComponentConfigRsp'
 
 
-  /v2/auth/session-init:
+  /v2/auth/process/init:
     post:
       description: tbd
-      operationId: InitSession
+      operationId: ProcessInit
       tags:
         - Auth
       requestBody:
@@ -62,19 +53,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/initSessionReq'
+              $ref: '#/components/schemas/processInitReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/initSessionRsp'
+                $ref: '#/components/schemas/processInitRsp'
 
-  /v2/auth/session:
+  /v2/auth/process:
     get:
       description: tbd
-      operationId: GetSession
+      operationId: ProcessGet
       tags:
         - Auth
       responses:
@@ -85,10 +76,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/blockBody'
 
-  /v2/auth/signup-init:
+  /v2/auth/process/complete:
     post:
       description: tbd
-      operationId: InitSignup
+      operationId: ProcessComplete
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blockBody'
+
+  /v2/auth/signup/init:
+    post:
+      description: tbd
+      operationId: SignupInit
       tags:
         - Auth
       requestBody:
@@ -96,19 +101,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/initSignupReq'
+              $ref: '#/components/schemas/signupInitReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/initSignupRsp'
+                $ref: '#/components/schemas/signupInitRsp'
 
-  /v2/auth/skipBlock:
+  /v2/auth/block/skip:
     post:
       description: tbd
-      operationId: SkipBlock
+      operationId: BlockSkip
       tags:
         - Auth
       responses:
@@ -122,7 +127,7 @@ paths:
   /v2/auth/passkey/append/start:
     post:
       description: tbd
-      operationId: StartPasskeyAppend
+      operationId: PasskeyAppendStart
       tags:
         - Auth
       requestBody:
@@ -142,7 +147,7 @@ paths:
   /v2/auth/passkey/append/finish:
     post:
       description: tbd
-      operationId: FinishPasskeyAppend
+      operationId: PasskeyAppendFinish
       tags:
         - Auth
       requestBody:
@@ -162,7 +167,7 @@ paths:
   /v2/auth/email/verify/start:
     post:
       description: tbd
-      operationId: StartEmailVerify
+      operationId: EmailVerifyStart
       tags:
         - Auth
       requestBody:
@@ -182,7 +187,7 @@ paths:
   /v2/auth/email/verify/finish:
     post:
       description: tbd
-      operationId: FinishEmailVerify
+      operationId: EmailVerifyFinish
       tags:
         - Auth
       requestBody:
@@ -202,7 +207,7 @@ paths:
   /v2/auth/social/verify/start:
     post:
       description: tbd
-      operationId: StartSocialVerify
+      operationId: SocialVerifyStart
       tags:
         - Auth
       requestBody:
@@ -222,7 +227,7 @@ paths:
   /v2/auth/social/verify/finish:
     post:
       description: tbd
-      operationId: FinishSocialVerify
+      operationId: SocialVerifyFinish
       tags:
         - Auth
       responses:
@@ -236,7 +241,7 @@ paths:
   /v2/auth/phone/collect:
     post:
       description: tbd
-      operationId: CollectPhone
+      operationId: PhoneCollect
       tags:
         - Auth
       requestBody:
@@ -256,7 +261,7 @@ paths:
   /v2/auth/username/collect:
     post:
       description: tbd
-      operationId: CollectUsername
+      operationId: UsernameCollect
       tags:
         - Auth
       requestBody:
@@ -308,7 +313,7 @@ components:
         success:
           type: boolean
 
-    initSessionReq:
+    processInitReq:
       type: object
       description: tbd.
       required:
@@ -317,7 +322,7 @@ components:
         clientInfo:
           type: object
 
-    initSessionRsp:
+    processInitRsp:
       type: object
       description: tbd.
       required:
@@ -328,11 +333,11 @@ components:
         token:
           type: string
         expiresAt:
-          type: number
+          type: integer
         initialBlock:
           $ref: '#/components/schemas/blockBody'
 
-    initSignupReq:
+    signupInitReq:
       type: object
       description: tbd.
       required:
@@ -345,7 +350,7 @@ components:
           items:
             $ref: '#/components/schemas/loginIdentifier'
 
-    initSignupRsp:
+    signupInitRsp:
       allOf:
         - $ref: '#/components/schemas/blockBody'
 
@@ -486,10 +491,6 @@ components:
         metadata:
           type: object
 
-    loginBlock:
-      type: string
-      enum: [ verify-passkey, verify-identifier, passkey-append, completed ]
-
     blockBody:
       type: object
       required:
@@ -585,8 +586,11 @@ components:
       type: object
       required:
         - challenge
+        - userHandle
       properties:
         challenge:
+          type: string
+        userHandle:
           type: string
 
     generalBlockPasskeyAppended:

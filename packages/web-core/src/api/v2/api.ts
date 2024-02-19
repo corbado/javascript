@@ -70,6 +70,12 @@ export interface BlockBodyData {
     'challenge': string;
     /**
      * 
+     * @type {string}
+     * @memberof BlockBodyData
+     */
+    'userHandle': string;
+    /**
+     * 
      * @type {VerificationMethod}
      * @memberof BlockBodyData
      */
@@ -225,6 +231,12 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'challenge': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'userHandle': string;
 }
 /**
  * 
@@ -301,112 +313,6 @@ export interface GeneralBlockVerifyIdentifier {
      */
     'alternativeVerificationMethods': Array<object>;
 }
-
-
-/**
- * tbd.
- * @export
- * @interface InitSessionReq
- */
-export interface InitSessionReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof InitSessionReq
-     */
-    'clientInfo': object;
-}
-/**
- * tbd.
- * @export
- * @interface InitSessionRsp
- */
-export interface InitSessionRsp {
-    /**
-     * 
-     * @type {string}
-     * @memberof InitSessionRsp
-     */
-    'token': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InitSessionRsp
-     */
-    'expiresAt': number;
-    /**
-     * 
-     * @type {BlockBody}
-     * @memberof InitSessionRsp
-     */
-    'initialBlock': BlockBody;
-}
-/**
- * tbd.
- * @export
- * @interface InitSignupReq
- */
-export interface InitSignupReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof InitSignupReq
-     */
-    'fullName'?: string;
-    /**
-     * 
-     * @type {Array<LoginIdentifier>}
-     * @memberof InitSignupReq
-     */
-    'identifiers': Array<LoginIdentifier>;
-}
-/**
- * 
- * @export
- * @interface InitSignupRsp
- */
-export interface InitSignupRsp {
-    /**
-     * 
-     * @type {BlockType}
-     * @memberof InitSignupRsp
-     */
-    'block': BlockType;
-    /**
-     * 
-     * @type {BlockBodyData}
-     * @memberof InitSignupRsp
-     */
-    'data': BlockBodyData;
-    /**
-     * 
-     * @type {Array<BlockBody>}
-     * @memberof InitSignupRsp
-     */
-    'alternatives'?: Array<BlockBody>;
-    /**
-     * 
-     * @type {RequestError}
-     * @memberof InitSignupRsp
-     */
-    'error'?: RequestError;
-}
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const LoginBlock = {
-    VerifyPasskey: 'verify-passkey',
-    VerifyIdentifier: 'verify-identifier',
-    PasskeyAppend: 'passkey-append',
-    Completed: 'completed'
-} as const;
-
-export type LoginBlock = typeof LoginBlock[keyof typeof LoginBlock];
 
 
 /**
@@ -564,6 +470,44 @@ export interface PhoneCollectReq {
     'value': string;
 }
 /**
+ * tbd.
+ * @export
+ * @interface ProcessInitReq
+ */
+export interface ProcessInitReq {
+    /**
+     * 
+     * @type {object}
+     * @memberof ProcessInitReq
+     */
+    'clientInfo': object;
+}
+/**
+ * tbd.
+ * @export
+ * @interface ProcessInitRsp
+ */
+export interface ProcessInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessInitRsp
+     */
+    'token': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProcessInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {BlockBody}
+     * @memberof ProcessInitRsp
+     */
+    'initialBlock': BlockBody;
+}
+/**
  * 
  * @export
  * @interface RequestError
@@ -582,6 +526,58 @@ export interface RequestError {
      */
     'message': string;
 }
+/**
+ * tbd.
+ * @export
+ * @interface SignupInitReq
+ */
+export interface SignupInitReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof SignupInitReq
+     */
+    'fullName'?: string;
+    /**
+     * 
+     * @type {Array<LoginIdentifier>}
+     * @memberof SignupInitReq
+     */
+    'identifiers': Array<LoginIdentifier>;
+}
+/**
+ * 
+ * @export
+ * @interface SignupInitRsp
+ */
+export interface SignupInitRsp {
+    /**
+     * 
+     * @type {BlockType}
+     * @memberof SignupInitRsp
+     */
+    'block': BlockType;
+    /**
+     * 
+     * @type {BlockBodyData}
+     * @memberof SignupInitRsp
+     */
+    'data': BlockBodyData;
+    /**
+     * 
+     * @type {Array<BlockBody>}
+     * @memberof SignupInitRsp
+     */
+    'alternatives'?: Array<BlockBody>;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof SignupInitRsp
+     */
+    'error'?: RequestError;
+}
+
+
 /**
  * 
  * @export
@@ -702,14 +698,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * tbd
-         * @param {PhoneCollectReq} phoneCollectReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        collectPhone: async (phoneCollectReq: PhoneCollectReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'phoneCollectReq' is not null or undefined
-            assertParamExists('collectPhone', 'phoneCollectReq', phoneCollectReq)
-            const localVarPath = `/v2/auth/phone/collect`;
+        blockSkip: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/block/skip`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -730,54 +723,9 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(phoneCollectReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {UsernameCollectReq} usernameCollectReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        collectUsername: async (usernameCollectReq: UsernameCollectReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'usernameCollectReq' is not null or undefined
-            assertParamExists('collectUsername', 'usernameCollectReq', usernameCollectReq)
-            const localVarPath = `/v2/auth/username/collect`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(usernameCollectReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -790,9 +738,9 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        finishEmailVerify: async (emailVerifyFinishReq: EmailVerifyFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        emailVerifyFinish: async (emailVerifyFinishReq: EmailVerifyFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'emailVerifyFinishReq' is not null or undefined
-            assertParamExists('finishEmailVerify', 'emailVerifyFinishReq', emailVerifyFinishReq)
+            assertParamExists('emailVerifyFinish', 'emailVerifyFinishReq', emailVerifyFinishReq)
             const localVarPath = `/v2/auth/email/verify/finish`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -828,247 +776,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        finishPasskeyAppend: async (passkeyAppendFinishReq: PasskeyAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'passkeyAppendFinishReq' is not null or undefined
-            assertParamExists('finishPasskeyAppend', 'passkeyAppendFinishReq', passkeyAppendFinishReq)
-            const localVarPath = `/v2/auth/passkey/append/finish`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendFinishReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        finishSocialVerify: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/auth/social/verify/finish`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSession: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/auth/session`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {InitSessionReq} initSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        initSession: async (initSessionReq: InitSessionReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'initSessionReq' is not null or undefined
-            assertParamExists('initSession', 'initSessionReq', initSessionReq)
-            const localVarPath = `/v2/auth/session-init`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(initSessionReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {InitSignupReq} initSignupReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        initSignup: async (initSignupReq: InitSignupReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'initSignupReq' is not null or undefined
-            assertParamExists('initSignup', 'initSignupReq', initSignupReq)
-            const localVarPath = `/v2/auth/signup-init`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(initSignupReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        skipBlock: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/auth/skipBlock`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * tbd
          * @param {EmailVerifyStartReq} emailVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startEmailVerify: async (emailVerifyStartReq: EmailVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        emailVerifyStart: async (emailVerifyStartReq: EmailVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'emailVerifyStartReq' is not null or undefined
-            assertParamExists('startEmailVerify', 'emailVerifyStartReq', emailVerifyStartReq)
+            assertParamExists('emailVerifyStart', 'emailVerifyStartReq', emailVerifyStartReq)
             const localVarPath = `/v2/auth/email/verify/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1104,13 +818,55 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyAppendFinish: async (passkeyAppendFinishReq: PasskeyAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passkeyAppendFinishReq' is not null or undefined
+            assertParamExists('passkeyAppendFinish', 'passkeyAppendFinishReq', passkeyAppendFinishReq)
+            const localVarPath = `/v2/auth/passkey/append/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startPasskeyAppend: async (passkeyAppendStartReq: PasskeyAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        passkeyAppendStart: async (passkeyAppendStartReq: PasskeyAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'passkeyAppendStartReq' is not null or undefined
-            assertParamExists('startPasskeyAppend', 'passkeyAppendStartReq', passkeyAppendStartReq)
+            assertParamExists('passkeyAppendStart', 'passkeyAppendStartReq', passkeyAppendStartReq)
             const localVarPath = `/v2/auth/passkey/append/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1146,13 +902,247 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {PhoneCollectReq} phoneCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneCollect: async (phoneCollectReq: PhoneCollectReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'phoneCollectReq' is not null or undefined
+            assertParamExists('phoneCollect', 'phoneCollectReq', phoneCollectReq)
+            const localVarPath = `/v2/auth/phone/collect`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(phoneCollectReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processComplete: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/process/complete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/process`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {ProcessInitReq} processInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processInit: async (processInitReq: ProcessInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'processInitReq' is not null or undefined
+            assertParamExists('processInit', 'processInitReq', processInitReq)
+            const localVarPath = `/v2/auth/process/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(processInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {SignupInitReq} signupInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        signupInit: async (signupInitReq: SignupInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'signupInitReq' is not null or undefined
+            assertParamExists('signupInit', 'signupInitReq', signupInitReq)
+            const localVarPath = `/v2/auth/signup/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(signupInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialVerifyFinish: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/social/verify/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {SocialVerifyStartReq} socialVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startSocialVerify: async (socialVerifyStartReq: SocialVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        socialVerifyStart: async (socialVerifyStartReq: SocialVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'socialVerifyStartReq' is not null or undefined
-            assertParamExists('startSocialVerify', 'socialVerifyStartReq', socialVerifyStartReq)
+            assertParamExists('socialVerifyStart', 'socialVerifyStartReq', socialVerifyStartReq)
             const localVarPath = `/v2/auth/social/verify/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1186,6 +1176,48 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * tbd
+         * @param {UsernameCollectReq} usernameCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usernameCollect: async (usernameCollectReq: UsernameCollectReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'usernameCollectReq' is not null or undefined
+            assertParamExists('usernameCollect', 'usernameCollectReq', usernameCollectReq)
+            const localVarPath = `/v2/auth/username/collect`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(usernameCollectReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1198,22 +1230,11 @@ export const AuthApiFp = function(configuration?: Configuration) {
     return {
         /**
          * tbd
-         * @param {PhoneCollectReq} phoneCollectReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async collectPhone(phoneCollectReq: PhoneCollectReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.collectPhone(phoneCollectReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {UsernameCollectReq} usernameCollectReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async collectUsername(usernameCollectReq: UsernameCollectReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.collectUsername(usernameCollectReq, options);
+        async blockSkip(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.blockSkip(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1222,65 +1243,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async finishEmailVerify(emailVerifyFinishReq: EmailVerifyFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.finishEmailVerify(emailVerifyFinishReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async finishPasskeyAppend(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.finishPasskeyAppend(passkeyAppendFinishReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async finishSocialVerify(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.finishSocialVerify(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSession(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSession(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {InitSessionReq} initSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async initSession(initSessionReq: InitSessionReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InitSessionRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.initSession(initSessionReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {InitSignupReq} initSignupReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async initSignup(initSignupReq: InitSignupReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InitSignupRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.initSignup(initSignupReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async skipBlock(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.skipBlock(options);
+        async emailVerifyFinish(emailVerifyFinishReq: EmailVerifyFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.emailVerifyFinish(emailVerifyFinishReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1289,8 +1253,18 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startEmailVerify(emailVerifyStartReq: EmailVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startEmailVerify(emailVerifyStartReq, options);
+        async emailVerifyStart(emailVerifyStartReq: EmailVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.emailVerifyStart(emailVerifyStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async passkeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyAppendFinish(passkeyAppendFinishReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1299,8 +1273,65 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startPasskeyAppend(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startPasskeyAppend(passkeyAppendStartReq, options);
+        async passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyAppendStart(passkeyAppendStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {PhoneCollectReq} phoneCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async phoneCollect(phoneCollectReq: PhoneCollectReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.phoneCollect(phoneCollectReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async processComplete(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.processComplete(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async processGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.processGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {ProcessInitReq} processInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async processInit(processInitReq: ProcessInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.processInit(processInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {SignupInitReq} signupInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async signupInit(signupInitReq: SignupInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignupInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.signupInit(signupInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async socialVerifyFinish(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialVerifyFinish(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1309,8 +1340,18 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startSocialVerify(socialVerifyStartReq: SocialVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startSocialVerify(socialVerifyStartReq, options);
+        async socialVerifyStart(socialVerifyStartReq: SocialVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialVerifyStart(socialVerifyStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {UsernameCollectReq} usernameCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usernameCollect(usernameCollectReq: UsernameCollectReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.usernameCollect(usernameCollectReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1325,21 +1366,11 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * tbd
-         * @param {PhoneCollectReq} phoneCollectReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        collectPhone(phoneCollectReq: PhoneCollectReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.collectPhone(phoneCollectReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {UsernameCollectReq} usernameCollectReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        collectUsername(usernameCollectReq: UsernameCollectReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.collectUsername(usernameCollectReq, options).then((request) => request(axios, basePath));
+        blockSkip(options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.blockSkip(options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1347,59 +1378,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        finishEmailVerify(emailVerifyFinishReq: EmailVerifyFinishReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.finishEmailVerify(emailVerifyFinishReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        finishPasskeyAppend(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.finishPasskeyAppend(passkeyAppendFinishReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        finishSocialVerify(options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.finishSocialVerify(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSession(options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.getSession(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {InitSessionReq} initSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        initSession(initSessionReq: InitSessionReq, options?: any): AxiosPromise<InitSessionRsp> {
-            return localVarFp.initSession(initSessionReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {InitSignupReq} initSignupReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        initSignup(initSignupReq: InitSignupReq, options?: any): AxiosPromise<InitSignupRsp> {
-            return localVarFp.initSignup(initSignupReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * tbd
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        skipBlock(options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.skipBlock(options).then((request) => request(axios, basePath));
+        emailVerifyFinish(emailVerifyFinishReq: EmailVerifyFinishReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.emailVerifyFinish(emailVerifyFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1407,8 +1387,17 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startEmailVerify(emailVerifyStartReq: EmailVerifyStartReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.startEmailVerify(emailVerifyStartReq, options).then((request) => request(axios, basePath));
+        emailVerifyStart(emailVerifyStartReq: EmailVerifyStartReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.emailVerifyStart(emailVerifyStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.passkeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1416,8 +1405,59 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startPasskeyAppend(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.startPasskeyAppend(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PhoneCollectReq} phoneCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneCollect(phoneCollectReq: PhoneCollectReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.phoneCollect(phoneCollectReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processComplete(options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.processComplete(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processGet(options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.processGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {ProcessInitReq} processInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        processInit(processInitReq: ProcessInitReq, options?: any): AxiosPromise<ProcessInitRsp> {
+            return localVarFp.processInit(processInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {SignupInitReq} signupInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        signupInit(signupInitReq: SignupInitReq, options?: any): AxiosPromise<SignupInitRsp> {
+            return localVarFp.signupInit(signupInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        socialVerifyFinish(options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.socialVerifyFinish(options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1425,8 +1465,17 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startSocialVerify(socialVerifyStartReq: SocialVerifyStartReq, options?: any): AxiosPromise<BlockBody> {
-            return localVarFp.startSocialVerify(socialVerifyStartReq, options).then((request) => request(axios, basePath));
+        socialVerifyStart(socialVerifyStartReq: SocialVerifyStartReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.socialVerifyStart(socialVerifyStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {UsernameCollectReq} usernameCollectReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usernameCollect(usernameCollectReq: UsernameCollectReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.usernameCollect(usernameCollectReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1440,24 +1489,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
 export class AuthApi extends BaseAPI {
     /**
      * tbd
-     * @param {PhoneCollectReq} phoneCollectReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public collectPhone(phoneCollectReq: PhoneCollectReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).collectPhone(phoneCollectReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {UsernameCollectReq} usernameCollectReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public collectUsername(usernameCollectReq: UsernameCollectReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).collectUsername(usernameCollectReq, options).then((request) => request(this.axios, this.basePath));
+    public blockSkip(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).blockSkip(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1467,71 +1504,8 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public finishEmailVerify(emailVerifyFinishReq: EmailVerifyFinishReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).finishEmailVerify(emailVerifyFinishReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public finishPasskeyAppend(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).finishPasskeyAppend(passkeyAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public finishSocialVerify(options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).finishSocialVerify(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public getSession(options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).getSession(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {InitSessionReq} initSessionReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public initSession(initSessionReq: InitSessionReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).initSession(initSessionReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {InitSignupReq} initSignupReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public initSignup(initSignupReq: InitSignupReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).initSignup(initSignupReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public skipBlock(options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).skipBlock(options).then((request) => request(this.axios, this.basePath));
+    public emailVerifyFinish(emailVerifyFinishReq: EmailVerifyFinishReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).emailVerifyFinish(emailVerifyFinishReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1541,8 +1515,19 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public startEmailVerify(emailVerifyStartReq: EmailVerifyStartReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).startEmailVerify(emailVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
+    public emailVerifyStart(emailVerifyStartReq: EmailVerifyStartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).emailVerifyStart(emailVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public passkeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1552,8 +1537,71 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public startPasskeyAppend(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).startPasskeyAppend(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    public passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PhoneCollectReq} phoneCollectReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public phoneCollect(phoneCollectReq: PhoneCollectReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).phoneCollect(phoneCollectReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public processComplete(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).processComplete(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public processGet(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).processGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {ProcessInitReq} processInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public processInit(processInitReq: ProcessInitReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).processInit(processInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {SignupInitReq} signupInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public signupInit(signupInitReq: SignupInitReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).signupInit(signupInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public socialVerifyFinish(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).socialVerifyFinish(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1563,8 +1611,19 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public startSocialVerify(socialVerifyStartReq: SocialVerifyStartReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).startSocialVerify(socialVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
+    public socialVerifyStart(socialVerifyStartReq: SocialVerifyStartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).socialVerifyStart(socialVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {UsernameCollectReq} usernameCollectReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public usernameCollect(usernameCollectReq: UsernameCollectReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).usernameCollect(usernameCollectReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

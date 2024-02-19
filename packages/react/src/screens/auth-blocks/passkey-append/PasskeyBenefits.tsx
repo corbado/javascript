@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Body, Header, PrimaryButton } from '../../../components';
+import { FingerprintIcon } from '../../../components/ui/icons/Icons';
 
 export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
@@ -25,7 +26,8 @@ export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
   return (
     <div className='cb-layout-passkey'>
       <Header>{header}</Header>
-      {body && <Body className='cb-body-spacing'>{body}</Body>}
+      <FingerprintIcon className={'cb-finger-print-icon'} />
+      <Body className='cb-body-spacing'>{body}</Body>
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);

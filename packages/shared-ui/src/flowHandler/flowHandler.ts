@@ -1,12 +1,10 @@
-import { type CorbadoApp } from '@corbado/web-core';
-import type { BlockBody } from '@corbado/web-core/dist/api/v2';
+import type { BlockBody } from '@corbado/web-core';
+import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
-import type { Block } from './blocks/Block';
-import { EmailVerifyBlock } from './blocks/EmailVerifyBlock';
-import { PasskeyAppendBlock } from './blocks/PasskeyAppendBlock';
-import { PasskeyAppendedBlock } from './blocks/PasskeyAppendedBlock';
-import { SignupInitBlock } from './blocks/SignupInitBlock';
+import type { Block } from './blocks';
+import { EmailVerifyBlock, PasskeyAppendBlock, PasskeyAppendedBlock, SignupInitBlock } from './blocks';
+import { CompletedBlock } from './blocks/CompletedBlock';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import type { ScreenWithBlock } from './types';
@@ -22,6 +20,7 @@ export class FlowHandler {
 
   #corbadoApp: CorbadoApp;
   #errorTranslator: ErrorTranslator;
+  readonly onProcessCompleted: () => void;
 
   #onScreenChangeCallbacks: Array<(v: ScreenWithBlock) => void> = [];
 
@@ -29,7 +28,7 @@ export class FlowHandler {
    * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
-  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined) {
+  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, onProcessCompleted: () => void) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
@@ -37,13 +36,14 @@ export class FlowHandler {
     const errorTranslator = new ErrorTranslator(i18next);
     this.#corbadoApp = corbadoApp;
     this.#errorTranslator = errorTranslator;
+    this.onProcessCompleted = onProcessCompleted;
   }
 
   /**
    * Initializes the FlowHandler.
    * Call this function after registering all callbacks.
    */
-  async init(_: () => void) {
+  async init() {
     // get sID for flow type
 
     // init flowHandler state
@@ -68,10 +68,7 @@ export class FlowHandler {
     */
 
     const initialBlock = await this.#corbadoApp.authProcessService.init(false);
-    console.log('initialBlock', initialBlock);
     this.handleBlockData(initialBlock);
-
-    // this.#changeFlow();
   }
 
   dispose() {
@@ -108,31 +105,43 @@ export class FlowHandler {
   handleBlockData(blockBody: BlockBody) {
     let newBlock: Block<unknown>;
     switch (blockBody.block) {
-      case 'passkey-append':
-        newBlock = new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+      case BlockType.PasskeyAppend:
+        newBlock = new PasskeyAppendBlock(
+          this.#corbadoApp,
+          this,
+          this.#errorTranslator,
+          blockBody.data,
+          blockBody.alternatives ?? [],
+        );
         break;
-      case 'signup-init':
+      case BlockType.SignupInit:
         newBlock = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
-      case 'passkey-appended':
+      case BlockType.PasskeyAppended:
         newBlock = new PasskeyAppendedBlock(this.#corbadoApp, this);
         break;
-      case 'email-verify':
+      case BlockType.EmailVerify:
         newBlock = new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
+      case BlockType.Completed:
+        // this block is handled differently because it marks the end of the process
+        newBlock = new CompletedBlock(this.#corbadoApp, this);
+        return;
       default:
-        newBlock = new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
-        break;
+        throw new Error(`Invalid block type: ${blockBody.block}}`);
     }
 
-    console.log('newBlock', newBlock, blockBody);
-
     const blockHasChanged = this.#currentBlock == null || newBlock.type !== this.#currentBlock.type;
+    console.log('newBlock', newBlock, blockBody);
+    console.log('currentBlock', this.#currentBlock, blockHasChanged);
     if (blockHasChanged) {
       this.#currentScreen = newBlock.initialScreen;
     }
 
     this.#currentBlock = newBlock;
+
+    console.log('screen', this.#currentScreen);
+
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({
         screen: this.#currentScreen,

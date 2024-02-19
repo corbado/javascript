@@ -21,14 +21,14 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, on
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    const flowHandler = new FlowHandler(i18n, corbadoApp);
+    const flowHandler = new FlowHandler(i18n, corbadoApp, onLoggedIn);
 
     onFlowChangeCbId.current = flowHandler.onScreenChange(value => {
       setCurrentScreen(value);
     });
 
     void (async () => {
-      await flowHandler.init(onLoggedIn);
+      await flowHandler.init();
       setInitialized(true);
     })();
 

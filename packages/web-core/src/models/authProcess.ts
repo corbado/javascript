@@ -1,11 +1,11 @@
 const storageKey = 'cbo_auth_process';
 
 export class AuthProcess {
-  readonly sessionId: string;
+  readonly id: string;
   readonly expiresAt: number;
 
-  constructor(sessionId: string, expiresAt: number) {
-    this.sessionId = sessionId;
+  constructor(id: string, expiresAt: number) {
+    this.id = id;
     this.expiresAt = expiresAt;
   }
 
@@ -19,8 +19,8 @@ export class AuthProcess {
       return undefined;
     }
 
-    const { sessionId, expiresAt } = JSON.parse(serialized);
-    const process = new AuthProcess(sessionId, expiresAt);
+    const { id, expiresAt } = JSON.parse(serialized);
+    const process = new AuthProcess(id, expiresAt);
     if (!process.isValid()) {
       return undefined;
     }
@@ -32,7 +32,7 @@ export class AuthProcess {
     localStorage.setItem(
       storageKey,
       JSON.stringify({
-        sessionId: this.sessionId,
+        sessionId: this.id,
         expiresAt: this.expiresAt,
       }),
     );

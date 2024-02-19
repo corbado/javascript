@@ -9,8 +9,9 @@ import { Block } from './Block';
 
 export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   readonly data: BlockDataEmailVerify;
-  readonly type = BlockTypes.PasskeyAppend;
+  readonly type = BlockTypes.EmailVerify;
   readonly initialScreen;
+  readonly verificationMethod: 'email-otp' | 'email-link';
 
   constructor(
     app: CorbadoApp,
@@ -31,6 +32,8 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
         break;
     }
 
+    this.verificationMethod = data.verificationMethod;
+    console.log(this.verificationMethod);
     this.data = {
       email: data.identifier,
       translatedError: translator.translate(data.error),
@@ -50,8 +53,15 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   }
 
   async resendCode() {
-    const newBlock = await this.app.authProcessService.startEmailCodeVerification();
-    this.flowHandler.updateBlock(newBlock);
+    console.log('this.verificationMethod', this.verificationMethod);
+
+    if (this.verificationMethod === 'email-otp') {
+      const newBlock = await this.app.authProcessService.startEmailCodeVerification();
+      this.flowHandler.updateBlock(newBlock);
+    } else {
+      const newBlock = await this.app.authProcessService.startEmailLinkVerification();
+      this.flowHandler.updateBlock(newBlock);
+    }
 
     return;
   }

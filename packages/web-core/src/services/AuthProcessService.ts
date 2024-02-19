@@ -4,7 +4,7 @@ import log from 'loglevel';
 import type { Subject } from 'rxjs';
 
 import { Configuration } from '../api/v1';
-import type { BlockBody, InitSessionRsp, LoginIdentifier } from '../api/v2';
+import type { BlockBody, LoginIdentifier, ProcessInitRsp } from '../api/v2';
 import { AuthApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { CorbadoError, NonRecoverableError } from '../utils';
@@ -67,20 +67,20 @@ export class AuthProcessService {
 
     const process = AuthProcess.loadFromStorage();
     if (process) {
-      this.#setApisV2(process.sessionId);
-      // this.#currentAuthProcess = process;
+      this.#setApisV2(process.id);
 
       return this.#getAuthProcessState();
     }
 
-    const initSessionRsp = await this.#initSession();
-    this.#setApisV2(initSessionRsp.token);
-    // this.#currentAuthProcess = new AuthProcess(initSessionRsp.token, initSessionRsp.expiresAt, processType);
+    const processInitRsp = await this.#initAuthProcess();
+    this.#setApisV2(processInitRsp.token);
+    const newProcess = new AuthProcess(processInitRsp.token, processInitRsp.expiresAt);
+    newProcess.persistToStorage();
 
-    return initSessionRsp.initialBlock;
+    return processInitRsp.initialBlock;
   }
 
-  #createAxiosInstanceV2(sessionId: string): AxiosInstance {
+  #createAxiosInstanceV2(processId: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -94,7 +94,7 @@ export class AuthProcessService {
     const out = axios.create({
       timeout: this.#timeout,
       withCredentials: true,
-      headers: sessionId ? { ...headers, sid: sessionId } : headers,
+      headers: processId ? { ...headers, 'x-corbado-process-id': processId } : headers,
     });
 
     // We transform AxiosErrors into CorbadoErrors using axios interceptors.
@@ -118,18 +118,18 @@ export class AuthProcessService {
     return out;
   }
 
-  #setApisV2(sessionId: string): void {
+  #setApisV2(processId: string): void {
     const config = new Configuration({
       apiKey: this.#projectId,
       basePath: this.#frontendApiUrl,
     });
-    const axiosInstance = this.#createAxiosInstanceV2(sessionId);
+    const axiosInstance = this.#createAxiosInstanceV2(processId);
 
     this.#authApi = new AuthApi(config, this.#frontendApiUrl, axiosInstance);
   }
 
-  async #initSession(): Promise<InitSessionRsp> {
-    const r = await this.#authApi.initSession({
+  async #initAuthProcess(): Promise<ProcessInitRsp> {
+    const r = await this.#authApi.processInit({
       clientInfo: {},
     });
 
@@ -137,13 +137,19 @@ export class AuthProcessService {
   }
 
   async #getAuthProcessState(): Promise<BlockBody> {
-    const r = await this.#authApi.getSession();
+    const r = await this.#authApi.processGet();
+
+    return r.data;
+  }
+
+  async finishAuthProcess(): Promise<BlockBody> {
+    const r = await this.#authApi.processComplete();
 
     return r.data;
   }
 
   async initSignup(identifiers: LoginIdentifier[]): Promise<BlockBody> {
-    const r = await this.#authApi.initSignup({
+    const r = await this.#authApi.signupInit({
       identifiers: identifiers,
     });
 
@@ -151,13 +157,13 @@ export class AuthProcessService {
   }
 
   async skipBlock(): Promise<BlockBody> {
-    const r = await this.#authApi.skipBlock();
+    const r = await this.#authApi.blockSkip();
 
     return r.data;
   }
 
   async startPasskeyAppend(): Promise<BlockBody> {
-    const r = await this.#authApi.startPasskeyAppend({
+    const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
     });
 
@@ -165,7 +171,7 @@ export class AuthProcessService {
   }
 
   async finishPasskeyAppend(signedChallenge: string): Promise<BlockBody> {
-    const r = await this.#authApi.finishPasskeyAppend({
+    const r = await this.#authApi.passkeyAppendFinish({
       clientInfo: {},
       signedChallenge: signedChallenge,
     });
@@ -175,7 +181,7 @@ export class AuthProcessService {
 
   async startPasskeyLogin(): Promise<BlockBody> {
     // TODO: add real request
-    const r = await this.#authApi.startPasskeyAppend({
+    const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
     });
 
@@ -184,7 +190,7 @@ export class AuthProcessService {
 
   async finishPasskeyLogin(): Promise<BlockBody> {
     // TODO: add real request
-    const r = await this.#authApi.startPasskeyAppend({
+    const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
     });
 
@@ -193,7 +199,7 @@ export class AuthProcessService {
 
   async startPasskeyMediation(): Promise<BlockBody> {
     // TODO: add real request
-    const r = await this.#authApi.startPasskeyAppend({
+    const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
     });
 
@@ -201,7 +207,7 @@ export class AuthProcessService {
   }
 
   async startEmailCodeVerification(): Promise<BlockBody> {
-    const r = await this.#authApi.startEmailVerify({
+    const r = await this.#authApi.emailVerifyStart({
       verificationType: 'email-otp',
     });
 
@@ -209,7 +215,7 @@ export class AuthProcessService {
   }
 
   async finishEmailCodeVerification(code: string): Promise<BlockBody> {
-    const r = await this.#authApi.finishEmailVerify({
+    const r = await this.#authApi.emailVerifyFinish({
       verificationType: 'email-otp',
       code: code,
       clientInfo: {},
@@ -219,7 +225,7 @@ export class AuthProcessService {
   }
 
   async startEmailLinkVerification(): Promise<BlockBody> {
-    const r = await this.#authApi.startEmailVerify({
+    const r = await this.#authApi.emailVerifyStart({
       verificationType: 'email-link',
     });
 
@@ -227,7 +233,7 @@ export class AuthProcessService {
   }
 
   async finishEmailLinkVerification(code: string): Promise<BlockBody> {
-    const r = await this.#authApi.finishEmailVerify({
+    const r = await this.#authApi.emailVerifyFinish({
       verificationType: 'email-link',
       code: code,
       clientInfo: {},

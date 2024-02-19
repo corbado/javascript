@@ -80,6 +80,7 @@ export type BlockDataSignupInit = {
 
 export type BlockDataPasskeyAppend = {
   availableFallbacks: PasskeyFallback[];
+  canBeSkipped: boolean;
   userHandle: string;
 };
 
@@ -92,7 +93,8 @@ export type BlockDataEmailVerify = {
 };
 
 export type PasskeyFallback = {
-  type: string;
+  label: string;
+  action: () => void;
 };
 
 export type SocialLogin = {

@@ -18,6 +18,7 @@
         "headerButton_showPasskeyBenefits": "Passkeys",
         "body": "We'll create an account for ",
         "button_start": "Create your account",
+        "button_skip": "Maybe later",
         "button_switchToAlternate": {
           "emailOtp": "Send email one-time passcode",
           "emailLink": "Send email magic link"

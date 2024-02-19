@@ -73,7 +73,9 @@ jobs:
           path: node_modules
 
       - name: Grant execute permissions for Playwright
-        run: chmod +x node_modules/.bin/playwright
+        run: |
+          chmod +x node_modules/.bin/playwright
+          chmod +x node_modules/.bin/lerna
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

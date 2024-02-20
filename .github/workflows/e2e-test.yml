@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: [ self-hosted, "javascript" ]
+    runs-on: [ self-hosted, "Deploy" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -25,6 +25,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
 
+    # # The self-hosted runners are so fast that caching overhead is more expensive than just installing the dependencies
     # - name: Cache dependencies
     #   uses: actions/cache@v3
     #   with:
@@ -76,11 +77,6 @@ jobs:
       
       - name: Extract node_modules
         run: tar -xzf node_modules.tar.gz
-
-      # - name: Grant execute permissions for Playwright
-      #   run: |
-      #     chmod +x node_modules/.bin/playwright
-      #     chmod +x node_modules/.bin/lerna
 
       - name: Install Playwright Browsers
         run: |

@@ -1,3 +1,9 @@
+# When running this on a different self-hosted runner, the following needs
+# to be done before the workflow will properly run:
+#   1. Install Node.js and npm on the server
+#   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
+#      match the number of cores on the server
+
 name: End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
@@ -25,7 +31,8 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
 
-    # # The self-hosted runners are so fast that caching overhead is more expensive than just installing the dependencies
+    # # The self-hosted runners are so fast that caching overhead is more 
+    # # expensive than just installing the dependencies
     # - name: Cache dependencies
     #   uses: actions/cache@v3
     #   with:

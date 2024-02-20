@@ -32,7 +32,6 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
           }}
           darkMode={'off'}
           isDevMode={true}
-          frontendApiUrl='http://localhost:15950'
         >
           <WrappedComponent {...(props as T)} />
         </CorbadoProvider>

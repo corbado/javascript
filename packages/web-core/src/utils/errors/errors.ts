@@ -30,6 +30,8 @@ export type CompleteAutocompletedLoginWithPasskeyError =
   | PasskeyChallengeCancelledError
   | UnknownError;
 
+export type GetProcessError = ProcessNotFound;
+
 /** Email OTP Errors */
 export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
 export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
@@ -353,3 +355,5 @@ export class UnknownError extends RecoverableError {
     this.name = 'errors.unknownError';
   }
 }
+
+export class ProcessNotFound extends RecoverableError {}

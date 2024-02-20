@@ -5,6 +5,7 @@ import type { i18n } from 'i18next';
 import type { Block } from './blocks';
 import { EmailVerifyBlock, PasskeyAppendBlock, PasskeyAppendedBlock, SignupInitBlock } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
+import { PhoneVerifyBlock } from './blocks/PhoneVerifyBlock';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import type { ScreenWithBlock } from './types';
@@ -122,6 +123,9 @@ export class FlowHandler {
         break;
       case BlockType.EmailVerify:
         newBlock = new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+        break;
+      case BlockType.PhoneVerify:
+        newBlock = new PhoneVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
         break;
       case BlockType.Completed:
         // this block is handled differently because it marks the end of the process

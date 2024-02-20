@@ -10,7 +10,7 @@ export class AuthProcess {
   }
 
   isValid(): boolean {
-    return this.expiresAt > Date.now();
+    return this.expiresAt > Date.now() / 1000;
   }
 
   static loadFromStorage(): AuthProcess | undefined {
@@ -32,7 +32,7 @@ export class AuthProcess {
     localStorage.setItem(
       storageKey,
       JSON.stringify({
-        sessionId: this.id,
+        id: this.id,
         expiresAt: this.expiresAt,
       }),
     );

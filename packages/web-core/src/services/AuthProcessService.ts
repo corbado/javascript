@@ -2,11 +2,13 @@ import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
 import type { Subject } from 'rxjs';
+import { Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { BlockBody, LoginIdentifier, ProcessInitRsp } from '../api/v2';
 import { AuthApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
+import type { GetProcessError } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
@@ -66,18 +68,17 @@ export class AuthProcessService {
     }
 
     const process = AuthProcess.loadFromStorage();
-    if (process) {
-      this.#setApisV2(process.id);
-
-      return this.#getAuthProcessState();
+    if (!process) {
+      return this.#initNewAuthProcess();
     }
 
-    const processInitRsp = await this.#initAuthProcess();
-    this.#setApisV2(processInitRsp.token);
-    const newProcess = new AuthProcess(processInitRsp.token, processInitRsp.expiresAt);
-    newProcess.persistToStorage();
+    this.#setApisV2(process.id);
+    const res = await this.#getAuthProcessState();
+    if (res.err) {
+      return this.#initNewAuthProcess();
+    }
 
-    return processInitRsp.initialBlock;
+    return res.val;
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -118,6 +119,15 @@ export class AuthProcessService {
     return out;
   }
 
+  async #initNewAuthProcess() {
+    const processInitRsp = await this.#initAuthProcess();
+    this.#setApisV2(processInitRsp.token);
+    const newProcess = new AuthProcess(processInitRsp.token, processInitRsp.expiresAt);
+    newProcess.persistToStorage();
+
+    return processInitRsp.initialBlock;
+  }
+
   #setApisV2(processId: string): void {
     const config = new Configuration({
       apiKey: this.#projectId,
@@ -136,10 +146,12 @@ export class AuthProcessService {
     return r.data;
   }
 
-  async #getAuthProcessState(): Promise<BlockBody> {
-    const r = await this.#authApi.processGet();
+  async #getAuthProcessState(): Promise<Result<BlockBody, GetProcessError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.processGet();
 
-    return r.data;
+      return r.data;
+    });
   }
 
   async finishAuthProcess(): Promise<BlockBody> {
@@ -235,6 +247,23 @@ export class AuthProcessService {
   async finishEmailLinkVerification(code: string): Promise<BlockBody> {
     const r = await this.#authApi.emailVerifyFinish({
       verificationType: 'email-link',
+      code: code,
+      clientInfo: {},
+    });
+
+    return r.data;
+  }
+
+  async startPhoneOtpVerification(): Promise<BlockBody> {
+    const r = await this.#authApi.phoneVerifyStart({
+      clientInfo: {},
+    });
+
+    return r.data;
+  }
+
+  async finishPhoneOtpVerification(code: string): Promise<BlockBody> {
+    const r = await this.#authApi.phoneVerifyFinish({
       code: code,
       clientInfo: {},
     });

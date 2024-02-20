@@ -204,6 +204,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/emailVerifyFinishRsp'
 
+  /v2/auth/phone/verify/start:
+    post:
+      description: tbd
+      operationId: PhoneVerifyStart
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/phoneVerifyStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/phoneVerifyStartRsp'
+
+  /v2/auth/phone/verify/finish:
+    post:
+      description: tbd
+      operationId: PhoneVerifyFinish
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/phoneVerifyFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/phoneVerifyFinishRsp'
+
   /v2/auth/social/verify/start:
     post:
       description: tbd
@@ -408,6 +448,32 @@ components:
           $ref: '#/components/schemas/verificationMethod'
 
     emailVerifyFinishRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    phoneVerifyStartReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+      properties:
+        clientInfo:
+          type: object
+
+    phoneVerifyStartRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    phoneVerifyFinishReq:
+      type: object
+      required:
+        - clientInfo
+        - code
+      properties:
+        clientInfo:
+          type: object
+        code:
+          type: string
+
+    phoneVerifyFinishRsp:
       $ref: '#/components/schemas/blockBody'
 
     usernameCollectReq:

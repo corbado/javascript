@@ -25,10 +25,10 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       case 'sms-otp':
         throw new Error('SMS OTP verification is not supported for email verification');
       case 'email-link':
-        this.initialScreen = ScreenNames.EmailLinkVerification;
+        this.initialScreen = ScreenNames.EmailLinkSent;
         break;
       case 'email-otp':
-        this.initialScreen = ScreenNames.EmailOTPVerification;
+        this.initialScreen = ScreenNames.EmailOtpVerification;
         break;
     }
 

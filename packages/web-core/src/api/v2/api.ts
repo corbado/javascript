@@ -470,6 +470,38 @@ export interface PhoneCollectReq {
     'value': string;
 }
 /**
+ * 
+ * @export
+ * @interface PhoneVerifyFinishReq
+ */
+export interface PhoneVerifyFinishReq {
+    /**
+     * 
+     * @type {object}
+     * @memberof PhoneVerifyFinishReq
+     */
+    'clientInfo': object;
+    /**
+     * 
+     * @type {string}
+     * @memberof PhoneVerifyFinishReq
+     */
+    'code': string;
+}
+/**
+ * tbd.
+ * @export
+ * @interface PhoneVerifyStartReq
+ */
+export interface PhoneVerifyStartReq {
+    /**
+     * 
+     * @type {object}
+     * @memberof PhoneVerifyStartReq
+     */
+    'clientInfo': object;
+}
+/**
  * tbd.
  * @export
  * @interface ProcessInitReq
@@ -944,6 +976,90 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {PhoneVerifyFinishReq} phoneVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneVerifyFinish: async (phoneVerifyFinishReq: PhoneVerifyFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'phoneVerifyFinishReq' is not null or undefined
+            assertParamExists('phoneVerifyFinish', 'phoneVerifyFinishReq', phoneVerifyFinishReq)
+            const localVarPath = `/v2/auth/phone/verify/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(phoneVerifyFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {PhoneVerifyStartReq} phoneVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneVerifyStart: async (phoneVerifyStartReq: PhoneVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'phoneVerifyStartReq' is not null or undefined
+            assertParamExists('phoneVerifyStart', 'phoneVerifyStartReq', phoneVerifyStartReq)
+            const localVarPath = `/v2/auth/phone/verify/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(phoneVerifyStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1289,6 +1405,26 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {PhoneVerifyFinishReq} phoneVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async phoneVerifyFinish(phoneVerifyFinishReq: PhoneVerifyFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.phoneVerifyFinish(phoneVerifyFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {PhoneVerifyStartReq} phoneVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async phoneVerifyStart(phoneVerifyStartReq: PhoneVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.phoneVerifyStart(phoneVerifyStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1416,6 +1552,24 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         phoneCollect(phoneCollectReq: PhoneCollectReq, options?: any): AxiosPromise<BlockBody> {
             return localVarFp.phoneCollect(phoneCollectReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PhoneVerifyFinishReq} phoneVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneVerifyFinish(phoneVerifyFinishReq: PhoneVerifyFinishReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.phoneVerifyFinish(phoneVerifyFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PhoneVerifyStartReq} phoneVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        phoneVerifyStart(phoneVerifyStartReq: PhoneVerifyStartReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.phoneVerifyStart(phoneVerifyStartReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1550,6 +1704,28 @@ export class AuthApi extends BaseAPI {
      */
     public phoneCollect(phoneCollectReq: PhoneCollectReq, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).phoneCollect(phoneCollectReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PhoneVerifyFinishReq} phoneVerifyFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public phoneVerifyFinish(phoneVerifyFinishReq: PhoneVerifyFinishReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).phoneVerifyFinish(phoneVerifyFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PhoneVerifyStartReq} phoneVerifyStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public phoneVerifyStart(phoneVerifyStartReq: PhoneVerifyStartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).phoneVerifyStart(phoneVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

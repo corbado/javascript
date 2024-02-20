@@ -19,8 +19,9 @@ export enum LoginFlowNames {
 export enum ScreenNames {
   Start = 'start',
   End = 'end',
-  EmailOTPVerification = 'email-otp-verification',
+  EmailOtpVerification = 'email-otp-verification',
   EmailLinkSent = 'email-link-sent',
+  PhoneOtp = 'phone-otp',
   EmailLinkVerification = 'email-link-verification',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
@@ -58,6 +59,7 @@ export const passkeyAppendAskTSKey = 'corbado_passkeyAppendAskTS';
 export enum BlockTypes {
   SignupInit = 'signup-init',
   EmailVerify = 'email-verify',
+  PhoneVerify = 'phone-verify',
   PasskeyAppend = 'passkey-append',
   PasskeyAppended = 'passkey-appended',
   Completed = 'completed',

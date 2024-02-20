@@ -92,6 +92,12 @@ export type BlockDataEmailVerify = {
   retryNotBefore?: number;
 };
 
+export type BlockDataPhoneVerify = {
+  phone: string;
+  translatedError?: string;
+  retryNotBefore?: number;
+};
+
 export type PasskeyFallback = {
   label: string;
   action: () => void;

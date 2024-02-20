@@ -67,6 +67,14 @@
         "button_back": "Cancel"
       }
     },
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Enter one-time passcode to create account",
+        "body_text1": "We just sent a one-time passcode to ",
+        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
+        "button_resend": "Send one-time passcode again"
+      }
+    },
     "passkeyError": {
       "header": "Let's get you set up",
       "body_errorMessage": "Creating your account was not possible with ",

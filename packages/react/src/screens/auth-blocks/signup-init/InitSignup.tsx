@@ -105,7 +105,7 @@ export const InitSignup = ({ block }: { block: SignupInitBlock }) => {
               type='phone'
               autoComplete='phone'
               label={phoneFieldLabel}
-              error={email?.translatedError}
+              error={phone?.translatedError}
               ref={el => el && (phoneRef.current = el)}
             />
           )}

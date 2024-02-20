@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: [ self-hosted, "Deploy" ]
+    runs-on: [ self-hosted, "javascript" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -25,13 +25,12 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
 
-    # - name: Cache node modules
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: node_modules
-    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-node-
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-build-
 
     - name: Install Dependencies
       run: |

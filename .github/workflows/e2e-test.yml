@@ -95,7 +95,7 @@ jobs:
             npm run test:e2e:ui
           fi
         env:
-          PLAYWRIGHT_NUM_WORKERS: 6
+          PLAYWRIGHT_NUM_WORKERS: 7
           PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
       - uses: actions/upload-artifact@v4
         if: always()

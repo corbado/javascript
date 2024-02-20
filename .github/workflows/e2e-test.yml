@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: [ self-hosted, "Deploy" ]
+    runs-on: [ self-hosted, "javascript" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:

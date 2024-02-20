@@ -12,7 +12,8 @@ on:
   pull_request:
   push:
     branches:
-      - playwright-runner
+      - main
+      - develop
 
 jobs:
   prepare:

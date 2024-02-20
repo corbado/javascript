@@ -49,10 +49,11 @@ export class SessionService {
     if (this.#shortSession && this.#shortSession.isValidForXMoreSeconds(0)) {
       log.debug('emit shortsession', this.#shortSession);
       this.#onShortSessionChange(this.#shortSession);
-      this.#apiService.setInstanceWithToken(this.#shortSession.value);
     } else {
       await this.#handleRefreshRequest();
     }
+
+    this.#apiService.setInstanceWithToken(this.#longSession);
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers
@@ -112,7 +113,7 @@ export class SessionService {
    */
   setSession(shortSession: ShortSession, longSession: string | undefined) {
     this.#setShortTermSessionToken(shortSession);
-    this.#apiService.setInstanceWithToken(shortSession.value);
+    this.#apiService.setInstanceWithToken(longSession ?? '');
 
     if (this.#onShortSessionChange) {
       this.#onShortSessionChange(shortSession);

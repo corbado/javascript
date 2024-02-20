@@ -41,6 +41,7 @@ const packageVersion = '0.0.0';
 export class ApiService {
   // Private API instances for various services.
   #usersApi: UsersApi = new UsersApi();
+  #usersApiWithAuth: UsersApi = new UsersApi();
   #assetsApi: AssetsApi = new AssetsApi();
   #projectsApi: ProjectsApi = new ProjectsApi();
   #sessionsApi: SessionsApi = new SessionsApi();
@@ -83,6 +84,10 @@ export class ApiService {
     return this.#usersApi;
   }
 
+  get usersApiWithAuth(): UsersApi {
+    return this.#usersApiWithAuth;
+  }
+
   get assetsApi(): AssetsApi {
     return this.#assetsApi;
   }
@@ -96,33 +101,11 @@ export class ApiService {
   }
 
   /**
-   * Creates an Axios instance with common headers, including authorization if a token is provided.
-   * @param token - The authentication token for API requests.
-   * @returns The configured AxiosInstance object.
+   * Transforms AxiosErrors into CorbadoErrors using axios interceptors.
+   * @param instance - The Axios instance to add the interceptor to.
    */
-  #createAxiosInstance(token: string): AxiosInstance {
-    const corbadoVersion = {
-      name: 'web-core',
-      sdkVersion: packageVersion,
-    };
-
-    const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
-      'Content-Type': 'application/json',
-      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
-    };
-
-    if (this.#isPreviewMode) {
-      headers['X-Corbado-Mode'] = 'preview';
-    }
-
-    const out = axios.create({
-      timeout: this.#timeout,
-      withCredentials: true,
-      headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers,
-    });
-
-    // We transform AxiosErrors into CorbadoErrors using axios interceptors.
-    out.interceptors.response.use(
+  #addErrorInterceptor = (instance: AxiosInstance) => {
+    instance.interceptors.response.use(
       response => {
         return response;
       },
@@ -138,8 +121,51 @@ export class ApiService {
         return Promise.reject(e);
       },
     );
+  };
 
-    return out;
+  /**
+   * Creates an Axios instance with common headers, including authorization if a token is provided.
+   * @param token - The authentication token for API requests.
+   * @returns The configured AxiosInstance object.
+   */
+  #createAxiosInstance(token: string): {
+    instanceWithAuth: AxiosInstance;
+    instanceWithoutAuth: AxiosInstance;
+  } {
+    const corbadoVersion = {
+      name: 'web-core',
+      sdkVersion: packageVersion,
+    };
+
+    const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
+      'Content-Type': 'application/json',
+      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+    };
+
+    if (this.#isPreviewMode) {
+      headers['X-Corbado-Mode'] = 'preview';
+    }
+
+    const instanceWithoutAuth = axios.create({
+      timeout: this.#timeout,
+      headers,
+    });
+
+    const instanceWithAuth = token
+      ? axios.create({
+          timeout: this.#timeout,
+          withCredentials: true,
+          headers: { ...headers, Authorization: `Bearer ${token}` },
+        })
+      : instanceWithoutAuth;
+
+    this.#addErrorInterceptor(instanceWithoutAuth);
+    this.#addErrorInterceptor(instanceWithAuth);
+
+    return {
+      instanceWithAuth,
+      instanceWithoutAuth,
+    };
   }
 
   /**
@@ -152,12 +178,13 @@ export class ApiService {
       basePath: this.#frontendApiUrl,
       accessToken: token,
     });
-    const axiosInstance = this.#createAxiosInstance(token);
+    const { instanceWithoutAuth, instanceWithAuth } = this.#createAxiosInstance(token);
 
-    this.#usersApi = new UsersApi(config, this.#frontendApiUrl, axiosInstance);
-    this.#assetsApi = new AssetsApi(config, this.#frontendApiUrl, axiosInstance);
-    this.#projectsApi = new ProjectsApi(config, this.#frontendApiUrl, axiosInstance);
-    this.#sessionsApi = new SessionsApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#usersApi = new UsersApi(config, this.#frontendApiUrl, instanceWithoutAuth);
+    this.#usersApiWithAuth = new UsersApi(config, this.#frontendApiUrl, instanceWithAuth);
+    this.#assetsApi = new AssetsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
+    this.#projectsApi = new ProjectsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
+    this.#sessionsApi = new SessionsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
   }
 
   /**
@@ -196,7 +223,7 @@ export class ApiService {
 
   public passKeyAppendStart(): Promise<Result<string, AppendPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
-      const r = await this.usersApi.passKeyAppendStart({});
+      const r = await this.usersApiWithAuth.passKeyAppendStart({});
 
       return r.data.data.challenge;
     });
@@ -204,7 +231,7 @@ export class ApiService {
 
   public passKeyAppendFinish(signedChallenge: string): Promise<Result<void, AppendPasskeyError | undefined>> {
     return Result.wrapAsync(async () => {
-      await this.usersApi.passKeyAppendFinish({
+      await this.usersApiWithAuth.passKeyAppendFinish({
         signedChallenge: signedChallenge,
       });
 
@@ -356,7 +383,7 @@ export class ApiService {
 
   public async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
     return Result.wrapAsync(async () => {
-      const r = await this.#usersApi.currentUserPassKeyGet();
+      const r = await this.usersApiWithAuth.currentUserPassKeyGet();
 
       return r.data.data;
     });
@@ -364,7 +391,7 @@ export class ApiService {
 
   public async passkeyDelete(passkeyId: string): Promise<Result<void, PasskeyDeleteError>> {
     return Result.wrapAsync(async () => {
-      await this.#usersApi.currentUserPassKeyDelete(passkeyId);
+      await this.usersApiWithAuth.currentUserPassKeyDelete(passkeyId);
 
       return void 0;
     });

@@ -89,7 +89,7 @@ export class AuthService {
       return Err(projectConfig.val);
     }
 
-    // TODO: The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be removed
+    // TODO: The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be 
     const useCorbadoSessionManagement = true;
     if (useCorbadoSessionManagement) {
       await this.#setupSessionManagement();

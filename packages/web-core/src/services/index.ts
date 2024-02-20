@@ -35,10 +35,11 @@ export class CorbadoApp {
       frontendApiUrl,
       isDevMode = false,
       setShortSessionCookie = false,
+      isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;
     this.#isDevMode = isDevMode;
-    this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
+    this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, isPreviewMode, frontendApiUrl);
     this.#authService = new AuthService(this.#apiService, this.#globalErrors, setShortSessionCookie);
     this.#projectService = new ProjectService(this.#apiService);
   }

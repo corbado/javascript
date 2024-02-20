@@ -1,7 +1,7 @@
 import Corbado from '@corbado/web-js';
 import { CORBADO_PROJECT_ID } from './environment';
 
-Corbado.load({
+await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
   darkMode: 'off',
 });

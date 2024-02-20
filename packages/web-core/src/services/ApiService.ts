@@ -1,6 +1,6 @@
 import type { ProjectConfig, UserAuthMethods } from '@corbado/types';
 import type { PassKeyList, UserIdentifier } from '@corbado/types';
-import type { AxiosError, AxiosInstance } from 'axios';
+import type { AxiosError, AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
 import type { Subject } from 'rxjs';
@@ -50,6 +50,7 @@ export class ApiService {
   #projectId: string;
   #timeout: number;
   #frontendApiUrl: string;
+  #isPreviewMode: boolean;
 
   /**
    * Constructs the ApiService with a project ID and an optional timeout.
@@ -63,12 +64,14 @@ export class ApiService {
     globalErrors: Subject<NonRecoverableError | undefined>,
     projectId: string,
     timeout: number = 30 * 1000,
+    isPreviewMode: boolean,
     frontendApiUrl?: string,
   ) {
     this.#globalErrors = globalErrors;
     this.#projectId = projectId;
     this.#timeout = timeout;
     this.#frontendApiUrl = frontendApiUrl || `https://${this.#projectId}.frontendapi.corbado.io`;
+    this.#isPreviewMode = isPreviewMode;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -103,10 +106,14 @@ export class ApiService {
       sdkVersion: packageVersion,
     };
 
-    const headers = {
+    const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
     };
+
+    if (this.#isPreviewMode) {
+      headers['X-Corbado-Mode'] = 'preview';
+    }
 
     const out = axios.create({
       timeout: this.#timeout,

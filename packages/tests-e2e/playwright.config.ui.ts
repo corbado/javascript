@@ -5,7 +5,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? process.env.PLAYWRIGHT_NUM_WORKERS : undefined,
+  workers: process.env.CI
+    ? process.env.PLAYWRIGHT_NUM_WORKERS
+      ? parseInt(process.env.PLAYWRIGHT_NUM_WORKERS, 10)
+      : undefined
+    : undefined,
   reporter: 'html',
   timeout: 15000, // default: 30000ms
   expect: {

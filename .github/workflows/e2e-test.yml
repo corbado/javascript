@@ -38,11 +38,14 @@ jobs:
         npm ci
         npm install lerna
 
+    - name: 'Tar node_modules'
+      run: tar -czf node_modules.tar.gz node_modules
+
     - name: Upload node_modules
       uses: actions/upload-artifact@v4
       with:
         name: node-modules
-        path: node_modules
+        path: node_modules.tar.gz
 
   e2e-tests:
     timeout-minutes: 60
@@ -70,12 +73,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-modules
-          path: node_modules
+          path: node_modules.tar.gz
+      
+      - name: Extract node_modules
+        run: tar -xzf node_modules.tar.gz
 
-      - name: Grant execute permissions for Playwright
-        run: |
-          chmod +x node_modules/.bin/playwright
-          chmod +x node_modules/.bin/lerna
+      # - name: Grant execute permissions for Playwright
+      #   run: |
+      #     chmod +x node_modules/.bin/playwright
+      #     chmod +x node_modules/.bin/lerna
 
       - name: Install Playwright Browsers
         run: |

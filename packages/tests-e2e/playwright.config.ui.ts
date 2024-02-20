@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI
     ? process.env.PLAYWRIGHT_NUM_CORES
-      ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
+      ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) // - 1
       : undefined
     : undefined,
   reporter: 'html',

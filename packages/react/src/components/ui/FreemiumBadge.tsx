@@ -32,6 +32,9 @@ export const FreemiumBadge: FC = () => {
         href='https://www.corbado.com'
         target='_blank'
         rel='noreferrer'
+        style={{
+          display: 'flex',
+        }}
       >
         <CorbadoLogoIcon
           style={{

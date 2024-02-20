@@ -2,7 +2,7 @@ import Corbado from '@corbado/web-js';
 import { jwtDecode } from 'jwt-decode';
 import { CORBADO_PROJECT_ID } from './environment';
 
-Corbado.load({
+await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
 });
 

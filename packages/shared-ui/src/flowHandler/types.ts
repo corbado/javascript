@@ -100,7 +100,7 @@ export type BlockDataPhoneVerify = {
 
 export type PasskeyFallback = {
   label: string;
-  action: () => void;
+  action: () => Promise<void>;
 };
 
 export type SocialLogin = {

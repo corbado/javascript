@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - next_js_sample_application
 
 jobs:
   deploy:

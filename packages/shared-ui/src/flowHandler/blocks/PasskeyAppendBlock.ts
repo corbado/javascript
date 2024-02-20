@@ -61,25 +61,25 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     return;
   }
 
-  async initFallbackEmailOtp() {
+  async initFallbackEmailOtp(): Promise<void> {
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
     this.flowHandler.updateBlock(newBlock);
 
     return;
   }
 
-  initFallbackSmsOtp() {
-    return;
+  initFallbackSmsOtp(): Promise<void> {
+    return Promise.reject(new Error('Not implemented'));
   }
 
-  async skipPasskeyAppend() {
+  async skipPasskeyAppend(): Promise<void> {
     const newBlock = await this.app.authProcessService.finishAuthProcess();
     this.flowHandler.updateBlock(newBlock);
 
     return;
   }
 
-  async initFallbackEmailLink() {
+  async initFallbackEmailLink(): Promise<void> {
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();
     this.flowHandler.updateBlock(newBlock);
 

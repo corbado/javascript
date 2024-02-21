@@ -2,7 +2,7 @@ import type { AxiosError, AxiosInstance } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
 import type { Subject } from 'rxjs';
-import { Result } from 'ts-results';
+import { Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { BlockBody, LoginIdentifier, ProcessInitRsp } from '../api/v2';
@@ -275,19 +275,21 @@ export class AuthProcessService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
-  async appendPasskey(): Promise<BlockBody> {
+  async appendPasskey(): Promise<Result<BlockBody, CorbadoError>> {
     const respStart = await this.startPasskeyAppend();
     if (respStart.error) {
-      return respStart;
+      return Ok(respStart);
     }
 
     const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.challenge);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error
-      return respStart;
+      return signedChallenge;
     }
 
-    return await this.finishPasskeyAppend(signedChallenge.val);
+    const respFinish = await this.finishPasskeyAppend(signedChallenge.val);
+
+    return Ok(respFinish);
   }
 
   // TODO: complete this method

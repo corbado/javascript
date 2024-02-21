@@ -31,6 +31,19 @@
         "body_loginMethods": "Face ID, Touch ID or screen lock code.",
         "button_start": "Create passkey",
         "button_skip": "Maybe later"
+      },
+      "passkey-error": {
+        "header": "Something went wrong...",
+        "body_errorMessage": "Creating your account was not possible with ",
+        "button_showPasskeyBenefits": "passkeys",
+        "body_tryAgainMessage": ". Try again or sign up with one of the fallback methods below.",
+        "button_switchToAlternate": {
+          "emailOtp": "Send email one-time passcode",
+          "emailLink": "Send email magic link"
+        },
+        "button_start": "Try again",
+        "button_back": "Back",
+        "button_cancel": "Cancel"
       }
     },
     "passkey-appended": {
@@ -74,22 +87,6 @@
         "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
         "button_resend": "Send one-time passcode again"
       }
-    },
-    "passkeyError": {
-      "header": "Let's get you set up",
-      "body_errorMessage": "Creating your account was not possible with ",
-      "button_showPasskeyBenefits": "passkeys",
-      "body_tryAgainMessage": {
-        "emailOtp": ". Try again or sign up with email one-time passcode.",
-        "emailLink": ". Try again or sign up with email magic link."
-      },
-      "button_switchToAlternate": {
-        "emailOtp": "Send email one-time passcode",
-        "emailLink": "Send email magic link"
-      },
-      "button_retry": "Try again",
-      "button_back": "Back",
-      "button_cancel": "Cancel"
     },
     "passkeyAppend": {
       "header": "Log in even faster with ",

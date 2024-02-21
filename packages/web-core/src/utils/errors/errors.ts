@@ -152,6 +152,10 @@ export class CorbadoError extends Error {
           return new ConditionalUiUnconfirmedCredential();
         }
 
+        if (errorResp.details === 'process_not_available') {
+          return new ProcessNotFound();
+        }
+
         break;
       }
     }
@@ -356,4 +360,9 @@ export class UnknownError extends RecoverableError {
   }
 }
 
-export class ProcessNotFound extends RecoverableError {}
+export class ProcessNotFound extends RecoverableError {
+  constructor() {
+    super('The process is not available');
+    this.name = 'errors.processNotFound';
+  }
+}

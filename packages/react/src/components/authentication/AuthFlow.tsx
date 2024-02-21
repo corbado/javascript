@@ -16,6 +16,7 @@ import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkS
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
+import { PasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { InitSignup } from '../../screens/auth-blocks/signup-init/InitSignup';
@@ -35,7 +36,7 @@ const componentMap: ScreenMap = {
   [ScreenNames.PasskeyAppend]: (block: PasskeyAppendBlock) => <PasskeyAppend block={block} />,
   [ScreenNames.PasskeyBenefits]: (block: PasskeyAppendBlock) => <PasskeyBenefits block={block} />,
   [ScreenNames.PasskeySuccess]: (block: PasskeyAppendedBlock) => <PasskeyAppended block={block} />,
-  [ScreenNames.PasskeyError]: InitSignup,
+  [ScreenNames.PasskeyError]: (block: PasskeyAppendBlock) => <PasskeyError block={block} />,
 };
 
 export const AuthFlow: FC = () => {

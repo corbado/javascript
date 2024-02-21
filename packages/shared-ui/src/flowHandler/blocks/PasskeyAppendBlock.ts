@@ -55,8 +55,13 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async passkeyAppend() {
-    const newBlock = await this.app.authProcessService.appendPasskey();
-    this.flowHandler.updateBlock(newBlock);
+    const res = await this.app.authProcessService.appendPasskey();
+    if (res.err) {
+      this.updateScreen(ScreenNames.PasskeyError);
+      return;
+    }
+
+    this.flowHandler.updateBlock(res.val);
 
     return;
   }

@@ -159,6 +159,11 @@
     }
   },
   "errors": {
+    "missing_identifier_type": {
+      "username": "Please enter a valid username",
+      "email": "Please enter a valid email",
+      "phone": "Please enter a valid phone number"
+    },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
@@ -167,11 +172,12 @@
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid. Log in using your email address instead.",
-    "invalidOtp": "The provided one-time passcode is not valid",
-    "invalidToken": "The provided token is not valid for user verification",
+    "invalid_challenge_solution_email-otp": "The provided one-time passcode is not valid",
+    "invalid_challenge_solution_email-link": "The provided token is not valid for user verification",
+    "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
-    "unknownError": "Something went wrong. Please try again later"
+    "unknown": "Something went wrong. Please try again later"
   },
   "passkeysList": {
     "warning_notLoggedIn": "Please log in to see your passkeys.",

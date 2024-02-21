@@ -73,8 +73,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     return;
   }
 
-  initFallbackSmsOtp(): Promise<void> {
-    return Promise.reject(new Error('Not implemented'));
+  async initFallbackSmsOtp(): Promise<void> {
+    const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
+    this.flowHandler.updateBlock(newBlock);
+
+    return;
   }
 
   async skipPasskeyAppend(): Promise<void> {

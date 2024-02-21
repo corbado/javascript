@@ -85,7 +85,7 @@ export const InitSignup = ({ block }: { block: SignupInitBlock }) => {
             <FormInput
               name='username'
               label={usernameFieldLabel}
-              error={email?.translatedError}
+              error={username?.translatedError}
               ref={el => el && (usernameRef.current = el)}
             />
           )}

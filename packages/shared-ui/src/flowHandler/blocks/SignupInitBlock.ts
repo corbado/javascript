@@ -28,13 +28,22 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     data.identifiers.forEach(item => {
       switch (item.type) {
         case 'email':
-          email = { value: item.identifier, translatedError: errorTranslator.translate(item.error) };
+          email = {
+            value: item.identifier,
+            translatedError: errorTranslator.translateWithIdentifier(item.error, item.type),
+          };
           break;
         case 'phone':
-          phone = { value: item.identifier, translatedError: errorTranslator.translate(item.error) };
+          phone = {
+            value: item.identifier,
+            translatedError: errorTranslator.translateWithIdentifier(item.error, item.type),
+          };
           break;
         case 'username':
-          userName = { value: item.identifier, translatedError: errorTranslator.translate(item.error) };
+          userName = {
+            value: item.identifier,
+            translatedError: errorTranslator.translateWithIdentifier(item.error, item.type),
+          };
           break;
       }
     });

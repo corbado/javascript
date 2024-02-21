@@ -1,4 +1,4 @@
-import type { RequestError } from '@corbado/web-core/dist/api/v2';
+import type { LoginIdentifierType, RequestError } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 
 export class ErrorTranslator {
@@ -13,6 +13,14 @@ export class ErrorTranslator {
       return undefined;
     }
 
-    return this.#i18next.t(error.code);
+    return this.#i18next.t(`errors.${error.code}`);
+  }
+
+  translateWithIdentifier(error: RequestError | undefined, type: LoginIdentifierType): string | undefined {
+    if (!error) {
+      return undefined;
+    }
+
+    return this.#i18next.t(`errors.${error.code}.${type}`);
   }
 }

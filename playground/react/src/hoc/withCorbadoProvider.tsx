@@ -32,6 +32,7 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
           }}
           darkMode={'off'}
           isDevMode={true}
+          frontendApiUrl={process.env.REACT_APP_CORBADO_FRONTEND_API_URL}
         >
           <WrappedComponent {...(props as T)} />
         </CorbadoProvider>

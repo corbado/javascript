@@ -91,7 +91,7 @@ export default defineConfig({
     {
       name: 'b1-2-setup',
       testMatch: ['ui/b1-2/setup.ts'],
-      dependencies: ['b1-1-chromium'],
+      // dependencies: ['b1-1-chromium'],
     },
     {
       name: 'b1-2-chromium',
@@ -110,7 +110,7 @@ export default defineConfig({
     {
       name: 'b1-3-setup',
       testMatch: ['ui/b1-3/setup.ts'],
-      dependencies: ['b1-2-chromium'],
+      // dependencies: ['b1-2-chromium'],
     },
     {
       name: 'b1-3-chromium',

@@ -59,7 +59,7 @@ jobs:
   e2e-tests:
     timeout-minutes: 60
     needs: prepare
-    runs-on: [ self-hosted, "Deploy" ]
+    runs-on: [ self-hosted, "javascript" ]
     strategy:
       matrix:
         include:

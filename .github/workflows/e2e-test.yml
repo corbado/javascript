@@ -1,13 +1,23 @@
+# When running this on a different self-hosted runner, the following needs
+# to be done before the workflow will properly run:
+#   1. Install Node.js and npm on the server
+#   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
+#      match the number of cores on the server
+
 name: End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
+      - develop
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, "javascript" ]
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -22,29 +32,34 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
 
-    - name: Cache node modules
-      uses: actions/cache@v3
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    # # The self-hosted runners are so fast that caching overhead is more 
+    # # expensive than just installing the dependencies
+    # - name: Cache dependencies
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/.npm
+    #     key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: ${{ runner.os }}-build-
 
     - name: Install Dependencies
       run: |
         npm ci
         npm install lerna
 
+    # Compressing node_modules preserves file permissions and decreases download/upload times
+    - name: 'Tar node_modules'
+      run: tar -czf node_modules.tar.gz node_modules
+
     - name: Upload node_modules
       uses: actions/upload-artifact@v4
       with:
         name: node-modules
-        path: node_modules
+        path: node_modules.tar.gz
 
   e2e-tests:
     timeout-minutes: 60
     needs: prepare
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, "Deploy" ]
     strategy:
       matrix:
         include:
@@ -67,13 +82,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-modules
-          path: node_modules
-
-      - name: Grant execute permissions for Playwright
-        run: chmod +x node_modules/.bin/playwright
+          path: .
+      
+      - name: Extract node_modules
+        run: tar -xzf node_modules.tar.gz
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: |
+          npx playwright install --with-deps
+          npx playwright install msedge
 
       - name: Run E2E Test for ${{ matrix.app }}
         run: |
@@ -83,6 +100,7 @@ jobs:
             npm run test:e2e:ui
           fi
         env:
+          PLAYWRIGHT_NUM_CORES: 8
           PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
       - uses: actions/upload-artifact@v4
         if: always()

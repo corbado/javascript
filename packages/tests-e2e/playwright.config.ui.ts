@@ -15,12 +15,17 @@ export default defineConfig({
       : undefined
     : undefined,
   // reporter: 'html',
-  reporter: [['blob', {
-    // Saving all blobs to the same directory deletes every other blob in the directory
-    // so we temporarily make a directory for each project (ref: run-all-projects.sh)
-    outputDir: `playwright-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
-    fileName: `report-${process.env.PLAYWRIGHT_PROJECT_NAME}.zip`
-  }]],
+  reporter: [
+    [
+      'blob',
+      {
+        // Saving all blobs to the same directory deletes every other blob in the directory
+        // so we temporarily make a directory for each project (ref: run-all-projects.sh)
+        outputDir: `playwright-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
+        fileName: `report-${process.env.PLAYWRIGHT_PROJECT_NAME}.zip`,
+      },
+    ],
+  ],
   timeout: 15000, // default: 30000ms
   expect: {
     timeout: 3000, // default: 5000ms
@@ -51,41 +56,6 @@ export default defineConfig({
       testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
       dependencies: ['b1-1-setup'],
     },
-    // {
-    //   name: 'b1-1-firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    //   testMatch: ['ui/b1-1/all-browsers/*.*'],
-    //   dependencies: ['b1-1-setup'],
-    // },
-    // {
-    //   name: 'b1-1-webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    //   testMatch: ['ui/b1-1/all-browsers/*.*'],
-    //   dependencies: ['b1-1-setup'],
-    // },
-    // {
-    //   name: 'b1-1-mobile-chrome',
-    //   use: { ...devices['Pixel 7'] },
-    //   testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
-    //   dependencies: ['b1-1-setup'],
-    // },
-    // {
-    //   name: 'b1-1-mobile-safari',
-    //   use: { ...devices['iPhone 14 Pro Max'] },
-    //   testMatch: ['ui/b1-1/all-browsers/*.*'],
-    //   dependencies: ['b1-1-setup'],
-    // },
-    // {
-    //   name: 'b1-1-msedge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    //   testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
-    //   dependencies: ['b1-1-setup'],
-    // },
-    // {
-    //   name: 'b1-1-all-browsers',
-    //   testMatch: ['ui/b1-1/teardown.ts'],
-    //   dependencies: ['b1-1-chromium', 'b1-1-firefox', 'b1-1-webkit', 'b1-1-mobile-chrome', 'b1-1-mobile-safari', 'b1-1-msedge'],
-    // },
     //////////////////////////////////////////////////////
     // B1.2 configs: SignUp with Identifier (verified)
     //           | enabled | enforced
@@ -97,7 +67,6 @@ export default defineConfig({
     {
       name: 'b1-2-setup',
       testMatch: ['ui/b1-2/setup.ts'],
-      // dependencies: ['b1-1-chromium'],
     },
     {
       name: 'b1-2-chromium',
@@ -116,7 +85,6 @@ export default defineConfig({
     {
       name: 'b1-3-setup',
       testMatch: ['ui/b1-3/setup.ts'],
-      // dependencies: ['b1-2-chromium'],
     },
     {
       name: 'b1-3-chromium',
@@ -124,5 +92,65 @@ export default defineConfig({
       testMatch: ['ui/b1-3/all-browsers/*.*', 'ui/b1-3/chromium/*.*'],
       dependencies: ['b1-3-setup'],
     },
+    //////////////////////////////////////////////////////
+    // B1.9 configs: SignUp with Identifiers (verified)
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | true
+    //  Phone    | true    | true
+    //  Social   | true    |
+    //  Username | false   |
+    // {
+    //   name: 'b1-9-setup',
+    //   testMatch: ['ui/b1-9/setup.ts'],
+    // },
+    // {
+    //   name: 'b1-9-chromium',
+    //   use: { ...devices['Desktop Chrome'] },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*', 'ui/b1-9/chromium/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-mobile-chrome',
+    //   use: { ...devices['Pixel 7'] },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*', 'ui/b1-9/chromium/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-mobile-safari',
+    //   use: { ...devices['iPhone 14 Pro Max'] },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-msedge',
+    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    //   testMatch: ['ui/b1-9/all-browsers/*.*', 'ui/b1-9/chromium/*.*'],
+    //   dependencies: ['b1-9-setup'],
+    // },
+    // {
+    //   name: 'b1-9-all-browsers',
+    //   testMatch: ['ui/b1-9/teardown.ts'],
+    //   dependencies: [
+    //     'b1-9-chromium',
+    //     'b1-9-firefox',
+    //     'b1-9-webkit',
+    //     'b1-9-mobile-chrome',
+    //     'b1-9-mobile-safari',
+    //     'b1-9-msedge',
+    //   ],
+    // },
   ],
 });

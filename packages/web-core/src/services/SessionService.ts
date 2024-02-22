@@ -1,9 +1,22 @@
-import type { CorbadoUser, SessionUser } from '@corbado/types';
-import type { AxiosRequestConfig } from 'axios';
+import type { PassKeyList, SessionUser } from '@corbado/types';
+import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
+import { BehaviorSubject, type Subject } from 'rxjs';
+import { Ok, Result } from 'ts-results';
 
+import { Configuration } from '../api/v1';
+import { UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
-import type { ApiService } from './ApiService';
+import {
+  AuthState,
+  CorbadoError,
+  type GlobalError,
+  NonRecoverableError,
+  type PasskeyDeleteError,
+  type PasskeyListError,
+} from '../utils';
+import { WebAuthnService } from './WebAuthnService';
 
 const shortSessionKey = 'cbo_short_session';
 const longSessionKey = 'cbo_long_session';
@@ -13,6 +26,8 @@ const shortSessionRefreshBeforeExpirationSeconds = 60;
 // controls how often we check if we need to refresh the session
 const shortSessionRefreshIntervalMs = 10_000;
 
+const packageVersion = '0.0.0';
+
 /**
  * The SessionService manages user sessions for the Corbado Application, handling shortSession and longSession.
  * It offers methods to set, delete, and retrieve these tokens and the username,
@@ -21,27 +36,43 @@ const shortSessionRefreshIntervalMs = 10_000;
  * The longSession should not be exposed from this service as it is only used for session refresh.
  */
 export class SessionService {
-  readonly #apiService: ApiService;
+  #usersApi: UsersApi = new UsersApi();
+  #webAuthnService: WebAuthnService;
+
   readonly #setShortSessionCookie: boolean;
+  readonly #frontendApiUrl: string;
+  readonly #isPreviewMode: boolean;
+  readonly #globalErrors: Subject<NonRecoverableError | undefined>;
+  readonly #projectId: string;
+
   #shortSession: ShortSession | undefined;
   #longSession: string | undefined;
-  #onShortSessionChange?: (value: ShortSession | undefined) => void;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
-  constructor(apiService: ApiService, setShortSessionCookie: boolean) {
-    this.#apiService = apiService;
+  #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
+  #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
+
+  constructor(
+    globalErrors: GlobalError,
+    projectId: string,
+    setShortSessionCookie: boolean,
+    isPreviewMode: boolean,
+    frontendApiUrl?: string,
+  ) {
+    this.#globalErrors = globalErrors;
+    this.#projectId = projectId;
+    this.#webAuthnService = new WebAuthnService(globalErrors);
     this.#longSession = undefined;
     this.#setShortSessionCookie = setShortSessionCookie;
+    this.#frontendApiUrl = frontendApiUrl || `https://${projectId}.frontendapi.corbado.io`;
+    this.#isPreviewMode = isPreviewMode;
   }
 
   /**
    * Initializes the SessionService by registering a callback that is called when the shortSession changes.
-   *
-   * @param onShortSessionChange
    */
-  async init(onShortSessionChange: (value: ShortSession | undefined) => void) {
-    this.#onShortSessionChange = onShortSessionChange;
-
+  async init() {
     this.#longSession = SessionService.#getLongSessionToken();
     this.#shortSession = SessionService.#getShortTermSessionToken();
 
@@ -53,10 +84,9 @@ export class SessionService {
       await this.#handleRefreshRequest();
     }
 
-    this.#apiService.setInstanceWithToken(this.#longSession);
+    this.#setApisV2(this.#longSession);
 
     // init scheduled session refresh
-    // TODO: make use of pageVisibility event and service workers
     this.#refreshIntervalId = setInterval(() => {
       void this.#handleRefreshRequest();
     }, shortSessionRefreshIntervalMs);
@@ -96,30 +126,150 @@ export class SessionService {
   }
 
   /**
-   * Method to get the full user object from the Corbado API.
+   * Exposes changes to the user object
    */
-  async getCorbadoUser() {
-    const resp = await this.#apiService.usersApi.currentUserGet();
+  get userChanges(): BehaviorSubject<SessionUser | undefined> {
+    return this.#userChanges;
+  }
 
-    const me = resp.data.data as CorbadoUser;
+  /**
+   * Exposes changes to the shortSession
+   */
+  get shortSessionChanges(): BehaviorSubject<string | undefined> {
+    return this.#shortSessionChanges;
+  }
 
-    return me;
+  /**
+   * Exposes changes to the auth state
+   */
+  get authStateChanges(): BehaviorSubject<AuthState> {
+    return this.#authStateChanges;
+  }
+
+  abortOngoingPasskeyOperation() {
+    this.#webAuthnService.abortOngoingOperation();
+  }
+
+  async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
+    const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
+      clientInfo: {},
+    });
+
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.challenge);
+    if (signedChallenge.err) {
+      return signedChallenge;
+    }
+
+    await this.#usersApi.currentUserPasskeyAppendFinish({
+      signedChallenge: signedChallenge.val,
+      clientInfo: {},
+    });
+
+    return Ok(void 0);
+  }
+
+  async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
+    return Result.wrapAsync(async () => {
+      const resp = await this.#usersApi.currentUserPasskeyGet();
+      return resp.data;
+    });
+  }
+
+  async passkeyDelete(id: string): Promise<Result<void, PasskeyDeleteError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserPasskeyDelete(id);
+      return void 0;
+    });
+  }
+
+  logout() {
+    // TODO: should we call backend to destroy the session here?
+    log.debug('logging out user');
+    this.clear();
+
+    this.#onShortSessionChange(undefined);
+  }
+
+  #onShortSessionChange(shortSession: ShortSession | undefined) {
+    const user = this.getUser();
+
+    if (user && shortSession) {
+      this.#shortSessionChanges.next(shortSession.value);
+      this.#updateAuthState(AuthState.LoggedIn);
+      this.#updateUser(user);
+    } else {
+      console.log('user is logged out', user, shortSession);
+      this.#shortSessionChanges.next(undefined);
+      this.#updateAuthState(AuthState.LoggedOut);
+      this.#updateUser(undefined);
+    }
   }
 
   /** Method to set Session
    * It sets the short term session token, long term session token, and username for the Corbado Application.
-   * @param shortSession The short term session token to be set.
+   * @param shortSessionValue The short term session token to be set.
    * @param longSession The long term session token to be set.
    */
-  setSession(shortSession: ShortSession, longSession: string | undefined) {
-    this.#setShortTermSessionToken(shortSession);
-    this.#apiService.setInstanceWithToken(longSession ?? '');
+  setSession(shortSessionValue: string, longSession: string | undefined) {
+    const shortSession = new ShortSession(shortSessionValue);
+    console.log('set session', shortSession, longSession);
 
-    if (this.#onShortSessionChange) {
-      this.#onShortSessionChange(shortSession);
+    this.#setShortTermSessionToken(shortSession);
+    this.#setApisV2(longSession ?? '');
+
+    this.#onShortSessionChange(shortSession);
+    this.#setLongSessionToken(longSession);
+  }
+
+  #setApisV2(longSession: string): void {
+    const config = new Configuration({
+      apiKey: this.#projectId,
+      basePath: this.#frontendApiUrl,
+    });
+    const axiosInstance = this.#createAxiosInstanceV2(longSession);
+
+    this.#usersApi = new UsersApi(config, this.#frontendApiUrl, axiosInstance);
+  }
+
+  #createAxiosInstanceV2(longSession: string): AxiosInstance {
+    const corbadoVersion = {
+      name: 'web-core',
+      sdkVersion: packageVersion,
+    };
+
+    const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
+      'Content-Type': 'application/json',
+      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+    };
+
+    if (this.#isPreviewMode) {
+      headers['X-Corbado-Mode'] = 'preview';
     }
 
-    this.#setLongSessionToken(longSession);
+    const out = axios.create({
+      withCredentials: true,
+      headers: { ...headers, Authorization: `Bearer ${longSession}` },
+    });
+
+    // We transform AxiosErrors into CorbadoErrors using axios interceptors.
+    out.interceptors.response.use(
+      response => {
+        return response;
+      },
+      (error: AxiosError) => {
+        const e = CorbadoError.fromAxiosError(error);
+        log.warn('error', e);
+
+        if (e instanceof NonRecoverableError) {
+          this.#globalErrors.next(e);
+          return Promise.reject();
+        }
+
+        return Promise.reject(e);
+      },
+    );
+
+    return out;
   }
 
   /**
@@ -132,16 +282,6 @@ export class SessionService {
 
     if (this.#refreshIntervalId) {
       clearInterval(this.#refreshIntervalId);
-    }
-  }
-
-  logout() {
-    // TODO: should we call backend to destroy the session here?
-    log.debug('logging out user');
-    this.clear();
-
-    if (this.#onShortSessionChange) {
-      this.#onShortSessionChange(undefined);
     }
   }
 
@@ -251,24 +391,24 @@ export class SessionService {
     log.debug('session refresh: starting refresh');
 
     try {
+      /*
       const options: AxiosRequestConfig = {
         headers: {
           Authorization: `Bearer ${this.#longSession}`,
         },
       };
-      const response = await this.#apiService.sessionsApi.sessionRefresh({}, options);
+      const response = await this.#usersApi.currentUserSessionRefresh(options);
       if (response.status !== 200) {
         log.warn(`refresh error, status code: ${response.status}`);
         return;
       }
 
-      if (!response.data.shortSession?.value) {
+      if (!response.data.shortSession) {
         log.warn('refresh error, missing short session');
         return;
       }
 
-      const shortSession = new ShortSession(response.data.shortSession?.value);
-      this.setSession(shortSession, undefined);
+      this.setSession(response.data.shortSession, undefined);*/
     } catch (e) {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user
@@ -290,4 +430,31 @@ export class SessionService {
       log.error(e);
     }
   }
+
+  #updateUser = (user: SessionUser | undefined) => {
+    const currentUser = this.#userChanges.value;
+
+    if (currentUser === user) {
+      return;
+    }
+
+    if (
+      currentUser?.email === user?.email &&
+      currentUser?.name === user?.name &&
+      currentUser?.orig === user?.orig &&
+      currentUser?.sub === user?.sub
+    ) {
+      return;
+    }
+
+    this.#userChanges.next(user);
+  };
+
+  #updateAuthState = (authState: AuthState) => {
+    if (this.#authStateChanges.value === authState) {
+      return;
+    }
+
+    this.#authStateChanges.next(authState);
+  };
 }

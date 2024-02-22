@@ -26,6 +26,25 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 /**
  * 
  * @export
+ * @interface AuthenticationResponse
+ */
+export interface AuthenticationResponse {
+    /**
+     * Only given when project environment is dev
+     * @type {string}
+     * @memberof AuthenticationResponse
+     */
+    'longSession'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthenticationResponse
+     */
+    'shortSession': string;
+}
+/**
+ * 
+ * @export
  * @interface BlockBody
  */
 export interface BlockBody {
@@ -115,7 +134,7 @@ export interface BlockBodyData {
      * @type {string}
      * @memberof BlockBodyData
      */
-    'shortSession'?: string;
+    'shortSession': string;
     /**
      * 
      * @type {Array<LoginIdentifierWithError>}
@@ -200,25 +219,6 @@ export interface EmailVerifyStartReq {
 }
 
 
-/**
- * 
- * @export
- * @interface GeneralBlockCompleted
- */
-export interface GeneralBlockCompleted {
-    /**
-     * Only given when project environment is dev
-     * @type {string}
-     * @memberof GeneralBlockCompleted
-     */
-    'longSession'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GeneralBlockCompleted
-     */
-    'shortSession'?: string;
-}
 /**
  * 
  * @export
@@ -417,6 +417,157 @@ export interface LoginIdentifierWithError {
     'error'?: RequestError;
 }
 
+
+/**
+ * 
+ * @export
+ * @interface MePasskeyAppendStartRsp
+ */
+export interface MePasskeyAppendStartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeyAppendStartRsp
+     */
+    'challenge': string;
+}
+/**
+ * 
+ * @export
+ * @interface MePasskeyDeleteRsp
+ */
+export interface MePasskeyDeleteRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeyDeleteRsp
+     */
+    'id': string;
+}
+/**
+ * 
+ * @export
+ * @interface MePasskeyRsp
+ */
+export interface MePasskeyRsp {
+    /**
+     * 
+     * @type {Array<PassKeyItem>}
+     * @memberof MePasskeyRsp
+     */
+    'passkeys': Array<PassKeyItem>;
+    /**
+     * 
+     * @type {Paging}
+     * @memberof MePasskeyRsp
+     */
+    'paging'?: Paging;
+}
+/**
+ * 
+ * @export
+ * @interface Paging
+ */
+export interface Paging {
+    /**
+     * current page returned in response
+     * @type {number}
+     * @memberof Paging
+     */
+    'page': number;
+    /**
+     * total number of pages available
+     * @type {number}
+     * @memberof Paging
+     */
+    'totalPages': number;
+    /**
+     * total number of items available
+     * @type {number}
+     * @memberof Paging
+     */
+    'totalItems': number;
+}
+/**
+ * 
+ * @export
+ * @interface PassKeyItem
+ */
+export interface PassKeyItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'credentialHash': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'aaguid': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'userAgent': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'attestationType': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PassKeyItem
+     */
+    'transport': Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassKeyItem
+     */
+    'backupEligible': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PassKeyItem
+     */
+    'backupState': boolean;
+    /**
+     * Timestamp of when the entity was last used in yyyy-MM-dd\'T\'HH:mm:ss format
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'lastUsed': string;
+    /**
+     * Status
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'status': PassKeyItemStatusEnum;
+    /**
+     * Timestamp of when the entity was created in yyyy-MM-dd\'T\'HH:mm:ss format
+     * @type {string}
+     * @memberof PassKeyItem
+     */
+    'created': string;
+}
+
+export const PassKeyItemStatusEnum = {
+    Pending: 'pending',
+    Active: 'active'
+} as const;
+
+export type PassKeyItemStatusEnum = typeof PassKeyItemStatusEnum[keyof typeof PassKeyItemStatusEnum];
 
 /**
  * tbd.
@@ -1911,6 +2062,448 @@ export class DefaultApi extends BaseAPI {
      */
     public updateComponentConfig(updateComponentConfigReq: UpdateComponentConfigReq, options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).updateComponentConfig(updateComponentConfigReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * UsersApi - axios parameter creator
+ * @export
+ */
+export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Finish passkey append
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendFinish: async (passkeyAppendFinishReq: PasskeyAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passkeyAppendFinishReq' is not null or undefined
+            assertParamExists('currentUserPasskeyAppendFinish', 'passkeyAppendFinishReq', passkeyAppendFinishReq)
+            const localVarPath = `/v2/me/passkeys/append/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Start passkey append
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendStart: async (passkeyAppendStartReq: PasskeyAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passkeyAppendStartReq' is not null or undefined
+            assertParamExists('currentUserPasskeyAppendStart', 'passkeyAppendStartReq', passkeyAppendStartReq)
+            const localVarPath = `/v2/me/passkeys/append/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete current user\'s passkeys
+         * @param {string} credentialID Credential ID from passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyDelete: async (credentialID: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'credentialID' is not null or undefined
+            assertParamExists('currentUserPasskeyDelete', 'credentialID', credentialID)
+            const localVarPath = `/v2/me/passkeys/{credentialID}`
+                .replace(`{${"credentialID"}}`, encodeURIComponent(String(credentialID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets current user\'s passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/me/passkeys`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Performs session logout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserSessionLogout: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/me/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Performs session refresh
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserSessionRefresh: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/me/refresh`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UsersApi - functional programming interface
+ * @export
+ */
+export const UsersApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Finish passkey append
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Start passkey append
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyAppendStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendStart(passkeyAppendStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Delete current user\'s passkeys
+         * @param {string} credentialID Credential ID from passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserPasskeyDelete(credentialID: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyDeleteRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyDelete(credentialID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Gets current user\'s passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserPasskeyGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Performs session logout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserSessionLogout(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserSessionLogout(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Performs session refresh
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserSessionRefresh(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthenticationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserSessionRefresh(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * UsersApi - factory interface
+ * @export
+ */
+export const UsersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UsersApiFp(configuration)
+    return {
+        /**
+         * Finish passkey append
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: any): AxiosPromise<void> {
+            return localVarFp.currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Start passkey append
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<MePasskeyAppendStartRsp> {
+            return localVarFp.currentUserPasskeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete current user\'s passkeys
+         * @param {string} credentialID Credential ID from passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyDelete(credentialID: string, options?: any): AxiosPromise<MePasskeyDeleteRsp> {
+            return localVarFp.currentUserPasskeyDelete(credentialID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets current user\'s passkeys
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyGet(options?: any): AxiosPromise<MePasskeyRsp> {
+            return localVarFp.currentUserPasskeyGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Performs session logout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserSessionLogout(options?: any): AxiosPromise<void> {
+            return localVarFp.currentUserSessionLogout(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Performs session refresh
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserSessionRefresh(options?: any): AxiosPromise<AuthenticationResponse> {
+            return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * UsersApi - object-oriented interface
+ * @export
+ * @class UsersApi
+ * @extends {BaseAPI}
+ */
+export class UsersApi extends BaseAPI {
+    /**
+     * Finish passkey append
+     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Start passkey append
+     * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyAppendStart(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete current user\'s passkeys
+     * @param {string} credentialID Credential ID from passkeys
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserPasskeyDelete(credentialID: string, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyDelete(credentialID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets current user\'s passkeys
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserPasskeyGet(options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Performs session logout
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserSessionLogout(options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserSessionLogout(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Performs session refresh
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserSessionRefresh(options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserSessionRefresh(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

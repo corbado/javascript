@@ -41,6 +41,101 @@ paths:
               schema:
                 $ref: '#/components/schemas/updateComponentConfigRsp'
 
+  /v2/me/passkeys:
+    get:
+      description: Gets current user's passkeys
+      operationId: CurrentUserPasskeyGet
+      tags:
+        - Users
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mePasskeyRsp'
+
+  /v2/me/passkeys/append/start:
+    post:
+      description: Start passkey append
+      operationId: CurrentUserPasskeyAppendStart
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyAppendStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mePasskeyAppendStartRsp'
+
+  /v2/me/passkeys/append/finish:
+    post:
+      description: Finish passkey append
+      operationId: CurrentUserPasskeyAppendFinish
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyAppendFinishReq'
+      responses:
+        '204':
+          description: tbd
+
+  /v2/me/passkeys/{credentialID}:
+    delete:
+      description: Delete current user's passkeys
+      operationId: CurrentUserPasskeyDelete
+      parameters:
+        - in: path
+          required: true
+          name: credentialID
+          schema:
+            type: string
+          description: 'Credential ID from passkeys'
+          example: 'cre-abc123'
+      tags:
+        - Users
+      responses:
+        '200':
+          description: tbs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mePasskeyDeleteRsp'
+
+  /v2/me/refresh:
+    put:
+      description: Performs session refresh
+      operationId: CurrentUserSessionRefresh
+      tags:
+        - Users
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authenticationResponse'
+
+  /v2/me/logout:
+    post:
+      description: Performs session logout
+      operationId: CurrentUserSessionLogout
+      tags:
+        - Users
+      responses:
+        '204':
+          description: tbd
 
   /v2/auth/process/init:
     post:
@@ -406,6 +501,14 @@ components:
     passkeyAppendStartRsp:
       $ref: '#/components/schemas/blockBody'
 
+    mePasskeyAppendStartRsp:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+
     passkeyAppendFinishReq:
       type: object
       description: tbd.
@@ -540,6 +643,70 @@ components:
         alternatives:
           type: object
 
+    mePasskeyRsp:
+      type: object
+      required:
+        - passkeys
+      properties:
+        passkeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/passKeyItem'
+        paging:
+          $ref: 'common.yml#/components/schemas/paging'
+
+
+    mePasskeyDeleteRsp:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+
+    passKeyItem:
+      type: object
+      required:
+        - id
+        - credentialHash
+        - aaguid
+        - userAgent
+        - attestationType
+        - transport
+        - backupEligible
+        - backupState
+        - lastUsed
+        - status
+        - created
+      properties:
+        id:
+          type: string
+        credentialHash:
+          type: string
+        aaguid:
+          type: string
+        userAgent:
+          type: string
+        attestationType:
+          type: string
+        transport:
+          type: array
+          items:
+            type: string
+        backupEligible:
+          type: boolean
+        backupState:
+          type: boolean
+        lastUsed:
+          type: string
+          description: Timestamp of when the entity was last used in yyyy-MM-dd'T'HH:mm:ss format
+        status:
+          type: string
+          enum: [ 'pending', 'active' ]
+          description: "Status"
+        created:
+          $ref: 'common.yml#/components/schemas/created'
+
     loginIdentifierConfig:
       type: object
       required:
@@ -663,13 +830,7 @@ components:
       type: object
 
     generalBlockCompleted:
-      type: object
-      properties:
-        longSession:
-          type: string
-          description: Only given when project environment is dev
-        shortSession:
-          type: string
+      $ref: '#/components/schemas/authenticationResponse'
 
     generalBlockVerifyIdentifier:
       type: object
@@ -699,6 +860,18 @@ components:
               $ref: '#/components/schemas/verificationMethod'
             identifier:
               type: string
+
+    authenticationResponse:
+      type: object
+      required:
+        - shortSession
+      properties:
+        longSession:
+          type: string
+          description: Only given when project environment is dev
+        shortSession:
+          type: string
+
 
     requestError:
       type: object

@@ -15,11 +15,11 @@ export class CorbadoAppState {
   constructor(corbadoAppProps: CorbadoConfig) {
     const corbadoApp = new CorbadoApp(corbadoAppProps);
 
-    corbadoApp.authService.shortSessionChanges.subscribe(value => {
+    corbadoApp.sessionService.shortSessionChanges.subscribe(value => {
       this.#shortSession = value;
     });
 
-    corbadoApp.authService.userChanges.subscribe(value => {
+    corbadoApp.sessionService.userChanges.subscribe(value => {
       this.#user = value;
     });
 
@@ -31,7 +31,7 @@ export class CorbadoAppState {
       }
     });
 
-    corbadoApp.authService.authStateChanges.subscribe(value => {
+    corbadoApp.sessionService.authStateChanges.subscribe(value => {
       this.#isAuthenticated = !!value;
     });
 
@@ -58,7 +58,7 @@ export class CorbadoAppState {
   }
 
   get shortSessionChanges() {
-    return this.#corbadoApp.authService.shortSessionChanges;
+    return this.#corbadoApp.sessionService.shortSessionChanges;
   }
 
   get isAuthenticated() {
@@ -66,11 +66,11 @@ export class CorbadoAppState {
   }
 
   get authStateChanges() {
-    return this.#corbadoApp.authService.authStateChanges;
+    return this.#corbadoApp.sessionService.authStateChanges;
   }
 
   get userChanges() {
-    return this.#corbadoApp.authService.userChanges;
+    return this.#corbadoApp.sessionService.userChanges;
   }
 
   get user() {
@@ -86,6 +86,6 @@ export class CorbadoAppState {
       throw new Error('Please call load() before logging out');
     }
 
-    this.corbadoApp.authService.logout();
+    this.corbadoApp.sessionService.logout();
   }
 }

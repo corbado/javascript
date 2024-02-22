@@ -3,13 +3,9 @@ import { BehaviorSubject } from 'rxjs';
 
 import type { GlobalError } from '../utils';
 import { defaultTimeout, NonRecoverableError } from '../utils';
-import { ApiService } from './ApiService';
 import { AuthProcessService } from './AuthProcessService';
-import { AuthService } from './AuthService';
-import { ProjectService } from './ProjectService';
+import { SessionService } from './SessionService';
 
-export type { ProjectService } from './ProjectService';
-export type { AuthService } from './AuthService';
 export type { SessionService } from './SessionService';
 
 /**
@@ -18,12 +14,9 @@ export type { SessionService } from './SessionService';
  * It also handles the initialization and destruction of the application.
  */
 export class CorbadoApp {
-  #apiService: ApiService;
-  #authService: AuthService;
   #authProcessService: AuthProcessService;
-  #projectService: ProjectService;
+  #sessionService: SessionService;
   #projectId: string;
-  #isDevMode: boolean;
   #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
   #initialized = false;
 
@@ -35,39 +28,39 @@ export class CorbadoApp {
       projectId,
       apiTimeout = defaultTimeout,
       frontendApiUrl,
-      isDevMode = false,
       setShortSessionCookie = false,
       isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;
-    this.#isDevMode = isDevMode;
-    this.#apiService = new ApiService(this.#globalErrors, this.#projectId, apiTimeout, isPreviewMode, frontendApiUrl);
-    this.#authProcessService = new AuthProcessService(this.#globalErrors, this.#projectId, apiTimeout, frontendApiUrl);
-    this.#authService = new AuthService(this.#apiService, this.#globalErrors, setShortSessionCookie);
-    this.#projectService = new ProjectService(this.#apiService);
+    this.#authProcessService = new AuthProcessService(
+      this.#globalErrors,
+      this.#projectId,
+      apiTimeout,
+      isPreviewMode,
+      frontendApiUrl,
+    );
+    this.#sessionService = new SessionService(
+      this.#globalErrors,
+      this.#projectId,
+      setShortSessionCookie,
+      isPreviewMode,
+      frontendApiUrl,
+    );
   }
 
-  public get apiService() {
-    return this.#apiService;
-  }
-
-  public get authService() {
-    return this.#authService;
-  }
-
-  public get authProcessService() {
+  get authProcessService() {
     return this.#authProcessService;
   }
 
-  public get projectService() {
-    return this.#projectService;
+  get sessionService() {
+    return this.#sessionService;
   }
 
-  public get globalErrors(): BehaviorSubject<NonRecoverableError | undefined> {
+  get globalErrors(): BehaviorSubject<NonRecoverableError | undefined> {
     return this.#globalErrors;
   }
 
-  public get initialized() {
+  get initialized() {
     return this.#initialized;
   }
 
@@ -75,40 +68,38 @@ export class CorbadoApp {
    * Method to initialize the application.
    * It fetches the project configuration and initializes the services.
    */
-  public async init() {
+  async init() {
     if (this.#initialized) {
       return;
     }
 
     if (!this.#validateProjectId(this.#projectId)) {
-      this.#globalErrors.next(NonRecoverableError.invalidConfig('Invalid project ID'));
+      this.addGlobalError(NonRecoverableError.invalidConfig('Invalid project ID'));
       return;
     }
 
-    /*
-    // we will need to pass this projectConfig to AuthService (e.g. to make decisions whether to use CorbadoSessionManagement or not)
-    const projectConfig = await this.#projectService.getProjectConfig();
-    if (projectConfig.err) {
-      this.#globalErrors.next(NonRecoverableError.invalidConfig('Config could not be loaded'));
-      return;
-    }*/
+    await this.#sessionService.init();
 
-    await this.#authService.init(this.#isDevMode);
     this.#initialized = true;
   }
 
-  public dispose() {
-    this.#authService.abortOngoingPasskeyOperation();
+  dispose() {
+    this.#authProcessService.abortOngoingPasskeyOperation();
+    this.#sessionService.abortOngoingPasskeyOperation();
   }
 
   #validateProjectId(projectId: string): boolean {
     return /^pro-\d+$/.test(projectId);
   }
 
+  addGlobalError(error: NonRecoverableError | undefined) {
+    this.#globalErrors.next(error);
+  }
+
   /**
    * Method to clear the global errors.
    */
   clearGlobalErrors() {
-    this.#globalErrors.next(undefined);
+    this.addGlobalError(undefined);
   }
 }

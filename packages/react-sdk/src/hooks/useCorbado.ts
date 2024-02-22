@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 
-import type { CorbadoAppContextProps } from '../contexts/CorbadoAppContext';
-import { CorbadoAppContext } from '../contexts/CorbadoAppContext';
+import type { CorbadoSessionContextProps } from '../contexts/CorbadoSessionContext';
+import { CorbadoSessionContext } from '../contexts/CorbadoSessionContext';
 
-export const useCorbado = (context = CorbadoAppContext): CorbadoAppContextProps => {
-  const corbadoApp = useContext(context);
+export const useCorbado = (context = CorbadoSessionContext): CorbadoSessionContextProps => {
+  const corbadoSession = useContext(context);
 
-  if (!corbadoApp) {
+  if (!corbadoSession) {
     throw new Error('Please make sure that your components are wrapped inside <CorbadoProvider />');
   }
 
-  return corbadoApp;
+  return corbadoSession;
 };

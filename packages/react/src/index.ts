@@ -1,4 +1,4 @@
-import { useCorbado, useCorbadoSession } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react-sdk';
 import { CorbadoThemes } from '@corbado/shared-ui';
 import type { CorbadoAuthConfig } from '@corbado/types';
 
@@ -11,7 +11,6 @@ import SignUp from './screens/core/SignUp';
 export {
   CorbadoProvider,
   useCorbado,
-  useCorbadoSession,
   CorbadoAuth,
   PasskeyList,
   SignUp,

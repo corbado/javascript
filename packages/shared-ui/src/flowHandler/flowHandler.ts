@@ -45,30 +45,7 @@ export class FlowHandler {
    * Call this function after registering all callbacks.
    */
   async init() {
-    // get sID for flow type
-
-    // init flowHandler state
-
-    /*
-    let flowType = initialFlowType;
-
-    const projectConfigResult = await this.#corbadoApp.projectService.getProjectConfig();
-    if (projectConfigResult.err) {
-      // currently there are no errors that can be thrown here
-      return;
-    }
-
-    const projectConfig = projectConfigResult.val;
-    if (!projectConfig.allowUserRegistration) {
-      if (initialFlowType === FlowType.SignUp) {
-        this.#corbadoApp.globalErrors.next(NonRecoverableError.userRegistrationNotAllowed());
-      } else {
-        flowType = FlowType.Login;
-      }
-    }
-    */
-
-    const initialBlock = await this.#corbadoApp.authProcessService.init(false);
+    const initialBlock = await this.#corbadoApp.authProcessService.init();
     this.handleBlockData(initialBlock);
   }
 
@@ -129,7 +106,7 @@ export class FlowHandler {
         break;
       case BlockType.Completed:
         // this block is handled differently because it marks the end of the process
-        newBlock = new CompletedBlock(this.#corbadoApp, this);
+        newBlock = new CompletedBlock(this.#corbadoApp, this, blockBody.data);
         return;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);

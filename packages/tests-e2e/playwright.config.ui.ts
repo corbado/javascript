@@ -42,7 +42,7 @@ export default defineConfig({
     {
       name: 'b1-1-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-1/**/*.*'],
+      testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
       dependencies: ['b1-1-setup'],
     },
     // {
@@ -60,7 +60,7 @@ export default defineConfig({
     // {
     //   name: 'b1-1-mobile-chrome',
     //   use: { ...devices['Pixel 7'] },
-    //   testMatch: ['ui/b1-1/**/*.*'],
+    //   testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
     //   dependencies: ['b1-1-setup'],
     // },
     // {
@@ -72,7 +72,7 @@ export default defineConfig({
     // {
     //   name: 'b1-1-msedge',
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    //   testMatch: ['ui/b1-1/**/*.*'],
+    //   testMatch: ['ui/b1-1/all-browsers/*.*', 'ui/b1-1/chromium/*.*'],
     //   dependencies: ['b1-1-setup'],
     // },
     // {
@@ -96,7 +96,7 @@ export default defineConfig({
     {
       name: 'b1-2-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-2/**/*.*'],
+      testMatch: ['ui/b1-2/all-browsers/*.*', 'ui/b1-2/chromium/*.*'],
       dependencies: ['b1-2-setup'],
     },
     //////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ export default defineConfig({
     {
       name: 'b1-3-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-3/**/*.*'],
+      testMatch: ['ui/b1-3/all-browsers/*.*', 'ui/b1-3/chromium/*.*'],
       dependencies: ['b1-3-setup'],
     },
   ],

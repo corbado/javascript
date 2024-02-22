@@ -46,6 +46,7 @@ jobs:
         npm ci
         npm install lerna
 
+    # Compressing node_modules preserves file permissions and decreases download/upload times
     - name: 'Tar node_modules'
       run: tar -czf node_modules.tar.gz node_modules
 

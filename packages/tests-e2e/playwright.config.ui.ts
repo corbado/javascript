@@ -8,6 +8,10 @@ export default defineConfig({
   workers: process.env.CI
     ? process.env.PLAYWRIGHT_NUM_CORES
       ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
+        // Using all cores increases flakiness due to slow browsers.
+        // Recommended # of workers = # of cores / 2, but leaving only 1 free
+        // core seems enough to prevent flakiness on our self-hosted runners.
+        // Ref: https://learn.microsoft.com/en-us/azure/playwright-testing/concept-determine-optimal-configuration#run-tests-locally
       : undefined
     : undefined,
   reporter: 'html',

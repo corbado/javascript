@@ -22,17 +22,15 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
 
   const header = useMemo(
     () => (
-      <Header>
-        <span>
-          {t('header')}
-          <span
-            className='cb-link-primary'
-            onClick={() => void block.showPasskeyBenefits()}
-          >
-            {t('headerButton_showPasskeyBenefits')}
-          </span>
+      <span>
+        {t('header')}
+        <span
+          className='cb-link-primary'
+          onClick={() => void block.showPasskeyBenefits()}
+        >
+          {t('headerButton_showPasskeyBenefits')}
         </span>
-      </Header>
+      </span>
     ),
     [t],
   );
@@ -57,7 +55,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);
-          return block.passkeyAppend();
+          void block.passkeyAppend();
         }}
         isLoading={primaryLoading}
         disabled={secondaryLoading}
@@ -67,9 +65,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       {fallbacksAvailable && <HorizontalRule>or</HorizontalRule>}
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton
+          key={fallback.label}
           onClick={() => {
             setSecondaryLoading(true);
-            return fallback.action();
+            void fallback.action();
           }}
           isLoading={secondaryLoading}
           disabled={primaryLoading}
@@ -79,7 +78,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       ))}
       {block.data.canBeSkipped && (
         <SecondaryButton
-          onClick={() => block.skipPasskeyAppend()}
+          onClick={() => void block.skipPasskeyAppend()}
           isLoading={secondaryLoading}
           disabled={primaryLoading}
         >

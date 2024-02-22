@@ -5,7 +5,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
-    expect(false).toBeTruthy();
+    // expect(false).toBeTruthy();
   });
 
   test('after verifying identifier', async ({ signupFlow }) => {

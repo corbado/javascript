@@ -13,7 +13,7 @@
   },
   "scripts": {
     "e2e:sdk": "playwright test --config=playwright.config.sdk.ts",
-    "e2e:ui": "playwright test --config=playwright.config.ui.ts --project=b1-1-chromium; playwright test --config=playwright.config.ui.ts --project=b1-2-chromium; playwright test --config=playwright.config.ui.ts --project=b1-3-chromium",
+    "e2e:ui": "sh ./run-all-projects.sh",
     "e2e:report": "npx playwright show-report"
   },
   "bugs": {

@@ -1,7 +1,16 @@
 #!/bin/bash
 
-PW_TEST_HTML_REPORT_OPEN='never' playwright test --config=playwright.config.ui.ts --project=b1-1-chromium || EXIT=$?
-PW_TEST_HTML_REPORT_OPEN='never' playwright test --config=playwright.config.ui.ts --project=b1-2-chromium || EXIT=$?
-PW_TEST_HTML_REPORT_OPEN='never' playwright test --config=playwright.config.ui.ts --project=b1-3-chromium || EXIT=$?
-echo $EXIT
+project_names=(
+  "b1-1-chromium"
+  "b1-2-chromium"
+  "b1-3-chromium"
+)
+
+for project_name in "${project_names[@]}"; do
+  PW_TEST_HTML_REPORT_OPEN='never' PLAYWRIGHT_PROJECT_NAME=$project_name playwright test --config=playwright.config.ui.ts --project=$project_name || EXIT=$?
+  mv playwright-report/$project_name/* playwright-report/
+done
+
+playwright merge-reports --reporter html playwright-report/
+
 exit $EXIT

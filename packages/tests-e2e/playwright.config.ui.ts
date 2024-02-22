@@ -14,7 +14,13 @@ export default defineConfig({
       ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
       : undefined
     : undefined,
-  reporter: 'html',
+  // reporter: 'html',
+  reporter: [['blob', {
+    // Saving all blobs to the same directory deletes every other blob in the directory
+    // so we temporarily make a directory for each project (ref: run-all-projects.sh)
+    outputDir: `playwright-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
+    fileName: `report-${process.env.PLAYWRIGHT_PROJECT_NAME}.zip`
+  }]],
   timeout: 15000, // default: 30000ms
   expect: {
     timeout: 3000, // default: 5000ms

@@ -53,7 +53,7 @@ export class SessionService {
       await this.#handleRefreshRequest();
     }
 
-    this.#apiService.setInstanceWithToken(this.#longSession);
+    this.#apiService.setInstanceWithToken(this.#longSession || this.#shortSession?.value || '');
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers

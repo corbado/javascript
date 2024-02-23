@@ -33,6 +33,25 @@ export class UILoginFlow {
     }
   }
 
+  async getWebAuthnCredentials() {
+    if (this.#cdpClient) {
+      const result = await this.#cdpClient.send('WebAuthn.getCredentials', {
+        authenticatorId: this.#authenticatorId,
+      });
+      return result.credentials;
+    }
+    return [];
+  }
+
+  async removeWebAuthnCredential(credentialId: string) {
+    if (this.#cdpClient) {
+      await this.#cdpClient.send('WebAuthn.removeCredential', {
+        authenticatorId: this.#authenticatorId,
+        credentialId,
+      });
+    }
+  }
+
   async setWebAuthnUserVerified(successful: boolean) {
     if (this.#cdpClient) {
       await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, successful);

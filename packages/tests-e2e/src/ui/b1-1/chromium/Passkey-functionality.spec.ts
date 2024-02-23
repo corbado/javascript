@@ -26,12 +26,12 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
 
-    await signupFlow.fillIdentifiers(false, true, false);
+    const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
 
     await page.getByRole('button', { name: 'Send email verification code' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
 
     await signupFlow.fillOTP();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);

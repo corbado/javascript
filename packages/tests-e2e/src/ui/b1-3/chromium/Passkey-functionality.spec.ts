@@ -7,7 +7,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
 
-    await signupFlow.fillIdentifiers(false, true, true);
+    const [, email, phone] = await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
 
@@ -17,10 +17,10 @@ test.describe('Signup with passkey proper user behavior', () => {
     });
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
 
     await signupFlow.fillOTP();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp);
+    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
 
     await signupFlow.fillOTP();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
@@ -32,13 +32,26 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
 
-    await signupFlow.fillIdentifiers(false, true, true);
+    const [, email, phone] = await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
 
     await page.getByRole('button', { name: 'Send email verification code' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailLinkSent);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
 
-    // TODO: figure out how to handle email link in tests
+    await signupFlow.fillOTP();
+    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+
+    await signupFlow.fillOTP();
+    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
+
+    await page.getByRole('button', { name: 'Create your account' }).click();
+    await signupFlow.inputPasskey(async () => {
+      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
+    });
+
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await signupFlow.checkLandedOnScreen(ScreenNames.End);
+    // await signupFlow.checkPasskeyRegistered();
   });
 });

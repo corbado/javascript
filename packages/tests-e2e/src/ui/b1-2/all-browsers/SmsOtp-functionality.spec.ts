@@ -3,9 +3,9 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with phone OTP proper user behavior', () => {
   test('with no passkey support', async ({ signupFlow, page }) => {
-    await signupFlow.fillIdentifiers(false, true, false);
+    const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp);
+    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
 
     await signupFlow.fillOTP();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);

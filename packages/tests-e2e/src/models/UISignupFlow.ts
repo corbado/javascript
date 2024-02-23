@@ -59,25 +59,29 @@ export class UISignupFlow {
 
   async fillIdentifiers(fillUsername: boolean, fillEmail: boolean, fillPhone: boolean) {
     const username = UserManager.getUserForSignup();
+    let email,
+      phone = undefined;
     if (fillUsername) {
       await this.page.getByPlaceholder('Username').click();
       await this.page.getByPlaceholder('Username').fill(username);
       await expect(this.page.getByPlaceholder('Name')).toHaveValue(username);
     }
     if (fillEmail) {
-      const email = `${username}@corbado.com`;
+      email = `${username}@corbado.com`;
 
       await this.page.getByPlaceholder('Email address').click();
       await this.page.getByPlaceholder('Email address').fill(email);
       await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
     }
     if (fillPhone) {
-      const phone = username.split('+')[1];
+      phone = username.split('+')[1];
 
       await this.page.getByPlaceholder('Phone number').click();
       await this.page.getByPlaceholder('Phone number').fill(phone);
       await expect(this.page.getByPlaceholder('Phone number')).toHaveValue(phone);
     }
+
+    return [username, email, phone];
   }
 
   // async navigateToPasskeySignupScreen() {
@@ -178,19 +182,30 @@ export class UISignupFlow {
     // await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 
-  async checkLandedOnScreen(screenName: ScreenNames) {
+  async checkLandedOnScreen(screenName: ScreenNames, email?: string, phone?: string) {
     switch (screenName) {
       case ScreenNames.InitSignup:
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Create your account');
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Create your account');
         break;
       case ScreenNames.PasskeyAppend:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText("Let's get you set up with");
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText("Let's get you set up with");
         break;
       case ScreenNames.PasskeyAppended:
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.EmailOtp:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Enter one-time passcode to');
+        if (!email) {
+          throw new Error('Email is required');
+        }
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Enter one-time passcode to');
+        await expect(this.page.getByText(email)).toHaveText(email);
+        break;
+      case ScreenNames.PhoneOtp:
+        if (!phone) {
+          throw new Error('Phone is required');
+        }
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Enter one-time passcode to');
+        await expect(this.page.getByText(phone)).toHaveText(phone);
         break;
       case ScreenNames.End:
         await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);

@@ -3,7 +3,7 @@ import type { GeneralBlockVerifyIdentifier } from '@corbado/web-core/dist/api/v2
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
-import type { FlowHandler } from '../flowHandler';
+import type { ProcessHandler } from '../processHandler';
 import type { BlockDataPhoneVerify } from '../types';
 import { Block } from './Block';
 
@@ -14,7 +14,7 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
 
   constructor(
     app: CorbadoApp,
-    flowHandler: FlowHandler,
+    flowHandler: ProcessHandler,
     translator: ErrorTranslator,
     data: GeneralBlockVerifyIdentifier,
   ) {

@@ -3,7 +3,7 @@ import type { GeneralBlockSignupInit, LoginIdentifier } from '@corbado/web-core/
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
-import type { FlowHandler } from '../flowHandler';
+import type { ProcessHandler } from '../processHandler';
 import type { BlockDataSignupInit, LoginIdentifiers, SignUpField } from '../types';
 import { Block } from './Block';
 
@@ -14,7 +14,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
 
   constructor(
     app: CorbadoApp,
-    flowHandler: FlowHandler,
+    flowHandler: ProcessHandler,
     errorTranslator: ErrorTranslator,
     data: GeneralBlockSignupInit,
   ) {

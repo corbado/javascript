@@ -21,7 +21,7 @@ const packageVersion = '0.0.0';
  * authentication tokens and default settings such as timeout and headers.
  * ApiService should completely abstract away the API layer from the rest of the application.
  */
-export class AuthProcessService {
+export class ProcessService {
   #authApi: AuthApi = new AuthApi();
   #webAuthnService: WebAuthnService;
 

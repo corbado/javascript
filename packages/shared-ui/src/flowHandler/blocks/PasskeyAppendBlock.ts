@@ -3,7 +3,7 @@ import { BlockType, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
-import type { FlowHandler } from '../flowHandler';
+import type { ProcessHandler } from '../processHandler';
 import type { BlockDataPasskeyAppend } from '../types';
 import { Block } from './Block';
 
@@ -14,7 +14,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   constructor(
     app: CorbadoApp,
-    flowHandler: FlowHandler,
+    flowHandler: ProcessHandler,
     _: ErrorTranslator,
     data: GeneralBlockPasskeyAppend,
     alternatives: Array<BlockBody>,

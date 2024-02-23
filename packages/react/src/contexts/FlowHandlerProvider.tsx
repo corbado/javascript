@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { FlowType, ScreenWithBlock } from '@corbado/shared-ui';
-import { FlowHandler } from '@corbado/shared-ui';
+import { ProcessHandler } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -21,7 +21,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, on
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    const flowHandler = new FlowHandler(i18n, corbadoApp, onLoggedIn);
+    const flowHandler = new ProcessHandler(i18n, corbadoApp, onLoggedIn);
 
     onFlowChangeCbId.current = flowHandler.onScreenChange(value => {
       setCurrentScreen(value);

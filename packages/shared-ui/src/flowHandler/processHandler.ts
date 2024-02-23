@@ -11,11 +11,11 @@ import { ErrorTranslator } from './errorTranslator';
 import type { ScreenWithBlock } from './types';
 
 /**
- * FlowHandler is a class that manages the navigation flow of the application.
+ * ProcessHandler is a class that manages the navigation flow of the application.
  * It keeps track of the current flow, the current screen, and the screen history.
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
-export class FlowHandler {
+export class ProcessHandler {
   #currentScreen!: ScreenNames;
   #currentBlock: Block<unknown> | null = null;
 
@@ -26,7 +26,7 @@ export class FlowHandler {
   #onScreenChangeCallbacks: Array<(v: ScreenWithBlock) => void> = [];
 
   /**
-   * The constructor initializes the FlowHandler with a flow name, a project configuration, and a flow handler configuration.
+   * The constructor initializes the ProcessHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
   constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, onProcessCompleted: () => void) {
@@ -41,7 +41,7 @@ export class FlowHandler {
   }
 
   /**
-   * Initializes the FlowHandler.
+   * Initializes the ProcessHandler.
    * Call this function after registering all callbacks.
    */
   async init() {

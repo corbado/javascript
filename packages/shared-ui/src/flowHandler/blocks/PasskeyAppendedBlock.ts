@@ -1,7 +1,7 @@
 import type { CorbadoApp } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
-import type { FlowHandler } from '../flowHandler';
+import type { ProcessHandler } from '../processHandler';
 import type { BlockDataPasskeyAppended } from '../types';
 import { Block } from './Block';
 
@@ -10,7 +10,7 @@ export class PasskeyAppendedBlock extends Block<BlockDataPasskeyAppended> {
   readonly type = BlockTypes.PasskeyAppended;
   readonly initialScreen = ScreenNames.PasskeySuccess;
 
-  constructor(app: CorbadoApp, flowHandler: FlowHandler) {
+  constructor(app: CorbadoApp, flowHandler: ProcessHandler) {
     super(app, flowHandler);
   }
 

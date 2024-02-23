@@ -30,19 +30,6 @@ export enum ScreenNames {
   PasskeyCreate = 'passkey-create',
 }
 
-// Enum representing different events that can occur during the flow handling process
-export enum FlowHandlerEvents {
-  ShowBenefits = 'show-benefits',
-  CancelOTP = 'cancel-otp',
-  CancelEmailLink = 'cancel-email-link',
-  VerifyLink = 'verify-link',
-  CancelPasskey = 'cancel-passkey',
-  ChangeFlow = 'change-flow',
-  PrimaryButton = 'primary-button',
-  SecondaryButton = 'secondary-button',
-  InitConditionalUI = 'init-conditional-ui',
-}
-
 // Map of passkey append intervals to their respective number of days
 export const passkeyAppendIntervalMap: { [key: string]: number } = {
   '0d': 0,

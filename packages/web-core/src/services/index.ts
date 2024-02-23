@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import type { GlobalError } from '../utils';
 import { defaultTimeout, NonRecoverableError } from '../utils';
-import { AuthProcessService } from './AuthProcessService';
+import { ProcessService } from './ProcessService';
 import { SessionService } from './SessionService';
 
 export type { SessionService } from './SessionService';
@@ -14,7 +14,7 @@ export type { SessionService } from './SessionService';
  * It also handles the initialization and destruction of the application.
  */
 export class CorbadoApp {
-  #authProcessService: AuthProcessService;
+  #authProcessService: ProcessService;
   #sessionService: SessionService;
   #projectId: string;
   #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
@@ -32,7 +32,7 @@ export class CorbadoApp {
       isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;
-    this.#authProcessService = new AuthProcessService(
+    this.#authProcessService = new ProcessService(
       this.#globalErrors,
       this.#projectId,
       apiTimeout,

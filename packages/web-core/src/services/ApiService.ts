@@ -148,6 +148,7 @@ export class ApiService {
 
     const instanceWithoutAuth = axios.create({
       timeout: this.#timeout,
+      withCredentials: true,
       headers,
     });
 

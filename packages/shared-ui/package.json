@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-ui",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "This package contains shared files for all the complete packages of Corbado for VanillaJS, React, Angular, Vue, etc.",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -50,7 +50,7 @@
     "**/*.json"
   ],
   "dependencies": {
-    "@corbado/web-core": "^1.1.4",
+    "@corbado/web-core": "^1.1.5",
     "ua-parser-js": "^1.0.37"
   },
   "gitHead": "bdc9da96c3a34574545c5d9b522464ca9d3eca57"

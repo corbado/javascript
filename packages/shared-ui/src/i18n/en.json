@@ -1,5 +1,5 @@
 {
-  "authentication": {
+  "signup": {
     "signup-init": {
       "signup-init": {
         "header": "Create your account",
@@ -93,70 +93,73 @@
       "button_showPasskeyBenefits": "Passkeys",
       "button_start": "Activate",
       "button_skip": "Maybe later"
-    },
-    "login": {
-      "start": {
+    }
+  },
+  "login": {
+    "login-init": {
+      "login-init": {
         "header": "Welcome back!",
         "subheader": "Don't have an account yet? ",
         "button_signup": "Create account",
         "button_submit": "Continue",
-        "textField_email": "Email address"
-      },
-      "emailOtp": {
-        "header": "Enter one-time passcode to log in",
-        "body_text1": "We just sent a one-time passcode to ",
-        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-        "button_verify": "Continue",
-        "button_sendOtpAgain": "Send one-time passcode again",
-        "button_back": "Cancel"
-      },
-      "emailLinkSent": {
-        "header": "Check your inbox to login",
-        "body_text1": "We just sent you a magic link to ",
-        "body_text2": ". Click on the link in the email to login to your account.",
-        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
-        "button_sendLinkAgain": "Send email again",
-        "button_back": "Cancel"
-      },
-      "emailLinkVerification": {
-        "header": "Verifying your email address",
-        "button_back": "Cancel"
-      },
-      "passkeyError": {
-        "header": "Log in with Passkeys",
-        "body": {
-          "emailOtp": "Log in with passkeys not possible. Try again or log in with email one-time passcode.",
-          "emailLink": "Log in with passkeys not possible. Try again or log in with email magic link."
-        },
-        "button_switchToAlternate": {
-          "emailOtp": "Send email one-time passcode",
-          "emailLink": "Send email magic link"
-        },
-        "button_retry": "Try again",
-        "button_back": "Back",
-        "button_cancel": "Cancel"
-      },
-      "passkeyAppend": {
-        "header": "Log in even faster with ",
-        "button_showPasskeyBenefits": "Passkeys",
-        "button_start": "Activate",
-        "button_skip": "Maybe later"
-      },
-      "passkeyBenefits": {
-        "header": "Passkeys",
-        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-        "button_start": "Create passkey",
-        "button_skip": "Maybe later"
+        "textField_email": "Email address or username",
+        "textField_phone": "Phone number"
       }
     },
-    "unexpectedError": {
-      "header": "Something went wrong",
-      "subheader": "We’re sorry that our service is currently not available.",
-      "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-      "body_noCustomerSupport": "Please try again in a few moments.",
-      "button": "Refresh Page"
+    "emailOtp": {
+      "header": "Enter one-time passcode to log in",
+      "body_text1": "We just sent a one-time passcode to ",
+      "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
+      "button_verify": "Continue",
+      "button_sendOtpAgain": "Send one-time passcode again",
+      "button_back": "Cancel"
+    },
+    "emailLinkSent": {
+      "header": "Check your inbox to login",
+      "body_text1": "We just sent you a magic link to ",
+      "body_text2": ". Click on the link in the email to login to your account.",
+      "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
+      "button_sendLinkAgain": "Send email again",
+      "button_back": "Cancel"
+    },
+    "emailLinkVerification": {
+      "header": "Verifying your email address",
+      "button_back": "Cancel"
+    },
+    "passkeyError": {
+      "header": "Log in with Passkeys",
+      "body": {
+        "emailOtp": "Log in with passkeys not possible. Try again or log in with email one-time passcode.",
+        "emailLink": "Log in with passkeys not possible. Try again or log in with email magic link."
+      },
+      "button_switchToAlternate": {
+        "emailOtp": "Send email one-time passcode",
+        "emailLink": "Send email magic link"
+      },
+      "button_retry": "Try again",
+      "button_back": "Back",
+      "button_cancel": "Cancel"
+    },
+    "passkeyAppend": {
+      "header": "Log in even faster with ",
+      "button_showPasskeyBenefits": "Passkeys",
+      "button_start": "Activate",
+      "button_skip": "Maybe later"
+    },
+    "passkeyBenefits": {
+      "header": "Passkeys",
+      "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
+      "body_loginMethods": "Face ID, Touch ID or screen lock code.",
+      "button_start": "Create passkey",
+      "button_skip": "Maybe later"
     }
+  },
+  "unexpectedError": {
+    "header": "Something went wrong",
+    "subheader": "We’re sorry that our service is currently not available.",
+    "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
+    "body_noCustomerSupport": "Please try again in a few moments.",
+    "button": "Refresh Page"
   },
   "errors": {
     "missing_identifier_type": {

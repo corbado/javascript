@@ -26,6 +26,20 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const AuthType = {
+    Signup: 'signup',
+    Login: 'login'
+} as const;
+
+export type AuthType = typeof AuthType[keyof typeof AuthType];
+
+
+/**
+ * 
+ * @export
  * @interface AuthenticationResponse
  */
 export interface AuthenticationResponse {
@@ -54,6 +68,12 @@ export interface BlockBody {
      * @memberof BlockBody
      */
     'block': BlockType;
+    /**
+     * 
+     * @type {AuthType}
+     * @memberof BlockBody
+     */
+    'authType': AuthType;
     /**
      * 
      * @type {BlockBodyData}
@@ -171,7 +191,9 @@ export const BlockType = {
     Completed: 'completed',
     SocialVerify: 'social-verify',
     UsernameCollect: 'username-collect',
-    PhoneCollect: 'phone-collect'
+    PhoneCollect: 'phone-collect',
+    LoginInit: 'login-init',
+    PasskeyVerify: 'passkey-verify'
 } as const;
 
 export type BlockType = typeof BlockType[keyof typeof BlockType];
@@ -222,6 +244,19 @@ export interface EmailVerifyStartReq {
 /**
  * 
  * @export
+ * @interface GeneralBlockLoginInit
+ */
+export interface GeneralBlockLoginInit {
+    /**
+     * 
+     * @type {Array<LoginIdentifierWithError>}
+     * @memberof GeneralBlockLoginInit
+     */
+    'identifiers': Array<LoginIdentifierWithError>;
+}
+/**
+ * 
+ * @export
  * @interface GeneralBlockPasskeyAppend
  */
 export interface GeneralBlockPasskeyAppend {
@@ -237,6 +272,19 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'userHandle': string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneralBlockPasskeyVerify
+ */
+export interface GeneralBlockPasskeyVerify {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockPasskeyVerify
+     */
+    'challenge': string;
 }
 /**
  * 
@@ -418,6 +466,25 @@ export interface LoginIdentifierWithError {
 }
 
 
+/**
+ * tbd.
+ * @export
+ * @interface LoginInitReq
+ */
+export interface LoginInitReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginInitReq
+     */
+    'identifierValue': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LoginInitReq
+     */
+    'isPhone': boolean;
+}
 /**
  * 
  * @export
@@ -602,6 +669,38 @@ export interface PasskeyAppendStartReq {
     'clientInfo': object;
 }
 /**
+ * tbd.
+ * @export
+ * @interface PasskeyLoginFinishReq
+ */
+export interface PasskeyLoginFinishReq {
+    /**
+     * 
+     * @type {object}
+     * @memberof PasskeyLoginFinishReq
+     */
+    'clientInfo': object;
+    /**
+     * 
+     * @type {string}
+     * @memberof PasskeyLoginFinishReq
+     */
+    'signedChallenge': string;
+}
+/**
+ * tbd.
+ * @export
+ * @interface PasskeyLoginStartReq
+ */
+export interface PasskeyLoginStartReq {
+    /**
+     * 
+     * @type {object}
+     * @memberof PasskeyLoginStartReq
+     */
+    'clientInfo': object;
+}
+/**
  * 
  * @export
  * @interface PhoneCollectReq
@@ -728,39 +827,6 @@ export interface SignupInitReq {
      */
     'identifiers': Array<LoginIdentifier>;
 }
-/**
- * 
- * @export
- * @interface SignupInitRsp
- */
-export interface SignupInitRsp {
-    /**
-     * 
-     * @type {BlockType}
-     * @memberof SignupInitRsp
-     */
-    'block': BlockType;
-    /**
-     * 
-     * @type {BlockBodyData}
-     * @memberof SignupInitRsp
-     */
-    'data': BlockBodyData;
-    /**
-     * 
-     * @type {Array<BlockBody>}
-     * @memberof SignupInitRsp
-     */
-    'alternatives'?: Array<BlockBody>;
-    /**
-     * 
-     * @type {RequestError}
-     * @memberof SignupInitRsp
-     */
-    'error'?: RequestError;
-}
-
-
 /**
  * 
  * @export
@@ -1001,6 +1067,48 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {LoginInitReq} loginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loginInit: async (loginInitReq: LoginInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginInitReq' is not null or undefined
+            assertParamExists('loginInit', 'loginInitReq', loginInitReq)
+            const localVarPath = `/v2/auth/login/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(loginInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1077,6 +1185,90 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyLoginFinish: async (passkeyLoginFinishReq: PasskeyLoginFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passkeyLoginFinishReq' is not null or undefined
+            assertParamExists('passkeyLoginFinish', 'passkeyLoginFinishReq', passkeyLoginFinishReq)
+            const localVarPath = `/v2/auth/passkey/login/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passkeyLoginFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyLoginStart: async (passkeyLoginStartReq: PasskeyLoginStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passkeyLoginStartReq' is not null or undefined
+            assertParamExists('passkeyLoginStart', 'passkeyLoginStartReq', passkeyLoginStartReq)
+            const localVarPath = `/v2/auth/passkey/login/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passkeyLoginStartReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1526,6 +1718,16 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {LoginInitReq} loginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async loginInit(loginInitReq: LoginInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginInit(loginInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1542,6 +1744,26 @@ export const AuthApiFp = function(configuration?: Configuration) {
          */
         async passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyAppendStart(passkeyAppendStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async passkeyLoginFinish(passkeyLoginFinishReq: PasskeyLoginFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyLoginFinish(passkeyLoginFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyLoginStart(passkeyLoginStartReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1608,7 +1830,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async signupInit(signupInitReq: SignupInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignupInitRsp>> {
+        async signupInit(signupInitReq: SignupInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BlockBody>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.signupInit(signupInitReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1679,6 +1901,15 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
+         * @param {LoginInitReq} loginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loginInit(loginInitReq: LoginInitReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.loginInit(loginInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1694,6 +1925,24 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<BlockBody> {
             return localVarFp.passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyLoginFinish(passkeyLoginFinishReq: PasskeyLoginFinishReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.passkeyLoginFinish(passkeyLoginFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: any): AxiosPromise<BlockBody> {
+            return localVarFp.passkeyLoginStart(passkeyLoginStartReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1753,7 +2002,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        signupInit(signupInitReq: SignupInitReq, options?: any): AxiosPromise<SignupInitRsp> {
+        signupInit(signupInitReq: SignupInitReq, options?: any): AxiosPromise<BlockBody> {
             return localVarFp.signupInit(signupInitReq, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1826,6 +2075,17 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
+     * @param {LoginInitReq} loginInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public loginInit(loginInitReq: LoginInitReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).loginInit(loginInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
      * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1844,6 +2104,28 @@ export class AuthApi extends BaseAPI {
      */
     public passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public passkeyLoginFinish(passkeyLoginFinishReq: PasskeyLoginFinishReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyLoginFinish(passkeyLoginFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyLoginStart(passkeyLoginStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

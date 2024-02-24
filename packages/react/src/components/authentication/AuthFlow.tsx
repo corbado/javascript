@@ -1,6 +1,7 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type {
   EmailVerifyBlock,
+  LoginInitBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
   PhoneVerifyBlock,
@@ -14,12 +15,13 @@ import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
+import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
 import { PasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
-import { InitSignup } from '../../screens/auth-blocks/signup-init/InitSignup';
+import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import Loading from '../ui/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -28,7 +30,8 @@ export type ScreenMap = {
 };
 
 const componentMap: ScreenMap = {
-  [ScreenNames.Start]: (block: SignupInitBlock) => <InitSignup block={block} />,
+  [ScreenNames.SignupInit]: (block: SignupInitBlock) => <SignupInit block={block} />,
+  [ScreenNames.LoginInit]: (block: LoginInitBlock) => <LoginInit block={block} />,
   [ScreenNames.EmailOtpVerification]: (block: EmailVerifyBlock) => <EmailOtp block={block} />,
   [ScreenNames.EmailLinkSent]: (block: EmailVerifyBlock) => <EmailLinkSent block={block} />,
   [ScreenNames.PhoneOtp]: (block: PhoneVerifyBlock) => <PhoneOtp block={block} />,

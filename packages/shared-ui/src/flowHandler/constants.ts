@@ -1,5 +1,5 @@
 // Enum representing the type of user flow, either sign up or login
-export enum FlowType {
+export enum AuthType {
   SignUp,
   Login,
 }
@@ -17,7 +17,8 @@ export enum LoginFlowNames {
 
 // Enum representing common screens that are used in multiple flows
 export enum ScreenNames {
-  Start = 'start',
+  SignupInit = 'signup-init',
+  LoginInit = 'login-init',
   End = 'end',
   EmailOtpVerification = 'email-otp-verification',
   EmailLinkSent = 'email-link-sent',
@@ -44,6 +45,7 @@ export const passkeyAppendIntervalMap: { [key: string]: number } = {
 export const passkeyAppendAskTSKey = 'corbado_passkeyAppendAskTS';
 
 export enum BlockTypes {
+  LoginInit = 'login-init',
   SignupInit = 'signup-init',
   EmailVerify = 'email-verify',
   PhoneVerify = 'phone-verify',

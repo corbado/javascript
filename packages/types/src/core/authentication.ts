@@ -6,10 +6,6 @@ import type { Paging } from './common';
  */
 export type AuthMethod = 'email' | 'phone_number' | 'webauthn' | 'password';
 
-export type UserIdentifier = 'email' | 'phone_number';
-
-export type AuthProcessType = 'login' | 'signup';
-
 /**
  * Interface representing the authentication methods a user has selected and can possibly use.
  * @interface UserAuthMethods

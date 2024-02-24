@@ -1,7 +1,11 @@
 export {
   BlockType,
-  BlockBody,
+  AuthType,
   VerificationMethod,
+  LoginIdentifierType,
+  LoginIdentifierWithError,
+  GeneralBlockLoginInit,
+  BlockBody,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
 } from './v2';

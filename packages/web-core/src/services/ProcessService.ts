@@ -172,6 +172,15 @@ export class ProcessService {
     return r.data;
   }
 
+  async initLogin(identifierValue: string, isPhone: boolean): Promise<BlockBody> {
+    const r = await this.#authApi.loginInit({
+      isPhone: isPhone,
+      identifierValue: identifierValue,
+    });
+
+    return r.data;
+  }
+
   async skipBlock(): Promise<BlockBody> {
     const r = await this.#authApi.blockSkip();
 

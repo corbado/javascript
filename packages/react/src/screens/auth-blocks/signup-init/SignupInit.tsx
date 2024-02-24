@@ -1,24 +1,24 @@
-import type { LoginIdentifiers, SignUpField, SignupInitBlock } from '@corbado/shared-ui';
+import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
 import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, Header, PrimaryButton, SubHeader } from '../../../components';
 
-export const InitSignup = ({ block }: { block: SignupInitBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.signup-init.signup-init` });
+export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
+  const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [username, setUsername] = useState<SignUpField | null>(null);
+  const [username, setUsername] = useState<TextFieldWithError | null>(null);
   const usernameRef = useRef<HTMLInputElement>();
 
-  const [email, setEmail] = useState<SignUpField | null>(null);
+  const [email, setEmail] = useState<TextFieldWithError | null>(null);
   const emailRef = useRef<HTMLInputElement>();
 
-  const [phone, setPhone] = useState<SignUpField | null>(null);
+  const [phone, setPhone] = useState<TextFieldWithError | null>(null);
   const phoneRef = useRef<HTMLInputElement>();
 
-  const [fullName, setFullName] = useState<SignUpField | null>(null);
+  const [fullName, setFullName] = useState<TextFieldWithError | null>(null);
   const fullNameRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const InitSignup = ({ block }: { block: SignupInitBlock }) => {
         {subHeaderText}
         <span
           className='cb-link-secondary'
-          onClick={block.switchToLogin}
+          onClick={() => block.switchToLogin()}
         >
           {flowChangeButtonText}
         </span>

@@ -2,11 +2,20 @@ import type { Block } from './blocks/Block';
 import type { ScreenNames } from './constants';
 
 export type BlockDataSignupInit = {
-  fullName: SignUpField | null;
-  email: SignUpField | null;
-  phone: SignUpField | null;
-  userName: SignUpField | null;
+  fullName: TextFieldWithError | null;
+  email: TextFieldWithError | null;
+  phone: TextFieldWithError | null;
+  userName: TextFieldWithError | null;
   socialLogins: SocialLogin[];
+};
+
+export type BlockDataLoginInit = {
+  loginIdentifier: string;
+  loginIdentifierError: string;
+  isPhoneFocused: boolean;
+
+  emailOrUsernameEnabled: boolean;
+  phoneEnabled: boolean;
 };
 
 export type BlockDataPasskeyAppend = {
@@ -40,7 +49,7 @@ export type SocialLogin = {
   url: string;
 };
 
-export type SignUpField = {
+export type TextFieldWithError = {
   value: string;
   translatedError?: string;
 };

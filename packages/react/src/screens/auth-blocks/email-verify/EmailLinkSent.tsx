@@ -5,7 +5,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Body, EmailProviderButtons, Header, PrimaryButton } from '../../../components';
 
 export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.email-verify.email-link-sent` });
+  const { t } = useTranslation('translation', {
+    keyPrefix: `${block.verificationMethod}.email-verify.email-link-sent`,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(30);
   const resendTimer = useRef<NodeJS.Timeout>();

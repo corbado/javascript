@@ -1,4 +1,4 @@
-import type { CorbadoApp } from '@corbado/web-core';
+import type { AuthType, BlockBody, CorbadoApp } from '@corbado/web-core';
 import type { GeneralBlockVerifyIdentifier } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -11,15 +11,14 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
   readonly data: BlockDataPhoneVerify;
   readonly type = BlockTypes.PhoneVerify;
   readonly initialScreen = ScreenNames.PhoneOtp;
+  readonly authType: AuthType;
 
-  constructor(
-    app: CorbadoApp,
-    flowHandler: ProcessHandler,
-    translator: ErrorTranslator,
-    data: GeneralBlockVerifyIdentifier,
-  ) {
+  constructor(app: CorbadoApp, flowHandler: ProcessHandler, translator: ErrorTranslator, blockBody: BlockBody) {
     super(app, flowHandler);
 
+    const data = blockBody.data as GeneralBlockVerifyIdentifier;
+
+    this.authType = blockBody.authType;
     this.data = {
       phone: data.identifier,
       translatedError: translator.translate(data.error),
@@ -33,14 +32,14 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
 
   async validateCode(code: string) {
     const newBlock = await this.app.authProcessService.finishPhoneOtpVerification(code);
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }
 
   async resendCode() {
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }

@@ -1,5 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
-import type { FlowType, ScreenWithBlock } from '@corbado/shared-ui';
+import type { AuthType, ScreenWithBlock } from '@corbado/shared-ui';
 import { ProcessHandler } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
@@ -11,7 +11,7 @@ import FlowHandlerContext from './FlowHandlerContext';
 type Props = {
   onLoggedIn: () => void;
   onChangeFlow?: () => void;
-  initialFlowType?: FlowType;
+  initialFlowType?: AuthType;
 };
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, onLoggedIn }) => {

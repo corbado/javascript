@@ -3,6 +3,7 @@ import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import type { Block } from './blocks';
+import { LoginInitBlock } from './blocks';
 import { EmailVerifyBlock, PasskeyAppendBlock, PasskeyAppendedBlock, SignupInitBlock } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
 import { PhoneVerifyBlock } from './blocks/PhoneVerifyBlock';
@@ -46,7 +47,7 @@ export class ProcessHandler {
    */
   async init() {
     const initialBlock = await this.#corbadoApp.authProcessService.init();
-    this.handleBlockData(initialBlock);
+    this.handleBlockUpdateBackend(initialBlock);
   }
 
   dispose() {
@@ -68,10 +69,6 @@ export class ProcessHandler {
     );
   }
 
-  updateBlock(blockBody: BlockBody) {
-    this.handleBlockData(blockBody);
-  }
-
   onScreenChange(cb: (value: ScreenWithBlock) => void) {
     return this.#onScreenChangeCallbacks.push(cb) - 1;
   }
@@ -80,54 +77,53 @@ export class ProcessHandler {
     this.#onScreenChangeCallbacks.splice(cbId, 1);
   }
 
-  handleBlockData(blockBody: BlockBody) {
-    let newBlock: Block<unknown>;
-    switch (blockBody.block) {
-      case BlockType.PasskeyAppend:
-        newBlock = new PasskeyAppendBlock(
-          this.#corbadoApp,
-          this,
-          this.#errorTranslator,
-          blockBody.data,
-          blockBody.alternatives ?? [],
-        );
-        break;
-      case BlockType.SignupInit:
-        newBlock = new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
-        break;
-      case BlockType.PasskeyAppended:
-        newBlock = new PasskeyAppendedBlock(this.#corbadoApp, this);
-        break;
-      case BlockType.EmailVerify:
-        newBlock = new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
-        break;
-      case BlockType.PhoneVerify:
-        newBlock = new PhoneVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
-        break;
-      case BlockType.Completed:
-        // this block is handled differently because it marks the end of the process
-        newBlock = new CompletedBlock(this.#corbadoApp, this, blockBody.data);
-        return;
-      default:
-        throw new Error(`Invalid block type: ${blockBody.block}}`);
-    }
+  handleBlockUpdateBackend(blockBody: BlockBody) {
+    const newPrimaryBlock = this.#parseBlockData(blockBody);
+    const alternatives = blockBody.alternatives?.map(this.#parseBlockData) ?? [];
+    newPrimaryBlock.setAlternatives(alternatives);
 
-    const blockHasChanged = this.#currentBlock == null || newBlock.type !== this.#currentBlock.type;
-    console.log('newBlock', newBlock, blockBody);
-    console.log('currentBlock', this.#currentBlock, blockHasChanged);
+    this.#updatePrimaryBlock(newPrimaryBlock);
+  }
+
+  handleBlockUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
+    newPrimaryBlock.setAlternatives(newAlternatives);
+
+    this.#updatePrimaryBlock(newPrimaryBlock);
+  }
+
+  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
+    const blockHasChanged = this.#currentBlock == null || newPrimaryBlock.type !== this.#currentBlock.type;
     if (blockHasChanged) {
-      this.#currentScreen = newBlock.initialScreen;
+      this.#currentScreen = newPrimaryBlock.initialScreen;
     }
 
-    this.#currentBlock = newBlock;
-
-    console.log('screen', this.#currentScreen);
-
+    this.#currentBlock = newPrimaryBlock;
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({
         screen: this.#currentScreen,
         block: this.#currentBlock!,
       }),
     );
-  }
+  };
+
+  #parseBlockData = (blockBody: BlockBody) => {
+    switch (blockBody.block) {
+      case BlockType.PasskeyAppend:
+        return new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+      case BlockType.SignupInit:
+        return new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+      case BlockType.LoginInit:
+        return new LoginInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+      case BlockType.PasskeyAppended:
+        return new PasskeyAppendedBlock(this.#corbadoApp, this, blockBody);
+      case BlockType.EmailVerify:
+        return new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+      case BlockType.PhoneVerify:
+        return new PhoneVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+      case BlockType.Completed:
+        return new CompletedBlock(this.#corbadoApp, this, blockBody);
+      default:
+        throw new Error(`Invalid block type: ${blockBody.block}}`);
+    }
+  };
 }

@@ -1,16 +1,18 @@
 import type { CorbadoApp } from '@corbado/web-core';
+import { AuthType } from '@corbado/web-core';
 import type { GeneralBlockSignupInit, LoginIdentifier } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataSignupInit, LoginIdentifiers, SignUpField } from '../types';
+import type { BlockDataSignupInit, LoginIdentifiers, TextFieldWithError } from '../types';
 import { Block } from './Block';
 
 export class SignupInitBlock extends Block<BlockDataSignupInit> {
   readonly data: BlockDataSignupInit;
   readonly type = BlockTypes.SignupInit;
-  readonly initialScreen = ScreenNames.Start;
+  readonly authType = AuthType.Signup;
+  readonly initialScreen = ScreenNames.SignupInit;
 
   constructor(
     app: CorbadoApp,
@@ -20,10 +22,10 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
   ) {
     super(app, flowHandler);
 
-    let email: SignUpField | null = null;
-    let phone: SignUpField | null = null;
-    let userName: SignUpField | null = null;
-    let fullName: SignUpField | null = null;
+    let email: TextFieldWithError | null = null;
+    let phone: TextFieldWithError | null = null;
+    let userName: TextFieldWithError | null = null;
+    let fullName: TextFieldWithError | null = null;
 
     data.identifiers.forEach(item => {
       switch (item.type) {
@@ -78,6 +80,8 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
   }
 
   switchToLogin() {
-    this.updateScreen(ScreenNames.Start);
+    const newPrimary = this.alternatives[0];
+    const newAlternatives = [this];
+    this.updateBlockFrontend(newPrimary, newAlternatives);
   }
 }

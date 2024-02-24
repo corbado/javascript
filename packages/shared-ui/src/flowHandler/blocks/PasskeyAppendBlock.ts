@@ -1,4 +1,10 @@
-import type { BlockBody, CorbadoApp, GeneralBlockPasskeyAppend, GeneralBlockVerifyIdentifier } from '@corbado/web-core';
+import type {
+  AuthType,
+  BlockBody,
+  CorbadoApp,
+  GeneralBlockPasskeyAppend,
+  GeneralBlockVerifyIdentifier,
+} from '@corbado/web-core';
 import { BlockType, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -11,15 +17,12 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   readonly data: BlockDataPasskeyAppend;
   readonly type = BlockTypes.PasskeyAppend;
   readonly initialScreen = ScreenNames.PasskeyAppend;
+  readonly authType: AuthType;
 
-  constructor(
-    app: CorbadoApp,
-    flowHandler: ProcessHandler,
-    _: ErrorTranslator,
-    data: GeneralBlockPasskeyAppend,
-    alternatives: Array<BlockBody>,
-  ) {
+  constructor(app: CorbadoApp, flowHandler: ProcessHandler, _: ErrorTranslator, blockBody: BlockBody) {
     super(app, flowHandler);
+    const data = blockBody.data as GeneralBlockPasskeyAppend;
+    const alternatives = blockBody.alternatives ?? [];
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
@@ -43,6 +46,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     // if there is a completed alternative, the passkey-append block can be skipped and the user can log in immediately
     const canBeSkipped = alternatives.some(a => a.block === BlockType.Completed);
 
+    this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.userHandle,
@@ -61,35 +65,35 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
       return;
     }
 
-    this.flowHandler.updateBlock(res.val);
+    this.updateBlock(res.val);
 
     return;
   }
 
   async initFallbackEmailOtp(): Promise<void> {
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }
 
   async initFallbackSmsOtp(): Promise<void> {
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }
 
   async skipPasskeyAppend(): Promise<void> {
     const newBlock = await this.app.authProcessService.finishAuthProcess();
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }
 
   async initFallbackEmailLink(): Promise<void> {
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();
-    this.flowHandler.updateBlock(newBlock);
+    this.updateBlock(newBlock);
 
     return;
   }

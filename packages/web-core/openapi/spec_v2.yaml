@@ -205,6 +205,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/signupInitRsp'
 
+  /v2/auth/login/init:
+    post:
+      description: tbd
+      operationId: LoginInit
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginInitReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginInitRsp'
+
   /v2/auth/block/skip:
     post:
       description: tbd
@@ -258,6 +278,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/passkeyAppendFinishRsp'
+
+  /v2/auth/passkey/login/start:
+    post:
+      description: tbd
+      operationId: PasskeyLoginStart
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyLoginStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/passkeyLoginStartRsp'
+
+  /v2/auth/passkey/login/finish:
+    post:
+      description: tbd
+      operationId: PasskeyLoginFinish
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyLoginFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/passkeyLoginFinishRsp'
 
   /v2/auth/email/verify/start:
     post:
@@ -486,8 +546,23 @@ components:
             $ref: '#/components/schemas/loginIdentifier'
 
     signupInitRsp:
-      allOf:
-        - $ref: '#/components/schemas/blockBody'
+      $ref: '#/components/schemas/blockBody'
+
+    loginInitReq:
+      type: object
+      description: tbd.
+      required:
+        - identifierValue
+        - isPhone
+      properties:
+        identifierValue:
+          type: string
+        isPhone:
+          type: boolean
+
+
+    loginInitRsp:
+      $ref: '#/components/schemas/blockBody'
 
     passkeyAppendStartReq:
       type: object
@@ -522,6 +597,33 @@ components:
           type: string
 
     passkeyAppendFinishRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    passkeyLoginStartReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+      properties:
+        clientInfo:
+          type: object
+
+    passkeyLoginStartRsp:
+      $ref: '#/components/schemas/blockBody'
+
+    passkeyLoginFinishReq:
+      type: object
+      description: tbd.
+      required:
+        - clientInfo
+        - signedChallenge
+      properties:
+        clientInfo:
+          type: object
+        signedChallenge:
+          type: string
+
+    passkeyLoginFinishRsp:
       $ref: '#/components/schemas/blockBody'
 
     emailVerifyStartReq:
@@ -729,13 +831,17 @@ components:
       required:
         - block
         - data
+        - authType
       properties:
         block:
           $ref: '#/components/schemas/blockType'
+        authType:
+          $ref: '#/components/schemas/authType'
         data:
           type: object
           anyOf:
             - $ref: '#/components/schemas/generalBlockPasskeyAppend'
+            - $ref: '#/components/schemas/generalBlockPasskeyVerify'
             - $ref: '#/components/schemas/generalBlockVerifyIdentifier'
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
             - $ref: '#/components/schemas/generalBlockCompleted'
@@ -743,6 +849,7 @@ components:
             - $ref: '#/components/schemas/generalBlockSocialVerify'
             - $ref: '#/components/schemas/generalBlockUsernameCollect'
             - $ref: '#/components/schemas/generalPhoneCollect'
+            - $ref: '#/components/schemas/generalBlockLoginInit'
         alternatives:
           type: array
           items:
@@ -780,7 +887,11 @@ components:
 
     blockType:
       type: string
-      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect ]
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify ]
+
+    authType:
+      type: string
+      enum: [ signup, login ]
 
     verificationMethod:
       type: string
@@ -805,6 +916,15 @@ components:
             error:
               $ref: '#/components/schemas/requestError'
 
+    generalBlockLoginInit:
+      type: object
+      required:
+        - identifiers
+      properties:
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/loginIdentifierWithError'
 
     generalBlockSocialVerify:
       type: object
@@ -824,6 +944,14 @@ components:
         challenge:
           type: string
         userHandle:
+          type: string
+
+    generalBlockPasskeyVerify:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
           type: string
 
     generalBlockPasskeyAppended:

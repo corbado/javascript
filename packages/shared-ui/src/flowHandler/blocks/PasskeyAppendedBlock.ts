@@ -1,4 +1,4 @@
-import type { BlockBody, CorbadoApp } from '@corbado/web-core';
+import type { BlockBody, CorbadoApp, ProcessCommon } from '@corbado/web-core';
 import type { AuthType } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -12,15 +12,15 @@ export class PasskeyAppendedBlock extends Block<BlockDataPasskeyAppended> {
   readonly initialScreen = ScreenNames.PasskeySuccess;
   readonly authType: AuthType;
 
-  constructor(app: CorbadoApp, flowHandler: ProcessHandler, blockBody: BlockBody) {
-    super(app, flowHandler);
+  constructor(app: CorbadoApp, flowHandler: ProcessHandler, common: ProcessCommon, blockBody: BlockBody) {
+    super(app, flowHandler, common);
 
     this.authType = blockBody.authType;
   }
 
   async continue() {
     const newBlock = await this.app.authProcessService.skipBlock();
-    this.updateBlock(newBlock);
+    this.updateProcess(newBlock);
 
     return;
   }

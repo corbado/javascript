@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton } from '../../../components';
 
 export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.email-verify.email-otp` });
+  const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const otpRef = useRef<string>('');
 

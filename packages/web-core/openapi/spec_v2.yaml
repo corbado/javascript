@@ -169,7 +169,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/blockBody'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/process/complete:
     post:
@@ -183,7 +183,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/blockBody'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/signup/init:
     post:
@@ -203,7 +203,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/signupInitRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/login/init:
     post:
@@ -223,7 +223,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/loginInitRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/block/skip:
     post:
@@ -237,7 +237,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/blockBody'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/passkey/append/start:
     post:
@@ -257,7 +257,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/passkeyAppendStartRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/passkey/append/finish:
     post:
@@ -277,7 +277,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/passkeyAppendFinishRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/passkey/login/start:
     post:
@@ -297,7 +297,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/passkeyLoginStartRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/passkey/login/finish:
     post:
@@ -317,12 +317,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/passkeyLoginFinishRsp'
+                $ref: '#/components/schemas/processResponse'
 
-  /v2/auth/email/verify/start:
+  /v2/auth/identifier/verify/start:
     post:
       description: tbd
-      operationId: EmailVerifyStart
+      operationId: IdentifierVerifyStart
       tags:
         - Auth
       requestBody:
@@ -330,19 +330,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/emailVerifyStartReq'
+              $ref: '#/components/schemas/identifierVerifyStartReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emailVerifyStartRsp'
+                $ref: '#/components/schemas/processResponse'
 
-  /v2/auth/email/verify/finish:
+  /v2/auth/identifier/verify/finish:
     post:
       description: tbd
-      operationId: EmailVerifyFinish
+      operationId: IdentifierVerifyFinish
       tags:
         - Auth
       requestBody:
@@ -350,19 +350,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/emailVerifyFinishReq'
+              $ref: '#/components/schemas/identifierVerifyFinishReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/emailVerifyFinishRsp'
+                $ref: '#/components/schemas/processResponse'
 
-  /v2/auth/phone/verify/start:
+
+  /v2/auth/identifier/update:
     post:
       description: tbd
-      operationId: PhoneVerifyStart
+      operationId: EmailUpdate
       tags:
         - Auth
       requestBody:
@@ -370,34 +371,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/phoneVerifyStartReq'
+              $ref: '#/components/schemas/identifierUpdateReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/phoneVerifyStartRsp'
-
-  /v2/auth/phone/verify/finish:
-    post:
-      description: tbd
-      operationId: PhoneVerifyFinish
-      tags:
-        - Auth
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/phoneVerifyFinishReq'
-      responses:
-        '200':
-          description: tbd
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/phoneVerifyFinishRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/social/verify/start:
     post:
@@ -417,7 +398,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/socialVerifyStartRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/social/verify/finish:
     post:
@@ -431,7 +412,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/socialVerifyFinishRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/phone/collect:
     post:
@@ -451,7 +432,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/phoneCollectRsp'
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/username/collect:
     post:
@@ -471,7 +452,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/usernameCollectRsp'
+                $ref: '#/components/schemas/processResponse'
 
 components:
   ###################################################################
@@ -496,7 +477,10 @@ components:
       description: tbd.
       required:
         - identifiers
+        - appName
       properties:
+        appName:
+          type: string
         identifiers:
           type: array
           items:
@@ -523,14 +507,14 @@ components:
       required:
         - token
         - expiresAt
-        - initialBlock
+        - processResponse
       properties:
         token:
           type: string
         expiresAt:
           type: integer
-        initialBlock:
-          $ref: '#/components/schemas/blockBody'
+        processResponse:
+          $ref: '#/components/schemas/processResponse'
 
     signupInitReq:
       type: object
@@ -626,60 +610,34 @@ components:
     passkeyLoginFinishRsp:
       $ref: '#/components/schemas/blockBody'
 
-    emailVerifyStartReq:
+    identifierVerifyStartReq:
       type: object
       description: tbd.
       required:
+        - identifierType
         - verificationType
       properties:
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
         verificationType:
           $ref: '#/components/schemas/verificationMethod'
 
-    emailVerifyStartRsp:
-      $ref: '#/components/schemas/blockBody'
-
-    emailVerifyFinishReq:
+    identifierVerifyFinishReq:
       type: object
       required:
         - clientInfo
         - code
+        - identifierType
         - verificationType
       properties:
         clientInfo:
           type: object
         code:
           type: string
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
         verificationType:
           $ref: '#/components/schemas/verificationMethod'
-
-    emailVerifyFinishRsp:
-      $ref: '#/components/schemas/blockBody'
-
-    phoneVerifyStartReq:
-      type: object
-      description: tbd.
-      required:
-        - clientInfo
-      properties:
-        clientInfo:
-          type: object
-
-    phoneVerifyStartRsp:
-      $ref: '#/components/schemas/blockBody'
-
-    phoneVerifyFinishReq:
-      type: object
-      required:
-        - clientInfo
-        - code
-      properties:
-        clientInfo:
-          type: object
-        code:
-          type: string
-
-    phoneVerifyFinishRsp:
-      $ref: '#/components/schemas/blockBody'
 
     usernameCollectReq:
       type: object
@@ -723,6 +681,14 @@ components:
     socialVerifyFinishRsp:
       $ref: '#/components/schemas/blockBody'
 
+    identifierUpdateReq:
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          type: string
+
     verifyPasskeyRsp:
       type: object
       required:
@@ -756,7 +722,6 @@ components:
             $ref: '#/components/schemas/passKeyItem'
         paging:
           $ref: 'common.yml#/components/schemas/paging'
-
 
     mePasskeyDeleteRsp:
       type: object
@@ -825,6 +790,25 @@ components:
           type: boolean
         metadata:
           type: object
+
+    processResponse:
+      type: object
+      required:
+        - blockBody
+        - common
+      properties:
+        blockBody:
+          $ref: '#/components/schemas/blockBody'
+        common:
+          $ref: '#/components/schemas/processCommon'
+
+    processCommon:
+      type: object
+      required:
+        - appName
+      properties:
+        appName:
+          type: string
 
     blockBody:
       type: object

@@ -6,7 +6,7 @@ import { Body, Header, PrimaryButton } from '../../../components';
 
 export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.passkey-appended.passkey-appended`,
+    keyPrefix: `signup.passkey-appended.passkey-appended`,
   });
   const header = useMemo(() => t('header'), [t]);
   const secondaryHeader = useMemo(() => t('subheader'), [t]);

@@ -116,7 +116,7 @@ export class CorbadoError extends Error {
   }
 
   static fromUnknownException(e: unknown): CorbadoError {
-    log.debug('unknown exception', e);
+    log.error('unknown exception', e);
     return NonRecoverableError.unknown();
   }
 

@@ -4,10 +4,11 @@ import type {
   LoginInitBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
+  PasskeyVerifyBlock,
   PhoneVerifyBlock,
   SignupInitBlock,
 } from '@corbado/shared-ui';
-import { ScreenNames } from '@corbado/shared-ui';
+import { BlockTypes, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 
@@ -17,9 +18,12 @@ import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkS
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
-import { PasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
-import { PasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
+import { PasskeyBenefits as PasskeyAppendPasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
+import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
+import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
+import { PasskeyBenefits as PasskeyVerifyPasskeyBenefits } from '../../screens/auth-blocks/passkey-verify/PasskeyBenefits';
+import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import Loading from '../ui/Loading';
@@ -27,19 +31,6 @@ import { ErrorBoundary } from './ErrorBoundary';
 
 export type ScreenMap = {
   [K in ScreenNames]?: (block: any) => React.ReactNode;
-};
-
-const componentMap: ScreenMap = {
-  [ScreenNames.SignupInit]: (block: SignupInitBlock) => <SignupInit block={block} />,
-  [ScreenNames.LoginInit]: (block: LoginInitBlock) => <LoginInit block={block} />,
-  [ScreenNames.EmailOtpVerification]: (block: EmailVerifyBlock) => <EmailOtp block={block} />,
-  [ScreenNames.EmailLinkSent]: (block: EmailVerifyBlock) => <EmailLinkSent block={block} />,
-  [ScreenNames.PhoneOtp]: (block: PhoneVerifyBlock) => <PhoneOtp block={block} />,
-  [ScreenNames.EmailLinkVerification]: (block: EmailVerifyBlock) => <EmailOtp block={block} />,
-  [ScreenNames.PasskeyAppend]: (block: PasskeyAppendBlock) => <PasskeyAppend block={block} />,
-  [ScreenNames.PasskeyBenefits]: (block: PasskeyAppendBlock) => <PasskeyBenefits block={block} />,
-  [ScreenNames.PasskeySuccess]: (block: PasskeyAppendedBlock) => <PasskeyAppended block={block} />,
-  [ScreenNames.PasskeyError]: (block: PasskeyAppendBlock) => <PasskeyError block={block} />,
 };
 
 export const AuthFlow: FC = () => {
@@ -52,14 +43,52 @@ export const AuthFlow: FC = () => {
       return null;
     }
 
-    const componentBuilder = componentMap[currentScreen.screen];
-    if (!componentBuilder) {
-      return null;
+    switch (currentScreen.block.type) {
+      case BlockTypes.LoginInit:
+        return <LoginInit block={currentScreen.block as LoginInitBlock} />;
+      case BlockTypes.SignupInit:
+        return <SignupInit block={currentScreen.block as SignupInitBlock} />;
+      case BlockTypes.EmailVerify:
+        switch (currentScreen.screen) {
+          case ScreenNames.EmailLinkSent:
+            return <EmailLinkSent block={currentScreen.block as EmailVerifyBlock} />;
+          case ScreenNames.EmailOtpVerification:
+            return <EmailOtp block={currentScreen.block as EmailVerifyBlock} />;
+          case ScreenNames.EmailLinkVerification:
+            return <EmailOtp block={currentScreen.block as EmailVerifyBlock} />;
+          default:
+            throw new Error(`Invalid screen: ${currentScreen.screen}`);
+        }
+      case BlockTypes.PhoneVerify:
+        return <PhoneOtp block={currentScreen.block as PhoneVerifyBlock} />;
+      case BlockTypes.PasskeyAppend:
+        switch (currentScreen.screen) {
+          case ScreenNames.PasskeyAppend:
+            return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.PasskeyBenefits:
+            return <PasskeyAppendPasskeyBenefits block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.PasskeyError:
+            return <PasskeyAppendPasskeyError block={currentScreen.block as PasskeyAppendBlock} />;
+          default:
+            throw new Error(`Invalid screen: ${currentScreen.screen}`);
+        }
+      case BlockTypes.PasskeyVerify:
+        switch (currentScreen.screen) {
+          case ScreenNames.PasskeyBackground:
+            return <PasskeyBackground block={currentScreen.block as PasskeyVerifyBlock} />;
+          case ScreenNames.PasskeyBenefits:
+            return <PasskeyVerifyPasskeyBenefits block={currentScreen.block as PasskeyVerifyBlock} />;
+          case ScreenNames.PasskeyError:
+            return <PasskeyVerifyPasskeyError block={currentScreen.block as PasskeyVerifyBlock} />;
+          default:
+            throw new Error(`Invalid screen: ${currentScreen.screen}`);
+        }
+      case BlockTypes.PasskeyAppended:
+        return <PasskeyAppended block={currentScreen.block as PasskeyAppendedBlock} />;
+      case BlockTypes.Completed:
+        return null;
     }
-
-    console.log(`building ${currentScreen.screen} component`);
-    return componentBuilder(currentScreen.block);
-  }, [componentMap, currentScreen]);
+  }, [currentScreen]);
 
   // Render the component if it exists, otherwise a fallback or null
   return (

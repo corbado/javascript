@@ -5,7 +5,7 @@ import type { Subject } from 'rxjs';
 import { Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { BlockBody, LoginIdentifier, ProcessInitRsp } from '../api/v2';
+import type { LoginIdentifier, ProcessInitRsp, ProcessResponse } from '../api/v2';
 import { AuthApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import type { GetProcessError } from '../utils';
@@ -60,7 +60,7 @@ export class ProcessService {
     this.#setApisV2('');
   }
 
-  async init(isDebug = false): Promise<BlockBody> {
+  async init(isDebug = false): Promise<ProcessResponse> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
@@ -129,7 +129,7 @@ export class ProcessService {
     const newProcess = new AuthProcess(processInitRsp.token, processInitRsp.expiresAt);
     newProcess.persistToStorage();
 
-    return processInitRsp.initialBlock;
+    return processInitRsp.processResponse;
   }
 
   #setApisV2(processId: string): void {
@@ -150,7 +150,7 @@ export class ProcessService {
     return r.data;
   }
 
-  async #getAuthProcessState(): Promise<Result<BlockBody, GetProcessError>> {
+  async #getAuthProcessState(): Promise<Result<ProcessResponse, GetProcessError>> {
     return Result.wrapAsync(async () => {
       const r = await this.#authApi.processGet();
 
@@ -158,13 +158,13 @@ export class ProcessService {
     });
   }
 
-  async finishAuthProcess(): Promise<BlockBody> {
+  async finishAuthProcess(): Promise<ProcessResponse> {
     const r = await this.#authApi.processComplete();
 
     return r.data;
   }
 
-  async initSignup(identifiers: LoginIdentifier[]): Promise<BlockBody> {
+  async initSignup(identifiers: LoginIdentifier[]): Promise<ProcessResponse> {
     const r = await this.#authApi.signupInit({
       identifiers: identifiers,
     });
@@ -172,7 +172,7 @@ export class ProcessService {
     return r.data;
   }
 
-  async initLogin(identifierValue: string, isPhone: boolean): Promise<BlockBody> {
+  async initLogin(identifierValue: string, isPhone: boolean): Promise<ProcessResponse> {
     const r = await this.#authApi.loginInit({
       isPhone: isPhone,
       identifierValue: identifierValue,
@@ -181,13 +181,13 @@ export class ProcessService {
     return r.data;
   }
 
-  async skipBlock(): Promise<BlockBody> {
+  async skipBlock(): Promise<ProcessResponse> {
     const r = await this.#authApi.blockSkip();
 
     return r.data;
   }
 
-  async startPasskeyAppend(): Promise<BlockBody> {
+  async startPasskeyAppend(): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
     });
@@ -195,7 +195,7 @@ export class ProcessService {
     return r.data;
   }
 
-  async finishPasskeyAppend(signedChallenge: string): Promise<BlockBody> {
+  async finishPasskeyAppend(signedChallenge: string): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyAppendFinish({
       clientInfo: {},
       signedChallenge: signedChallenge,
@@ -204,7 +204,24 @@ export class ProcessService {
     return r.data;
   }
 
-  async startPasskeyLogin(): Promise<BlockBody> {
+  async startPasskeyLogin(): Promise<ProcessResponse> {
+    const r = await this.#authApi.passkeyLoginStart({
+      clientInfo: {},
+    });
+
+    return r.data;
+  }
+
+  async finishPasskeyLogin(signedChallenge: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.passkeyLoginFinish({
+      clientInfo: {},
+      signedChallenge: signedChallenge,
+    });
+
+    return r.data;
+  }
+
+  async startPasskeyMediation(): Promise<ProcessResponse> {
     // TODO: add real request
     const r = await this.#authApi.passkeyAppendStart({
       clientInfo: {},
@@ -213,35 +230,19 @@ export class ProcessService {
     return r.data;
   }
 
-  async finishPasskeyLogin(): Promise<BlockBody> {
-    // TODO: add real request
-    const r = await this.#authApi.passkeyAppendStart({
-      clientInfo: {},
-    });
-
-    return r.data;
-  }
-
-  async startPasskeyMediation(): Promise<BlockBody> {
-    // TODO: add real request
-    const r = await this.#authApi.passkeyAppendStart({
-      clientInfo: {},
-    });
-
-    return r.data;
-  }
-
-  async startEmailCodeVerification(): Promise<BlockBody> {
-    const r = await this.#authApi.emailVerifyStart({
+  async startEmailCodeVerification(): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyStart({
       verificationType: 'email-otp',
+      identifierType: 'email',
     });
 
     return r.data;
   }
 
-  async finishEmailCodeVerification(code: string): Promise<BlockBody> {
-    const r = await this.#authApi.emailVerifyFinish({
+  async finishEmailCodeVerification(code: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyFinish({
       verificationType: 'email-otp',
+      identifierType: 'email',
       code: code,
       clientInfo: {},
     });
@@ -249,17 +250,19 @@ export class ProcessService {
     return r.data;
   }
 
-  async startEmailLinkVerification(): Promise<BlockBody> {
-    const r = await this.#authApi.emailVerifyStart({
+  async startEmailLinkVerification(): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyStart({
       verificationType: 'email-link',
+      identifierType: 'email',
     });
 
     return r.data;
   }
 
-  async finishEmailLinkVerification(code: string): Promise<BlockBody> {
-    const r = await this.#authApi.emailVerifyFinish({
+  async finishEmailLinkVerification(code: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyFinish({
       verificationType: 'email-link',
+      identifierType: 'email',
       code: code,
       clientInfo: {},
     });
@@ -267,16 +270,19 @@ export class ProcessService {
     return r.data;
   }
 
-  async startPhoneOtpVerification(): Promise<BlockBody> {
-    const r = await this.#authApi.phoneVerifyStart({
-      clientInfo: {},
+  async startPhoneOtpVerification(): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyStart({
+      verificationType: 'sms-otp',
+      identifierType: 'phone',
     });
 
     return r.data;
   }
 
-  async finishPhoneOtpVerification(code: string): Promise<BlockBody> {
-    const r = await this.#authApi.phoneVerifyFinish({
+  async finishPhoneOtpVerification(code: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierVerifyFinish({
+      verificationType: 'sms-otp',
+      identifierType: 'phone',
       code: code,
       clientInfo: {},
     });
@@ -288,13 +294,13 @@ export class ProcessService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
-  async appendPasskey(): Promise<Result<BlockBody, CorbadoError>> {
+  async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyAppend();
-    if (respStart.error) {
+    if (respStart.blockBody.error) {
       return Ok(respStart);
     }
 
-    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.challenge);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.blockBody.data.challenge);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error
       return signedChallenge;
@@ -305,8 +311,20 @@ export class ProcessService {
     return Ok(respFinish);
   }
 
-  // TODO: complete this method
-  async loginWithPasskey(): Promise<BlockBody> {
-    return await this.startPasskeyLogin();
+  async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
+    const respStart = await this.startPasskeyLogin();
+    if (respStart.blockBody.error) {
+      return Ok(respStart);
+    }
+
+    const signedChallenge = await this.#webAuthnService.login(respStart.blockBody.data.challenge, false);
+    if (signedChallenge.err) {
+      // TODO: return block body with client generated error
+      return signedChallenge;
+    }
+
+    const respFinish = await this.finishPasskeyLogin(signedChallenge.val);
+
+    return Ok(respFinish);
   }
 }

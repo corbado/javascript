@@ -24,6 +24,11 @@ export type BlockDataPasskeyAppend = {
   userHandle: string;
 };
 
+export type BlockDataPasskeyVerify = {
+  availableFallbacks: PasskeyFallback[];
+  userHandle: string;
+};
+
 export type BlockDataPasskeyAppended = Record<string, never>;
 
 export type BlockDataEmailVerify = {

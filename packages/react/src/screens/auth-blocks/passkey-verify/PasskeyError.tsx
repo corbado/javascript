@@ -1,13 +1,13 @@
-import { type PasskeyAppendBlock } from '@corbado/shared-ui';
+import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Body, Header, HorizontalRule, PrimaryButton, SecondaryButton } from '../../../components';
 import { FingerprintIcon } from '../../../components/ui/icons/Icons';
 
-export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
+export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `signup.passkey-append.passkey-error`,
+    keyPrefix: `${block.authType}.passkey-verify.passkey-error`,
   });
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
@@ -30,9 +30,9 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
-  const passkeyAppend = async () => {
+  const passkeyLogin = async () => {
     setPrimaryLoading(true);
-    await block.passkeyAppend();
+    await block.passkeyLogin();
     setPrimaryLoading(false);
   };
 
@@ -42,7 +42,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       <Body className='cb-subheader-spacing'>{body}</Body>
       <FingerprintIcon className={'cb-finger-print-icon'} />
       <PrimaryButton
-        onClick={() => void passkeyAppend()}
+        onClick={() => void passkeyLogin()}
         isLoading={primaryLoading}
         disabled={secondaryLoading}
       >
@@ -61,15 +61,6 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
           {fallback.label}
         </SecondaryButton>
       ))}
-      {block.data.canBeSkipped && (
-        <SecondaryButton
-          onClick={() => block.skipPasskeyAppend()}
-          isLoading={secondaryLoading}
-          disabled={primaryLoading}
-        >
-          {t('button_skip')}
-        </SecondaryButton>
-      )}
     </div>
   );
 };

@@ -1,12 +1,18 @@
-import type { BlockBody } from '@corbado/web-core';
+import type { BlockBody, ProcessCommon, ProcessResponse } from '@corbado/web-core';
 import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 
 import type { Block } from './blocks';
-import { LoginInitBlock } from './blocks';
-import { EmailVerifyBlock, PasskeyAppendBlock, PasskeyAppendedBlock, SignupInitBlock } from './blocks';
+import {
+  EmailVerifyBlock,
+  LoginInitBlock,
+  PasskeyAppendBlock,
+  PasskeyAppendedBlock,
+  PasskeyVerifyBlock,
+  PhoneVerifyBlock,
+  SignupInitBlock,
+} from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
-import { PhoneVerifyBlock } from './blocks/PhoneVerifyBlock';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import type { ScreenWithBlock } from './types';
@@ -47,7 +53,7 @@ export class ProcessHandler {
    */
   async init() {
     const initialBlock = await this.#corbadoApp.authProcessService.init();
-    this.handleBlockUpdateBackend(initialBlock);
+    this.handleProcessUpdateBackend(initialBlock);
   }
 
   dispose() {
@@ -77,15 +83,17 @@ export class ProcessHandler {
     this.#onScreenChangeCallbacks.splice(cbId, 1);
   }
 
-  handleBlockUpdateBackend(blockBody: BlockBody) {
-    const newPrimaryBlock = this.#parseBlockData(blockBody);
-    const alternatives = blockBody.alternatives?.map(this.#parseBlockData) ?? [];
+  handleProcessUpdateBackend(processUpdate: ProcessResponse) {
+    const newPrimaryBlock = this.#parseBlockData(processUpdate.blockBody, processUpdate.common);
+    const alternatives =
+      processUpdate.blockBody.alternatives?.map(b => this.#parseBlockData(b, processUpdate.common)) ?? [];
     newPrimaryBlock.setAlternatives(alternatives);
+    newPrimaryBlock.init();
 
     this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
-  handleBlockUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
+  handleProcessUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
     newPrimaryBlock.setAlternatives(newAlternatives);
 
     this.#updatePrimaryBlock(newPrimaryBlock);
@@ -106,22 +114,24 @@ export class ProcessHandler {
     );
   };
 
-  #parseBlockData = (blockBody: BlockBody) => {
+  #parseBlockData = (blockBody: BlockBody, common: ProcessCommon) => {
     switch (blockBody.block) {
       case BlockType.PasskeyAppend:
-        return new PasskeyAppendBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+        return new PasskeyAppendBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
       case BlockType.SignupInit:
-        return new SignupInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+        return new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
       case BlockType.LoginInit:
-        return new LoginInitBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody.data);
+        return new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
       case BlockType.PasskeyAppended:
-        return new PasskeyAppendedBlock(this.#corbadoApp, this, blockBody);
+        return new PasskeyAppendedBlock(this.#corbadoApp, this, common, blockBody);
       case BlockType.EmailVerify:
-        return new EmailVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+        return new EmailVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
       case BlockType.PhoneVerify:
-        return new PhoneVerifyBlock(this.#corbadoApp, this, this.#errorTranslator, blockBody);
+        return new PhoneVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
       case BlockType.Completed:
-        return new CompletedBlock(this.#corbadoApp, this, blockBody);
+        return new CompletedBlock(this.#corbadoApp, this, common, blockBody);
+      case BlockType.PasskeyVerify:
+        return new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);
     }

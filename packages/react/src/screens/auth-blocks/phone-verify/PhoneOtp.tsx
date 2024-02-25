@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton } from '../../../components';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `authentication.phone-verify.phone-otp` });
+  const { t } = useTranslation('translation', { keyPrefix: `signup.phone-verify.phone-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const otpRef = useRef<string>('');
 

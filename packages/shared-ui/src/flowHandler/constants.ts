@@ -28,7 +28,7 @@ export enum ScreenNames {
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',
   PasskeySuccess = 'passkey-success',
-  PasskeyCreate = 'passkey-create',
+  PasskeyBackground = 'passkey-background',
 }
 
 // Map of passkey append intervals to their respective number of days
@@ -50,6 +50,7 @@ export enum BlockTypes {
   EmailVerify = 'email-verify',
   PhoneVerify = 'phone-verify',
   PasskeyAppend = 'passkey-append',
+  PasskeyVerify = 'passkey-verify',
   PasskeyAppended = 'passkey-appended',
   Completed = 'completed',
 }

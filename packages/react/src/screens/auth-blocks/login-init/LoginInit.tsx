@@ -47,6 +47,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   return (
     <>
       <Header>{headerText}</Header>
+      <Header>{block.common.appName}</Header>
       <SubHeader>
         {subHeaderText}
         <span

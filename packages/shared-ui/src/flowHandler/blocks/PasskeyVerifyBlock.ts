@@ -11,13 +11,13 @@ import { BlockType, VerificationMethod } from '@corbado/web-core';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataPasskeyAppend } from '../types';
+import type { BlockDataPasskeyVerify } from '../types';
 import { Block } from './Block';
 
-export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
-  readonly data: BlockDataPasskeyAppend;
-  readonly type = BlockTypes.PasskeyAppend;
-  readonly initialScreen = ScreenNames.PasskeyAppend;
+export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
+  readonly data: BlockDataPasskeyVerify;
+  readonly type = BlockTypes.PasskeyVerify;
+  readonly initialScreen = ScreenNames.PasskeyBackground;
   readonly authType: AuthType;
 
   constructor(
@@ -50,14 +50,10 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
         }
       });
 
-    // if there is a completed alternative, the passkey-append block can be skipped and the user can log in immediately
-    const canBeSkipped = alternatives.some(a => a.block === BlockType.Completed);
-
     this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.userHandle,
-      canBeSkipped,
     };
   }
 
@@ -65,8 +61,8 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.updateScreen(ScreenNames.PasskeyBenefits);
   }
 
-  async passkeyAppend() {
-    const res = await this.app.authProcessService.appendPasskey();
+  async passkeyLogin() {
+    const res = await this.app.authProcessService.loginWithPasskey();
     if (res.err) {
       this.updateScreen(ScreenNames.PasskeyError);
       return;
@@ -86,13 +82,6 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async initFallbackSmsOtp(): Promise<void> {
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
-    this.updateProcess(newBlock);
-
-    return;
-  }
-
-  async skipPasskeyAppend(): Promise<void> {
-    const newBlock = await this.app.authProcessService.finishAuthProcess();
     this.updateProcess(newBlock);
 
     return;

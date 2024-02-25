@@ -1,4 +1,4 @@
-import type { AuthType, BlockBody, CorbadoApp, GeneralBlockVerifyIdentifier } from '@corbado/web-core';
+import type { AuthType, BlockBody, CorbadoApp, GeneralBlockVerifyIdentifier, ProcessCommon } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -13,8 +13,14 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   readonly authType: AuthType;
   readonly verificationMethod: 'email-otp' | 'email-link';
 
-  constructor(app: CorbadoApp, flowHandler: ProcessHandler, translator: ErrorTranslator, blockBody: BlockBody) {
-    super(app, flowHandler);
+  constructor(
+    app: CorbadoApp,
+    flowHandler: ProcessHandler,
+    common: ProcessCommon,
+    translator: ErrorTranslator,
+    blockBody: BlockBody,
+  ) {
+    super(app, flowHandler, common);
 
     const data = blockBody.data as GeneralBlockVerifyIdentifier;
     switch (data.verificationMethod) {
@@ -43,8 +49,8 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   }
 
   async validateCode(code: string) {
-    const newBlock = await this.app.authProcessService.finishEmailCodeVerification(code);
-    this.updateBlock(newBlock);
+    const processUpdate = await this.app.authProcessService.finishEmailCodeVerification(code);
+    this.updateProcess(processUpdate);
 
     return;
   }
@@ -54,10 +60,10 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
 
     if (this.verificationMethod === 'email-otp') {
       const newBlock = await this.app.authProcessService.startEmailCodeVerification();
-      this.updateBlock(newBlock);
+      this.updateProcess(newBlock);
     } else {
       const newBlock = await this.app.authProcessService.startEmailLinkVerification();
-      this.updateBlock(newBlock);
+      this.updateProcess(newBlock);
     }
 
     return;

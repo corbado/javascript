@@ -8,4 +8,6 @@ export {
   BlockBody,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
+  ProcessResponse,
+  ProcessCommon,
 } from './v2';

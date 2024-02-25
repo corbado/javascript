@@ -7,7 +7,7 @@ import { FingerprintIcon } from '../../../components/ui/icons/Icons';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `authentication.passkey-append.passkey-append`,
+    keyPrefix: `signup.passkey-append.passkey-append`,
   });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string | undefined>(undefined);
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);

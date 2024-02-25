@@ -1,4 +1,4 @@
-import type { CorbadoApp } from '@corbado/web-core';
+import type { CorbadoApp, ProcessCommon } from '@corbado/web-core';
 import { AuthType } from '@corbado/web-core';
 import type { GeneralBlockSignupInit, LoginIdentifier } from '@corbado/web-core/dist/api/v2';
 
@@ -17,10 +17,11 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
   constructor(
     app: CorbadoApp,
     flowHandler: ProcessHandler,
+    common: ProcessCommon,
     errorTranslator: ErrorTranslator,
     data: GeneralBlockSignupInit,
   ) {
-    super(app, flowHandler);
+    super(app, flowHandler, common);
 
     let email: TextFieldWithError | null = null;
     let phone: TextFieldWithError | null = null;
@@ -76,12 +77,12 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     }
 
     const b = await this.app.authProcessService.initSignup(loginIdentifiers);
-    this.updateBlock(b);
+    this.updateProcess(b);
   }
 
   switchToLogin() {
     const newPrimary = this.alternatives[0];
     const newAlternatives = [this];
-    this.updateBlockFrontend(newPrimary, newAlternatives);
+    this.updateProcessFrontend(newPrimary, newAlternatives);
   }
 }

@@ -104,4 +104,25 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
     return;
   }
+
+  async updateEmail(value: string): Promise<void> {
+    const newBlock = await this.app.authProcessService.updateEmail(value);
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  async updatePhone(value: string): Promise<void> {
+    const newBlock = await this.app.authProcessService.updatePhone(value);
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  async updateUsername(value: string): Promise<void> {
+    const newBlock = await this.app.authProcessService.updateUsername(value);
+    this.updateProcess(newBlock);
+
+    return;
+  }
 }

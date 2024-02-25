@@ -15,12 +15,6 @@ import { WebAuthnService } from './WebAuthnService';
 // TODO: set this version
 const packageVersion = '0.0.0';
 
-/**
- * ApiService class encapsulates API handling for the Corbado Application.
- * It manages API instances for users, projects, and sessions, and configures them with
- * authentication tokens and default settings such as timeout and headers.
- * ApiService should completely abstract away the API layer from the rest of the application.
- */
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
   #webAuthnService: WebAuthnService;
@@ -33,14 +27,6 @@ export class ProcessService {
   readonly #isPreviewMode: boolean;
   readonly #frontendApiUrl: string;
 
-  /**
-   * Constructs the ApiService with a project ID and an optional timeout.
-   * It initializes the API instances with a short term session token, if available.
-   * @param globalErrors Subscribe to this subject to receive global errors that can not be handled by the component)
-   * @param projectId The project ID for the current application instance.
-   * @param timeout Optional timeout for API requests, defaulting to 30 seconds.
-   * @param frontendApiUrl Optional URL for the frontend API, defaulting to https://<projectId>.frontendapi.corbado.io.
-   */
   constructor(
     globalErrors: Subject<NonRecoverableError | undefined>,
     projectId: string,
@@ -265,6 +251,33 @@ export class ProcessService {
       identifierType: 'email',
       code: code,
       clientInfo: {},
+    });
+
+    return r.data;
+  }
+
+  async updateEmail(email: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierUpdate({
+      identifierType: 'email',
+      value: email,
+    });
+
+    return r.data;
+  }
+
+  async updatePhone(phone: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierUpdate({
+      identifierType: 'phone',
+      value: phone,
+    });
+
+    return r.data;
+  }
+
+  async updateUsername(username: string): Promise<ProcessResponse> {
+    const r = await this.#authApi.identifierUpdate({
+      identifierType: 'username',
+      value: username,
     });
 
     return r.data;

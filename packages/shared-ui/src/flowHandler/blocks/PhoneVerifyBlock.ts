@@ -49,4 +49,11 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
 
     return;
   }
+
+  async updatePhone(value: string): Promise<void> {
+    const newBlock = await this.app.authProcessService.updatePhone(value);
+    this.updateProcess(newBlock);
+
+    return;
+  }
 }

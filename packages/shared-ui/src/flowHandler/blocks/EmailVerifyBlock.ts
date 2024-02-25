@@ -68,4 +68,11 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
 
     return;
   }
+
+  async updateEmail(value: string): Promise<void> {
+    const newBlock = await this.app.authProcessService.updateEmail(value);
+    this.updateProcess(newBlock);
+
+    return;
+  }
 }

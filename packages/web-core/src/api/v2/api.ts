@@ -329,11 +329,19 @@ export interface GeneralBlockVerifyIdentifier {
 export interface IdentifierUpdateReq {
     /**
      * 
+     * @type {LoginIdentifierType}
+     * @memberof IdentifierUpdateReq
+     */
+    'identifierType': LoginIdentifierType;
+    /**
+     * 
      * @type {string}
      * @memberof IdentifierUpdateReq
      */
     'value': string;
 }
+
+
 /**
  * 
  * @export
@@ -934,25 +942,6 @@ export type VerificationMethod = typeof VerificationMethod[keyof typeof Verifica
 /**
  * 
  * @export
- * @interface VerifyIdentifierRsp
- */
-export interface VerifyIdentifierRsp {
-    /**
-     * 
-     * @type {object}
-     * @memberof VerifyIdentifierRsp
-     */
-    'primary': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof VerifyIdentifierRsp
-     */
-    'alternatives': object;
-}
-/**
- * 
- * @export
  * @interface VerifyPasskeyRsp
  */
 export interface VerifyPasskeyRsp {
@@ -1018,9 +1007,9 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        emailUpdate: async (identifierUpdateReq: IdentifierUpdateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        identifierUpdate: async (identifierUpdateReq: IdentifierUpdateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'identifierUpdateReq' is not null or undefined
-            assertParamExists('emailUpdate', 'identifierUpdateReq', identifierUpdateReq)
+            assertParamExists('identifierUpdate', 'identifierUpdateReq', identifierUpdateReq)
             const localVarPath = `/v2/auth/identifier/update`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1691,8 +1680,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async emailUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.emailUpdate(identifierUpdateReq, options);
+        async identifierUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.identifierUpdate(identifierUpdateReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1866,8 +1855,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        emailUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: any): AxiosPromise<ProcessResponse> {
-            return localVarFp.emailUpdate(identifierUpdateReq, options).then((request) => request(axios, basePath));
+        identifierUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.identifierUpdate(identifierUpdateReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -2028,8 +2017,8 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public emailUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).emailUpdate(identifierUpdateReq, options).then((request) => request(this.axios, this.basePath));
+    public identifierUpdate(identifierUpdateReq: IdentifierUpdateReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).identifierUpdate(identifierUpdateReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -363,7 +363,7 @@ paths:
   /v2/auth/identifier/update:
     post:
       description: tbd
-      operationId: EmailUpdate
+      operationId: IdentifierUpdate
       tags:
         - Auth
       requestBody:
@@ -685,22 +685,14 @@ components:
       type: object
       required:
         - value
+        - identifierType
       properties:
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
         value:
           type: string
 
     verifyPasskeyRsp:
-      type: object
-      required:
-        - primary
-        - alternatives
-      properties:
-        primary:
-          type: object
-        alternatives:
-          type: object
-
-    verifyIdentifierRsp:
       type: object
       required:
         - primary

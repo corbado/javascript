@@ -1,5 +1,5 @@
 import type { PassKeyList, SessionUser } from '@corbado/types';
-import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
 import { BehaviorSubject, type Subject } from 'rxjs';
@@ -391,7 +391,6 @@ export class SessionService {
     log.debug('session refresh: starting refresh');
 
     try {
-      /*
       const options: AxiosRequestConfig = {
         headers: {
           Authorization: `Bearer ${this.#longSession}`,
@@ -408,7 +407,7 @@ export class SessionService {
         return;
       }
 
-      this.setSession(response.data.shortSession, undefined);*/
+      this.setSession(response.data.shortSession, undefined);
     } catch (e) {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user

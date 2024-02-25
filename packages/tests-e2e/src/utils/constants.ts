@@ -1,10 +1,23 @@
+// export enum ScreenNames {
+//   Start,
+//   EnterOtp,
+//   PasskeyCreate,
+//   PasskeyBenefits,
+//   PasskeyAppend,
+//   PasskeySuccess,
+//   End,
+// }
+
 export enum ScreenNames {
-  Start,
-  EnterOtp,
-  PasskeyCreate,
-  PasskeyBenefits,
+  InitSignup,
   PasskeyAppend,
-  PasskeySuccess,
+  PasskeyAppended,
+  EmailOtp,
+  EmailLinkSent,
+  EmailLinkSuccess,
+  EmailChange,
+  PhoneOtp,
+  PhoneChange,
   End,
 }
 

@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import log from 'loglevel';
 import type { BehaviorSubject } from 'rxjs';
 
-import type { ErrorRsp } from '../../api';
+import type { ErrorRsp } from '../../api/v1';
 
 /** General Errors */
 export type AuthMethodsListError = UnknownUserError | UnknownError;
@@ -30,6 +30,8 @@ export type CompleteAutocompletedLoginWithPasskeyError =
   | PasskeyChallengeCancelledError
   | UnknownError;
 
+export type GetProcessError = ProcessNotFound;
+
 /** Email OTP Errors */
 export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
 export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
@@ -51,8 +53,8 @@ export class CorbadoError extends Error {
   #translatedMessage?: string;
   recoverable: boolean;
 
-  constructor(message: string, recoverable: boolean) {
-    super(message);
+  constructor(recoverable: boolean) {
+    super('An error has occurred');
     this.name = 'CorbadoError';
     this.recoverable = recoverable;
   }
@@ -79,9 +81,7 @@ export class CorbadoError extends Error {
     if (error.response.status >= 500 || error.response.status === 422) {
       try {
         const errorRespRaw = error.response.data as ErrorRsp;
-        const message = errorRespRaw.error.details ?? error.message;
         return NonRecoverableError.server(
-          message,
           errorRespRaw.requestData.requestID,
           errorRespRaw.error.links.pop() ?? '',
           errorRespRaw.error.type,
@@ -95,63 +95,8 @@ export class CorbadoError extends Error {
     const errorRespRaw = error.response.data as ErrorRsp;
     const errorResp = errorRespRaw.error;
     switch (errorResp.type) {
-      case 'validation_error': {
-        if (!errorResp.validation?.length) {
-          return RecoverableError.unknown();
-        }
-
-        // we only care about the first error
-        const firstError = errorResp.validation[0];
-
-        if (firstError.field === 'username') {
-          switch (firstError.message) {
-            case 'user already exists':
-              return new UserAlreadyExistsError();
-            case 'cannot be blank':
-              return new InvalidEmailError();
-            case "user doesn't exist":
-              return new UnknownUserError();
-            case 'Invalid email address':
-            case 'Invalid / unreachable email address':
-              return new InvalidEmailError();
-          }
-        }
-
-        if (firstError.field === 'sessionToken') {
-          switch (firstError.message) {
-            case 'user already exists':
-              return new PasskeyAlreadyExistsError();
-          }
-        }
-
-        break;
-      }
-      case 'not_found': {
-        if (errorResp.details === "user doesn't exist") {
-          return new UnknownUserError();
-        }
-
-        if (errorResp.details === 'Used invalid credentials') {
-          return new InvalidPasskeyError();
-        }
-
-        if (errorResp.details === 'Email code not valid') {
-          return new InvalidOtpInputError();
-        }
-
-        if (errorResp.details === 'Email link not valid') {
-          return new InvalidTokenInputError();
-        }
-
-        break;
-      }
-      case 'client_error': {
-        if (errorResp.details === 'Unconfirmed credential') {
-          return new ConditionalUiUnconfirmedCredential();
-        }
-
-        break;
-      }
+      case 'process_not_available':
+        return new ProcessNotFound();
     }
 
     return NonRecoverableError.unknown();
@@ -163,11 +108,7 @@ export class CorbadoError extends Error {
       case 'AbortError':
         return new PasskeyChallengeCancelledError();
       case 'SecurityError':
-        return new NonRecoverableError(
-          'server',
-          'The relying party ID is not a registrable domain suffix of, nor equal to the current domain.',
-          'https://docs.corbado.com',
-        );
+        return new NonRecoverableError('server', 'https://docs.corbado.com');
       default:
         log.warn('unhandled DOM exception', e.name, e.message);
         return NonRecoverableError.client(e.message);
@@ -175,7 +116,7 @@ export class CorbadoError extends Error {
   }
 
   static fromUnknownException(e: unknown): CorbadoError {
-    log.debug('unknown exception', e);
+    log.error('unknown exception', e);
     return NonRecoverableError.unknown();
   }
 
@@ -197,13 +138,17 @@ export class CorbadoError extends Error {
  * Most errors fall into this category.
  */
 export class RecoverableError extends CorbadoError {
-  constructor(message: string) {
-    super(message, true);
-    this.name = 'RecoverableError';
+  constructor(name: string) {
+    super(true);
+    this.name = name;
+  }
+
+  getTranslationKey() {
+    return `errors.${this.name}`;
   }
 
   static unknown() {
-    return new RecoverableError('An unknown error occurred');
+    return new RecoverableError('unknown');
   }
 }
 
@@ -220,15 +165,8 @@ export class NonRecoverableError extends CorbadoError {
   readonly detailedType?: string;
   readonly requestId?: string;
 
-  constructor(
-    type: 'client' | 'server',
-    message: string,
-    link?: string,
-    details?: string,
-    detailedType?: string,
-    requestId?: string,
-  ) {
-    super(message, false);
+  constructor(type: 'client' | 'server', link?: string, details?: string, detailedType?: string, requestId?: string) {
+    super(false);
     this.name = 'Integration error';
     this.type = type;
     this.link = link;
@@ -238,7 +176,7 @@ export class NonRecoverableError extends CorbadoError {
   }
 
   static unknown() {
-    return new NonRecoverableError('server', 'An unknown error occurred', 'https://docs.corbado.com');
+    return new NonRecoverableError('server', 'https://docs.corbado.com');
   }
 
   static invalidConfig(message: string) {
@@ -246,19 +184,19 @@ export class NonRecoverableError extends CorbadoError {
     return NonRecoverableError.client(message, 'https://docs.corbado.com');
   }
 
-  static server(message: string, requestId: string, link: string, detailedType: string, details?: string) {
-    return new NonRecoverableError('server', message, link, details, detailedType, requestId);
+  static server(requestId: string, link: string, detailedType: string, details?: string) {
+    return new NonRecoverableError('server', link, details, detailedType, requestId);
   }
 
   static client(message: string, link?: string) {
-    return new NonRecoverableError('client', message, link);
+    return new NonRecoverableError('client', link, message);
   }
 
   static userRegistrationNotAllowed() {
     return new NonRecoverableError(
       'server',
-      'User registration is not allowed for this project',
       'https://docs.corbado.com/overview/sign-up-and-login-with-passkeys/user-flow-configuration#id-2.-public-sign-ups',
+      'User registration is not allowed for this project',
     );
   }
 }
@@ -351,5 +289,11 @@ export class UnknownError extends RecoverableError {
   constructor() {
     super('An unknown error occurred');
     this.name = 'errors.unknownError';
+  }
+}
+
+export class ProcessNotFound extends RecoverableError {
+  constructor() {
+    super('processNotFound');
   }
 }

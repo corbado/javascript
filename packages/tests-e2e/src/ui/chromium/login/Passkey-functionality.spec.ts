@@ -2,7 +2,7 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with passkey proper user behavior', () => {
-  test('from Start', async ({ loginFlow, page }) => {
+  test('from InitSignup', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
@@ -40,7 +40,7 @@ test.describe('Login with passkey proper user behavior', () => {
     });
   });
 
-  test('from Start with conditional UI', async ({ loginFlow, page, channel }) => {
+  test('from InitSignup with conditional UI', async ({ loginFlow, page, channel }) => {
     if (channel) {
       test.skip(channel.includes('msedge'), 'Edge does not support conditional UI');
     }

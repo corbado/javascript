@@ -1,4 +1,4 @@
-import { FlowType } from '@corbado/shared-ui';
+import { AuthType } from '@corbado/shared-ui';
 import type { CorbadoLoginConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
@@ -19,7 +19,7 @@ const Login: FC<CorbadoLoginConfig> = ({ onLoggedIn, navigateToSignUp }) => {
         <FlowHandlerProvider
           onLoggedIn={onLoggedIn}
           onChangeFlow={navigateToSignUp}
-          initialFlowType={FlowType.Login}
+          initialFlowType={AuthType.Login}
         >
           <AuthFlow />
         </FlowHandlerProvider>

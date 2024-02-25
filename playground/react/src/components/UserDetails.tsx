@@ -1,8 +1,8 @@
-import { useCorbadoSession } from '@corbado/react-sdk';
+import { useCorbado } from '@corbado/react-sdk';
 import { jwtDecode } from 'jwt-decode';
 
 export const UserDetails = () => {
-  const { user, shortSession } = useCorbadoSession();
+  const { user, shortSession } = useCorbado();
 
   const decodedShortSession = jwtDecode(shortSession ?? '');
   const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);

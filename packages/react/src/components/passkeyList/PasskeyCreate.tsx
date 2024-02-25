@@ -1,4 +1,3 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +10,7 @@ export interface PasskeyCreateProps {
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
-  const { appendPasskey } = useCorbado();
+  // TODO: appendPasskey
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,9 +24,9 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
     [t],
   );
 
-  const openDialog = () => {
-    setDialogOpen(true);
-  };
+  // const openDialog = () => {
+  //   setDialogOpen(true);
+  // };
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -35,13 +34,14 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
 
   const createPasskey = async () => {
     setLoading(true);
-    const result = await appendPasskey();
+    /*const result = await appendPasskey();
 
     if (result.ok) {
       await fetchPasskeys();
     } else if (result.val?.name === 'errors.passkeyAlreadyExists') {
       openDialog();
-    }
+    }*/
+    await fetchPasskeys();
 
     setLoading(false);
   };

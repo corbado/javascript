@@ -1,4 +1,4 @@
-import type { AuthenticationRsp } from '../api';
+import type { AuthenticationRsp } from '../api/v1';
 import { ShortSession } from './session';
 
 export class AuthenticationResponse {

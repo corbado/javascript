@@ -1,5 +1,5 @@
 // Enum representing the type of user flow, either sign up or login
-export enum FlowType {
+export enum AuthType {
   SignUp,
   Login,
 }
@@ -17,29 +17,18 @@ export enum LoginFlowNames {
 
 // Enum representing common screens that are used in multiple flows
 export enum ScreenNames {
-  Start = 'start',
+  SignupInit = 'signup-init',
+  LoginInit = 'login-init',
   End = 'end',
-  EmailOTPVerification = 'email-otp-verification',
+  EmailOtpVerification = 'email-otp-verification',
   EmailLinkSent = 'email-link-sent',
+  PhoneOtp = 'phone-otp',
   EmailLinkVerification = 'email-link-verification',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
   PasskeyBenefits = 'passkey-benefits',
   PasskeySuccess = 'passkey-success',
-  PasskeyCreate = 'passkey-create',
-}
-
-// Enum representing different events that can occur during the flow handling process
-export enum FlowHandlerEvents {
-  ShowBenefits = 'show-benefits',
-  CancelOTP = 'cancel-otp',
-  CancelEmailLink = 'cancel-email-link',
-  VerifyLink = 'verify-link',
-  CancelPasskey = 'cancel-passkey',
-  ChangeFlow = 'change-flow',
-  PrimaryButton = 'primary-button',
-  SecondaryButton = 'secondary-button',
-  InitConditionalUI = 'init-conditional-ui',
+  PasskeyBackground = 'passkey-background',
 }
 
 // Map of passkey append intervals to their respective number of days
@@ -54,3 +43,14 @@ export const passkeyAppendIntervalMap: { [key: string]: number } = {
 };
 
 export const passkeyAppendAskTSKey = 'corbado_passkeyAppendAskTS';
+
+export enum BlockTypes {
+  LoginInit = 'login-init',
+  SignupInit = 'signup-init',
+  EmailVerify = 'email-verify',
+  PhoneVerify = 'phone-verify',
+  PasskeyAppend = 'passkey-append',
+  PasskeyVerify = 'passkey-verify',
+  PasskeyAppended = 'passkey-appended',
+  Completed = 'completed',
+}

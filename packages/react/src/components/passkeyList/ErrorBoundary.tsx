@@ -27,7 +27,7 @@ export class PasskeyListErrorBoundary extends React.Component<
   }
 
   render() {
-    if (this.props.globalError) {
+    if (this.props.globalError && this.props.globalError.name !== 'errors.passkeyAlreadyExists') {
       return (
         <div className='error-page'>
           <div>Something went wrong. Please try again in a few moments.</div>

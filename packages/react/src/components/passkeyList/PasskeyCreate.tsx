@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { FC } from 'react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Dialog, PrimaryButton } from '../';
@@ -11,9 +11,16 @@ export interface PasskeyCreateProps {
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
-  const { appendPasskey } = useCorbado();
+  const { appendPasskey, globalError, setGlobalError } = useCorbado();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (globalError?.name === 'errors.passkeyAlreadyExists') {
+      openDialog();
+      setGlobalError(undefined);
+    }
+  }, [globalError]);
 
   const translatedTexts = useMemo(
     () => ({

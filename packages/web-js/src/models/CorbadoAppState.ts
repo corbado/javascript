@@ -88,4 +88,8 @@ export class CorbadoAppState {
 
     this.corbadoApp.authService.logout();
   }
+
+  clearGlobalError() {
+    this.corbadoApp.globalErrors.next(undefined);
+  }
 }

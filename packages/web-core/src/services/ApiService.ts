@@ -6,6 +6,7 @@ import log from 'loglevel';
 import type { Subject } from 'rxjs';
 import { Err, Result } from 'ts-results';
 
+import type { SessionRefreshRsp } from '../api';
 import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
 import { AuthenticationResponse } from '../models/auth';
 import type {
@@ -45,6 +46,7 @@ export class ApiService {
   #assetsApi: AssetsApi = new AssetsApi();
   #projectsApi: ProjectsApi = new ProjectsApi();
   #sessionsApi: SessionsApi = new SessionsApi();
+  #sessionsApiWithAuth: SessionsApi = new SessionsApi();
   #globalErrors: Subject<NonRecoverableError | undefined>;
 
   // Private fields for project ID and default timeout for API calls.
@@ -98,6 +100,10 @@ export class ApiService {
 
   get sessionsApi(): SessionsApi {
     return this.#sessionsApi;
+  }
+
+  get sessionsApiWithAuth(): SessionsApi {
+    return this.#sessionsApiWithAuth;
   }
 
   /**
@@ -186,6 +192,7 @@ export class ApiService {
     this.#assetsApi = new AssetsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
     this.#projectsApi = new ProjectsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
     this.#sessionsApi = new SessionsApi(config, this.#frontendApiUrl, instanceWithoutAuth);
+    this.#sessionsApiWithAuth = new SessionsApi(config, this.#frontendApiUrl, instanceWithAuth);
   }
 
   /**
@@ -409,6 +416,24 @@ export class ApiService {
       });
 
       return r.data.exists;
+    });
+  }
+
+  public async sessionRefresh(): Promise<Result<SessionRefreshRsp | undefined, NonRecoverableError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const response = await this.#sessionsApiWithAuth.sessionRefresh({});
+
+      if (response.status !== 200) {
+        log.warn(`refresh error, status code: ${response.status}`);
+        return;
+      }
+
+      if (!response.data.shortSession?.value) {
+        log.warn('refresh error, missing short session');
+        return;
+      }
+
+      return response.data;
     });
   }
 }

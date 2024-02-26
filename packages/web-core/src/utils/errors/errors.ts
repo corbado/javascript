@@ -8,6 +8,7 @@ import type { ErrorRsp } from '../../api';
 export type AuthMethodsListError = UnknownUserError | UnknownError;
 export type GetProjectConfigError = UnknownError;
 export type GlobalError = BehaviorSubject<NonRecoverableError | undefined>;
+export type SessionRefreshError = UnknownError;
 
 /** Passkey Authentication Errors */
 export type SignUpWithPasskeyError =
@@ -16,7 +17,7 @@ export type SignUpWithPasskeyError =
   | InvalidFullnameError
   | PasskeyChallengeCancelledError
   | UnknownError;
-export type AppendPasskeyError = PasskeyChallengeCancelledError | UnknownError;
+export type AppendPasskeyError = PasskeyAlreadyExistsError | PasskeyChallengeCancelledError | UnknownError;
 export type LoginWithPasskeyError =
   | InvalidEmailError
   | InvalidPasskeyError
@@ -90,6 +91,10 @@ export class CorbadoError extends Error {
       } catch (e) {
         return NonRecoverableError.server(error.message, '', '', '');
       }
+    }
+
+    if (error.response.status === 401) {
+      return new UnAuthenticatedError();
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;
@@ -260,6 +265,13 @@ export class NonRecoverableError extends CorbadoError {
       'User registration is not allowed for this project',
       'https://docs.corbado.com/overview/sign-up-and-login-with-passkeys/user-flow-configuration#id-2.-public-sign-ups',
     );
+  }
+}
+
+export class UnAuthenticatedError extends RecoverableError {
+  constructor() {
+    super('Unauthenticated');
+    this.name = 'errors.unauthenticated';
   }
 }
 

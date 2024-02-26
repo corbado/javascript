@@ -41,18 +41,22 @@ export class Corbado {
   }
 
   mountAuthUI(element: HTMLElement, options: CorbadoAuthConfig) {
+    this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, CorbadoAuth, options);
   }
 
   mountSignUpUI(element: HTMLElement, options: CorbadoSignUpConfig) {
+    this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, SignUp, options);
   }
 
   mountLoginUI(element: HTMLElement, options: CorbadoLoginConfig) {
+    this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, Login, options);
   }
 
   mountPasskeyListUI(element: HTMLElement) {
+    this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, PasskeyList, {});
   }
 

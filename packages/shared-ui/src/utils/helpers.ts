@@ -19,7 +19,6 @@ export const updateSvgFillColor = (base64Svg: string, newColor: string) => {
 
     return updatedBase64Svg;
   } catch (error) {
-    console.error('Error updating svg fill color', error, base64Svg);
     return base64Svg;
   }
 };

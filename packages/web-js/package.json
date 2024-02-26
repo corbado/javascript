@@ -22,7 +22,7 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "webpack --config webpack.prod.js && npm run build:bundler",
+    "build": "webpack --config webpack.prod.js && npm run build:bundler:local",
     "build:dev": "npm run clean && tsc -b",
     "build:bundler": "node ./esbuild.config.js",
     "build:bundler:local": "node ./esbuild.config.js && npm run copy:bundle:local",

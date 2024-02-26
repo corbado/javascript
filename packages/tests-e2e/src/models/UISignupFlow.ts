@@ -134,7 +134,14 @@ export class UISignupFlow {
     const [name, email] = await this.createAccount();
     await this.checkLandedOnScreen(ScreenNames.EnterOtp);
 
-    await this.page.getByRole('button', { name: 'Cancel' }).click();
+    // await this.page.getByRole('button', { name: 'Cancel' }).click();
+    // await this.checkLandedOnScreen(ScreenNames.Start);
+
+    await this.fillOTP();
+    // assume passkey not supported
+    await this.checkLandedOnScreen(ScreenNames.End);
+
+    await this.page.getByRole('button', { name: 'Logout' }).click();
     await this.checkLandedOnScreen(ScreenNames.Start);
 
     return [name, email];
@@ -169,7 +176,7 @@ export class UISignupFlow {
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-*/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);
         break;
     }
   }

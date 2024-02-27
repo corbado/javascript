@@ -4,7 +4,7 @@ import type { FC } from 'react';
 
 import { CorbadoAppState } from '../models/CorbadoAppState';
 import type { CorbadoConfig } from '../types/core';
-import { mountComponent } from '../ui/mountComponent';
+import { mountComponent, unmountComponent } from '../ui/mountComponent';
 
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
@@ -45,9 +45,17 @@ export class Corbado {
     this.#mountComponent(element, CorbadoAuth, options);
   }
 
+  unmountAuthUI(element: HTMLElement) {
+    this.#unmountComponent(element);
+  }
+
   mountSignUpUI(element: HTMLElement, options: CorbadoSignUpConfig) {
     this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, SignUp, options);
+  }
+
+  unmountSignUpUI(element: HTMLElement) {
+    this.#unmountComponent(element);
   }
 
   mountLoginUI(element: HTMLElement, options: CorbadoLoginConfig) {
@@ -55,9 +63,17 @@ export class Corbado {
     this.#mountComponent(element, Login, options);
   }
 
+  unmountLoginUI(element: HTMLElement) {
+    this.#unmountComponent(element);
+  }
+
   mountPasskeyListUI(element: HTMLElement) {
     this.#corbadoAppState?.clearGlobalError();
     this.#mountComponent(element, PasskeyList, {});
+  }
+
+  unmountPasskeyListUI(element: HTMLElement) {
+    this.#unmountComponent(element);
   }
 
   logout() {
@@ -75,6 +91,14 @@ export class Corbado {
     }
 
     mountComponent(this.#corbadoAppState, element, Component, componentOptions);
+  };
+
+  #unmountComponent = (element: HTMLElement) => {
+    if (!this.#corbadoAppState) {
+      throw new Error('Please call load() before unmounting components');
+    }
+
+    unmountComponent(element);
   };
 
   #getCorbadoAppState = (): CorbadoAppState => {

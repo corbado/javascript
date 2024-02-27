@@ -36,3 +36,8 @@ export function mountComponent<T extends Record<string, any>>(
     />,
   );
 }
+
+export function unmountComponent(element: HTMLElement) {
+  const root = createRoot(element);
+  root.unmount();
+}

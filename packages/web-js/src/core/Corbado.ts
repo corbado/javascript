@@ -1,6 +1,7 @@
 import { CorbadoAuth, Login, PasskeyList, SignUp } from '@corbado/react';
 import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
+import type { Root } from 'react-dom/client';
 
 import { CorbadoAppState } from '../models/CorbadoAppState';
 import type { CorbadoConfig } from '../types/core';
@@ -8,6 +9,7 @@ import { mountComponent, unmountComponent } from '../ui/mountComponent';
 
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
+  #componentInstances: Record<string, Root> = {};
 
   get user() {
     return this.#getCorbadoAppState().user;
@@ -90,7 +92,9 @@ export class Corbado {
       throw new Error('Please call load() before mounting components');
     }
 
-    mountComponent(this.#corbadoAppState, element, Component, componentOptions);
+    const root = mountComponent(this.#corbadoAppState, element, Component, componentOptions);
+
+    this.#componentInstances[element.id] = root;
   };
 
   #unmountComponent = (element: HTMLElement) => {
@@ -98,7 +102,8 @@ export class Corbado {
       throw new Error('Please call load() before unmounting components');
     }
 
-    unmountComponent(element);
+    const root = this.#componentInstances[element.id];
+    unmountComponent(root);
   };
 
   #getCorbadoAppState = (): CorbadoAppState => {

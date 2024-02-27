@@ -1,4 +1,5 @@
-import React, { type FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
+import React, { type FocusEvent, forwardRef, useState } from 'react';
 
 import { Input, type InputProps } from './Input';
 
@@ -6,10 +7,10 @@ interface Props extends InputProps {
   label: string;
 }
 
-export const FormInput = React.forwardRef<HTMLInputElement, Props>(
+export const FormInput = forwardRef<HTMLInputElement, Props>(
   ({ label, type, id, name, value, onChange, onFocus, onBlur, error, ...rest }: Omit<Props, 'ref'>, ref) => {
-    const [focused, setFocused] = React.useState(false);
-    const [isDirty, setIsDirty] = React.useState(false);
+    const [focused, setFocused] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
 
     const onFocusClick = (event: FocusEvent<HTMLInputElement, Element>) => {
       setFocused(true);
@@ -27,7 +28,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, Props>(
       }
     };
 
-    const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       setIsDirty(!!event.target.value);
 
       if (onChange) {

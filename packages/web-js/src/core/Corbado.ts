@@ -9,7 +9,7 @@ import { mountComponent, unmountComponent } from '../ui/mountComponent';
 
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
-  #componentInstances: Record<string, Root> = {};
+  #componentInstances: Map<HTMLElement, Root> = new Map();
 
   get user() {
     return this.#getCorbadoAppState().user;
@@ -92,9 +92,11 @@ export class Corbado {
       throw new Error('Please call load() before mounting components');
     }
 
+    this.#unmountComponent(element);
+
     const root = mountComponent(this.#corbadoAppState, element, Component, componentOptions);
 
-    this.#componentInstances[element.id] = root;
+    this.#componentInstances.set(element, root);
   };
 
   #unmountComponent = (element: HTMLElement) => {
@@ -102,8 +104,10 @@ export class Corbado {
       throw new Error('Please call load() before unmounting components');
     }
 
-    const root = this.#componentInstances[element.id];
-    unmountComponent(root);
+    const existingRoot = this.#componentInstances.get(element);
+    if (existingRoot) {
+      unmountComponent(existingRoot);
+    }
   };
 
   #getCorbadoAppState = (): CorbadoAppState => {

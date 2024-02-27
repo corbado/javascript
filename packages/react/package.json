@@ -1,6 +1,6 @@
 {
   "name": "@corbado/react",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "This package provides all the functionalities and UI components needed by developers when integration Corbado's Authentication management system in their react application",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",

@@ -164,7 +164,11 @@ export class ApiService {
           withCredentials: true,
           headers: { ...headers, Authorization: `Bearer ${token}` },
         })
-      : instanceWithoutAuth;
+      : axios.create({
+          timeout: this.#timeout,
+          withCredentials: true,
+          headers,
+        });
 
     this.#addErrorInterceptor(instanceWithoutAuth);
     this.#addErrorInterceptor(instanceWithAuth);

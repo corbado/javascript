@@ -1,5 +1,4 @@
 import type { CorbadoUser, SessionUser } from '@corbado/types';
-import type { AxiosRequestConfig } from 'axios';
 import log from 'loglevel';
 
 import { ShortSession } from '../models/session';
@@ -49,10 +48,11 @@ export class SessionService {
     if (this.#shortSession && this.#shortSession.isValidForXMoreSeconds(0)) {
       log.debug('emit shortsession', this.#shortSession);
       this.#onShortSessionChange(this.#shortSession);
-      this.#apiService.setInstanceWithToken(this.#shortSession.value);
     } else {
       await this.#handleRefreshRequest();
     }
+
+    this.#apiService.setInstanceWithToken(this.#longSession || this.#shortSession?.value || '');
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers
@@ -112,7 +112,7 @@ export class SessionService {
    */
   setSession(shortSession: ShortSession, longSession: string | undefined) {
     this.#setShortTermSessionToken(shortSession);
-    this.#apiService.setInstanceWithToken(shortSession.value);
+    this.#apiService.setInstanceWithToken(longSession ?? '');
 
     if (this.#onShortSessionChange) {
       this.#onShortSessionChange(shortSession);
@@ -249,31 +249,19 @@ export class SessionService {
   async #refresh() {
     log.debug('session refresh: starting refresh');
 
-    try {
-      const options: AxiosRequestConfig = {
-        headers: {
-          Authorization: `Bearer ${this.#longSession}`,
-        },
-      };
-      const response = await this.#apiService.sessionsApi.sessionRefresh({}, options);
-      if (response.status !== 200) {
-        log.warn(`refresh error, status code: ${response.status}`);
-        return;
-      }
+    const response = await this.#apiService.sessionRefresh();
 
-      if (!response.data.shortSession?.value) {
-        log.warn('refresh error, missing short session');
-        return;
-      }
+    if (response.err) {
+      log.warn(response.val);
 
-      const shortSession = new ShortSession(response.data.shortSession?.value);
-      this.setSession(shortSession, undefined);
-    } catch (e) {
-      // if it's a network error, we should do a retry
-      // for all other errors, we should log out the user
-      log.warn(e);
-      this.logout();
+      if (response.val?.name === 'errors.unauthenticated') {
+        this.logout();
+      }
+      return;
     }
+
+    const shortSession = new ShortSession(response.val?.shortSession?.value || '');
+    this.setSession(shortSession, undefined);
   }
 
   #handleVisibilityChange() {

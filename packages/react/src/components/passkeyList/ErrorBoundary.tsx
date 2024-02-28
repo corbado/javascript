@@ -1,25 +1,13 @@
-import type { NonRecoverableError, RecoverableError } from '@corbado/web-core';
+import type { NonRecoverableError } from '@corbado/web-core';
 import React from 'react';
 
 export type PasskeyListErrorBoundaryProps = React.PropsWithChildren<{
   globalError: NonRecoverableError | undefined;
 }>;
-export type PasskeyListErrorBoundaryState = {
-  error: RecoverableError | undefined;
-};
 
-export class PasskeyListErrorBoundary extends React.Component<
-  PasskeyListErrorBoundaryProps,
-  PasskeyListErrorBoundaryState
-> {
+export class PasskeyListErrorBoundary extends React.Component<PasskeyListErrorBoundaryProps> {
   constructor(props: PasskeyListErrorBoundaryProps) {
     super(props);
-    this.state = { error: undefined };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    console.error(error);
-    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -27,13 +15,12 @@ export class PasskeyListErrorBoundary extends React.Component<
   }
 
   render() {
-    if (this.props.globalError) {
-      return (
-        <div className='error-page'>
-          <div>Something went wrong. Please try again in a few moments.</div>
-        </div>
-      );
-    }
-    return this.props.children;
+    return !this.props.globalError ? (
+      this.props.children
+    ) : (
+      <div className='error-page'>
+        <div>Something went wrong. Please try again in a few moments.</div>
+      </div>
+    );
   }
 }

@@ -2,20 +2,35 @@ import Corbado from '@corbado/web-js';
 import { jwtDecode } from 'jwt-decode';
 import { CORBADO_PROJECT_ID } from './environment';
 
-Corbado.load({
+await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
+  darkMode: 'off',
+  isDevMode: true,
 });
 
-if (!Corbado.user) {
+function loadAuthComponent() {
   const corbadoAppElement = document.getElementById('corbado-app');
   corbadoAppElement.style.display = 'none';
-  const corbadoAuthElement = document.getElementById('login');
-  corbadoAuthElement.onclick = () => {
-    window.location.href = '/auth.html';
-  };
-} else {
+
+  const fallbackUI = document.getElementById('fallback-ui');
+  fallbackUI.style.display = 'initial';
+
+  const authUI = document.getElementById('auth-ui');
+  Corbado.mountAuthUI(authUI, {
+    onLoggedIn: () => {
+      Corbado.unmountAuthUI(authUI);
+
+      loadPasskeyListComponent();
+    },
+  });
+}
+
+function loadPasskeyListComponent() {
   const fallbackUI = document.getElementById('fallback-ui');
   fallbackUI.style.display = 'none';
+
+  const corbadoAppElement = document.getElementById('corbado-app');
+  corbadoAppElement.style.display = 'initial';
 
   const header = document.getElementById('header');
   header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
@@ -25,12 +40,19 @@ if (!Corbado.user) {
   const shortSession = document.getElementById('short-session');
   shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
 
+  const passkeyList = document.getElementById('passkey-list');
+  Corbado.mountPasskeyListUI(passkeyList);
+
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', () => {
     Corbado.logout();
-    window.location.href = '/auth.html';
+    Corbado.unmountPasskeyListUI(passkeyList);
+    loadAuthComponent();
   });
+}
 
-  const passkeyList = document.getElementById('passkey-list');
-  Corbado.mountPasskeyListUI(passkeyList);
+if (Corbado.user) {
+  loadPasskeyListComponent();
+} else {
+  loadAuthComponent();
 }

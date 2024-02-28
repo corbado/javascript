@@ -10,4 +10,5 @@ export interface CorbadoAppParams {
   frontendApiUrl?: string;
   isDevMode?: boolean;
   setShortSessionCookie?: boolean;
+  isPreviewMode?: boolean;
 }

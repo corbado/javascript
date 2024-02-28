@@ -84,7 +84,12 @@ export class AuthService {
       log.setLevel('error');
     }
 
-    // The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be removed
+    const projectConfig = await this.#apiService.getProjectConfig();
+    if (projectConfig.err) {
+      return Err(projectConfig.val);
+    }
+
+    // TODO: The backend is not exposing this parameter, we will add it today or tomorrow => then the hard-coding will be
     const useCorbadoSessionManagement = true;
     if (useCorbadoSessionManagement) {
       await this.#setupSessionManagement();

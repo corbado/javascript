@@ -4,7 +4,7 @@ import { CORBADO_PROJECT_ID } from './environment';
 
 await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
-  darkMode: "off",
+  darkMode: 'off',
   isDevMode: true,
 });
 
@@ -21,7 +21,7 @@ function loadAuthComponent() {
       Corbado.unmountAuthUI(authUI);
 
       loadPasskeyListComponent();
-    }
+    },
   });
 }
 

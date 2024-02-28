@@ -26,9 +26,9 @@ Finally, open the url in the `url` column in your browser and test the applicati
 When you are developing locally and making changes to one or more packages, you can run `lerna run build` to build all packages again.
 Take a look at the `apply changes` column to see if you need any additional commands to apply your changes.
 
-| package                | steps                                                      | url                        | apply changes                 |
-|------------------------|------------------------------------------------------------|----------------------------|-------------------------------|
-| @corbado/react-sdk     | 1. npm i<br/>2. npm run dev                                | http://localhost:5173/     |                               |
-| @corbado/react         | 1. npm i<br/>2. npm start                                  | http://localhost:3000/auth |                               |
-| @corbado/web-js        | 1. npm i<br/>2. npm start                                  | http://localhost:9000/     |                               |
-| @corbado/web-js-script | 1. npm i<br/>2. lerna run build:bundler:local<br/>3. serve | http://localhost:3000/     | lerna run build:bundler:local |
+| package                | steps                                                                                 | url                        | apply changes                 |
+| ---------------------- | ------------------------------------------------------------------------------------- | -------------------------- | ----------------------------- |
+| @corbado/react-sdk     | 1. npm i<br/>2. npm run dev                                                           | http://localhost:5173/     |                               |
+| @corbado/react         | 1. npm i<br/>2. npm run dev                                                           | http://localhost:5173/auth |                               |
+| @corbado/web-js        | 1. npm i<br/>2. npm run dev                                                           | http://localhost:5173/     |                               |
+| @corbado/web-js-script | 1.npm install -g serve<br/>2. npm i<br/>3. lerna run build:bundler:local<br/>4. serve | http://localhost:3000/     | lerna run build:bundler:local |

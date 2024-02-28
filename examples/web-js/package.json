@@ -18,7 +18,7 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@corbado/web-js": "^1.0.3",
+    "@corbado/web-js": "^1.1.13",
     "prismjs": "^1.29.0"
   }
 }

@@ -1,7 +1,7 @@
 # When running this on a different self-hosted runner, the following needs
 # to be done before the workflow will properly run:
 #   1. Install Node.js and npm on the server
-#   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
+#   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to
 #      match the number of cores on the server
 
 name: End-to-End testing check for Playground Apps
@@ -12,8 +12,8 @@ on:
   pull_request:
   push:
     branches:
-      - main
-      - develop
+      # - main
+      # - develop
 
 jobs:
   prepare:
@@ -28,11 +28,11 @@ jobs:
       id: set_branch_name
       run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
       shell: bash
-    
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
 
-    # # The self-hosted runners are so fast that caching overhead is more 
+    # # The self-hosted runners are so fast that caching overhead is more
     # # expensive than just installing the dependencies
     # - name: Cache dependencies
     #   uses: actions/cache@v3
@@ -83,7 +83,7 @@ jobs:
         with:
           name: node-modules
           path: .
-      
+
       - name: Extract node_modules
         run: tar -xzf node_modules.tar.gz
 

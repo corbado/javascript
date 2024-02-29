@@ -51,21 +51,21 @@ const SignUpForm: React.FC = () => {
           <p className='cb-footer-text'>
             By continuing you agree to our
             <a
-              href='#'
+              href='https://corbado.com'
               className='cb-link'
             >
               User Agreement
             </a>
             ,
             <a
-              href='#'
+              href='https://corbado.com'
               className='cb-link'
             >
               Wallet Service Terms
             </a>
             , and
             <a
-              href='#'
+              href='https://corbado.com'
               className='cb-link'
             >
               Privacy Policy

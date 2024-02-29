@@ -86,7 +86,7 @@ export class CorbadoAppState {
       throw new Error('Please call load() before logging out');
     }
 
-    this.corbadoApp.authService.logout();
+    return this.corbadoApp.authService.logout();
   }
 
   clearGlobalError() {

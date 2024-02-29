@@ -1,12 +1,10 @@
 import React from 'react';
 
 interface ErrorMessageProps {
-  altText: string;
-  imgSrc: string;
   message: string;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ altText, imgSrc, message }) => (
+const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
   <div className='cb-error-message'>
     <div className='cb-error-icon'>
       <svg

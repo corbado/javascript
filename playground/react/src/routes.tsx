@@ -9,7 +9,11 @@ const RouteProvider = () => {
   const routes = [
     {
       path: 'testing',
-      element: <SignUpForm />,
+      element: (
+        <div className='component'>
+          <SignUpForm />
+        </div>
+      ),
     },
     {
       path: '/:projectId/auth',

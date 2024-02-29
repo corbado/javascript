@@ -6,18 +6,10 @@ interface InputFieldProps {
   type?: string;
   id: string;
   errorMessage?: string;
-  errorImgSrc?: string;
-  errorImgAlt?: string;
+  showError?: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  type = 'text',
-  id,
-  errorMessage,
-  errorImgSrc,
-  errorImgAlt,
-}) => (
+const InputField: React.FC<InputFieldProps> = ({ label, type = 'text', id, errorMessage, showError }) => (
   <>
     <label
       htmlFor={id}
@@ -31,13 +23,7 @@ const InputField: React.FC<InputFieldProps> = ({
       className='cb-input'
       aria-label={label}
     />
-    {errorMessage && errorImgSrc && errorImgAlt && (
-      <ErrorMessage
-        altText={errorImgAlt}
-        imgSrc={errorImgSrc}
-        message={errorMessage}
-      />
-    )}
+    {showError && errorMessage && <ErrorMessage message={errorMessage} />}
   </>
 );
 

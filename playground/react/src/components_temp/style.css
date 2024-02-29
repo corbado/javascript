@@ -1,144 +1,146 @@
 :root {
-    --cb-primary-color: #2563eb;
-    --cb-text-primary-color: #000000;
-    --cb-text-secondary-color: #4b5563;
-    --cb-text-error-color: #db2777;
-    --cb-background-color: #ffffff;
-    --cb-border-color: #a1a1aa;
-    --cb-link-color: #60a5fa;
-    --cb-primary-font: 'Space Grotesk', sans-serif;
-    --cb-secondary-font: 'Inter', sans-serif;
-    --cb-font-weight-bold: 700;
-    --cb-font-weight-normal: 400;
-    --cb-font-size-normal: 1rem;
-    --cb-border-radius: 1.125rem;
-    --cb-error-padding: 1rem 1.8rem;
-    --cb-error-margin-top: 6rem;
-    --cb-error-background-color: #E9E9E9;
-    --cb-error-text-color: #4B5563;
-    --cb-error-img-aspect-ratio: 1.2;
-    --cb-error-indicator-width: 35px;
-    --cb-error-img-fill-color: #B91C1C;
+  --cb-primary-color: #2563eb;
+  --cb-text-primary-color: #000000;
+  --cb-text-secondary-color: #4b5563;
+  --cb-text-error-color: #db2777;
+  --cb-background-color: #ffffff;
+  --cb-border-color: #a1a1aa;
+  --cb-link-color: #60a5fa;
+  --cb-primary-font: 'Space Grotesk', sans-serif;
+  --cb-secondary-font: 'Inter', sans-serif;
+  --cb-font-weight-bold: 700;
+  --cb-font-weight-normal: 400;
+  --cb-font-size-normal: 1rem;
+  --cb-border-radius: 1.125rem;
+  --cb-error-padding: 1rem 1.8rem;
+  --cb-error-margin-top: 6rem;
+  --cb-error-background-color: #e9e9e9;
+  --cb-error-text-color: #4b5563;
+  --cb-error-img-aspect-ratio: 1.2;
+  --cb-error-indicator-width: 35px;
+  --cb-error-img-fill-color: #b91c1c;
 }
 
 .cb-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 30rem;
-    /* max-height: 900px; */
-    padding: 1.5rem 2rem 1.5rem 2rem;
-    background-color: var(--cb-background-color);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-radius: var(--cb-border-radius);
+  display: flex;
+  flex-direction: column;
+  max-width: 30rem;
+  /* max-height: 900px; */
+  padding: 1.5rem 2rem 1.5rem 2rem;
+  background-color: var(--cb-background-color);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-radius: var(--cb-border-radius);
 }
 
 .cb-header {
-    font-family: var(--cb-primary-font);
-    font-size: 2rem;
-    font-weight: var(--cb-font-weight-bold);
-    color: var(--cb-text-primary-color);
-    text-align: center;
-    line-height: 0.5rem;
+  font-family: var(--cb-primary-font);
+  font-size: 2rem;
+  font-weight: var(--cb-font-weight-bold);
+  color: var(--cb-text-primary-color);
+  text-align: center;
+  line-height: 0.5rem;
 }
 
 .cb-subheader {
-    font-family: var(--cb-primary-font);
-    font-size: 1.7rem;
-    font-weight: var(--cb-font-weight-bold);
-    color: var(--cb-text-secondary-color);
-    text-align: center;
-    line-height: 0.5rem;
+  font-family: var(--cb-primary-font);
+  font-size: 1.7rem;
+  font-weight: var(--cb-font-weight-bold);
+  color: var(--cb-text-secondary-color);
+  text-align: center;
+  line-height: 0.5rem;
 }
 
 .cb-label {
-    font-family: var(--cb-secondary-font);
-    font-size: 1rem;
-    font-weight: var(--cb-font-weight-bold);
-    color: var(--cb-text-primary-color);
-    margin-top: 1rem;
-    display: block;
-    padding-left: 0.6rem;
+  font-family: var(--cb-secondary-font);
+  font-size: 1rem;
+  font-weight: var(--cb-font-weight-bold);
+  color: var(--cb-text-primary-color);
+  margin-top: 1rem;
+  display: block;
+  padding-left: 0.6rem;
 }
 
 .cb-input {
-    margin-top: 0.5rem;
-    width: 100%;
-    border-radius: 0.8rem;
-    border: 1px solid var(--cb-border-color);
-    height: 3rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  border-radius: 0.8rem;
+  border: 1px solid var(--cb-border-color);
+  height: 3rem;
 }
 
 .cb-error-message {
-    display: flex;
-    gap: 0.1rem;
-    font-size: 0.9rem;
-    color: var(--cb-text-error-color);
-    margin-top: 0.625rem;
-    align-items: center;
+  display: flex;
+  gap: 0.1rem;
+  font-size: 0.9rem;
+  color: var(--cb-text-error-color);
+  margin-top: 0.625rem;
+  align-items: center;
 }
 
 .cb-error-icon svg {
-    width: 1.5rem;
-    aspect-ratio: 1;
+  width: 1.5rem;
+  aspect-ratio: 1;
 }
 
 .cb-error-popup {
-    display: flex;
-    gap: 1.25rem;
-    justify-content: between;
-    padding: var(--cb-error-padding);
-    background-color: var(--cb-error-background-color);
-    border-radius: var(--cb-border-radius);
-    color: var(--cb-error-text-color);
+  display: flex;
+  gap: 1.25rem;
+  justify-content: between;
+  padding: var(--cb-error-padding);
+  background-color: var(--cb-error-background-color);
+  border-radius: var(--cb-border-radius);
+  color: var(--cb-error-text-color);
 }
 
 .cb-error-popup-icon {
-    margin: auto;
+  margin: auto;
 }
 
 .cb-error-popup-icon svg {
-    align-self: start;
-    aspect-ratio: var(--cb-error-img-aspect-ratio);
-    width: var(--cb-error-indicator-width);
-    fill: var(--cb-error-img-fill-color);
+  align-self: start;
+  aspect-ratio: var(--cb-error-img-aspect-ratio);
+  width: var(--cb-error-indicator-width);
+  fill: var(--cb-error-img-fill-color);
 }
 
 .cb-error-popup-text {
-    flex: auto;
+  flex: auto;
 }
 
 .cb-footer {
-    margin-top: 2.75rem;
-    text-align: center;
+  margin-top: 2.75rem;
+  text-align: center;
 }
 
 .cb-footer-text {
-    font-size: var(--cb-font-size-normal);
-    color: var(--cb-link-color);
+  font-size: var(--cb-font-size-normal);
+  color: var(--cb-link-color);
 }
 
 .cb-link {
-    color: var(--cb-link-color);
-    font-weight: var(--cb-font-weight-bold);
-    text-decoration: none;
+  color: var(--cb-link-color);
+  font-weight: var(--cb-font-weight-bold);
+  text-decoration: none;
 }
 
 .cb-button {
-    justify-content: center;
-    align-items: center;
-    padding: 0.3125rem 1rem;
-    margin-top: 4rem;
-    height: auto;
-    background-color: var(--cb-primary-color);
-    border-radius: var(--cb-border-radius);
-    cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3125rem 1rem;
+  margin-top: 4rem;
+  height: auto;
+  background-color: var(--cb-primary-color);
+  border-radius: var(--cb-border-radius);
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
-    .cb-error-popup {
-        flex-wrap: wrap;
-        padding: 2rem 1.25rem;
-        margin-top: 2.5rem;
-        max-width: 100%;
-    }
+  .cb-error-popup {
+    flex-wrap: wrap;
+    padding: 2rem 1.25rem;
+    margin-top: 2.5rem;
+    max-width: 100%;
+  }
 }

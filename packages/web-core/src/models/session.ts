@@ -1,11 +1,15 @@
 import type { SessionUser } from '@corbado/types';
 
+import type { CookieInfo } from './cookieInfo';
+
 export class ShortSession {
   readonly #value: string;
   readonly #user: SessionUser;
+  readonly #cookieInfo?: CookieInfo;
 
-  constructor(value: string) {
+  constructor(value: string, cookieInfo?: CookieInfo) {
     this.#value = value;
+    this.#cookieInfo = cookieInfo;
 
     // this is a quick and easy way to parse JWT tokens without using a library
     const splits = value.split('.');
@@ -18,6 +22,10 @@ export class ShortSession {
 
   get user() {
     return this.#user;
+  }
+
+  get cookieInfo() {
+    return this.#cookieInfo;
   }
 
   isValidForXMoreSeconds(seconds: number): boolean {

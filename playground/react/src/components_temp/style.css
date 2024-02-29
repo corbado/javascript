@@ -4,7 +4,7 @@
   --cb-text-primary-color: #000000;
   --cb-text-secondary-color: #6e6d6d;
   --cb-background-color: #ffffff;
-  --cb-border-color: #a1a1aa;
+  --cb-border-color: #c7c7c7;
   --cb-link-color: #59acff;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
@@ -33,10 +33,11 @@
   font-weight: var(--cb-font-weight-bold);
   color: var(--cb-text-primary-color);
   text-align: center;
-  line-height: 0rem;
+  word-wrap: break-word;
 }
 
 .cb-subheader {
+  margin-top: -1.5rem;
   font-family: var(--cb-primary-font);
   font-size: 1.2rem;
   font-weight: var(--cb-font-weight-bold);
@@ -48,7 +49,7 @@
 .cb-label {
   font-family: var(--cb-secondary-font);
   font-size: 0.7rem;
-  font-weight: var(--cb-font-weight-bold);
+  font-weight: 600;
   color: var(--cb-text-primary-color);
   margin-top: 0.3rem;
   display: block;
@@ -143,7 +144,7 @@
 .cb-button {
   justify-content: center;
   align-items: center;
-  padding: 0.3rem;
+  padding: 0.35rem;
   margin-top: 1rem;
   color: white;
   background-color: var(--cb-primary-color);

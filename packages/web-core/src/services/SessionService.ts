@@ -1,6 +1,7 @@
 import type { CorbadoUser, SessionUser } from '@corbado/types';
 import log from 'loglevel';
 
+import { CookieInfo } from '../models/cookieInfo';
 import { ShortSession } from '../models/session';
 import type { ApiService } from './ApiService';
 
@@ -52,7 +53,7 @@ export class SessionService {
       await this.#handleRefreshRequest();
     }
 
-    this.#apiService.setInstanceWithToken(this.#longSession || this.#shortSession?.value || '');
+    this.#apiService.setInstanceWithToken(this.#longSession || '');
 
     // init scheduled session refresh
     // TODO: make use of pageVisibility event and service workers
@@ -134,11 +135,21 @@ export class SessionService {
     }
   }
 
-  logout() {
-    // TODO: should we call backend to destroy the session here?
+  async logout() {
     log.debug('logging out user');
-    this.clear();
+    const response = await this.#apiService.logout();
 
+    if (this.#setShortSessionCookie) {
+      // deleting a cookie actually means to overwrite it
+      // the logout call returns all required information (domain and path) to overwrite the cookie
+      if (response.ok && response.val) {
+        const s = response.val;
+        const overwrite = new CookieInfo(s.value, s.domain, s.expires, s.path, s.sameSite, s.secure);
+        this.#deleteShortTermSessionCookie(overwrite);
+      }
+    }
+
+    this.clear();
     if (this.#onShortSessionChange) {
       this.#onShortSessionChange(undefined);
     }
@@ -199,7 +210,12 @@ export class SessionService {
     this.#shortSession = value;
 
     if (this.#setShortSessionCookie) {
-      document.cookie = `${shortSessionKey}=${value.toString()}; path=/;`;
+      if (!value.cookieInfo) {
+        log.warn('no cookieInfo on shortSession', value);
+        return;
+      }
+
+      document.cookie = value.cookieInfo.toCookie(shortSessionKey);
     }
   }
 
@@ -209,10 +225,10 @@ export class SessionService {
   #deleteShortTermSessionToken(): void {
     localStorage.removeItem(shortSessionKey);
     this.#shortSession = undefined;
+  }
 
-    if (this.#setShortSessionCookie) {
-      document.cookie = `${shortSessionKey}=; path=/; expires=${new Date().toUTCString()}`;
-    }
+  #deleteShortTermSessionCookie(overwrite: CookieInfo): void {
+    document.cookie = overwrite.toCookie(shortSessionKey);
   }
 
   /**
@@ -255,13 +271,17 @@ export class SessionService {
       log.warn(response.val);
 
       if (response.val?.name === 'errors.unauthenticated') {
-        this.logout();
+        await this.logout();
       }
       return;
     }
 
-    const shortSession = new ShortSession(response.val?.shortSession?.value || '');
-    this.setSession(shortSession, undefined);
+    if (response.val?.shortSession) {
+      const s = response.val.shortSession;
+      const cookieInfo = new CookieInfo(s.value, s.domain, s.expires, s.path, s.sameSite, s.secure);
+      const shortSession = new ShortSession(s.value, cookieInfo);
+      this.setSession(shortSession, undefined);
+    }
   }
 
   #handleVisibilityChange() {

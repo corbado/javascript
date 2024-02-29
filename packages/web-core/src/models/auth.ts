@@ -1,4 +1,5 @@
 import type { AuthenticationRsp } from '../api';
+import { CookieInfo } from './cookieInfo';
 import { ShortSession } from './session';
 
 export class AuthenticationResponse {
@@ -17,6 +18,10 @@ export class AuthenticationResponse {
       throw new Error('ShortSession is undefined. This must never happen.');
     }
 
-    return new AuthenticationResponse(new ShortSession(value.shortSession.value), value.redirectURL, value.longSession);
+    const s = value.shortSession;
+    const cookieInfo = new CookieInfo(s.value, s.domain, s.expires, s.path, s.sameSite, s.secure);
+    const shortSession = new ShortSession(s.value, cookieInfo);
+
+    return new AuthenticationResponse(shortSession, value.redirectURL, value.longSession);
   }
 }

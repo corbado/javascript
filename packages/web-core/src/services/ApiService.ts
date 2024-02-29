@@ -6,7 +6,7 @@ import log from 'loglevel';
 import type { Subject } from 'rxjs';
 import { Err, Result } from 'ts-results';
 
-import type { SessionRefreshRsp } from '../api';
+import type { SessionRefreshRsp, ShortSession } from '../api';
 import { AssetsApi, Configuration, ProjectsApi, SessionsApi, UsersApi } from '../api';
 import { AuthenticationResponse } from '../models/auth';
 import type {
@@ -438,6 +438,18 @@ export class ApiService {
       }
 
       return response.data;
+    });
+  }
+
+  public async logout(): Promise<Result<ShortSession | undefined, NonRecoverableError | undefined>> {
+    return Result.wrapAsync(async () => {
+      const response = await this.#sessionsApiWithAuth.sessionLogout({});
+
+      if (response.status !== 200) {
+        return;
+      }
+
+      return response.data.shortSession;
     });
   }
 }

@@ -13,7 +13,7 @@ const SignUpForm: React.FC = () => {
         <header className='cb-header'>
           <p>Create your account</p>
         </header>
-        <p className='cb-subheader'>to continue to loooooooooooongAppName</p>
+        <p className='cb-subheader'>to continue to AppName</p>
         <InputField
           label='Name'
           id='name'

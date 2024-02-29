@@ -140,6 +140,10 @@
 }
 
 @media (max-width: 768px) {
+  .component {
+    margin: 0.2rem;
+  }
+
   .sticky-header {
     background-color: #333;
     color: white;

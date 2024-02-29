@@ -20,7 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, type = 'text', id, error
     <input
       type={type}
       id={id}
-      className='cb-input'
+      className={`cb-input ${showError ? 'cb-input-error' : ''}`}
       aria-label={label}
     />
     {showError && errorMessage && <ErrorMessage message={errorMessage} />}

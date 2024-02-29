@@ -11,7 +11,7 @@ const SignUpForm: React.FC = () => {
       {showError && <ErrorPopup />}
       <form>
         <header className='cb-header'>
-          <h1>Create your account</h1>
+          <p>Create your account</p>
         </header>
         <p className='cb-subheader'>to continue to loooooooooooongAppName</p>
         <InputField

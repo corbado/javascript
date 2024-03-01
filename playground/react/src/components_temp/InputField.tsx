@@ -10,10 +10,10 @@ interface InputFieldProps {
 }
 
 const InputField: React.FC<InputFieldProps> = ({ label, type = 'text', id, errorMessage, showError }) => (
-  <>
+  <div className='cb-input-field'>
     <label
       htmlFor={id}
-      className='cb-label'
+      className='cb-input-label'
     >
       {label}
     </label>
@@ -24,7 +24,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, type = 'text', id, error
       aria-label={label}
     />
     {showError && errorMessage && <ErrorMessage message={errorMessage} />}
-  </>
+  </div>
 );
 
 export default InputField;

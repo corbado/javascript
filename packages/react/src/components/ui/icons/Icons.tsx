@@ -1,5 +1,7 @@
 import cancelSrc from '@corbado/shared-ui/assets/cancel.svg';
+import circleExclamationSrc from '@corbado/shared-ui/assets/circle-exclamation.svg';
 import deleteSrc from '@corbado/shared-ui/assets/delete.svg';
+import exclamationSrc from '@corbado/shared-ui/assets/exclamation.svg';
 import fingerprintSrc from '@corbado/shared-ui/assets/fingerprint.svg';
 import gmailSrc from '@corbado/shared-ui/assets/gmail.svg';
 import corbadoLogoSrc from '@corbado/shared-ui/assets/logo.svg';
@@ -92,6 +94,26 @@ export const CorbadoLogoIcon = (props: IconProps) => {
     <Icon
       src={corbadoLogoSrc}
       alt='corbado-logo'
+      {...props}
+    />
+  );
+};
+
+export const ExlamationIcon = (props: IconProps) => {
+  return (
+    <Icon
+      src={exclamationSrc}
+      alt='exlamation'
+      {...props}
+    />
+  );
+};
+
+export const CircleExlamationIcon = (props: IconProps) => {
+  return (
+    <Icon
+      src={circleExclamationSrc}
+      alt='circle-exlamation'
       {...props}
     />
   );

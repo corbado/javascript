@@ -5,7 +5,9 @@ import './styles/themes/emerald-funk.css';
 import './styles2/index.css';
 
 import cancelIcon from './assets/cancel.svg';
+import circleExclamationIcon from './assets/circle-exclamation.svg';
 import deleteIcon from './assets/delete.svg';
+import exclamationIcon from './assets/exclamation.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import gmailIcon from './assets/gmail.svg';
 import logoIcon from './assets/logo.svg';
@@ -31,4 +33,6 @@ export const assets = {
   fingerprintIcon,
   cancelIcon,
   logoIcon,
+  circleExclamationIcon,
+  exclamationIcon,
 };

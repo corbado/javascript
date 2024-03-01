@@ -104,7 +104,7 @@
     font-weight: var(--cb-font-weight-normal);
   }
 
-  .cb-error-icon-2 svg {
+  .cb-error-icon-2 {
     width: 1.15rem;
   }
 
@@ -120,9 +120,6 @@
 
   .cb-error-popup-icon-2 {
     margin: auto;
-  }
-
-  .cb-error-popup-icon-2 svg {
     width: 1.3rem;
   }
 

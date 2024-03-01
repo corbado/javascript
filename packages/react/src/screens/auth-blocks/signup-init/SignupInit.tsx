@@ -7,7 +7,7 @@ import ErrorPopup from '../../../components/ui2/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
-  const falseFlag = false;
+  const falseFlag = true;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [, setLoading] = useState<boolean>(false);
 

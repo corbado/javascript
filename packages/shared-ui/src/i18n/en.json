@@ -167,6 +167,7 @@
   },
   "errors": {
     "missing_identifier_type": {
+      "fullName": "Please enter a valid name.",
       "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
       "email": "That email address is taken. Pleas try another one.",
       "phone": "Phone number must be a valid phone number. "

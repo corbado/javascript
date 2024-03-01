@@ -78,6 +78,9 @@
     height: 1.75rem;
     padding-left: 0.6rem;
     justify-content: center;
+    font-size: 0.7rem;
+    font-family: var(--cb-secondary-font);
+    font-weight: var(--cb-font-weight-normal);
   }
 
   .cb-input-2:focus {

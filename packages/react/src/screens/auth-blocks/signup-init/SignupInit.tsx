@@ -33,7 +33,8 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
-  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const subheaderText = useMemo(() => t('subheader'), [t]);
+  const loginText = useMemo(() => t('text_login'), [t]);
   const flowChangeButtonText = useMemo(() => t('button_login'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const fullNameFieldLabel = useMemo(() => t('textField_fullName'), [t]);
@@ -61,7 +62,10 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         <header className='cb-header-2'>
           <p>{headerText}</p>
         </header>
-        <p className='cb-subheader-2'>to continue to {block.common.appName}</p>
+        <p className='cb-subheader-2'>
+          {subheaderText}
+          {block.common.appName}
+        </p>
         <form className='cb-form-2'>
           {fullName && (
             <InputField
@@ -111,7 +115,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           {submitButtonText}
         </button>
         <p className='cb-auth-change-section-2'>
-          {subHeaderText}
+          {loginText}
           <span
             className='cb-link-2'
             onClick={() => block.switchToLogin()}

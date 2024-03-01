@@ -1,8 +1,8 @@
 import React from 'react';
 
 const ErrorPopup = () => (
-  <div className='cb-error-popup'>
-    <div className='cb-error-popup-icon'>
+  <div className='cb-error-popup-2'>
+    <div className='cb-error-popup-icon-2'>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='35'
@@ -16,7 +16,7 @@ const ErrorPopup = () => (
       </svg>
     </div>
     <div>
-      <p className='cb-error-popup-text'>
+      <p className='cb-error-popup-text-2'>
         Unable to complete action at this time. If the problem persists please contact support.
       </p>
     </div>

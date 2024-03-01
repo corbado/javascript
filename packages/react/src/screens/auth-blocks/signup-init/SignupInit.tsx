@@ -1,13 +1,15 @@
 import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
-import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FormInput, Header, PrimaryButton, SubHeader } from '../../../components';
+import Disclaimer from '../../../components/ui2/Disclaimer';
+import ErrorPopup from '../../../components/ui2/ErrorPopup';
+import InputField from '../../../components/ui2/InputField';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
+  const falseFlag = false;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
 
   const [username, setUsername] = useState<TextFieldWithError | null>(null);
   const usernameRef = useRef<HTMLInputElement>();
@@ -39,84 +41,86 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const phoneFieldLabel = useMemo(() => t('textField_phone'), [t]);
   const usernameFieldLabel = useMemo(() => t('textField_username'), [t]);
 
-  const handleSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
+  const handleSubmit = useCallback(() => {
+    setLoading(true);
 
-      const identifiers: LoginIdentifiers = {
-        email: emailRef.current?.value,
-        phone: phoneRef.current?.value,
-        userName: usernameRef.current?.value,
-      };
+    const identifiers: LoginIdentifiers = {
+      email: emailRef.current?.value,
+      phone: phoneRef.current?.value,
+      userName: usernameRef.current?.value,
+    };
 
-      const fullName = fullNameRef.current?.value;
-      void block.updateUserData(identifiers, fullName);
-    },
-    [block],
-  );
+    const fullName = fullNameRef.current?.value;
+    void block.updateUserData(identifiers, fullName);
+  }, [block]);
 
   return (
-    <>
-      <Header>{headerText}</Header>
-      <SubHeader>
-        {subHeaderText}
-        <span
-          className='cb-link-secondary'
-          onClick={() => block.switchToLogin()}
-        >
-          {flowChangeButtonText}
-        </span>
-      </SubHeader>
-      <form
-        className='cb-form'
-        onSubmit={handleSubmit}
-      >
-        <div className='cb-form-body'>
+    <div className='new-ui-component'>
+      <div className='cb-container-2'>
+        {falseFlag && <ErrorPopup />}
+        <header className='cb-header-2'>
+          <p>{headerText}</p>
+        </header>
+        <p className='cb-subheader-2'>to continue to {block.common.appName}</p>
+        <form className='cb-form-2'>
           {fullName && (
-            <FormInput
-              name='fullName'
+            <InputField
+              id='name'
+              name='name'
               label={fullNameFieldLabel}
-              error={fullName?.translatedError}
+              errorMessage={fullName?.translatedError}
               ref={el => el && (fullNameRef.current = el)}
             />
           )}
           {username && (
-            <FormInput
-              name='username'
+            <InputField
               label={usernameFieldLabel}
-              error={username?.translatedError}
+              id='username'
+              name='username'
+              errorMessage={username?.translatedError}
               ref={el => el && (usernameRef.current = el)}
             />
           )}
           {email && (
-            <FormInput
+            <InputField
+              label={emailFieldLabel}
+              id='email'
               name='email'
               type='email'
               autoComplete='email'
-              label={emailFieldLabel}
-              error={email?.translatedError}
+              errorMessage={email?.translatedError}
               ref={el => el && (emailRef.current = el)}
             />
           )}
           {phone && (
-            <FormInput
-              name='phone'
-              type='phone'
-              autoComplete='phone'
+            <InputField
               label={phoneFieldLabel}
-              error={phone?.translatedError}
+              id='phone'
+              name='phone'
+              autoComplete='phone'
+              errorMessage={phone?.translatedError}
               ref={el => el && (phoneRef.current = el)}
             />
           )}
-        </div>
-        <PrimaryButton
-          disabled={loading}
-          isLoading={loading}
+        </form>
+        <button
+          type='button'
+          className='cb-button-2'
+          onClick={handleSubmit}
         >
           {submitButtonText}
-        </PrimaryButton>
-      </form>
-    </>
+        </button>
+        <p className='cb-auth-change-section-2'>
+          {subHeaderText}
+          <span
+            className='cb-link-2'
+            onClick={() => block.switchToLogin()}
+          >
+            {flowChangeButtonText}
+          </span>
+        </p>
+        <Disclaimer />
+      </div>
+    </div>
   );
 };

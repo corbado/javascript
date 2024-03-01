@@ -33,7 +33,7 @@ export const PasskeyBenefits = ({ block }: { block: PasskeyVerifyBlock }) => {
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);
-          return block.passkeyLogin();
+          return void block.passkeyLogin();
         }}
         isLoading={primaryLoading}
       >

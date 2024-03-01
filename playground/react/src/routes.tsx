@@ -3,18 +3,9 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import SignUpPage from './pages/SignUpPage';
 import LoginPage from './pages/LoginPage';
-import SignUpForm from './components_temp/SignUpFrom';
 
 const RouteProvider = () => {
   const routes = [
-    {
-      path: 'testing',
-      element: (
-        <div className='component'>
-          <SignUpForm />
-        </div>
-      ),
-    },
     {
       path: '/:projectId/auth',
       element: <AuthPage />,

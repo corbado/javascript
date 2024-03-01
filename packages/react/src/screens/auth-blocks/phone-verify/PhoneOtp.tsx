@@ -54,7 +54,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
 
       <PrimaryButton
         isLoading={loading}
-        onClick={() => block.resendCode()}
+        onClick={() => void block.resendCode()}
       >
         {resendButtonText}
       </PrimaryButton>

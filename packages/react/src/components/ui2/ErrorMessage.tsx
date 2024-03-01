@@ -1,12 +1,13 @@
+import type { FC } from 'react';
 import React from 'react';
 
 interface ErrorMessageProps {
   message: string;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-  <div className='cb-error-message'>
-    <div className='cb-error-icon'>
+const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => (
+  <div className='cb-error-message-2'>
+    <div className='cb-error-icon-2'>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='24'

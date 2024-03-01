@@ -63,7 +63,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       ))}
       {block.data.canBeSkipped && (
         <SecondaryButton
-          onClick={() => block.skipPasskeyAppend()}
+          onClick={() => void block.skipPasskeyAppend()}
           isLoading={secondaryLoading}
           disabled={primaryLoading}
         >

@@ -15,7 +15,7 @@ const SignUp: FC<CorbadoSignUpConfig> = ({ onSignedUp, navigateToLogin }) => {
         alignItems: 'center',
       }}
     >
-      <div className='cb-container'>
+      <div>
         <FlowHandlerProvider
           onLoggedIn={onSignedUp}
           onChangeFlow={navigateToLogin}

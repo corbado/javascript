@@ -8,7 +8,7 @@ export const FreemiumBadge: FC = () => {
     <div
       style={{
         backgroundColor: 'var(--cb-primary-color)',
-        borderRadius: ' 0 0 1.5rem 1.5rem',
+        borderRadius: ' 0 0 1rem 1rem',
         height: '2rem',
         width: '11rem',
         display: 'flex',

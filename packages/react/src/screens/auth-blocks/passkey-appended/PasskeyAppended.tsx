@@ -28,7 +28,7 @@ export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
       <Body className='cb-body-spacing'>{body}</Body>
       <PrimaryButton
         onClick={() => {
-          return block.continue();
+          return void block.continue();
         }}
       >
         {primaryButton}

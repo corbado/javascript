@@ -8,9 +8,8 @@ import {
   setBackendConfigs,
 } from '../../utils/helperFunctions/setBackendConfigs';
 
-setup('set b1.3 configs', async (/* { page } */) => {
+setup('set b1.2 configs', async (/* { page } */) => {
   await setBackendConfigs('pro-8125835201872404154', [
     makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.EmailOtp]),
-    makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.SmsOtp]),
   ]);
 });

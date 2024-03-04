@@ -17,7 +17,8 @@ on:
 
 jobs:
   prepare:
-    runs-on: [ self-hosted, "javascript" ]
+    # runs-on: [ self-hosted, "javascript" ]
+    runs-on: ubuntu-latest
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -59,7 +60,8 @@ jobs:
   e2e-tests:
     timeout-minutes: 60
     needs: prepare
-    runs-on: [ self-hosted, "javascript" ]
+    # runs-on: [ self-hosted, "javascript" ]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:

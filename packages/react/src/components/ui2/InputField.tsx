@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 import React, { forwardRef } from 'react';
 
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from './errors/ErrorMessage';
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;

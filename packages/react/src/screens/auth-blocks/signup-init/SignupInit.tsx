@@ -2,14 +2,15 @@ import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@cor
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import Disclaimer from '../../../components/ui2/Disclaimer';
-import ErrorPopup from '../../../components/ui2/ErrorPopup';
+import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
-  const falseFlag = true;
+  const falseFlag = false;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
-  const [, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [username, setUsername] = useState<TextFieldWithError | null>(null);
   const usernameRef = useRef<HTMLInputElement>();
@@ -107,13 +108,13 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             />
           )}
         </form>
-        <button
+        <PrimaryButton
           type='button'
-          className='cb-button-2'
+          isLoading={loading}
           onClick={handleSubmit}
         >
           {submitButtonText}
-        </button>
+        </PrimaryButton>
         <p className='cb-auth-change-section-2'>
           {loginText}
           <span

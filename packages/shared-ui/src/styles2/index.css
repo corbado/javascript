@@ -1,9 +1,11 @@
 .new-ui-component {
   --cb-primary-color: #1953ff;
   --cb-primary-color-hover: #0d3bfc;
+  --cb-primary-color-disabled: #889DFF;
+  --cb-button-text-primary-color: #fff;
   --cb-text-primary-color: #000000;
   --cb-text-secondary-color: #6e6d6d;
-  --cb-background-color: #ffffff;
+  --cb-white: #ffffff;
   --cb-border-color: #c7c7c7;
   --cb-link-color: #59acff;
   --cb-primary-font: 'Space Grotesk', sans-serif;
@@ -21,7 +23,7 @@
     max-width: 350px;
     max-height: 675px;
     padding: 0.5rem 1.5rem;
-    background-color: var(--cb-background-color);
+    background-color: var(--cb-white);
     box-shadow: 0px 11.478px 28.694px 2.296px rgba(0, 0, 0, 0.25);
     border-radius: var(--cb-border-radius-lg);
   }
@@ -156,12 +158,12 @@
     cursor: pointer;
   }
 
-  .cb-button-2 {
+  .cb-primary-button-2 {
     justify-content: center;
     align-items: center;
     align-self: center;
-    padding: 0.35rem;
-    color: white;
+    padding: 0.45rem;
+    color: var(--cb-button-text-primary-color);
     background-color: var(--cb-primary-color);
     border-radius: var(--cb-border-radius-sm);
     border: none;
@@ -170,5 +172,38 @@
     font-family: var(--cb-primary-font);
     font-weight: var(--cb-font-weight-bold);
     cursor: pointer;
+  }
+
+  .cb-primary-button-2:hover, .cb-primary-button-2:focus, .cb-primary-button-2:active {
+    background-color: var(--cb-primary-color-hover);
+  }
+
+  .cb-primary-button-2:disabled {
+    background-color: var(--cb-primary-color-disabled);
+    cursor: not-allowed;
+  }
+
+  .cb-spinner-2 {
+    margin: auto;
+    border: 0.25rem solid transparent;
+    border-radius: 100%;
+    animation: cb-spin-animation 0.75s linear infinite;
+  }
+
+  .cb-primary-button-spinner-2 {
+    border-top-color: var(--cb-button-text-primary-color);
+    border-right-color: var(--cb-button-text-primary-color);
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+
+  @keyframes cb-spin-animation {
+    from {
+      transform: rotate(0turn);
+    }
+
+    to {
+      transform: rotate(1turn);
+    }
   }
 }

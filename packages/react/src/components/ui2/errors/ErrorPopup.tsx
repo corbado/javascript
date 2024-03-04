@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { ExlamationIcon } from '../ui/icons/Icons';
+import { ExclamationIcon } from '../icons/ExclamationIcon';
 
 const ErrorPopup = () => (
   <div className='cb-error-popup-2'>
     <div className='cb-error-popup-icon-2'>
-      <ExlamationIcon className='cb-error-popup-icon-2' />
+      <ExclamationIcon className='cb-error-popup-icon-2' />
     </div>
     <div>
       <p className='cb-error-popup-text-2'>

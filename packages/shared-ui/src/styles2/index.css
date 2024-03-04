@@ -1,7 +1,7 @@
 .new-ui-component {
   --cb-primary-color: #1953ff;
   --cb-primary-color-hover: #0d3bfc;
-  --cb-primary-color-disabled: #889DFF;
+  --cb-primary-color-disabled: #889dff;
   --cb-button-text-primary-color: #fff;
   --cb-text-primary-color: #000000;
   --cb-text-secondary-color: #6e6d6d;
@@ -174,7 +174,9 @@
     cursor: pointer;
   }
 
-  .cb-primary-button-2:hover, .cb-primary-button-2:focus, .cb-primary-button-2:active {
+  .cb-primary-button-2:hover,
+  .cb-primary-button-2:focus,
+  .cb-primary-button-2:active {
     background-color: var(--cb-primary-color-hover);
   }
 

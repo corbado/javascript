@@ -2,8 +2,10 @@ import { type PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Header, HorizontalRule, PrimaryButton, SecondaryButton, SubHeader } from '../../../components';
+import { HorizontalRule, PrimaryButton, SecondaryButton, SubHeader } from '../../../components';
 import { FingerprintIcon } from '../../../components/ui/icons/Icons';
+import { Header } from '../../../components/ui2/typography/Header';
+import { Text } from '../../../components/ui2/typography/Text';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
@@ -49,7 +51,15 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
 
   return (
     <div className='new-ui-component'>
-      <div className='cb-container-2'></div>
+      <div className='cb-container-2'>
+        <Header size='md'>{header}</Header>
+        <Text
+          level='4'
+          fontWeight='bold'
+        >
+          {subHeader}
+        </Text>
+      </div>
     </div>
   );
 

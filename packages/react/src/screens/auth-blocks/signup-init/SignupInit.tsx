@@ -64,7 +64,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     <div className='new-ui-component'>
       <div className='cb-container-2'>
         {falseFlag && <ErrorPopup />}
-        <Header>{headerText}</Header>
+        <Header size='lg'>{headerText}</Header>
         <SubHeader>
           {subheaderText}
           {block.common.appName}

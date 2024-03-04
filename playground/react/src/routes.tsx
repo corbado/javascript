@@ -3,9 +3,14 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import SignUpPage from './pages/SignUpPage';
 import LoginPage from './pages/LoginPage';
+import { Testing } from './component2/Testing';
 
 const RouteProvider = () => {
   const routes = [
+    {
+      path: '/testing',
+      element: <Testing />,
+    },
     {
       path: '/:projectId/auth',
       element: <AuthPage />,

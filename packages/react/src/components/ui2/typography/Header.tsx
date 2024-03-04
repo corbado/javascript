@@ -3,12 +3,17 @@ import React from 'react';
 
 import { Text } from './Text';
 
-export const Header: FC<PropsWithChildren> = ({ children }) => {
+interface HeaderProps {
+  size?: 'md' | 'lg';
+  className?: string;
+}
+
+export const Header: FC<PropsWithChildren<HeaderProps>> = ({ size, className, children }) => {
   return (
     <Text
-      level='6'
+      level={size === 'lg' ? '7' : '6'}
       fontWeight='bold'
-      className='cb-header-2'
+      className={`cb-header-2${className ? ` ${className}` : ''}`}
     >
       {children}
     </Text>

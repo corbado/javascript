@@ -3,9 +3,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import Disclaimer from '../../../components/ui2/Disclaimer';
 import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
+import { Header } from '../../../components/ui2/typography/Header';
+import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const falseFlag = false;
@@ -60,13 +63,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     <div className='new-ui-component'>
       <div className='cb-container-2'>
         {falseFlag && <ErrorPopup />}
-        <header className='cb-header-2'>
-          <p>{headerText}</p>
-        </header>
-        <p className='cb-subheader-2'>
+        <Header>{headerText}</Header>
+        <SubHeader>
           {subheaderText}
           {block.common.appName}
-        </p>
+        </SubHeader>
         <form className='cb-form-2'>
           {fullName && (
             <InputField
@@ -117,12 +118,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         </PrimaryButton>
         <p className='cb-auth-change-section-2'>
           {loginText}
-          <span
-            className='cb-link-2'
-            onClick={() => block.switchToLogin()}
-          >
-            {flowChangeButtonText}
-          </span>
+          <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
         </p>
         <Disclaimer />
       </div>

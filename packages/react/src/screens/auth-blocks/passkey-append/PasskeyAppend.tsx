@@ -48,6 +48,12 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
   return (
+    <div className='new-ui-component'>
+      <div className='cb-container-2'></div>
+    </div>
+  );
+
+  return (
     <div className='cb-layout-passkey'>
       <Header>{header}</Header>
       <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>

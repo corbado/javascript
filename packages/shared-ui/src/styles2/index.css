@@ -12,6 +12,7 @@
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
   --cb-font-weight-normal: 400;
+  --cb-base-font-size: 0.6rem;
   --cb-border-radius-lg: 1.125rem;
   --cb-border-radius-sm: 0.5rem;
   --cb-error-text-color: #ce1212;
@@ -34,24 +35,63 @@
     margin-bottom: 1rem;
   }
 
-  .cb-header-2 {
-    font-family: var(--cb-primary-font);
-    font-size: 1.8rem;
-    font-weight: var(--cb-font-weight-bold);
+  .cb-primary-text-color-2 {
     color: var(--cb-text-primary-color);
+  }
+
+  .cb-secondary-text-color-2 {
+    color: var(--cb-text-secondary-color);
+  }
+
+  .cb-bold-text-weight-2 {
+    font-weight: var(--cb-font-weight-bold);
+  }
+
+  .cb-normal-text-weight-2 {
+    font-weight: var(--cb-font-weight-normal);
+  }
+
+  .cb-primary-text-font-2 {
+    font-family: var(--cb-primary-font);
+  }
+
+  .cb-secondary-text-font-2 {
+    font-family: var(--cb-secondary-font);
+  }
+
+  .cb-text-1-2 {
+    font-size: var(--cb-base-font-size);
+  }
+
+  .cb-text-2-2 {
+    font-size: calc(var(--cb-base-font-size) * 1.17);
+  }
+
+  .cb-text-3-2 {
+    font-size: calc(var(--cb-base-font-size) * 1.25);
+  }
+
+  .cb-text-4-2 {
+    font-size: calc(var(--cb-base-font-size) * 1.5);
+  }
+
+  .cb-text-5-2 {
+    font-size: calc(var(--cb-base-font-size) * 2);
+  }
+
+  .cb-text-6-2 {
+    font-size: calc(var(--cb-base-font-size) * 3);
+  }
+
+  .cb-header-2 {
     text-align: center;
     word-wrap: break-word;
-    line-height: 1.1rem;
+    margin-top: 1.5rem;
   }
 
   .cb-subheader-2 {
-    margin-top: -1.5rem;
-    font-family: var(--cb-primary-font);
-    font-size: 1.2rem;
-    font-weight: var(--cb-font-weight-bold);
-    color: var(--cb-text-secondary-color);
     text-align: center;
-    line-height: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .cb-input-field-2 {
@@ -63,10 +103,6 @@
   }
 
   .cb-input-label-2 {
-    font-family: var(--cb-secondary-font);
-    font-size: 0.7rem;
-    font-weight: var(--cb-font-weight-normal);
-    color: var(--cb-text-primary-color);
     margin-top: 0.4rem;
     padding-left: 0.3rem;
     align-self: flex-start;
@@ -80,7 +116,6 @@
     height: 1.75rem;
     padding-left: 0.6rem;
     justify-content: center;
-    font-size: 0.7rem;
     font-family: var(--cb-secondary-font);
     font-weight: var(--cb-font-weight-normal);
   }
@@ -134,9 +169,6 @@
   }
 
   .cb-auth-change-section-2 {
-    font-size: 0.75rem;
-    font-family: var(--cb-primary-font);
-    font-weight: var(--cb-font-weight-bold);
     margin: 1rem 0 1rem 0;
     width: 90%;
     align-self: center;
@@ -144,11 +176,8 @@
 
   .cb-disclaimer-2 {
     text-align: center;
-    margin: 0 2.5rem 0 2.5rem;
-    font-size: 0.6rem;
+    margin: 0.8rem 2.5rem 0.8rem 2.5rem;
     line-height: 1rem;
-    font-family: var(--cb-secondary-font);
-    font-weight: var(--cb-font-weight-normal);
   }
 
   .cb-link-2 {
@@ -159,8 +188,6 @@
   }
 
   .cb-primary-button-2 {
-    justify-content: center;
-    align-items: center;
     align-self: center;
     padding: 0.45rem;
     color: var(--cb-button-text-primary-color);

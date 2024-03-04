@@ -9,6 +9,7 @@ import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
+import { Text } from '../../../components/ui2/typography/Text';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const falseFlag = false;
@@ -116,10 +117,14 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         >
           {submitButtonText}
         </PrimaryButton>
-        <p className='cb-auth-change-section-2'>
+        <Text
+          level='3'
+          fontWeight='bold'
+          className='cb-auth-change-section-2'
+        >
           {loginText}
           <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
-        </p>
+        </Text>
         <Disclaimer />
       </div>
     </div>

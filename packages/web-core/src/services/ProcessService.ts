@@ -14,6 +14,7 @@ import { WebAuthnService } from './WebAuthnService';
 
 // TODO: set this version
 const packageVersion = '0.0.0';
+const clientHandleKey = 'cbo_client_handle';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -129,9 +130,22 @@ export class ProcessService {
   }
 
   async #initAuthProcess(): Promise<ProcessInitRsp> {
+    const maybeClientHandle = localStorage.getItem(clientHandleKey);
+    const canUsePasskeys =
+      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
+
     const r = await this.#authApi.processInit({
-      clientInfo: {},
+      clientInformation: {
+        bluetoothAvailable: false,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: maybeClientHandle ?? undefined,
+      },
     });
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (r.data.newClientEnvHandle) {
+      localStorage.setItem(clientHandleKey, r.data.newClientEnvHandle);
+    }
 
     return r.data;
   }
@@ -183,7 +197,6 @@ export class ProcessService {
 
   async finishPasskeyAppend(signedChallenge: string): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyAppendFinish({
-      clientInfo: {},
       signedChallenge: signedChallenge,
     });
 
@@ -191,16 +204,13 @@ export class ProcessService {
   }
 
   async startPasskeyLogin(): Promise<ProcessResponse> {
-    const r = await this.#authApi.passkeyLoginStart({
-      clientInfo: {},
-    });
+    const r = await this.#authApi.passkeyLoginStart({});
 
     return r.data;
   }
 
   async finishPasskeyLogin(signedChallenge: string): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyLoginFinish({
-      clientInfo: {},
       signedChallenge: signedChallenge,
     });
 
@@ -230,7 +240,6 @@ export class ProcessService {
       verificationType: 'email-otp',
       identifierType: 'email',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;
@@ -250,7 +259,6 @@ export class ProcessService {
       verificationType: 'email-link',
       identifierType: 'email',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;
@@ -297,7 +305,6 @@ export class ProcessService {
       verificationType: 'sms-otp',
       identifierType: 'phone',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;

@@ -3,7 +3,7 @@ import React from 'react';
 
 export interface TextProps {
   className?: string;
-  level?: '1' | '2' | '3' | '4' | '5' | '6';
+  level?: '1' | '2' | '3' | '4' | '5' | '6' | '7';
   fontFamilyVariant?: 'primary' | 'secondary';
   fontWeight?: 'normal' | 'bold';
   textColorVariant?: 'primary' | 'secondary';
@@ -19,7 +19,7 @@ export const Text: FC<PropsWithChildren<TextProps>> = ({
 }) => {
   return (
     <span
-      className={`cb-${textColorVariant}-text-color-2 cb-${fontWeight}-text-weight-2 cb-${fontFamilyVariant}-text-font-2 cb-text-${level}-2 ${className ?? ''}`}
+      className={`cb-${textColorVariant}-text-color-2 cb-${fontWeight}-text-weight-2 cb-${fontFamilyVariant}-text-font-2 cb-text-${level}-2${className ? ` ${className}` : ''}`}
     >
       {children}
     </span>

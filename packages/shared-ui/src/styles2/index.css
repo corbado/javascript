@@ -80,6 +80,10 @@
   }
 
   .cb-text-6-2 {
+    font-size: calc(var(--cb-base-font-size) * 2.5);
+  }
+
+  .cb-text-7-2 {
     font-size: calc(var(--cb-base-font-size) * 3);
   }
 

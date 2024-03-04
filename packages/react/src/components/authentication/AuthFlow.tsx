@@ -29,10 +29,6 @@ import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import Loading from '../ui/Loading';
 import { ErrorBoundary } from './ErrorBoundary';
 
-export type ScreenMap = {
-  [K in ScreenNames]?: (block: any) => React.ReactNode;
-};
-
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initialized } = useFlowHandler();

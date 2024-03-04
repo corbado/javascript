@@ -33,7 +33,7 @@ export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
       <PrimaryButton
         onClick={() => {
           setPrimaryLoading(true);
-          return block.passkeyAppend();
+          return void block.passkeyAppend();
         }}
         isLoading={primaryLoading}
       >
@@ -44,7 +44,7 @@ export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
         <SecondaryButton
           onClick={() => {
             setSecondaryLoading(true);
-            return fallback.action();
+            return void fallback.action();
           }}
           isLoading={secondaryLoading}
           disabled={primaryLoading}
@@ -54,7 +54,7 @@ export const PasskeyBenefits = ({ block }: { block: PasskeyAppendBlock }) => {
       ))}
       {block.data.canBeSkipped && (
         <SecondaryButton
-          onClick={() => block.skipPasskeyAppend()}
+          onClick={() => void block.skipPasskeyAppend()}
           isLoading={secondaryLoading}
           disabled={primaryLoading}
         >

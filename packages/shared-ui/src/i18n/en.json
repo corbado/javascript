@@ -3,7 +3,8 @@
     "signup-init": {
       "signup-init": {
         "header": "Create your account",
-        "subheader": "You already have an account? ",
+        "subheader": "to continue to ",
+        "text_login": "You already have an account? ",
         "button_login": "Log in",
         "button_submit": "Continue",
         "textField_fullName": "Name",
@@ -166,9 +167,10 @@
   },
   "errors": {
     "missing_identifier_type": {
-      "username": "Please enter a valid username",
-      "email": "Please enter a valid email",
-      "phone": "Please enter a valid phone number"
+      "fullName": "Please enter a valid name.",
+      "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
+      "email": "That email address is taken. Pleas try another one.",
+      "phone": "Phone number must be a valid phone number. "
     },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",

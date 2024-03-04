@@ -1,11 +1,17 @@
 import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
-import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FormInput, Header, PrimaryButton, SubHeader } from '../../../components';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
+import Disclaimer from '../../../components/ui2/Disclaimer';
+import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
+import InputField from '../../../components/ui2/InputField';
+import { Header } from '../../../components/ui2/typography/Header';
+import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
+  const falseFlag = false;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -31,7 +37,8 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
-  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const subheaderText = useMemo(() => t('subheader'), [t]);
+  const loginText = useMemo(() => t('text_login'), [t]);
   const flowChangeButtonText = useMemo(() => t('button_login'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const fullNameFieldLabel = useMemo(() => t('textField_fullName'), [t]);
@@ -39,84 +46,82 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const phoneFieldLabel = useMemo(() => t('textField_phone'), [t]);
   const usernameFieldLabel = useMemo(() => t('textField_username'), [t]);
 
-  const handleSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
+  const handleSubmit = useCallback(() => {
+    setLoading(true);
 
-      const identifiers: LoginIdentifiers = {
-        email: emailRef.current?.value,
-        phone: phoneRef.current?.value,
-        userName: usernameRef.current?.value,
-      };
+    const identifiers: LoginIdentifiers = {
+      email: emailRef.current?.value,
+      phone: phoneRef.current?.value,
+      userName: usernameRef.current?.value,
+    };
 
-      const fullName = fullNameRef.current?.value;
-      void block.updateUserData(identifiers, fullName);
-    },
-    [block],
-  );
+    const fullName = fullNameRef.current?.value;
+    void block.updateUserData(identifiers, fullName);
+  }, [block]);
 
   return (
-    <>
-      <Header>{headerText}</Header>
-      <SubHeader>
-        {subHeaderText}
-        <span
-          className='cb-link-secondary'
-          onClick={() => block.switchToLogin()}
-        >
-          {flowChangeButtonText}
-        </span>
-      </SubHeader>
-      <form
-        className='cb-form'
-        onSubmit={handleSubmit}
-      >
-        <div className='cb-form-body'>
+    <div className='new-ui-component'>
+      <div className='cb-container-2'>
+        {falseFlag && <ErrorPopup />}
+        <Header>{headerText}</Header>
+        <SubHeader>
+          {subheaderText}
+          {block.common.appName}
+        </SubHeader>
+        <form className='cb-form-2'>
           {fullName && (
-            <FormInput
-              name='fullName'
+            <InputField
+              id='name'
+              name='name'
               label={fullNameFieldLabel}
-              error={fullName?.translatedError}
+              errorMessage={fullName?.translatedError}
               ref={el => el && (fullNameRef.current = el)}
             />
           )}
           {username && (
-            <FormInput
-              name='username'
+            <InputField
               label={usernameFieldLabel}
-              error={username?.translatedError}
+              id='username'
+              name='username'
+              errorMessage={username?.translatedError}
               ref={el => el && (usernameRef.current = el)}
             />
           )}
           {email && (
-            <FormInput
+            <InputField
+              label={emailFieldLabel}
+              id='email'
               name='email'
               type='email'
               autoComplete='email'
-              label={emailFieldLabel}
-              error={email?.translatedError}
+              errorMessage={email?.translatedError}
               ref={el => el && (emailRef.current = el)}
             />
           )}
           {phone && (
-            <FormInput
-              name='phone'
-              type='phone'
-              autoComplete='phone'
+            <InputField
               label={phoneFieldLabel}
-              error={phone?.translatedError}
+              id='phone'
+              name='phone'
+              autoComplete='phone'
+              errorMessage={phone?.translatedError}
               ref={el => el && (phoneRef.current = el)}
             />
           )}
-        </div>
+        </form>
         <PrimaryButton
-          disabled={loading}
+          type='button'
           isLoading={loading}
+          onClick={handleSubmit}
         >
           {submitButtonText}
         </PrimaryButton>
-      </form>
-    </>
+        <p className='cb-auth-change-section-2'>
+          {loginText}
+          <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
+        </p>
+        <Disclaimer />
+      </div>
+    </div>
   );
 };

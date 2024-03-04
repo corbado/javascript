@@ -17,7 +17,7 @@ export class ErrorTranslator {
   }
 
   translateWithIdentifier(error: RequestError | undefined, type: LoginIdentifierType): string | undefined {
-    if (!error) {
+    if (!error || !error.code) {
       return undefined;
     }
 

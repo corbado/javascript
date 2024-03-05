@@ -84,13 +84,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             >
               This information will never leave your device.
             </Text>
-            <Text
-              level='3'
-              fontWeight='bold'
-              fontFamilyVariant='secondary'
-            >
-              <SecondaryButton onClick={() => void block.showPasskeyBenefits()}>Learn more</SecondaryButton>
-            </Text>
+            <SecondaryButton onClick={() => void block.showPasskeyBenefits()}>Learn more</SecondaryButton>
           </span>
           <Text
             level='3'
@@ -112,7 +106,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               fontFamilyVariant='secondary'
               textColorVariant='secondary'
             >
-              email@email.com
+              {passkeyUserHandle}
             </Text>
           </div>
           <div className='cb-pk-append-email-section-right-2'>
@@ -120,27 +114,33 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </div>
         </div>
         <PrimaryButton>Create account</PrimaryButton>
-        <Divider label='Create account with' />
-        <div className='cb-pk-append-buttons-section-2'>
-          <Text
-            level='3'
-            fontWeight='normal'
-            fontFamilyVariant='secondary'
-            textColorVariant='secondary'
-            className='cb-row-2'
+        {fallbacksAvailable && (
+          <>
+            <Divider label='Create account with' />
+            <div className='cb-pk-append-buttons-section-2'>
+              {block.data.availableFallbacks.map(fallback => (
+                <SecondaryButton
+                  key={fallback.label}
+                  onClick={() => {
+                    setSecondaryLoading(true);
+                    void fallback.action();
+                  }}
+                  disabled={primaryLoading}
+                >
+                  {fallback.label}
+                </SecondaryButton>
+              ))}
+            </div>
+          </>
+        )}
+        {block.data.canBeSkipped && (
+          <SecondaryButton
+            onClick={() => void block.skipPasskeyAppend()}
+            disabled={primaryLoading}
           >
-            <SecondaryButton onClick={() => void 0}>Email verification</SecondaryButton>
-          </Text>
-          <Text
-            level='3'
-            fontWeight='normal'
-            fontFamilyVariant='secondary'
-            textColorVariant='secondary'
-            className='cb-row-2'
-          >
-            <SecondaryButton onClick={() => void 0}>Phone verification</SecondaryButton>
-          </Text>
-        </div>
+            {t('button_skip')}
+          </SecondaryButton>
+        )}
       </div>
     </div>
   );

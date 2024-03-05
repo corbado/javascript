@@ -7,13 +7,12 @@
   --cb-text-secondary-color: #6e6d6d;
   --cb-white: #ffffff;
   --cb-border-color: #c7c7c7;
-  --cb-primary-link-color: #1953ff;
   --cb-secondary-link-color: #59acff;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
   --cb-font-weight-normal: 400;
-  --cb-base-font-size: 0.6rem;
+  --cb-base-font-size: 0.5rem;
   --cb-border-radius-lg: 1.125rem;
   --cb-border-radius-sm: 0.5rem;
   --cb-error-text-color: #ce1212;
@@ -73,11 +72,11 @@
   }
 
   .cb-text-4-2 {
-    font-size: calc(var(--cb-base-font-size) * 1.75);
+    font-size: calc(var(--cb-base-font-size) * 1.9);
   }
 
   .cb-text-5-2 {
-    font-size: calc(var(--cb-base-font-size) * 2);
+    font-size: calc(var(--cb-base-font-size) * 2.25);
   }
 
   .cb-text-6-2 {
@@ -192,7 +191,15 @@
   }
 
   .cb-primary-link-2 {
-    color: var(--cb-primary-link-color);
+    color: var(--cb-primary-color);
+  }
+  
+  .cb-primary-link-2:hover {
+    color: var(--cb-primary-color-hover);
+  }
+
+  .cb-primary-link-2 .cb-disabled-2 {
+    color: var(--cb-primary-color-disabled);
   }
 
   .cb-secondary-link-2 {
@@ -201,13 +208,12 @@
 
   .cb-primary-button-2 {
     align-self: center;
-    padding: 0.45rem;
+    padding: 0.6rem;
     color: var(--cb-button-text-primary-color);
     background-color: var(--cb-primary-color);
     border-radius: var(--cb-border-radius-sm);
     border: none;
     width: 90%;
-    font-size: 0.9rem;
     font-family: var(--cb-primary-font);
     font-weight: var(--cb-font-weight-bold);
     cursor: pointer;

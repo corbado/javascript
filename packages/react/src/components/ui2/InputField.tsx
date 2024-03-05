@@ -16,7 +16,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     <div className='cb-input-field-2'>
       <label htmlFor={id}>
         <Text
-          level='2'
+          level='3'
           fontFamilyVariant='secondary'
           className='cb-input-label-2'
         >
@@ -27,7 +27,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         {...props}
         type={type}
         id={id}
-        className={`cb-text-2-2 cb-input-2 ${errorMessage ? 'cb-input-error-2' : ''}`}
+        className={`cb-text-3-2 cb-input-2 ${errorMessage ? 'cb-input-error-2' : ''}`}
         aria-label={label}
         ref={ref}
       />

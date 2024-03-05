@@ -102,10 +102,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </Text>
         </div>
         <div className='cb-pk-append-email-section-2'>
-          <div className='cb-pk-append-email-section-left'>
-            <EmailIcon />
+          <div className='cb-pk-append-email-section-left-2'>
+            <EmailIcon className='cb-pk-append-email-section-left-icon-2' />
           </div>
-          <div className='cb-pk-append-email-section-middle'>
+          <div className='cb-pk-append-email-section-middle-2'>
             <Text
               level='3'
               fontWeight='normal'
@@ -115,13 +115,13 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               email@email.com
             </Text>
           </div>
-          <div className='cb-pk-append-email-section-right'>
-            <EditIcon />
+          <div className='cb-pk-append-email-section-right-2'>
+            <EditIcon className='cb-pk-append-email-section-right-icon-2' />
           </div>
         </div>
         <PrimaryButton>Create account</PrimaryButton>
         <Divider label='Create account with' />
-        <div className='cb-pk-append-buttons-section'>
+        <div className='cb-pk-append-buttons-section-2'>
           <Text
             level='3'
             fontWeight='normal'

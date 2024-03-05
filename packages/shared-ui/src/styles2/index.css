@@ -72,7 +72,7 @@
   }
 
   .cb-text-4-2 {
-    font-size: calc(var(--cb-base-font-size) * 1.5);
+    font-size: calc(var(--cb-base-font-size) * 1.75);
   }
 
   .cb-text-5-2 {
@@ -238,5 +238,100 @@
     to {
       transform: rotate(1turn);
     }
+  }
+
+  .cb-row-2 {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .cb-divider-container-2 {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .cb-divider-line-2 {
+    flex: 1;
+    height: 1px;
+    background-color: #d6d6d6;
+  }
+
+  .cb-divider-text-2 {
+    padding: 0 10px;
+  }
+
+  .cb-pk-append-header-2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2.5rem 0 2.5rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .cb-pk-append-icons-section-2 {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+
+  .cb-pk-append-icons-section-icon-2 {
+    height: 3.75rem;
+  }
+
+  .cb-pk-append-benefits-section-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0 3rem 0;
+  }
+
+  .cb-pk-append-email-section-2 {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    width: 90%;
+    height: 1.9rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+    background-color: #fafafa;
+    border: 1px solid #999;
+    border-radius: var(--cb-border-radius-sm);
+  }
+
+  .cb-pk-append-email-section-left {
+    flex: 1;
+    margin: auto;
+    padding-left: 0.5rem;
+    padding-top: 0.2rem;
+    height: 1rem;
+  }
+
+  .cb-pk-append-email-section-middle {
+    flex: 8;
+    margin: auto;
+    text-align: center;
+  }
+
+  .cb-pk-append-email-section-right {
+    align-self: center;
+    flex: 0;
+    padding-top: 0.2rem;
+    padding-right: 0.5rem;
+    height: 1.1rem;
+  }
+
+  .cb-pk-append-buttons-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin: 0rem 0 1rem 0;
   }
 }

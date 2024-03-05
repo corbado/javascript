@@ -7,7 +7,10 @@ import './styles2/index.css';
 import cancelIcon from './assets/cancel.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
 import deleteIcon from './assets/delete.svg';
+import editIcon from './assets/edit.svg';
+import emailIcon from './assets/email.svg';
 import exclamationIcon from './assets/exclamation.svg';
+import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import gmailIcon from './assets/gmail.svg';
 import logoIcon from './assets/logo.svg';
@@ -30,6 +33,9 @@ export const assets = {
   yahooIcon,
   gmailIcon,
   outlookIcon,
+  editIcon,
+  emailIcon,
+  faceId,
   fingerprintIcon,
   cancelIcon,
   logoIcon,

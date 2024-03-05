@@ -139,7 +139,7 @@ export function Testing() {
           <div className='cb-passkey-append-email-section-right'>
             <svg
               viewBox='0 0 18 18'
-              fill='#C5C6C5'
+              fill='#1953FF'
               xmlns='http://www.w3.org/2000/svg'
             >
               <path

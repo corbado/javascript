@@ -89,7 +89,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               fontWeight='bold'
               fontFamilyVariant='secondary'
             >
-              <SecondaryButton onClick={() => void 0}>Learn more</SecondaryButton>
+              <SecondaryButton onClick={() => void block.showPasskeyBenefits()}>Learn more</SecondaryButton>
             </Text>
           </span>
           <Text

@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+if (!process.env.CI) {
+  dotenv.config();
+} // CI env vars set in e2e-test.yml
 
 export default defineConfig({
   testDir: './src',
@@ -33,7 +38,7 @@ export default defineConfig({
   use: {
     actionTimeout: 3000, // default: none
     navigationTimeout: 3000, // default: none
-    baseURL: process.env.PLAYWRIGHT_TEST_URL,
+    baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

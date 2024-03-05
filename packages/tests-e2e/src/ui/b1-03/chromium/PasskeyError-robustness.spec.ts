@@ -12,7 +12,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
   });
 
-  test.skip('canceling passkey input redirects to PasskeyErrorScreen', async ({ signupFlow, page }) => {
+  test('canceling passkey input redirects to PasskeyErrorScreen', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn(false);
     await signupFlow.loadAuth();
@@ -21,8 +21,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
     await page.getByRole('button', { name: 'Try again' }).click();
     await signupFlow.setWebAuthnUserVerified(true);
     await signupFlow.inputPasskey(async () => {
-      await page.getByText('Something went wrong...').click();
-      // TODO: wtf how do i check if passkey input doesn't change anything in the page???
+      await page.waitForTimeout(300);
       await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);
     });
   });

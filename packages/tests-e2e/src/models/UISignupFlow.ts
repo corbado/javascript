@@ -47,7 +47,14 @@ export class UISignupFlow {
 
   async inputPasskey(check: () => Promise<void>) {
     if (this.#cdpClient) {
+      // const credentialAddedPromise = new Promise<void>((resolve) => {
+      //   this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
+      //     console.log(payload);
+      //     resolve();
+      //   });
+      // });
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      // await credentialAddedPromise;
       await check();
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
@@ -63,8 +70,8 @@ export class UISignupFlow {
       phone = undefined;
     if (fillUsername) {
       await this.page.getByRole('textbox', { name: 'username'}).click();
-      await this.page.getByRole('textbox', { name: 'username'}).fill(username);
-      await expect(this.page.getByRole('textbox', { name: 'username'})).toHaveValue(username);
+      await this.page.getByRole('textbox', { name: 'username'}).fill(username.replace('+', '-'));
+      await expect(this.page.getByRole('textbox', { name: 'username'})).toHaveValue(username.replace('+', '-'));
     }
     if (fillEmail) {
       email = `${username}@corbado.com`;

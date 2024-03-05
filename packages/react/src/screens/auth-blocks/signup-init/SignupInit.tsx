@@ -123,7 +123,12 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           className='cb-auth-change-section-2'
         >
           {loginText}
-          <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
+          <SecondaryButton
+            onClick={() => block.switchToLogin()}
+            variant='secondary'
+          >
+            {flowChangeButtonText}
+          </SecondaryButton>
         </Text>
         <Disclaimer />
       </div>

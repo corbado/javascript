@@ -7,7 +7,8 @@
   --cb-text-secondary-color: #6e6d6d;
   --cb-white: #ffffff;
   --cb-border-color: #c7c7c7;
-  --cb-link-color: #59acff;
+  --cb-primary-link-color: #1953ff;
+  --cb-secondary-link-color: #59acff;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
@@ -185,10 +186,17 @@
   }
 
   .cb-link-2 {
-    color: var(--cb-link-color);
     font-weight: var(--cb-font-weight-bold);
     text-decoration: none;
     cursor: pointer;
+  }
+
+  .cb-primary-link-2 {
+    color: var(--cb-primary-link-color);
+  }
+
+  .cb-secondary-link-2 {
+    color: var(--cb-secondary-link-color);
   }
 
   .cb-primary-button-2 {

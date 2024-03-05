@@ -47,7 +47,14 @@ export class UISignupFlow {
 
   async inputPasskey(check: () => Promise<void>) {
     if (this.#cdpClient) {
+      // const credentialAddedPromise = new Promise<void>((resolve) => {
+      //   this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
+      //     console.log(payload);
+      //     resolve();
+      //   });
+      // });
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      // await credentialAddedPromise;
       await check();
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
@@ -62,24 +69,79 @@ export class UISignupFlow {
     let email,
       phone = undefined;
     if (fillUsername) {
-      await this.page.getByPlaceholder('Username').click();
-      await this.page.getByPlaceholder('Username').fill(username);
-      await expect(this.page.getByPlaceholder('Name')).toHaveValue(username);
+      await this.page.getByRole('textbox', { name: 'username'}).click();
+      await this.page.getByRole('textbox', { name: 'username'}).fill(username.replace('+', '-'));
+      await expect(this.page.getByRole('textbox', { name: 'username'})).toHaveValue(username.replace('+', '-'));
     }
     if (fillEmail) {
       email = `${username}@corbado.com`;
 
-      await this.page.getByPlaceholder('Email address').click();
-      await this.page.getByPlaceholder('Email address').fill(email);
-      await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
+      await this.page.getByRole('textbox', { name: 'email'}).click();
+      await this.page.getByRole('textbox', { name: 'email'}).fill(email);
+      await expect(this.page.getByRole('textbox', { name: 'email'})).toHaveValue(email);
     }
     if (fillPhone) {
       phone = username.split('+')[1];
 
-      await this.page.getByPlaceholder('Phone number').click();
-      await this.page.getByPlaceholder('Phone number').fill(phone);
-      await expect(this.page.getByPlaceholder('Phone number')).toHaveValue(phone);
+      await this.page.getByRole('textbox', { name: 'phone'}).click();
+      await this.page.getByRole('textbox', { name: 'phone'}).fill(phone);
+      await expect(this.page.getByRole('textbox', { name: 'phone'})).toHaveValue(phone);
     }
+
+    return [username, email, phone];
+  }
+
+  // helper function for checking duplicate identifiers in InitSignup screen robustness tests
+  // assumes config for B1.3, passkey unsupported device
+  async createAccount() {
+    const [username, email, phone] = await this.fillIdentifiers(true, true, true);
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    
+    await this.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await this.fillOTP();
+    await this.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    await this.fillOTP();
+
+    await this.checkLandedOnScreen(ScreenNames.End);
+
+    await this.page.getByRole('button', { name: 'Logout' }).click();
+    await this.checkLandedOnScreen(ScreenNames.InitSignup);
+
+    return [username ?? '', email ?? '', phone ?? ''];
+  }
+
+  // helper function for robustness tests in PasskeyAppendScreen-robustness.spec.ts
+  // assumes config for B1.3, passkey supported device
+  async navigateToPasskeyAppendScreen() {
+    const [username, email, phone] = await this.fillIdentifiers(true, true, true);
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+
+    await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
+
+    return [username, email, phone];
+  }
+
+  // helper function for robustness tests in PasskeyBenefitsScreen-robustness.spec.ts
+  // assumes config for B1.3, passkey supported device
+  async navigateToPasskeyBenefitsScreen() {
+    const [username, email, phone] = await this.navigateToPasskeyAppendScreen();
+
+    await this.page.getByText('Passkeys').click();
+    await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
+
+    return [username, email, phone];
+  }
+
+  // helper function for robustness tests in PasskeyError-robustness.spec.ts
+  // assumes config for B1.3, passkey supported device
+  // assumes userVerified set to false
+  async navigateToPasskeyErrorScreen() {
+    const [username, email, phone] = await this.navigateToPasskeyAppendScreen();
+
+    await this.page.getByRole('button', { name: 'Create your account' }).click();
+    await this.inputPasskey(async () => {
+      await this.checkLandedOnScreen(ScreenNames.PasskeyError);
+    });
 
     return [username, email, phone];
   }
@@ -187,22 +249,31 @@ export class UISignupFlow {
       case ScreenNames.InitSignup:
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Create your account');
         break;
+      case ScreenNames.InitLogin:
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Welcome back!');
+        break;
       case ScreenNames.PasskeyAppend:
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText("Let's get you set up with");
         break;
       case ScreenNames.PasskeyAppended:
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
         break;
+      case ScreenNames.PasskeyError:
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Something went wrong...');
+        break;
+      case ScreenNames.PasskeyBenefits:
+        await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Passkeys');
+        break;
       case ScreenNames.EmailOtp:
         if (!email) {
-          throw new Error('Email is required');
+          throw new Error('checkLandedOnScreen: Email is required');
         }
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Enter one-time passcode to');
         await expect(this.page.getByText(email)).toHaveText(email);
         break;
       case ScreenNames.PhoneOtp:
         if (!phone) {
-          throw new Error('Phone is required');
+          throw new Error('checkLandedOnScreen: Phone is required');
         }
         await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Enter one-time passcode to');
         await expect(this.page.getByText(phone)).toHaveText(phone);

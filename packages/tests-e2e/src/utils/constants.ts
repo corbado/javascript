@@ -10,8 +10,11 @@
 
 export enum ScreenNames {
   InitSignup,
+  InitLogin,
   PasskeyAppend,
   PasskeyAppended,
+  PasskeyError,
+  PasskeyBenefits,
   EmailOtp,
   EmailLinkSent,
   EmailLinkSuccess,

@@ -3,7 +3,7 @@
 project_names=(
   "b1-1-chromium"
   "b1-2-chromium"
-  "b1-3-chromium"
+  "b1-3-all-browsers"
 )
 
 for project_name in "${project_names[@]}"; do

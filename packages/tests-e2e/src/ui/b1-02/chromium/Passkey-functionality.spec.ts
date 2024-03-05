@@ -7,7 +7,8 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
 
-    const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    // const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
 
@@ -17,7 +18,8 @@ test.describe('Signup with passkey proper user behavior', () => {
     });
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    // await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
 
     await signupFlow.fillOTP();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
@@ -29,12 +31,15 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn(true);
     await signupFlow.loadAuth();
 
-    const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    // const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);
 
-    await page.getByRole('button', { name: 'Send phone verification code' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    // await page.getByRole('button', { name: 'Send phone verification code' }).click();
+    await page.getByRole('button', { name: 'Send email verification code' }).click();
+    // await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
 
     await signupFlow.fillOTP();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend);

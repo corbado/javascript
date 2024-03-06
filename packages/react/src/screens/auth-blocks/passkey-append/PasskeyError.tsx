@@ -2,8 +2,14 @@ import { type PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Body, Header, HorizontalRule, PrimaryButton, SecondaryButton } from '../../../components';
+import { Body, HorizontalRule } from '../../../components';
 import { FingerprintIcon } from '../../../components/ui/icons/Icons';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
+import { Divider } from '../../../components/ui2/Divider';
+import { PasskeyErrorIcon } from '../../../components/ui2/icons/PasskeyErrorIcon';
+import { Header } from '../../../components/ui2/typography/Header';
+import { Text } from '../../../components/ui2/typography/Text';
 
 export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
@@ -37,6 +43,33 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   };
 
   return (
+    <div className='new-ui-component'>
+      <div className='cb-container-2'>
+        <div className='cb-pk-error-bloc-2'>
+          <Header>Something went wrong...</Header>
+          <div className='cb-pk-error-bloc-icon-2'>
+            <PasskeyErrorIcon />
+          </div>
+          <Text
+            level='3'
+            fontFamilyVariant='secondary'
+            className='cb-pk-error-bloc-description-2'
+          >
+            Creating your account with passkeys not possible. Try again or log in with email one time code.
+          </Text>
+          <PrimaryButton>Create account</PrimaryButton>
+          <Divider
+            label='or'
+            className='cb-pk-error-bloc-divider-2'
+          />
+          <SecondaryButton onClick={() => void 0}>Use email verification</SecondaryButton>
+          <SecondaryButton onClick={() => void 0}>Use phone verification</SecondaryButton>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
     <div className='cb-layout-passkey'>
       <Header>{header}</Header>
       <Body className='cb-subheader-spacing'>{body}</Body>
@@ -55,7 +88,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
             setSecondaryLoading(true);
             void fallback.action();
           }}
-          isLoading={secondaryLoading}
+          // isLoading={secondaryLoading}
           disabled={primaryLoading}
         >
           {fallback.label}
@@ -64,7 +97,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       {block.data.canBeSkipped && (
         <SecondaryButton
           onClick={() => void block.skipPasskeyAppend()}
-          isLoading={secondaryLoading}
+          // isLoading={secondaryLoading}
           disabled={primaryLoading}
         >
           {t('button_skip')}

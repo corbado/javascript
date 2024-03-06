@@ -27,7 +27,7 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
   return (
     <span onClick={handleClick}>
       <Text
-        level='3'
+        level='2'
         fontWeight='normal'
         fontFamilyVariant='secondary'
         textColorVariant='secondary'

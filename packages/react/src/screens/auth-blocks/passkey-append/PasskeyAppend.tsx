@@ -88,7 +88,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </Text>
           <span className='cb-pk-append-benefits-section-2'>
             <Text
-              level='3'
+              level='2'
               fontWeight='bold'
               fontFamilyVariant='secondary'
               className='cb-row-2'
@@ -98,7 +98,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             <SecondaryButton onClick={() => void block.showPasskeyBenefits()}>Learn more</SecondaryButton>
           </span>
           <Text
-            level='3'
+            level='2'
             fontWeight='bold'
             fontFamilyVariant='secondary'
             className='cb-row-2'
@@ -112,7 +112,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </div>
           <div className='cb-pk-append-email-section-middle-2'>
             <Text
-              level='3'
+              level='2'
               fontWeight='normal'
               fontFamilyVariant='secondary'
               textColorVariant='secondary'

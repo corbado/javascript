@@ -29,6 +29,7 @@ export enum ScreenNames {
   PasskeyBenefits = 'passkey-benefits',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',
+  EditUserData = 'edit-user-data',
 }
 
 // Map of passkey append intervals to their respective number of days

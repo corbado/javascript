@@ -68,11 +68,11 @@
   }
 
   .cb-text-2-2 {
-    font-size: calc(var(--cb-base-font-size) * 1.17);
+    font-size: calc(var(--cb-base-font-size) * 1.25);
   }
 
   .cb-text-3-2 {
-    font-size: calc(var(--cb-base-font-size) * 1.25);
+    font-size: calc(var(--cb-base-font-size) * 1.5);
   }
 
   .cb-text-4-2 {
@@ -197,7 +197,7 @@
   .cb-primary-link-2 {
     color: var(--cb-primary-color);
   }
-  
+
   .cb-primary-link-2:hover {
     color: var(--cb-primary-color-hover);
   }
@@ -373,9 +373,34 @@
     margin-bottom: 1rem;
   }
 
-    .cb-pk-edit-email-section-back-button-2 {
+  .cb-pk-edit-email-section-back-button-2 {
     align-self: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    }
+  }
+
+  .cb-pk-error-bloc-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .cb-pk-error-bloc-icon-2 {
+    width: 6rem;
+    margin: 2rem auto 0.5rem auto;
+  }
+
+  .cb-pk-error-bloc-description-2 {
+    margin-bottom: 1.5rem;
+    width: 90%;
+    text-align: center;
+  }
+
+  .cb-pk-error-bloc-divider-2 {
+    width: 100%;
+    margin-bottom: 0.3rem;
+  }
 }

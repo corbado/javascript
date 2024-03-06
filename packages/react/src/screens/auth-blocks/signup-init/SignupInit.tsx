@@ -128,7 +128,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           </PrimaryButton>
         </form>
         <Text
-          level='3'
+          level='2'
           fontWeight='bold'
           className='cb-auth-change-section-2'
         >

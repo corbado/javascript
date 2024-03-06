@@ -16,6 +16,7 @@ import gmailIcon from './assets/gmail.svg';
 import logoIcon from './assets/logo.svg';
 import outlookIcon from './assets/outlook.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
+import passkeyErrorIcon from './assets/passkey-error.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
@@ -41,4 +42,5 @@ export const assets = {
   logoIcon,
   circleExclamationIcon,
   exclamationIcon,
+  passkeyErrorIcon,
 };

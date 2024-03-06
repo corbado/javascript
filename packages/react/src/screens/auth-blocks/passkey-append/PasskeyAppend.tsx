@@ -12,7 +12,6 @@ import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
 import { Header } from '../../../components/ui2/typography/Header';
 import { Text } from '../../../components/ui2/typography/Text';
-import { EditUserData } from './EditUserData';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
@@ -21,7 +20,6 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string | undefined>(undefined);
   const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
   const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
-  const [editUserData, setEditUserData] = useState<boolean>(false);
 
   useEffect(() => {
     setPasskeyUserHandle(block.data.userHandle);
@@ -56,15 +54,6 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
 
   const primaryButton = useMemo(() => t('button_start'), [t]);
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
-
-  if (editUserData) {
-    return (
-      <EditUserData
-        block={block}
-        back={() => setEditUserData(false)}
-      />
-    );
-  }
 
   return (
     <div className='new-ui-component'>
@@ -122,7 +111,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </div>
           <div
             className='cb-pk-append-email-section-right-2'
-            onClick={() => setEditUserData(true)}
+            onClick={() => block.showEditUserData()}
           >
             <EditIcon className='cb-pk-append-email-section-right-icon-2' />
           </div>

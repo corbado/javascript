@@ -9,24 +9,17 @@ import { Header } from '../../../components/ui2/typography/Header';
 
 export interface EditUserDataProps {
   block: PasskeyAppendBlock;
-  back: () => void;
 }
 
-export const EditUserData: FC<EditUserDataProps> = ({ block, back }) => {
+export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string>(block.data.userHandle);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [emailUpdated, setEmailUpdated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (emailUpdated) {
+    if (block.data.translatedError) {
       setLoading(false);
-
-      if (block.data.translatedError) {
-        setErrorMessage(block.data.translatedError);
-      } else {
-        back();
-      }
+      setErrorMessage(block.data.translatedError);
     }
   }, [block]);
 
@@ -34,12 +27,11 @@ export const EditUserData: FC<EditUserDataProps> = ({ block, back }) => {
     setLoading(true);
 
     if (block.data.userHandle === passkeyUserHandle) {
-      back();
+      block.showPasskeyAppend();
       return;
     }
 
     await block.updateEmail(passkeyUserHandle);
-    setEmailUpdated(true);
   };
 
   return (
@@ -65,7 +57,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block, back }) => {
           </PrimaryButton>
           <SecondaryButton
             className='cb-pk-edit-email-section-back-button-2'
-            onClick={back}
+            onClick={() => block.showPasskeyAppend()}
           >
             Back
           </SecondaryButton>

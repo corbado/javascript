@@ -70,6 +70,7 @@ export class ProcessHandler {
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({
         screen: newScreen,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         block: this.#currentBlock!,
       }),
     );
@@ -109,6 +110,7 @@ export class ProcessHandler {
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({
         screen: this.#currentScreen,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         block: this.#currentBlock!,
       }),
     );

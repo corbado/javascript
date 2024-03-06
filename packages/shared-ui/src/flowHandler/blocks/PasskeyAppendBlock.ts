@@ -68,6 +68,14 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.updateScreen(ScreenNames.PasskeyBenefits);
   }
 
+  showEditUserData() {
+    this.updateScreen(ScreenNames.EditUserData);
+  }
+
+  showPasskeyAppend() {
+    this.updateScreen(ScreenNames.PasskeyAppend);
+  }
+
   async passkeyAppend() {
     const res = await this.app.authProcessService.appendPasskey();
     if (res.err) {
@@ -110,7 +118,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updateEmail(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
-    console.log(newBlock);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;
@@ -118,6 +130,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updatePhone(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updatePhone(value);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;
@@ -125,6 +142,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updateUsername(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateUsername(value);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;

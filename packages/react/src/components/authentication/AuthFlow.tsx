@@ -17,6 +17,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
+import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyBenefits as PasskeyAppendPasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
@@ -65,6 +66,8 @@ export const AuthFlow: FC = () => {
             return <PasskeyAppendPasskeyBenefits block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
             return <PasskeyAppendPasskeyError block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.EditUserData:
+            return <EditUserData block={currentScreen.block as PasskeyAppendBlock} />;
           default:
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }

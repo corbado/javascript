@@ -55,15 +55,24 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
             fontFamilyVariant='secondary'
             className='cb-pk-error-bloc-description-2'
           >
-            Creating your account with passkeys not possible. Try again or log in with email one time code.
+            Adding a passkey to your account was not possible. Please try again or use another method.
           </Text>
-          <PrimaryButton>Create account</PrimaryButton>
+          <PrimaryButton
+            onClick={() => void passkeyAppend()}
+            isLoading={primaryLoading}
+          >
+            Try again
+          </PrimaryButton>
           <Divider
             label='or'
             className='cb-pk-error-bloc-divider-2'
           />
-          <SecondaryButton onClick={() => void 0}>Use email verification</SecondaryButton>
-          <SecondaryButton onClick={() => void 0}>Use phone verification</SecondaryButton>
+          {block.data.availableFallbacks.map(fallback => (
+            <SecondaryButton onClick={() => void fallback.action()}>{fallback.label}</SecondaryButton>
+          ))}
+          {block.data.canBeSkipped && (
+            <SecondaryButton onClick={() => void block.skipPasskeyAppend()}>{t('button_skip')}</SecondaryButton>
+          )}
         </div>
       </div>
     </div>

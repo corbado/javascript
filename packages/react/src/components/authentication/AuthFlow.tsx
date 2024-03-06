@@ -10,7 +10,7 @@ import type {
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
@@ -36,7 +36,7 @@ export const AuthFlow: FC = () => {
   const { currentScreen, initState } = useFlowHandler();
   const { globalError } = useCorbado();
 
-  const screenComponent = () => {
+  const screenComponent = useMemo(() => {
     if (!currentScreen) {
       return null;
     }
@@ -88,18 +88,7 @@ export const AuthFlow: FC = () => {
       case BlockTypes.Completed:
         return null;
     }
-  };
-
-  const screen = (() => {
-    switch (initState) {
-      case InitState.Initializing:
-        return <Loading />;
-      case InitState.Failed:
-        return <ComponentUnavailableError />;
-      case InitState.Success:
-        return screenComponent();
-    }
-  })();
+  }, [currentScreen]);
 
   // Render the component if it exists, otherwise a fallback or null
   return initState === InitState.Failed ? (
@@ -116,7 +105,7 @@ export const AuthFlow: FC = () => {
             customerSupportEmail={customerSupportEmail}
           />
         )}
-        {screen}
+        {screenComponent}
       </div>
     </div>
   );

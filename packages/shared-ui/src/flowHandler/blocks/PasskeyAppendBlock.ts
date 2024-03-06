@@ -24,12 +24,13 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     app: CorbadoApp,
     flowHandler: ProcessHandler,
     common: ProcessCommon,
-    _: ErrorTranslator,
+    errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
   ) {
     super(app, flowHandler, common);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
+    const error = blockBody.error;
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
@@ -37,14 +38,15 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
         switch (alternative.block) {
           case BlockType.EmailVerify: {
             const typed = alternative.data as GeneralBlockVerifyIdentifier;
-            if (typed.verificationMethod === VerificationMethod.EmailOtp) {
-              return { label: 'Send email verification code', action: () => this.initFallbackEmailOtp() };
-            }
+            const action =
+              typed.verificationMethod === VerificationMethod.EmailOtp
+                ? () => this.initFallbackEmailOtp()
+                : () => this.initFallbackEmailLink();
 
-            return { label: 'Send email verification link', action: () => this.initFallbackEmailLink() };
+            return { label: 'Email verification', action };
           }
           case BlockType.PhoneVerify:
-            return { label: 'Send phone verification code', action: () => this.initFallbackSmsOtp() };
+            return { label: 'Phone verification', action: () => this.initFallbackSmsOtp() };
           default:
             throw new Error('Invalid block type');
         }
@@ -57,6 +59,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.userHandle,
+      translatedError: errorTranslator.translate(error),
       canBeSkipped,
     };
   }
@@ -107,6 +110,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updateEmail(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
+    console.log(newBlock);
     this.updateProcess(newBlock);
 
     return;

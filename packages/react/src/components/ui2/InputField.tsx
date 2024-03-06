@@ -5,24 +5,26 @@ import ErrorMessage from './errors/ErrorMessage';
 import { Text } from './typography/Text';
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   type?: string;
-  id: string;
+  id?: string;
   errorMessage?: string;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, type = 'text', id, errorMessage, ...props }, ref) => (
     <div className='cb-input-field-2'>
-      <label htmlFor={id}>
-        <Text
-          level='3'
-          fontFamilyVariant='secondary'
-          className='cb-input-label-2'
-        >
-          {label}
-        </Text>
-      </label>
+      {label && (
+        <label htmlFor={id}>
+          <Text
+            level='3'
+            fontFamilyVariant='secondary'
+            className='cb-input-label-2'
+          >
+            {label}
+          </Text>
+        </label>
+      )}
       <input
         {...props}
         type={type}

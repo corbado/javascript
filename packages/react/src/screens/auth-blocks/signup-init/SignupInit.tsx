@@ -1,4 +1,5 @@
 import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -47,18 +48,22 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const phoneFieldLabel = useMemo(() => t('textField_phone'), [t]);
   const usernameFieldLabel = useMemo(() => t('textField_username'), [t]);
 
-  const handleSubmit = useCallback(() => {
-    setLoading(true);
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
 
-    const identifiers: LoginIdentifiers = {
-      email: emailRef.current?.value,
-      phone: phoneRef.current?.value,
-      userName: usernameRef.current?.value,
-    };
+      const identifiers: LoginIdentifiers = {
+        email: emailRef.current?.value,
+        phone: phoneRef.current?.value,
+        userName: usernameRef.current?.value,
+      };
 
-    const fullName = fullNameRef.current?.value;
-    void block.updateUserData(identifiers, fullName);
-  }, [block]);
+      const fullName = fullNameRef.current?.value;
+      void block.updateUserData(identifiers, fullName);
+    },
+    [block],
+  );
 
   return (
     <div className='new-ui-component'>
@@ -69,7 +74,10 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           {subheaderText}
           {block.common.appName}
         </SubHeader>
-        <form className='cb-form-2'>
+        <form
+          className='cb-form-2'
+          onSubmit={handleSubmit}
+        >
           {fullName && (
             <InputField
               id='name'
@@ -109,14 +117,16 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
               ref={el => el && (phoneRef.current = el)}
             />
           )}
+
+          <PrimaryButton
+            type='submit'
+            className='cb-signup-form-submit-button-2'
+            isLoading={loading}
+            onClick={handleSubmit}
+          >
+            {submitButtonText}
+          </PrimaryButton>
         </form>
-        <PrimaryButton
-          type='button'
-          isLoading={loading}
-          onClick={handleSubmit}
-        >
-          {submitButtonText}
-        </PrimaryButton>
         <Text
           level='3'
           fontWeight='bold'

@@ -10,7 +10,7 @@ import type {
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
@@ -36,7 +36,7 @@ export const AuthFlow: FC = () => {
   const { currentScreen, initState } = useFlowHandler();
   const { globalError } = useCorbado();
 
-  const screenComponent = useMemo(() => {
+  const screenComponent = () => {
     if (!currentScreen) {
       return null;
     }
@@ -88,21 +88,25 @@ export const AuthFlow: FC = () => {
       case BlockTypes.Completed:
         return null;
     }
-  }, [currentScreen]);
+  };
 
-  const render = useMemo(() => {
+  const screen = (() => {
     switch (initState) {
       case InitState.Initializing:
         return <Loading />;
       case InitState.Failed:
         return <ComponentUnavailableError />;
       case InitState.Success:
-        return screenComponent;
+        return screenComponent();
     }
-  }, [initState, screenComponent]);
+  })();
 
   // Render the component if it exists, otherwise a fallback or null
-  return (
+  return initState === InitState.Failed ? (
+    <ComponentUnavailableError />
+  ) : initState === InitState.Initializing ? (
+    <Loading />
+  ) : (
     <div className='new-ui-component'>
       <div className='cb-container-2'>
         {globalError && (
@@ -112,7 +116,7 @@ export const AuthFlow: FC = () => {
             customerSupportEmail={customerSupportEmail}
           />
         )}
-        {render}
+        {screen}
       </div>
     </div>
   );

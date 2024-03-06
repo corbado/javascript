@@ -43,34 +43,30 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   };
 
   return (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        <div className='cb-pk-edit-email-section-2'>
-          <Header
-            size='md'
-            className='cb-pk-edit-email-section-header-2'
-          >
-            {headerText}
-          </Header>
-          <InputField
-            value={passkeyUserHandle}
-            errorMessage={errorMessage}
-            onChange={e => setPasskeyUserHandle(e.target.value)}
-          />
-          <PrimaryButton
-            isLoading={loading}
-            onClick={() => void handleConfirm()}
-          >
-            {primaryButtonText}
-          </PrimaryButton>
-          <SecondaryButton
-            className='cb-pk-edit-email-section-back-button-2'
-            onClick={() => block.showPasskeyAppend()}
-          >
-            {secondaryButtonText}
-          </SecondaryButton>
-        </div>
-      </div>
+    <div className='cb-pk-edit-email-section-2'>
+      <Header
+        size='md'
+        className='cb-pk-edit-email-section-header-2'
+      >
+        {headerText}
+      </Header>
+      <InputField
+        value={passkeyUserHandle}
+        errorMessage={errorMessage}
+        onChange={e => setPasskeyUserHandle(e.target.value)}
+      />
+      <PrimaryButton
+        isLoading={loading}
+        onClick={() => void handleConfirm()}
+      >
+        {primaryButtonText}
+      </PrimaryButton>
+      <SecondaryButton
+        className='cb-pk-edit-email-section-back-button-2'
+        onClick={() => block.showPasskeyAppend()}
+      >
+        {secondaryButtonText}
+      </SecondaryButton>
     </div>
   );
 };

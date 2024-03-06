@@ -18,7 +18,7 @@
         "header": "Enable Passkeys",
         "subheader": "Create an account with face, fingerprint or pin",
         "body_description": "This information will never leave your device.",
-        "body_userInfo": "This information will never leave your device.",
+        "body_userInfo": "We'll create an account for",
         "button_start": "Create account",
         "button_skip": "Maybe later",
         "button_switchToAlternate": {
@@ -166,8 +166,12 @@
     "missing_identifier_type": {
       "fullName": "Please enter a valid name.",
       "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
+      "email": "Please enter a valid email address.",
+      "phone": "Phone number must be a valid phone number."
+    },
+    "identifier_already_in_use": {
       "email": "That email address is taken. Pleas try another one.",
-      "phone": "Phone number must be a valid phone number. "
+      "phone": "That phone number is taken. Pleas try another one."
     },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",

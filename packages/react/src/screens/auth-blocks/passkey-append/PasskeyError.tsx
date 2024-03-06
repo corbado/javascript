@@ -27,48 +27,44 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   };
 
   return (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        <div className='cb-pk-error-bloc-2'>
-          <Header>{headerText}</Header>
-          <div className='cb-pk-error-bloc-icon-2'>
-            <PasskeyErrorIcon />
-          </div>
-          <Text
-            level='3'
-            fontFamilyVariant='secondary'
-            className='cb-pk-error-bloc-description-2'
-          >
-            {bodyText}
-          </Text>
-          <PrimaryButton
-            onClick={() => void passkeyAppend()}
-            isLoading={loading}
-          >
-            {primaryButtonText}
-          </PrimaryButton>
-          <Divider
-            label='or'
-            className='cb-pk-error-bloc-divider-2'
-          />
-          {block.data.availableFallbacks.map(fallback => (
-            <SecondaryButton
-              disabled={loading}
-              onClick={() => void fallback.action()}
-            >
-              {t(fallback.label)}
-            </SecondaryButton>
-          ))}
-          {block.data.canBeSkipped && (
-            <SecondaryButton
-              disabled={loading}
-              onClick={() => void block.skipPasskeyAppend()}
-            >
-              {skipButtonText}
-            </SecondaryButton>
-          )}
-        </div>
+    <div className='cb-pk-error-bloc-2'>
+      <Header>{headerText}</Header>
+      <div className='cb-pk-error-bloc-icon-2'>
+        <PasskeyErrorIcon />
       </div>
+      <Text
+        level='3'
+        fontFamilyVariant='secondary'
+        className='cb-pk-error-bloc-description-2'
+      >
+        {bodyText}
+      </Text>
+      <PrimaryButton
+        onClick={() => void passkeyAppend()}
+        isLoading={loading}
+      >
+        {primaryButtonText}
+      </PrimaryButton>
+      <Divider
+        label='or'
+        className='cb-pk-error-bloc-divider-2'
+      />
+      {block.data.availableFallbacks.map(fallback => (
+        <SecondaryButton
+          disabled={loading}
+          onClick={() => void fallback.action()}
+        >
+          {t(fallback.label)}
+        </SecondaryButton>
+      ))}
+      {block.data.canBeSkipped && (
+        <SecondaryButton
+          disabled={loading}
+          onClick={() => void block.skipPasskeyAppend()}
+        >
+          {skipButtonText}
+        </SecondaryButton>
+      )}
     </div>
   );
 };

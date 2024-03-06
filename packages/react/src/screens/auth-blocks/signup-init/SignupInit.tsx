@@ -64,81 +64,80 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   );
 
   return (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        <Header size='lg'>{headerText}</Header>
-        <SubHeader>
-          {subheaderText}
-          {block.common.appName}
-        </SubHeader>
-        <form
-          className='cb-form-2'
-          onSubmit={handleSubmit}
-        >
-          {fullName && (
-            <InputField
-              id='name'
-              name='name'
-              label={fullNameFieldLabel}
-              errorMessage={fullName?.translatedError}
-              ref={el => el && (fullNameRef.current = el)}
-            />
-          )}
-          {username && (
-            <InputField
-              label={usernameFieldLabel}
-              id='username'
-              name='username'
-              errorMessage={username?.translatedError}
-              ref={el => el && (usernameRef.current = el)}
-            />
-          )}
-          {email && (
-            <InputField
-              label={emailFieldLabel}
-              id='email'
-              name='email'
-              type='email'
-              autoComplete='email'
-              errorMessage={email?.translatedError}
-              ref={el => el && (emailRef.current = el)}
-            />
-          )}
-          {phone && (
-            <InputField
-              label={phoneFieldLabel}
-              id='phone'
-              name='phone'
-              autoComplete='phone'
-              errorMessage={phone?.translatedError}
-              ref={el => el && (phoneRef.current = el)}
-            />
-          )}
+    <>
+      <Header size='lg'>{headerText}</Header>
+      <SubHeader>
+        {subheaderText}
+        {block.common.appName}
+      </SubHeader>
+      <form
+        className='cb-form-2'
+        onSubmit={handleSubmit}
+      >
+        {fullName && (
+          <InputField
+            id='name'
+            name='name'
+            label={fullNameFieldLabel}
+            errorMessage={fullName?.translatedError}
+            ref={el => el && (fullNameRef.current = el)}
+          />
+        )}
+        {username && (
+          <InputField
+            label={usernameFieldLabel}
+            id='username'
+            name='username'
+            errorMessage={username?.translatedError}
+            ref={el => el && (usernameRef.current = el)}
+          />
+        )}
+        {email && (
+          <InputField
+            label={emailFieldLabel}
+            id='email'
+            name='email'
+            type='email'
+            autoComplete='email'
+            errorMessage={email?.translatedError}
+            ref={el => el && (emailRef.current = el)}
+          />
+        )}
+        {phone && (
+          <InputField
+            label={phoneFieldLabel}
+            id='phone'
+            name='phone'
+            autoComplete='phone'
+            errorMessage={phone?.translatedError}
+            ref={el => el && (phoneRef.current = el)}
+          />
+        )}
 
-          <PrimaryButton
-            type='submit'
-            className='cb-signup-form-submit-button-2'
-            isLoading={loading}
-            onClick={handleSubmit}
-          >
-            {submitButtonText}
-          </PrimaryButton>
-        </form>
-        <Text
-          level='2'
-          fontWeight='bold'
-          className='cb-auth-change-section-2'
+        <PrimaryButton
+          type='submit'
+          className='cb-signup-form-submit-button-2'
+          isLoading={loading}
+          onClick={handleSubmit}
         >
-          {loginText}
-          <SecondaryButton
-            onClick={() => block.switchToLogin()}
-            variant='secondary'
-          >
-            {flowChangeButtonText}
-          </SecondaryButton>
-        </Text>
-        <Disclaimer />
-      </div>
-    </div>
+          {submitButtonText}
+        </PrimaryButton>
+      </form>
+      <Text
+        level='2'
+        fontWeight='bold'
+        className='cb-auth-change-section-2'
+      >
+        {loginText}
+        <SecondaryButton
+          colorVariant='link'
+          disabled={loading}
+          onClick={() => block.switchToLogin()}
+        >
+          {flowChangeButtonText}
+        </SecondaryButton>
+      </Text>
+      <Disclaimer />
+    </>
   );
 };

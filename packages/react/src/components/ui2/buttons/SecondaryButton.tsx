@@ -4,14 +4,14 @@ import React from 'react';
 import { Text } from '../typography/Text';
 
 export interface SecondaryButtonProps {
-  variant?: 'primary' | 'secondary';
+  colorVariant?: 'default' | 'link';
   className?: string;
   disabled?: boolean;
   onClick: () => void;
 }
 
 export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
-  variant = 'primary',
+  colorVariant = 'default',
   disabled,
   className,
   children,
@@ -24,6 +24,9 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
     onClick();
   };
 
+  const variant = colorVariant === 'link' ? 'secondary' : 'primary';
+  const computedClassName = `cb-link-2 cb-${variant}-link-2 ${disabled ? 'cb-disabled' : ''} ${className ? ` ${className}` : ''}`;
+
   return (
     <span onClick={handleClick}>
       <Text
@@ -31,7 +34,7 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
         fontWeight='normal'
         fontFamilyVariant='secondary'
         textColorVariant='secondary'
-        className={`cb-link-2 cb-${variant}-link-2 ${disabled ? 'cb-disabled' : ''} ${className ? ` ${className}` : ''}`}
+        className={computedClassName}
       >
         {children}
       </Text>

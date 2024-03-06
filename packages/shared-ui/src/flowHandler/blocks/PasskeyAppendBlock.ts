@@ -58,7 +58,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.userHandle,
-      translatedError: errorTranslator.translate(error),
+      translatedError: errorTranslator.translateWithIdentifier(error, 'email'),
       canBeSkipped,
     };
   }

@@ -2,7 +2,6 @@ import { type PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { HorizontalRule, SubHeader } from '../../../components';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import { Divider } from '../../../components/ui2/Divider';
@@ -10,7 +9,6 @@ import { EditIcon } from '../../../components/ui2/icons/EditIcon';
 import { EmailIcon } from '../../../components/ui2/icons/EmailIcon';
 import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
-import { Header } from '../../../components/ui2/typography/Header';
 import { Text } from '../../../components/ui2/typography/Text';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
@@ -18,42 +16,27 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     keyPrefix: `signup.passkey-append.passkey-append`,
   });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string | undefined>(undefined);
-  const [primaryLoading, setPrimaryLoading] = useState<boolean>(false);
-  const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setPasskeyUserHandle(block.data.userHandle);
 
-    setPrimaryLoading(false);
-    setSecondaryLoading(false);
+    setLoading(false);
   }, [block]);
 
-  const header = useMemo(
-    () => (
-      <span>
-        {t('header')}
-        <span
-          className='cb-link-primary'
-          onClick={() => void block.showPasskeyBenefits()}
-        >
-          {t('headerButton_showPasskeyBenefits')}
-        </span>
-      </span>
-    ),
-    [t],
-  );
+  const headerText = useMemo(() => t('header'), [t]);
+  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const descriptionText = useMemo(() => t('bodybody_description'), [t]);
+  const userInfoTitleText = useMemo(() => t('body_userInfo'), [t]);
+  const primaryButtonText = useMemo(() => t('button_start'), [t]);
+  const skipButtonText = useMemo(() => t('button_skip'), [t]);
 
-  const subHeader = useMemo(
-    () => (
-      <span>
-        {t('body')} <span className='cb-text-secondary'>{passkeyUserHandle}</span>.
-      </span>
-    ),
-    [t, passkeyUserHandle],
-  );
-
-  const primaryButton = useMemo(() => t('button_start'), [t]);
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
+
+  const appendPasskey = () => {
+    setLoading(true);
+    void block.passkeyAppend();
+  };
 
   return (
     <div className='new-ui-component'>
@@ -63,7 +46,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             level='6'
             fontWeight='bold'
           >
-            Enable Passkeys
+            {headerText}
           </Text>
           <span className='cb-pk-append-icons-section-2'>
             <FingerPrintIcon className='cb-pk-append-icons-section-icon-2' />
@@ -73,7 +56,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             level='4'
             fontWeight='bold'
           >
-            Create an account with face, fingerprint or pin
+            {subHeaderText}
           </Text>
           <span className='cb-pk-append-benefits-section-2'>
             <Text
@@ -82,18 +65,20 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               fontFamilyVariant='secondary'
               className='cb-row-2'
             >
-              This information will never leave your device.
+              {descriptionText}
             </Text>
             <SecondaryButton onClick={() => void block.showPasskeyBenefits()}>Learn more</SecondaryButton>
           </span>
-          <Text
-            level='2'
-            fontWeight='bold'
-            fontFamilyVariant='secondary'
-            className='cb-row-2'
-          >
-            We’ll create an account for
-          </Text>
+          {!block.data.canBeSkipped && (
+            <Text
+              level='2'
+              fontWeight='bold'
+              fontFamilyVariant='secondary'
+              className='cb-row-2'
+            >
+              {userInfoTitleText}
+            </Text>
+          )}
         </div>
         <div className='cb-pk-append-email-section-2'>
           <div className='cb-pk-append-email-section-left-2'>
@@ -109,14 +94,21 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               {passkeyUserHandle}
             </Text>
           </div>
-          <div
-            className='cb-pk-append-email-section-right-2'
-            onClick={() => block.showEditUserData()}
-          >
-            <EditIcon className='cb-pk-append-email-section-right-icon-2' />
-          </div>
+          {!block.data.canBeSkipped && (
+            <div
+              className='cb-pk-append-email-section-right-2'
+              onClick={() => block.showEditUserData()}
+            >
+              <EditIcon className='cb-pk-append-email-section-right-icon-2' />
+            </div>
+          )}
         </div>
-        <PrimaryButton onClick={() => void block.passkeyAppend()}>Create account</PrimaryButton>
+        <PrimaryButton
+          isLoading={loading}
+          onClick={appendPasskey}
+        >
+          {primaryButtonText}
+        </PrimaryButton>
         {fallbacksAvailable && (
           <>
             <Divider label='Create account with' />
@@ -124,13 +116,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               {block.data.availableFallbacks.map(fallback => (
                 <SecondaryButton
                   key={fallback.label}
-                  onClick={() => {
-                    setSecondaryLoading(true);
-                    void fallback.action();
-                  }}
-                  disabled={primaryLoading}
+                  onClick={() => void fallback.action()}
+                  disabled={loading}
                 >
-                  {fallback.label}
+                  {t(fallback.label)}
                 </SecondaryButton>
               ))}
             </div>
@@ -139,53 +128,12 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         {block.data.canBeSkipped && (
           <SecondaryButton
             onClick={() => void block.skipPasskeyAppend()}
-            disabled={primaryLoading}
+            disabled={loading}
           >
-            {t('button_skip')}
+            {skipButtonText}
           </SecondaryButton>
         )}
       </div>
-    </div>
-  );
-
-  return (
-    <div className='cb-layout-passkey'>
-      <Header>{header}</Header>
-      <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>
-      {/* <FingerprintIcon className={'cb-finger-print-icon'} /> */}
-      <PrimaryButton
-        onClick={() => {
-          setPrimaryLoading(true);
-          void block.passkeyAppend();
-        }}
-        isLoading={primaryLoading}
-        disabled={secondaryLoading}
-      >
-        {primaryButton}
-      </PrimaryButton>
-      {fallbacksAvailable && <HorizontalRule>or</HorizontalRule>}
-      {block.data.availableFallbacks.map(fallback => (
-        <SecondaryButton
-          key={fallback.label}
-          onClick={() => {
-            setSecondaryLoading(true);
-            void fallback.action();
-          }}
-          // isLoading={secondaryLoading}
-          // disabled={primaryLoading}
-        >
-          {fallback.label}
-        </SecondaryButton>
-      ))}
-      {block.data.canBeSkipped && (
-        <SecondaryButton
-          onClick={() => void block.skipPasskeyAppend()}
-          // isLoading={secondaryLoading}
-          // disabled={primaryLoading}
-        >
-          {t('button_skip')}
-        </SecondaryButton>
-      )}
     </div>
   );
 };

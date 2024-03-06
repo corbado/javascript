@@ -38,15 +38,14 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
         switch (alternative.block) {
           case BlockType.EmailVerify: {
             const typed = alternative.data as GeneralBlockVerifyIdentifier;
-            const action =
-              typed.verificationMethod === VerificationMethod.EmailOtp
-                ? () => this.initFallbackEmailOtp()
-                : () => this.initFallbackEmailLink();
+            if (typed.verificationMethod === VerificationMethod.EmailOtp) {
+              return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
+            }
 
-            return { label: 'Email verification', action };
+            return { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
           }
           case BlockType.PhoneVerify:
-            return { label: 'Phone verification', action: () => this.initFallbackSmsOtp() };
+            return { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
           default:
             throw new Error('Invalid block type');
         }

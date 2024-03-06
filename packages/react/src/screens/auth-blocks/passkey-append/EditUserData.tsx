@@ -1,6 +1,7 @@
 import type { PasskeyAppendBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
@@ -12,6 +13,9 @@ export interface EditUserDataProps {
 }
 
 export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
+  const { t } = useTranslation('translation', {
+    keyPrefix: `signup.passkey-append.edit-user-data`,
+  });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string>(block.data.userHandle);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +26,10 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       setErrorMessage(block.data.translatedError);
     }
   }, [block]);
+
+  const headerText = useMemo(() => t('header'), [t]);
+  const primaryButtonText = useMemo(() => t('button_submit'), [t]);
+  const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -42,7 +50,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
             size='md'
             className='cb-pk-edit-email-section-header-2'
           >
-            Type new email address
+            {headerText}
           </Header>
           <InputField
             value={passkeyUserHandle}
@@ -53,13 +61,13 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
             isLoading={loading}
             onClick={() => void handleConfirm()}
           >
-            Confirm
+            {primaryButtonText}
           </PrimaryButton>
           <SecondaryButton
             className='cb-pk-edit-email-section-back-button-2'
             onClick={() => block.showPasskeyAppend()}
           >
-            Back
+            {secondaryButtonText}
           </SecondaryButton>
         </div>
       </div>

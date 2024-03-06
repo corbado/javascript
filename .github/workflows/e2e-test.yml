@@ -17,7 +17,8 @@ on:
 
 jobs:
   prepare:
-    runs-on: [ self-hosted, "javascript" ]
+    # runs-on: [ self-hosted, "javascript" ]
+    runs-on: ubuntu-latest
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -59,7 +60,8 @@ jobs:
   e2e-tests:
     timeout-minutes: 60
     needs: prepare
-    runs-on: [ self-hosted, "javascript" ]
+    # runs-on: [ self-hosted, "javascript" ]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
@@ -100,8 +102,9 @@ jobs:
             npm run test:e2e:ui
           fi
         env:
-          PLAYWRIGHT_NUM_CORES: 8
-          PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}/pro-8125835201872404154', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          PLAYWRIGHT_NUM_CORES: 2
+          PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          # PLAYWRIGHT_PROJECT_ID defined in .env.ci file
       - uses: actions/upload-artifact@v4
         if: always()
         with:

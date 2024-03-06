@@ -36,7 +36,7 @@ export class WebAuthnService {
         if (e instanceof DOMException) {
           return Err(CorbadoError.fromDOMException(e));
         } else {
-          return Err(CorbadoError.fromUnknownException(e));
+          return Err(CorbadoError.fromUnknownFrontendError(e));
         }
       }
     });
@@ -63,7 +63,7 @@ export class WebAuthnService {
         if (e instanceof DOMException) {
           return Err(CorbadoError.fromDOMException(e));
         } else {
-          return Err(CorbadoError.fromUnknownException(e));
+          return Err(CorbadoError.fromUnknownFrontendError(e));
         }
       }
     });

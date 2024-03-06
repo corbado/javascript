@@ -202,6 +202,31 @@ export type BlockType = typeof BlockType[keyof typeof BlockType];
 /**
  * 
  * @export
+ * @interface ClientInformation
+ */
+export interface ClientInformation {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'bluetoothAvailable': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientInformation
+     */
+    'clientEnvHandle'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'canUsePasskeys': boolean;
+}
+/**
+ * 
+ * @export
  * @interface GeneralBlockLoginInit
  */
 export interface GeneralBlockLoginInit {
@@ -348,12 +373,6 @@ export interface IdentifierUpdateReq {
  * @interface IdentifierVerifyFinishReq
  */
 export interface IdentifierVerifyFinishReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof IdentifierVerifyFinishReq
-     */
-    'clientInfo': object;
     /**
      * 
      * @type {string}
@@ -530,6 +549,12 @@ export interface MePasskeyAppendStartRsp {
      * @memberof MePasskeyAppendStartRsp
      */
     'challenge': string;
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof MePasskeyAppendStartRsp
+     */
+    'clientInformation': ClientInformation;
 }
 /**
  * 
@@ -677,29 +702,10 @@ export type PassKeyItemStatusEnum = typeof PassKeyItemStatusEnum[keyof typeof Pa
 export interface PasskeyAppendFinishReq {
     /**
      * 
-     * @type {object}
-     * @memberof PasskeyAppendFinishReq
-     */
-    'clientInfo': object;
-    /**
-     * 
      * @type {string}
      * @memberof PasskeyAppendFinishReq
      */
     'signedChallenge': string;
-}
-/**
- * tbd.
- * @export
- * @interface PasskeyAppendStartReq
- */
-export interface PasskeyAppendStartReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof PasskeyAppendStartReq
-     */
-    'clientInfo': object;
 }
 /**
  * tbd.
@@ -709,29 +715,10 @@ export interface PasskeyAppendStartReq {
 export interface PasskeyLoginFinishReq {
     /**
      * 
-     * @type {object}
-     * @memberof PasskeyLoginFinishReq
-     */
-    'clientInfo': object;
-    /**
-     * 
      * @type {string}
      * @memberof PasskeyLoginFinishReq
      */
     'signedChallenge': string;
-}
-/**
- * tbd.
- * @export
- * @interface PasskeyLoginStartReq
- */
-export interface PasskeyLoginStartReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof PasskeyLoginStartReq
-     */
-    'clientInfo': object;
 }
 /**
  * 
@@ -739,12 +726,6 @@ export interface PasskeyLoginStartReq {
  * @interface PhoneCollectReq
  */
 export interface PhoneCollectReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof PhoneCollectReq
-     */
-    'clientInfo': object;
     /**
      * 
      * @type {string}
@@ -773,10 +754,10 @@ export interface ProcessCommon {
 export interface ProcessInitReq {
     /**
      * 
-     * @type {object}
+     * @type {ClientInformation}
      * @memberof ProcessInitReq
      */
-    'clientInfo': object;
+    'clientInformation': ClientInformation;
 }
 /**
  * tbd.
@@ -784,6 +765,12 @@ export interface ProcessInitReq {
  * @interface ProcessInitRsp
  */
 export interface ProcessInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessInitRsp
+     */
+    'newClientEnvHandle'?: string;
     /**
      * 
      * @type {string}
@@ -868,10 +855,10 @@ export interface SignupInitReq {
 export interface SocialVerifyStartReq {
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof SocialVerifyStartReq
      */
-    'clientInfo': object;
+    'placeholder'?: string;
 }
 /**
  * tbd.
@@ -911,12 +898,6 @@ export interface UpdateComponentConfigRsp {
  * @interface UsernameCollectReq
  */
 export interface UsernameCollectReq {
-    /**
-     * 
-     * @type {object}
-     * @memberof UsernameCollectReq
-     */
-    'clientInfo': object;
     /**
      * 
      * @type {string}
@@ -1213,13 +1194,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        passkeyAppendStart: async (passkeyAppendStartReq: PasskeyAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'passkeyAppendStartReq' is not null or undefined
-            assertParamExists('passkeyAppendStart', 'passkeyAppendStartReq', passkeyAppendStartReq)
+        passkeyAppendStart: async (body: object, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('passkeyAppendStart', 'body', body)
             const localVarPath = `/v2/auth/passkey/append/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1246,7 +1227,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendStartReq, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1297,13 +1278,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        passkeyLoginStart: async (passkeyLoginStartReq: PasskeyLoginStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'passkeyLoginStartReq' is not null or undefined
-            assertParamExists('passkeyLoginStart', 'passkeyLoginStartReq', passkeyLoginStartReq)
+        passkeyLoginStart: async (body: object, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('passkeyLoginStart', 'body', body)
             const localVarPath = `/v2/auth/passkey/login/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1330,7 +1311,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passkeyLoginStartReq, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1726,12 +1707,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyAppendStart(passkeyAppendStartReq, options);
+        async passkeyAppendStart(body: object, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyAppendStart(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1746,12 +1727,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyLoginStart(passkeyLoginStartReq, options);
+        async passkeyLoginStart(body: object, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.passkeyLoginStart(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1896,12 +1877,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<ProcessResponse> {
-            return localVarFp.passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        passkeyAppendStart(body: object, options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.passkeyAppendStart(body, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -1914,12 +1895,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: any): AxiosPromise<ProcessResponse> {
-            return localVarFp.passkeyLoginStart(passkeyLoginStartReq, options).then((request) => request(axios, basePath));
+        passkeyLoginStart(body: object, options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.passkeyLoginStart(body, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -2067,13 +2048,13 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+     * @param {object} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public passkeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    public passkeyAppendStart(body: object, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyAppendStart(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2089,13 +2070,13 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+     * @param {object} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public passkeyLoginStart(passkeyLoginStartReq: PasskeyLoginStartReq, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).passkeyLoginStart(passkeyLoginStartReq, options).then((request) => request(this.axios, this.basePath));
+    public passkeyLoginStart(body: object, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).passkeyLoginStart(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2347,13 +2328,13 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Start passkey append
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendStart: async (passkeyAppendStartReq: PasskeyAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'passkeyAppendStartReq' is not null or undefined
-            assertParamExists('currentUserPasskeyAppendStart', 'passkeyAppendStartReq', passkeyAppendStartReq)
+        currentUserPasskeyAppendStart: async (body: object, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('currentUserPasskeyAppendStart', 'body', body)
             const localVarPath = `/v2/me/passkeys/append/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2380,7 +2361,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendStartReq, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2557,12 +2538,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Start passkey append
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyAppendStartRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendStart(passkeyAppendStartReq, options);
+        async currentUserPasskeyAppendStart(body: object, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyAppendStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendStart(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2623,12 +2604,12 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Start passkey append
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: any): AxiosPromise<MePasskeyAppendStartRsp> {
-            return localVarFp.currentUserPasskeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
+        currentUserPasskeyAppendStart(body: object, options?: any): AxiosPromise<MePasskeyAppendStartRsp> {
+            return localVarFp.currentUserPasskeyAppendStart(body, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete current user\'s passkeys
@@ -2686,13 +2667,13 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Start passkey append
-     * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+     * @param {object} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public currentUserPasskeyAppendStart(passkeyAppendStartReq: PasskeyAppendStartReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserPasskeyAppendStart(passkeyAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    public currentUserPasskeyAppendStart(body: object, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyAppendStart(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

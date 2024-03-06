@@ -162,7 +162,6 @@ export class SessionService {
 
     await this.#usersApi.currentUserPasskeyAppendFinish({
       signedChallenge: signedChallenge.val,
-      clientInfo: {},
     });
 
     return Ok(void 0);

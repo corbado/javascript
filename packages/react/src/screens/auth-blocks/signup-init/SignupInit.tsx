@@ -6,14 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import Disclaimer from '../../../components/ui2/Disclaimer';
-import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
-  const falseFlag = false;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -68,7 +66,6 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   return (
     <div className='new-ui-component'>
       <div className='cb-container-2'>
-        {falseFlag && <ErrorPopup />}
         <Header size='lg'>{headerText}</Header>
         <SubHeader>
           {subheaderText}

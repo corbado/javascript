@@ -14,6 +14,7 @@ import { WebAuthnService } from './WebAuthnService';
 
 // TODO: set this version
 const packageVersion = '0.0.0';
+const clientHandleKey = 'cbo_client_handle';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -46,7 +47,7 @@ export class ProcessService {
     this.#setApisV2('');
   }
 
-  async init(isDebug = false): Promise<ProcessResponse> {
+  async init(isDebug = false): Promise<Result<ProcessResponse, CorbadoError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
@@ -64,7 +65,7 @@ export class ProcessService {
       return this.#initNewAuthProcess();
     }
 
-    return res.val;
+    return res;
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -109,13 +110,17 @@ export class ProcessService {
     return out;
   }
 
-  async #initNewAuthProcess() {
-    const processInitRsp = await this.#initAuthProcess();
-    this.#setApisV2(processInitRsp.token);
-    const newProcess = new AuthProcess(processInitRsp.token, processInitRsp.expiresAt);
+  async #initNewAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
+    const res = await this.#initAuthProcess();
+    if (res.err) {
+      return res;
+    }
+
+    this.#setApisV2(res.val.token);
+    const newProcess = new AuthProcess(res.val.token, res.val.expiresAt);
     newProcess.persistToStorage();
 
-    return processInitRsp.processResponse;
+    return Ok(res.val.processResponse);
   }
 
   #setApisV2(processId: string): void {
@@ -128,12 +133,39 @@ export class ProcessService {
     this.#authApi = new AuthApi(config, this.#frontendApiUrl, axiosInstance);
   }
 
-  async #initAuthProcess(): Promise<ProcessInitRsp> {
-    const r = await this.#authApi.processInit({
-      clientInfo: {},
-    });
+  async #initAuthProcess(): Promise<Result<ProcessInitRsp, CorbadoError>> {
+    const maybeClientHandle = localStorage.getItem(clientHandleKey);
+    const canUsePasskeys =
+      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 
-    return r.data;
+    const res = await this.#processInit(canUsePasskeys, maybeClientHandle ?? undefined);
+    if (res.err) {
+      return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      localStorage.setItem(clientHandleKey, res.val.newClientEnvHandle);
+    }
+
+    return res;
+  }
+
+  #processInit(
+    canUsePasskeys: boolean,
+    clientHandle: string | undefined,
+  ): Promise<Result<ProcessInitRsp, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.processInit({
+        clientInformation: {
+          bluetoothAvailable: false,
+          canUsePasskeys: canUsePasskeys,
+          clientEnvHandle: clientHandle,
+        },
+      });
+
+      return r.data;
+    });
   }
 
   async #getAuthProcessState(): Promise<Result<ProcessResponse, GetProcessError>> {
@@ -183,7 +215,6 @@ export class ProcessService {
 
   async finishPasskeyAppend(signedChallenge: string): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyAppendFinish({
-      clientInfo: {},
       signedChallenge: signedChallenge,
     });
 
@@ -191,16 +222,13 @@ export class ProcessService {
   }
 
   async startPasskeyLogin(): Promise<ProcessResponse> {
-    const r = await this.#authApi.passkeyLoginStart({
-      clientInfo: {},
-    });
+    const r = await this.#authApi.passkeyLoginStart({});
 
     return r.data;
   }
 
   async finishPasskeyLogin(signedChallenge: string): Promise<ProcessResponse> {
     const r = await this.#authApi.passkeyLoginFinish({
-      clientInfo: {},
       signedChallenge: signedChallenge,
     });
 
@@ -230,7 +258,6 @@ export class ProcessService {
       verificationType: 'email-otp',
       identifierType: 'email',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;
@@ -250,7 +277,6 @@ export class ProcessService {
       verificationType: 'email-link',
       identifierType: 'email',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;
@@ -297,7 +323,6 @@ export class ProcessService {
       verificationType: 'sms-otp',
       identifierType: 'phone',
       code: code,
-      clientInfo: {},
     });
 
     return r.data;

@@ -9,7 +9,7 @@ import {
 } from '../../utils/helperFunctions/setBackendConfigs';
 
 setup('set b1.1 configs', async () => {
-  await setBackendConfigs('pro-8125835201872404154', [
+  await setBackendConfigs([
     makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, false, [
       IdentifierVerification.EmailOtp,
     ]),

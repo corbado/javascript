@@ -1,6 +1,6 @@
 import { useCorbado } from '@corbado/react-sdk';
 import type { AuthType, ScreenWithBlock } from '@corbado/shared-ui';
-import { ProcessHandler } from '@corbado/shared-ui';
+import { InitState, ProcessHandler } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -17,7 +17,7 @@ type Props = {
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, onLoggedIn }) => {
   const { corbadoApp } = useCorbado();
   const [currentScreen, setCurrentScreen] = useState<ScreenWithBlock>();
-  const [initialized, setInitialized] = useState(false);
+  const [initState, setInitState] = useState<InitState>(InitState.Initializing);
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
@@ -28,8 +28,12 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, on
     });
 
     void (async () => {
-      await flowHandler.init();
-      setInitialized(true);
+      const res = await flowHandler.init();
+      if (res.ok) {
+        setInitState(InitState.Success);
+      } else {
+        setInitState(InitState.Failed);
+      }
     })();
 
     return () => {
@@ -41,9 +45,9 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, on
   const contextValue = useMemo<FlowHandlerContextProps>(
     () => ({
       currentScreen,
-      initialized,
+      initState,
     }),
-    [currentScreen, initialized],
+    [currentScreen, initState],
   );
 
   return <FlowHandlerContext.Provider value={contextValue}>{children}</FlowHandlerContext.Provider>;

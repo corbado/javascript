@@ -496,10 +496,10 @@ components:
       type: object
       description: tbd.
       required:
-        - clientInfo
+        - clientInformation
       properties:
-        clientInfo:
-          type: object
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
 
     processInitRsp:
       type: object
@@ -509,6 +509,8 @@ components:
         - expiresAt
         - processResponse
       properties:
+        newClientEnvHandle:
+          type: string
         token:
           type: string
         expiresAt:
@@ -551,11 +553,6 @@ components:
     passkeyAppendStartReq:
       type: object
       description: tbd.
-      required:
-        - clientInfo
-      properties:
-        clientInfo:
-          type: object
 
     passkeyAppendStartRsp:
       $ref: '#/components/schemas/blockBody'
@@ -564,19 +561,19 @@ components:
       type: object
       required:
         - challenge
+        - clientInformation
       properties:
         challenge:
           type: string
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
 
     passkeyAppendFinishReq:
       type: object
       description: tbd.
       required:
-        - clientInfo
         - signedChallenge
       properties:
-        clientInfo:
-          type: object
         signedChallenge:
           type: string
 
@@ -586,11 +583,6 @@ components:
     passkeyLoginStartReq:
       type: object
       description: tbd.
-      required:
-        - clientInfo
-      properties:
-        clientInfo:
-          type: object
 
     passkeyLoginStartRsp:
       $ref: '#/components/schemas/blockBody'
@@ -599,11 +591,8 @@ components:
       type: object
       description: tbd.
       required:
-        - clientInfo
         - signedChallenge
       properties:
-        clientInfo:
-          type: object
         signedChallenge:
           type: string
 
@@ -625,13 +614,10 @@ components:
     identifierVerifyFinishReq:
       type: object
       required:
-        - clientInfo
         - code
         - identifierType
         - verificationType
       properties:
-        clientInfo:
-          type: object
         code:
           type: string
         identifierType:
@@ -642,11 +628,8 @@ components:
     usernameCollectReq:
       type: object
       required:
-        - clientInfo
         - value
       properties:
-        clientInfo:
-          type: object
         value:
           type: string
 
@@ -656,11 +639,8 @@ components:
     phoneCollectReq:
       type: object
       required:
-        - clientInfo
         - value
       properties:
-        clientInfo:
-          type: object
         value:
           type: string
 
@@ -669,11 +649,9 @@ components:
 
     socialVerifyStartReq:
       type: object
-      required:
-        - clientInfo
       properties:
-        clientInfo:
-          type: object
+        placeholder:
+          type: string
 
     socialVerifyStartRsp:
       $ref: '#/components/schemas/blockBody'
@@ -964,6 +942,19 @@ components:
               $ref: '#/components/schemas/verificationMethod'
             identifier:
               type: string
+
+    clientInformation:
+      type: object
+      required:
+        - bluetoothAvailable
+        - canUsePasskeys
+      properties:
+        bluetoothAvailable:
+          type: boolean
+        clientEnvHandle:
+          type: string
+        canUsePasskeys:
+          type: boolean
 
     authenticationResponse:
       type: object

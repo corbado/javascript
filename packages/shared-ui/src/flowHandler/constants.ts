@@ -55,3 +55,9 @@ export enum BlockTypes {
   PasskeyAppended = 'passkey-appended',
   Completed = 'completed',
 }
+
+export enum InitState {
+  Initializing, // the component is currently loading (we need to retrieve configuration from the backend first before we can render most parts of the component)
+  Failed, // we were not able to retrieve the config from the backend => we can not render the component
+  Success, // config from the backend has been loaded => we can render the component (there can still be NonRecoverableErrors, but we can always allow the end user to use the component)
+}

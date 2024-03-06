@@ -61,7 +61,8 @@ export class CorbadoError extends Error {
 
   get translatedMessage(): string {
     if (!this.#translatedMessage) {
-      throw new Error('error has not been translated.');
+      // if the error can not be translated we show the untranslated message
+      return this.message;
     }
 
     return this.#translatedMessage;
@@ -75,31 +76,18 @@ export class CorbadoError extends Error {
     log.debug('axios error', error);
 
     if (!error.response || !error.response.data) {
-      return NonRecoverableError.unknown();
-    }
-
-    if (error.response.status >= 500 || error.response.status === 422) {
-      try {
-        const errorRespRaw = error.response.data as ErrorRsp;
-        return NonRecoverableError.server(
-          errorRespRaw.requestData.requestID,
-          errorRespRaw.error.links.pop() ?? '',
-          errorRespRaw.error.type,
-          errorRespRaw.requestData.link,
-        );
-      } catch (e) {
-        return NonRecoverableError.server(error.message, '', '', '');
-      }
+      return NonRecoverableError.unhandledBackendError('no_data_in_response');
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;
+    console.log('errorRespRaw', errorRespRaw.error.type);
     const errorResp = errorRespRaw.error;
     switch (errorResp.type) {
       case 'process_not_available':
         return new ProcessNotFound();
     }
 
-    return NonRecoverableError.unknown();
+    return NonRecoverableError.unhandledBackendError(errorResp.type);
   }
 
   static fromDOMException(e: DOMException): CorbadoError {
@@ -108,28 +96,20 @@ export class CorbadoError extends Error {
       case 'AbortError':
         return new PasskeyChallengeCancelledError();
       case 'SecurityError':
-        return new NonRecoverableError('server', 'https://docs.corbado.com');
+        return new NonRecoverableError('SecurityError');
       default:
         log.warn('unhandled DOM exception', e.name, e.message);
-        return NonRecoverableError.client(e.message);
+        return new NonRecoverableError(e.message);
     }
   }
 
-  static fromUnknownException(e: unknown): CorbadoError {
-    log.error('unknown exception', e);
-    return NonRecoverableError.unknown();
-  }
-
-  static illegalState(message: string, link: string): CorbadoError {
-    return NonRecoverableError.client(message, link);
+  static fromUnknownFrontendError(e: unknown): CorbadoError {
+    log.error('unknown error', e);
+    return NonRecoverableError.unhandledFrontendError(`unknown ${e}`);
   }
 
   static noPasskeyAvailable(): CorbadoError {
     return new NoPasskeyAvailableError();
-  }
-
-  static unknown(): CorbadoError {
-    return new UnknownError();
   }
 }
 
@@ -157,47 +137,29 @@ export class RecoverableError extends CorbadoError {
  * We can not recover from such an error.
  * Therefore, these errors are handled by showing a central error page.
  * Only a few errors should fall into this category.
+ *
+ * We don't offer translations for NonRecoverableError in general.
+ * Only the generic version of the NonRecoverableError can be translated because it is intended to be shown to the end user.
+ * The more detailed versions of NonRecoverableError are only shown to developers so there is no need to translate them.
  */
 export class NonRecoverableError extends CorbadoError {
-  readonly type: 'client' | 'server';
+  readonly message: string;
   readonly link?: string;
-  readonly details?: string;
-  readonly detailedType?: string;
   readonly requestId?: string;
 
-  constructor(type: 'client' | 'server', link?: string, details?: string, detailedType?: string, requestId?: string) {
+  constructor(message: string, link?: string, requestId?: string) {
     super(false);
-    this.name = 'Integration error';
-    this.type = type;
+    this.message = message;
     this.link = link;
-    this.details = details;
-    this.detailedType = detailedType;
     this.requestId = requestId;
   }
 
-  static unknown() {
-    return new NonRecoverableError('server', 'https://docs.corbado.com');
+  static unhandledFrontendError(message: string) {
+    return new NonRecoverableError(`An error occurred in the frontend was not handled: ${message}`);
   }
 
-  static invalidConfig(message: string) {
-    // TODO: add link to docs
-    return NonRecoverableError.client(message, 'https://docs.corbado.com');
-  }
-
-  static server(requestId: string, link: string, detailedType: string, details?: string) {
-    return new NonRecoverableError('server', link, details, detailedType, requestId);
-  }
-
-  static client(message: string, link?: string) {
-    return new NonRecoverableError('client', link, message);
-  }
-
-  static userRegistrationNotAllowed() {
-    return new NonRecoverableError(
-      'server',
-      'https://docs.corbado.com/overview/sign-up-and-login-with-passkeys/user-flow-configuration#id-2.-public-sign-ups',
-      'User registration is not allowed for this project',
-    );
+  static unhandledBackendError(code: string, message?: string) {
+    return new NonRecoverableError(`This error is not being handled by the frontend: ${message} (${code})`);
   }
 }
 

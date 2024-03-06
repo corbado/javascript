@@ -1,14 +1,15 @@
 import type { ScreenWithBlock } from '@corbado/shared-ui';
+import { InitState } from '@corbado/shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
   currentScreen: ScreenWithBlock | undefined;
-  initialized: boolean;
+  initState: InitState;
 }
 
 export const initialContext: FlowHandlerContextProps = {
   currentScreen: undefined,
-  initialized: false,
+  initState: InitState.Initializing,
 };
 
 const FlowHandlerContext = createContext<FlowHandlerContextProps>(initialContext);

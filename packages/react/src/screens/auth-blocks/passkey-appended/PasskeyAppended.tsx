@@ -1,37 +1,51 @@
 import type { PasskeyAppendedBlock } from '@corbado/shared-ui';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Body, Header, PrimaryButton } from '../../../components';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { PasskeyAppendedIcon } from '../../../components/ui2/icons/PasskeyAppendedIcon';
+import { Header } from '../../../components/ui2/typography/Header';
+import { Text } from '../../../components/ui2/typography/Text';
 
 export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-appended.passkey-appended`,
   });
-  const header = useMemo(() => t('header'), [t]);
-  const secondaryHeader = useMemo(() => t('subheader'), [t]);
-  const body = useMemo(
-    () => (
-      <span>
-        {t('body_text1')} <strong>{t(`body_text2.emailOtp`)}</strong> {t('body_text3')}
-      </span>
-    ),
-    [t],
-  );
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const primaryButton = useMemo(() => t('button'), [t]);
+  const headerText = useMemo(() => t('header'), [t]);
+  const subHeaderText = useMemo(() => t('subheader'), [t]);
+  const bodyText = useMemo(() => t('body'), [t]);
+  const primaryButtonText = useMemo(() => t('button'), [t]);
 
   return (
-    <div className='cb-layout-passkey'>
-      <Header>{header}</Header>
-      <Header className='cb-secondary-header-spacing'>{secondaryHeader}</Header>
-      <Body className='cb-body-spacing'>{body}</Body>
+    <div className='cb-pk-appended-bloc-2'>
+      <Header>{headerText}</Header>
+      <div className='cb-pk-appended-bloc-icon-2'>
+        <PasskeyAppendedIcon />
+      </div>
+      <Text
+        level='4'
+        fontWeight='bold'
+        fontFamilyVariant='secondary'
+      >
+        {subHeaderText}
+      </Text>
+      <Text
+        level='3'
+        fontFamilyVariant='secondary'
+        className='cb-pk-appended-bloc-description-2'
+      >
+        {bodyText}
+      </Text>
       <PrimaryButton
         onClick={() => {
+          setLoading(true);
           return void block.continue();
         }}
+        isLoading={loading}
       >
-        {primaryButton}
+        {primaryButtonText}
       </PrimaryButton>
     </div>
   );

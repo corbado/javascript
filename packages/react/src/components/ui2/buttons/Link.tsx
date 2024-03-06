@@ -10,7 +10,7 @@ export const Link: FC<PropsWithChildren<LinkProps>> = ({ href, className, childr
   return (
     <a
       href={href}
-      className={`cb-link-2 ${className}`}
+      className={`cb-link-2 cb-secondary-link-2 ${className}`}
     >
       {children}
     </a>

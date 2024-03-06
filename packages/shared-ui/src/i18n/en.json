@@ -15,16 +15,22 @@
     },
     "passkey-append": {
       "passkey-append": {
-        "header": "Let's get you set up with ",
-        "headerButton_showPasskeyBenefits": "Passkeys",
-        "body": "We'll create an account for ",
-        "button_start": "Create your account",
+        "header": "Enable Passkeys",
+        "subheader": "Create an account with face, fingerprint or pin",
+        "body_description": "This information will never leave your device.",
+        "body_userInfo": "We'll create an account for",
+        "button_start": "Create account",
         "button_skip": "Maybe later",
         "button_switchToAlternate": {
-          "emailOtp": "Send email one-time passcode",
-          "emailLink": "Send email magic link"
-        },
-        "button_back": "Back"
+          "emailOtp": "Email verification",
+          "emailLink": "Email verification",
+          "phone": "Phone verification"
+        }
+      },
+      "edit-user-data": {
+        "header": "Type new email address",
+        "button_submit": "Confirm",
+        "button_cancel": "Back"
       },
       "passkey-benefits": {
         "header": "Passkeys",
@@ -35,16 +41,14 @@
       },
       "passkey-error": {
         "header": "Something went wrong...",
-        "body_errorMessage": "Creating your account was not possible with ",
-        "button_showPasskeyBenefits": "passkeys",
-        "body_tryAgainMessage": ". Try again or sign up with one of the fallback methods below.",
+        "body": "Adding a passkey to your account was not possible. Please try again or use another method.",
         "button_switchToAlternate": {
-          "emailOtp": "Send email one-time passcode",
-          "emailLink": "Send email magic link"
+          "emailOtp": "Email verification",
+          "emailLink": "Email verification",
+          "phone": "Phone verification"
         },
-        "button_start": "Try again",
-        "button_back": "Back",
-        "button_cancel": "Cancel"
+        "button_tryAgain": "Try again",
+        "button_cancel": "Maybe later"
       }
     },
     "passkey-appended": {
@@ -162,8 +166,12 @@
     "missing_identifier_type": {
       "fullName": "Please enter a valid name.",
       "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
+      "email": "Please enter a valid email address.",
+      "phone": "Phone number must be a valid phone number."
+    },
+    "identifier_already_in_use": {
       "email": "That email address is taken. Pleas try another one.",
-      "phone": "Phone number must be a valid phone number. "
+      "phone": "That phone number is taken. Pleas try another one."
     },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",

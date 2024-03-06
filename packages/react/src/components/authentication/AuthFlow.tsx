@@ -17,6 +17,7 @@ import useFlowHandler from '../../hooks/useFlowHandler';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
+import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyBenefits as PasskeyAppendPasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
@@ -66,6 +67,8 @@ export const AuthFlow: FC = () => {
             return <PasskeyAppendPasskeyBenefits block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
             return <PasskeyAppendPasskeyError block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.EditUserData:
+            return <EditUserData block={currentScreen.block as PasskeyAppendBlock} />;
           default:
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }
@@ -87,19 +90,12 @@ export const AuthFlow: FC = () => {
     }
   }, [currentScreen]);
 
-  const render = useMemo(() => {
-    switch (initState) {
-      case InitState.Initializing:
-        return <Loading />;
-      case InitState.Failed:
-        return <ComponentUnavailableError />;
-      case InitState.Success:
-        return screenComponent;
-    }
-  }, [initState, screenComponent]);
-
   // Render the component if it exists, otherwise a fallback or null
-  return (
+  return initState === InitState.Failed ? (
+    <ComponentUnavailableError />
+  ) : initState === InitState.Initializing ? (
+    <Loading />
+  ) : (
     <div className='new-ui-component'>
       <div className='cb-container-2'>
         {globalError && (
@@ -109,7 +105,7 @@ export const AuthFlow: FC = () => {
             customerSupportEmail={customerSupportEmail}
           />
         )}
-        {render}
+        {screenComponent}
       </div>
     </div>
   );

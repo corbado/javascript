@@ -24,12 +24,13 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     app: CorbadoApp,
     flowHandler: ProcessHandler,
     common: ProcessCommon,
-    _: ErrorTranslator,
+    errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
   ) {
     super(app, flowHandler, common);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
+    const error = blockBody.error;
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
@@ -38,13 +39,13 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
           case BlockType.EmailVerify: {
             const typed = alternative.data as GeneralBlockVerifyIdentifier;
             if (typed.verificationMethod === VerificationMethod.EmailOtp) {
-              return { label: 'Send email verification code', action: () => this.initFallbackEmailOtp() };
+              return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
             }
 
-            return { label: 'Send email verification link', action: () => this.initFallbackEmailLink() };
+            return { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
           }
           case BlockType.PhoneVerify:
-            return { label: 'Send phone verification code', action: () => this.initFallbackSmsOtp() };
+            return { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
           default:
             throw new Error('Invalid block type');
         }
@@ -57,12 +58,21 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.userHandle,
+      translatedError: errorTranslator.translateWithIdentifier(error, 'email'),
       canBeSkipped,
     };
   }
 
   showPasskeyBenefits() {
     this.updateScreen(ScreenNames.PasskeyBenefits);
+  }
+
+  showEditUserData() {
+    this.updateScreen(ScreenNames.EditUserData);
+  }
+
+  showPasskeyAppend() {
+    this.updateScreen(ScreenNames.PasskeyAppend);
   }
 
   async passkeyAppend() {
@@ -107,6 +117,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updateEmail(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;
@@ -114,6 +129,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updatePhone(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updatePhone(value);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;
@@ -121,6 +141,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
   async updateUsername(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateUsername(value);
+
+    if (!newBlock.blockBody.error) {
+      this.updateScreen(ScreenNames.PasskeyAppend);
+    }
+
     this.updateProcess(newBlock);
 
     return;

@@ -22,6 +22,7 @@ export type BlockDataPasskeyAppend = {
   availableFallbacks: PasskeyFallback[];
   canBeSkipped: boolean;
   userHandle: string;
+  translatedError?: string;
 };
 
 export type BlockDataPasskeyVerify = {

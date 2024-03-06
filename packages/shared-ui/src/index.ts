@@ -7,12 +7,16 @@ import './styles2/index.css';
 import cancelIcon from './assets/cancel.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
 import deleteIcon from './assets/delete.svg';
+import editIcon from './assets/edit.svg';
+import emailIcon from './assets/email.svg';
 import exclamationIcon from './assets/exclamation.svg';
+import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import gmailIcon from './assets/gmail.svg';
 import logoIcon from './assets/logo.svg';
 import outlookIcon from './assets/outlook.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
+import passkeyErrorIcon from './assets/passkey-error.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
@@ -30,9 +34,13 @@ export const assets = {
   yahooIcon,
   gmailIcon,
   outlookIcon,
+  editIcon,
+  emailIcon,
+  faceId,
   fingerprintIcon,
   cancelIcon,
   logoIcon,
   circleExclamationIcon,
   exclamationIcon,
+  passkeyErrorIcon,
 };

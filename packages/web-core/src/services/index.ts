@@ -74,7 +74,7 @@ export class CorbadoApp {
     }
 
     if (!this.#validateProjectId(this.#projectId)) {
-      this.addGlobalError(NonRecoverableError.invalidConfig('Invalid project ID'));
+      this.addGlobalError(new NonRecoverableError('Invalid project ID'));
       return;
     }
 

@@ -5,13 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import Disclaimer from '../../../components/ui2/Disclaimer';
-import ErrorPopup from '../../../components/ui2/errors/ErrorPopup';
 import InputField from '../../../components/ui2/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
-  const falseFlag = false;
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -60,68 +58,65 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   }, [block]);
 
   return (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        {falseFlag && <ErrorPopup />}
-        <Header>{headerText}</Header>
-        <SubHeader>
-          {subheaderText}
-          {block.common.appName}
-        </SubHeader>
-        <form className='cb-form-2'>
-          {fullName && (
-            <InputField
-              id='name'
-              name='name'
-              label={fullNameFieldLabel}
-              errorMessage={fullName?.translatedError}
-              ref={el => el && (fullNameRef.current = el)}
-            />
-          )}
-          {username && (
-            <InputField
-              label={usernameFieldLabel}
-              id='username'
-              name='username'
-              errorMessage={username?.translatedError}
-              ref={el => el && (usernameRef.current = el)}
-            />
-          )}
-          {email && (
-            <InputField
-              label={emailFieldLabel}
-              id='email'
-              name='email'
-              type='email'
-              autoComplete='email'
-              errorMessage={email?.translatedError}
-              ref={el => el && (emailRef.current = el)}
-            />
-          )}
-          {phone && (
-            <InputField
-              label={phoneFieldLabel}
-              id='phone'
-              name='phone'
-              autoComplete='phone'
-              errorMessage={phone?.translatedError}
-              ref={el => el && (phoneRef.current = el)}
-            />
-          )}
-        </form>
-        <PrimaryButton
-          type='button'
-          isLoading={loading}
-          onClick={handleSubmit}
-        >
-          {submitButtonText}
-        </PrimaryButton>
-        <p className='cb-auth-change-section-2'>
-          {loginText}
-          <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
-        </p>
-        <Disclaimer />
-      </div>
-    </div>
+    <>
+      <Header>{headerText}</Header>
+      <SubHeader>
+        {subheaderText}
+        {block.common.appName}
+      </SubHeader>
+      <form className='cb-form-2'>
+        {fullName && (
+          <InputField
+            id='name'
+            name='name'
+            label={fullNameFieldLabel}
+            errorMessage={fullName?.translatedError}
+            ref={el => el && (fullNameRef.current = el)}
+          />
+        )}
+        {username && (
+          <InputField
+            label={usernameFieldLabel}
+            id='username'
+            name='username'
+            errorMessage={username?.translatedError}
+            ref={el => el && (usernameRef.current = el)}
+          />
+        )}
+        {email && (
+          <InputField
+            label={emailFieldLabel}
+            id='email'
+            name='email'
+            type='email'
+            autoComplete='email'
+            errorMessage={email?.translatedError}
+            ref={el => el && (emailRef.current = el)}
+          />
+        )}
+        {phone && (
+          <InputField
+            label={phoneFieldLabel}
+            id='phone'
+            name='phone'
+            autoComplete='phone'
+            errorMessage={phone?.translatedError}
+            ref={el => el && (phoneRef.current = el)}
+          />
+        )}
+      </form>
+      <PrimaryButton
+        type='button'
+        isLoading={loading}
+        onClick={handleSubmit}
+      >
+        {submitButtonText}
+      </PrimaryButton>
+      <p className='cb-auth-change-section-2'>
+        {loginText}
+        <SecondaryButton onClick={() => block.switchToLogin()}>{flowChangeButtonText}</SecondaryButton>
+      </p>
+      <Disclaimer />
+    </>
   );
 };

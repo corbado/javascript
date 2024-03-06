@@ -1,6 +1,8 @@
-import type { BlockBody, ProcessCommon, ProcessResponse } from '@corbado/web-core';
+import type { BlockBody, CorbadoError, ProcessCommon, ProcessResponse } from '@corbado/web-core';
 import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
+import type { Result } from 'ts-results';
+import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
 import {
@@ -51,9 +53,15 @@ export class ProcessHandler {
    * Initializes the ProcessHandler.
    * Call this function after registering all callbacks.
    */
-  async init() {
-    const initialBlock = await this.#corbadoApp.authProcessService.init();
-    this.handleProcessUpdateBackend(initialBlock);
+  async init(): Promise<Result<void, CorbadoError>> {
+    const res = await this.#corbadoApp.authProcessService.init();
+    if (res.err) {
+      return res;
+    }
+
+    this.handleProcessUpdateBackend(res.val);
+
+    return Ok(void 0);
   }
 
   dispose() {

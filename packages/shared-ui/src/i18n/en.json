@@ -158,13 +158,6 @@
       "button_skip": "Maybe later"
     }
   },
-  "unexpectedError": {
-    "header": "Something went wrong",
-    "subheader": "We’re sorry that our service is currently not available.",
-    "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-    "body_noCustomerSupport": "Please try again in a few moments.",
-    "button": "Refresh Page"
-  },
   "errors": {
     "missing_identifier_type": {
       "fullName": "Please enter a valid name.",
@@ -185,7 +178,18 @@
     "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
-    "unknown": "Something went wrong. Please try again later"
+    "unknown": "Something went wrong. Please try again later",
+    "unexpectedError": {
+      "withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
+      "noCustomerSupport": "Please try again in a few moments."
+    },
+    "componentUnavailable": {
+      "header": "Something went wrong",
+      "subheader": "We’re sorry that our service is currently not available.",
+      "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Please try again in a few moments.",
+      "button": "Refresh Page"
+    }
   },
   "passkeysList": {
     "warning_notLoggedIn": "Please log in to see your passkeys.",

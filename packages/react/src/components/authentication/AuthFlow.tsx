@@ -8,7 +8,7 @@ import type {
   PhoneVerifyBlock,
   SignupInitBlock,
 } from '@corbado/shared-ui';
-import { BlockTypes, ScreenNames } from '@corbado/shared-ui';
+import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 
@@ -27,11 +27,12 @@ import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-bl
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import Loading from '../ui/Loading';
-import { ErrorBoundary } from './ErrorBoundary';
+import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
+import ErrorPopup from '../ui2/errors/ErrorPopup';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
-  const { currentScreen, initialized } = useFlowHandler();
+  const { currentScreen, initState } = useFlowHandler();
   const { globalError } = useCorbado();
 
   const screenComponent = useMemo(() => {
@@ -86,14 +87,30 @@ export const AuthFlow: FC = () => {
     }
   }, [currentScreen]);
 
+  const render = useMemo(() => {
+    switch (initState) {
+      case InitState.Initializing:
+        return <Loading />;
+      case InitState.Failed:
+        return <ComponentUnavailableError />;
+      case InitState.Success:
+        return screenComponent;
+    }
+  }, [initState, screenComponent]);
+
   // Render the component if it exists, otherwise a fallback or null
   return (
-    <ErrorBoundary
-      globalError={globalError}
-      isDevMode={isDevMode}
-      customerSupportEmail={customerSupportEmail}
-    >
-      {initialized ? screenComponent ? screenComponent : <Loading /> : <Loading />}
-    </ErrorBoundary>
+    <div className='new-ui-component'>
+      <div className='cb-container-2'>
+        {globalError && (
+          <ErrorPopup
+            isDevMode={isDevMode}
+            error={globalError}
+            customerSupportEmail={customerSupportEmail}
+          />
+        )}
+        {render}
+      </div>
+    </div>
   );
 };

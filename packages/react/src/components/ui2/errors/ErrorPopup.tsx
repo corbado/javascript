@@ -1,18 +1,21 @@
+import type { CorbadoError } from '@corbado/web-core';
 import React from 'react';
 
-import { ExclamationIcon } from '../icons/ExclamationIcon';
+import { DeveloperError } from './DeveloperError';
+import { UserError } from './UserError';
 
-const ErrorPopup = () => (
-  <div className='cb-error-popup-2'>
-    <div className='cb-error-popup-icon-2'>
-      <ExclamationIcon className='cb-error-popup-icon-2' />
-    </div>
-    <div>
-      <p className='cb-error-popup-text-2'>
-        Unable to complete action at this time. If the problem persists please contact support.
-      </p>
-    </div>
-  </div>
-);
+type Props = {
+  isDevMode: boolean;
+  error: CorbadoError;
+  customerSupportEmail?: string;
+};
+
+const ErrorPopup = ({ isDevMode, error, customerSupportEmail }: Props) => {
+  if (isDevMode) {
+    return <UserError customerSupportEmail={customerSupportEmail} />;
+  }
+
+  return <DeveloperError error={error} />;
+};
 
 export default ErrorPopup;

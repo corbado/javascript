@@ -6,7 +6,7 @@ import { Text } from './Text';
 export const SubHeader: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Text
-      fontWeight='bold'
+      fontWeight='normal'
       level='5'
       textColorVariant='secondary'
       className='cb-subheader-2'

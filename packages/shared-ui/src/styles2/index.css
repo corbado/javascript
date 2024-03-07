@@ -12,7 +12,7 @@
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
   --cb-font-weight-normal: 400;
-  --cb-base-font-size: 0.5rem;
+  --cb-base-font-size: 0.65rem;
   --cb-border-radius-lg: 1.125rem;
   --cb-border-radius-sm: 0.5rem;
   --cb-error-text-color: #ce1212;
@@ -80,7 +80,7 @@
   }
 
   .cb-text-5-2 {
-    font-size: calc(var(--cb-base-font-size) * 2.25);
+    font-size: calc(var(--cb-base-font-size) * 1.75);
   }
 
   .cb-text-6-2 {
@@ -88,7 +88,7 @@
   }
 
   .cb-text-7-2 {
-    font-size: calc(var(--cb-base-font-size) * 3);
+    font-size: calc(var(--cb-base-font-size) * 2.5);
   }
 
   .cb-header-2 {
@@ -99,7 +99,7 @@
 
   .cb-subheader-2 {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   .cb-input-field-2 {
@@ -108,6 +108,7 @@
     justify-content: center;
     width: 90%;
     align-self: center;
+    margin-bottom: .75rem;
   }
 
   .cb-input-label-2 {
@@ -411,12 +412,12 @@
     align-items: center;
     margin: 1rem 0 3rem 0;
   }
-  
+
   .cb-pk-appended-bloc-icon-2 {
     width: 6rem;
     margin: 0.5rem auto 0.5rem auto;
   }
-  
+
   .cb-pk-appended-bloc-description-2 {
     margin-bottom: 2.5rem;
     text-align: center;

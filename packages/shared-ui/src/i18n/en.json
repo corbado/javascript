@@ -82,6 +82,11 @@
       "email-link-verification": {
         "header": "Verifying your email address",
         "button_back": "Cancel"
+      },
+      "edit-email": {
+        "header": "Type new email address",
+        "button_submit": "Confirm",
+        "button_cancel": "Back"
       }
     },
     "phone-verify": {

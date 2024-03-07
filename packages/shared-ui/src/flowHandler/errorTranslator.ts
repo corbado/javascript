@@ -9,7 +9,7 @@ export class ErrorTranslator {
   }
 
   translate(error: RequestError | undefined): string | undefined {
-    if (!error) {
+    if (!error || !error.code) {
       return undefined;
     }
 

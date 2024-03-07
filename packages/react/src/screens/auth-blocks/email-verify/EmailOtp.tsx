@@ -84,6 +84,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       <UserInfo
         className='cb-email-otp-user-info-section-2'
         userData={block.data.email}
+        onRightIconClick={() => void block.showEditEmail()}
       ></UserInfo>
       <Text
         level='2'

@@ -37,15 +37,29 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     this.verificationMethod = data.verificationMethod;
     this.authType = blockBody.authType;
 
+    const translatedError = blockBody.error
+      ? translator.translateWithIdentifier(blockBody.error, 'email')
+      : translator.translate(data.error);
+
     this.data = {
       email: data.identifier,
-      translatedError: translator.translate(data.error),
+      translatedError: translatedError,
       retryNotBefore: data.retryNotBefore,
     };
   }
 
   showEditEmail() {
-    this.updateScreen(ScreenNames.PasskeyBenefits);
+    this.data.translatedError = undefined;
+    this.updateScreen(ScreenNames.EditEmail);
+  }
+
+  showEmailVerificationScreen() {
+    this.data.translatedError = undefined;
+    if (this.verificationMethod === 'email-otp') {
+      this.updateScreen(ScreenNames.EmailOtpVerification);
+    } else {
+      this.updateScreen(ScreenNames.EmailLinkSent);
+    }
   }
 
   async validateCode(code: string) {
@@ -56,8 +70,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   }
 
   async resendCode() {
-    console.log('this.verificationMethod', this.verificationMethod);
-
     if (this.verificationMethod === 'email-otp') {
       const newBlock = await this.app.authProcessService.startEmailCodeVerification();
       this.updateProcess(newBlock);
@@ -71,6 +83,12 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
 
   async updateEmail(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
+
+    if (!newBlock.blockBody.error) {
+      this.showEmailVerificationScreen();
+      void this.resendCode();
+    }
+
     this.updateProcess(newBlock);
 
     return;

@@ -20,7 +20,6 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({ target = '_blan
       <Text
         fontFamilyVariant='secondary'
         textColorVariant='secondary'
-        fontWeight='bold'
       >
         {label}
       </Text>

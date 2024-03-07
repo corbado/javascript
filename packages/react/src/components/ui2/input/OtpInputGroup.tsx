@@ -1,21 +1,31 @@
 import { notANumberRegex, numberRegex } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import ErrorMessage from '../errors/ErrorMessage';
 import { OtpInput } from './OtpInput';
 
 interface Props {
-  numberOfDigits?: number;
-  loading?: boolean;
-  emittedOTP(otp: string[]): void;
   error?: string;
+  loading?: boolean;
+  showErrorMessage?: boolean;
+  emittedOTP(otp: string[]): void;
 }
 
-export const OtpInputGroup: FC<Props> = memo(({ emittedOTP, numberOfDigits = 6, loading = false, error }) => {
-  const [otpState, setOtpState] = useState(new Array<string>(numberOfDigits).fill(''));
+const numberOfDigits = 6;
+const emptyOtp = new Array<string>(numberOfDigits).fill('');
+
+export const OtpInputGroup: FC<Props> = memo(({ error, showErrorMessage, loading = false, emittedOTP }) => {
+  const [otpState, setOtpState] = useState([...emptyOtp]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
-  const otpRef = useRef(new Array<string>(numberOfDigits).fill(''));
+  const otpRef = useRef([...emptyOtp]);
+
+  useEffect(() => {
+    if (showErrorMessage) {
+      updateOtp([...emptyOtp]);
+      inputRefs.current[0].focus();
+    }
+  }, [showErrorMessage]);
 
   const updateOtp = useCallback(
     (otp: string[]) => {
@@ -114,11 +124,11 @@ export const OtpInputGroup: FC<Props> = memo(({ emittedOTP, numberOfDigits = 6, 
             handlePaste={handlePaste}
             ref={el => el && (inputRefs.current[index] = el)}
             disabled={loading}
-            error={error}
+            hasError={showErrorMessage}
           />
         ))}
       </div>
-      {error && <ErrorMessage message={error} />}
+      {showErrorMessage && <ErrorMessage message={error ?? ''} />}
     </>
   );
 });

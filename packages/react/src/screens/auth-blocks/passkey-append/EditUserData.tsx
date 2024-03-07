@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/InputField';
+import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 
 export interface EditUserDataProps {

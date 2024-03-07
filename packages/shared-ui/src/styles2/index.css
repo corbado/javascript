@@ -424,4 +424,85 @@
     margin-bottom: 2.5rem;
     text-align: center;
   }
+
+  .cb-email-otp-block-2 {
+    width: 90%;
+    margin-bottom: 1.5rem;
+    align-self: center;
+    margin-top: 1.5rem;
+  }
+
+  .cb-email-otp-block-header-2 {
+    margin-top: 1rem;
+    align-self: center;
+  }
+
+  .cb-email-otp-user-info-section-2 {
+    width: 100%;
+    margin-top: 2.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .cb-email-otp-input-container-2 {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    align-self: center;
+  }
+
+  .cb-email-otp-input-2 {
+    height: 3.25rem;
+    border: 1px solid var(--cb-border-color);
+    border-radius: var(--cb-border-radius-sm);
+    font-size: calc(var(--cb-base-font-size) * 1.25);
+    text-align: center;
+    font-family: var(--cb-secondary-font);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .cb-email-otp-buton-group-2 {
+    align-self: center;
+    margin: 2rem 0 1.25rem 0;
+  }
+
+  .cb-email-links-2 {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+    justify-content: space-around;
+  }
+
+  .cb-icon-button-2 {
+    display: flex;
+    gap: 0.3rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content:  center;
+    height: 2rem;
+    border: 1px solid var(--cb-border-color);
+    border-radius: var(--cb-border-radius-sm);
+    text-decoration: none;
+    color: var(--cb-primary-text-color);
+    font-family: var(--cb-secondary-font);
+    cursor: pointer;
+    padding-right: 0.5rem;
+    padding-left: 0.3rem;
+  }
+
+  .cb-icon-button-2:hover {
+    background-color: #f5f5f5;
+  }
+
+  .cb-icon-button-icon-2 img {
+    height: 1.5rem;
+    padding-top: 0.15rem;
+  }
+
+  .cb-email-otp-resend-button-2 {
+    width: 100%;
+    margin-top: 0.2rem;
+  }
 }

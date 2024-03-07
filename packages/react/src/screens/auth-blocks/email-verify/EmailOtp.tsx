@@ -1,11 +1,16 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton } from '../../../components';
+// import { useTranslation } from 'react-i18next';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { EmailLinks } from '../../../components/ui2/EmailLinks';
+import { OtpInputGroup } from '../../../components/ui2/input/OtpInputGroup';
+import { Header } from '../../../components/ui2/typography/Header';
+import { Text } from '../../../components/ui2/typography/Text';
+import { UserInfo } from '../../../components/ui2/UserInfo';
 
 export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
+  // const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const otpRef = useRef<string>('');
 
@@ -13,15 +18,15 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
     setLoading(false);
   }, [block]);
 
-  const header = t('header');
-  const body = (
-    <>
-      {t('body_text1')}
-      <span className='cb-text-secondary cb-text-bold'>{block.data.email}</span>
-      {t('body_text2')}
-    </>
-  );
-  const resendButtonText = t('button_resend');
+  // const header = t('header');
+  // const body = (
+  //   <>
+  //     {t('body_text1')}
+  //     <span className='cb-text-secondary cb-text-bold'>{block.data.email}</span>
+  //     {t('body_text2')}
+  //   </>
+  // );
+  // const resendButtonText = t('button_resend');
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
@@ -37,27 +42,40 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   );
 
   return (
-    <form
-      className='cb-email-screen'
-      onSubmit={event => event.preventDefault()}
-    >
-      <Header>{header}</Header>
-      <Body>{body}</Body>
-
-      <EmailProviderButtons />
+    <div className='cb-email-otp-block-2'>
+      <Header className='cb-email-otp-block-header-2'>Enter code to create account</Header>
+      <UserInfo
+        className='cb-email-otp-user-info-section-2'
+        userData={block.data.email}
+      ></UserInfo>
+      <Text
+        level='2'
+        fontWeight='bold'
+        fontFamilyVariant='secondary'
+        className='cb-row-2'
+      >
+        One-time passcode
+      </Text>
+      <Text fontFamilyVariant='secondary'>Enter the one-time passcode sent to your email address</Text>
       <OtpInputGroup
         emittedOTP={handleOtpChange}
         error={block.data.translatedError}
       />
-
-      {block.data.translatedError && <p className='cb-error'>{block.data.translatedError}</p>}
-
+      <EmailLinks className='cb-email-otp-buton-group-2' />
+      <Text
+        fontWeight='bold'
+        fontFamilyVariant='secondary'
+        className='cb-email-otp-resend-text-2'
+      >
+        Didn't receive the code?
+      </Text>
       <PrimaryButton
+        className='cb-email-otp-resend-button-2'
         isLoading={loading}
         onClick={() => void block.resendCode()}
       >
-        {resendButtonText}
+        Resend code
       </PrimaryButton>
-    </form>
+    </div>
   );
 };

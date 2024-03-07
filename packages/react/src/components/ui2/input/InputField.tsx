@@ -1,8 +1,9 @@
 import type { InputHTMLAttributes } from 'react';
 import React, { forwardRef } from 'react';
 
-import ErrorMessage from './errors/ErrorMessage';
-import { Text } from './typography/Text';
+import ErrorMessage from '../errors/ErrorMessage';
+import { Text } from '../typography/Text';
+import { Input } from './Input';
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -25,13 +26,13 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           </Text>
         </label>
       )}
-      <input
+      <Input
         {...props}
         type={type}
         id={id}
-        className={`cb-text-2-2 cb-input-2 ${errorMessage ? 'cb-input-error-2' : ''}`}
         aria-label={label}
         ref={ref}
+        hasError={!!errorMessage}
       />
       {errorMessage && <ErrorMessage message={errorMessage} />}
     </div>

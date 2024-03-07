@@ -7,7 +7,7 @@ import useTheme from './useTheme';
 export function useIconWithTheme(
   svgRef: RefObject<HTMLImageElement>,
   iconSrc: string,
-  color = '--cb-secondary-text-color',
+  color = '--cb-primary-text-color',
 ) {
   const { themeUpdateTS } = useTheme();
   const [logoSVG, setLogoSVG] = useState<string>(iconSrc);

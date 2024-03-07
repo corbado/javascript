@@ -53,14 +53,9 @@
     },
     "passkey-appended": {
       "passkey-appended": {
-        "header": "Welcome!",
+        "header": "Success!",
         "subheader": "Passkey created",
-        "body_text1": "You can now confirm your identity using your ",
-        "body_text2": {
-          "emailOtp": "passkey or via email one-time passcode",
-          "emailLink": "passkey or via email magic link"
-        },
-        "body_text3": " when you log in.",
+        "body": "You can now confirm your identity using your passkey when you log in.",
         "button": "Continue"
       }
     },

@@ -169,13 +169,19 @@
   "errors": {
     "missing_identifier_type": {
       "fullName": "Please enter a valid name.",
-      "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
-      "email": "Please enter a valid email address.",
-      "phone": "Phone number must be a valid phone number."
+      "username": "Enter username.",
+      "email": "Enter email address.",
+      "phone": "Enter phone number."
     },
     "identifier_already_in_use": {
+      "username": "That username is taken. Please try another one.",
       "email": "That email address is taken. Pleas try another one.",
       "phone": "That phone number is taken. Pleas try another one."
+    },
+    "identifier_invalid_format": {
+      "username": "Username can only contain letters, numbers and “-” or “_”.",
+      "email": "Email address must be a valid email address.",
+      "phone": "Phone number must be a valid phone number."
     },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",

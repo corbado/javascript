@@ -85,7 +85,7 @@
       },
       "edit-email": {
         "header": "Type new email address",
-        "button_submit": "Confirm",
+        "button_submit": "Resend code",
         "button_cancel": "Back"
       }
     },

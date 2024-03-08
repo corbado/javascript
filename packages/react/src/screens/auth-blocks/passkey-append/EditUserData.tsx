@@ -34,19 +34,14 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const handleConfirm = async () => {
     setLoading(true);
 
-    if (block.data.userHandle === passkeyUserHandle) {
-      block.showPasskeyAppend();
-      return;
-    }
-
     await block.updateEmail(passkeyUserHandle);
   };
 
   return (
-    <div className='cb-pk-edit-email-section-2'>
+    <div className='cb-edit-data-section-2'>
       <Header
         size='md'
-        className='cb-pk-edit-email-section-header-2'
+        className='cb-edit-data-section-header-2'
       >
         {headerText}
       </Header>
@@ -57,12 +52,13 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       />
       <PrimaryButton
         isLoading={loading}
+        disabled={passkeyUserHandle === block.data.userHandle}
         onClick={() => void handleConfirm()}
       >
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
-        className='cb-pk-edit-email-section-back-button-2'
+        className='cb-edit-data-section-back-button-2'
         onClick={() => block.showPasskeyAppend()}
       >
         {secondaryButtonText}

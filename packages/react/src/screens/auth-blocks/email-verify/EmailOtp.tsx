@@ -13,7 +13,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(30);
-  const otpRef = useRef<string>('');
+  const [emailSendTS, setEmailSendTS] = useState<number>(0);
   const resendTimer = useRef<NodeJS.Timeout>();
 
   const otpHasError = !loading && !!block.data.translatedError;
@@ -21,26 +21,32 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   useEffect(() => {
     setLoading(false);
 
+    if (block.resetTimerStartedAt) {
+      const timeSpent = (Date.now() - block.resetTimerStartedAt) / 1000;
+
+      if (timeSpent > 30) {
+        return;
+      } else {
+        setRemainingTime(30 - timeSpent);
+      }
+    }
+
     const timer = startTimer();
 
     return () => clearInterval(timer);
   }, [block]);
 
-  function startTimer() {
-    resendTimer.current = setInterval(
-      () =>
-        setRemainingTime(time => {
-          if (time === 1) {
-            clearInterval(resendTimer.current);
-          }
+  useEffect(() => {
+    if (resendTimer.current) {
+      return;
+    }
 
-          return time - 1;
-        }),
-      1000,
-    );
+    setLoading(false);
+    setRemainingTime(30);
+    const timer = startTimer();
 
-    return resendTimer.current;
-  }
+    return () => clearInterval(timer);
+  }, [emailSendTS]);
 
   const headerText = useMemo(() => t('header'), [t]);
   const bodyTitleText = useMemo(() => t('body_title'), [t]);
@@ -51,9 +57,14 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const outlookLinkText = useMemo(() => t('button_outlook'), [t]);
   const resendButtonText = useMemo(() => {
     if (remainingTime < 1) {
+      if (resendTimer.current) {
+        stopTimer();
+      }
+
       return t('button_resend');
     }
 
+    console.log('remainingTime', remainingTime);
     return (
       <Trans
         i18nKey='button_resendWaitingText'
@@ -67,16 +78,40 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
-      const newOtp = userOtp.join('');
-      otpRef.current = newOtp;
-
-      if (newOtp.length === 6) {
-        setLoading(true);
-        void block.validateCode(newOtp);
+      if (userOtp.length !== 6) {
+        return;
       }
+
+      setLoading(true);
+      void block.validateCode(userOtp.join(''));
     },
     [block],
   );
+
+  function startTimer() {
+    block.resetTimerStartedAt = Date.now();
+    resendTimer.current = setInterval(
+      () =>
+        setRemainingTime(time => {
+          console.log(time);
+          return time - 1;
+        }),
+      1000,
+    );
+
+    return resendTimer.current;
+  }
+
+  function stopTimer() {
+    clearInterval(resendTimer.current);
+    resendTimer.current = undefined;
+  }
+
+  async function resendCode() {
+    setLoading(true);
+    await block.resendCode();
+    setEmailSendTS(Date.now());
+  }
 
   return (
     <div className='cb-email-otp-block-2'>
@@ -121,8 +156,8 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       <PrimaryButton
         className='cb-email-otp-resend-button-2'
         isLoading={loading}
-        disabled={remainingTime > 0}
-        onClick={() => void block.resendCode()}
+        disabled={remainingTime > 1}
+        onClick={() => void resendCode}
       >
         {resendButtonText}
       </PrimaryButton>

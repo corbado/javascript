@@ -1,6 +1,6 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -17,12 +17,15 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const [email, setEmail] = useState<string>(block.data.email);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (block.data.translatedError) {
       setLoading(false);
       setErrorMessage(block.data.translatedError);
     }
+
+    emailInputRef.current?.focus();
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -32,35 +35,32 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const handleConfirm = async () => {
     setLoading(true);
 
-    if (block.data.email === email) {
-      block.showEmailVerificationScreen();
-      return;
-    }
-
     await block.updateEmail(email);
   };
 
   return (
-    <div className='cb-pk-edit-email-section-2'>
+    <div className='cb-edit-data-section-2'>
       <Header
         size='md'
-        className='cb-pk-edit-email-section-header-2'
+        className='cb-edit-data-section-header-2'
       >
         {headerText}
       </Header>
       <InputField
         value={email}
         errorMessage={errorMessage}
+        ref={emailInputRef}
         onChange={e => setEmail(e.target.value)}
       />
       <PrimaryButton
         isLoading={loading}
+        disabled={email === block.data.email}
         onClick={() => void handleConfirm()}
       >
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
-        className='cb-pk-edit-email-section-back-button-2'
+        className='cb-edit-data-section-back-button-2'
         onClick={() => block.showEmailVerificationScreen()}
       >
         {secondaryButtonText}

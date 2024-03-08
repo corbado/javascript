@@ -320,6 +320,25 @@
     cursor: pointer;
   }
 
+  .cb-edit-data-section-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 22rem;
+  }
+
+  .cb-edit-data-section-header-2 {
+    margin-bottom: 1rem;
+  }
+
+  .cb-edit-data-section-back-button-2 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: var(--cb-font-weight-normal);
+  }
+
   .cb-pk-append-header-2 {
     display: flex;
     flex-direction: column;
@@ -361,25 +380,6 @@
     justify-content: center;
     align-items: center;
     margin: 0rem 0 1rem 0;
-  }
-
-  .cb-pk-edit-email-section-2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    width: 18rem;
-  }
-
-  .cb-pk-edit-email-section-header-2 {
-    margin-bottom: 1rem;
-  }
-
-  .cb-pk-edit-email-section-back-button-2 {
-    align-self: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
   }
 
   .cb-pk-error-bloc-2 {
@@ -433,8 +433,7 @@
   }
 
   .cb-email-otp-block-header-2 {
-    margin-top: 1rem;
-    align-self: center;
+    padding-left: 1rem;
   }
 
   .cb-email-otp-user-info-section-2 {

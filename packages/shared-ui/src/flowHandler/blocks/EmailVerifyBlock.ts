@@ -81,12 +81,16 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     return;
   }
 
-  async updateEmail(value: string): Promise<void> {
+  async updateEmail(value: string, onSuccessCallback?: () => void): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
 
     if (!newBlock.blockBody.error) {
       this.showEmailVerificationScreen();
       void this.resendCode();
+
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
     }
 
     this.updateProcess(newBlock);

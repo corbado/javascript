@@ -7,6 +7,7 @@ import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
+import { useTimer } from '../../../hooks/useTimer';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;
@@ -14,6 +15,7 @@ export interface EditEmailProps {
 
 export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.edit-email` });
+  const { startTimer } = useTimer();
   const [email, setEmail] = useState<string>(block.data.email);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,7 +37,7 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const handleConfirm = async () => {
     setLoading(true);
 
-    await block.updateEmail(email);
+    await block.updateEmail(email, () => startTimer());
   };
 
   return (

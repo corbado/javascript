@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 
 import ErrorHandlingProvider from '../contexts/ErrorHandlingProvider';
 import { ThemeProvider } from '../contexts/ThemeProvider';
+import { TimerProvider } from '../contexts/TimerProvier';
 import { handleDynamicLocaleSetup } from '../i18n';
 
 export type CorbadoProviderProps = PropsWithChildren<CorbadoUIConfig & CorbadoProviderParams>;
@@ -36,7 +37,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
           theme={theme}
           darkMode={darkMode}
         >
-          {children}
+          <TimerProvider>{children}</TimerProvider>
         </ThemeProvider>
       </ErrorHandlingProvider>
     </CorbadoSDKProvider>

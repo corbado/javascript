@@ -84,11 +84,11 @@
   }
 
   .cb-text-6-2 {
-    font-size: calc(var(--cb-base-font-size) * 2.5);
+    font-size: calc(var(--cb-base-font-size) * 1.95);
   }
 
   .cb-text-7-2 {
-    font-size: calc(var(--cb-base-font-size) * 2.5);
+    font-size: calc(var(--cb-base-font-size) * 2.3);
   }
 
   .cb-header-2 {

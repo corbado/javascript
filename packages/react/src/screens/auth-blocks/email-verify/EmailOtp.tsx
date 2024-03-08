@@ -47,12 +47,13 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
-      if (userOtp.length !== 6) {
+      const otp = userOtp.join('');
+      if (otp.length !== 6) {
         return;
       }
 
       setLoading(true);
-      void block.validateCode(userOtp.join(''));
+      void block.validateCode(otp);
     },
     [block],
   );

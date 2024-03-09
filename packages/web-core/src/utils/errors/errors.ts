@@ -1,62 +1,25 @@
 import type { AxiosError } from 'axios';
 import log from 'loglevel';
-import type { BehaviorSubject } from 'rxjs';
 
 import type { ErrorRsp } from '../../api/v1';
 
 /** General Errors */
-export type AuthMethodsListError = UnknownUserError | UnknownError;
-export type GetProjectConfigError = UnknownError;
-export type GlobalError = BehaviorSubject<NonRecoverableError | undefined>;
-
-/** Passkey Authentication Errors */
-export type SignUpWithPasskeyError =
-  | UserAlreadyExistsError
-  | InvalidEmailError
-  | InvalidFullnameError
-  | PasskeyChallengeCancelledError
-  | UnknownError;
-export type AppendPasskeyError = PasskeyChallengeCancelledError | UnknownError;
-export type LoginWithPasskeyError =
-  | InvalidEmailError
-  | InvalidPasskeyError
-  | PasskeyChallengeCancelledError
-  | InitAutocompletedLoginWithPasskeyError
-  | ConditionalUiNotSupportedError
-  | UnknownError;
-export type InitAutocompletedLoginWithPasskeyError = UnknownError;
-export type CompleteAutocompletedLoginWithPasskeyError =
-  | InvalidPasskeyError
-  | PasskeyChallengeCancelledError
-  | UnknownError;
-
 export type GetProcessError = ProcessNotFound;
-
-/** Email OTP Errors */
-export type InitSignUpWithEmailOTPError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
-export type CompleteSignupWithEmailOTPError = InvalidOtpInputError | UnknownError;
-export type InitLoginWithEmailOTPError = InvalidEmailError | UnknownError;
-export type CompleteLoginWithEmailOTPError = InvalidOtpInputError | UnknownError;
-
-/** Email Link Errors */
-export type InitSignUpWithEmailLinkError = InvalidEmailError | UserAlreadyExistsError | UnknownError;
-export type CompleteSignupWithEmailLinkError = InvalidTokenInputError | UnknownError;
-export type InitLoginWithEmailLinkError = InvalidEmailError | UnknownError;
-export type CompleteLoginWithEmailLinkError = InvalidTokenInputError | UnknownError;
 
 /** Passkey Management Errors */
 export type PasskeyListError = UnknownError;
 export type PasskeyDeleteError = UnknownError;
-export type UserExistsError = UnknownError;
 
 export class CorbadoError extends Error {
   #translatedMessage?: string;
   recoverable: boolean;
+  ignore: boolean;
 
-  constructor(recoverable: boolean) {
+  constructor(recoverable: boolean, ignore: boolean) {
     super('An error has occurred');
     this.name = 'CorbadoError';
     this.recoverable = recoverable;
+    this.ignore = ignore;
   }
 
   get translatedMessage(): string {
@@ -72,8 +35,12 @@ export class CorbadoError extends Error {
     this.#translatedMessage = message;
   }
 
+  static ignore(): CorbadoError {
+    return new CorbadoError(true, true);
+  }
+
   static fromAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
-    log.debug('axios error', error);
+    log.error('axios error', error);
 
     if (!error.response || !error.response.data) {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
@@ -104,7 +71,12 @@ export class CorbadoError extends Error {
   }
 
   static fromUnknownFrontendError(e: unknown): CorbadoError {
-    log.error('unknown error', e);
+    if (e instanceof Error) {
+      if (e.name === 'CanceledError') {
+        return CorbadoError.ignore();
+      }
+    }
+
     return NonRecoverableError.unhandledFrontendError(`unknown ${e}`);
   }
 
@@ -119,7 +91,7 @@ export class CorbadoError extends Error {
  */
 export class RecoverableError extends CorbadoError {
   constructor(name: string) {
-    super(true);
+    super(true, false);
     this.name = name;
   }
 
@@ -148,7 +120,7 @@ export class NonRecoverableError extends CorbadoError {
   readonly requestId?: string;
 
   constructor(message: string, link?: string, requestId?: string) {
-    super(false);
+    super(false, false);
     this.message = message;
     this.link = link;
     this.requestId = requestId;

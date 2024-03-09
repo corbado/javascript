@@ -11,9 +11,9 @@ export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) =>
     };
   }, []);
 
-  if (block.continueOnOtherDevice) {
-    return <div className='cb-email-link-verification'>Email has been verified. Continue on other tab</div>;
+  if (block.data.translatedError) {
+    return <div>Error: {block.data.translatedError}</div>;
   }
 
-  return <div className='cb-pk-appended-bloc-2'>Verification in progress</div>;
+  return <div>Verification in progress</div>;
 };

@@ -16,11 +16,19 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [shortSession, setShortSession] = useState<string | undefined>();
 
-  useEffect(() => {
+  const init = async () => {
     setLoading(true);
-    void corbadoApp.init().then(() => {
-      setLoading(false);
-    });
+    const res = await corbadoApp.init();
+    if (res.err) {
+      setGlobalError(res.val);
+      return;
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    void init();
 
     const userSub = corbadoApp.sessionService.userChanges.subscribe(value => {
       setUser(value);
@@ -34,15 +42,10 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
       setShortSession(value);
     });
 
-    const globalErrorSub = corbadoApp.globalErrors.subscribe((value: NonRecoverableError | undefined) => {
-      setGlobalError(value);
-    });
-
     return () => {
       userSub.unsubscribe();
       authStateSub.unsubscribe();
       shortSessionSub.unsubscribe();
-      globalErrorSub.unsubscribe();
     };
   }, []);
 

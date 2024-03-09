@@ -1,5 +1,5 @@
-import type { Block } from './blocks/Block';
-import type { ScreenNames } from './constants';
+import type { Block } from './blocks';
+import type { ContinueOnOtherEnvReasons, LoginIdentifierType, ScreenNames } from './constants';
 
 export type BlockDataSignupInit = {
   fullName: TextFieldWithError | null;
@@ -22,6 +22,7 @@ export type BlockDataPasskeyAppend = {
   availableFallbacks: PasskeyFallback[];
   canBeSkipped: boolean;
   userHandle: string;
+  userHandleType: LoginIdentifierType;
   translatedError?: string;
 };
 
@@ -42,6 +43,10 @@ export type BlockDataPhoneVerify = {
   phone: string;
   translatedError?: string;
   retryNotBefore?: number;
+};
+
+export type BlockDataContinueOnOtherEnv = {
+  reason: ContinueOnOtherEnvReasons;
 };
 
 export type PasskeyFallback = {

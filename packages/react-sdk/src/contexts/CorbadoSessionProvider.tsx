@@ -29,19 +29,13 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   }, [corbadoApp]);
 
   const logout = useCallback(() => {
+    corbadoApp.authProcessService.clearProcess();
     return corbadoApp.sessionService.logout();
   }, [corbadoApp]);
 
   const deletePasskey = useCallback(
     (id: string) => {
       return corbadoApp.sessionService.passkeyDelete(id);
-    },
-    [corbadoApp],
-  );
-
-  const setGlobalError = useCallback(
-    (error: NonRecoverableError | undefined) => {
-      corbadoApp.globalErrors.next(error);
     },
     [corbadoApp],
   );
@@ -58,7 +52,6 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         deletePasskey,
         logout,
         globalError,
-        setGlobalError,
       }}
     >
       {children}

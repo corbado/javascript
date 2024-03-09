@@ -1,5 +1,5 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type {
+  ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
   PasskeyAppendBlock,
@@ -14,6 +14,7 @@ import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import { ContinueOnOtherEnv } from '../../screens/auth-blocks/continue-on-other-env/ContinueOnOtherEnv';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailLinkVerification } from '../../screens/auth-blocks/email-verify/EmailLinkVerification';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
@@ -35,7 +36,6 @@ import ErrorPopup from '../ui2/errors/ErrorPopup';
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
-  const { globalError } = useCorbado();
 
   const screenComponent = useMemo(() => {
     if (!currentScreen) {
@@ -88,6 +88,8 @@ export const AuthFlow: FC = () => {
         return <PasskeyAppended block={currentScreen.block as PasskeyAppendedBlock} />;
       case BlockTypes.Completed:
         return null;
+      case BlockTypes.ContinueOnOtherEnv:
+        return <ContinueOnOtherEnv block={currentScreen.block as ContinueOnOtherEnvBlock} />;
     }
   }, [currentScreen]);
 
@@ -99,10 +101,10 @@ export const AuthFlow: FC = () => {
   ) : (
     <div className='new-ui-component'>
       <div className='cb-container-2'>
-        {globalError && (
+        {currentScreen?.block.error && (
           <ErrorPopup
             isDevMode={isDevMode}
-            error={globalError}
+            error={currentScreen?.block.error}
             customerSupportEmail={customerSupportEmail}
           />
         )}

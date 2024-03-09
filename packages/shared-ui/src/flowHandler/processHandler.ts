@@ -15,6 +15,7 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
+import { ContinueOnOtherEnvBlock } from './blocks/ContinueOnOtherEnvBlock';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import type { ScreenWithBlock } from './types';
@@ -131,6 +132,7 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
+  // @todo: make sure that this error is shown as a message on the first screen
   async handleError(_: CorbadoError) {
     // get a new process
     const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
@@ -160,33 +162,58 @@ export class ProcessHandler {
   };
 
   #parseBlockData = (blockBody: BlockBody, common: ProcessCommon) => {
+    if (blockBody.continueOnOtherDevice) {
+      return new ContinueOnOtherEnvBlock(
+        this.#corbadoApp,
+        this,
+        common,
+        this.#errorTranslator,
+        blockBody.authType,
+        blockBody.continueOnOtherDevice,
+      );
+    }
+
+    let block: Block<unknown>;
     switch (blockBody.block) {
       case BlockType.PasskeyAppend:
-        return new PasskeyAppendBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        block = new PasskeyAppendBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       case BlockType.SignupInit:
-        return new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        block = new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        break;
       case BlockType.LoginInit:
-        return new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        block = new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        break;
       case BlockType.PasskeyAppended:
-        return new PasskeyAppendedBlock(this.#corbadoApp, this, common, blockBody);
+        block = new PasskeyAppendedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       case BlockType.EmailVerify:
-        return EmailVerifyBlock.fromBackend(
+        block = EmailVerifyBlock.fromBackend(
           this.#corbadoApp,
           this,
           common,
           this.#errorTranslator,
           blockBody.data,
           blockBody.authType,
-          !!blockBody.continueOnOtherDevice,
         );
+        break;
       case BlockType.PhoneVerify:
-        return new PhoneVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        block = new PhoneVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       case BlockType.Completed:
-        return new CompletedBlock(this.#corbadoApp, this, common, blockBody);
+        block = new CompletedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       case BlockType.PasskeyVerify:
-        return new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);
     }
+
+    if (blockBody.error) {
+      block.setError(blockBody.error);
+    }
+
+    return block;
   };
 }

@@ -120,7 +120,7 @@ paths:
                 $ref: '#/components/schemas/mePasskeyDeleteRsp'
 
   /v2/me/refresh:
-    put:
+    post:
       description: Performs session refresh
       operationId: CurrentUserSessionRefresh
       tags:
@@ -131,7 +131,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/authenticationResponse'
+                $ref: '#/components/schemas/meRefreshRsp'
 
   /v2/me/logout:
     post:
@@ -715,6 +715,14 @@ components:
         paging:
           $ref: 'common.yml#/components/schemas/paging'
 
+    meRefreshRsp:
+      type: object
+      required:
+        - shortSession
+      properties:
+        shortSession:
+          type: string
+
     mePasskeyDeleteRsp:
       type: object
       required:
@@ -856,7 +864,7 @@ components:
 
     verificationMethod:
       type: string
-      enum: [ email-link, email-otp, sms-otp ]
+      enum: [ email-link, email-otp, phone-otp ]
 
     generalBlockSignupInit:
       type: object
@@ -900,12 +908,15 @@ components:
       type: object
       required:
         - challenge
-        - userHandle
+        - identifierValue
+        - identifierType
       properties:
         challenge:
           type: string
-        userHandle:
+        identifierValue:
           type: string
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
 
     generalBlockPasskeyVerify:
       type: object
@@ -981,6 +992,7 @@ components:
       properties:
         reason:
           type: string
+          enum: [ 'email-link-verified', 'process-already-completed' ]
 
     requestError:
       type: object

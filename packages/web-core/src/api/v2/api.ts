@@ -118,7 +118,13 @@ export interface BlockBodyData {
      * @type {string}
      * @memberof BlockBodyData
      */
-    'userHandle': string;
+    'identifierValue': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof BlockBodyData
+     */
+    'identifierType': LoginIdentifierType;
     /**
      * 
      * @type {VerificationMethod}
@@ -241,8 +247,16 @@ export interface ContinueOnOtherDevice {
      * @type {string}
      * @memberof ContinueOnOtherDevice
      */
-    'reason': string;
+    'reason': ContinueOnOtherDeviceReasonEnum;
 }
+
+export const ContinueOnOtherDeviceReasonEnum = {
+    EmailLinkVerified: 'email-link-verified',
+    ProcessAlreadyCompleted: 'process-already-completed'
+} as const;
+
+export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReasonEnum[keyof typeof ContinueOnOtherDeviceReasonEnum];
+
 /**
  * 
  * @export
@@ -273,8 +287,16 @@ export interface GeneralBlockPasskeyAppend {
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
-    'userHandle': string;
+    'identifierValue': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'identifierType': LoginIdentifierType;
 }
+
+
 /**
  * 
  * @export
@@ -631,6 +653,19 @@ export interface MePasskeyRsp {
 /**
  * 
  * @export
+ * @interface MeRefreshRsp
+ */
+export interface MeRefreshRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeRefreshRsp
+     */
+    'shortSession': string;
+}
+/**
+ * 
+ * @export
  * @interface Paging
  */
 export interface Paging {
@@ -954,7 +989,7 @@ export interface UsernameCollectReq {
 export const VerificationMethod = {
     EmailLink: 'email-link',
     EmailOtp: 'email-otp',
-    SmsOtp: 'sms-otp'
+    PhoneOtp: 'phone-otp'
 } as const;
 
 export type VerificationMethod = typeof VerificationMethod[keyof typeof VerificationMethod];
@@ -2578,7 +2613,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -2663,7 +2698,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async currentUserSessionRefresh(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthenticationResponse>> {
+        async currentUserSessionRefresh(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeRefreshRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserSessionRefresh(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2725,7 +2760,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserSessionRefresh(options?: any): AxiosPromise<AuthenticationResponse> {
+        currentUserSessionRefresh(options?: any): AxiosPromise<MeRefreshRsp> {
             return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
         },
     };

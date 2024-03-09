@@ -21,7 +21,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     errorTranslator: ErrorTranslator,
     data: GeneralBlockLoginInit,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
 
     let loginIdentifier: string | undefined;
     let loginIdentifierError: string | undefined;

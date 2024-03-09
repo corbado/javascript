@@ -6,7 +6,7 @@ import type {
   ProcessCommon,
 } from '@corbado/web-core';
 import type { Result } from 'ts-results';
-import { Err, Ok } from 'ts-results';
+import { Ok } from 'ts-results';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -22,24 +22,22 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   readonly verificationMethod: 'email-otp' | 'email-link';
   readonly isNewDevice: boolean;
   readonly emailLinkToken?: string;
-  readonly continueOnOtherDevice: boolean;
 
   constructor(
     app: CorbadoApp,
     flowHandler: ProcessHandler,
     common: ProcessCommon,
-    translator: ErrorTranslator,
+    errorTranslator: ErrorTranslator,
     data: GeneralBlockVerifyIdentifier,
     authType: AuthType,
     fromEmailVerifyFromUrl: boolean,
     isNewDevice: boolean,
-    continueOnOtherDevice: boolean,
     emailLinkToken?: string,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
 
     switch (data.verificationMethod) {
-      case 'sms-otp':
+      case 'phone-otp':
         throw new Error('SMS OTP verification is not supported for email verification');
       case 'email-link':
         if (fromEmailVerifyFromUrl) {
@@ -57,11 +55,10 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     this.authType = authType;
     this.isNewDevice = isNewDevice;
     this.emailLinkToken = emailLinkToken;
-    this.continueOnOtherDevice = continueOnOtherDevice;
 
     this.data = {
       email: data.identifier,
-      translatedError: translator.translate(data.error),
+      translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
     };
   }
@@ -73,19 +70,8 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     translator: ErrorTranslator,
     data: GeneralBlockVerifyIdentifier,
     authType: AuthType,
-    continueOnOtherDevice: boolean,
   ): EmailVerifyBlock {
-    return new EmailVerifyBlock(
-      app,
-      flowHandler,
-      common,
-      translator,
-      data,
-      authType,
-      false,
-      false,
-      continueOnOtherDevice,
-    );
+    return new EmailVerifyBlock(app, flowHandler, common, translator, data, authType, false, false);
   }
 
   static fromUrl(
@@ -110,7 +96,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       authType,
       true,
       isNewDevice,
-      false,
       emailLinkToken,
     );
   }
@@ -177,7 +162,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       return Ok(false);
     }
 
-    this.updateProcess(newBlock.val);
+    this.updateProcess(newBlock);
 
     return Ok(false);
   }

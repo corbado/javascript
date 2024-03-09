@@ -18,7 +18,6 @@ export class CorbadoApp {
   #sessionService: SessionService;
   #projectId: string;
   #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
-  #initialized = false;
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -60,31 +59,21 @@ export class CorbadoApp {
     return this.#globalErrors;
   }
 
-  get initialized() {
-    return this.#initialized;
-  }
-
   /**
    * Method to initialize the application.
    * It fetches the project configuration and initializes the services.
    */
   async init() {
-    if (this.#initialized) {
-      return;
-    }
-
     if (!this.#validateProjectId(this.#projectId)) {
       this.addGlobalError(new NonRecoverableError('Invalid project ID'));
       return;
     }
 
     await this.#sessionService.init();
-
-    this.#initialized = true;
   }
 
   dispose() {
-    this.#authProcessService.abortOngoingPasskeyOperation();
+    this.#authProcessService.dispose();
     this.#sessionService.abortOngoingPasskeyOperation();
   }
 

@@ -8,6 +8,7 @@ import { Configuration } from '../api/v1';
 import type { LoginIdentifier, ProcessInitRsp, ProcessResponse } from '../api/v2';
 import { AuthApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
+import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { GetProcessError } from '../utils';
 import { CorbadoError, NonRecoverableError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
@@ -47,7 +48,7 @@ export class ProcessService {
     this.#setApisV2('');
   }
 
-  async init(isDebug = false): Promise<Result<ProcessResponse, CorbadoError>> {
+  async init(abortController: AbortController, isDebug = false): Promise<Result<ProcessResponse, CorbadoError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
@@ -56,16 +57,36 @@ export class ProcessService {
 
     const process = AuthProcess.loadFromStorage();
     if (!process) {
-      return this.#initNewAuthProcess();
+      return this.#initNewAuthProcess(abortController);
     }
 
     this.#setApisV2(process.id);
-    const res = await this.#getAuthProcessState();
+    const res = await this.#getAuthProcessState(abortController);
     if (res.err) {
-      return this.#initNewAuthProcess();
+      return this.#initNewAuthProcess(abortController);
     }
 
     return res;
+  }
+
+  initEmailVerifyFromUrl(): EmailVerifyFromUrl | null {
+    const searchParams = new URLSearchParams(window.location.search);
+    const encodedProcess = searchParams.get('corbadoEmailLinkID');
+    if (!encodedProcess) {
+      return null;
+    }
+
+    const token = searchParams.get('corbadoToken');
+    if (!token) {
+      return null;
+    }
+
+    const maybeProcess = AuthProcess.loadFromStorage();
+    const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
+
+    this.#setApisV2(emailVerifyFromUrl.processID);
+
+    return emailVerifyFromUrl;
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -110,8 +131,8 @@ export class ProcessService {
     return out;
   }
 
-  async #initNewAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
-    const res = await this.#initAuthProcess();
+  async #initNewAuthProcess(abortController: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
+    const res = await this.#initAuthProcess(abortController);
     if (res.err) {
       return res;
     }
@@ -133,12 +154,12 @@ export class ProcessService {
     this.#authApi = new AuthApi(config, this.#frontendApiUrl, axiosInstance);
   }
 
-  async #initAuthProcess(): Promise<Result<ProcessInitRsp, CorbadoError>> {
+  async #initAuthProcess(abortController: AbortController): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const maybeClientHandle = localStorage.getItem(clientHandleKey);
     const canUsePasskeys =
       window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 
-    const res = await this.#processInit(canUsePasskeys, maybeClientHandle ?? undefined);
+    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle ?? undefined);
     if (res.err) {
       return res;
     }
@@ -152,25 +173,29 @@ export class ProcessService {
   }
 
   #processInit(
+    abortController: AbortController,
     canUsePasskeys: boolean,
     clientHandle: string | undefined,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processInit({
-        clientInformation: {
-          bluetoothAvailable: false,
-          canUsePasskeys: canUsePasskeys,
-          clientEnvHandle: clientHandle,
+      const r = await this.#authApi.processInit(
+        {
+          clientInformation: {
+            bluetoothAvailable: false,
+            canUsePasskeys: canUsePasskeys,
+            clientEnvHandle: clientHandle,
+          },
         },
-      });
+        { signal: abortController.signal },
+      );
 
       return r.data;
     });
   }
 
-  async #getAuthProcessState(): Promise<Result<ProcessResponse, GetProcessError>> {
+  async #getAuthProcessState(abortController: AbortController): Promise<Result<ProcessResponse, GetProcessError>> {
     return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processGet();
+      const r = await this.#authApi.processGet(abortController);
 
       return r.data;
     });
@@ -258,6 +283,7 @@ export class ProcessService {
       verificationType: 'email-otp',
       identifierType: 'email',
       code: code,
+      isNewDevice: false,
     });
 
     return r.data;
@@ -272,14 +298,33 @@ export class ProcessService {
     return r.data;
   }
 
-  async finishEmailLinkVerification(code: string): Promise<ProcessResponse> {
-    const r = await this.#authApi.identifierVerifyFinish({
-      verificationType: 'email-link',
-      identifierType: 'email',
-      code: code,
-    });
+  async finishEmailLinkVerification(
+    abortController: AbortController,
+    code: string,
+    isNewDevice: boolean,
+  ): Promise<Result<ProcessResponse, GetProcessError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.identifierVerifyFinish(
+        {
+          verificationType: 'email-link',
+          identifierType: 'email',
+          code: code,
+          isNewDevice: isNewDevice,
+        },
+        {
+          signal: abortController.signal,
+        },
+      );
 
-    return r.data;
+      return r.data;
+    });
+  }
+
+  getVerificationStatus(): Promise<Result<ProcessResponse, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.identifierVerifyStatus();
+      return r.data;
+    });
   }
 
   async updateEmail(email: string): Promise<ProcessResponse> {
@@ -323,13 +368,10 @@ export class ProcessService {
       verificationType: 'sms-otp',
       identifierType: 'phone',
       code: code,
+      isNewDevice: false,
     });
 
     return r.data;
-  }
-
-  abortOngoingPasskeyOperation() {
-    this.#webAuthnService.abortOngoingOperation();
   }
 
   async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
@@ -364,5 +406,34 @@ export class ProcessService {
     const respFinish = await this.finishPasskeyLogin(signedChallenge.val);
 
     return Ok(respFinish);
+  }
+
+  /*
+  async #maybeHandleEmailLink(abortController: AbortController): Promise<Result<ProcessResponse | null, CorbadoError>> {
+    const searchParams = new URLSearchParams(window.location.search);
+    const processID = searchParams.get('corbadoEmailLinkID');
+    if (!processID) {
+      return Ok(null);
+    }
+
+    const emailLinkId = searchParams.get('corbadoToken');
+    if (!emailLinkId) {
+      return Ok(null);
+    }
+
+    const maybeProcess = AuthProcess.loadFromStorage();
+    const isNewDevice = maybeProcess?.id !== processID;
+
+    this.#setApisV2(processID);
+    const res = await this.finishEmailLinkVerification(abortController, emailLinkId, isNewDevice);
+    if (res.err) {
+      return res;
+    }
+
+    return res;
+  }*/
+
+  dispose() {
+    this.#webAuthnService.abortOngoingOperation();
   }
 }

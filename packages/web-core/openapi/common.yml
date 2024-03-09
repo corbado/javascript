@@ -25,7 +25,7 @@ paths:
       tags:
         - Common
       security:
-        - projectID: []
+        - projectID: [ ]
       parameters:
         - $ref: '#/components/parameters/remoteAddress'
         - $ref: '#/components/parameters/userAgent'
@@ -159,7 +159,7 @@ components:
 
     status:
       type: string
-      enum: ['active', 'pending', 'deleted']
+      enum: [ 'active', 'pending', 'deleted' ]
       description: Generic status that can describe Corbado entities
 
     authMethods:
@@ -169,7 +169,7 @@ components:
 
     authMethod:
       type: string
-      enum: ['email', 'phone_number', 'webauthn', 'password']
+      enum: [ 'email', 'phone_number', 'webauthn', 'password' ]
       description: Authentication methods
 
     fullUser:
@@ -248,6 +248,26 @@ components:
         status:
           $ref: '#/components/schemas/status'
 
+    highEntropyValues:
+      description: High entropy values from browser
+      type: object
+      required:
+        - platform
+        - platformVersion
+        - mobile
+      properties:
+        platform:
+          description: Platform
+          type: string
+          example: 'macOS'
+        platformVersion:
+          description: Platform version
+          type: string
+          example: '14.1.2'
+        mobile:
+          description: Mobile
+          type: boolean
+
     ID:
       description: generic ID
       type: string
@@ -305,7 +325,17 @@ components:
     loginIdentifierType:
       description: Login Identifier type
       type: string
-      enum: ['email', 'phone_number', 'custom']
+      enum: [ 'email', 'phone_number', 'custom' ]
+
+    appType:
+      description: Application type
+      type: string
+      enum: [ 'empty', 'web', 'native' ]
+
+    sessionManagement:
+      description: What session management should be used
+      type: string
+      enum: [ 'SessionManagementCorbado', 'SessionManagementOwn' ]
 
     requestData:
       description: Data about the request itself, can be used for debugging
@@ -320,6 +350,23 @@ components:
           description: Link to dashboard with details about request
           type: string
           example: 'https://my.corbado.com/requests/req-xxxxxxxxxxxxxxxxxxx'
+
+    loginIdentifierConfig:
+      type: object
+      required:
+        - type
+        - enforceVerification
+        - useAsLoginIdentifier
+      properties:
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        enforceVerification:
+          type: string
+          enum: [ none, signup, before-passkey-login ]
+        useAsLoginIdentifier:
+          type: boolean
+        metadata:
+          type: object
 
     # this is necessary so that code generator doesn't ignore "unused" types
     allTypes:
@@ -365,6 +412,14 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         p20:
           $ref: '#/components/schemas/emailCodeID'
+        p21:
+          $ref: '#/components/schemas/appType'
+        p22:
+          $ref: '#/components/schemas/sessionManagement'
+        p23:
+          $ref: '#/components/schemas/highEntropyValues'
+        p24:
+          $ref: '#/components/schemas/loginIdentifierConfig'
 
     genericRsp:
       type: object
@@ -398,6 +453,8 @@ components:
           required:
             - error
           properties:
+            data:
+              type: object
             error:
               type: object
               required:

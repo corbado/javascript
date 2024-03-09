@@ -15,6 +15,7 @@ import React, { useMemo } from 'react';
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
+import { EmailLinkVerification } from '../../screens/auth-blocks/email-verify/EmailLinkVerification';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
@@ -53,7 +54,7 @@ export const AuthFlow: FC = () => {
           case ScreenNames.EmailOtpVerification:
             return <EmailOtp block={currentScreen.block as EmailVerifyBlock} />;
           case ScreenNames.EmailLinkVerification:
-            return <EmailOtp block={currentScreen.block as EmailVerifyBlock} />;
+            return <EmailLinkVerification block={currentScreen.block as EmailVerifyBlock} />;
           default:
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }

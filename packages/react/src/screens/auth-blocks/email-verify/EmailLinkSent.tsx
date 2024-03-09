@@ -6,10 +6,11 @@ import { Body, EmailProviderButtons, Header, PrimaryButton } from '../../../comp
 
 export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `${block.verificationMethod}.email-verify.email-link-sent`,
+    keyPrefix: `${block.authType}.email-verify.email-link-sent`,
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(30);
+  const [completedOnOtherDevice, setCompletedOnOtherDevice] = useState(false);
   const resendTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
@@ -20,11 +21,19 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
       setRemainingTime(block.data.retryNotBefore - secondsNow);
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+    };
   }, [block]);
 
   function startTimer() {
-    resendTimer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
+    resendTimer.current = setInterval(() => {
+      if (completedOnOtherDevice) {
+        return;
+      }
+
+      setRemainingTime(time => time - 1);
+    }, 1000);
 
     return resendTimer.current;
   }
@@ -61,6 +70,23 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
     );
   }, [remainingTime]);
 
+  const handleStatusChange = async () => {
+    const res = await block.getVerificationStatus();
+    if (res.err) {
+      return;
+    }
+
+    setCompletedOnOtherDevice(res.val);
+  };
+
+  useEffect(() => {
+    void handleStatusChange();
+  }, [block, remainingTime]);
+
+  if (completedOnOtherDevice) {
+    return <div className='cb-email-link-verification'>Email has been verified. Continue on other tab</div>;
+  }
+
   return (
     <form
       className='cb-email-screen'
@@ -74,7 +100,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
         disabled={remainingTime > 0}
         onClick={() => {
           setLoading(true);
-          void block.resendCode();
+          void block.resendEmail();
         }}
       >
         {resendButtonText}

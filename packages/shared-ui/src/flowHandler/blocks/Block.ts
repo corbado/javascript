@@ -1,5 +1,6 @@
-import type { AuthType, CorbadoApp, ProcessCommon } from '@corbado/web-core';
+import type { AuthType, CorbadoApp, CorbadoError, ProcessCommon } from '@corbado/web-core';
 import type { ProcessResponse } from '@corbado/web-core/dist/api/v2';
+import type { Result } from 'ts-results';
 
 import type { BlockTypes, ScreenNames } from '../constants';
 import type { ProcessHandler } from '../processHandler';
@@ -27,8 +28,13 @@ export abstract class Block<A> {
     return;
   }
 
-  protected updateProcess(processUpdate: ProcessResponse) {
-    this.flowHandler.handleProcessUpdateBackend(processUpdate);
+  protected updateProcess(processUpdateRes: Result<ProcessResponse, CorbadoError>) {
+    if (processUpdateRes.err) {
+      void this.flowHandler.handleError(processUpdateRes.val);
+      return;
+    }
+
+    this.flowHandler.handleProcessUpdateBackend(processUpdateRes.val);
 
     return;
   }

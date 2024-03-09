@@ -21,12 +21,18 @@ servers:
 tags:
   - name: Auth
     description: All API calls that are related to an authentication process.
+  - name: Configs
+    description: All API calls to manage configurations
+  - name: Users
+    description: All API calls to manage users
 
 paths:
   /v2/component-config:
     post:
       description: tbd
       operationId: UpdateComponentConfig
+      tags:
+        - Configs
       requestBody:
         required: true
         content:
@@ -95,6 +101,8 @@ paths:
     delete:
       description: Delete current user's passkeys
       operationId: CurrentUserPasskeyDelete
+      tags:
+        - Users
       parameters:
         - in: path
           required: true
@@ -103,8 +111,6 @@ paths:
             type: string
           description: 'Credential ID from passkeys'
           example: 'cre-abc123'
-      tags:
-        - Users
       responses:
         '200':
           description: tbs
@@ -359,6 +365,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/auth/identifier/verify/status:
+    get:
+      description: tbd
+      operationId: IdentifierVerifyStatus
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processResponse'
 
   /v2/auth/identifier/update:
     post:
@@ -484,7 +503,7 @@ components:
         identifiers:
           type: array
           items:
-            $ref: '#/components/schemas/loginIdentifierConfig'
+            $ref: 'common.yml#/components/schemas/loginIdentifierConfig'
 
     updateComponentConfigRsp:
       type: object
@@ -531,8 +550,8 @@ components:
           items:
             $ref: '#/components/schemas/loginIdentifier'
 
-    signupInitRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    signupInitRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     loginInitReq:
       type: object
@@ -547,15 +566,15 @@ components:
           type: boolean
 
 
-    loginInitRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    loginInitRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     passkeyAppendStartReq:
       type: object
       description: tbd.
 
-    passkeyAppendStartRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    passkeyAppendStartRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     mePasskeyAppendStartRsp:
       type: object
@@ -577,15 +596,15 @@ components:
         signedChallenge:
           type: string
 
-    passkeyAppendFinishRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    passkeyAppendFinishRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     passkeyLoginStartReq:
       type: object
       description: tbd.
 
-    passkeyLoginStartRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    passkeyLoginStartRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     passkeyLoginFinishReq:
       type: object
@@ -596,8 +615,8 @@ components:
         signedChallenge:
           type: string
 
-    passkeyLoginFinishRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    passkeyLoginFinishRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     identifierVerifyStartReq:
       type: object
@@ -617,6 +636,7 @@ components:
         - code
         - identifierType
         - verificationType
+        - isNewDevice
       properties:
         code:
           type: string
@@ -624,6 +644,8 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         verificationType:
           $ref: '#/components/schemas/verificationMethod'
+        isNewDevice:
+          type: boolean
 
     usernameCollectReq:
       type: object
@@ -633,8 +655,8 @@ components:
         value:
           type: string
 
-    usernameCollectRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    usernameCollectRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     phoneCollectReq:
       type: object
@@ -644,8 +666,8 @@ components:
         value:
           type: string
 
-    phoneCollectRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    phoneCollectRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     socialVerifyStartReq:
       type: object
@@ -653,11 +675,11 @@ components:
         placeholder:
           type: string
 
-    socialVerifyStartRsp:
-      $ref: '#/components/schemas/blockBody'
-
-    socialVerifyFinishRsp:
-      $ref: '#/components/schemas/blockBody'
+    #    socialVerifyStartRsp:
+    #      $ref: '#/components/schemas/blockBody'
+    #
+    #    socialVerifyFinishRsp:
+    #      $ref: '#/components/schemas/blockBody'
 
     identifierUpdateReq:
       type: object
@@ -670,16 +692,16 @@ components:
         value:
           type: string
 
-    verifyPasskeyRsp:
-      type: object
-      required:
-        - primary
-        - alternatives
-      properties:
-        primary:
-          type: object
-        alternatives:
-          type: object
+    #    verifyPasskeyRsp:
+    #      type: object
+    #      required:
+    #        - primary
+    #        - alternatives
+    #      properties:
+    #        primary:
+    #          type: object
+    #        alternatives:
+    #          type: object
 
     mePasskeyRsp:
       type: object
@@ -744,23 +766,6 @@ components:
         created:
           $ref: 'common.yml#/components/schemas/created'
 
-    loginIdentifierConfig:
-      type: object
-      required:
-        - type
-        - enforceVerification
-        - useAsLoginIdentifier
-      properties:
-        type:
-          $ref: '#/components/schemas/loginIdentifierType'
-        enforceVerification:
-          type: string
-          enum: [ none, signup, before-passkey-login ]
-        useAsLoginIdentifier:
-          type: boolean
-        metadata:
-          type: object
-
     processResponse:
       type: object
       required:
@@ -810,6 +815,8 @@ components:
             $ref: '#/components/schemas/blockBody'
         error:
           $ref: '#/components/schemas/requestError'
+        continueOnOtherDevice:
+          $ref: '#/components/schemas/continueOnOtherDevice'
 
     loginIdentifier:
       type: object
@@ -967,6 +974,13 @@ components:
         shortSession:
           type: string
 
+    continueOnOtherDevice:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
 
     requestError:
       type: object

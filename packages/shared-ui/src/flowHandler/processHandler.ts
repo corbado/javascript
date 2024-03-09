@@ -1,4 +1,4 @@
-import type { BlockBody, CorbadoError, ProcessCommon, ProcessResponse } from '@corbado/web-core';
+import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
 import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
@@ -27,6 +27,7 @@ import type { ScreenWithBlock } from './types';
 export class ProcessHandler {
   #currentScreen!: ScreenNames;
   #currentBlock: Block<unknown> | null = null;
+  #abortController = new AbortController();
 
   #corbadoApp: CorbadoApp;
   #errorTranslator: ErrorTranslator;
@@ -54,7 +55,13 @@ export class ProcessHandler {
    * Call this function after registering all callbacks.
    */
   async init(): Promise<Result<void, CorbadoError>> {
-    const res = await this.#corbadoApp.authProcessService.init();
+    const emailVerifyFromUrl = this.#corbadoApp.authProcessService.initEmailVerifyFromUrl();
+    if (emailVerifyFromUrl) {
+      this.handleProcessUpdateFromUrl(emailVerifyFromUrl);
+      return Ok(void 0);
+    }
+
+    const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
     if (res.err) {
       return res;
     }
@@ -66,6 +73,7 @@ export class ProcessHandler {
 
   dispose() {
     this.#corbadoApp.dispose();
+    this.#abortController.abort();
   }
 
   get currentScreenName() {
@@ -92,10 +100,25 @@ export class ProcessHandler {
     this.#onScreenChangeCallbacks.splice(cbId, 1);
   }
 
-  handleProcessUpdateBackend(processUpdate: ProcessResponse) {
-    const newPrimaryBlock = this.#parseBlockData(processUpdate.blockBody, processUpdate.common);
+  handleProcessUpdateFromUrl(emailVerifyFromUrl: EmailVerifyFromUrl) {
+    const newBlock = EmailVerifyBlock.fromUrl(
+      this.#corbadoApp,
+      this,
+      this.#errorTranslator,
+      emailVerifyFromUrl.data,
+      emailVerifyFromUrl.authType,
+      emailVerifyFromUrl.isNewDevice,
+      emailVerifyFromUrl.token,
+    ) as Block<unknown>;
+
+    newBlock.init();
+    this.#updatePrimaryBlock(newBlock);
+  }
+
+  handleProcessUpdateBackend(processResponse: ProcessResponse) {
+    const newPrimaryBlock = this.#parseBlockData(processResponse.blockBody, processResponse.common);
     const alternatives =
-      processUpdate.blockBody.alternatives?.map(b => this.#parseBlockData(b, processUpdate.common)) ?? [];
+      processResponse.blockBody.alternatives?.map(b => this.#parseBlockData(b, processResponse.common)) ?? [];
     newPrimaryBlock.setAlternatives(alternatives);
     newPrimaryBlock.init();
 
@@ -106,6 +129,18 @@ export class ProcessHandler {
     newPrimaryBlock.setAlternatives(newAlternatives);
 
     this.#updatePrimaryBlock(newPrimaryBlock);
+  }
+
+  async handleError(_: CorbadoError) {
+    // get a new process
+    const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
+    if (res.err) {
+      return res;
+    }
+
+    this.handleProcessUpdateBackend(res.val);
+
+    return;
   }
 
   #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
@@ -135,7 +170,15 @@ export class ProcessHandler {
       case BlockType.PasskeyAppended:
         return new PasskeyAppendedBlock(this.#corbadoApp, this, common, blockBody);
       case BlockType.EmailVerify:
-        return new EmailVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        return EmailVerifyBlock.fromBackend(
+          this.#corbadoApp,
+          this,
+          common,
+          this.#errorTranslator,
+          blockBody.data,
+          blockBody.authType,
+          !!blockBody.continueOnOtherDevice,
+        );
       case BlockType.PhoneVerify:
         return new PhoneVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
       case BlockType.Completed:

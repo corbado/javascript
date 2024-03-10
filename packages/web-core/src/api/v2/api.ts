@@ -92,6 +92,12 @@ export interface BlockBody {
      * @memberof BlockBody
      */
     'error'?: RequestError;
+    /**
+     * 
+     * @type {ContinueOnOtherDevice}
+     * @memberof BlockBody
+     */
+    'continueOnOtherDevice'?: ContinueOnOtherDevice;
 }
 
 
@@ -112,7 +118,13 @@ export interface BlockBodyData {
      * @type {string}
      * @memberof BlockBodyData
      */
-    'userHandle': string;
+    'identifierValue': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof BlockBodyData
+     */
+    'identifierType': LoginIdentifierType;
     /**
      * 
      * @type {VerificationMethod}
@@ -227,6 +239,27 @@ export interface ClientInformation {
 /**
  * 
  * @export
+ * @interface ContinueOnOtherDevice
+ */
+export interface ContinueOnOtherDevice {
+    /**
+     * 
+     * @type {string}
+     * @memberof ContinueOnOtherDevice
+     */
+    'reason': ContinueOnOtherDeviceReasonEnum;
+}
+
+export const ContinueOnOtherDeviceReasonEnum = {
+    EmailLinkVerified: 'email-link-verified',
+    ProcessAlreadyCompleted: 'process-already-completed'
+} as const;
+
+export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReasonEnum[keyof typeof ContinueOnOtherDeviceReasonEnum];
+
+/**
+ * 
+ * @export
  * @interface GeneralBlockLoginInit
  */
 export interface GeneralBlockLoginInit {
@@ -254,8 +287,16 @@ export interface GeneralBlockPasskeyAppend {
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
-    'userHandle': string;
+    'identifierValue': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'identifierType': LoginIdentifierType;
 }
+
+
 /**
  * 
  * @export
@@ -391,6 +432,12 @@ export interface IdentifierVerifyFinishReq {
      * @memberof IdentifierVerifyFinishReq
      */
     'verificationType': VerificationMethod;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdentifierVerifyFinishReq
+     */
+    'isNewDevice': boolean;
 }
 
 
@@ -444,10 +491,10 @@ export interface LoginIdentifier {
 export interface LoginIdentifierConfig {
     /**
      * 
-     * @type {LoginIdentifierType}
+     * @type {LoginIdentifierType1}
      * @memberof LoginIdentifierConfig
      */
-    'type': LoginIdentifierType;
+    'type': LoginIdentifierType1;
     /**
      * 
      * @type {string}
@@ -489,6 +536,21 @@ export const LoginIdentifierType = {
 } as const;
 
 export type LoginIdentifierType = typeof LoginIdentifierType[keyof typeof LoginIdentifierType];
+
+
+/**
+ * Login Identifier type
+ * @export
+ * @enum {string}
+ */
+
+export const LoginIdentifierType1 = {
+    Email: 'email',
+    PhoneNumber: 'phone_number',
+    Custom: 'custom'
+} as const;
+
+export type LoginIdentifierType1 = typeof LoginIdentifierType1[keyof typeof LoginIdentifierType1];
 
 
 /**
@@ -587,6 +649,19 @@ export interface MePasskeyRsp {
      * @memberof MePasskeyRsp
      */
     'paging'?: Paging;
+}
+/**
+ * 
+ * @export
+ * @interface MeRefreshRsp
+ */
+export interface MeRefreshRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeRefreshRsp
+     */
+    'shortSession': string;
 }
 /**
  * 
@@ -914,31 +989,12 @@ export interface UsernameCollectReq {
 export const VerificationMethod = {
     EmailLink: 'email-link',
     EmailOtp: 'email-otp',
-    SmsOtp: 'sms-otp'
+    PhoneOtp: 'phone-otp'
 } as const;
 
 export type VerificationMethod = typeof VerificationMethod[keyof typeof VerificationMethod];
 
 
-/**
- * 
- * @export
- * @interface VerifyPasskeyRsp
- */
-export interface VerifyPasskeyRsp {
-    /**
-     * 
-     * @type {object}
-     * @memberof VerifyPasskeyRsp
-     */
-    'primary': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof VerifyPasskeyRsp
-     */
-    'alternatives': object;
-}
 
 /**
  * AuthApi - axios parameter creator
@@ -1102,6 +1158,42 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(identifierVerifyStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        identifierVerifyStatus: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/auth/identifier/verify/status`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1687,6 +1779,15 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async identifierVerifyStatus(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.identifierVerifyStatus(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {LoginInitReq} loginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1859,6 +1960,14 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        identifierVerifyStatus(options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.identifierVerifyStatus(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
          * @param {LoginInitReq} loginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2026,6 +2135,16 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public identifierVerifyStatus(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).identifierVerifyStatus(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
      * @param {LoginInitReq} loginInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2168,10 +2287,10 @@ export class AuthApi extends BaseAPI {
 
 
 /**
- * DefaultApi - axios parameter creator
+ * ConfigsApi - axios parameter creator
  * @export
  */
-export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+export const ConfigsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * tbd
@@ -2219,11 +2338,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * DefaultApi - functional programming interface
+ * ConfigsApi - functional programming interface
  * @export
  */
-export const DefaultApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
+export const ConfigsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ConfigsApiAxiosParamCreator(configuration)
     return {
         /**
          * tbd
@@ -2239,11 +2358,11 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * DefaultApi - factory interface
+ * ConfigsApi - factory interface
  * @export
  */
-export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = DefaultApiFp(configuration)
+export const ConfigsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ConfigsApiFp(configuration)
     return {
         /**
          * tbd
@@ -2258,21 +2377,21 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
 };
 
 /**
- * DefaultApi - object-oriented interface
+ * ConfigsApi - object-oriented interface
  * @export
- * @class DefaultApi
+ * @class ConfigsApi
  * @extends {BaseAPI}
  */
-export class DefaultApi extends BaseAPI {
+export class ConfigsApi extends BaseAPI {
     /**
      * tbd
      * @param {UpdateComponentConfigReq} updateComponentConfigReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof ConfigsApi
      */
     public updateComponentConfig(updateComponentConfigReq: UpdateComponentConfigReq, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).updateComponentConfig(updateComponentConfigReq, options).then((request) => request(this.axios, this.basePath));
+        return ConfigsApiFp(this.configuration).updateComponentConfig(updateComponentConfigReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2494,7 +2613,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -2579,7 +2698,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async currentUserSessionRefresh(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthenticationResponse>> {
+        async currentUserSessionRefresh(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeRefreshRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserSessionRefresh(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2641,7 +2760,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserSessionRefresh(options?: any): AxiosPromise<AuthenticationResponse> {
+        currentUserSessionRefresh(options?: any): AxiosPromise<MeRefreshRsp> {
             return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
         },
     };

@@ -3,3 +3,5 @@ export * from './utils/errors';
 export * from './services';
 
 export * from './api';
+
+export * from './models/emailVerifyFromUrl';

@@ -21,7 +21,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     errorTranslator: ErrorTranslator,
     data: GeneralBlockSignupInit,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
 
     let email: TextFieldWithError | null = null;
     let phone: TextFieldWithError | null = null;

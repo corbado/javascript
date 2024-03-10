@@ -1,7 +1,8 @@
 import type { CorbadoAppParams } from '@corbado/types';
-import { BehaviorSubject } from 'rxjs';
+import type { Result } from 'ts-results';
+import { Err, Ok } from 'ts-results';
 
-import type { GlobalError } from '../utils';
+import type { CorbadoError } from '../utils';
 import { defaultTimeout, NonRecoverableError } from '../utils';
 import { ProcessService } from './ProcessService';
 import { SessionService } from './SessionService';
@@ -17,8 +18,6 @@ export class CorbadoApp {
   #authProcessService: ProcessService;
   #sessionService: SessionService;
   #projectId: string;
-  #globalErrors: GlobalError = new BehaviorSubject<NonRecoverableError | undefined>(undefined);
-  #initialized = false;
 
   /**
    * The constructor initializes the services and sets up the application.
@@ -32,20 +31,8 @@ export class CorbadoApp {
       isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;
-    this.#authProcessService = new ProcessService(
-      this.#globalErrors,
-      this.#projectId,
-      apiTimeout,
-      isPreviewMode,
-      frontendApiUrl,
-    );
-    this.#sessionService = new SessionService(
-      this.#globalErrors,
-      this.#projectId,
-      setShortSessionCookie,
-      isPreviewMode,
-      frontendApiUrl,
-    );
+    this.#authProcessService = new ProcessService(this.#projectId, apiTimeout, isPreviewMode, frontendApiUrl);
+    this.#sessionService = new SessionService(this.#projectId, setShortSessionCookie, isPreviewMode, frontendApiUrl);
   }
 
   get authProcessService() {
@@ -56,50 +43,26 @@ export class CorbadoApp {
     return this.#sessionService;
   }
 
-  get globalErrors(): BehaviorSubject<NonRecoverableError | undefined> {
-    return this.#globalErrors;
-  }
-
-  get initialized() {
-    return this.#initialized;
-  }
-
   /**
    * Method to initialize the application.
    * It fetches the project configuration and initializes the services.
    */
-  async init() {
-    if (this.#initialized) {
-      return;
-    }
-
+  async init(): Promise<Result<void, CorbadoError>> {
     if (!this.#validateProjectId(this.#projectId)) {
-      this.addGlobalError(new NonRecoverableError('Invalid project ID'));
-      return;
+      return Err(new NonRecoverableError('Invalid project ID'));
     }
 
     await this.#sessionService.init();
 
-    this.#initialized = true;
+    return Ok(void 0);
   }
 
   dispose() {
-    this.#authProcessService.abortOngoingPasskeyOperation();
+    this.#authProcessService.dispose();
     this.#sessionService.abortOngoingPasskeyOperation();
   }
 
   #validateProjectId(projectId: string): boolean {
     return /^pro-\d+$/.test(projectId);
-  }
-
-  addGlobalError(error: NonRecoverableError | undefined) {
-    this.#globalErrors.next(error);
-  }
-
-  /**
-   * Method to clear the global errors.
-   */
-  clearGlobalErrors() {
-    this.addGlobalError(undefined);
   }
 }

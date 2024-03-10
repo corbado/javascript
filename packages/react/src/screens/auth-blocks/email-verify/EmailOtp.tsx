@@ -54,7 +54,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
 
       <PrimaryButton
         isLoading={loading}
-        onClick={() => void block.resendCode()}
+        onClick={() => void block.resendEmail()}
       >
         {resendButtonText}
       </PrimaryButton>

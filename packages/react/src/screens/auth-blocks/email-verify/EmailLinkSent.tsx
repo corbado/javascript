@@ -4,30 +4,70 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { Body, EmailProviderButtons, Header, PrimaryButton } from '../../../components';
 
+// we poll for a maximum of 5 minutes (300 * 1000ms = 5min)
+const pollIntervalMs = 1000;
+const pollMaxNumber = 300;
+
 export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `${block.verificationMethod}.email-verify.email-link-sent`,
+    keyPrefix: `${block.authType}.email-verify.email-link-sent`,
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(30);
+  const [remainingPolls, setRemainingPolls] = useState(pollMaxNumber);
+  const [completedOnOtherDevice, setCompletedOnOtherDevice] = useState(false);
   const resendTimer = useRef<NodeJS.Timeout>();
+  const pollingTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     setLoading(false);
-    const timer = startTimer();
+    startCountDownTimer();
+
     if (block.data.retryNotBefore) {
       const secondsNow = Math.floor(Date.now() / 1000);
       setRemainingTime(block.data.retryNotBefore - secondsNow);
     }
 
-    return () => clearInterval(timer);
+    startPollingTimer();
+
+    return () => {
+      clearInterval(resendTimer.current);
+      clearInterval(pollingTimer.current);
+    };
   }, [block]);
 
-  function startTimer() {
-    resendTimer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
+  useEffect(() => {
+    if (completedOnOtherDevice || remainingPolls < 1) {
+      return;
+    }
 
-    return resendTimer.current;
-  }
+    void handleStatusChange();
+  }, [block, remainingPolls]);
+
+  const startCountDownTimer = () => {
+    resendTimer.current = setInterval(() => {
+      if (completedOnOtherDevice) {
+        return;
+      }
+
+      setRemainingTime(time => time - 1);
+    }, 1000);
+  };
+
+  const startPollingTimer = () => {
+    pollingTimer.current = setInterval(() => {
+      setRemainingPolls(v => v - 1);
+    }, pollIntervalMs);
+  };
+
+  const handleStatusChange = async () => {
+    const res = await block.getVerificationStatus();
+    if (res.err) {
+      return;
+    }
+
+    setCompletedOnOtherDevice(res.val);
+  };
 
   const header = t('header');
   const body = useMemo(
@@ -61,6 +101,10 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
     );
   }, [remainingTime]);
 
+  if (completedOnOtherDevice) {
+    return <div className='cb-email-link-verification'>Email has been verified. Continue on other tab</div>;
+  }
+
   return (
     <form
       className='cb-email-screen'
@@ -74,7 +118,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
         disabled={remainingTime > 0}
         onClick={() => {
           setLoading(true);
-          void block.resendCode();
+          void block.resendEmail();
         }}
       >
         {resendButtonText}

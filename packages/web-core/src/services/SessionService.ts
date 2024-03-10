@@ -2,20 +2,13 @@ import type { PassKeyList, SessionUser } from '@corbado/types';
 import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
-import { BehaviorSubject, type Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import { UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
-import {
-  AuthState,
-  CorbadoError,
-  type GlobalError,
-  NonRecoverableError,
-  type PasskeyDeleteError,
-  type PasskeyListError,
-} from '../utils';
+import { AuthState, CorbadoError, type PasskeyDeleteError, type PasskeyListError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const shortSessionKey = 'cbo_short_session';
@@ -42,7 +35,6 @@ export class SessionService {
   readonly #setShortSessionCookie: boolean;
   readonly #frontendApiUrl: string;
   readonly #isPreviewMode: boolean;
-  readonly #globalErrors: Subject<NonRecoverableError | undefined>;
   readonly #projectId: string;
 
   #shortSession: ShortSession | undefined;
@@ -53,16 +45,9 @@ export class SessionService {
   #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
-  constructor(
-    globalErrors: GlobalError,
-    projectId: string,
-    setShortSessionCookie: boolean,
-    isPreviewMode: boolean,
-    frontendApiUrl?: string,
-  ) {
-    this.#globalErrors = globalErrors;
+  constructor(projectId: string, setShortSessionCookie: boolean, isPreviewMode: boolean, frontendApiUrl?: string) {
     this.#projectId = projectId;
-    this.#webAuthnService = new WebAuthnService(globalErrors);
+    this.#webAuthnService = new WebAuthnService();
     this.#longSession = undefined;
     this.#setShortSessionCookie = setShortSessionCookie;
     this.#frontendApiUrl = frontendApiUrl || `https://${projectId}.frontendapi.corbado.io`;
@@ -181,11 +166,17 @@ export class SessionService {
     });
   }
 
-  logout() {
-    // TODO: should we call backend to destroy the session here?
+  async logout() {
     log.debug('logging out user');
-    this.clear();
+    await Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserSessionLogout({});
+    });
 
+    if (this.#setShortSessionCookie) {
+      // @todo clean up short session cookie
+    }
+
+    this.clear();
     this.#onShortSessionChange(undefined);
   }
 
@@ -252,18 +243,10 @@ export class SessionService {
 
     // We transform AxiosErrors into CorbadoErrors using axios interceptors.
     out.interceptors.response.use(
-      response => {
-        return response;
-      },
+      response => response,
       (error: AxiosError) => {
         const e = CorbadoError.fromAxiosError(error);
         log.warn('error', e);
-
-        if (e instanceof NonRecoverableError) {
-          this.#globalErrors.next(e);
-          return Promise.reject();
-        }
-
         return Promise.reject(e);
       },
     );
@@ -411,7 +394,7 @@ export class SessionService {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user
       log.warn(e);
-      this.logout();
+      await this.logout();
     }
   }
 

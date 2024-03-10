@@ -8,7 +8,7 @@ import type {
 } from '@corbado/web-core';
 import { BlockType, VerificationMethod } from '@corbado/web-core';
 
-import { BlockTypes, ScreenNames } from '../constants';
+import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 import type { BlockDataPasskeyAppend } from '../types';
@@ -27,7 +27,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
     const error = blockBody.error;
@@ -57,7 +57,8 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
-      userHandle: data.userHandle,
+      userHandle: data.identifierValue,
+      userHandleType: createLoginIdentifierType(data.identifierType),
       translatedError: errorTranslator.translateWithIdentifier(error, 'email'),
       canBeSkipped,
     };
@@ -82,7 +83,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
       return;
     }
 
-    this.updateProcess(res.val);
+    this.updateProcess(res);
 
     return;
   }
@@ -118,7 +119,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   async updateEmail(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
 
-    if (!newBlock.blockBody.error) {
+    if (newBlock.ok && !newBlock.val.blockBody.error) {
       this.updateScreen(ScreenNames.PasskeyAppend);
     }
 
@@ -130,7 +131,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   async updatePhone(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updatePhone(value);
 
-    if (!newBlock.blockBody.error) {
+    if (newBlock.ok && !newBlock.val.blockBody.error) {
       this.updateScreen(ScreenNames.PasskeyAppend);
     }
 
@@ -142,7 +143,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   async updateUsername(value: string): Promise<void> {
     const newBlock = await this.app.authProcessService.updateUsername(value);
 
-    if (!newBlock.blockBody.error) {
+    if (newBlock.ok && !newBlock.val.blockBody.error) {
       this.updateScreen(ScreenNames.PasskeyAppend);
     }
 

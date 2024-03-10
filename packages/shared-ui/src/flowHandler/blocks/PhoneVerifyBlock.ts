@@ -17,17 +17,17 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
     app: CorbadoApp,
     flowHandler: ProcessHandler,
     common: ProcessCommon,
-    translator: ErrorTranslator,
+    errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
 
     const data = blockBody.data as GeneralBlockVerifyIdentifier;
 
     this.authType = blockBody.authType;
     this.data = {
       phone: data.identifier,
-      translatedError: translator.translate(data.error),
+      translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
     };
   }

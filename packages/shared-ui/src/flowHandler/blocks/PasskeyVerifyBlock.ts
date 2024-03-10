@@ -24,10 +24,10 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     app: CorbadoApp,
     flowHandler: ProcessHandler,
     common: ProcessCommon,
-    _: ErrorTranslator,
+    errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
   ) {
-    super(app, flowHandler, common);
+    super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
 
@@ -53,7 +53,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
-      userHandle: data.userHandle,
+      userHandle: data.identifierValue,
     };
   }
 
@@ -68,7 +68,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
       return;
     }
 
-    this.updateProcess(res.val);
+    this.updateProcess(res);
 
     return;
   }

@@ -1,7 +1,10 @@
 import type { AuthType, CorbadoApp, ProcessCommon } from '@corbado/web-core';
-import type { ProcessResponse } from '@corbado/web-core/dist/api/v2';
+import { CorbadoError } from '@corbado/web-core';
+import type { ProcessResponse, RequestError } from '@corbado/web-core/dist/api/v2';
+import type { Result } from 'ts-results';
 
 import type { BlockTypes, ScreenNames } from '../constants';
+import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 
 export abstract class Block<A> {
@@ -12,13 +15,16 @@ export abstract class Block<A> {
 
   protected readonly app: CorbadoApp;
   readonly flowHandler: ProcessHandler;
+  readonly errorTranslator: ErrorTranslator;
   readonly common: ProcessCommon;
   alternatives: Block<unknown>[] = [];
+  error?: CorbadoError;
 
-  constructor(app: CorbadoApp, flowHandler: ProcessHandler, common: ProcessCommon) {
+  constructor(app: CorbadoApp, flowHandler: ProcessHandler, common: ProcessCommon, errorTranslator: ErrorTranslator) {
     this.flowHandler = flowHandler;
     this.app = app;
     this.common = common;
+    this.errorTranslator = errorTranslator;
   }
 
   protected updateScreen(newScreen: ScreenNames) {
@@ -27,9 +33,17 @@ export abstract class Block<A> {
     return;
   }
 
-  protected updateProcess(processUpdate: ProcessResponse) {
-    this.flowHandler.handleProcessUpdateBackend(processUpdate);
+  protected updateProcess(processUpdateRes: Result<ProcessResponse, CorbadoError>) {
+    if (processUpdateRes.err && processUpdateRes.val.ignore) {
+      return;
+    }
 
+    if (processUpdateRes.err) {
+      void this.flowHandler.handleError(processUpdateRes.val);
+      return;
+    }
+
+    this.flowHandler.handleProcessUpdateBackend(processUpdateRes.val);
     return;
   }
 
@@ -41,6 +55,18 @@ export abstract class Block<A> {
 
   setAlternatives(alternatives: Block<unknown>[]) {
     this.alternatives = alternatives;
+  }
+
+  setError(error: RequestError) {
+    const corbadoError = new CorbadoError(true, false);
+    const maybeTranslation = this.errorTranslator.translate(error);
+    if (maybeTranslation) {
+      corbadoError.translatedMessage = maybeTranslation;
+    } else {
+      corbadoError.message = error.message;
+    }
+
+    this.error = corbadoError;
   }
 
   init() {

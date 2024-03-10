@@ -10,4 +10,6 @@ export {
   GeneralBlockVerifyIdentifier,
   ProcessResponse,
   ProcessCommon,
+  ContinueOnOtherDevice,
+  ContinueOnOtherDeviceReasonEnum,
 } from './v2';

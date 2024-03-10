@@ -1,63 +1,108 @@
 import type { PhoneVerifyBlock } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ScreenNames } from '@corbado/shared-ui';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { Body, EmailProviderButtons, Header, OtpInputGroup, PrimaryButton } from '../../../components';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { OtpInputGroup } from '../../../components/ui2/input/OtpInputGroup';
+import { Header } from '../../../components/ui2/typography/Header';
+import { Text } from '../../../components/ui2/typography/Text';
+import { UserInfo } from '../../../components/ui2/UserInfo';
+import { useTimer } from '../../../hooks/useTimer';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.phone-verify.phone-otp` });
   const [loading, setLoading] = useState<boolean>(false);
-  const otpRef = useRef<string>('');
+  const { remainingTime, startTimer, startTimerOnScreenInit } = useTimer();
+
+  const otpHasError = !loading && !!block.data.translatedError;
 
   useEffect(() => {
     setLoading(false);
+    startTimerOnScreenInit(ScreenNames.EmailOtpVerification);
   }, [block]);
 
-  const header = t('header');
-  const body = (
-    <>
-      {t('body_text1')}
-      <span className='cb-text-secondary cb-text-bold'>{block.data.phone}</span>
-      {t('body_text2')}
-    </>
-  );
-  const resendButtonText = t('button_resend');
+  const headerText = useMemo(() => t('header'), [t]);
+  const bodyTitleText = useMemo(() => t('body_title'), [t]);
+  const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
+  const bodyResendText = useMemo(() => t('body_resend'), [t]);
+  const resendButtonText = useMemo(() => {
+    if (remainingTime < 1) {
+      return t('button_resend');
+    }
+
+    return (
+      <Trans
+        i18nKey='button_resendWaitingText'
+        t={t}
+        values={{
+          remainingTime: remainingTime,
+        }}
+      />
+    );
+  }, [remainingTime]);
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
-      const newOtp = userOtp.join('');
-      otpRef.current = newOtp;
-
-      if (newOtp.length === 6) {
-        setLoading(true);
-        void block.validateCode(newOtp);
+      const otp = userOtp.join('');
+      if (otp.length !== 6) {
+        return;
       }
+
+      setLoading(true);
+      void block.validateCode(otp);
     },
     [block],
   );
 
-  return (
-    <form
-      className='cb-email-screen'
-      onSubmit={event => event.preventDefault()}
-    >
-      <Header>{header}</Header>
-      <Body>{body}</Body>
+  async function resendCode() {
+    setLoading(true);
+    await block.resendCode();
+    startTimer();
+  }
 
-      <EmailProviderButtons />
+  return (
+    <div className='cb-email-otp-block-2'>
+      <Header className='cb-email-otp-block-header-2'>{headerText}</Header>
+      <UserInfo
+        className='cb-email-otp-user-info-section-2'
+        userData={block.data.phone}
+        onRightIconClick={() => void block.showEditPhone()}
+      ></UserInfo>
+      <Text
+        level='2'
+        fontWeight='bold'
+        fontFamilyVariant='secondary'
+        className='cb-row-2'
+      >
+        {bodyTitleText}
+      </Text>
+      <Text
+        level='2'
+        fontFamilyVariant='secondary'
+      >
+        {bodyDescriptionText}
+      </Text>
       <OtpInputGroup
         emittedOTP={handleOtpChange}
+        loading={loading}
         error={block.data.translatedError}
+        showErrorMessage={otpHasError}
       />
-
-      {block.data.translatedError && <p className='cb-error'>{block.data.translatedError}</p>}
-
+      <Text
+        fontFamilyVariant='secondary'
+        className='cb-email-otp-resend-text-2'
+      >
+        {bodyResendText}
+      </Text>
       <PrimaryButton
+        className='cb-email-otp-resend-button-2'
         isLoading={loading}
-        onClick={() => void block.resendCode()}
+        disabled={remainingTime > 0}
+        onClick={() => void resendCode()}
       >
         {resendButtonText}
       </PrimaryButton>
-    </form>
+    </div>
   );
 };

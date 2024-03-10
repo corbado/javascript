@@ -2,6 +2,7 @@ import type { AuthType, BlockBody, CorbadoApp, ProcessCommon } from '@corbado/we
 import type { AuthenticationResponse } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
+import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 import { Block } from './Block';
 
@@ -11,8 +12,14 @@ export class CompletedBlock extends Block<AuthenticationResponse> {
   readonly initialScreen = ScreenNames.End;
   readonly authType: AuthType;
 
-  constructor(app: CorbadoApp, flowHandler: ProcessHandler, common: ProcessCommon, blockBody: BlockBody) {
-    super(app, flowHandler, common);
+  constructor(
+    app: CorbadoApp,
+    flowHandler: ProcessHandler,
+    common: ProcessCommon,
+    errorTranslator: ErrorTranslator,
+    blockBody: BlockBody,
+  ) {
+    super(app, flowHandler, common, errorTranslator);
 
     this.authType = blockBody.authType;
 

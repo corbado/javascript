@@ -6,3 +6,4 @@ export * from './PasskeyAppendedBlock';
 export * from './SignupInitBlock';
 export * from './LoginInitBlock';
 export * from './PasskeyVerifyBlock';
+export * from './ContinueOnOtherEnvBlock';

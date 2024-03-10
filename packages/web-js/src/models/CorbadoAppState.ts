@@ -23,14 +23,6 @@ export class CorbadoAppState {
       this.#user = value;
     });
 
-    corbadoApp.globalErrors.subscribe(value => {
-      this.#globalError = value;
-
-      if (corbadoAppProps.onError && value) {
-        corbadoAppProps.onError(value);
-      }
-    });
-
     corbadoApp.sessionService.authStateChanges.subscribe(value => {
       this.#isAuthenticated = !!value;
     });
@@ -40,7 +32,11 @@ export class CorbadoAppState {
   }
 
   async init() {
-    await this.#corbadoApp.init();
+    const res = await this.#corbadoApp.init();
+    if (res.err) {
+      this.#globalError = res.val;
+      return;
+    }
 
     return;
   }

@@ -60,7 +60,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
 
   async function resendCode() {
     setLoading(true);
-    await block.resendCode();
+    await block.resendEmail();
     startTimer();
   }
 

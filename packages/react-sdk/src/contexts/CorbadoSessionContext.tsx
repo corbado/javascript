@@ -16,9 +16,7 @@ export interface CorbadoSessionContextProps {
   logout: () => void;
   getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
-
   globalError: NonRecoverableError | undefined;
-  setGlobalError: (error: NonRecoverableError | undefined) => void;
 }
 
 export const initialContext: CorbadoSessionContextProps = {
@@ -31,7 +29,6 @@ export const initialContext: CorbadoSessionContextProps = {
   logout: missingImplementation,
   getPasskeys: missingImplementation,
   deletePasskey: missingImplementation,
-  setGlobalError: missingImplementation,
 };
 
 export const CorbadoSessionContext = createContext<CorbadoSessionContextProps>(initialContext);

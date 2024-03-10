@@ -1,8 +1,29 @@
+import type { LoginIdentifierType as ApiLoginIdentifierType } from '@corbado/web-core';
+
 // Enum representing the type of user flow, either sign up or login
 export enum AuthType {
   SignUp,
   Login,
 }
+
+export enum LoginIdentifierType {
+  Email = 'email',
+  Phone = 'phone',
+  Username = 'username',
+}
+
+export const createLoginIdentifierType = (v: ApiLoginIdentifierType): LoginIdentifierType => {
+  switch (v) {
+    case LoginIdentifierType.Email:
+      return LoginIdentifierType.Email;
+    case LoginIdentifierType.Phone:
+      return LoginIdentifierType.Phone;
+    case LoginIdentifierType.Username:
+      return LoginIdentifierType.Username;
+    default:
+      throw new Error(`Unknown login identifier type: ${v}`);
+  }
+};
 
 // Enum representing the names of different sign up flows
 export enum SignUpFlowNames {
@@ -31,6 +52,7 @@ export enum ScreenNames {
   PasskeyBackground = 'passkey-background',
   EditUserData = 'edit-user-data',
   EditEmail = 'edit-email',
+  ContinueOnOtherEnv = 'continue-on-other-device',
 }
 
 // Map of passkey append intervals to their respective number of days
@@ -55,10 +77,16 @@ export enum BlockTypes {
   PasskeyVerify = 'passkey-verify',
   PasskeyAppended = 'passkey-appended',
   Completed = 'completed',
+  ContinueOnOtherEnv = 'continue-on-other-env',
 }
 
 export enum InitState {
   Initializing, // the component is currently loading (we need to retrieve configuration from the backend first before we can render most parts of the component)
   Failed, // we were not able to retrieve the config from the backend => we can not render the component
   Success, // config from the backend has been loaded => we can render the component (there can still be NonRecoverableErrors, but we can always allow the end user to use the component)
+}
+
+export enum ContinueOnOtherEnvReasons {
+  EmailLinkVerified = 'email-link-verified',
+  ProcessAlreadyCompleted = 'process-already-completed',
 }

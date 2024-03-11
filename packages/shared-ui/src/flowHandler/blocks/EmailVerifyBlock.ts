@@ -149,10 +149,8 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       return this.errorTranslator.translateWithIdentifier(error, 'email');
     }
 
+    await this.resendEmail();
     this.showEmailVerificationScreen();
-    void this.resendEmail();
-
-    this.updateProcess(newBlock);
 
     return;
   }

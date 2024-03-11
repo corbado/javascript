@@ -52,6 +52,7 @@ export enum ScreenNames {
   PasskeyBackground = 'passkey-background',
   EditUserData = 'edit-user-data',
   EditEmail = 'edit-email',
+  EditPhone = 'edit-phone',
   ContinueOnOtherEnv = 'continue-on-other-device',
 }
 

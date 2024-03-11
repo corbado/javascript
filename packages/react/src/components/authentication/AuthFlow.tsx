@@ -28,6 +28,7 @@ import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/Pass
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyBenefits as PasskeyVerifyPasskeyBenefits } from '../../screens/auth-blocks/passkey-verify/PasskeyBenefits';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
+import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import Loading from '../ui/Loading';
@@ -62,7 +63,14 @@ export const AuthFlow: FC = () => {
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }
       case BlockTypes.PhoneVerify:
-        return <PhoneOtp block={currentScreen.block as PhoneVerifyBlock} />;
+        switch (currentScreen.screen) {
+          case ScreenNames.PhoneOtp:
+            return <PhoneOtp block={currentScreen.block as PhoneVerifyBlock} />;
+          case ScreenNames.EditPhone:
+            return <EditPhone block={currentScreen.block as PhoneVerifyBlock} />;
+          default:
+            throw new Error(`Invalid screen: ${currentScreen.screen}`);
+        }
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppend:

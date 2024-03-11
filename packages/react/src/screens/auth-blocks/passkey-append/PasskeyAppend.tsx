@@ -63,6 +63,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         </Text>
         <EditIcon
           className='cb-pk-append-user-info-section-edit-icon-2'
+          color='secondary'
           onClick={() => block.showEditUserData()}
         />
       </div>

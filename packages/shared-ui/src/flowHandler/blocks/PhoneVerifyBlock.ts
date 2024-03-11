@@ -33,7 +33,11 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
   }
 
   showEditPhone() {
-    this.updateScreen(ScreenNames.PasskeyBenefits);
+    this.updateScreen(ScreenNames.EditPhone);
+  }
+
+  showPhoneOtpScreen() {
+    this.updateScreen(ScreenNames.PhoneOtp);
   }
 
   async validateCode(code: string) {
@@ -50,9 +54,24 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
     return;
   }
 
-  async updatePhone(value: string): Promise<void> {
+  async updatePhone(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updatePhone(value);
-    this.updateProcess(newBlock);
+
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
+    }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new phone number is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditPhone
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'phone');
+    }
+
+    await this.resendCode();
+    this.showPhoneOtpScreen();
 
     return;
   }

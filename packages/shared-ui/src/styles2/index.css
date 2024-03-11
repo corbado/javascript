@@ -340,6 +340,26 @@
     font-weight: var(--cb-font-weight-normal);
   }
 
+  .cb-otp-input-2 {
+    height: 3.25rem;
+    border: 1px solid var(--cb-border-color);
+    border-radius: var(--cb-border-radius-sm);
+    font-size: calc(var(--cb-base-font-size) * 1.25);
+    text-align: center;
+    font-family: var(--cb-secondary-font);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .cb-otp-input-container-2 {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+    align-self: center;
+  }
+
   .cb-pk-append-header-2 {
     display: flex;
     flex-direction: column;
@@ -443,26 +463,6 @@
     margin-bottom: 1.75rem;
   }
 
-  .cb-email-otp-input-container-2 {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
-    align-self: center;
-  }
-
-  .cb-email-otp-input-2 {
-    height: 3.25rem;
-    border: 1px solid var(--cb-border-color);
-    border-radius: var(--cb-border-radius-sm);
-    font-size: calc(var(--cb-base-font-size) * 1.25);
-    text-align: center;
-    font-family: var(--cb-secondary-font);
-    padding: 0;
-    overflow: hidden;
-  }
-
   .cb-email-otp-buton-group-2 {
     align-self: center;
     margin: 2rem 0 1.25rem 0;
@@ -502,6 +502,32 @@
   }
 
   .cb-email-otp-resend-button-2 {
+    width: 100%;
+    margin-top: 0.2rem;
+  }
+
+  .cb-phone-otp-block-2 {
+    width: 90%;
+    margin-bottom: 1.5rem;
+    align-self: center;
+    margin-top: 1.5rem;
+  }
+
+  .cb-phone-otp-block-header-2 {
+    padding-left: 1rem;
+  }
+
+  .cb-phone-otp-user-info-section-2 {
+    width: 100%;
+    margin-top: 2.5rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .cb-phone-otp-input-container-2 {
+    margin-bottom: 2rem;
+  }
+  
+  .cb-phone-otp-resend-button-2 {
     width: 100%;
     margin-top: 0.2rem;
   }

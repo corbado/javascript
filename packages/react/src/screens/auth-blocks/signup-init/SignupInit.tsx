@@ -109,6 +109,9 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             id='phone'
             name='phone'
             autoComplete='phone'
+            type='tel'
+            inputMode='numeric'
+            pattern='+[0-9]*'
             errorMessage={phone?.translatedError}
             ref={el => el && (phoneRef.current = el)}
           />

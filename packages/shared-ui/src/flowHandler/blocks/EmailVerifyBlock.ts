@@ -133,17 +133,24 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     return;
   }
 
-  async updateEmail(value: string, onSuccessCallback?: () => void): Promise<void> {
+  async updateEmail(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
 
-    if (!newBlock.err) {
-      this.showEmailVerificationScreen();
-      void this.resendEmail();
-
-      if (onSuccessCallback) {
-        onSuccessCallback();
-      }
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
     }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new email is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditEmail
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'email');
+    }
+
+    this.showEmailVerificationScreen();
+    void this.resendEmail();
 
     this.updateProcess(newBlock);
 

@@ -1,5 +1,5 @@
-import { type EmailVerifyBlock, ScreenNames } from '@corbado/shared-ui';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import type { EmailVerifyBlock } from '@corbado/shared-ui';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -8,18 +8,26 @@ import { OtpInputGroup } from '../../../components/ui2/input/OtpInputGroup';
 import { Header } from '../../../components/ui2/typography/Header';
 import { Text } from '../../../components/ui2/typography/Text';
 import { UserInfo } from '../../../components/ui2/UserInfo';
-import { useTimer } from '../../../hooks/useTimer';
 
 export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
   const [loading, setLoading] = useState<boolean>(false);
-  const { remainingTime, startTimer, startTimerOnScreenInit } = useTimer();
+  const [remainingTime, setRemainingTime] = useState(0);
+  const timer = useRef<NodeJS.Timeout>();
 
   const otpHasError = !loading && !!block.data.translatedError;
 
   useEffect(() => {
     setLoading(false);
-    startTimerOnScreenInit(ScreenNames.EmailOtpVerification);
+
+    if (block.data.retryNotBefore) {
+      const secondsNow = Math.floor(Date.now() / 1000);
+      setRemainingTime(block.data.retryNotBefore - secondsNow);
+    }
+
+    const timer = startTimer();
+
+    return () => clearInterval(timer);
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -31,6 +39,10 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const outlookLinkText = useMemo(() => t('button_outlook'), [t]);
   const resendButtonText = useMemo(() => {
     if (remainingTime < 1) {
+      if (timer.current) {
+        clearInterval(timer.current);
+      }
+
       return t('button_resend');
     }
 
@@ -44,6 +56,12 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       />
     );
   }, [remainingTime]);
+
+  function startTimer() {
+    timer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
+
+    return timer.current;
+  }
 
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {

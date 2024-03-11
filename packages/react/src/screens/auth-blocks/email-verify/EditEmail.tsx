@@ -7,7 +7,6 @@ import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
-import { useTimer } from '../../../hooks/useTimer';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;
@@ -15,20 +14,14 @@ export interface EditEmailProps {
 
 export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.edit-email` });
-  const { startTimer } = useTimer();
   const [email, setEmail] = useState<string>(block.data.email);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (block.data.translatedError) {
-      setLoading(false);
-      setErrorMessage(block.data.translatedError);
-    }
-
     emailInputRef.current?.focus();
-  }, [block]);
+  }, []);
 
   const headerText = useMemo(() => t('header'), [t]);
   const primaryButtonText = useMemo(() => t('button_submit'), [t]);
@@ -37,7 +30,13 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const handleConfirm = async () => {
     setLoading(true);
 
-    await block.updateEmail(email, () => startTimer());
+    const error = await block.updateEmail(email);
+
+    if (error) {
+      setErrorMessage(error);
+      setLoading(false);
+      return;
+    }
   };
 
   return (

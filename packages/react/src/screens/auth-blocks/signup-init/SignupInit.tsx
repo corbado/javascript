@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import Disclaimer from '../../../components/ui2/Disclaimer';
-import InputField from '../../../components/ui2/InputField';
+import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';

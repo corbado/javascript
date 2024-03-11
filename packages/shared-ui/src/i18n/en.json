@@ -61,11 +61,15 @@
     },
     "email-verify": {
       "email-otp": {
-        "header": "Enter one-time passcode to create account",
-        "body_text1": "We just sent a one-time passcode to ",
-        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-        "button_resend": "Send one-time passcode again",
-        "button_back": "Cancel"
+        "header": "Enter code to create account",
+        "body_title": "One-time passcode",
+        "body_description": "Enter the passcode sent to your email address",
+        "body_resend": "Didn't receive an email?",
+        "button_resend": "Resend code",
+        "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
+        "button_gmail": "Open in Gmail",
+        "button_outlook": "Open in Outlook",
+        "button_yahoo": "Open in Yahoo"
       },
       "email-link-sent": {
         "header": "Check your inbox to create your account",
@@ -78,6 +82,11 @@
       "email-link-verification": {
         "header": "Verifying your email address",
         "button_back": "Cancel"
+      },
+      "edit-email": {
+        "header": "Type new email address",
+        "button_submit": "Resend code",
+        "button_cancel": "Back"
       }
     },
     "phone-verify": {
@@ -160,13 +169,19 @@
   "errors": {
     "missing_identifier_type": {
       "fullName": "Please enter a valid name.",
-      "username": "Username can only contain letters, numbers and \"-\" or \"_\".",
-      "email": "Please enter a valid email address.",
-      "phone": "Phone number must be a valid phone number."
+      "username": "Enter username.",
+      "email": "Enter email address.",
+      "phone": "Enter phone number."
     },
     "identifier_already_in_use": {
+      "username": "That username is taken. Please try another one.",
       "email": "That email address is taken. Pleas try another one.",
       "phone": "That phone number is taken. Pleas try another one."
+    },
+    "identifier_invalid_format": {
+      "username": "Username can only contain letters, numbers and “-” or “_”.",
+      "email": "Email address must be a valid email address.",
+      "phone": "Phone number must be a valid phone number."
     },
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",
@@ -176,7 +191,7 @@
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid. Log in using your email address instead.",
-    "invalid_challenge_solution_email-otp": "The provided one-time passcode is not valid",
+    "invalid_challenge_solution_email-otp": "The code is invalid or expired",
     "invalid_challenge_solution_email-link": "The provided token is not valid for user verification",
     "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",

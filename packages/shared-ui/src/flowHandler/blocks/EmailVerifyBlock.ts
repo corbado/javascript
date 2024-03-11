@@ -101,7 +101,17 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   }
 
   showEditEmail() {
-    this.updateScreen(ScreenNames.PasskeyBenefits);
+    this.data.translatedError = undefined;
+    this.updateScreen(ScreenNames.EditEmail);
+  }
+
+  showEmailVerificationScreen() {
+    this.data.translatedError = undefined;
+    if (this.verificationMethod === 'email-otp') {
+      this.updateScreen(ScreenNames.EmailOtpVerification);
+    } else {
+      this.updateScreen(ScreenNames.EmailLinkSent);
+    }
   }
 
   async validateCode(code: string) {
@@ -123,9 +133,24 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     return;
   }
 
-  async updateEmail(value: string): Promise<void> {
+  async updateEmail(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
-    this.updateProcess(newBlock);
+
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
+    }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new email is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditEmail
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'email');
+    }
+
+    await this.resendEmail();
+    this.showEmailVerificationScreen();
 
     return;
   }

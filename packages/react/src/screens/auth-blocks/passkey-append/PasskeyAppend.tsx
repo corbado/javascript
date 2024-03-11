@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import { Divider } from '../../../components/ui2/Divider';
-import { EditIcon } from '../../../components/ui2/icons/EditIcon';
-import { EmailIcon } from '../../../components/ui2/icons/EmailIcon';
 import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
 import { Text } from '../../../components/ui2/typography/Text';
+import { UserInfo } from '../../../components/ui2/UserInfo';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
@@ -79,29 +78,12 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           </Text>
         )}
       </div>
-      <div className='cb-pk-append-email-section-2'>
-        <div className='cb-pk-append-email-section-left-2'>
-          <EmailIcon className='cb-pk-append-email-section-left-icon-2' />
-        </div>
-        <div className='cb-pk-append-email-section-middle-2'>
-          <Text
-            level='2'
-            fontWeight='normal'
-            fontFamilyVariant='secondary'
-            textColorVariant='secondary'
-          >
-            {passkeyUserHandle}
-          </Text>
-        </div>
-        {!block.data.canBeSkipped && (
-          <div
-            className='cb-pk-append-email-section-right-2'
-            onClick={() => block.showEditUserData()}
-          >
-            <EditIcon className='cb-pk-append-email-section-right-icon-2' />
-          </div>
-        )}
-      </div>
+      <UserInfo
+        className='cb-pk-append-email-section-2'
+        userData={passkeyUserHandle ?? ''}
+        showRightIcon={!block.data.canBeSkipped}
+        onRightIconClick={() => block.showEditUserData()}
+      />
       <PrimaryButton
         isLoading={loading}
         onClick={appendPasskey}

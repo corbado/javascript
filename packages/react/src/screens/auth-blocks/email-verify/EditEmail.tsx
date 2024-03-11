@@ -1,6 +1,6 @@
-import type { PasskeyAppendBlock } from '@corbado/shared-ui';
+import type { EmailVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -8,24 +8,20 @@ import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton
 import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 
-export interface EditUserDataProps {
-  block: PasskeyAppendBlock;
+export interface EditEmailProps {
+  block: EmailVerifyBlock;
 }
 
-export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
-  const { t } = useTranslation('translation', {
-    keyPrefix: `signup.passkey-append.edit-user-data`,
-  });
-  const [passkeyUserHandle, setPasskeyUserHandle] = useState<string>(block.data.userHandle);
+export const EditEmail: FC<EditEmailProps> = ({ block }) => {
+  const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.edit-email` });
+  const [email, setEmail] = useState<string>(block.data.email);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (block.data.translatedError) {
-      setLoading(false);
-      setErrorMessage(block.data.translatedError);
-    }
-  }, [block]);
+    emailInputRef.current?.focus();
+  }, []);
 
   const headerText = useMemo(() => t('header'), [t]);
   const primaryButtonText = useMemo(() => t('button_submit'), [t]);
@@ -34,7 +30,13 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const handleConfirm = async () => {
     setLoading(true);
 
-    await block.updateEmail(passkeyUserHandle);
+    const error = await block.updateEmail(email);
+
+    if (error) {
+      setErrorMessage(error);
+      setLoading(false);
+      return;
+    }
   };
 
   return (
@@ -46,20 +48,21 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         {headerText}
       </Header>
       <InputField
-        value={passkeyUserHandle}
+        value={email}
         errorMessage={errorMessage}
-        onChange={e => setPasskeyUserHandle(e.target.value)}
+        ref={emailInputRef}
+        onChange={e => setEmail(e.target.value)}
       />
       <PrimaryButton
         isLoading={loading}
-        disabled={passkeyUserHandle === block.data.userHandle}
+        disabled={email === block.data.email}
         onClick={() => void handleConfirm()}
       >
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
         className='cb-edit-data-section-back-button-2'
-        onClick={() => block.showPasskeyAppend()}
+        onClick={() => block.showEmailVerificationScreen()}
       >
         {secondaryButtonText}
       </SecondaryButton>

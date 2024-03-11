@@ -30,7 +30,6 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
-    const error = blockBody.error;
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
@@ -55,11 +54,12 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     const canBeSkipped = alternatives.some(a => a.block === BlockType.Completed);
 
     this.authType = blockBody.authType;
+    const userHandleType = createLoginIdentifierType(data.identifierType);
+
     this.data = {
       availableFallbacks: fallbacks,
       userHandle: data.identifierValue,
-      userHandleType: createLoginIdentifierType(data.identifierType),
-      translatedError: errorTranslator.translateWithIdentifier(error, 'email'),
+      userHandleType,
       canBeSkipped,
     };
   }
@@ -116,26 +116,46 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     return;
   }
 
-  async updateEmail(value: string): Promise<void> {
+  async updateEmail(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updateEmail(value);
 
-    if (newBlock.ok && !newBlock.val.blockBody.error) {
-      this.updateScreen(ScreenNames.PasskeyAppend);
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
+    }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new email is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditUserInfo
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'email');
     }
 
     this.updateProcess(newBlock);
+    this.showPasskeyAppend();
 
     return;
   }
 
-  async updatePhone(value: string): Promise<void> {
+  async updatePhone(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updatePhone(value);
 
-    if (newBlock.ok && !newBlock.val.blockBody.error) {
-      this.updateScreen(ScreenNames.PasskeyAppend);
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
+    }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new phone number is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditUserInfo
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'phone');
     }
 
     this.updateProcess(newBlock);
+    this.showPasskeyAppend();
 
     return;
   }

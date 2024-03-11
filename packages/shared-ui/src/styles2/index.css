@@ -360,38 +360,66 @@
     align-self: center;
   }
 
-  .cb-pk-append-header-2 {
+  .cb-pk-append-2 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0 2.5rem 0 2.5rem;
-    text-align: center;
     margin-top: 1rem;
+  }
+
+  .cb-pk-append-header-2 {
+    text-align: center;
   }
 
   .cb-pk-append-icons-section-2 {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.2rem;
     justify-content: center;
-    align-items: center;
-    margin: 1rem;
+    margin-top: 1.5rem;
   }
 
   .cb-pk-append-icons-section-icon-2 {
     height: 3.75rem;
   }
 
-  .cb-pk-append-benefits-section-2 {
+  .cb-pk-append-user-info-section-2 {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin: 1.5rem 0 3rem 0;
+    align-self: center;
+    margin: 0.75rem 0 0.3rem 0;
   }
 
-  .cb-pk-append-email-section-2 {
-    margin-top: 0.5rem;
-    margin-bottom: 0.75rem;
+  .cb-pk-append-user-info-section-edit-icon-2 {
+    height: var(--cb-base-font-size);
+    cursor: pointer;
+    padding-left: 0.25rem;
+  }
+
+  .cb-pk-append-points-section-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.25rem 0 1.75rem 0;
+    width: 83%;
+    align-self: center;  
+  }
+  
+  .cb-pk-append-points-section-point-2 {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .cb-pk-append-points-section-point-icon-2 {
+    height: 1.5rem;
+    margin: auto;
+    flex: 0 0 10%;
+    max-width: 10%;
+  }
+
+  .cb-pk-append-subtext-2 {
+    margin-top: 0.25rem;
+    text-align: center;
+    align-self: center;
   }
 
   .cb-pk-append-buttons-section-2 {

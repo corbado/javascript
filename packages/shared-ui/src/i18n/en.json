@@ -15,12 +15,14 @@
     },
     "passkey-append": {
       "passkey-append": {
-        "header": "Enable Passkeys",
-        "subheader": "Create an account with face, fingerprint or pin",
-        "body_description": "This information will never leave your device.",
-        "body_userInfo": "We'll create an account for",
+        "header_createPasskey": "Create account with passkeys",
+        "header_appendPasskey": "Set up passkey for easier login",
+        "body_point1": "Quick and secure login using face, fingerprint or PIN instead of passwords.",
+        "body_point2": "Passkeys are stored on the device or in the cloud, accessible from connected devices.",
+        "body_subtext": "Biometric data will never leave your device.",
         "button_start": "Create account",
         "button_skip": "Maybe later",
+        "text_divider": "or create account with",
         "button_switchToAlternate": {
           "emailOtp": "Email verification",
           "emailLink": "Email verification",
@@ -28,7 +30,8 @@
         }
       },
       "edit-user-data": {
-        "header": "Type new email address",
+        "header_emailChange": "Type new email address",
+        "header_phoneChange": "Type new phone number",
         "button_submit": "Confirm",
         "button_cancel": "Back"
       },

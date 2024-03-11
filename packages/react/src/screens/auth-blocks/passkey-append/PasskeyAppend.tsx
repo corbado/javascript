@@ -61,11 +61,13 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         >
           {passkeyUserHandle ?? ''}
         </Text>
-        <EditIcon
-          className='cb-pk-append-user-info-section-edit-icon-2'
-          color='secondary'
-          onClick={() => block.showEditUserData()}
-        />
+        {!block.data.canBeSkipped && (
+          <EditIcon
+            className='cb-pk-append-user-info-section-edit-icon-2'
+            color='secondary'
+            onClick={() => block.showEditUserData()}
+          />
+        )}
       </div>
       <div className='cb-pk-append-points-section-2'>
         <div className='cb-pk-append-points-section-point-2'>
@@ -113,12 +115,14 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         </>
       )}
       {block.data.canBeSkipped && (
-        <SecondaryButton
-          onClick={() => void block.skipPasskeyAppend()}
-          disabled={loading}
-        >
-          {skipButtonText}
-        </SecondaryButton>
+        <div className='cb-pk-append-skip-button-section-2'>
+          <SecondaryButton
+            onClick={() => void block.skipPasskeyAppend()}
+            disabled={loading}
+          >
+            {skipButtonText}
+          </SecondaryButton>
+        </div>
       )}
     </div>
   );

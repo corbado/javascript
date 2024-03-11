@@ -430,6 +430,15 @@
     align-items: center;
     margin: 0rem 0 1rem 0;
   }
+  
+  .cb-pk-append-skip-button-section-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0 1rem 0;
+  }
 
   .cb-pk-error-bloc-2 {
     display: flex;

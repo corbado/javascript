@@ -1,4 +1,5 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
 import { AuthType } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -30,6 +31,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       isPhoneFocused: data.isPhone,
       emailOrUsernameEnabled: data.isEmailUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
+      conditionalUIChallenge: data.conditionalUIChallenge,
     };
   }
 
@@ -42,5 +44,19 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     const newPrimary = this.alternatives[0];
     const newAlternatives = [this];
     this.updateProcessFrontend(newPrimary, newAlternatives);
+  }
+
+  async continueWithConditionalUI() {
+    if (!this.data.conditionalUIChallenge) {
+      return;
+    }
+
+    const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
+    if (b.err && b.val instanceof PasskeyChallengeCancelledError) {
+      // we ignore this type of error
+      return;
+    }
+
+    this.updateProcess(b);
   }
 }

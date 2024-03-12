@@ -339,6 +339,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/auth/passkey/mediation/finish:
+    post:
+      description: tbd
+      operationId: PasskeyMediationFinish
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyMediationFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processResponse'
+
   /v2/auth/identifier/verify/start:
     post:
       description: tbd
@@ -629,8 +649,14 @@ components:
         signedChallenge:
           type: string
 
-    #    passkeyLoginFinishRsp:
-    #      $ref: '#/components/schemas/blockBody'
+    passkeyMediationFinishReq:
+      type: object
+      description: tbd.
+      required:
+        - signedChallenge
+      properties:
+        signedChallenge:
+          type: string
 
     identifierVerifyStartReq:
       type: object
@@ -870,7 +896,7 @@ components:
 
     blockType:
       type: string
-      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify ]
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed ]
 
     authType:
       type: string
@@ -907,6 +933,8 @@ components:
         - isPhoneAvailable
         - isEmailUsernameAvailable
       properties:
+        conditionalUIChallenge:
+          type: string
         identifierValue:
           type: string
         isPhone:
@@ -917,6 +945,7 @@ components:
           type: boolean
         error:
           $ref: '#/components/schemas/requestError'
+
 
     generalBlockSocialVerify:
       type: object

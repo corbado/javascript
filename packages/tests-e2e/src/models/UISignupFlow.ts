@@ -69,23 +69,23 @@ export class UISignupFlow {
     let email,
       phone = undefined;
     if (fillUsername) {
-      await this.page.getByRole('textbox', { name: 'username'}).click();
-      await this.page.getByRole('textbox', { name: 'username'}).fill(username.replace('+', '-'));
-      await expect(this.page.getByRole('textbox', { name: 'username'})).toHaveValue(username.replace('+', '-'));
+      await this.page.getByRole('textbox', { name: 'username' }).click();
+      await this.page.getByRole('textbox', { name: 'username' }).fill(username.replace('+', '-'));
+      await expect(this.page.getByRole('textbox', { name: 'username' })).toHaveValue(username.replace('+', '-'));
     }
     if (fillEmail) {
       email = `${username}@corbado.com`;
 
-      await this.page.getByRole('textbox', { name: 'email'}).click();
-      await this.page.getByRole('textbox', { name: 'email'}).fill(email);
-      await expect(this.page.getByRole('textbox', { name: 'email'})).toHaveValue(email);
+      await this.page.getByRole('textbox', { name: 'email' }).click();
+      await this.page.getByRole('textbox', { name: 'email' }).fill(email);
+      await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
     }
     if (fillPhone) {
       phone = `+1650555${username.slice(-5)}`;
 
-      await this.page.getByRole('textbox', { name: 'phone'}).click();
-      await this.page.getByRole('textbox', { name: 'phone'}).fill(phone);
-      await expect(this.page.getByRole('textbox', { name: 'phone'})).toHaveValue(phone);
+      await this.page.getByRole('textbox', { name: 'phone' }).click();
+      await this.page.getByRole('textbox', { name: 'phone' }).fill(phone);
+      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone);
     }
 
     return [username, email, phone];
@@ -96,7 +96,7 @@ export class UISignupFlow {
   async createAccount() {
     const [username, email, phone] = await this.fillIdentifiers(true, true, true);
     await this.page.getByRole('button', { name: 'Continue' }).click();
-    
+
     await this.checkLandedOnScreen(ScreenNames.EmailOtp, email);
     await this.fillOTP(OtpType.Email);
     await this.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);

@@ -45,16 +45,19 @@ export function makeIdentifier(
 }
 
 export async function setBackendConfigs(identifiers: Identifier[]) {
-  const response = await fetch(`https://${ process.env.PLAYWRIGHT_PROJECT_ID }.frontendapi.corbado.io/v2/component-config?=`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Corbado-ProjectID': process.env.PLAYWRIGHT_PROJECT_ID ?? '',
+  const response = await fetch(
+    `https://${process.env.PLAYWRIGHT_PROJECT_ID}.frontendapi.corbado.io/v2/component-config?=`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Corbado-ProjectID': process.env.PLAYWRIGHT_PROJECT_ID ?? '',
+      },
+      body: JSON.stringify({
+        identifiers: identifiers,
+      }),
     },
-    body: JSON.stringify({
-      identifiers: identifiers,
-    }),
-  });
+  );
 
   expect(response.ok).toBeTruthy();
 }

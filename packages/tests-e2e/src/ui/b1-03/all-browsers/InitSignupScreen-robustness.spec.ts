@@ -93,4 +93,3 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });
 });
-

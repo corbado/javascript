@@ -7,4 +7,3 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     // TODO: check if there is an indicator that passkey should be supported for this authentication process
   });
 });
-

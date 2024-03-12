@@ -12,6 +12,7 @@ export type BlockDataSignupInit = {
 export type BlockDataLoginInit = {
   loginIdentifier: string;
   loginIdentifierError: string;
+  conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
 
   emailOrUsernameEnabled: boolean;

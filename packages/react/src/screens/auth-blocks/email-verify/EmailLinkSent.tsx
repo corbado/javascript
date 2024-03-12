@@ -1,4 +1,5 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
+import { AuthType } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -123,6 +124,9 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
+      {block.authType === AuthType.Login && (
+        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
+      )}
       {block.data.translatedError && <p className='cb-error'>{block.data.translatedError}</p>}
     </form>
   );

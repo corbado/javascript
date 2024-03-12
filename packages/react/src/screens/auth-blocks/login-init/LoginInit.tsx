@@ -16,12 +16,15 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+    // TODO: set initial value of text field if available through block.data.loginIdentifier (this is important for aborted processes)
 
     if (block.data.isPhoneFocused) {
       setPhone({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });
     } else {
       setEmailOrUsername({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });
     }
+
+    void block.continueWithConditionalUI();
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -67,6 +70,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
               name='emailOrUsername'
               label={emailOrUsernameFieldLabel}
               error={emailOrUsername?.translatedError}
+              autoComplete='username webauthn'
               ref={el => el && (emailorUsernameRef.current = el)}
             />
           )}
@@ -74,7 +78,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
             <FormInput
               name='phone'
               type='phone'
-              autoComplete='phone'
+              autoComplete='phone webauthn'
               label={phoneFieldLabel}
               error={phone?.translatedError}
               ref={el => el && (phoneRef.current = el)}

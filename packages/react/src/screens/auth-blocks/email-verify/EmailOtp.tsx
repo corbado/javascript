@@ -1,4 +1,5 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
+import { AuthType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -131,6 +132,9 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
+      {block.authType === AuthType.Login && (
+        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
+      )}
     </div>
   );
 };

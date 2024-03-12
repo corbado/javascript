@@ -133,7 +133,8 @@ export class ProcessHandler {
   }
 
   // @todo: make sure that this error is shown as a message on the first screen
-  async handleError(_: CorbadoError) {
+  async handleError(corbadoError: CorbadoError) {
+    console.log('handleError', corbadoError);
     // get a new process
     const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
     if (res.err) {

@@ -1,4 +1,5 @@
 import type { PhoneVerifyBlock } from '@corbado/shared-ui';
+import { AuthType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -121,6 +122,9 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
+      {block.authType === AuthType.Login && (
+        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
+      )}
     </div>
   );
 };

@@ -16,6 +16,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+    // TODO: set initial value of text field if available through block.data.loginIdentifier (this is important for aborted processes)
 
     if (block.data.isPhoneFocused) {
       setPhone({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });

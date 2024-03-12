@@ -1,5 +1,4 @@
-import type { CorbadoApp, GeneralBlockLoginInit, LoginIdentifierWithError, ProcessCommon } from '@corbado/web-core';
-import { LoginIdentifierType } from '@corbado/web-core';
+import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
 import { AuthType } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -23,40 +22,14 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
   ) {
     super(app, flowHandler, common, errorTranslator);
 
-    let loginIdentifier: string | undefined;
-    let loginIdentifierError: string | undefined;
-    let isPhone = undefined;
-    let emailOrUsernameEnabled = false,
-      phoneEnabled = false;
-
-    data.identifiers.forEach((item: LoginIdentifierWithError) => {
-      loginIdentifier = item.identifier;
-
-      if (item.type === LoginIdentifierType.Email || item.type === LoginIdentifierType.Username) {
-        emailOrUsernameEnabled = true;
-      }
-
-      if (item.type === LoginIdentifierType.Phone) {
-        phoneEnabled = true;
-      }
-
-      if (item.identifier !== '' || item.error !== undefined) {
-        loginIdentifier = item.identifier;
-        loginIdentifierError = errorTranslator.translateWithIdentifier(item.error, item.type);
-        isPhone = item.type === LoginIdentifierType.Phone;
-      }
-    });
-
-    const first = data.identifiers[0];
-    console.log('LoginInitBlock', phoneEnabled, emailOrUsernameEnabled);
+    const loginIdentifierError = errorTranslator.translate(data.error);
 
     this.data = {
-      loginIdentifier: loginIdentifier ?? first.identifier,
+      loginIdentifier: data.identifierValue ?? '',
       loginIdentifierError: loginIdentifierError ?? '',
-      isPhoneFocused: isPhone ?? first.type === LoginIdentifierType.Phone,
-
-      emailOrUsernameEnabled: emailOrUsernameEnabled,
-      phoneEnabled: phoneEnabled,
+      isPhoneFocused: data.isPhone,
+      emailOrUsernameEnabled: data.isEmailUsernameAvailable,
+      phoneEnabled: data.isPhoneAvailable,
     };
   }
 

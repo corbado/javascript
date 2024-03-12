@@ -15,12 +15,17 @@
     },
     "passkey-append": {
       "passkey-append": {
-        "header_createPasskey": "Create account with passkeys",
-        "header_appendPasskey": "Set up passkey for easier login",
+        "header": {
+          "create": "Create account with passkeys",
+          "append": "Set up passkey for easier login"
+        },
         "body_point1": "Quick and secure login using face, fingerprint or PIN instead of passwords.",
         "body_point2": "Passkeys are stored on the device or in the cloud, accessible from connected devices.",
         "body_subtext": "Biometric data will never leave your device.",
-        "button_start": "Create account",
+        "button_start": {
+          "create": "Create account",
+          "append": "Create passkey"
+        },
         "button_skip": "Maybe later",
         "text_divider": "or create account with",
         "button_switchToAlternate": {

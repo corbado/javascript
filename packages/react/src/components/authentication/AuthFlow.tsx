@@ -14,9 +14,9 @@ import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { ContinueOnOtherEnv } from '../../screens/auth-blocks/continue-on-other-env/ContinueOnOtherEnv';
 import { EditEmail } from '../../screens/auth-blocks/email-verify/EditEmail';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
+import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLinkSuccess';
 import { EmailLinkVerification } from '../../screens/auth-blocks/email-verify/EmailLinkVerification';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
@@ -100,7 +100,7 @@ export const AuthFlow: FC = () => {
       case BlockTypes.Completed:
         return null;
       case BlockTypes.ContinueOnOtherEnv:
-        return <ContinueOnOtherEnv block={currentScreen.block as ContinueOnOtherEnvBlock} />;
+        return <EmailLinkSuccess block={currentScreen.block as ContinueOnOtherEnvBlock} />;
     }
   }, [currentScreen]);
 

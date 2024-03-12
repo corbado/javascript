@@ -560,7 +560,12 @@
     align-self: center;
     text-align: center;
     margin-bottom: 1rem;
-    width: 80%;
+    width: 22rem
+  }
+
+  .cb-email-link-success-block-2 {
+    display: block;
+    width: 75%;
   }
 
   .cb-email-link-success-icon-container-2 {

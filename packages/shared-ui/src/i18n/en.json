@@ -51,7 +51,7 @@
           "phone": "Phone verification"
         },
         "button_tryAgain": "Try again",
-        "button_cancel": "Maybe later"
+        "button_cancel": "Back"
       }
     },
     "passkey-appended": {

@@ -464,6 +464,11 @@
     width: 100%;
     margin-bottom: 0.3rem;
   }
+  
+  .cb-pk-error-bloc-skip-button-2 {
+    display: block;
+    margin-top: 1rem;
+  }
 
   .cb-pk-appended-bloc-2 {
     display: flex;

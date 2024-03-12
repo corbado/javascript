@@ -10,6 +10,6 @@ import {
 
 setup('set b1.2 configs', async (/* { page } */) => {
   await setBackendConfigs([
-    makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.EmailOtp]),
+    makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.SmsOtp]),
   ]);
 });

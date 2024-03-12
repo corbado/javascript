@@ -11,21 +11,22 @@
 export enum ScreenNames {
   InitSignup,
   InitLogin,
-  PasskeyAppend,
+  PasskeyAppend1,
+  PasskeyAppend2,
   PasskeyAppended,
   PasskeyError,
-  PasskeyBenefits,
   EmailOtp,
   EmailLinkSent,
   EmailLinkSuccess,
-  EmailChange,
+  EmailEdit,
   PhoneOtp,
-  PhoneChange,
+  PhoneEdit,
   End,
 }
 
 export enum OtpType {
-  Correct = '150919',
+  Email = '150919',
+  Sms = '481926',
   Incomplete = '15091',
   Incorrect = '150918',
 }

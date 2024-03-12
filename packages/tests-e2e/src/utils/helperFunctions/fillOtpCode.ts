@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { OtpType } from '../constants';
+import type { OtpType } from '../constants';
 
 export async function fillOtpCode(page: Page, otpType: OtpType) {
   for (let i = 0; i < otpType.length; i++) {

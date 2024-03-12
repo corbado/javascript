@@ -48,6 +48,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
       >
         {primaryButton}
       </PrimaryButton>
+      <PrimaryButton onClick={() => void block.resetProcess()}>Reset process</PrimaryButton>
       {fallbacksAvailable && <HorizontalRule>or</HorizontalRule>}
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton

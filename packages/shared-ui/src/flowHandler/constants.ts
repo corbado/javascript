@@ -2,8 +2,8 @@ import type { LoginIdentifierType as ApiLoginIdentifierType } from '@corbado/web
 
 // Enum representing the type of user flow, either sign up or login
 export enum AuthType {
-  SignUp,
-  Login,
+  SignUp = 'signup',
+  Login = 'login',
 }
 
 export enum LoginIdentifierType {

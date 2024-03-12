@@ -208,6 +208,13 @@ export class ProcessService {
     });
   }
 
+  async resetAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.processReset();
+      return r.data;
+    });
+  }
+
   async initSignup(identifiers: LoginIdentifier[]): Promise<Result<ProcessResponse, CorbadoError>> {
     return Result.wrapAsync(async () => {
       const r = await this.#authApi.signupInit({
@@ -272,11 +279,10 @@ export class ProcessService {
     });
   }
 
-  async startPasskeyMediation(): Promise<Result<ProcessResponse, CorbadoError>> {
+  async finishPasskeyMediation(signedChallenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
     return Result.wrapAsync(async () => {
-      // TODO: add real request
-      const r = await this.#authApi.passkeyAppendStart({
-        clientInfo: {},
+      const r = await this.#authApi.passkeyMediationFinish({
+        signedChallenge: signedChallenge,
       });
 
       return r.data;
@@ -433,6 +439,16 @@ export class ProcessService {
     }
 
     return await this.finishPasskeyLogin(signedChallenge.val);
+  }
+
+  async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
+    const signedChallenge = await this.#webAuthnService.login(challenge, true);
+    if (signedChallenge.err) {
+      // TODO: return block body with client generated error
+      return signedChallenge;
+    }
+
+    return await this.finishPasskeyMediation(signedChallenge.val);
   }
 
   dispose() {

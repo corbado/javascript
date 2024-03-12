@@ -191,4 +191,11 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
 
     return Ok(false);
   }
+
+  async resetProcess(): Promise<void> {
+    const newBlock = await this.app.authProcessService.resetAuthProcess();
+    this.updateProcess(newBlock);
+
+    return;
+  }
 }

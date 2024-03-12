@@ -1,6 +1,6 @@
-import type { PasskeyAppendBlock } from '@corbado/shared-ui';
+import { LoginIdentifierType, type PasskeyAppendBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -19,35 +19,44 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string>(block.data.userHandle);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+  const passkeyUserHandleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (block.data.translatedError) {
-      setLoading(false);
-      setErrorMessage(block.data.translatedError);
-    }
-  }, [block]);
+    passkeyUserHandleInputRef.current?.focus();
+  }, []);
 
-  const headerText = useMemo(() => t('header'), [t]);
+  const headerText = useMemo(
+    () => (block.data.userHandleType === LoginIdentifierType.Phone ? t('header_phoneChange') : t('header_emailChange')),
+    [t],
+  );
   const primaryButtonText = useMemo(() => t('button_submit'), [t]);
   const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
 
   const handleConfirm = async () => {
     setLoading(true);
 
-    await block.updateEmail(passkeyUserHandle);
+    const error =
+      block.data.userHandleType === LoginIdentifierType.Phone
+        ? await block.updatePhone(passkeyUserHandle)
+        : await block.updateEmail(passkeyUserHandle);
+
+    if (error) {
+      setErrorMessage(error);
+      setLoading(false);
+      return;
+    }
   };
 
   return (
     <div className='cb-edit-data-section-2'>
-      <Header
-        size='md'
-        className='cb-edit-data-section-header-2'
-      >
-        {headerText}
-      </Header>
+      <Header className='cb-edit-data-section-header-2'>{headerText}</Header>
       <InputField
         value={passkeyUserHandle}
         errorMessage={errorMessage}
+        type={block.data.userHandleType === LoginIdentifierType.Phone ? 'tel' : 'email'}
+        autoComplete={block.data.userHandleType === LoginIdentifierType.Phone ? 'phone' : 'email'}
+        name={block.data.userHandleType === LoginIdentifierType.Phone ? 'phone' : 'email'}
+        ref={passkeyUserHandleInputRef}
         onChange={e => setPasskeyUserHandle(e.target.value)}
       />
       <PrimaryButton

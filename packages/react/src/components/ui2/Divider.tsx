@@ -16,7 +16,7 @@ export const Divider: FC<DividerProps> = ({ label, className }) => {
         <Text
           level='1'
           textColorVariant='secondary'
-          fontWeight='normal'
+          fontWeight='bold'
           className='cb-row-2'
         >
           {label}

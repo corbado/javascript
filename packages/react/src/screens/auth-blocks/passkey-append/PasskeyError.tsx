@@ -18,7 +18,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const headerText = useMemo(() => t('header'), [t]);
   const bodyText = useMemo(() => t('body'), [t]);
   const primaryButtonText = useMemo(() => t('button_tryAgain'), [t]);
-  const skipButtonText = useMemo(() => t('button_skip'), [t]);
+  const skipButtonText = useMemo(() => t('button_cancel'), [t]);
 
   const passkeyAppend = async () => {
     setLoading(true);
@@ -33,7 +33,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
         <PasskeyErrorIcon />
       </div>
       <Text
-        level='3'
+        level='2'
         fontFamilyVariant='secondary'
         className='cb-pk-error-bloc-description-2'
       >
@@ -45,10 +45,12 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       >
         {primaryButtonText}
       </PrimaryButton>
-      <Divider
-        label='or'
-        className='cb-pk-error-bloc-divider-2'
-      />
+      {!block.data.canBeSkipped && (
+        <Divider
+          label='or'
+          className='cb-pk-error-bloc-divider-2'
+        />
+      )}
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton
           disabled={loading}
@@ -59,6 +61,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       ))}
       {block.data.canBeSkipped && (
         <SecondaryButton
+          className='cb-pk-error-bloc-skip-button-2'
           disabled={loading}
           onClick={() => void block.skipPasskeyAppend()}
         >

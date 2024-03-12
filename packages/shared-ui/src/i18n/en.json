@@ -76,19 +76,39 @@
       },
       "email-link-sent": {
         "header": "Check your inbox to create your account",
-        "body_text1": "We just sent you a magic link to ",
-        "body_text2": ". Click on the link in the email to finish setting up your account.",
-        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
-        "button_sendLinkAgain": "Send email again",
-        "button_back": "Cancel"
+        "body_title": "Magic link",
+        "body_description": "We just sent a magic link to your email address ",
+        "body_resend": "Didn't receive an email?",
+        "button_resend": "Resend email",
+        "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
+        "button_gmail": "Open in Gmail",
+        "button_outlook": "Open in Outlook",
+        "button_yahoo": "Open in Yahoo"
       },
       "email-link-verification": {
-        "header": "Verifying your email address",
-        "button_back": "Cancel"
+        "header": "Signing up...",
+        "subheader": "You will be redirected soon"
+      },
+      "email-link-success": {
+        "header": "Successfully verified email",
+        "subheader": {
+          "isOldTab": "Return to the tab, where you have verified the email.",
+          "isNewTab": "Return to the original tab to continue"
+        },
+        "body": "You may close this tab"
+      },
+      "email-link-error": {
+        "header_linExpired": "This link has expired",
+        "header_linkInvalid": "Something went wrong",
+        "subheader": "Return to the tab where you are performing the signup and try again",
+        "body": "You may close this Tab"
       },
       "edit-email": {
         "header": "Type new email address",
-        "button_submit": "Resend code",
+        "button_submit": {
+          "emailOtp": "Resend code",
+          "emailLink": "Resend email"
+        },
         "button_cancel": "Back"
       }
     },

@@ -82,12 +82,16 @@ export class ProcessService {
       return null;
     }
 
-    const maybeProcess = AuthProcess.loadFromStorage();
-    const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
+    try {
+      const maybeProcess = AuthProcess.loadFromStorage();
+      const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
 
-    this.#setApisV2(emailVerifyFromUrl.processID);
+      this.#setApisV2(emailVerifyFromUrl.processID);
 
-    return emailVerifyFromUrl;
+      return emailVerifyFromUrl;
+    } catch (e) {
+      return null;
+    }
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {

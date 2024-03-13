@@ -70,16 +70,16 @@ export class ProcessService {
     return AuthProcess.clearStorage();
   }
 
-  initEmailVerifyFromUrl(): EmailVerifyFromUrl | null {
+  initEmailVerifyFromUrl(): Result<EmailVerifyFromUrl | null, CorbadoError> {
     const searchParams = new URLSearchParams(window.location.search);
     const encodedProcess = searchParams.get('corbadoEmailLinkID');
     if (!encodedProcess) {
-      return null;
+      return Ok(null);
     }
 
     const token = searchParams.get('corbadoToken');
     if (!token) {
-      return null;
+      return Ok(null);
     }
 
     try {
@@ -88,9 +88,9 @@ export class ProcessService {
 
       this.#setApisV2(emailVerifyFromUrl.processID);
 
-      return emailVerifyFromUrl;
+      return Ok(emailVerifyFromUrl);
     } catch (e) {
-      return null;
+      return Err(CorbadoError.fromUnknownFrontendError(e));
     }
   }
 

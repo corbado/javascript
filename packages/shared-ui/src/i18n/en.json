@@ -231,8 +231,8 @@
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
     "unknown": "Something went wrong. Please try again later",
     "unexpectedError": {
-      "withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-      "noCustomerSupport": "Please try again in a few moments."
+      "withCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support at {{customerSupportEmail}}.",
+      "noCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support."
     },
     "componentUnavailable": {
       "header": "Something went wrong",

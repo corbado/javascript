@@ -285,6 +285,7 @@
     display: flex;
     flex-direction: row;
     align-self: center;
+    align-items: center;
     width: 90%;
     height: 1.9rem;
     background-color: #fafafa;
@@ -294,7 +295,6 @@
 
   .cb-user-info-section-left-2 {
     flex: 1;
-    margin: auto;
     padding-left: 0.5rem;
     height: 1rem;
   }
@@ -304,15 +304,17 @@
   }
 
   .cb-user-info-section-middle-2 {
-    flex: 8;
-    margin: auto;
+    flex: 10;
     text-align: center;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .cb-user-info-section-right-2 {
-    align-self: center;
-    flex: 0;
-    padding-right: 0.5rem;
+    flex: 1;
     height: 1.2rem;
   }
 

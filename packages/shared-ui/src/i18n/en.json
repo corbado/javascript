@@ -103,8 +103,6 @@
         "body": "You may close this tab"
       },
       "email-link-error": {
-        "header_linExpired": "This link has expired",
-        "header_linkInvalid": "Something went wrong",
         "subheader": "Return to the tab where you are performing the signup and try again",
         "body": "You may close this Tab"
       },
@@ -227,7 +225,7 @@
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid. Log in using your email address instead.",
     "invalid_challenge_solution_email-otp": "The code is invalid or expired",
-    "invalid_challenge_solution_email-link": "The provided token is not valid for user verification",
+    "invalid_challenge_solution_email-link": "This link has expired",
     "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",

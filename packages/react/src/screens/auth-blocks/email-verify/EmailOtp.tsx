@@ -21,11 +21,6 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   useEffect(() => {
     setLoading(false);
 
-    if (block.data.retryNotBefore) {
-      const secondsNow = Math.floor(Date.now() / 1000);
-      setRemainingTime(block.data.retryNotBefore - secondsNow);
-    }
-
     const timer = startTimer();
 
     return () => clearInterval(timer);
@@ -59,6 +54,13 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   }, [remainingTime]);
 
   function startTimer() {
+    if (block.data.retryNotBefore) {
+      const secondsNow = Math.floor(Date.now() / 1000);
+      setRemainingTime(block.data.retryNotBefore - secondsNow);
+    } else {
+      setRemainingTime(30);
+    }
+
     timer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
 
     return timer.current;
@@ -81,6 +83,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
     setLoading(true);
     await block.resendEmail();
     startTimer();
+    setLoading(false);
   }
 
   return (

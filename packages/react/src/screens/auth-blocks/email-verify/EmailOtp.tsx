@@ -21,11 +21,6 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   useEffect(() => {
     setLoading(false);
 
-    if (block.data.retryNotBefore) {
-      const secondsNow = Math.floor(Date.now() / 1000);
-      setRemainingTime(block.data.retryNotBefore - secondsNow);
-    }
-
     const timer = startTimer();
 
     return () => clearInterval(timer);
@@ -59,6 +54,18 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   }, [remainingTime]);
 
   function startTimer() {
+    let newRemainingTime = 30;
+
+    if (block.data.retryNotBefore) {
+      const secondsNow = Math.floor(Date.now() / 1000);
+      newRemainingTime = block.data.retryNotBefore - secondsNow;
+    }
+
+    if (newRemainingTime < 1) {
+      return;
+    }
+
+    setRemainingTime(newRemainingTime);
     timer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
 
     return timer.current;
@@ -81,13 +88,14 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
     setLoading(true);
     await block.resendEmail();
     startTimer();
+    setLoading(false);
   }
 
   return (
-    <div className='cb-email-otp-block-2'>
-      <Header className='cb-email-otp-block-header-2'>{headerText}</Header>
+    <div className='cb-email-block-2'>
+      <Header className='cb-email-block-header-2'>{headerText}</Header>
       <UserInfo
-        className='cb-email-otp-user-info-section-2'
+        className='cb-email-user-info-section-2'
         userData={block.data.email}
         onRightIconClick={() => void block.showEditEmail()}
       ></UserInfo>
@@ -118,14 +126,9 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
         yahooButtonLabel={yahooLinkText}
         outlookButtonLabel={outlookLinkText}
       />
-      <Text
-        fontFamilyVariant='secondary'
-        className='cb-email-otp-resend-text-2'
-      >
-        {bodyResendText}
-      </Text>
+      <Text fontFamilyVariant='secondary'>{bodyResendText}</Text>
       <PrimaryButton
-        className='cb-email-otp-resend-button-2'
+        className='cb-email-resend-button-2'
         isLoading={loading}
         disabled={remainingTime > 0}
         onClick={() => void resendCode()}

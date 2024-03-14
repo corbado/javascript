@@ -10,6 +10,7 @@ import deleteIcon from './assets/delete.svg';
 import deviceIcon from './assets/device-icon.svg';
 import editIcon from './assets/edit.svg';
 import emailIcon from './assets/email.svg';
+import emaiLinkSuccessIcon from './assets/email-link-success.svg';
 import exclamationIcon from './assets/exclamation.svg';
 import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
@@ -49,4 +50,5 @@ export const assets = {
   passkeyAppendedIcon,
   secureIcon,
   deviceIcon,
+  emaiLinkSuccessIcon,
 };

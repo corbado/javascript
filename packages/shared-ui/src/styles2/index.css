@@ -285,6 +285,7 @@
     display: flex;
     flex-direction: row;
     align-self: center;
+    align-items: center;
     width: 90%;
     height: 1.9rem;
     background-color: #fafafa;
@@ -294,7 +295,6 @@
 
   .cb-user-info-section-left-2 {
     flex: 1;
-    margin: auto;
     padding-left: 0.5rem;
     height: 1rem;
   }
@@ -304,15 +304,17 @@
   }
 
   .cb-user-info-section-middle-2 {
-    flex: 8;
-    margin: auto;
+    flex: 10;
     text-align: center;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .cb-user-info-section-right-2 {
-    align-self: center;
-    flex: 0;
-    padding-right: 0.5rem;
+    flex: 1;
     height: 1.2rem;
   }
 
@@ -488,18 +490,17 @@
     text-align: center;
   }
 
-  .cb-email-otp-block-2 {
+  .cb-email-block-2 {
     width: 90%;
     margin-bottom: 1.5rem;
     align-self: center;
-    margin-top: 1.5rem;
   }
 
-  .cb-email-otp-block-header-2 {
-    padding-left: 1rem;
+  .cb-email-block-header-2 {
+    display: block;
   }
 
-  .cb-email-otp-user-info-section-2 {
+  .cb-email-user-info-section-2 {
     width: 100%;
     margin-top: 2.25rem;
     margin-bottom: 1.75rem;
@@ -508,6 +509,11 @@
   .cb-email-otp-buton-group-2 {
     align-self: center;
     margin: 2rem 0 1.25rem 0;
+  }
+
+  .cb-email-link-buton-group-2 {
+    align-self: center;
+    margin: 0.6rem 0 1.75rem 0;
   }
 
   .cb-email-links-2 {
@@ -543,9 +549,82 @@
     padding-top: 0.15rem;
   }
 
-  .cb-email-otp-resend-button-2 {
+  .cb-email-resend-button-2 {
     width: 100%;
     margin-top: 0.2rem;
+  }
+
+  .cb-email-link-success-block-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+    margin-bottom: 1rem;
+    width: 22rem
+  }
+
+  .cb-email-link-success-subheader-2 {
+    display: block;
+    width: 75%;
+  }
+
+  .cb-email-link-success-icon-container-2 {
+    padding: 0.85rem 2.3rem;
+    border: 1px solid var(--cb-border-color);
+    border-radius: var(--cb-border-radius-lg);
+    margin-top: 0.7rem;
+    margin-bottom: 2rem;
+  }
+
+  .cb-email-link-success-icon-2 {
+    height: 1.9rem;
+  }
+  
+  .cb-email-link-error-block-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+    margin-bottom: 1rem;
+    width: 22rem
+  }
+  
+  .cb-email-link-error-subheader-2 {
+    display: block;
+    width: 90%;
+  }
+  
+  .cb-email-link-error-icon-container-2 {
+    padding: 2.4rem;
+    border-radius: 100%;
+    background-color: #D9D9D9;
+  }
+  
+  .cb-email-link-error-icon-2 {
+    height: 1.25rem;
+  }
+
+  .cb-email-link-verification-block-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+    margin-bottom: 3rem;
+    width: 22rem;
+  }
+
+  .cb-email-link-verification-spinner-2 {
+    border-top-color: var(--cb-primary-color);
+    border-right-color: var(--cb-primary-color);
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-top: 1.25rem;
   }
 
   .cb-phone-otp-block-2 {

@@ -70,24 +70,28 @@ export class ProcessService {
     return AuthProcess.clearStorage();
   }
 
-  initEmailVerifyFromUrl(): EmailVerifyFromUrl | null {
+  initEmailVerifyFromUrl(): Result<EmailVerifyFromUrl | null, CorbadoError> {
     const searchParams = new URLSearchParams(window.location.search);
     const encodedProcess = searchParams.get('corbadoEmailLinkID');
     if (!encodedProcess) {
-      return null;
+      return Ok(null);
     }
 
     const token = searchParams.get('corbadoToken');
     if (!token) {
-      return null;
+      return Ok(null);
     }
 
-    const maybeProcess = AuthProcess.loadFromStorage();
-    const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
+    try {
+      const maybeProcess = AuthProcess.loadFromStorage();
+      const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
 
-    this.#setApisV2(emailVerifyFromUrl.processID);
+      this.#setApisV2(emailVerifyFromUrl.processID);
 
-    return emailVerifyFromUrl;
+      return Ok(emailVerifyFromUrl);
+    } catch (e) {
+      return Err(CorbadoError.fromUnknownFrontendError(e));
+    }
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {

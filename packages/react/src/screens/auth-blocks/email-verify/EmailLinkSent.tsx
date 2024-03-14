@@ -1,4 +1,4 @@
-import type { EmailVerifyBlock } from '@corbado/shared-ui';
+import { AuthType, type EmailVerifyBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -122,6 +122,18 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
     setLoading(false);
   };
 
+  async function emailChange() {
+    if (block.authType === AuthType.Login) {
+      setLoading(true);
+      await block.resetProcess();
+      setLoading(false);
+    }
+
+    block.showEditEmail();
+
+    return;
+  }
+
   if (completedOnOtherDevice) {
     return (
       <EmailLinkSuccess
@@ -137,7 +149,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
       <UserInfo
         className='cb-email-user-info-section-2'
         userData={block.data.email}
-        onRightIconClick={() => void block.showEditEmail()}
+        onRightIconClick={() => void emailChange()}
       ></UserInfo>
       <Text
         level='2'
@@ -168,9 +180,6 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
-      {/* {block.authType === AuthType.Login && (
-        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
-      )} */}
     </div>
   );
 };

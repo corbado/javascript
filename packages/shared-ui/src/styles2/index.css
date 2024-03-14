@@ -196,8 +196,7 @@
 }
 
 .cb-auth-change-section-2 {
-  display: block;
-  margin: 1rem auto 1.5rem auto;
+  margin: 0.6rem auto 1.5rem auto;
   width: 90%;
 }
 
@@ -497,6 +496,16 @@
   margin-top: 1rem;
 }
 
+.cb-pk-error-user-info-edit-section-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
 .cb-pk-appended-bloc-2 {
   display: flex;
   flex-direction: column;
@@ -673,4 +682,43 @@
 .cb-phone-otp-resend-button-2 {
   width: 100%;
   margin-top: 0.2rem;
+}
+
+.cb-pk-verify-2 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.cb-pk-verify-header-2 {
+  text-align: center;
+}
+
+.cb-pk-verify-icons-section-2 {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.cb-pk-verify-icons-section-icon-2 {
+  height: 3.75rem;
+}
+
+.cb-pk-verify-body-section-2 {
+  display: flex;
+  flex-direction: column;
+  margin: 2.5rem auto 2rem;
+  gap: 0.5rem;
+  width: 60%;
+  text-align: center;
+  align-self: center;
+}
+
+.cb-pk-verify-spinner-2 {
+  border-top-color: var(--cb-primary-color);
+  border-right-color: var(--cb-primary-color);
+  width: 2rem;
+  height: 2rem;
+  margin: 1rem auto;
 }

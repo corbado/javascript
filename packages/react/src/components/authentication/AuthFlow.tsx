@@ -110,7 +110,7 @@ export const AuthFlow: FC = () => {
   ) : initState === InitState.Initializing ? (
     <LoadingSpinner className='cb-initital-loading-spinner-2' />
   ) : (
-    <div>
+    <>
       {currentScreen?.block.error && (
         <ErrorPopup
           isDevMode={isDevMode}
@@ -119,6 +119,6 @@ export const AuthFlow: FC = () => {
         />
       )}
       {screenComponent}
-    </div>
+    </>
   );
 };

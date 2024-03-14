@@ -91,13 +91,25 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
     setLoading(false);
   }
 
+  async function emailChange() {
+    if (block.authType === AuthType.Login) {
+      setLoading(true);
+      await block.resetProcess();
+      setLoading(false);
+    }
+
+    block.showEditEmail();
+
+    return;
+  }
+
   return (
     <div className='cb-email-block-2'>
       <Header className='cb-email-block-header-2'>{headerText}</Header>
       <UserInfo
         className='cb-email-user-info-section-2'
         userData={block.data.email}
-        onRightIconClick={() => void block.showEditEmail()}
+        onRightIconClick={() => void emailChange()}
       ></UserInfo>
       <Text
         level='2'
@@ -135,9 +147,6 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
-      {block.authType === AuthType.Login && (
-        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
-      )}
     </div>
   );
 };

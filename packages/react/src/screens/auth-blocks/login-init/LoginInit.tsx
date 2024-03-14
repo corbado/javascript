@@ -83,10 +83,9 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         {showEmailOrUsername && (
           <InputField
             label={emailFieldLabel}
-            id='email'
-            name='email'
-            type='email'
-            autoComplete='email webauthn'
+            id='username'
+            name='username'
+            autoComplete='usernam webauthn'
             errorMessage={textField?.translatedError}
             ref={el => el && (textFieldRef.current = el)}
             labelLink={emailFieldLink}

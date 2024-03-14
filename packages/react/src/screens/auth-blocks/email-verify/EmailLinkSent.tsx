@@ -10,7 +10,7 @@ import { UserInfo } from '../../../components/ui2/UserInfo';
 import { EmailLinkSuccess } from './EmailLinkSuccess';
 
 // we poll for a maximum of 10 minutes (120 * 5000ms = 10min)
-const pollIntervalMs = 5000;
+const pollIntervalMs = 2000;
 const pollMaxNumber = 120;
 
 export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
@@ -64,12 +64,18 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   }, [remainingTime]);
 
   const startResendTimer = () => {
+    let newRemainingTime = 30;
+
     if (block.data.retryNotBefore) {
       const secondsNow = Math.floor(Date.now() / 1000);
-      setRemainingTime(block.data.retryNotBefore - secondsNow);
-    } else {
-      setRemainingTime(30);
+      newRemainingTime = block.data.retryNotBefore - secondsNow;
     }
+
+    if (newRemainingTime < 1) {
+      return;
+    }
+
+    setRemainingTime(newRemainingTime);
 
     resendTimer.current = setInterval(() => {
       setRemainingTime(time => time - 1);

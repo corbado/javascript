@@ -54,13 +54,18 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   }, [remainingTime]);
 
   function startTimer() {
+    let newRemainingTime = 30;
+
     if (block.data.retryNotBefore) {
       const secondsNow = Math.floor(Date.now() / 1000);
-      setRemainingTime(block.data.retryNotBefore - secondsNow);
-    } else {
-      setRemainingTime(30);
+      newRemainingTime = block.data.retryNotBefore - secondsNow;
     }
 
+    if (newRemainingTime < 1) {
+      return;
+    }
+
+    setRemainingTime(newRemainingTime);
     timer.current = setInterval(() => setRemainingTime(time => time - 1), 1000);
 
     return timer.current;

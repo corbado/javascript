@@ -116,6 +116,14 @@
 }
 
 .cb-input-label-2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.cb-input-label-text-2 {
   margin-top: 0.4rem;
   padding-left: 0.3rem;
   align-self: flex-start;
@@ -188,9 +196,9 @@
 }
 
 .cb-auth-change-section-2 {
-  margin: 1rem 0 1rem 0;
+  display: block;
+  margin: 1rem auto 1.5rem auto;
   width: 90%;
-  align-self: center;
 }
 
 .cb-disclaimer-2 {

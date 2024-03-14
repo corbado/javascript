@@ -21,23 +21,27 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, labelLink, type = 'text', id, errorMessage, ...props }, ref) => (
     <div className='cb-input-field-2'>
       {label && (
-        <label htmlFor={id}>
+        <label
+          htmlFor={id}
+          className='cb-input-label-2'
+        >
           <Text
             level='2'
             fontFamilyVariant='secondary'
-            className='cb-input-label-2'
+            className='cb-input-label-text-2'
           >
             {label}
           </Text>
 
           {labelLink && (
-            <SecondaryButton
-              className='cb-input-label-link-2'
-              colorVariant='link'
-              onClick={labelLink.onClick}
-            >
-              {labelLink.text}
-            </SecondaryButton>
+            <span className='cb-input-label-link-2'>
+              <SecondaryButton
+                colorVariant='link'
+                onClick={labelLink.onClick}
+              >
+                {labelLink.text}
+              </SecondaryButton>
+            </span>
           )}
         </label>
       )}

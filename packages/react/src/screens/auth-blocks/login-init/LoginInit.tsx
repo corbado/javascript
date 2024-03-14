@@ -31,7 +31,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);
   const signUpText = useMemo(() => t('text_signup'), [t]);
-  const flowChangeButtonText = useMemo(() => t('button_login'), [t]);
+  const flowChangeButtonText = useMemo(() => t('button_signup'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const emailFieldLabel = useMemo(() => t('textField.email'), [t]);
   const phoneFieldLabel = useMemo(() => t('textField.phone'), [t]);

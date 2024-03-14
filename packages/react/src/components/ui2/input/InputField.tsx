@@ -1,6 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 import React, { forwardRef } from 'react';
 
+import { SecondaryButton } from '../buttons/SecondaryButton';
 import ErrorMessage from '../errors/ErrorMessage';
 import { Text } from '../typography/Text';
 import { Input } from './Input';
@@ -10,10 +11,14 @@ interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   id?: string;
   errorMessage?: string;
+  labelLink?: {
+    text: string;
+    onClick: () => void;
+  };
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, type = 'text', id, errorMessage, ...props }, ref) => (
+  ({ label, labelLink, type = 'text', id, errorMessage, ...props }, ref) => (
     <div className='cb-input-field-2'>
       {label && (
         <label htmlFor={id}>
@@ -24,6 +29,16 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           >
             {label}
           </Text>
+
+          {labelLink && (
+            <SecondaryButton
+              className='cb-input-label-link-2'
+              colorVariant='link'
+              onClick={labelLink.onClick}
+            >
+              {labelLink.text}
+            </SecondaryButton>
+          )}
         </label>
       )}
       <Input

@@ -31,9 +31,9 @@ import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-bl
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
-import Loading from '../ui/Loading';
 import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
 import ErrorPopup from '../ui2/errors/ErrorPopup';
+import { LoadingSpinner } from '../ui2/LoadingSpinner';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
@@ -108,19 +108,17 @@ export const AuthFlow: FC = () => {
   return initState === InitState.Failed ? (
     <ComponentUnavailableError />
   ) : initState === InitState.Initializing ? (
-    <Loading />
+    <LoadingSpinner className='cb-initital-loading-spinner-2' />
   ) : (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        {currentScreen?.block.error && (
-          <ErrorPopup
-            isDevMode={isDevMode}
-            error={currentScreen?.block.error}
-            customerSupportEmail={customerSupportEmail}
-          />
-        )}
-        {screenComponent}
-      </div>
+    <div>
+      {currentScreen?.block.error && (
+        <ErrorPopup
+          isDevMode={isDevMode}
+          error={currentScreen?.block.error}
+          customerSupportEmail={customerSupportEmail}
+        />
+      )}
+      {screenComponent}
     </div>
   );
 };

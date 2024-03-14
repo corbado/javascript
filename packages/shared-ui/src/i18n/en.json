@@ -140,12 +140,19 @@
   "login": {
     "login-init": {
       "login-init": {
-        "header": "Welcome back!",
-        "subheader": "Don't have an account yet? ",
-        "button_signup": "Create account",
+        "header": "Log in",
+        "subheader": "to continue to ",
+        "text_signup": "No account? ",
+        "button_signup": "Sign up",
         "button_submit": "Continue",
-        "textField_email": "Email address or username",
-        "textField_phone": "Phone number"
+        "textField": {
+          "email": "Email address or username",
+          "phone": "Phone number"
+        },
+        "button_switchToAlternate": {
+          "email": "Use phone",
+          "phone": "Use email or username"
+        }
       }
     },
     "passkey-verify": {

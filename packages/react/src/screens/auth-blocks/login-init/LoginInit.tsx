@@ -25,6 +25,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
     setTextField({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });
 
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
+    }
+
     void block.continueWithConditionalUI();
   }, [block]);
 

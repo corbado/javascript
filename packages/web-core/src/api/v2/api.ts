@@ -208,7 +208,13 @@ export interface BlockBodyData {
      * @type {boolean}
      * @memberof BlockBodyData
      */
-    'isEmailUsernameAvailable': boolean;
+    'isEmailAvailable': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BlockBodyData
+     */
+    'isUsernameAvailable': boolean;
 }
 
 
@@ -317,7 +323,13 @@ export interface GeneralBlockLoginInit {
      * @type {boolean}
      * @memberof GeneralBlockLoginInit
      */
-    'isEmailUsernameAvailable': boolean;
+    'isEmailAvailable': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneralBlockLoginInit
+     */
+    'isUsernameAvailable': boolean;
     /**
      * 
      * @type {RequestError}

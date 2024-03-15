@@ -47,6 +47,9 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     [block],
   );
 
+  console.log(block.data.emailEnabled, block.data.usernameEnabled, block.data.phoneEnabled);
+  const emailOrUsernameEnabled = block.data.emailEnabled || block.data.usernameEnabled;
+
   return (
     <>
       <Header>{headerText}</Header>
@@ -65,7 +68,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         onSubmit={handleSubmit}
       >
         <div className='cb-form-body'>
-          {block.data.emailOrUsernameEnabled && (
+          {emailOrUsernameEnabled && (
             <FormInput
               name='emailOrUsername'
               label={emailOrUsernameFieldLabel}

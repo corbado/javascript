@@ -553,6 +553,9 @@ components:
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformation'
+        passkeyAppendShown:
+          type: integer
+          format: int64
 
     processInitRsp:
       type: object

@@ -1,12 +1,11 @@
 import type {
-  AuthType,
   BlockBody,
   CorbadoApp,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
 } from '@corbado/web-core';
-import { BlockType, VerificationMethod } from '@corbado/web-core';
+import { AuthType, BlockType, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -55,6 +54,10 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
     this.authType = blockBody.authType;
     const userHandleType = createLoginIdentifierType(data.identifierType);
+
+    if (this.authType === AuthType.Login) {
+      app.authProcessService.dropPasskeyAppendShown();
+    }
 
     this.data = {
       availableFallbacks: fallbacks,

@@ -901,6 +901,12 @@ export interface ProcessInitReq {
      * @memberof ProcessInitReq
      */
     'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProcessInitReq
+     */
+    'passkeyAppendShown'?: number;
 }
 /**
  * tbd.

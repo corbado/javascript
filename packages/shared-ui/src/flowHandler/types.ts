@@ -15,7 +15,8 @@ export type BlockDataLoginInit = {
   conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
 
-  emailOrUsernameEnabled: boolean;
+  emailEnabled: boolean;
+  usernameEnabled: boolean;
   phoneEnabled: boolean;
 };
 

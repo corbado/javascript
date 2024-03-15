@@ -11,9 +11,8 @@ import log from 'loglevel';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { LoginIdentifier, ProcessInitRsp, ProcessResponse } from '../api/v2';
-import { LoginIdentifierType, VerificationMethod } from '../api/v2';
-import { AuthApi } from '../api/v2';
+import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
+import { AuthApi, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import { CorbadoError } from '../utils';
@@ -22,6 +21,7 @@ import { WebAuthnService } from './WebAuthnService';
 // TODO: set this version
 const packageVersion = '0.0.0';
 const clientHandleKey = 'cbo_client_handle';
+const passkeyAppendShownKey = 'cbo_passkey_append_shown';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -153,10 +153,17 @@ export class ProcessService {
 
   async #initAuthProcess(abortController: AbortController): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const maybeClientHandle = localStorage.getItem(clientHandleKey);
+
+    const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
+    let passkeyAppendShown: number | null = null;
+    if (passkeyAppendShownRaw) {
+      passkeyAppendShown = parseInt(passkeyAppendShownRaw, 10);
+    }
+
     const canUsePasskeys =
       window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 
-    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle ?? undefined);
+    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle, passkeyAppendShown);
     if (res.err) {
       return res;
     }
@@ -185,14 +192,16 @@ export class ProcessService {
   async #processInit(
     abortController: AbortController,
     canUsePasskeys: boolean,
-    clientHandle: string | undefined,
+    clientHandle: string | null,
+    passkeyAppendShown: number | null,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
-    const req = {
+    const req: ProcessInitReq = {
       clientInformation: {
         bluetoothAvailable: false,
         canUsePasskeys: canUsePasskeys,
-        clientEnvHandle: clientHandle,
+        clientEnvHandle: clientHandle ?? undefined,
       },
+      passkeyAppendShown: passkeyAppendShown ?? undefined,
     };
 
     return this.wrapWithErr(() => this.#authApi.processInit(req, { signal: abortController.signal }));
@@ -453,6 +462,14 @@ export class ProcessService {
     }
 
     return await this.finishPasskeyMediation(signedChallenge.val);
+  }
+
+  // record time of last passkey append as unix timestamp (seconds)
+  dropPasskeyAppendShown(): void {
+    const now = new Date();
+    const utcSeconds = Math.floor((now.getTime() + now.getTimezoneOffset() * 60 * 1000) / 1000);
+
+    localStorage.setItem(passkeyAppendShownKey, utcSeconds.toString());
   }
 
   dispose() {

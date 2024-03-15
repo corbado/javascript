@@ -71,7 +71,8 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     [block, usePhone],
   );
 
-  const showEmailOrUsername = block.data.emailOrUsernameEnabled && !usePhone;
+  const showEmail = block.data.emailOrUsernameEnabled && !usePhone;
+  const showUsername = block.data.usernameEnabled && !usePhone;
   const showPhone = block.data.phoneEnabled && usePhone;
 
   return (
@@ -85,17 +86,18 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         className='cb-form-2'
         onSubmit={handleSubmit}
       >
-        {showEmailOrUsername && (
-          <InputField
-            label={emailFieldLabel}
-            id='username'
-            name='username'
-            autoComplete='usernam webauthn'
-            errorMessage={textField?.translatedError}
-            ref={el => el && (textFieldRef.current = el)}
-            labelLink={emailFieldLink}
-          />
-        )}
+        {showEmail ||
+          (showUsername && (
+            <InputField
+              label={emailFieldLabel}
+              id='username'
+              name='username'
+              autoComplete='usernam webauthn'
+              errorMessage={textField?.translatedError}
+              ref={el => el && (textFieldRef.current = el)}
+              labelLink={emailFieldLink}
+            />
+          ))}
         {showPhone && (
           <InputField
             label={phoneFieldLabel}
@@ -110,7 +112,6 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
             labelLink={phoneFieldLink}
           />
         )}
-
         <PrimaryButton
           type='submit'
           className='cb-signup-form-submit-button-2'

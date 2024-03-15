@@ -134,9 +134,6 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
-      {block.authType === AuthType.Login && (
-        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
-      )}
     </div>
   );
 };

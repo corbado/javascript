@@ -68,7 +68,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
       void block.start(textFieldRef.current?.value ?? '', usePhone);
     },
-    [block],
+    [block, usePhone],
   );
 
   const showEmailOrUsername = block.data.emailOrUsernameEnabled && !usePhone;

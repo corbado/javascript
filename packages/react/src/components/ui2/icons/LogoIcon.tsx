@@ -9,7 +9,7 @@ import { Icon } from './Icon';
 
 export const CorbadoLogoIcon: FC<IconProps> = memo(props => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, logoSrc, '--cb-secondary-text-color');
+  const { logoSVG } = useIconWithTheme(svgRef, logoSrc, '--cb-button-text-primary-color');
 
   return (
     <Icon

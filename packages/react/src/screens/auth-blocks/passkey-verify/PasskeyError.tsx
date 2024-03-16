@@ -51,7 +51,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
           {bodyTitleText}
         </Text>
         <UserInfo
-          userData={block.data.userHandle}
+          userData={block.data.identifierValue}
           onRightIconClick={() => void emailChange()}
         ></UserInfo>
       </div>

@@ -141,12 +141,16 @@
         "button_signup": "Sign up",
         "button_submit": "Continue",
         "textField": {
-          "email": "Email address or username",
+          "email": "Email address",
+          "username": "Username",
+          "emailOrUsername": "Email address or username",
           "phone": "Phone number"
         },
         "button_switchToAlternate": {
-          "email": "Use phone",
-          "phone": "Use email or username"
+          "email": "Use email",
+          "username": "Use username",
+          "emailOrUsername": "Use email or username",
+          "phone": "Use phone"
         }
       }
     },

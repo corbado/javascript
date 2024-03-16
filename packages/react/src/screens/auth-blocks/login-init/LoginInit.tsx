@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
+import type { InputFieldProps } from '../../../components/ui2/input/InputField';
 import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
@@ -13,13 +14,15 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
   const [loading, setLoading] = useState<boolean>(false);
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);
-  const [usePhone, setUsePhone] = useState<boolean>(block.data.isPhoneFocused || !block.data.emailOrUsernameEnabled);
+  const [usePhone, setUsePhone] = useState<boolean>(
+    block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
+  );
   const textFieldRef = useRef<HTMLInputElement>();
+  const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
 
   useEffect(() => {
     setLoading(false);
-    // TODO: set initial value of text field if available through block.data.loginIdentifier (this is important for aborted processes)
-    if (block.data.isPhoneFocused || !block.data.emailOrUsernameEnabled) {
+    if (block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled)) {
       setUsePhone(true);
     }
 
@@ -38,28 +41,75 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const signUpText = useMemo(() => t('text_signup'), [t]);
   const flowChangeButtonText = useMemo(() => t('button_signup'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
-  const emailFieldLabel = useMemo(() => t('textField.email'), [t]);
-  const phoneFieldLabel = useMemo(() => t('textField.phone'), [t]);
-  const emailFieldLink = useMemo(() => {
-    if (block.data.phoneEnabled) {
-      return {
-        text: t('button_switchToAlternate.email'),
-        onClick: () => setUsePhone(true),
-      };
+  const IdentifierInputField = useMemo(() => {
+    const commonProps: Partial<InputFieldProps> & React.RefAttributes<HTMLInputElement> = {
+      errorMessage: textField?.translatedError,
+      ref: (el: HTMLInputElement | null) => el && (textFieldRef.current = el),
+    };
+
+    if (usePhone) {
+      let fieldLinkText: string | undefined = undefined;
+
+      if (hasBothEmailAndUsername) {
+        fieldLinkText = t('button_switchToAlternate.emailOrUsername');
+      } else if (block.data.emailEnabled) {
+        fieldLinkText = t('button_switchToAlternate.email');
+      } else if (block.data.usernameEnabled) {
+        fieldLinkText = t('button_switchToAlternate.username');
+      }
+
+      const fieldLink = fieldLinkText
+        ? {
+            text: fieldLinkText,
+            onClick: () => setUsePhone(false),
+          }
+        : undefined;
+
+      return (
+        <InputField
+          label={t('textField.phone')}
+          id='phone'
+          name='phone'
+          autoComplete='phone webauthn'
+          type='tel'
+          inputMode='numeric'
+          pattern='+[0-9]*'
+          labelLink={fieldLink}
+          {...commonProps}
+        />
+      );
     }
 
-    return undefined;
-  }, [t]);
-  const phoneFieldLink = useMemo(() => {
-    if (block.data.emailOrUsernameEnabled) {
-      return {
-        text: t('button_switchToAlternate.phone'),
-        onClick: () => setUsePhone(false),
-      };
+    commonProps.labelLink = block.data.phoneEnabled
+      ? {
+          text: t('button_switchToAlternate.phone'),
+          onClick: () => setUsePhone(true),
+        }
+      : undefined;
+
+    if (hasBothEmailAndUsername || block.data.usernameEnabled) {
+      return (
+        <InputField
+          label={hasBothEmailAndUsername ? t('textField.emailOrUsername') : t('textField.username')}
+          id='username'
+          name='username'
+          autoComplete='username webauthn'
+          {...commonProps}
+        />
+      );
     }
 
-    return undefined;
-  }, [t]);
+    return (
+      <InputField
+        label={t('textField.email')}
+        id='email'
+        name='email'
+        type='email'
+        autoComplete='email webauthn'
+        {...commonProps}
+      />
+    );
+  }, [block, t, textField, usePhone]);
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -70,10 +120,6 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     },
     [block, usePhone],
   );
-
-  const showEmail = block.data.emailOrUsernameEnabled && !usePhone;
-  const showUsername = block.data.usernameEnabled && !usePhone;
-  const showPhone = block.data.phoneEnabled && usePhone;
 
   return (
     <>
@@ -86,32 +132,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         className='cb-form-2'
         onSubmit={handleSubmit}
       >
-        {showEmail ||
-          (showUsername && (
-            <InputField
-              label={emailFieldLabel}
-              id='username'
-              name='username'
-              autoComplete='usernam webauthn'
-              errorMessage={textField?.translatedError}
-              ref={el => el && (textFieldRef.current = el)}
-              labelLink={emailFieldLink}
-            />
-          ))}
-        {showPhone && (
-          <InputField
-            label={phoneFieldLabel}
-            id='phone'
-            name='phone'
-            autoComplete='phone webauthn'
-            type='tel'
-            inputMode='numeric'
-            pattern='+[0-9]*'
-            errorMessage={textField?.translatedError}
-            ref={el => el && (textFieldRef.current = el)}
-            labelLink={phoneFieldLink}
-          />
-        )}
+        {IdentifierInputField}
         <PrimaryButton
           type='submit'
           className='cb-signup-form-submit-button-2'

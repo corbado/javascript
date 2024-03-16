@@ -30,15 +30,15 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
-    let userHandler = data.identifierValue;
+    let identifierValue = data.identifierValue;
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
       .map(alternative => {
         const typed = alternative.data as GeneralBlockVerifyIdentifier;
 
-        if (!userHandler) {
-          userHandler = typed.identifier;
+        if (!identifierValue) {
+          identifierValue = typed.identifier;
         }
 
         switch (alternative.block) {
@@ -59,7 +59,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
-      userHandle: userHandler,
+      identifierValue: identifierValue,
     };
   }
 

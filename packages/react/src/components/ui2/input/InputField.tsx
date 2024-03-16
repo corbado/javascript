@@ -6,7 +6,7 @@ import ErrorMessage from '../errors/ErrorMessage';
 import { Text } from '../typography/Text';
 import { Input } from './Input';
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   type?: string;
   id?: string;

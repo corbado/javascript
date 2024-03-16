@@ -30,7 +30,7 @@ export type BlockDataPasskeyAppend = {
 
 export type BlockDataPasskeyVerify = {
   availableFallbacks: PasskeyFallback[];
-  userHandle: string;
+  identifierValue: string;
 };
 
 export type BlockDataPasskeyAppended = Record<string, never>;

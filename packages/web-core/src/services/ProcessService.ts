@@ -228,10 +228,11 @@ export class ProcessService {
     });
   }
 
-  async initSignup(identifiers: LoginIdentifier[]): Promise<Result<ProcessResponse, CorbadoError>> {
+  async initSignup(identifiers: LoginIdentifier[], fullName?: string): Promise<Result<ProcessResponse, CorbadoError>> {
     return Result.wrapAsync(async () => {
       const r = await this.#authApi.signupInit({
         identifiers: identifiers,
+        fullName: fullName,
       });
       return r.data;
     });

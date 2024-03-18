@@ -226,11 +226,11 @@
   },
   "errors": {
     "missing_identifier_type": {
-      "fullName": "Please enter a valid name.",
       "username": "Enter username.",
       "email": "Enter email address.",
       "phone": "Enter phone number."
     },
+    "missing_full_name": "Please enter a valid name.",
     "identifier_already_in_use": {
       "username": "That username is taken. Please try another one.",
       "email": "That email address is taken. Pleas try another one.",
@@ -243,7 +243,6 @@
     },
     "login_identifier_unknown_user": "Couldn't find your account.",
     "invalidName": "Please enter a valid email",
-    "invalidFullname": "Please enter a valid name",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use. If this account is yours, please log in instead.",
     "passkeyAlreadyExists": "Passkey for this device already exists",

@@ -93,6 +93,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           label={hasBothEmailAndUsername ? t('textField.emailOrUsername') : t('textField.username')}
           id='username'
           name='username'
+          type='username'
           autoComplete='username webauthn'
           {...commonProps}
         />

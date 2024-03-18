@@ -163,14 +163,24 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     return;
   }
 
-  async updateUsername(value: string): Promise<void> {
+  async updateUsername(value: string): Promise<string | undefined> {
     const newBlock = await this.app.authProcessService.updateUsername(value);
 
-    if (newBlock.ok && !newBlock.val.blockBody.error) {
-      this.updateScreen(ScreenNames.PasskeyAppend);
+    if (newBlock.err) {
+      this.updateProcess(newBlock);
+      return;
+    }
+
+    const error = newBlock.val.blockBody.error;
+
+    //If the new username is invalid, we don't want to update the block because the new block data from BE has no indicator for ScreenNames.EditUserInfo
+    //So, the FE needs to maintain state and we just  want to show the translated error message
+    if (error) {
+      return this.errorTranslator.translateWithIdentifier(error, 'username');
     }
 
     this.updateProcess(newBlock);
+    this.showPasskeyAppend();
 
     return;
   }

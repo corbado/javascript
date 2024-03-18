@@ -36,7 +36,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await page.getByRole('button', { name: 'Create account' }).click();
+    await page.getByRole('button', { name: 'Create passkey' }).click();
     await signupFlow.inputPasskey(async () => {
       await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
     });

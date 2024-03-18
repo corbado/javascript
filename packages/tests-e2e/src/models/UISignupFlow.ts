@@ -81,7 +81,7 @@ export class UISignupFlow {
       await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
     }
     if (fillPhone) {
-      phone = `+1650555${username.slice(-5)}`;
+      phone = `+1650555${username.slice(-4)}`;
 
       await this.page.getByRole('textbox', { name: 'phone' }).click();
       await this.page.getByRole('textbox', { name: 'phone' }).fill(phone);
@@ -160,7 +160,7 @@ export class UISignupFlow {
         await expect(this.page.getByText('Create your account')).toBeVisible();
         break;
       case ScreenNames.InitLogin:
-        await expect(this.page.getByRole('heading', { level: 1 }).first()).toHaveText('Welcome back!');
+        await expect(this.page.getByText('Log In')).toBeVisible();
         break;
       case ScreenNames.PasskeyAppend1:
         await expect(this.page.getByText('Create account with passkeys')).toBeVisible();

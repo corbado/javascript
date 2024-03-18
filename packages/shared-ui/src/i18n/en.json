@@ -35,8 +35,11 @@
         }
       },
       "edit-user-data": {
-        "header_emailChange": "Type new email address",
-        "header_phoneChange": "Type new phone number",
+        "header": {
+          "username": "Type new username",
+          "email": "Type new email address",
+          "phone": "Type new phone number"
+        },
         "button_submit": "Confirm",
         "button_cancel": "Back"
       },

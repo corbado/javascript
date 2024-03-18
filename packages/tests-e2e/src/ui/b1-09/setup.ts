@@ -1,9 +1,7 @@
 import { test as setup } from '@playwright/test';
 
+import { IdentifierEnforceVerification, IdentifierType, IdentifierVerification } from '../../utils/constants';
 import {
-  IdentifierEnforceVerification,
-  IdentifierType,
-  IdentifierVerification,
   makeIdentifier,
   setBackendConfigs,
 } from '../../utils/helperFunctions/setBackendConfigs';
@@ -13,7 +11,7 @@ setup('set b1.1 configs', async () => {
     makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, false, [
       IdentifierVerification.EmailOtp,
     ]),
-    makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.Signup, false, [IdentifierVerification.SmsOtp]),
+    makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.Signup, false, [IdentifierVerification.PhoneOtp]),
     makeIdentifier(IdentifierType.Social, IdentifierEnforceVerification.None, false, []),
   ]);
 });

@@ -217,5 +217,41 @@ export default defineConfig({
       testMatch: ['ui/b1-11/all-browsers/*.*', 'ui/b1-11/chromium/*.*'],
       dependencies: ['b1-11-setup'],
     },
+    //////////////////////////////////////////////////////
+    // B2.1 configs (Email OTP): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | true
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-emailotp-setup',
+      testMatch: ['ui/b2-01-emailotp/setup.ts']
+    },
+    {
+      name: 'b2-01-emailotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-emailotp/all-browsers/*.*', 'ui/b2-01-emailotp/chromium/*.*'],
+      dependencies: ['b2-01-emailotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.1 configs (Phone OTP): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | false   | false
+    //  Phone    | true    | true
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-phoneotp-setup',
+      testMatch: ['ui/b2-01-phoneotp/setup.ts']
+    },
+    {
+      name: 'b2-01-phoneotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-phoneotp/all-browsers/*.*', 'ui/b2-01-phoneotp/chromium/*.*'],
+      dependencies: ['b2-01-phoneotp-setup'],
+    },
   ],
 });

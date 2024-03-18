@@ -5,7 +5,7 @@ test.describe('Signup with email OTP proper user behavior', () => {
   test.skip('with no passkey support', async ({ signupFlow, page }) => {
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
     await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.End);

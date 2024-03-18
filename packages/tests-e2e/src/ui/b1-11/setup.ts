@@ -1,8 +1,7 @@
 import { test as setup } from '@playwright/test';
 
+import { IdentifierEnforceVerification,IdentifierType } from '../../utils/constants';
 import {
-  IdentifierEnforceVerification,
-  IdentifierType,
   makeIdentifier,
   setBackendConfigs,
 } from '../../utils/helperFunctions/setBackendConfigs';

@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 if (process.env.CI) {
-  dotenv.config({ path: path.resolve(process.cwd(), '.env.ci') });
+  dotenv.config({ path: path.resolve(__dirname, '.env.ci') });
   console.log(process.env.PLAYWRIGHT_TEST_URL, process.env.PLAYWRIGHT_PROJECT_ID);
 } else {
-  dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+  dotenv.config({ path: path.resolve(__dirname, '.env.local') });
 }
 
 export default defineConfig({

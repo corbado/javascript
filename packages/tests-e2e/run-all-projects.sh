@@ -1,9 +1,13 @@
 #!/bin/bash
 
 project_names=(
-  "b1-1-chromium"
-  "b1-2-chromium"
-  "b1-3-all-browsers"
+  "b1-01-chromium"
+  "b1-02-chromium"
+  "b1-03-all-browsers"
+  "b1-11-chromium"
+  "b2-01-emailotp-chromium"
+  "b2-01-phoneotp-chromium"
+  "b2-03-chromium"
 )
 
 for project_name in "${project_names[@]}"; do

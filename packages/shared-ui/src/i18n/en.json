@@ -240,7 +240,7 @@
       "phone": "That phone number is taken. Pleas try another one."
     },
     "identifier_invalid_format": {
-      "username": "Username can only contain letters, numbers and “-” or “_”.",
+      "username": "Username must be between 4 and 64 characters long and can only contain letters, numbers and \"-\" or \"_\".",
       "email": "Email address must be a valid email address.",
       "phone": "Phone number must be a valid phone number."
     },
@@ -266,7 +266,7 @@
     },
     "componentUnavailable": {
       "header": "Something went wrong",
-      "subheader": "We’re sorry that our service is currently not available.",
+      "subheader": "We're sorry that our service is currently not available.",
       "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
       "body_noCustomerSupport": "Please try again in a few moments.",
       "button": "Refresh Page"

@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 
 if (process.env.CI) {
   dotenv.config({ path: '.env.ci' });
-  console.log(process.env.PLAYWRIGHT_PROJECT_ID);
+  console.log(process.env.PLAYWRIGHT_TEST_URL, process.env.PLAYWRIGHT_PROJECT_ID);
 } else {
-  dotenv.config();
+  dotenv.config({ path: '.env.local' });
 }
 
 export default defineConfig({

@@ -7,7 +7,12 @@ test.describe('Login with phone OTP proper user behavior', () => {
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailLink], true, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailLink],
+      true,
+      false,
+    );
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
@@ -19,7 +24,7 @@ test.describe('Login with phone OTP proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailLinkSentLogin, email);
 
     // TODO: construct email link and open in a new tab
-    
+
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
     await page.getByText('Maybe later').click();

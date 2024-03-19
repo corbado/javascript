@@ -7,7 +7,12 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailOtp],
+      true,
+      false,
+    );
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
@@ -30,7 +35,12 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailOtp],
+      true,
+      false,
+    );
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);

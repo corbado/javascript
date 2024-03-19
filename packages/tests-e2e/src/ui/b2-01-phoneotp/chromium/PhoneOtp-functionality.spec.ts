@@ -7,7 +7,12 @@ test.describe('Login with phone OTP proper user behavior', () => {
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
 
-    let [, , phone] = await loginFlow.createAccount([IdentifierType.Phone], [IdentifierVerification.PhoneOtp], true, false);
+    let [, , phone] = await loginFlow.createAccount(
+      [IdentifierType.Phone],
+      [IdentifierVerification.PhoneOtp],
+      true,
+      false,
+    );
     phone = phone ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);

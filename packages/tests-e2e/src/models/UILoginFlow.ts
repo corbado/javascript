@@ -72,7 +72,9 @@ export class UILoginFlow {
     registerPasskey: boolean,
   ) {
     const id = UserManager.getUserForSignup();
-    let username, email, phone = undefined;
+    let username,
+      email,
+      phone = undefined;
 
     if (enabled.includes(IdentifierType.Username)) {
       username = id.replace('+', '-');
@@ -104,7 +106,10 @@ export class UILoginFlow {
         });
         await this.page.getByRole('button', { name: 'Continue' }).click();
       } else {
-        if (verifications.includes(IdentifierVerification.EmailOtp) || verifications.includes(IdentifierVerification.EmailLink)) {
+        if (
+          verifications.includes(IdentifierVerification.EmailOtp) ||
+          verifications.includes(IdentifierVerification.EmailLink)
+        ) {
           await this.page.getByText('Email verification').click();
         } else if (verifications.includes(IdentifierVerification.PhoneOtp)) {
           await this.page.getByText('Phone verification').click();
@@ -116,7 +121,7 @@ export class UILoginFlow {
       await this.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
       await this.fillOTP(OtpType.Email);
     } else if (verifications.includes(IdentifierVerification.EmailLink)) {
-      throw new Error('createAccount: Email link test code not yet implemented')
+      throw new Error('createAccount: Email link test code not yet implemented');
     }
     if (verifications.includes(IdentifierVerification.PhoneOtp)) {
       await this.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
@@ -135,6 +140,7 @@ export class UILoginFlow {
     await this.page.getByRole('button', { name: 'Logout' }).click();
 
     await loadAuth(this.page);
+    await this.checkLandedOnScreen(ScreenNames.InitSignup);
 
     return [username, email, phone];
   }

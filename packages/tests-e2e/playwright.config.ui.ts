@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 if (process.env.CI) {
-  // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before 
-  // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the 
+  // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
+  // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the
   // value should theoretically be undefined. For now the 'override' option fixes the issue.
   dotenv.config({ path: path.resolve(__dirname, '.env.ci'), override: true });
 } else {
@@ -39,11 +39,11 @@ export default defineConfig({
   ],
   timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 5000, // default: 5000ms
+    timeout: 3000, // default: 5000ms
   },
   use: {
-    actionTimeout: 5000, // default: none
-    navigationTimeout: 5000, // default: none
+    actionTimeout: 3000, // default: none
+    navigationTimeout: 3000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -233,7 +233,7 @@ export default defineConfig({
     //  Username | false   |
     {
       name: 'b2-01-emailotp-setup',
-      testMatch: ['ui/b2-01-emailotp/setup.ts']
+      testMatch: ['ui/b2-01-emailotp/setup.ts'],
     },
     {
       name: 'b2-01-emailotp-chromium',
@@ -251,7 +251,7 @@ export default defineConfig({
     //  Username | false   |
     {
       name: 'b2-01-phoneotp-setup',
-      testMatch: ['ui/b2-01-phoneotp/setup.ts']
+      testMatch: ['ui/b2-01-phoneotp/setup.ts'],
     },
     {
       name: 'b2-01-phoneotp-chromium',
@@ -269,7 +269,7 @@ export default defineConfig({
     //  Username | false   |
     {
       name: 'b2-03-setup',
-      testMatch: ['ui/b2-03/setup.ts']
+      testMatch: ['ui/b2-03/setup.ts'],
     },
     {
       name: 'b2-03-chromium',

@@ -66,7 +66,9 @@ export class UISignupFlow {
 
   async fillIdentifiers(fillUsername: boolean, fillEmail: boolean, fillPhone: boolean) {
     const id = UserManager.getUserForSignup();
-    let username, email, phone = undefined;
+    let username,
+      email,
+      phone = undefined;
     if (fillUsername) {
       username = id.replace('+', '-');
 

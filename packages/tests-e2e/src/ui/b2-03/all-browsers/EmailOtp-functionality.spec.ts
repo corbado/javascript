@@ -3,7 +3,12 @@ import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '..
 
 test.describe('Login with email OTP proper user behavior', () => {
   test.skip('with no passkey support', async ({ loginFlow, page }) => {
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], false, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailOtp],
+      false,
+      false,
+    );
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);

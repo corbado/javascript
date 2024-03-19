@@ -10,19 +10,19 @@ export interface DividerProps {
 
 export const Divider: FC<DividerProps> = ({ label, className }) => {
   return (
-    <div className={`cb-divider-container-2 ${className ? ` ${className}` : ''}`}>
-      <div className='cb-divider-line-2'></div>
-      <div className='cb-divider-text-2'>
+    <div className={`cb-divider-container ${className ? ` ${className}` : ''}`}>
+      <div className='cb-divider-line'></div>
+      <div className='cb-divider-text'>
         <Text
           level='1'
           textColorVariant='secondary'
           fontWeight='bold'
-          className='cb-row-2'
+          className='cb-row'
         >
           {label}
         </Text>
       </div>
-      <div className='cb-divider-line-2'></div>
+      <div className='cb-divider-line'></div>
     </div>
   );
 };

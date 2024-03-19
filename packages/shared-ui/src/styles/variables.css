@@ -1,0 +1,27 @@
+:root {
+  --cb-primary-color: #1953ff;
+  --cb-primary-color-hover: #0d3bfc;
+  --cb-primary-color-disabled: #889dff;
+  --cb-button-text-primary-color: #fff;
+  --cb-text-primary-color: #000000;
+  --cb-text-secondary-color: #6e6d6d;
+  --cb-white: #ffffff;
+  --cb-dark: #000000;
+  --cb-border-color: #c7c7c7;
+  --cb-secondary-link-color: #59acff;
+  --cb-primary-font: 'Space Grotesk', sans-serif;
+  --cb-secondary-font: 'Inter', sans-serif;
+  --cb-font-weight-bold: 700;
+  --cb-font-weight-normal: 400;
+  --cb-base-font-size: 0.65rem;
+  --cb-border-radius-lg: 1.125rem;
+  --cb-border-radius-sm: 0.5rem;
+  --cb-error-text-color: #ce1212;
+  --cb-error-font-size: 0.65rem;
+}
+
+.cb-dark {
+  --cb-text-primary-color: #ffffff;
+  --cb-dark: #ffffff;
+  --cb-white: #000000;
+}

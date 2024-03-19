@@ -19,22 +19,22 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, labelLink, type = 'text', id, errorMessage, ...props }, ref) => (
-    <div className='cb-input-field-2'>
+    <div className='cb-input-field'>
       {label && (
         <label
           htmlFor={id}
-          className='cb-input-label-2'
+          className='cb-input-label'
         >
           <Text
             level='2'
             fontFamilyVariant='secondary'
-            className='cb-input-label-text-2'
+            className='cb-input-label-text'
           >
             {label}
           </Text>
 
           {labelLink && (
-            <span className='cb-input-label-link-2'>
+            <span className='cb-input-label-link'>
               <SecondaryButton
                 colorVariant='link'
                 onClick={labelLink.onClick}

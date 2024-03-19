@@ -37,16 +37,16 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   }
 
   return (
-    <div className='cb-pk-error-bloc-2'>
+    <div className='cb-pk-error-bloc'>
       <Header>{headerText}</Header>
-      <div className='cb-pk-error-bloc-icon-2'>
+      <div className='cb-pk-error-bloc-icon'>
         <PasskeyErrorIcon />
       </div>
-      <div className='cb-pk-error-user-info-edit-section-2'>
+      <div className='cb-pk-error-user-info-edit-section'>
         <Text
           level='2'
           fontWeight='bold'
-          className='cb-pk-error-user-info-edit-section-title-2'
+          className='cb-pk-error-user-info-edit-section-title'
         >
           {bodyTitleText}
         </Text>
@@ -58,7 +58,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
       <Text
         level='2'
         fontFamilyVariant='secondary'
-        className='cb-pk-error-bloc-description-2'
+        className='cb-pk-error-bloc-description'
       >
         {bodyDescriptionText}
       </Text>
@@ -71,7 +71,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
       {fallbacksAvailable && (
         <Divider
           label={dividerText}
-          className='cb-pk-error-bloc-divider-2'
+          className='cb-pk-error-bloc-divider'
         />
       )}
       {block.data.availableFallbacks.map(fallback => (

@@ -20,7 +20,7 @@ export const EmailLinks: FC<EmailLinksProps> = ({
   outlookButtonLabel,
 }) => {
   return (
-    <div className={`cb-email-links-2 ${className ? ` ${className}` : ''}`}>
+    <div className={`cb-email-links ${className ? ` ${className}` : ''}`}>
       <IconButton
         icon={<GmailIcon />}
         label={gmailButtonLabel}

@@ -22,16 +22,16 @@ export const EmailLinkSuccess: FC<EmailLinkSuccessProps> = ({ block, isOldTab = 
   const bodyText = useMemo(() => t('body'), [t]);
 
   return (
-    <div className='cb-email-link-success-block-2'>
+    <div className='cb-email-link-success-block'>
       <Header>{headerText}</Header>
       <Text
         level='2'
-        className='cb-email-link-success-subheader-2'
+        className='cb-email-link-success-subheader'
       >
         {subheaderText}
       </Text>
-      <div className='cb-email-link-success-icon-container-2'>
-        <EmailLinkSuccessIcon className='cb-email-link-success-icon-2' />
+      <div className='cb-email-link-success-icon-container'>
+        <EmailLinkSuccessIcon className='cb-email-link-success-icon' />
       </div>
       <Text level='2'>{bodyText}</Text>
     </div>

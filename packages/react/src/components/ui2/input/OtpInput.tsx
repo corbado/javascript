@@ -28,7 +28,7 @@ export const OtpInput = forwardRef<HTMLInputElement, OtpInputProps>(
         onKeyDown={e => handleKeyDown(e, index)}
         onPaste={handlePaste}
         disabled={disabled}
-        className='cb-otp-input-2'
+        className='cb-otp-input'
         autoFocus={index === 0}
         hasError={hasError}
       />

@@ -9,12 +9,12 @@ type Props = {
 
 export const DeveloperError = ({ error }: Props) => {
   return (
-    <div className='cb-error-popup-2'>
-      <div className='cb-error-popup-icon-2'>
-        <ExclamationIcon className='cb-error-popup-icon-2' />
+    <div className='cb-error-popup'>
+      <div className='cb-error-popup-icon'>
+        <ExclamationIcon className='cb-error-popup-icon' />
       </div>
       <div>
-        <p className='cb-error-popup-text-2'>{error.message}</p>
+        <p className='cb-error-popup-text'>{error.message}</p>
       </div>
     </div>
   );

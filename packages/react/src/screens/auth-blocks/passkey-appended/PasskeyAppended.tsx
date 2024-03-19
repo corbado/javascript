@@ -19,22 +19,21 @@ export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const primaryButtonText = useMemo(() => t('button'), [t]);
 
   return (
-    <div className='cb-pk-appended-bloc-2'>
+    <div className='cb-pk-appended-bloc'>
       <Header>{headerText}</Header>
-      <div className='cb-pk-appended-bloc-icon-2'>
+      <div className='cb-pk-appended-bloc-icon'>
         <PasskeyAppendedIcon />
       </div>
       <Text
-        level='4'
+        level='3'
         fontWeight='bold'
-        fontFamilyVariant='secondary'
       >
         {subHeaderText}
       </Text>
       <Text
-        level='3'
+        level='2'
         fontFamilyVariant='secondary'
-        className='cb-pk-appended-bloc-description-2'
+        className='cb-pk-appended-bloc-description'
       >
         {bodyText}
       </Text>

@@ -115,7 +115,7 @@ export const OtpInputGroup: FC<OtpInputGroupProps> = memo(
 
     return (
       <div className={className}>
-        <div className='cb-otp-input-container-2'>
+        <div className='cb-otp-input-container'>
           {otpState.map((data, index) => (
             <OtpInput
               key={index}

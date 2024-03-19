@@ -53,7 +53,7 @@
       "passkey-error": {
         "header": "Something went wrong...",
         "body": "Adding a passkey to your account was not possible. Please try again or use another method.",
-        "text_divider": "or",
+        "text_divider": "Or continue with",
         "button_switchToAlternate": {
           "emailOtp": "Email verification",
           "emailLink": "Email verification",
@@ -244,6 +244,7 @@
       "email": "Email address must be a valid email address.",
       "phone": "Phone number must be a valid phone number."
     },
+    "identifier_not_allowed": "Couldn't find your account",
     "login_identifier_unknown_user": "Couldn't find your account.",
     "invalidName": "Please enter a valid email",
     "invalidFullname": "Please enter a valid name",

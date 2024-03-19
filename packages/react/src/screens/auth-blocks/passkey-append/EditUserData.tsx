@@ -79,8 +79,8 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   };
 
   return (
-    <div className='cb-edit-data-section-2'>
-      <Header className='cb-edit-data-section-header-2'>{headerText}</Header>
+    <div className='cb-edit-data-section'>
+      <Header className='cb-edit-data-section-header'>{headerText}</Header>
       <InputField
         {...inputFieldComputedProps}
         value={passkeyUserHandle}
@@ -96,7 +96,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
-        className='cb-edit-data-section-back-button-2'
+        className='cb-edit-data-section-back-button'
         onClick={() => block.showPasskeyAppend()}
       >
         {secondaryButtonText}

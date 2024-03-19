@@ -41,19 +41,19 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   };
 
   return (
-    <div className='cb-pk-append-2'>
+    <div className='cb-pk-append'>
       <Text
         level='6'
         fontWeight='bold'
-        className='cb-pk-append-header-2'
+        className='cb-pk-append-header'
       >
         {headerText}
       </Text>
-      <span className='cb-pk-append-icons-section-2'>
-        <FingerPrintIcon className='cb-pk-append-icons-section-icon-2' />
-        <FaceIdIcon className='cb-pk-append-icons-section-icon-2' />
+      <span className='cb-pk-append-icons-section'>
+        <FingerPrintIcon className='cb-pk-append-icons-section-icon' />
+        <FaceIdIcon className='cb-pk-append-icons-section-icon' />
       </span>
-      <div className='cb-pk-append-user-info-section-2'>
+      <div className='cb-pk-append-user-info-section'>
         <Text
           textColorVariant='secondary'
           fontFamilyVariant='secondary'
@@ -62,15 +62,15 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         </Text>
         {!block.data.canBeSkipped && (
           <EditIcon
-            className='cb-pk-append-user-info-section-edit-icon-2'
+            className='cb-pk-append-user-info-section-edit-icon'
             color='secondary'
             onClick={() => block.showEditUserData()}
           />
         )}
       </div>
-      <div className='cb-pk-append-points-section-2'>
-        <div className='cb-pk-append-points-section-point-2'>
-          <SecureIcon className='cb-pk-append-points-section-point-icon-2' />
+      <div className='cb-pk-append-points-section'>
+        <div className='cb-pk-append-points-section-point'>
+          <SecureIcon className='cb-pk-append-points-section-point-icon' />
           <Text
             level='2'
             fontFamilyVariant='secondary'
@@ -78,8 +78,8 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             {bodyPoint1Text}
           </Text>
         </div>
-        <div className='cb-pk-append-points-section-point-2'>
-          <DeviceIcon className='cb-pk-append-points-section-point-icon-2' />
+        <div className='cb-pk-append-points-section-point'>
+          <DeviceIcon className='cb-pk-append-points-section-point-icon' />
           <Text
             level='2'
             fontFamilyVariant='secondary'
@@ -94,13 +94,13 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       >
         {primaryButtonText}
       </PrimaryButton>
-      <div className='cb-pk-append-subtext-2'>
+      <div className='cb-pk-append-subtext'>
         <Text fontFamilyVariant='secondary'>{bodySubtext}</Text>
       </div>
       {fallbacksAvailable && (
         <>
           <Divider label={textDivider} />
-          <div className='cb-pk-append-buttons-section-2'>
+          <div className='cb-pk-append-buttons-section'>
             {block.data.availableFallbacks.map(fallback => (
               <SecondaryButton
                 key={fallback.label}
@@ -114,7 +114,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         </>
       )}
       {block.data.canBeSkipped && (
-        <div className='cb-pk-append-skip-button-section-2'>
+        <div className='cb-pk-append-skip-button-section'>
           <SecondaryButton
             onClick={() => void block.skipPasskeyAppend()}
             disabled={loading}

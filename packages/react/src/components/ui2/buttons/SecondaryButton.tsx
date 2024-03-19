@@ -25,7 +25,7 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
   };
 
   const variant = colorVariant === 'link' ? 'secondary' : 'primary';
-  const computedClassName = `cb-link-2 cb-${variant}-link-2 ${disabled ? 'cb-disabled' : ''} ${className ? ` ${className}` : ''}`;
+  const computedClassName = `cb-link cb-${variant}-link ${disabled ? 'cb-disabled' : ''} ${className ? ` ${className}` : ''}`;
 
   return (
     <span onClick={handleClick}>

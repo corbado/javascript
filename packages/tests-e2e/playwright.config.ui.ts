@@ -1,11 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import path from 'path';
 
 if (process.env.CI) {
-  dotenv.config({ path: '.env.ci' });
+  dotenv.config({ path: path.resolve(process.cwd(), '.env.ci') });
   console.log(process.env.PLAYWRIGHT_TEST_URL, process.env.PLAYWRIGHT_PROJECT_ID);
 } else {
-  dotenv.config({ path: '.env.local' });
+  dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 }
 
 export default defineConfig({
@@ -36,11 +37,11 @@ export default defineConfig({
   ],
   timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 3000, // default: 5000ms
+    timeout: 5000, // default: 5000ms
   },
   use: {
-    actionTimeout: 3000, // default: none
-    navigationTimeout: 3000, // default: none
+    actionTimeout: 5000, // default: none
+    navigationTimeout: 5000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',

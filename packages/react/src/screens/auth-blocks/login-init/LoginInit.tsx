@@ -73,7 +73,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           autoComplete='phone webauthn'
           type='tel'
           inputMode='numeric'
-          pattern='+[0-9]*'
+          pattern='\+[0-9]*'
           labelLink={fieldLink}
           {...commonProps}
         />

@@ -16,7 +16,7 @@ export enum IdentifierEnforceVerification {
 export enum IdentifierVerification {
   EmailOtp = 'email-otp',
   EmailLink = 'email-link',
-  SmsOtp = 'sms-otp',
+  SmsOtp = 'phone-otp',
 }
 
 interface Identifier {

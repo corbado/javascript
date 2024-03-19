@@ -110,7 +110,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             autoComplete='phone'
             type='tel'
             inputMode='numeric'
-            pattern='+[0-9]*'
+            pattern='\+[0-9]*'
             errorMessage={phone?.translatedError}
             ref={el => el && (phoneRef.current = el)}
           />

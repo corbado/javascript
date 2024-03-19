@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog } from '..';
-import { DeleteIcon } from '../ui/icons/Icons';
+import { Dialog } from '../ui2/Dialog';
+import { DeleteIcon } from '../ui2/icons/DeleteIcon';
 
 export interface PasskeyDeleteProps {
   passkeyId: string;
@@ -29,7 +29,10 @@ export const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDele
 
   return (
     <div className='cb-passkey-list-icon'>
-      <DeleteIcon onClick={openDialog} />
+      <DeleteIcon
+        className='cb-passkey-list-delete'
+        onClick={openDialog}
+      />
       <Dialog
         isOpen={isDialogOpen}
         header={t('header')}

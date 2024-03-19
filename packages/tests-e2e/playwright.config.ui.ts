@@ -76,7 +76,7 @@ export default defineConfig({
       testMatch: ['ui/b1-02/setup.ts'],
     },
     {
-      name: 'b1-2-chromium',
+      name: 'b1-02-chromium',
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b1-02/all-browsers/*.*', 'ui/b1-02/chromium/*.*'],
       dependencies: ['b1-02-setup'],

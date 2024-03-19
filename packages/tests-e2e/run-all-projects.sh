@@ -15,6 +15,6 @@ for project_name in "${project_names[@]}"; do
   mv playwright-report/$project_name/* playwright-report/
 done
 
-playwright merge-reports --reporter html playwright-report/
+playwright merge-reports --reporter blob playwright-report/
 
 exit $EXIT

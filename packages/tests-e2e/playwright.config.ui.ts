@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 if (process.env.CI) {
+  console.log('CI environment');
   console.log(dotenv.config({ path: path.resolve(__dirname, '.env.ci') }));
   console.log(process.env.PLAYWRIGHT_TEST_URL, process.env.PLAYWRIGHT_PROJECT_ID);
 } else {
+  console.log('Local environment');
   console.log(dotenv.config({ path: path.resolve(__dirname, '.env.local') }));
+  console.log(process.env.PLAYWRIGHT_TEST_URL, process.env.PLAYWRIGHT_PROJECT_ID);
 }
 
 export default defineConfig({

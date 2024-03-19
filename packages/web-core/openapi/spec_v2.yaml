@@ -553,6 +553,9 @@ components:
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformation'
+        passkeyAppendShown:
+          type: integer
+          format: int64
 
     processInitRsp:
       type: object
@@ -931,7 +934,8 @@ components:
         - identifierValue
         - isPhone
         - isPhoneAvailable
-        - isEmailUsernameAvailable
+        - isEmailAvailable
+        - isUsernameAvailable
       properties:
         conditionalUIChallenge:
           type: string
@@ -941,7 +945,9 @@ components:
           type: boolean
         isPhoneAvailable:
           type: boolean
-        isEmailUsernameAvailable:
+        isEmailAvailable:
+          type: boolean
+        isUsernameAvailable:
           type: boolean
         error:
           $ref: '#/components/schemas/requestError'

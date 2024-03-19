@@ -29,7 +29,8 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       loginIdentifier: data.identifierValue ?? '',
       loginIdentifierError: loginIdentifierError ?? '',
       isPhoneFocused: data.isPhone,
-      emailOrUsernameEnabled: data.isEmailUsernameAvailable,
+      emailEnabled: data.isEmailAvailable,
+      usernameEnabled: data.isUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
       conditionalUIChallenge: data.conditionalUIChallenge,
     };

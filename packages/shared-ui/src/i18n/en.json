@@ -15,12 +15,17 @@
     },
     "passkey-append": {
       "passkey-append": {
-        "header_createPasskey": "Create account with passkeys",
-        "header_appendPasskey": "Set up passkey for easier login",
+        "header": {
+          "create": "Create account with passkeys",
+          "append": "Set up passkey for easier login"
+        },
         "body_point1": "Quick and secure login using face, fingerprint or PIN instead of passwords.",
         "body_point2": "Passkeys are stored on the device or in the cloud, accessible from connected devices.",
         "body_subtext": "Biometric data will never leave your device.",
-        "button_start": "Create account",
+        "button_start": {
+          "create": "Create account",
+          "append": "Create passkey"
+        },
         "button_skip": "Maybe later",
         "text_divider": "or create account with",
         "button_switchToAlternate": {
@@ -45,13 +50,14 @@
       "passkey-error": {
         "header": "Something went wrong...",
         "body": "Adding a passkey to your account was not possible. Please try again or use another method.",
+        "text_divider": "or",
         "button_switchToAlternate": {
           "emailOtp": "Email verification",
           "emailLink": "Email verification",
           "phone": "Phone verification"
         },
         "button_tryAgain": "Try again",
-        "button_cancel": "Back"
+        "button_cancel": "Continue without passkeys"
       }
     },
     "passkey-appended": {
@@ -76,19 +82,37 @@
       },
       "email-link-sent": {
         "header": "Check your inbox to create your account",
-        "body_text1": "We just sent you a magic link to ",
-        "body_text2": ". Click on the link in the email to finish setting up your account.",
-        "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
-        "button_sendLinkAgain": "Send email again",
-        "button_back": "Cancel"
+        "body_title": "Magic link",
+        "body_description": "We just sent a magic link to your email address ",
+        "body_resend": "Didn't receive an email?",
+        "button_resend": "Resend email",
+        "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
+        "button_gmail": "Open in Gmail",
+        "button_outlook": "Open in Outlook",
+        "button_yahoo": "Open in Yahoo"
       },
       "email-link-verification": {
-        "header": "Verifying your email address",
-        "button_back": "Cancel"
+        "header": "Signing up...",
+        "subheader": "You will be redirected soon"
+      },
+      "email-link-success": {
+        "header": "Successfully verified email",
+        "subheader": {
+          "isOldTab": "Return to the tab, where you have verified the email.",
+          "isNewTab": "Return to the original tab to continue"
+        },
+        "body": "You may close this tab"
+      },
+      "email-link-error": {
+        "subheader": "Return to the tab where you are performing the signup and try again",
+        "body": "You may close this Tab"
       },
       "edit-email": {
         "header": "Type new email address",
-        "button_submit": "Resend code",
+        "button_submit": {
+          "emailOtp": "Resend code",
+          "emailLink": "Resend email"
+        },
         "button_cancel": "Back"
       }
     },
@@ -106,83 +130,107 @@
         "button_submit": "Resend code",
         "button_cancel": "Back"
       }
-    },
-    "passkeyAppend": {
-      "header": "Log in even faster with ",
-      "button_showPasskeyBenefits": "Passkeys",
-      "button_start": "Activate",
-      "button_skip": "Maybe later"
     }
   },
   "login": {
     "login-init": {
       "login-init": {
-        "header": "Welcome back!",
-        "subheader": "Don't have an account yet? ",
-        "button_signup": "Create account",
+        "header": "Log in",
+        "subheader": "to continue to ",
+        "text_signup": "No account? ",
+        "button_signup": "Sign up",
         "button_submit": "Continue",
-        "textField_email": "Email address or username",
-        "textField_phone": "Phone number"
+        "textField": {
+          "email": "Email address",
+          "username": "Username",
+          "emailOrUsername": "Email address or username",
+          "phone": "Phone number"
+        },
+        "button_switchToAlternate": {
+          "email": "Use email",
+          "username": "Use username",
+          "emailOrUsername": "Use email or username",
+          "phone": "Use phone"
+        }
       }
     },
     "passkey-verify": {
       "passkey-background": {
-        "header": "Passkey login in process..."
-      },
-      "passkey-benefits": {
-        "header": "Passkeys",
-        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-        "button_start": "Try passkeys"
+        "header": "Passkey login in process...",
+        "body_title": "Please wait",
+        "body_description": "We are connecting to your authenticator."
       },
       "passkey-error": {
         "header": "Something went wrong...",
-        "body_errorMessage": "Creating your account was not possible with ",
-        "button_showPasskeyBenefits": "passkeys",
-        "body_tryAgainMessage": ". Try again or sign up with one of the fallback methods below.",
+        "body_title": "Login for",
+        "body_description": "Login with passkeys was not possible. Try again or use other method.",
+        "text_divider": "or",
         "button_switchToAlternate": {
-          "emailOtp": "Send email one-time passcode",
-          "emailLink": "Send email magic link"
+          "emailOtp": "Use email verification",
+          "emailLink": "Use email verification",
+          "phone": "Use phone verification"
         },
-        "button_start": "Try again",
-        "button_back": "Back",
-        "button_cancel": "Cancel"
+        "button_tryAgain": "Try again"
       }
     },
     "email-verify": {
       "email-otp": {
-        "header": "Enter one-time passcode to log in",
-        "body_text1": "We just sent a one-time passcode to ",
-        "body_text2": ". The one-time passcode expires shortly, so please enter it soon.",
-        "button_resend": "Send one-time passcode again"
+        "header": "Enter code to log in",
+        "body_title": "One-time passcode",
+        "body_description": "Enter the passcode sent to your email address",
+        "body_resend": "Didn't receive an email?",
+        "button_resend": "Resend code",
+        "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
+        "button_gmail": "Open in Gmail",
+        "button_outlook": "Open in Outlook",
+        "button_yahoo": "Open in Yahoo"
+      },
+      "email-link-sent": {
+        "header": "Check your inbox to log in",
+        "body_title": "Magic link",
+        "body_description": "We just sent a magic link to your email address ",
+        "body_resend": "Didn't receive an email?",
+        "button_resend": "Resend email",
+        "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
+        "button_gmail": "Open in Gmail",
+        "button_outlook": "Open in Outlook",
+        "button_yahoo": "Open in Yahoo"
+      },
+      "email-link-verification": {
+        "header": "Logging in...",
+        "subheader": "You will be redirected soon"
+      },
+      "email-link-success": {
+        "header": "Successful email login",
+        "subheader": {
+          "isOldTab": "Return to the tab, where you have verified the email.",
+          "isNewTab": "Return to the original tab to continue"
+        },
+        "body": "You may close this tab"
+      },
+      "email-link-error": {
+        "subheader": "Return to the tab where you are performing the login and try again",
+        "body": "You may close this Tab"
       }
     },
-    "emailLinkSent": {
-      "header": "Check your inbox to login",
-      "body_text1": "We just sent you a magic link to ",
-      "body_text2": ". Click on the link in the email to login to your account.",
-      "button_sendLinkAgainWaitingText": "Send email again ({{remainingTime}} sec)",
-      "button_sendLinkAgain": "Send email again",
-      "button_back": "Cancel"
-    },
-    "emailLinkVerification": {
-      "header": "Verifying your email address",
-      "button_back": "Cancel"
-    },
-    "passkeyAppend": {
-      "header": "Log in even faster with ",
-      "button_showPasskeyBenefits": "Passkeys",
-      "button_start": "Activate",
-      "button_skip": "Maybe later"
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Enter code to log in",
+        "body_title": "Verification code",
+        "body_description": "We just sent a verification code to your phone number",
+        "body_resend": "Didn't receive an sms?",
+        "button_resend": "Resend code",
+        "button_resendWaitingText": "Resend code ({{remainingTime}} sec)"
+      }
     }
   },
   "errors": {
     "missing_identifier_type": {
-      "fullName": "Please enter a valid name.",
       "username": "Enter username.",
       "email": "Enter email address.",
       "phone": "Enter phone number."
     },
+    "missing_full_name": "Please enter a valid name.",
     "identifier_already_in_use": {
       "username": "That username is taken. Please try another one.",
       "email": "That email address is taken. Pleas try another one.",
@@ -193,8 +241,9 @@
       "email": "Email address must be a valid email address.",
       "phone": "Phone number must be a valid phone number."
     },
+    "login_identifier_unknown_user": "Couldn't find your account.",
+    "invalid_conditional_ui_login": "The provided passkey is no longer valid. Please enter your identifier (e.g. email) manually.",
     "invalidName": "Please enter a valid email",
-    "invalidFullname": "Please enter a valid name",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use. If this account is yours, please log in instead.",
     "passkeyAlreadyExists": "Passkey for this device already exists",
@@ -202,14 +251,14 @@
     "noPasskeyAvailable": "No passkey available",
     "invalidPasskey": "The provided passkey is no longer valid. Log in using your email address instead.",
     "invalid_challenge_solution_email-otp": "The code is invalid or expired",
-    "invalid_challenge_solution_email-link": "The provided token is not valid for user verification",
+    "invalid_challenge_solution_email-link": "This link has expired",
     "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
     "unknown": "Something went wrong. Please try again later",
     "unexpectedError": {
-      "withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-      "noCustomerSupport": "Please try again in a few moments."
+      "withCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support at {{customerSupportEmail}}.",
+      "noCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support."
     },
     "componentUnavailable": {
       "header": "Something went wrong",

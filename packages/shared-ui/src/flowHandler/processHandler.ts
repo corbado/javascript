@@ -57,8 +57,13 @@ export class ProcessHandler {
    */
   async init(): Promise<Result<void, CorbadoError>> {
     const emailVerifyFromUrl = this.#corbadoApp.authProcessService.initEmailVerifyFromUrl();
-    if (emailVerifyFromUrl) {
-      this.handleProcessUpdateFromUrl(emailVerifyFromUrl);
+    if (emailVerifyFromUrl.err) {
+      await this.handleError(emailVerifyFromUrl.val);
+      return Ok(void 0);
+    }
+
+    if (emailVerifyFromUrl.val) {
+      this.handleProcessUpdateFromUrl(emailVerifyFromUrl.val);
       return Ok(void 0);
     }
 
@@ -116,8 +121,13 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newBlock);
   }
 
-  handleProcessUpdateBackend(processResponse: ProcessResponse) {
+  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError) {
     const newPrimaryBlock = this.#parseBlockData(processResponse.blockBody, processResponse.common);
+
+    if (error) {
+      newPrimaryBlock.error = error;
+    }
+
     const alternatives =
       processResponse.blockBody.alternatives?.map(b => this.#parseBlockData(b, processResponse.common)) ?? [];
     newPrimaryBlock.setAlternatives(alternatives);
@@ -141,7 +151,7 @@ export class ProcessHandler {
       return res;
     }
 
-    this.handleProcessUpdateBackend(res.val);
+    this.handleProcessUpdateBackend(res.val, corbadoError);
 
     return;
   }

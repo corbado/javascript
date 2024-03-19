@@ -24,7 +24,10 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   }, []);
 
   const headerText = useMemo(() => t('header'), [t]);
-  const primaryButtonText = useMemo(() => t('button_submit'), [t]);
+  const primaryButtonText = useMemo(
+    () => t(`button_submit.${block.verificationMethod === 'email-otp' ? 'emailOtp' : 'emailLink'}`),
+    [t],
+  );
   const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
 
   const handleConfirm = async () => {

@@ -1,23 +1,22 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { FC } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Header, HorizontalRule, SecondaryButton, SubHeader } from '../../../components';
-import { FingerprintIcon } from '../../../components/ui/icons/Icons';
+import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
+import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
+import { LoadingSpinner } from '../../../components/ui2/LoadingSpinner';
+import { Text } from '../../../components/ui2/typography/Text';
 
-export const PasskeyBackground = ({ block }: { block: PasskeyVerifyBlock }) => {
+export interface PasskeyBackgroundProps {
+  block: PasskeyVerifyBlock;
+}
+
+export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-background`,
   });
-  const [passkeyName, setPasskeyName] = useState<string | undefined>(undefined);
-  const [secondaryLoading, setSecondaryLoading] = useState<boolean>(false);
   const passkeyLoginStarted = useRef(false);
-
-  useEffect(() => {
-    setPasskeyName(block.data.userHandle);
-
-    setSecondaryLoading(false);
-  }, [block]);
 
   useEffect(() => {
     if (passkeyLoginStarted.current) {
@@ -28,30 +27,38 @@ export const PasskeyBackground = ({ block }: { block: PasskeyVerifyBlock }) => {
     void block.passkeyLogin();
   }, []);
 
-  const header = useMemo(() => <span>{t('header')}</span>, [t]);
-
-  const subHeader = useMemo(() => <span className='cb-text-secondary'>{passkeyName}</span>, [t, passkeyName]);
-
-  const fallbacksAvailable = block.data.availableFallbacks.length > 0;
+  const headerText = useMemo(() => <span>{t('header')}</span>, [t]);
+  const bodyTitleText = useMemo(() => t('body_title'), [t]);
+  const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
 
   return (
-    <div className='cb-layout-passkey'>
-      <Header>{header}</Header>
-      <SubHeader className='cb-subheader-spacing'>{subHeader}</SubHeader>
-      <FingerprintIcon className={'cb-finger-print-icon'} />
-      {fallbacksAvailable && <HorizontalRule>or</HorizontalRule>}
-      {block.data.availableFallbacks.map(fallback => (
-        <SecondaryButton
-          key={fallback.label}
-          onClick={() => {
-            setSecondaryLoading(true);
-            void fallback.action();
-          }}
-          isLoading={secondaryLoading}
+    <div className='cb-pk-verify-2'>
+      <Text
+        level='6'
+        fontWeight='bold'
+        className='cb-pk-verify-header-2'
+      >
+        {headerText}
+      </Text>
+      <span className='cb-pk-verify-icons-section-2'>
+        <FingerPrintIcon className='cb-pk-verify-icons-section-icon-2' />
+        <FaceIdIcon className='cb-pk-verify-icons-section-icon-2' />
+      </span>
+      <div className='cb-pk-verify-body-section-2'>
+        <Text
+          level='5'
+          fontWeight='bold'
         >
-          {fallback.label}
-        </SecondaryButton>
-      ))}
+          {bodyTitleText}
+        </Text>
+        <Text
+          level='3'
+          fontWeight='bold'
+        >
+          {bodyDescriptionText}
+        </Text>
+      </div>
+      <LoadingSpinner className='cb-pk-verify-spinner-2' />
     </div>
   );
 };

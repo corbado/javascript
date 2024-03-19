@@ -10,7 +10,7 @@ import { Text } from '../../../components/ui2/typography/Text';
 import { UserInfo } from '../../../components/ui2/UserInfo';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
-  const { t } = useTranslation('translation', { keyPrefix: `signup.phone-verify.phone-otp` });
+  const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.phone-verify.phone-otp` });
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const timer = useRef<NodeJS.Timeout>();
@@ -79,13 +79,25 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
     startTimer();
   }
 
+  async function phoneChange() {
+    if (block.authType === AuthType.Login) {
+      setLoading(true);
+      await block.resetProcess();
+      setLoading(false);
+    }
+
+    block.showEditPhone();
+
+    return;
+  }
+
   return (
     <div className='cb-phone-otp-block-2'>
       <Header className='cb-phone-otp-block-header-2'>{headerText}</Header>
       <UserInfo
         className='cb-phone-otp-user-info-section-2'
         userData={block.data.phone}
-        onRightIconClick={() => void block.showEditPhone()}
+        onRightIconClick={() => void phoneChange()}
       ></UserInfo>
       <Text
         level='2'
@@ -122,9 +134,6 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       >
         {resendButtonText}
       </PrimaryButton>
-      {block.authType === AuthType.Login && (
-        <PrimaryButton onClick={() => void block.resetProcess()}>Reset</PrimaryButton>
-      )}
     </div>
   );
 };

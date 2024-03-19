@@ -25,13 +25,12 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     setLoading(false);
   }, [block]);
 
-  const headerCreatePasskeyText = useMemo(() => t('header_createPasskey'), [t]);
-  const headerAppendPasskeyText = useMemo(() => t('header_appendPasskey'), [t]);
+  const headerText = useMemo(() => t(`header.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
   const bodyPoint1Text = useMemo(() => t('body_point1'), [t]);
   const bodyPoint2Text = useMemo(() => t('body_point2'), [t]);
   const bodySubtext = useMemo(() => t('body_subtext'), [t]);
   const textDivider = useMemo(() => t('text_divider'), [t]);
-  const primaryButtonText = useMemo(() => t('button_start'), [t]);
+  const primaryButtonText = useMemo(() => t(`button_start.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
   const skipButtonText = useMemo(() => t('button_skip'), [t]);
 
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
@@ -48,7 +47,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         fontWeight='bold'
         className='cb-pk-append-header-2'
       >
-        {block.data.canBeSkipped ? headerAppendPasskeyText : headerCreatePasskeyText}
+        {headerText}
       </Text>
       <span className='cb-pk-append-icons-section-2'>
         <FingerPrintIcon className='cb-pk-append-icons-section-icon-2' />

@@ -64,7 +64,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     };
   }
 
-  async updateUserData(identifiers: LoginIdentifiers, _?: string) {
+  async updateUserData(identifiers: LoginIdentifiers, fullName?: string) {
     const loginIdentifiers: LoginIdentifier[] = [];
     if (identifiers.email) {
       loginIdentifiers.push({ type: 'email', identifier: identifiers.email });
@@ -76,7 +76,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
       loginIdentifiers.push({ type: 'username', identifier: identifiers.userName });
     }
 
-    const b = await this.app.authProcessService.initSignup(loginIdentifiers);
+    const b = await this.app.authProcessService.initSignup(loginIdentifiers, fullName);
     this.updateProcess(b);
   }
 

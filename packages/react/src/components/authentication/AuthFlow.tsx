@@ -14,9 +14,9 @@ import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { ContinueOnOtherEnv } from '../../screens/auth-blocks/continue-on-other-env/ContinueOnOtherEnv';
 import { EditEmail } from '../../screens/auth-blocks/email-verify/EditEmail';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
+import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLinkSuccess';
 import { EmailLinkVerification } from '../../screens/auth-blocks/email-verify/EmailLinkVerification';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
@@ -31,9 +31,9 @@ import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-bl
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
-import Loading from '../ui/Loading';
 import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
 import ErrorPopup from '../ui2/errors/ErrorPopup';
+import { LoadingSpinner } from '../ui2/LoadingSpinner';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
@@ -100,7 +100,7 @@ export const AuthFlow: FC = () => {
       case BlockTypes.Completed:
         return null;
       case BlockTypes.ContinueOnOtherEnv:
-        return <ContinueOnOtherEnv block={currentScreen.block as ContinueOnOtherEnvBlock} />;
+        return <EmailLinkSuccess block={currentScreen.block as ContinueOnOtherEnvBlock} />;
     }
   }, [currentScreen]);
 
@@ -108,19 +108,17 @@ export const AuthFlow: FC = () => {
   return initState === InitState.Failed ? (
     <ComponentUnavailableError />
   ) : initState === InitState.Initializing ? (
-    <Loading />
+    <LoadingSpinner className='cb-initital-loading-spinner-2' />
   ) : (
-    <div className='new-ui-component'>
-      <div className='cb-container-2'>
-        {currentScreen?.block.error && (
-          <ErrorPopup
-            isDevMode={isDevMode}
-            error={currentScreen?.block.error}
-            customerSupportEmail={customerSupportEmail}
-          />
-        )}
-        {screenComponent}
-      </div>
-    </div>
+    <>
+      {currentScreen?.block.error && (
+        <ErrorPopup
+          isDevMode={isDevMode}
+          error={currentScreen?.block.error}
+          customerSupportEmail={customerSupportEmail}
+        />
+      )}
+      {screenComponent}
+    </>
   );
 };

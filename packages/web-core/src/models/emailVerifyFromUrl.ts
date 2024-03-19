@@ -42,9 +42,14 @@ export class EmailVerifyFromUrl {
       retryNotBefore: decodedProcess.blockData.retryNotBefore,
       verificationMethod: decodedProcess.blockData.verificationMethod as VerificationMethod,
     };
-    console.log(existingProcess, decodedProcess);
+
     const isNewDevice = existingProcess?.id !== decodedProcess.processID;
-    const authType = AuthType.Signup;
+    let authType: AuthType;
+    if (decodedProcess.authType === 1) {
+      authType = AuthType.Login;
+    } else {
+      authType = AuthType.Signup;
+    }
 
     return new EmailVerifyFromUrl(data, token, isNewDevice, decodedProcess.processID, authType);
   }

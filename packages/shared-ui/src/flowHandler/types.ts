@@ -15,7 +15,8 @@ export type BlockDataLoginInit = {
   conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
 
-  emailOrUsernameEnabled: boolean;
+  emailEnabled: boolean;
+  usernameEnabled: boolean;
   phoneEnabled: boolean;
 };
 
@@ -29,7 +30,7 @@ export type BlockDataPasskeyAppend = {
 
 export type BlockDataPasskeyVerify = {
   availableFallbacks: PasskeyFallback[];
-  userHandle: string;
+  identifierValue: string;
 };
 
 export type BlockDataPasskeyAppended = Record<string, never>;

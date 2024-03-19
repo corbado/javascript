@@ -11,9 +11,8 @@ import log from 'loglevel';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { LoginIdentifier, ProcessInitRsp, ProcessResponse } from '../api/v2';
-import { LoginIdentifierType, VerificationMethod } from '../api/v2';
-import { AuthApi } from '../api/v2';
+import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
+import { AuthApi, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import { CorbadoError } from '../utils';
@@ -22,6 +21,7 @@ import { WebAuthnService } from './WebAuthnService';
 // TODO: set this version
 const packageVersion = '0.0.0';
 const clientHandleKey = 'cbo_client_handle';
+const passkeyAppendShownKey = 'cbo_passkey_append_shown';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -70,24 +70,28 @@ export class ProcessService {
     return AuthProcess.clearStorage();
   }
 
-  initEmailVerifyFromUrl(): EmailVerifyFromUrl | null {
+  initEmailVerifyFromUrl(): Result<EmailVerifyFromUrl | null, CorbadoError> {
     const searchParams = new URLSearchParams(window.location.search);
     const encodedProcess = searchParams.get('corbadoEmailLinkID');
     if (!encodedProcess) {
-      return null;
+      return Ok(null);
     }
 
     const token = searchParams.get('corbadoToken');
     if (!token) {
-      return null;
+      return Ok(null);
     }
 
-    const maybeProcess = AuthProcess.loadFromStorage();
-    const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
+    try {
+      const maybeProcess = AuthProcess.loadFromStorage();
+      const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
 
-    this.#setApisV2(emailVerifyFromUrl.processID);
+      this.#setApisV2(emailVerifyFromUrl.processID);
 
-    return emailVerifyFromUrl;
+      return Ok(emailVerifyFromUrl);
+    } catch (e) {
+      return Err(CorbadoError.fromUnknownFrontendError(e));
+    }
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -149,10 +153,17 @@ export class ProcessService {
 
   async #initAuthProcess(abortController: AbortController): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const maybeClientHandle = localStorage.getItem(clientHandleKey);
+
+    const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
+    let passkeyAppendShown: number | null = null;
+    if (passkeyAppendShownRaw) {
+      passkeyAppendShown = parseInt(passkeyAppendShownRaw, 10);
+    }
+
     const canUsePasskeys =
       window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 
-    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle ?? undefined);
+    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle, passkeyAppendShown);
     if (res.err) {
       return res;
     }
@@ -181,14 +192,16 @@ export class ProcessService {
   async #processInit(
     abortController: AbortController,
     canUsePasskeys: boolean,
-    clientHandle: string | undefined,
+    clientHandle: string | null,
+    passkeyAppendShown: number | null,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
-    const req = {
+    const req: ProcessInitReq = {
       clientInformation: {
         bluetoothAvailable: false,
         canUsePasskeys: canUsePasskeys,
-        clientEnvHandle: clientHandle,
+        clientEnvHandle: clientHandle ?? undefined,
       },
+      passkeyAppendShown: passkeyAppendShown ?? undefined,
     };
 
     return this.wrapWithErr(() => this.#authApi.processInit(req, { signal: abortController.signal }));
@@ -215,10 +228,11 @@ export class ProcessService {
     });
   }
 
-  async initSignup(identifiers: LoginIdentifier[]): Promise<Result<ProcessResponse, CorbadoError>> {
+  async initSignup(identifiers: LoginIdentifier[], fullName?: string): Promise<Result<ProcessResponse, CorbadoError>> {
     return Result.wrapAsync(async () => {
       const r = await this.#authApi.signupInit({
         identifiers: identifiers,
+        fullName: fullName,
       });
       return r.data;
     });
@@ -449,6 +463,14 @@ export class ProcessService {
     }
 
     return await this.finishPasskeyMediation(signedChallenge.val);
+  }
+
+  // record time of last passkey append as unix timestamp (seconds)
+  dropPasskeyAppendShown(): void {
+    const now = new Date();
+    const utcSeconds = Math.floor((now.getTime() + now.getTimezoneOffset() * 60 * 1000) / 1000);
+
+    localStorage.setItem(passkeyAppendShownKey, utcSeconds.toString());
   }
 
   dispose() {

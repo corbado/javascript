@@ -19,6 +19,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const bodyText = useMemo(() => t('body'), [t]);
   const primaryButtonText = useMemo(() => t('button_tryAgain'), [t]);
   const skipButtonText = useMemo(() => t('button_cancel'), [t]);
+  const dividerLabel = useMemo(() => t('text_divider'), [t]);
 
   const passkeyAppend = async () => {
     setLoading(true);
@@ -47,12 +48,13 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       </PrimaryButton>
       {!block.data.canBeSkipped && (
         <Divider
-          label='or'
+          label={dividerLabel}
           className='cb-pk-error-bloc-divider-2'
         />
       )}
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton
+          key={fallback.label}
           disabled={loading}
           onClick={() => void fallback.action()}
         >

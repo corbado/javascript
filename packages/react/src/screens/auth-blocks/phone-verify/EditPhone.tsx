@@ -53,7 +53,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
         ref={phoneInputRef}
         type='tel'
         inputMode='numeric'
-        pattern='+[0-9]*'
+        pattern='\+[0-9]*'
         onChange={e => setPhone(e.target.value)}
       />
       <PrimaryButton

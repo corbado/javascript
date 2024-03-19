@@ -30,21 +30,27 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
+    let identifierValue = data.identifierValue;
 
     const fallbacks = alternatives
       .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
       .map(alternative => {
+        const typed = alternative.data as GeneralBlockVerifyIdentifier;
+
+        if (!identifierValue) {
+          identifierValue = typed.identifier;
+        }
+
         switch (alternative.block) {
           case BlockType.EmailVerify: {
-            const typed = alternative.data as GeneralBlockVerifyIdentifier;
             if (typed.verificationMethod === VerificationMethod.EmailOtp) {
-              return { label: 'Send email verification code', action: () => this.initFallbackEmailOtp() };
+              return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
             }
 
-            return { label: 'Send email verification link', action: () => this.initFallbackEmailLink() };
+            return { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
           }
           case BlockType.PhoneVerify:
-            return { label: 'Send phone verification code', action: () => this.initFallbackSmsOtp() };
+            return { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
           default:
             throw new Error('Invalid block type');
         }
@@ -53,7 +59,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     this.authType = blockBody.authType;
     this.data = {
       availableFallbacks: fallbacks,
-      userHandle: data.identifierValue,
+      identifierValue: identifierValue,
     };
   }
 

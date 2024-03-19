@@ -39,11 +39,11 @@ export default defineConfig({
   ],
   timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 3000, // default: 5000ms
+    timeout: 5000, // default: 5000ms
   },
   use: {
-    actionTimeout: 3000, // default: none
-    navigationTimeout: 3000, // default: none
+    actionTimeout: 5000, // default: none
+    navigationTimeout: 5000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',

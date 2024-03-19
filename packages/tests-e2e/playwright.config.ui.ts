@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 if (process.env.CI) {
   dotenv.config({ path: '.env.ci' });
+  console.log(process.env.PLAYWRIGHT_PROJECT_ID);
 } else {
   dotenv.config();
 }

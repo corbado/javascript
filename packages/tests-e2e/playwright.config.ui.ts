@@ -1,9 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
-if (!process.env.CI) {
+if (process.env.CI) {
+  dotenv.config({ path: '.env.ci' });
+} else {
   dotenv.config();
-} // CI env vars set in e2e-test.yml
+}
 
 export default defineConfig({
   testDir: './src',

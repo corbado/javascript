@@ -266,10 +266,10 @@
     },
     "componentUnavailable": {
       "header": "Something went wrong",
-      "subheader": "We're sorry that our service is currently not available.",
-      "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-      "body_noCustomerSupport": "Please try again in a few moments.",
-      "button": "Refresh Page"
+      "subheader": "Our service is currently not available.",
+      "body_withCustomerSupport": "Please refresh the page and if the problem persists, contact support at {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Please refresh the page and if the problem persists, contact support.",
+      "button": "Refresh page"
     }
   },
   "passkeysList": {

@@ -838,6 +838,18 @@
   justify-content: center;
 }
 
+.cb-error-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0.5rem auto 1.5rem auto;
+}
+
+.cb-error-page-body {
+  text-align: center;
+  margin: 2rem auto 2.25rem auto;
+}
+
 @media screen and (max-width: 481px) {
   .cb-container {
     width: 293px;

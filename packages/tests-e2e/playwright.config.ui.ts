@@ -221,7 +221,7 @@ export default defineConfig({
     // B2.1 configs (Email OTP): Login with Identifier
     //           | enabled | enforced
     //  ---------|---------|----------
-    //  Email    | true    | true
+    //  Email    | true    | false
     //  Phone    | false   | false
     //  Social   | false   |
     //  Username | false   |
@@ -240,7 +240,7 @@ export default defineConfig({
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | false   | false
-    //  Phone    | true    | true
+    //  Phone    | true    | false
     //  Social   | false   |
     //  Username | false   |
     {
@@ -252,6 +252,24 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b2-01-phoneotp/all-browsers/*.*', 'ui/b2-01-phoneotp/chromium/*.*'],
       dependencies: ['b2-01-phoneotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.3 configs: Login with Identifier - enforce single verification before login
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | true
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-03-setup',
+      testMatch: ['ui/b2-03/setup.ts']
+    },
+    {
+      name: 'b2-03-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
     },
   ],
 });

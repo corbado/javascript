@@ -1,13 +1,13 @@
 import { expect, test } from '../../../fixtures/UILoginTest';
-import { IdentifierType, IdentifierVerification, ScreenNames } from '../../../utils/constants';
+import { IdentifierType, OtpType, ScreenNames } from '../../../utils/constants';
 
-test.describe('Login with phone OTP proper user behavior', () => {
-  test('fallback without appending passkey', async ({ loginFlow, page }) => {
+test.describe('Login with passkey proper user behavior', () => {
+  test('before verifying identifier', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn(true);
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailLink], true, false);
+    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [], true, true);
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
@@ -16,13 +16,13 @@ test.describe('Login with phone OTP proper user behavior', () => {
     await page.getByRole('textbox', { name: 'email' }).fill(email);
     await expect(page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await loginFlow.checkLandedOnScreen(ScreenNames.EmailLinkSentLogin, email);
+    await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyBackground);
 
-    // TODO: construct email link and open in a new tab
-    
-    await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
+    await loginFlow.inputPasskey(async () => {
+      await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
+    });
 
-    await page.getByText('Maybe later').click();
+    await loginFlow.fillOTP(OtpType.Email);
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 });

@@ -181,6 +181,20 @@ export class UILoginFlow {
         await expect(this.page.getByText('Enter code to log in')).toBeVisible();
         await expect(this.page.getByText(email)).toBeVisible();
         break;
+      case ScreenNames.EmailLinkSentSignup:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Check your inbox to create your account')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
+      case ScreenNames.EmailLinkSentLogin:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Check your inbox to log in')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
       case ScreenNames.EmailEdit:
         await expect(this.page.getByText('Type new email address')).toBeVisible();
         break;

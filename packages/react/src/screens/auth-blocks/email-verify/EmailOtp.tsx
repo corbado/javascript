@@ -104,10 +104,10 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   }
 
   return (
-    <div className='cb-email-block-2'>
-      <Header className='cb-email-block-header-2'>{headerText}</Header>
+    <div className='cb-email-block'>
+      <Header className='cb-email-block-header'>{headerText}</Header>
       <UserInfo
-        className='cb-email-user-info-section-2'
+        className='cb-email-user-info-section'
         userData={block.data.email}
         onRightIconClick={() => void emailChange()}
       ></UserInfo>
@@ -115,7 +115,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
         level='2'
         fontWeight='bold'
         fontFamilyVariant='secondary'
-        className='cb-row-2'
+        className='cb-row'
       >
         {bodyTitleText}
       </Text>
@@ -126,21 +126,21 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
         {bodyDescriptionText}
       </Text>
       <OtpInputGroup
-        className='cb-email-otp-input-container-2'
+        className='cb-email-otp-input-container'
         emittedOTP={handleOtpChange}
         loading={loading}
         error={block.data.translatedError}
         showErrorMessage={otpHasError}
       />
       <EmailLinks
-        className='cb-email-otp-buton-group-2'
+        className='cb-email-otp-buton-group'
         gmailButtonLabel={gmailLinkText}
         yahooButtonLabel={yahooLinkText}
         outlookButtonLabel={outlookLinkText}
       />
       <Text fontFamilyVariant='secondary'>{bodyResendText}</Text>
       <PrimaryButton
-        className='cb-email-resend-button-2'
+        className='cb-email-resend-button'
         isLoading={loading}
         disabled={remainingTime > 0}
         onClick={() => void resendCode()}

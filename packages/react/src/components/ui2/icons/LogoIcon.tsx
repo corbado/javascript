@@ -15,6 +15,7 @@ export const CorbadoLogoIcon: FC<IconProps> = memo(props => {
     <Icon
       src={logoSVG}
       ref={svgRef}
+      alt='corbado-logo'
       {...props}
     />
   );

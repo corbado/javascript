@@ -4,7 +4,8 @@ import type { FC } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem, Spinner } from '../../components';
+import { PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem } from '../../components';
+import { LoadingSpinner } from '../../components/ui2/LoadingSpinner';
 
 const PasskeyList: FC = () => {
   const { getPasskeys, globalError, isAuthenticated } = useCorbado();
@@ -37,7 +38,7 @@ const PasskeyList: FC = () => {
   }
 
   if (loading) {
-    return <Spinner />;
+    return <LoadingSpinner />;
   }
 
   return (

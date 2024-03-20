@@ -15,16 +15,16 @@ export function EmailLinkError({ block }: { block: EmailVerifyBlock }) {
   const bodyText = useMemo(() => t('body'), [t]);
 
   return (
-    <div className='cb-email-link-error-block-2'>
+    <div className='cb-email-link-error-block'>
       <Header>{block.data.translatedError}</Header>
       <Text
         level='2'
-        className='cb-email-link-error-subheader-2'
+        className='cb-email-link-error-subheader'
       >
         {subheaderText}
       </Text>
-      <div className='cb-email-link-error-icon-container-2'>
-        <ExclamationIcon className='cb-email-link-error-icon-2' />
+      <div className='cb-email-link-error-icon-container'>
+        <ExclamationIcon className='cb-email-link-error-icon' />
       </div>
       <Text level='2'>{bodyText}</Text>
     </div>

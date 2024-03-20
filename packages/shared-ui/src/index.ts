@@ -1,8 +1,4 @@
-// import './styles/index.css';
-// import './styles/error_page.css';
-// import './styles/themes/dark.css';
-// import './styles/themes/emerald-funk.css';
-import './styles2/index.css';
+import './styles/index.css';
 
 import cancelIcon from './assets/cancel.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';

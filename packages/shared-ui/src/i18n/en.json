@@ -35,8 +35,11 @@
         }
       },
       "edit-user-data": {
-        "header_emailChange": "Type new email address",
-        "header_phoneChange": "Type new phone number",
+        "header": {
+          "username": "Type new username",
+          "email": "Type new email address",
+          "phone": "Type new phone number"
+        },
         "button_submit": "Confirm",
         "button_cancel": "Back"
       },
@@ -50,7 +53,7 @@
       "passkey-error": {
         "header": "Something went wrong...",
         "body": "Adding a passkey to your account was not possible. Please try again or use another method.",
-        "text_divider": "or",
+        "text_divider": "Or continue with",
         "button_switchToAlternate": {
           "emailOtp": "Email verification",
           "emailLink": "Email verification",
@@ -237,10 +240,11 @@
       "phone": "That phone number is taken. Pleas try another one."
     },
     "identifier_invalid_format": {
-      "username": "Username can only contain letters, numbers and “-” or “_”.",
+      "username": "Username must be between 4 and 64 characters long and can only contain letters, numbers and \"-\" or \"_\".",
       "email": "Email address must be a valid email address.",
       "phone": "Phone number must be a valid phone number."
     },
+    "identifier_not_allowed": "Couldn't find your account",
     "login_identifier_unknown_user": "Couldn't find your account.",
     "invalid_conditional_ui_login": "The provided passkey is no longer valid. Please enter your identifier (e.g. email) manually.",
     "invalidName": "Please enter a valid email",
@@ -262,10 +266,10 @@
     },
     "componentUnavailable": {
       "header": "Something went wrong",
-      "subheader": "We’re sorry that our service is currently not available.",
-      "body_withCustomerSupport": "Please try again in a few moments and if the issue persists, please contact {{customerSupportEmail}}.",
-      "body_noCustomerSupport": "Please try again in a few moments.",
-      "button": "Refresh Page"
+      "subheader": "Our service is currently not available.",
+      "body_withCustomerSupport": "Please refresh the page and if the problem persists, contact support at {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Please refresh the page and if the problem persists, contact support.",
+      "button": "Refresh page"
     }
   },
   "passkeysList": {

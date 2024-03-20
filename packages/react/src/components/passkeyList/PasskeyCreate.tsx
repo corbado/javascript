@@ -1,8 +1,10 @@
+import { useCorbado } from '@corbado/react-sdk';
 import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog, PrimaryButton } from '../';
+import { PrimaryButton } from '../ui2/buttons/PrimaryButton';
+import { Dialog } from '../ui2/Dialog';
 
 export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;
@@ -10,7 +12,8 @@ export interface PasskeyCreateProps {
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
-  // TODO: appendPasskey
+  const { corbadoApp } = useCorbado();
+
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +27,9 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
     [t],
   );
 
-  // const openDialog = () => {
-  //   setDialogOpen(true);
-  // };
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
 
   const closeDialog = () => {
     setDialogOpen(false);
@@ -34,14 +37,13 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
 
   const createPasskey = async () => {
     setLoading(true);
-    /*const result = await appendPasskey();
+    const result = await corbadoApp?.authProcessService.appendPasskey();
 
-    if (result.ok) {
+    if (result?.ok) {
       await fetchPasskeys();
-    } else if (result.val?.name === 'errors.passkeyAlreadyExists') {
+    } else if (result?.val?.name === 'errors.passkeyAlreadyExists') {
       openDialog();
-    }*/
-    await fetchPasskeys();
+    }
 
     setLoading(false);
   };
@@ -49,7 +51,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
   return (
     <div>
       <PrimaryButton
-        className={'cb-passkey-list-primary-button'}
+        className='cb-passkey-list-primary-button'
         isLoading={loading}
         onClick={() => void createPasskey()}
       >

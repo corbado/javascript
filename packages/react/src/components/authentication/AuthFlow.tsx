@@ -108,7 +108,7 @@ export const AuthFlow: FC = () => {
   return initState === InitState.Failed ? (
     <ComponentUnavailableError />
   ) : initState === InitState.Initializing ? (
-    <LoadingSpinner className='cb-initital-loading-spinner-2' />
+    <LoadingSpinner className='cb-initital-loading-spinner' />
   ) : (
     <>
       {currentScreen?.block.error && (

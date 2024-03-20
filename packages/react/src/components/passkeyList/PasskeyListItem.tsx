@@ -3,7 +3,7 @@ import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React, { memo } from 'react';
 
-import { PasskeyAgentIcon } from './PasskeyAgentIcon';
+import { PasskeyDefaultIcon } from '../ui2/icons/PasskeyDefaultIcon';
 import { PasskeyDelete } from './PasskeyDelete';
 import { PasskeyDetails } from './PasskeyDetails';
 
@@ -25,7 +25,9 @@ export const PasskeyListItem: FC<PasskeyListItemProps> = memo(({ passkey, fetchP
       key={passkey.id}
       className='cb-passkey-list-card'
     >
-      <PasskeyAgentIcon aaguid={passkey.aaguid} />
+      <div className='cb-passkey-list-icon'>
+        <PasskeyDefaultIcon />
+      </div>
       <PasskeyDetails passkey={passkey} />
       <PasskeyDelete
         passkeyId={passkey.id}

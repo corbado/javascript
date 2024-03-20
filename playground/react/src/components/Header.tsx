@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Dropdown from './Dropdown';
+import ThemeContext from '../contexts/ThemeContext';
 
 const Header = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+  const darkModeButtonTitle = darkMode ? 'Light Mode' : 'Dark Mode';
 
   return (
     <>
@@ -16,6 +19,12 @@ const Header = () => {
           </button>
           <span className='desktop-header'>
             <div className='header-title'>Corbado React Playground</div>
+            <button
+              className='dropbtn'
+              onClick={toggleDarkMode}
+            >
+              {darkModeButtonTitle}
+            </button>
             <Dropdown />
           </span>
         </div>
@@ -31,6 +40,12 @@ const Header = () => {
               X
             </button>
           </div>
+          <button
+            className='dropbtn'
+            onClick={toggleDarkMode}
+          >
+            {darkModeButtonTitle}
+          </button>
           <Dropdown />
         </aside>
       )}

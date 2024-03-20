@@ -1,21 +1,22 @@
-import faceIdSrc from '@corbado/shared-ui/assets/face-id.svg';
+import passkeyDefaultSrc from '@corbado/shared-ui/assets/passkey-default.svg';
 import type { FC } from 'react';
-import React, { useRef } from 'react';
+import { memo, useRef } from 'react';
+import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 
-export const FaceIdIcon: FC<IconProps> = props => {
+export const PasskeyDefaultIcon: FC<IconProps> = memo(props => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, faceIdSrc, '--cb-text-primary-color', true);
+  const { logoSVG } = useIconWithTheme(svgRef, passkeyDefaultSrc);
 
   return (
     <Icon
       src={logoSVG}
       ref={svgRef}
-      alt='face-id-icon'
+      alt='passkey-default'
       {...props}
     />
   );
-};
+});

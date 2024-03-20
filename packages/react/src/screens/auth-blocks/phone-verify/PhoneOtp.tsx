@@ -92,10 +92,10 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   }
 
   return (
-    <div className='cb-phone-otp-block-2'>
-      <Header className='cb-phone-otp-block-header-2'>{headerText}</Header>
+    <div className='cb-phone-otp-block'>
+      <Header className='cb-phone-otp-block-header'>{headerText}</Header>
       <UserInfo
-        className='cb-phone-otp-user-info-section-2'
+        className='cb-phone-otp-user-info-section'
         userData={block.data.phone}
         onRightIconClick={() => void phoneChange()}
       ></UserInfo>
@@ -103,7 +103,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
         level='2'
         fontWeight='bold'
         fontFamilyVariant='secondary'
-        className='cb-row-2'
+        className='cb-row'
       >
         {bodyTitleText}
       </Text>
@@ -114,7 +114,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
         {bodyDescriptionText}
       </Text>
       <OtpInputGroup
-        className='cb-phone-otp-input-container-2'
+        className='cb-phone-otp-input-container'
         emittedOTP={handleOtpChange}
         loading={loading}
         error={block.data.translatedError}
@@ -122,12 +122,12 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       />
       <Text
         fontFamilyVariant='secondary'
-        className='cb-phone-otp-resend-text-2'
+        className='cb-phone-otp-resend-text'
       >
         {bodyResendText}
       </Text>
       <PrimaryButton
-        className='cb-phone-otp-resend-button-2'
+        className='cb-phone-otp-resend-button'
         isLoading={loading}
         disabled={remainingTime > 0}
         onClick={() => void resendCode()}

@@ -16,8 +16,8 @@ export interface UserInfoProps {
   onRightIconClick?: () => void;
 }
 
-const defaultLeftIcon = <EmailIcon className='cb-user-info-section-left-icon-2' />;
-const defaultRightIcon = <EditIcon className='cb-user-info-section-right-icon-2' />;
+const defaultLeftIcon = <EmailIcon className='cb-user-info-section-left-icon' />;
+const defaultRightIcon = <EditIcon className='cb-user-info-section-right-icon' />;
 
 export const UserInfo: FC<UserInfoProps> = ({
   userData,
@@ -30,16 +30,16 @@ export const UserInfo: FC<UserInfoProps> = ({
   onRightIconClick,
 }) => {
   return (
-    <div className={`cb-user-info-section-2 ${className ? ` ${className}` : ''}`}>
+    <div className={`cb-user-info-section ${className ? ` ${className}` : ''}`}>
       {showLeftIcon && (
         <div
-          className='cb-user-info-section-left-2'
+          className='cb-user-info-section-left'
           onClick={onLeftIconClick}
         >
           {leftIcon}
         </div>
       )}
-      <div className='cb-user-info-section-middle-2'>
+      <div className='cb-user-info-section-middle'>
         <Text
           level='2'
           fontWeight='normal'
@@ -51,7 +51,7 @@ export const UserInfo: FC<UserInfoProps> = ({
       </div>
       {showRightIcon && (
         <div
-          className='cb-user-info-section-right-2'
+          className='cb-user-info-section-right'
           onClick={onRightIconClick}
         >
           {rightIcon}

@@ -93,6 +93,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           label={hasBothEmailAndUsername ? t('textField.emailOrUsername') : t('textField.username')}
           id='username'
           name='username'
+          type='username'
           autoComplete='username webauthn'
           {...commonProps}
         />
@@ -129,13 +130,13 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         {block.common.appName}
       </SubHeader>
       <form
-        className='cb-form-2'
+        className='cb-form'
         onSubmit={handleSubmit}
       >
         {IdentifierInputField}
         <PrimaryButton
           type='submit'
-          className='cb-signup-form-submit-button-2'
+          className='cb-signup-form-submit-button'
           isLoading={loading}
         >
           {submitButtonText}
@@ -144,7 +145,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       <Text
         level='2'
         fontWeight='normal'
-        className='cb-auth-change-section-2'
+        className='cb-auth-change-section'
       >
         {signUpText}
         <SecondaryButton

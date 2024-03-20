@@ -10,7 +10,7 @@ export const Input = forwardRef<HTMLInputElement, InputFieldProps>(({ id, hasErr
   <input
     {...props}
     id={id}
-    className={`cb-text-2-2 cb-input-2${hasError ? ' cb-input-error-2' : ''}${className ? ` ${className}` : ''}`}
+    className={`cb-text-2 cb-input${hasError ? ' cb-input-error' : ''}${className ? ` ${className}` : ''}`}
     ref={ref}
   />
 ));

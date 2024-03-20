@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import Disclaimer from '../../../components/ui2/Disclaimer';
 import InputField from '../../../components/ui2/input/InputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
@@ -71,7 +70,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         {block.common.appName}
       </SubHeader>
       <form
-        className='cb-form-2'
+        className='cb-form'
         onSubmit={handleSubmit}
       >
         {fullName && (
@@ -119,7 +118,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
         <PrimaryButton
           type='submit'
-          className='cb-signup-form-submit-button-2'
+          className='cb-signup-form-submit-button'
           isLoading={loading}
           onClick={handleSubmit}
         >
@@ -129,7 +128,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
       <Text
         level='2'
         fontWeight='normal'
-        className='cb-auth-change-section-2'
+        className='cb-auth-change-section'
       >
         {loginText}
         <SecondaryButton
@@ -140,7 +139,6 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           {flowChangeButtonText}
         </SecondaryButton>
       </Text>
-      <Disclaimer />
     </>
   );
 };

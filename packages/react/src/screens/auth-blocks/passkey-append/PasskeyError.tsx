@@ -27,16 +27,18 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     setLoading(false);
   };
 
+  const showDivider = !block.data.canBeSkipped && block.data.availableFallbacks.length > 0;
+
   return (
-    <div className='cb-pk-error-bloc-2'>
+    <div className='cb-pk-error-bloc'>
       <Header>{headerText}</Header>
-      <div className='cb-pk-error-bloc-icon-2'>
+      <div className='cb-pk-error-bloc-icon'>
         <PasskeyErrorIcon />
       </div>
       <Text
         level='2'
         fontFamilyVariant='secondary'
-        className='cb-pk-error-bloc-description-2'
+        className='cb-pk-error-bloc-description'
       >
         {bodyText}
       </Text>
@@ -46,10 +48,10 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       >
         {primaryButtonText}
       </PrimaryButton>
-      {!block.data.canBeSkipped && (
+      {showDivider && (
         <Divider
           label={dividerLabel}
-          className='cb-pk-error-bloc-divider-2'
+          className='cb-pk-error-bloc-divider'
         />
       )}
       {block.data.availableFallbacks.map(fallback => (
@@ -63,7 +65,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       ))}
       {block.data.canBeSkipped && (
         <SecondaryButton
-          className='cb-pk-error-bloc-skip-button-2'
+          className='cb-pk-error-bloc-skip-button'
           disabled={loading}
           onClick={() => void block.skipPasskeyAppend()}
         >

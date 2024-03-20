@@ -25,20 +25,51 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
     passkeyUserHandleInputRef.current?.focus();
   }, []);
 
-  const headerText = useMemo(
-    () => (block.data.userHandleType === LoginIdentifierType.Phone ? t('header_phoneChange') : t('header_emailChange')),
-    [t],
-  );
+  const headerText = useMemo(() => t(`header.${block.data.userHandleType}`), [t]);
   const primaryButtonText = useMemo(() => t('button_submit'), [t]);
   const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
+  const inputFieldComputedProps = useMemo(() => {
+    let type: string, autoComplete: string, name: string;
+
+    if (block.data.userHandleType === LoginIdentifierType.Phone) {
+      type = 'tel';
+      autoComplete = 'phone';
+      name = 'phone';
+    } else if (block.data.userHandleType === LoginIdentifierType.Email) {
+      type = 'email';
+      autoComplete = 'email';
+      name = 'email';
+    } else {
+      type = 'username';
+      autoComplete = 'username';
+      name = 'username';
+    }
+
+    return {
+      type,
+      autoComplete,
+      name,
+    };
+  }, [block.data.userHandleType, errorMessage, passkeyUserHandle]);
 
   const handleConfirm = async () => {
     setLoading(true);
 
-    const error =
-      block.data.userHandleType === LoginIdentifierType.Phone
-        ? await block.updatePhone(passkeyUserHandle)
-        : await block.updateEmail(passkeyUserHandle);
+    let error: string | undefined;
+
+    switch (block.data.userHandleType) {
+      case LoginIdentifierType.Email:
+        error = await block.updateEmail(passkeyUserHandle);
+        break;
+      case LoginIdentifierType.Phone:
+        error = await block.updatePhone(passkeyUserHandle);
+        break;
+      case LoginIdentifierType.Username:
+        error = await block.updateUsername(passkeyUserHandle);
+        break;
+      default:
+        throw new Error('Invalid user handle type');
+    }
 
     if (error) {
       setErrorMessage(error);
@@ -48,14 +79,12 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   };
 
   return (
-    <div className='cb-edit-data-section-2'>
-      <Header className='cb-edit-data-section-header-2'>{headerText}</Header>
+    <div className='cb-edit-data-section'>
+      <Header className='cb-edit-data-section-header'>{headerText}</Header>
       <InputField
+        {...inputFieldComputedProps}
         value={passkeyUserHandle}
         errorMessage={errorMessage}
-        type={block.data.userHandleType === LoginIdentifierType.Phone ? 'tel' : 'email'}
-        autoComplete={block.data.userHandleType === LoginIdentifierType.Phone ? 'phone' : 'email'}
-        name={block.data.userHandleType === LoginIdentifierType.Phone ? 'phone' : 'email'}
         ref={passkeyUserHandleInputRef}
         onChange={e => setPasskeyUserHandle(e.target.value)}
       />
@@ -67,7 +96,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
-        className='cb-edit-data-section-back-button-2'
+        className='cb-edit-data-section-back-button'
         onClick={() => block.showPasskeyAppend()}
       >
         {secondaryButtonText}

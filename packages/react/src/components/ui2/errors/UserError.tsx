@@ -10,12 +10,12 @@ export const UserError = ({ customerSupportEmail }: Props) => {
   const { t } = useTranslation('translation', { keyPrefix: 'errors.unexpectedError' });
 
   return (
-    <div className='cb-error-popup-2'>
-      <div className='cb-error-popup-icon-2'>
-        <ExclamationIcon className='cb-error-popup-icon-2' />
+    <div className='cb-error-popup'>
+      <div className='cb-error-popup-icon'>
+        <ExclamationIcon className='cb-error-popup-icon' />
       </div>
       <div>
-        <p className='cb-error-popup-text-2'>
+        <p className='cb-error-popup-text'>
           {customerSupportEmail ? t('withCustomerSupport', customerSupportEmail) : t('noCustomerSupport')}
         </p>
       </div>

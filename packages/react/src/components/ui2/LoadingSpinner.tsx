@@ -5,7 +5,7 @@ export interface SpinnerProps {
 }
 
 export const LoadingSpinner: React.FC<SpinnerProps> = ({ className = '' }) => {
-  const customClass = `cb-spinner-2 ${className}`;
+  const customClass = `cb-spinner ${className}`;
 
   return <div className={customClass}></div>;
 };

@@ -5,7 +5,7 @@ import { Text } from './typography/Text';
 
 const Disclaimer = () => {
   return (
-    <footer className='cb-disclaimer-2'>
+    <footer className='cb-disclaimer'>
       <Text fontFamilyVariant='secondary'>
         By continuing you agree to our <Link href='https://corbado.com'>User Agreement</Link>,{' '}
         <Link href='https://corbado.com'>Wallet Service Terms</Link>, and{' '}

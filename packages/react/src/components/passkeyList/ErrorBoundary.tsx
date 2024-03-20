@@ -29,7 +29,7 @@ export class PasskeyListErrorBoundary extends React.Component<
   render() {
     if (this.props.globalError) {
       return (
-        <div className='error-page'>
+        <div className='cb-error-page'>
           <div>Something went wrong. Please try again in a few moments.</div>
         </div>
       );

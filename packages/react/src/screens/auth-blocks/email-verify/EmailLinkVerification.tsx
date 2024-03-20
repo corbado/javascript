@@ -29,10 +29,10 @@ export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) =>
   }
 
   return (
-    <div className='cb-email-link-verification-block-2'>
+    <div className='cb-email-link-verification-block'>
       <Header>{headerText}</Header>
       <Text level='2'>{subheaderText}</Text>
-      <LoadingSpinner className='cb-email-link-verification-spinner-2' />
+      <LoadingSpinner className='cb-email-link-verification-spinner' />
     </div>
   );
 };

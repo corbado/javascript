@@ -32,19 +32,19 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
   const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
 
   return (
-    <div className='cb-pk-verify-2'>
+    <div className='cb-pk-verify'>
       <Text
         level='6'
         fontWeight='bold'
-        className='cb-pk-verify-header-2'
+        className='cb-pk-verify-header'
       >
         {headerText}
       </Text>
-      <span className='cb-pk-verify-icons-section-2'>
-        <FingerPrintIcon className='cb-pk-verify-icons-section-icon-2' />
-        <FaceIdIcon className='cb-pk-verify-icons-section-icon-2' />
+      <span className='cb-pk-verify-icons-section'>
+        <FingerPrintIcon className='cb-pk-verify-icons-section-icon' />
+        <FaceIdIcon className='cb-pk-verify-icons-section-icon' />
       </span>
-      <div className='cb-pk-verify-body-section-2'>
+      <div className='cb-pk-verify-body-section'>
         <Text
           level='5'
           fontWeight='bold'
@@ -58,7 +58,7 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
           {bodyDescriptionText}
         </Text>
       </div>
-      <LoadingSpinner className='cb-pk-verify-spinner-2' />
+      <LoadingSpinner className='cb-pk-verify-spinner' />
     </div>
   );
 };

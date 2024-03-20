@@ -13,7 +13,7 @@ export const Header: FC<PropsWithChildren<HeaderProps>> = ({ size, className, ch
     <Text
       level={size === 'lg' ? '7' : '6'}
       fontWeight='bold'
-      className={`cb-header-2${className ? ` ${className}` : ''}`}
+      className={`cb-header${className ? ` ${className}` : ''}`}
     >
       {children}
     </Text>

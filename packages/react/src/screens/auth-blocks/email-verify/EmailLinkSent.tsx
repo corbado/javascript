@@ -144,10 +144,10 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   }
 
   return (
-    <div className='cb-email-block-2'>
-      <Header className='cb-email-block-header-2'>{headerText}</Header>
+    <div className='cb-email-block'>
+      <Header className='cb-email-block-header'>{headerText}</Header>
       <UserInfo
-        className='cb-email-user-info-section-2'
+        className='cb-email-user-info-section'
         userData={block.data.email}
         onRightIconClick={() => void emailChange()}
       ></UserInfo>
@@ -155,7 +155,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
         level='2'
         fontWeight='bold'
         fontFamilyVariant='secondary'
-        className='cb-row-2'
+        className='cb-row'
       >
         {bodyTitleText}
       </Text>
@@ -166,14 +166,14 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
         {bodyDescriptionText}
       </Text>
       <EmailLinks
-        className='cb-email-link-buton-group-2'
+        className='cb-email-link-buton-group'
         gmailButtonLabel={gmailLinkText}
         yahooButtonLabel={yahooLinkText}
         outlookButtonLabel={outlookLinkText}
       />
       <Text fontFamilyVariant='secondary'>{bodyResendText}</Text>
       <PrimaryButton
-        className='cb-email-resend-button-2'
+        className='cb-email-resend-button'
         isLoading={loading}
         disabled={remainingTime > 0}
         onClick={() => void resendEmail()}

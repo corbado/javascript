@@ -40,10 +40,10 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
   };
 
   return (
-    <div className='cb-edit-data-section-2'>
+    <div className='cb-edit-data-section'>
       <Header
         size='md'
-        className='cb-edit-data-section-header-2'
+        className='cb-edit-data-section-header'
       >
         {headerText}
       </Header>
@@ -64,7 +64,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
         {primaryButtonText}
       </PrimaryButton>
       <SecondaryButton
-        className='cb-edit-data-section-back-button-2'
+        className='cb-edit-data-section-back-button'
         onClick={() => block.showPhoneOtpScreen()}
       >
         {secondaryButtonText}

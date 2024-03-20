@@ -21,7 +21,7 @@ const SignUp: FC<CorbadoSignUpConfig> = ({ onSignedUp, navigateToLogin }) => {
           alignItems: 'center',
         }}
       >
-        <div className='cb-container-2'>
+        <div className='cb-container'>
           <AuthFlow />
         </div>
         <FreemiumBadge />

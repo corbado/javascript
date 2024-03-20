@@ -9,7 +9,7 @@ export const SubHeader: FC<PropsWithChildren> = ({ children }) => {
       fontWeight='normal'
       level='5'
       textColorVariant='secondary'
-      className='cb-subheader-2'
+      className='cb-subheader'
     >
       {children}
     </Text>

@@ -13,10 +13,10 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({ target = '_blan
   return (
     <a
       target={target}
-      className='cb-icon-button-2'
+      className='cb-icon-button'
       href={href}
     >
-      <span className='cb-icon-button-icon-2'>{icon}</span>
+      <span className='cb-icon-button-icon'>{icon}</span>
       <Text
         fontFamilyVariant='secondary'
         textColorVariant='secondary'

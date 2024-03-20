@@ -191,7 +191,7 @@
       "email-link-sent": {
         "header": "Check your inbox to log in",
         "body_title": "Magic link",
-        "body_description": "We just sent a magic link to your email address",
+        "body_description": "We just sent a magic link to your email address ",
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend email",
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
@@ -235,7 +235,7 @@
     },
     "missing_full_name": "Please enter a valid name.",
     "identifier_already_in_use": {
-      "username": "TThis username is already taken. Please try another one or log in with this one.",
+      "username": "This username is already taken. Please try another one or log in with this one.",
       "email": "This email address is already taken. Please try another one or log in with this one.",
       "phone": "This phone number is already taken. Please try another one or log in with this one."
     },

@@ -45,7 +45,7 @@ export class EmailVerifyFromUrl {
 
     const isNewDevice = existingProcess?.id !== decodedProcess.processID;
     let authType: AuthType;
-    if (decodedProcess.authType === 1) {
+    if (decodedProcess.authType === 0) {
       authType = AuthType.Login;
     } else {
       authType = AuthType.Signup;

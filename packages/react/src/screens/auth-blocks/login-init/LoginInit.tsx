@@ -142,20 +142,22 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           {submitButtonText}
         </PrimaryButton>
       </form>
-      <Text
-        level='2'
-        fontWeight='normal'
-        className='cb-auth-change-section'
-      >
-        {signUpText}
-        <SecondaryButton
-          colorVariant='link'
-          disabled={loading}
-          onClick={() => block.switchToSignup()}
+      {block.isSignupEnabled() && (
+        <Text
+          level='2'
+          fontWeight='normal'
+          className='cb-auth-change-section'
         >
-          {flowChangeButtonText}
-        </SecondaryButton>
-      </Text>
+          {signUpText}
+          <SecondaryButton
+            colorVariant='link'
+            disabled={loading}
+            onClick={() => block.switchToSignup()}
+          >
+            {flowChangeButtonText}
+          </SecondaryButton>
+        </Text>
+      )}
     </>
   );
 };

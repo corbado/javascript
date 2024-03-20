@@ -47,6 +47,10 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     this.updateProcessFrontend(newPrimary, newAlternatives);
   }
 
+  isSignupEnabled() {
+    return this.alternatives.filter(b => b.type === BlockTypes.SignupInit).length > 0;
+  }
+
   async continueWithConditionalUI() {
     if (!this.data.conditionalUIChallenge) {
       return;

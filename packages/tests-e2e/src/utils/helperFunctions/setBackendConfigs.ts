@@ -1,23 +1,6 @@
 import { expect } from '@playwright/test';
 
-export enum IdentifierType {
-  Email = 'email',
-  Phone = 'phone',
-  Social = 'social',
-  Username = 'username',
-}
-
-export enum IdentifierEnforceVerification {
-  None = 'none',
-  BeforePasskeyLogin = 'before-passkey-login',
-  Signup = 'signup',
-}
-
-export enum IdentifierVerification {
-  EmailOtp = 'email-otp',
-  EmailLink = 'email-link',
-  SmsOtp = 'phone-otp',
-}
+import type { IdentifierEnforceVerification, IdentifierType } from '../constants';
 
 interface Identifier {
   type: IdentifierType;

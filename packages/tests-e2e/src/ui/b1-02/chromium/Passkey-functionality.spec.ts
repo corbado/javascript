@@ -17,9 +17,9 @@ test.describe('Signup with passkey proper user behavior', () => {
     });
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
 
-    await signupFlow.fillOTP(OtpType.Sms);
+    await signupFlow.fillOTP(OtpType.Phone);
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkPasskeyRegistered();
   });
@@ -34,9 +34,9 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
     await page.getByText('Phone verification').click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
+    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
 
-    await signupFlow.fillOTP(OtpType.Sms);
+    await signupFlow.fillOTP(OtpType.Phone);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
     await page.getByRole('button', { name: 'Create passkey' }).click();

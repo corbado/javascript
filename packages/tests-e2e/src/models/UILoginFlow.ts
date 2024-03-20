@@ -1,6 +1,7 @@
 import type { CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
+import { IdentifierType, IdentifierVerification } from '../utils/constants';
 import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { loadAuth } from '../utils/helperFunctions/loadAuth';
@@ -47,102 +48,101 @@ export class UILoginFlow {
 
   async inputPasskey(check: () => Promise<void>) {
     if (this.#cdpClient) {
+      // const credentialAssertedPromise = new Promise<void>((resolve) => {
+      //   this.#cdpClient?.on('WebAuthn.credentialAsserted', payload => {
+      //     console.log(payload);
+      //     resolve();
+      //   });
+      // });
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      // await credentialAssertedPromise;
       await check();
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
   }
 
-  async fillOTP(otpType: OtpType = OtpType.Correct) {
+  async fillOTP(otpType: OtpType) {
     await fillOtpCode(this.page, otpType);
   }
 
-  async navigateToStartScreen() {
-    await this.page.getByText('Log in').click();
-    await this.checkLandedOnScreen(ScreenNames.Start);
-  }
+  async createAccount(
+    enabled: IdentifierType[],
+    verifications: IdentifierVerification[],
+    passkeySupported: boolean,
+    registerPasskey: boolean,
+  ) {
+    const id = UserManager.getUserForSignup();
+    let username,
+      email,
+      phone = undefined;
 
-  async navigateToPasskeyAppendScreen(email: string) {
-    await this.navigateToStartScreen();
-
-    await this.page.getByPlaceholder('Email address').click();
-    await this.page.getByPlaceholder('Email address').fill(email);
-    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
-
-    await this.page.getByRole('button', { name: 'Continue' }).click();
-    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-
-    await this.fillOTP();
-    await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
-  }
-
-  async navigateToPasskeyBenefitsScreen(email: string) {
-    await this.navigateToPasskeyAppendScreen(email);
-
-    await this.page.getByText('Passkeys').click();
-    await this.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
-  }
-
-  async navigateToEnterOtpScreen(email: string) {
-    await this.navigateToStartScreen();
-
-    await this.page.getByPlaceholder('Email address').click();
-    await this.page.getByPlaceholder('Email address').fill(email);
-    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
-
-    await this.page.getByRole('button', { name: 'Continue' }).click();
-    await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-  }
-
-  async createAccount(passkeySupported: boolean, registerPasskey = true): Promise<[name: string, email: string]> {
-    const name = UserManager.getUserForSignup();
-    const email = `${name}@corbado.com`;
-
-    await this.page.getByPlaceholder('Name').click();
-    await this.page.getByPlaceholder('Name').fill(name);
-    await expect(this.page.getByPlaceholder('Name')).toHaveValue(name);
-
-    await this.page.getByPlaceholder('Email address').click();
-    await this.page.getByPlaceholder('Email address').fill(email);
-    await expect(this.page.getByPlaceholder('Email address')).toHaveValue(email);
-
+    if (enabled.includes(IdentifierType.Username)) {
+      username = id.replace('+', '-');
+      await this.page.getByRole('textbox', { name: 'username' }).click();
+      await this.page.getByRole('textbox', { name: 'username' }).fill(username);
+      await expect(this.page.getByRole('textbox', { name: 'username' })).toHaveValue(username);
+    }
+    if (enabled.includes(IdentifierType.Email)) {
+      email = `${id}@corbado.com`;
+      await this.page.getByRole('textbox', { name: 'email' }).click();
+      await this.page.getByRole('textbox', { name: 'email' }).fill(email);
+      await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
+    }
+    if (enabled.includes(IdentifierType.Phone)) {
+      phone = `+1650555${id.slice(-4)}`;
+      await this.page.getByRole('textbox', { name: 'phone' }).click();
+      await this.page.getByRole('textbox', { name: 'phone' }).fill(phone);
+      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone);
+    }
     await this.page.getByRole('button', { name: 'Continue' }).click();
 
     if (passkeySupported) {
-      await this.checkLandedOnScreen(ScreenNames.PasskeyCreate);
+      await this.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
       if (registerPasskey) {
-        await this.page.getByRole('button', { name: 'Create your account' }).click();
+        await this.page.getByRole('button', { name: 'Create account' }).click();
         await this.inputPasskey(async () => {
-          await this.checkLandedOnScreen(ScreenNames.PasskeySuccess);
+          await this.checkLandedOnScreen(ScreenNames.PasskeyAppended);
         });
-
         await this.page.getByRole('button', { name: 'Continue' }).click();
-        await this.checkLandedOnScreen(ScreenNames.End);
-        await this.checkPasskeyRegistered();
-
-        await this.page.getByRole('button', { name: 'Logout' }).click();
       } else {
-        await this.page.getByRole('button', { name: 'Send email one-time passcode' }).click();
-        await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-        await this.fillOTP();
-        await this.checkLandedOnScreen(ScreenNames.PasskeyAppend);
-        await this.page.getByRole('button', { name: 'Maybe later' }).click();
-        await this.checkLandedOnScreen(ScreenNames.End);
-
-        await this.page.getByRole('button', { name: 'Logout' }).click();
+        if (
+          verifications.includes(IdentifierVerification.EmailOtp) ||
+          verifications.includes(IdentifierVerification.EmailLink)
+        ) {
+          await this.page.getByText('Email verification').click();
+        } else if (verifications.includes(IdentifierVerification.PhoneOtp)) {
+          await this.page.getByText('Phone verification').click();
+        }
       }
-    } else {
-      await this.checkLandedOnScreen(ScreenNames.EnterOtp);
-      await this.fillOTP();
-      await this.checkLandedOnScreen(ScreenNames.End);
-
-      await this.page.getByRole('button', { name: 'Logout' }).click();
     }
 
-    await loadAuth(this.page);
+    if (verifications.includes(IdentifierVerification.EmailOtp)) {
+      await this.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
+      await this.fillOTP(OtpType.Email);
+    } else if (verifications.includes(IdentifierVerification.EmailLink)) {
+      throw new Error('createAccount: Email link test code not yet implemented');
+    }
+    if (verifications.includes(IdentifierVerification.PhoneOtp)) {
+      await this.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
+      await this.fillOTP(OtpType.Phone);
+    }
 
-    return [name, email];
+    if (passkeySupported && !registerPasskey) {
+      await this.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
+      await this.page.getByText('Maybe later').click();
+    }
+
+    await this.checkLandedOnScreen(ScreenNames.End);
+    if (registerPasskey) {
+      await this.checkPasskeyRegistered();
+    }
+    await this.page.getByRole('button', { name: 'Logout' }).click();
+
+    await loadAuth(this.page);
+    await this.checkLandedOnScreen(ScreenNames.InitSignup);
+
+    return [username, email, phone];
   }
 
   async checkPasskeyRegistered() {
@@ -153,22 +153,76 @@ export class UILoginFlow {
     // await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 
-  async checkLandedOnScreen(screenName: ScreenNames) {
+  async checkLandedOnScreen(screenName: ScreenNames, email?: string, phone?: string) {
     switch (screenName) {
-      case ScreenNames.Start:
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Welcome back!');
+      case ScreenNames.InitSignup:
+        await expect(this.page.getByText('Create your account')).toBeVisible();
         break;
-      case ScreenNames.EnterOtp:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Enter one-time passcode to');
+      case ScreenNames.InitLogin:
+        await expect(this.page.getByText('Log In')).toBeVisible();
         break;
-      case ScreenNames.PasskeyBenefits:
-        await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Passkeys');
+      case ScreenNames.PasskeyAppend1:
+        await expect(this.page.getByText('Create account with passkeys')).toBeVisible();
         break;
-      case ScreenNames.PasskeyAppend:
-        await expect(this.page.getByRole('heading', { level: 1 })).toContainText('Log in even faster with');
+      case ScreenNames.PasskeyAppend2:
+        await expect(this.page.getByText('Set up passkey for easier login')).toBeVisible();
         break;
-      case ScreenNames.PasskeySuccess:
-        await expect(this.page.getByRole('heading', { level: 1 }).first()).toContainText('Welcome!');
+      case ScreenNames.PasskeyAppended:
+        await expect(this.page.getByText('Success!')).toBeVisible();
+        break;
+      case ScreenNames.PasskeyError:
+        await expect(this.page.getByText('Something went wrong...')).toBeVisible();
+        break;
+      case ScreenNames.EmailOtpSignup:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Enter code to create account')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
+      case ScreenNames.EmailOtpLogin:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Enter code to log in')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
+      case ScreenNames.EmailLinkSentSignup:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Check your inbox to create your account')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
+      case ScreenNames.EmailLinkSentLogin:
+        if (!email) {
+          throw new Error('checkLandedOnScreen: Email is required');
+        }
+        await expect(this.page.getByText('Check your inbox to log in')).toBeVisible();
+        await expect(this.page.getByText(email)).toBeVisible();
+        break;
+      case ScreenNames.EmailEdit:
+        await expect(this.page.getByText('Type new email address')).toBeVisible();
+        break;
+      case ScreenNames.PhoneOtpSignup:
+        if (!phone) {
+          throw new Error('checkLandedOnScreen: Phone is required');
+        }
+        await expect(this.page.getByText('Enter code to create account')).toBeVisible();
+        await expect(this.page.getByText(phone)).toBeVisible();
+        break;
+      case ScreenNames.PhoneOtpLogin:
+        if (!phone) {
+          throw new Error('checkLandedOnScreen: Phone is required');
+        }
+        await expect(this.page.getByText('Enter code to log in')).toBeVisible();
+        await expect(this.page.getByText(phone)).toBeVisible();
+        break;
+      case ScreenNames.PhoneEdit:
+        await expect(this.page.getByText('Type new phone number')).toBeVisible();
+        break;
+      case ScreenNames.PasskeyBackground:
+        await expect(this.page.getByText('Passkey login in process...')).toBeVisible();
         break;
       case ScreenNames.End:
         await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);

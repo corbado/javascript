@@ -9,7 +9,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
 
     const [, email] = await signupFlow.navigateToPasskeyErrorScreen();
     await page.getByText('Email verification').click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
   });
 
   test('canceling passkey input redirects to PasskeyErrorScreen', async ({ signupFlow, page }) => {

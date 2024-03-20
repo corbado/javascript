@@ -1,9 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import path from 'path';
 
-if (!process.env.CI) {
-  dotenv.config();
-} // CI env vars set in e2e-test.yml
+if (process.env.CI) {
+  // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
+  // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the
+  // value should theoretically be undefined. For now the 'override' option fixes the issue.
+  dotenv.config({ path: path.resolve(__dirname, '.env.ci'), override: true });
+} else {
+  dotenv.config({ path: path.resolve(__dirname, '.env.local'), override: true });
+}
 
 export default defineConfig({
   testDir: './src',
@@ -33,11 +39,11 @@ export default defineConfig({
   ],
   timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 3000, // default: 5000ms
+    timeout: 5000, // default: 5000ms
   },
   use: {
-    actionTimeout: 3000, // default: none
-    navigationTimeout: 3000, // default: none
+    actionTimeout: 5000, // default: none
+    navigationTimeout: 5000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -74,7 +80,7 @@ export default defineConfig({
       testMatch: ['ui/b1-02/setup.ts'],
     },
     {
-      name: 'b1-2-chromium',
+      name: 'b1-02-chromium',
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b1-02/all-browsers/*.*', 'ui/b1-02/chromium/*.*'],
       dependencies: ['b1-02-setup'],
@@ -216,6 +222,60 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b1-11/all-browsers/*.*', 'ui/b1-11/chromium/*.*'],
       dependencies: ['b1-11-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.1 configs (Email OTP): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-emailotp-setup',
+      testMatch: ['ui/b2-01-emailotp/setup.ts'],
+    },
+    {
+      name: 'b2-01-emailotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-emailotp/all-browsers/*.*', 'ui/b2-01-emailotp/chromium/*.*'],
+      dependencies: ['b2-01-emailotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.1 configs (Phone OTP): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | false   | false
+    //  Phone    | true    | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-phoneotp-setup',
+      testMatch: ['ui/b2-01-phoneotp/setup.ts'],
+    },
+    {
+      name: 'b2-01-phoneotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-phoneotp/all-browsers/*.*', 'ui/b2-01-phoneotp/chromium/*.*'],
+      dependencies: ['b2-01-phoneotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.3 configs: Login with Identifier - enforce single verification before login
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | true
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-03-setup',
+      testMatch: ['ui/b2-03/setup.ts'],
+    },
+    {
+      name: 'b2-03-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
     },
   ],
 });

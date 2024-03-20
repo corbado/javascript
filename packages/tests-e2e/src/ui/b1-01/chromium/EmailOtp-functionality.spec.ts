@@ -12,7 +12,7 @@ test.describe('Signup with email OTP proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
     await page.getByText('Email verification').click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
     await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);

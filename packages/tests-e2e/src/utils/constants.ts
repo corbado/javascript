@@ -1,13 +1,3 @@
-// export enum ScreenNames {
-//   Start,
-//   EnterOtp,
-//   PasskeyCreate,
-//   PasskeyBenefits,
-//   PasskeyAppend,
-//   PasskeySuccess,
-//   End,
-// }
-
 export enum ScreenNames {
   InitSignup,
   InitLogin,
@@ -15,20 +5,43 @@ export enum ScreenNames {
   PasskeyAppend2,
   PasskeyAppended,
   PasskeyError,
-  EmailOtp,
-  EmailLinkSent,
+  EmailOtpSignup,
+  EmailOtpLogin,
+  EmailLinkSentSignup,
+  EmailLinkSentLogin,
   EmailLinkSuccess,
   EmailEdit,
-  PhoneOtp,
+  PhoneOtpSignup,
+  PhoneOtpLogin,
   PhoneEdit,
+  PasskeyBackground,
   End,
 }
 
 export enum OtpType {
   Email = '150919',
-  Sms = '481926',
+  Phone = '481926',
   Incomplete = '15091',
   Incorrect = '150918',
+}
+
+export enum IdentifierType {
+  Email = 'email',
+  Phone = 'phone',
+  Social = 'social',
+  Username = 'username',
+}
+
+export enum IdentifierEnforceVerification {
+  None = 'none',
+  Signup = 'signup',
+  AtFirstLogin = 'at_first_login',
+}
+
+export enum IdentifierVerification {
+  EmailOtp = 'email-otp',
+  EmailLink = 'email-link',
+  PhoneOtp = 'phone-otp',
 }
 
 export const waitAfterLoad = 600; // timeout to reduce flakiness due to repetitive reloads

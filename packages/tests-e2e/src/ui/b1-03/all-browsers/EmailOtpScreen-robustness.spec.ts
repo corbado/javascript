@@ -6,7 +6,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     const [, email] = await signupFlow.navigateToEmailOtpScreen();
 
     await signupFlow.fillOTP(OtpType.Incorrect);
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
     await expect(page.getByText('The code is invalid or expired')).toBeVisible();
   });
 
@@ -24,7 +24,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await expect(page.getByRole('textbox')).toHaveValue(newEmail);
 
     await page.getByRole('button', { name: 'Resend code' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, newEmail);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, newEmail);
   });
 
   test.skip('cancel modifying email identifier', async ({ signupFlow, page }) => {
@@ -41,7 +41,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await expect(page.getByRole('textbox')).toHaveValue(newEmail);
 
     await page.getByText('Back').click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
   });
 
   // Skipped because loading external links take a long time

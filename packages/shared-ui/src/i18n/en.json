@@ -99,7 +99,7 @@
         "subheader": "You will be redirected soon"
       },
       "email-link-success": {
-        "header": "Your email was successfully verified",
+        "header": "Successful email verification",
         "subheader": {
           "isOldTab": "Return to the tab where you have verified the email",
           "isNewTab": "Return to the tab where you are performing the signup to continue"

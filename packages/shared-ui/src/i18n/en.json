@@ -3,7 +3,7 @@
     "signup-init": {
       "signup-init": {
         "header": "Create your account",
-        "subheader": "to continue to ",
+        "subheader": "to access ",
         "text_login": "You already have an account? ",
         "button_login": "Log in",
         "button_submit": "Continue",
@@ -99,10 +99,10 @@
         "subheader": "You will be redirected soon"
       },
       "email-link-success": {
-        "header": "Successfully verified email",
+        "header": "Your email was successfully verified",
         "subheader": {
-          "isOldTab": "Return to the tab, where you have verified the email.",
-          "isNewTab": "Return to the original tab to continue"
+          "isOldTab": "Return to the tab where you have verified the email.",
+          "isNewTab": "Return to the tab where you are performing the signup to continue"
         },
         "body": "You may close this tab"
       },
@@ -139,7 +139,7 @@
     "login-init": {
       "login-init": {
         "header": "Log in",
-        "subheader": "to continue to ",
+        "subheader": "to access ",
         "text_signup": "No account? ",
         "button_signup": "Sign up",
         "button_submit": "Continue",
@@ -191,7 +191,7 @@
       "email-link-sent": {
         "header": "Check your inbox to log in",
         "body_title": "Magic link",
-        "body_description": "We just sent a magic link to your email address ",
+        "body_description": "We just sent a magic link to your email address",
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend email",
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
@@ -207,7 +207,7 @@
         "header": "Successful email login",
         "subheader": {
           "isOldTab": "Return to the tab, where you have verified the email.",
-          "isNewTab": "Return to the original tab to continue"
+          "isNewTab": "Return to the tab where you are performing the login to continue"
         },
         "body": "You may close this tab"
       },
@@ -229,20 +229,20 @@
   },
   "errors": {
     "missing_identifier_type": {
-      "username": "Enter username.",
-      "email": "Enter email address.",
-      "phone": "Enter phone number."
+      "username": "Please enter a username.",
+      "email": "Please enter an email address.",
+      "phone": "Please enter a phone number."
     },
     "missing_full_name": "Please enter a valid name.",
     "identifier_already_in_use": {
-      "username": "That username is taken. Please try another one.",
-      "email": "That email address is taken. Pleas try another one.",
-      "phone": "That phone number is taken. Pleas try another one."
+      "username": "TThis username is already taken. Please try another one or log in with this one.",
+      "email": "This email address is already taken. Please try another one or log in with this one.",
+      "phone": "This phone number is already taken. Please try another one or log in with this one."
     },
     "identifier_invalid_format": {
-      "username": "Username must be between 4 and 64 characters long and can only contain letters, numbers and \"-\" or \"_\".",
-      "email": "Email address must be a valid email address.",
-      "phone": "Phone number must be a valid phone number."
+      "username": "Username must be between 4 and 32 characters long and may only consist of alphanumeric characters and \"-\" or \"_\".",
+      "email": "Please enter a valid email address.",
+      "phone": "Please enter a valid phone number."
     },
     "identifier_not_allowed": "Couldn't find your account",
     "login_identifier_unknown_user": "Couldn't find your account.",
@@ -261,8 +261,8 @@
     "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
     "unknown": "Something went wrong. Please try again later",
     "unexpectedError": {
-      "withCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support at {{customerSupportEmail}}.",
-      "noCustomerSupport": "Unable to complete action at this time. If the problem persists please contact support."
+      "withCustomerSupport": "We encountered an issue. Please try again later or contact support at {{customerSupportEmail}}.",
+      "noCustomerSupport": "We encountered an issue. Please try again later or contact support."
     },
     "componentUnavailable": {
       "header": "Something went wrong",

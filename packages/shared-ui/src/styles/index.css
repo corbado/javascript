@@ -125,6 +125,8 @@
   justify-content: center;
   font-family: var(--cb-secondary-font);
   font-weight: var(--cb-font-weight-normal);
+  background-color: var(--cb-white);
+  color: var(--cb-text-primary-color);
 }
 
 .cb-input:focus {
@@ -308,7 +310,7 @@
   align-items: center;
   width: 90%;
   height: 1.9rem;
-  background-color: #fafafa;
+  background-color: var(--cb-edit-box-color);
   border: 1px solid #999;
   border-radius: var(--cb-border-radius-sm);
 }
@@ -781,6 +783,7 @@
   border: var(--cb-border-color) 1px solid;
   margin: 0.5rem 0;
   padding: 0.5rem;
+  background-color: var(--cb-white);
 }
 
 .cb-passkey-list-icon {

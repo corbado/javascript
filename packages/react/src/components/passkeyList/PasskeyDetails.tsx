@@ -29,12 +29,7 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
         </div>
         {passkey.backupState ? (
           <div className='cb-passkey-list-header-badge'>
-            <Text
-              level='3'
-              fontFamilyVariant='secondary'
-            >
-              {t('badge_synced')}
-            </Text>
+            <Text fontFamilyVariant='secondary'>{t('badge_synced')}</Text>
           </div>
         ) : null}
       </div>
@@ -44,8 +39,8 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
           fontFamilyVariant='secondary'
         >
           {t('field_credentialId')}
+          {passkey.id}
         </Text>
-        {passkey.id}
       </div>
       <div>
         <Text

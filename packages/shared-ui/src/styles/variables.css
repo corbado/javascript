@@ -9,6 +9,7 @@
   --cb-dark: #000000;
   --cb-border-color: #c7c7c7;
   --cb-secondary-link-color: #59acff;
+  --cb-edit-box-color: #fafafa;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
@@ -22,6 +23,7 @@
 
 .cb-dark {
   --cb-text-primary-color: #ffffff;
+  --cb-edit-box-color: #1f1f1f;
   --cb-dark: #ffffff;
   --cb-white: #000000;
 }

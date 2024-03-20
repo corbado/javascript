@@ -1,4 +1,4 @@
-import { updateSvgFillColor } from '@corbado/shared-ui';
+import { updateSvgFillColor, updateSvgStrokeColor } from '@corbado/shared-ui';
 import type { RefObject } from 'react';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +8,7 @@ export function useIconWithTheme(
   svgRef: RefObject<HTMLImageElement>,
   iconSrc: string,
   color = '--cb-text-primary-color',
+  addColorInStroke = false,
 ) {
   const { themeUpdateTS } = useTheme();
   const [logoSVG, setLogoSVG] = useState<string>(iconSrc);
@@ -19,7 +20,9 @@ export function useIconWithTheme(
 
     const rootStyle = getComputedStyle(svgRef.current);
     const fetchedColor = rootStyle.getPropertyValue(color).trim();
-    const newSvg = updateSvgFillColor(logoSVG, fetchedColor);
+    const newSvg = addColorInStroke
+      ? updateSvgStrokeColor(logoSVG, fetchedColor)
+      : updateSvgFillColor(logoSVG, fetchedColor);
     setLogoSVG(newSvg);
   }, [themeUpdateTS]);
 

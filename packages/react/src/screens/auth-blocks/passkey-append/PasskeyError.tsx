@@ -27,6 +27,8 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     setLoading(false);
   };
 
+  const showDivider = !block.data.canBeSkipped && block.data.availableFallbacks.length > 0;
+
   return (
     <div className='cb-pk-error-bloc'>
       <Header>{headerText}</Header>
@@ -46,7 +48,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       >
         {primaryButtonText}
       </PrimaryButton>
-      {!block.data.canBeSkipped && (
+      {showDivider && (
         <Divider
           label={dividerLabel}
           className='cb-pk-error-bloc-divider'

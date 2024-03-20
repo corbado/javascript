@@ -15,6 +15,7 @@ export const FingerPrintIcon: FC<IconProps> = memo(props => {
     <Icon
       src={logoSVG}
       ref={svgRef}
+      alt='fingerprint-icon'
       {...props}
     />
   );

@@ -101,7 +101,7 @@
       "email-link-success": {
         "header": "Your email was successfully verified",
         "subheader": {
-          "isOldTab": "Return to the tab where you have verified the email.",
+          "isOldTab": "Return to the tab where you have verified the email",
           "isNewTab": "Return to the tab where you are performing the signup to continue"
         },
         "body": "You may close this tab"
@@ -206,13 +206,13 @@
       "email-link-success": {
         "header": "Successful email login",
         "subheader": {
-          "isOldTab": "Return to the tab, where you have verified the email.",
+          "isOldTab": "Return to the tab where you have verified the email",
           "isNewTab": "Return to the tab where you are performing the login to continue"
         },
         "body": "You may close this tab"
       },
       "email-link-error": {
-        "subheader": "Return to the tab where you are performing the login and try again",
+        "subheader": "Return to the tab where you are performing the login and try again.",
         "body": "You may close this Tab"
       }
     },

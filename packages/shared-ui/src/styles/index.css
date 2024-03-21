@@ -120,7 +120,7 @@
   flex-grow: 1;
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: 1.75rem;
+  height: var(--cb-input-field-height);
   padding-left: 0.6rem;
   justify-content: center;
   font-family: var(--cb-secondary-font);
@@ -134,8 +134,92 @@
   border: 1px solid var(--cb-primary-color);
 }
 
-.cb-input.cb-input-error {
+.cb-input-error {
   border: 1px solid var(--cb-error-text-color);
+}
+
+.cb-phone-input-field {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  position: relative;
+  font-family: var(--cb-secondary-font);
+  font-weight: var(--cb-font-weight-normal);
+  background-color: var(--cb-white);
+  color: var(--cb-text-primary-color);
+  border-radius: var(--cb-border-radius-sm);
+  border: 1px solid var(--cb-border-color);
+  height: var(--cb-input-field-height);
+}
+
+.cb-phone-input-field:focus {
+  outline: none;
+  border: 1px solid var(--cb-primary-color);
+}
+
+.cb-phone-input-field-button {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--cb-box-color);
+  cursor: pointer;
+  gap: 0.5rem;
+  align-items: center;
+  border: 0px;
+  padding-left: 0.8rem;
+  border-top-left-radius: var(--cb-border-radius-sm);
+  border-bottom-left-radius: var(--cb-border-radius-sm);
+}
+
+.cb-phone-input-field-button svg {
+  width: 20px;
+}
+
+.cb-phone-input-field-selection {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  background-color: var(--cb-box-color);
+  top: calc(var(--cb-input-field-height) * 1.1);
+  height: 250px;
+  overflow-y: auto;
+}
+
+.cb-phone-input-field-selection svg {
+  width: 20px;
+}
+
+.cb-phone-input-field-selection-item {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--cb-border-color);
+}
+
+.cb-phone-input-field-selection-item-selected {
+  cursor: none;
+  background-color: var(--cb-box-color-hover);
+  color: var(--cb-primary-color);
+}
+
+.cb-phone-input-field-selection-item:hover {
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-phone-input-field-input {
+  flex: 4;
+  border: 0px;
+  height: 93%;
+  font-family: var(--cb-secondary-font);
+  border-top-right-radius: var(--cb-border-radius-sm);
+  border-bottom-right-radius: var(--cb-border-radius-sm);
+}
+
+.cb-phone-input-field-input:focus {
+  outline: none;
 }
 
 .cb-error-message {
@@ -310,7 +394,7 @@
   align-items: center;
   width: 90%;
   height: 1.9rem;
-  background-color: var(--cb-edit-box-color);
+  background-color: var(--cb-box-color);
   border: 1px solid #999;
   border-radius: var(--cb-border-radius-sm);
 }

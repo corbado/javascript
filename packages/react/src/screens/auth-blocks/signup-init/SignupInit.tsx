@@ -21,7 +21,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const emailRef = useRef<HTMLInputElement>();
 
   const [phone, setPhone] = useState<TextFieldWithError | null>(null);
-  const phoneRef = useRef<HTMLInputElement>();
+  const [phoneInput, setPhoneInput] = useState<string>('');
 
   const [fullName, setFullName] = useState<TextFieldWithError | null>(null);
   const fullNameRef = useRef<HTMLInputElement>();
@@ -52,9 +52,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
       const identifiers: LoginIdentifiers = {
         email: emailRef.current?.value,
-        phone: phoneRef.current?.value,
+        phone: phoneInput,
         userName: usernameRef.current?.value,
       };
+
+      console.log(identifiers);
 
       const fullName = fullNameRef.current?.value;
       void block.updateUserData(identifiers, fullName);
@@ -105,14 +107,9 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         {phone && (
           <InputField
             label={phoneFieldLabel}
-            id='phone'
-            name='phone'
-            autoComplete='phone'
-            type='tel'
-            inputMode='numeric'
-            pattern='\+[0-9]*'
             errorMessage={phone?.translatedError}
-            ref={el => el && (phoneRef.current = el)}
+            showPhoneNumberInput
+            onInputChange={setPhoneInput}
           />
         )}
 

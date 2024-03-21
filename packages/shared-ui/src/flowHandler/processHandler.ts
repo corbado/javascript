@@ -37,7 +37,7 @@ export class ProcessHandler {
   #corbadoApp: CorbadoApp;
   #processHistoryHandler: ProcessHistoryHandler;
   #errorTranslator: ErrorTranslator;
-  readonly onProcessCompleted: () => void;
+  #postProcess: () => void;
 
   #onScreenChangeCallbacks: Array<(v: ScreenWithBlock) => void> = [];
 
@@ -45,7 +45,7 @@ export class ProcessHandler {
    * The constructor initializes the ProcessHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
-  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, onProcessCompleted: () => void) {
+  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, postProcess: () => void) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
@@ -54,7 +54,7 @@ export class ProcessHandler {
     this.#corbadoApp = corbadoApp;
     this.#processHistoryHandler = new ProcessHistoryHandler(true);
     this.#errorTranslator = errorTranslator;
-    this.onProcessCompleted = onProcessCompleted;
+    this.#postProcess = postProcess;
   }
 
   /**
@@ -86,6 +86,11 @@ export class ProcessHandler {
     this.handleProcessUpdateBackend(res.val);
 
     return Ok(void 0);
+  }
+
+  onProcessCompleted() {
+    this.#corbadoApp.authProcessService.clearProcess();
+    this.#postProcess();
   }
 
   switchToBlock(blockType: BlockTypes): boolean {

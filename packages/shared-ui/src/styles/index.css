@@ -868,3 +868,15 @@
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
+.cb-confirm-process-abort-container {
+  padding: 0.85rem 2.3rem;
+  border: 1px solid var(--cb-border-color);
+  border-radius: var(--cb-border-radius-lg);
+  margin-top: 0.7rem;
+  margin-bottom: 2rem;
+}
+
+.cb-confirm-process-abort-icon {
+  height: 1.9rem;
+}

@@ -109,6 +109,8 @@ export class ProcessHandler {
     if (this.#currentBlock) {
       newAlternatives.push(this.#currentBlock);
     }
+
+    console.log('switching to block', blockType, newBlock, newAlternatives);
     this.handleProcessUpdateFrontend(newBlock, newAlternatives);
 
     return true;
@@ -199,6 +201,7 @@ export class ProcessHandler {
 
   handleProcessUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
     newPrimaryBlock.setAlternatives(newAlternatives);
+    newPrimaryBlock.init();
 
     this.#updatePrimaryBlock(newPrimaryBlock);
   }

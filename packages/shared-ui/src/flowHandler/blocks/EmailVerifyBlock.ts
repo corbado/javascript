@@ -19,7 +19,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   readonly type = BlockTypes.EmailVerify;
   readonly initialScreen;
   readonly authType: AuthType;
-  readonly verificationMethod: 'email-otp' | 'email-link';
   readonly isNewDevice: boolean;
   readonly emailLinkToken?: string;
 
@@ -51,12 +50,12 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
         break;
     }
 
-    this.verificationMethod = data.verificationMethod;
     this.authType = authType;
     this.isNewDevice = isNewDevice;
     this.emailLinkToken = emailLinkToken;
 
     this.data = {
+      verificationMethod: data.verificationMethod,
       email: data.identifier,
       translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
@@ -107,7 +106,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
 
   showEmailVerificationScreen() {
     this.data.translatedError = undefined;
-    if (this.verificationMethod === 'email-otp') {
+    if (this.data.verificationMethod === 'email-otp') {
       this.updateScreen(ScreenNames.EmailOtpVerification);
     } else {
       this.updateScreen(ScreenNames.EmailLinkSent);
@@ -122,7 +121,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   }
 
   async resendEmail() {
-    if (this.verificationMethod === 'email-otp') {
+    if (this.data.verificationMethod === 'email-otp') {
       const newBlock = await this.app.authProcessService.startEmailCodeVerification();
       this.updateProcess(newBlock);
     } else {

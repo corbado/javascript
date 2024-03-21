@@ -99,11 +99,4 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
     return;
   }
-
-  async resetProcess(): Promise<void> {
-    const newBlock = await this.app.authProcessService.resetAuthProcess();
-    this.updateProcess(newBlock);
-
-    return;
-  }
 }

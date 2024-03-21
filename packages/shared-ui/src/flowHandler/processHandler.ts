@@ -1,4 +1,5 @@
 import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
+import { AuthType } from '@corbado/web-core';
 import { BlockType, type CorbadoApp } from '@corbado/web-core';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
@@ -15,9 +16,12 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
+import { ConfirmProcessAbortBlock } from './blocks/ConfirmProcessAbortBlock';
 import { ContinueOnOtherEnvBlock } from './blocks/ContinueOnOtherEnvBlock';
+import type { BlockTypes } from './constants';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
+import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
 
 /**
@@ -31,6 +35,7 @@ export class ProcessHandler {
   #abortController = new AbortController();
 
   #corbadoApp: CorbadoApp;
+  #processHistoryHandler: ProcessHistoryHandler;
   #errorTranslator: ErrorTranslator;
   readonly onProcessCompleted: () => void;
 
@@ -47,6 +52,7 @@ export class ProcessHandler {
 
     const errorTranslator = new ErrorTranslator(i18next);
     this.#corbadoApp = corbadoApp;
+    this.#processHistoryHandler = new ProcessHistoryHandler(true);
     this.#errorTranslator = errorTranslator;
     this.onProcessCompleted = onProcessCompleted;
   }
@@ -56,6 +62,11 @@ export class ProcessHandler {
    * Call this function after registering all callbacks.
    */
   async init(): Promise<Result<void, CorbadoError>> {
+    this.#processHistoryHandler.init(
+      (blockType: BlockTypes) => this.switchToBlock(blockType),
+      () => this.startAskForAbort(),
+    );
+
     const emailVerifyFromUrl = this.#corbadoApp.authProcessService.initEmailVerifyFromUrl();
     if (emailVerifyFromUrl.err) {
       await this.handleError(emailVerifyFromUrl.val);
@@ -77,9 +88,54 @@ export class ProcessHandler {
     return Ok(void 0);
   }
 
+  switchToBlock(blockType: BlockTypes): boolean {
+    if (this.#currentBlock?.type === blockType) {
+      this.handleProcessUpdateFrontend(this.#currentBlock, this.#currentBlock.alternatives);
+
+      return true;
+    }
+
+    const newBlock = this.#currentBlock?.alternatives.find(b => b.type === blockType);
+    if (!newBlock) {
+      return false;
+    }
+
+    const newAlternatives = this.#currentBlock?.alternatives.filter(b => b.type !== blockType) ?? [];
+    if (this.#currentBlock) {
+      newAlternatives.push(this.#currentBlock);
+    }
+    this.handleProcessUpdateFrontend(newBlock, newAlternatives);
+
+    return true;
+  }
+
+  startAskForAbort() {
+    const currentBlock = this.#currentBlock;
+    if (!currentBlock) {
+      return;
+    }
+
+    // in login processes we don't want to ask for abort (we auto-confirm it)
+    if (currentBlock.authType === AuthType.Login) {
+      void currentBlock.confirmAbort();
+      return;
+    }
+
+    const confirmProcessAbort = new ConfirmProcessAbortBlock(
+      this.#corbadoApp,
+      this,
+      currentBlock.common,
+      this.#errorTranslator,
+      currentBlock,
+    );
+
+    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives]);
+  }
+
   dispose() {
     this.#corbadoApp.dispose();
     this.#abortController.abort();
+    this.#processHistoryHandler.dispose();
   }
 
   get currentScreenName() {
@@ -163,6 +219,8 @@ export class ProcessHandler {
     }
 
     this.#currentBlock = newPrimaryBlock;
+    console.log('updatePrimaryBlock', newPrimaryBlock.type, this.#currentBlock);
+
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({
         screen: this.#currentScreen,
@@ -170,6 +228,10 @@ export class ProcessHandler {
         block: this.#currentBlock!,
       }),
     );
+
+    if (blockHasChanged) {
+      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type);
+    }
   };
 
   #parseBlockData = (blockBody: BlockBody, common: ProcessCommon) => {

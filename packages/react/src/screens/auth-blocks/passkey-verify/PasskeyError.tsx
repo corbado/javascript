@@ -32,7 +32,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
 
   async function emailChange() {
     setLoading(true);
-    await block.resetProcess();
+    await block.confirmAbort();
     setLoading(false);
   }
 

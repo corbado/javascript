@@ -64,6 +64,16 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     [block],
   );
 
+  const handle1 = (e: FormEvent) => {
+    console.log('handle1');
+    handleSubmit(e);
+  };
+
+  const handle2 = (e: FormEvent) => {
+    console.log('handle2');
+    handleSubmit(e);
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -73,7 +83,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
       </SubHeader>
       <form
         className='cb-form'
-        onSubmit={handleSubmit}
+        onSubmit={handle1}
       >
         {fullName && (
           <InputField
@@ -117,7 +127,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           type='submit'
           className='cb-signup-form-submit-button'
           isLoading={loading}
-          onClick={handleSubmit}
+          onClick={handle2}
         >
           {submitButtonText}
         </PrimaryButton>

@@ -1,8 +1,13 @@
+import { useState } from 'react';
+import { Value } from 'react-phone-number-input';
+import PhoneInput from 'react-phone-number-input';
 import { useNavigate, useParams } from 'react-router-dom';
+import { CountrySelectWithIcon } from './CountrySelect';
 
 export const AuthButtons = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
+  const [value, setValue] = useState<Value>();
 
   return (
     <div className='auth-buttons'>
@@ -25,6 +30,17 @@ export const AuthButtons = () => {
       >
         Login Page
       </button>
+      <div>
+        <PhoneInput
+          className='cb-text-2 cb-phone-input-field-input'
+          value={value}
+          onChange={setValue}
+          countrySelectComponent={CountrySelectWithIcon}
+          international
+          countryCallingCodeEditable={false}
+          defaultCountry='US'
+        />
+      </div>
     </div>
   );
 };

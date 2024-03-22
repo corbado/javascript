@@ -77,7 +77,6 @@ const PhoneInputField = forwardRef<HTMLInputElement, PhoneInputProps>(({ classNa
         autoComplete='phone'
         type='tel'
         inputMode='numeric'
-        pattern='\+[0-9]*'
         value={selectedCountry}
         onChange={onPhoneChange}
         country={selectedCountry}

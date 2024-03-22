@@ -213,6 +213,7 @@
   flex: 4;
   border: 0px;
   height: 93%;
+  background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
   border-top-right-radius: var(--cb-border-radius-sm);
   border-bottom-right-radius: var(--cb-border-radius-sm);

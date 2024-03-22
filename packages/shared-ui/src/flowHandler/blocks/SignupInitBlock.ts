@@ -52,7 +52,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     });
 
     if (data.fullName) {
-      fullName = { value: data.fullName.value, translatedError: errorTranslator.translate(data.fullName.error) };
+      fullName = { value: data.fullName.fullName, translatedError: errorTranslator.translate(data.fullName.error) };
     }
 
     this.data = {

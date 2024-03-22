@@ -34,6 +34,7 @@ export class EmailVerifyFromUrl {
   }
 
   static fromURL(encodedProcess: string, token: string, existingProcess: AuthProcess | undefined): EmailVerifyFromUrl {
+    console.log('maybeProcess', encodedProcess, existingProcess);
     const decodedProcess = JSON.parse(atob(encodedProcess)) as EmailVerifyFromUrlData;
 
     const data: GeneralBlockVerifyIdentifier = {

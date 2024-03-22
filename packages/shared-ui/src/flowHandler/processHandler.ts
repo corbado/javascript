@@ -62,7 +62,7 @@ export class ProcessHandler {
    * Call this function after registering all callbacks.
    */
   async init(): Promise<Result<void, CorbadoError>> {
-    this.#processHistoryHandler.init(
+    const frontendPreferredBlockType = this.#processHistoryHandler.init(
       (blockType: BlockTypes) => this.switchToBlock(blockType),
       () => this.startAskForAbort(),
     );
@@ -78,7 +78,11 @@ export class ProcessHandler {
       return Ok(void 0);
     }
 
-    const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
+    const res = await this.#corbadoApp.authProcessService.init(
+      this.#abortController,
+      frontendPreferredBlockType as BlockType,
+    );
+
     if (res.err) {
       return res;
     }
@@ -116,6 +120,7 @@ export class ProcessHandler {
     return true;
   }
 
+  // this adds a ConfirmProcessAbortBlock to the process
   startAskForAbort() {
     const currentBlock = this.#currentBlock;
     if (!currentBlock) {

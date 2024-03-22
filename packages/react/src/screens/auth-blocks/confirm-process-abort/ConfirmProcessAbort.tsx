@@ -14,15 +14,15 @@ export const ConfirmProcessAbort = ({ block }: { block: ConfirmProcessAbortBlock
   return (
     <div className='cb-confirm-process-abort'>
       <Header size='lg'>{t('header')}</Header>
+      <div className='cb-confirm-process-abort-container'>
+        <FirstPageIcon className='cb-confirm-process-abort-icon' />
+      </div>
       <Text
         level='2'
         fontFamilyVariant='secondary'
       >
         {t('subheader')}
       </Text>
-      <div className='cb-confirm-process-abort-container'>
-        <FirstPageIcon className='cb-confirm-process-abort-icon' />
-      </div>
       <PrimaryButton onClick={() => void block.confirmAbort()}>{t('confirm')}</PrimaryButton>
       <SecondaryButton onClick={() => block.cancelAbort(block.data)}>{t('back')}</SecondaryButton>
     </div>

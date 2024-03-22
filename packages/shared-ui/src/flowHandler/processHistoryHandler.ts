@@ -9,16 +9,16 @@ export class ProcessHistoryHandler {
     this.#abortController = new AbortController();
   }
 
-  init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void) {
+  init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void): BlockTypes | null {
     console.log('init ProcessHistoryHandler');
     if (!this.#enabled) {
-      return;
+      return null;
     }
 
     window.addEventListener(
       'hashchange',
       () => {
-        const blockNameFromHash = location.hash.replace('#', '');
+        const blockNameFromHash = this.#getCurrentLocationHash();
 
         const blockType = blockNameFromHash as BlockTypes;
         console.log('hashchange', blockNameFromHash, blockType);
@@ -32,6 +32,13 @@ export class ProcessHistoryHandler {
       },
       { signal: this.#abortController.signal },
     );
+
+    const currentLocationHash = this.#getCurrentLocationHash();
+    if (currentLocationHash) {
+      return currentLocationHash as BlockTypes;
+    }
+
+    return null;
   }
 
   registerBlockChange(blockType: BlockTypes) {
@@ -49,5 +56,9 @@ export class ProcessHistoryHandler {
 
     console.log('stop ProcessHistoryHandler');
     this.#abortController.abort();
+  }
+
+  #getCurrentLocationHash() {
+    return window.location.hash.replace('#', '');
   }
 }

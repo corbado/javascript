@@ -169,6 +169,12 @@ paths:
       operationId: ProcessGet
       tags:
         - Auth
+      parameters:
+        - in: query
+          required: false
+          name: preferredBlock
+          schema:
+            $ref: '#/components/schemas/blockType'
       responses:
         '200':
           description: tbd
@@ -531,6 +537,9 @@ components:
       required:
         - identifiers
         - appName
+        - publicSignupEnabled
+        - fullNameRequired
+        - passkeyAppendInterval
       properties:
         appName:
           type: string
@@ -538,6 +547,13 @@ components:
           type: array
           items:
             $ref: 'common.yml#/components/schemas/loginIdentifierConfig'
+        publicSignupEnabled:
+          type: boolean
+        fullNameRequired:
+          type: boolean
+        passkeyAppendInterval:
+          type: string
+          enum: [ 'not_specified', '0d', '1d', '3d', '1w', '3w', '1m', '3m' ]
 
     updateComponentConfigRsp:
       type: object
@@ -556,6 +572,8 @@ components:
         passkeyAppendShown:
           type: integer
           format: int64
+        preferredBlock:
+          $ref: '#/components/schemas/blockType'
 
     processInitRsp:
       type: object
@@ -750,11 +768,12 @@ components:
       type: object
       required:
         - passkeys
+        - paging
       properties:
         passkeys:
           type: array
           items:
-            $ref: '#/components/schemas/passKeyItem'
+            $ref: '#/components/schemas/passkey'
         paging:
           $ref: 'common.yml#/components/schemas/paging'
 
@@ -774,28 +793,26 @@ components:
         id:
           type: string
 
-    passKeyItem:
+    passkey:
       type: object
       required:
         - id
-        - credentialHash
-        - aaguid
-        - userAgent
+        - credentialID
         - attestationType
         - transport
         - backupEligible
         - backupState
+        - authenticatorAAGUID
+        - sourceOS
+        - sourceBrowser
         - lastUsed
-        - status
         - created
+        - status
       properties:
         id:
           type: string
-        credentialHash:
-          type: string
-        aaguid:
-          type: string
-        userAgent:
+          example: "cre-12345"
+        credentialID:
           type: string
         attestationType:
           type: string
@@ -803,19 +820,26 @@ components:
           type: array
           items:
             type: string
+            enum: [ 'usb', 'nfc', 'ble', 'internal', 'hybrid', 'smart-card' ]
         backupEligible:
           type: boolean
         backupState:
           type: boolean
+        authenticatorAAGUID:
+          type: string
+        sourceOS:
+          type: string
+        sourceBrowser:
+          type: string
         lastUsed:
           type: string
-          description: Timestamp of when the entity was last used in yyyy-MM-dd'T'HH:mm:ss format
+          description: Timestamp of when the passkey was last used in yyyy-MM-dd'T'HH:mm:ss format
+        created:
+          $ref: 'common.yml#/components/schemas/created'
         status:
           type: string
           enum: [ 'pending', 'active' ]
           description: "Status"
-        created:
-          $ref: 'common.yml#/components/schemas/created'
 
     processResponse:
       type: object
@@ -893,6 +917,16 @@ components:
         error:
           $ref: '#/components/schemas/requestError'
 
+    fullNameWithError:
+      type: object
+      required:
+        - fullName
+      properties:
+        fullName:
+          type: string
+        error:
+          $ref: '#/components/schemas/requestError'
+
     loginIdentifierType:
       type: string
       enum: [ email, phone, username ]
@@ -919,14 +953,7 @@ components:
           items:
             $ref: '#/components/schemas/loginIdentifierWithError'
         fullName:
-          type: object
-          required:
-            - value
-          properties:
-            value:
-              type: string
-            error:
-              $ref: '#/components/schemas/requestError'
+          $ref: '#/components/schemas/fullNameWithError'
 
     generalBlockLoginInit:
       type: object
@@ -980,8 +1007,11 @@ components:
       type: object
       required:
         - challenge
+        - identifierValue
       properties:
         challenge:
+          type: string
+        identifierValue:
           type: string
 
     generalBlockPasskeyAppended:

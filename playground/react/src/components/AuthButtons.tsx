@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Value } from 'react-phone-number-input';
+import { Value, formatPhoneNumberIntl } from 'react-phone-number-input';
 import PhoneInput from 'react-phone-number-input';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CountrySelectWithIcon } from './CountrySelect';
+import './temp.css';
+import PhoneInputField from './PhoneField2';
 
 export const AuthButtons = () => {
   const navigate = useNavigate();
@@ -30,9 +32,15 @@ export const AuthButtons = () => {
       >
         Login Page
       </button>
-      <div>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          console.log(value, 'phone number form submitted');
+        }}
+      >
         <PhoneInput
-          className='cb-text-2 cb-phone-input-field-input'
+          className='phone-input-field'
+          smartCaret={true}
           value={value}
           onChange={setValue}
           countrySelectComponent={CountrySelectWithIcon}
@@ -40,7 +48,13 @@ export const AuthButtons = () => {
           countryCallingCodeEditable={false}
           defaultCountry='US'
         />
-      </div>
+
+        <div style={{ width: '350px', margin: '1rem 0rem' }}>
+          <PhoneInputField onChange={setValue} />
+        </div>
+      </form>
+      {value && <p>Phone number value: {value}</p>}
+      {value && <p>International phone number value: {formatPhoneNumberIntl(value)}</p>}
     </div>
   );
 };

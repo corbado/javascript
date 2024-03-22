@@ -108,8 +108,6 @@ export const AuthFlow: FC = () => {
     }
   }, [currentScreen]);
 
-  console.log(currentScreen?.block.error);
-
   // Render the component if it exists, otherwise a fallback or null
   return initState === InitState.Failed ? (
     <ComponentUnavailableError />

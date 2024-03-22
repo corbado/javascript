@@ -10,7 +10,6 @@ export class ProcessHistoryHandler {
   }
 
   init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void): BlockTypes | null {
-    console.log('init ProcessHistoryHandler');
     if (!this.#enabled) {
       return null;
     }
@@ -21,7 +20,6 @@ export class ProcessHistoryHandler {
         const blockNameFromHash = this.#getCurrentLocationHash();
 
         const blockType = blockNameFromHash as BlockTypes;
-        console.log('hashchange', blockNameFromHash, blockType);
 
         const switchWasPossible = maybeSwitchToBlock(blockType);
 
@@ -54,7 +52,6 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    console.log('stop ProcessHistoryHandler');
     this.#abortController.abort();
   }
 

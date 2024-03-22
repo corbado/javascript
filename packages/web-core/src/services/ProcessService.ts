@@ -51,7 +51,6 @@ export class ProcessService {
     frontendPreferredBlockType?: BlockType,
     isDebug = false,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
-    console.log('getAuthProcessState');
     if (isDebug) {
       log.setLevel('debug');
     } else {
@@ -60,7 +59,7 @@ export class ProcessService {
 
     const process = AuthProcess.loadFromStorage();
     if (!process) {
-      return this.#initNewAuthProcess(abortController);
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     this.#setApisV2(process.id);
@@ -72,7 +71,6 @@ export class ProcessService {
     // if the process does not contain any state yet, we recreate it from backend to get potential config changes
     // we might disable this for PROD projects
     const initial = isProcessInitial(res.val);
-    console.log('initial', initial);
     if (initial) {
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }

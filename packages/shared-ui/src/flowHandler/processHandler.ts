@@ -232,7 +232,6 @@ export class ProcessHandler {
     }
 
     this.#currentBlock = newPrimaryBlock;
-    console.log('updatePrimaryBlock', newPrimaryBlock.type, this.#currentBlock);
 
     this.#onScreenChangeCallbacks.forEach(cb =>
       cb({

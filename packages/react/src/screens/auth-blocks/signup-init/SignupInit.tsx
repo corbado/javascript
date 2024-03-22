@@ -1,5 +1,5 @@
 import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
-import type { FormEvent } from 'react';
+import type { FormEvent, MutableRefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -62,6 +62,20 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     [block],
   );
 
+  const attacheRef = (
+    ref: MutableRefObject<HTMLInputElement | undefined>,
+    value: string | undefined,
+    el: HTMLInputElement | null,
+  ) => {
+    if (el && !ref.current) {
+      ref.current = el;
+
+      if (!ref.current.value) {
+        ref.current.value = value || '';
+      }
+    }
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -79,7 +93,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             name='name'
             label={fullNameFieldLabel}
             errorMessage={fullName?.translatedError}
-            ref={el => el && (fullNameRef.current = el)}
+            ref={attacheRef.bind(null, fullNameRef, block.data.fullName?.value)}
           />
         )}
         {username && (
@@ -87,8 +101,9 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             label={usernameFieldLabel}
             id='username'
             name='username'
+            autoComplete='username'
             errorMessage={username?.translatedError}
-            ref={el => el && (usernameRef.current = el)}
+            ref={attacheRef.bind(null, usernameRef, block.data.userName?.value)}
           />
         )}
         {email && (
@@ -99,7 +114,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             type='email'
             autoComplete='email'
             errorMessage={email?.translatedError}
-            ref={el => el && (emailRef.current = el)}
+            ref={attacheRef.bind(null, emailRef, block.data.email?.value)}
           />
         )}
         {phone && (
@@ -112,7 +127,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             inputMode='numeric'
             pattern='\+[0-9]*'
             errorMessage={phone?.translatedError}
-            ref={el => el && (phoneRef.current = el)}
+            ref={attacheRef.bind(null, phoneRef, block.data.phone?.value)}
           />
         )}
 

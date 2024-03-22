@@ -9,7 +9,8 @@
   --cb-dark: #000000;
   --cb-border-color: #c7c7c7;
   --cb-secondary-link-color: #59acff;
-  --cb-edit-box-color: #fafafa;
+  --cb-box-color: #fafafa;
+  --cb-box-color-hover: #C5C6C5;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;

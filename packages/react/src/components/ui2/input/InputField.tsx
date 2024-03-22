@@ -5,7 +5,6 @@ import { SecondaryButton } from '../buttons/SecondaryButton';
 import ErrorMessage from '../errors/ErrorMessage';
 import { Text } from '../typography/Text';
 import { Input } from './Input';
-import PhoneInput from './PhoneInput';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -16,12 +15,10 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     text: string;
     onClick: () => void;
   };
-  showPhoneNumberInput?: boolean;
-  onInputChange?: (value: string) => void;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, labelLink, showPhoneNumberInput, type = 'text', id, errorMessage, onInputChange, ...props }, ref) => (
+  ({ label, labelLink, type = 'text', id, errorMessage, ...props }, ref) => (
     <div className='cb-input-field'>
       {label && (
         <label
@@ -48,22 +45,14 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           )}
         </label>
       )}
-      {showPhoneNumberInput ? (
-        <PhoneInput
-          onChange={value => onInputChange && onInputChange(value)}
-          hasError={!!errorMessage}
-          ref={ref}
-        />
-      ) : (
-        <Input
-          {...props}
-          type={type}
-          id={id}
-          aria-label={label}
-          ref={ref}
-          hasError={!!errorMessage}
-        />
-      )}
+      <Input
+        {...props}
+        type={type}
+        id={id}
+        aria-label={label}
+        ref={ref}
+        hasError={!!errorMessage}
+      />
       {errorMessage && <ErrorMessage message={errorMessage} />}
     </div>
   ),

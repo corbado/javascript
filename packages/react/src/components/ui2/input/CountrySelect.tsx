@@ -22,11 +22,10 @@ interface CountrySelectProps {
   onChange: (value: Country) => void;
 }
 
-export const CountrySelectWithIcon: FC<CountrySelectProps> = ({
+export const CountrySelect: FC<CountrySelectProps> = ({
   value,
   options,
   iconComponent: Icon,
-  arrowComponent: Arrow = DefaultArrowComponent,
   disabled,
   readOnly,
   onChange,
@@ -45,10 +44,10 @@ export const CountrySelectWithIcon: FC<CountrySelectProps> = ({
   );
 
   return (
-    <div className='phone-input-field-button'>
+    <div className='cb-phone-input-field-button'>
       <select
         {...rest}
-        className='phone-input-field-selection'
+        className='cb-phone-input-field-selection'
         disabled={disabled || readOnly}
         value={value}
         onChange={onChange_}
@@ -60,7 +59,7 @@ export const CountrySelectWithIcon: FC<CountrySelectProps> = ({
               key={countryCode}
               value={countryCode}
               disabled={countryCode === value}
-              className={`phone-input-field-selection-item${countryCode === value ? ' phone-input-field-selection-item-selected' : ''}`}
+              className={`cb-phone-input-field-selection-item${countryCode === value ? ' cb-phone-input-field-selection-item-selected' : ''}`}
             >
               {label} (+{getCountryCallingCode(countryCode) || ''})
             </option>
@@ -72,14 +71,9 @@ export const CountrySelectWithIcon: FC<CountrySelectProps> = ({
           label={(selectedOption && selectedOption.label) ?? ''}
         />
       )}
-      <Arrow />
     </div>
   );
 };
-
-function DefaultArrowComponent() {
-  return <div className='PhoneInputCountrySelectArrow' />;
-}
 
 function getSelectedOption(options: CountryOption[], value: Country | undefined) {
   for (const option of options) {

@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Value, formatPhoneNumberIntl } from 'react-phone-number-input';
-import PhoneInput from 'react-phone-number-input';
+// import { useState } from 'react';
+// import { Value, formatPhoneNumberIntl } from 'react-phone-number-input';
+// import PhoneInput from 'react-phone-number-input';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CountrySelectWithIcon } from './CountrySelect';
-import './temp.css';
-import PhoneInputField from './PhoneField2';
+// import { CountrySelectWithIcon } from './CountrySelect';
+// import './temp.css';
+// import PhoneInputField from './PhoneField2';
 
 export const AuthButtons = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const [value, setValue] = useState<Value>();
+  // const [value, setValue] = useState<Value>();
 
   return (
     <div className='auth-buttons'>
@@ -32,7 +32,7 @@ export const AuthButtons = () => {
       >
         Login Page
       </button>
-      <form
+      {/* <form
         onSubmit={e => {
           e.preventDefault();
           console.log(value, 'phone number form submitted');
@@ -54,7 +54,7 @@ export const AuthButtons = () => {
         </div>
       </form>
       {value && <p>Phone number value: {value}</p>}
-      {value && <p>International phone number value: {formatPhoneNumberIntl(value)}</p>}
+      {value && <p>International phone number value: {formatPhoneNumberIntl(value)}</p>} */}
     </div>
   );
 };

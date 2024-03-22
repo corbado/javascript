@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
+import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -56,23 +57,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         userName: usernameRef.current?.value,
       };
 
-      console.log(identifiers);
-
       const fullName = fullNameRef.current?.value;
       void block.updateUserData(identifiers, fullName);
     },
-    [block],
+    [block, phoneInput, setLoading],
   );
-
-  const handle1 = (e: FormEvent) => {
-    console.log('handle1');
-    handleSubmit(e);
-  };
-
-  const handle2 = (e: FormEvent) => {
-    console.log('handle2');
-    handleSubmit(e);
-  };
 
   return (
     <>
@@ -83,7 +72,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
       </SubHeader>
       <form
         className='cb-form'
-        onSubmit={handle1}
+        onSubmit={handleSubmit}
       >
         {fullName && (
           <InputField
@@ -115,11 +104,13 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           />
         )}
         {phone && (
-          <InputField
+          <PhoneInputField
             label={phoneFieldLabel}
+            id='phone'
             errorMessage={phone?.translatedError}
-            showPhoneNumberInput
-            onInputChange={setPhoneInput}
+            initialCountry='US'
+            initialPhoneNumber={block.data.phone?.value}
+            onChange={setPhoneInput}
           />
         )}
 
@@ -127,7 +118,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           type='submit'
           className='cb-signup-form-submit-button'
           isLoading={loading}
-          onClick={handle2}
+          onClick={handleSubmit}
         >
           {submitButtonText}
         </PrimaryButton>

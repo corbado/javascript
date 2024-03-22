@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/input/InputField';
+import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
 import { Header } from '../../../components/ui2/typography/Header';
 
 export interface EditPhoneProps {
@@ -47,14 +47,10 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       >
         {headerText}
       </Header>
-      <InputField
-        value={phone}
+      <PhoneInputField
+        initialPhoneNumber={phone}
         errorMessage={errorMessage}
-        ref={phoneInputRef}
-        type='tel'
-        inputMode='numeric'
-        pattern='\+[0-9]*'
-        onChange={e => setPhone(e.target.value)}
+        onChange={setPhone}
       />
       <PrimaryButton
         isLoading={loading}

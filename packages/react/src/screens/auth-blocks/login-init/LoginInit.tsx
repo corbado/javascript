@@ -6,6 +6,7 @@ import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import type { InputFieldProps } from '../../../components/ui2/input/InputField';
 import InputField from '../../../components/ui2/input/InputField';
+import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -17,12 +18,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const [usePhone, setUsePhone] = useState<boolean>(
     block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
   );
+  const [phoneInput, setPhoneInput] = useState<string>('');
   const textFieldRef = useRef<HTMLInputElement>();
   const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
 
   useEffect(() => {
     setLoading(false);
-    if (block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled)) {
+    const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
+    if (shouldUsePhone) {
       setUsePhone(true);
     }
 
@@ -66,16 +69,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         : undefined;
 
       return (
-        <InputField
+        <PhoneInputField
           label={t('textField.phone')}
-          id='phone'
-          name='phone'
-          autoComplete='phone webauthn'
-          type='tel'
-          inputMode='numeric'
-          pattern='\+[0-9]*'
           labelLink={fieldLink}
-          {...commonProps}
+          autocomplete='tel webauthn'
+          initialCountry='US'
+          initialPhoneNumber={textField?.value}
+          errorMessage={textField?.translatedError}
+          onChange={setPhoneInput}
         />
       );
     }
@@ -117,9 +118,13 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       e.preventDefault();
       setLoading(true);
 
-      void block.start(textFieldRef.current?.value ?? '', usePhone);
+      if (usePhone) {
+        void block.start(phoneInput, true);
+      } else {
+        void block.start(textFieldRef.current?.value ?? '', false);
+      }
     },
-    [block, usePhone],
+    [block, usePhone, phoneInput],
   );
 
   return (

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
+import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
 import { Header } from '../../../components/ui2/typography/Header';
 
 export interface EditUserDataProps {
@@ -31,18 +32,16 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const inputFieldComputedProps = useMemo(() => {
     let type: string, autoComplete: string, name: string;
 
-    if (block.data.userHandleType === LoginIdentifierType.Phone) {
-      type = 'tel';
-      autoComplete = 'phone';
-      name = 'phone';
-    } else if (block.data.userHandleType === LoginIdentifierType.Email) {
+    if (block.data.userHandleType === LoginIdentifierType.Email) {
       type = 'email';
       autoComplete = 'email';
       name = 'email';
-    } else {
+    } else if (block.data.userHandleType === LoginIdentifierType.Username) {
       type = 'username';
       autoComplete = 'username';
       name = 'username';
+    } else {
+      return undefined;
     }
 
     return {
@@ -81,13 +80,21 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   return (
     <div className='cb-edit-data-section'>
       <Header className='cb-edit-data-section-header'>{headerText}</Header>
-      <InputField
-        {...inputFieldComputedProps}
-        value={passkeyUserHandle}
-        errorMessage={errorMessage}
-        ref={passkeyUserHandleInputRef}
-        onChange={e => setPasskeyUserHandle(e.target.value)}
-      />
+      {block.data.userHandleType === LoginIdentifierType.Phone ? (
+        <PhoneInputField
+          initialPhoneNumber={passkeyUserHandle}
+          errorMessage={errorMessage}
+          onChange={setPasskeyUserHandle}
+        />
+      ) : (
+        <InputField
+          {...inputFieldComputedProps}
+          value={passkeyUserHandle}
+          errorMessage={errorMessage}
+          ref={passkeyUserHandleInputRef}
+          onChange={e => setPasskeyUserHandle(e.target.value)}
+        />
+      )}
       <PrimaryButton
         isLoading={loading}
         disabled={passkeyUserHandle === block.data.userHandle}

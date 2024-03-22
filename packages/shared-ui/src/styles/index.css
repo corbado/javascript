@@ -141,86 +141,93 @@
 .cb-phone-input-field {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
-  position: relative;
-  font-family: var(--cb-secondary-font);
-  font-weight: var(--cb-font-weight-normal);
+  align-items: center;
+  gap: 0rem;
+  border: 1px solid var(--cb-border-color);
+  border-radius: var(--cb-border-radius-sm);
+  height: var(--cb-input-field-height);
   background-color: var(--cb-white);
   color: var(--cb-text-primary-color);
-  border-radius: var(--cb-border-radius-sm);
-  border: 1px solid var(--cb-border-color);
-  height: var(--cb-input-field-height);
 }
 
-.cb-phone-input-field:focus {
+.cb-phone-input-field input {
+  flex: 4;
+  width: 100%;
+  border: none;
+  font-size: 13px;
+  height: 93%;
+  border-top-right-radius: var(--cb-border-radius-sm);
+  border-bottom-right-radius: var(--cb-border-radius-sm);
+  padding-left: 0.5rem;
+  background-color: var(--cb-white);
+    color: var(--cb-text-primary-color);
+}
+
+.cb-phone-input-field input:focus {
   outline: none;
-  border: 1px solid var(--cb-primary-color);
 }
 
 .cb-phone-input-field-button {
-  flex: 1;
   display: flex;
-  flex-direction: row;
-  background-color: var(--cb-box-color);
-  cursor: pointer;
-  gap: 0.5rem;
+  flex: 1;
+  position: relative;
+  align-self: stretch;
+  justify-content: center;
   align-items: center;
-  border: 0px;
-  padding-left: 0.8rem;
+  background-color: var(--cb-box-color);
+  color: var(--cb-text-primary-color);
+  border: none;
+  cursor: pointer;
+  gap: 0.3rem;
   border-top-left-radius: var(--cb-border-radius-sm);
   border-bottom-left-radius: var(--cb-border-radius-sm);
+  height: var(--cb-input-field-height);
+  padding-left: 0.35rem;
 }
 
-.cb-phone-input-field-button svg {
-  width: 20px;
+.cb-phone-input-field-button:hover {
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-phone-input-field-button img {
+  width: 1.5rem;
+  margin: auto;
+  padding-top: 0.25rem;
 }
 
 .cb-phone-input-field-selection {
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
   width: 100%;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
   background-color: var(--cb-box-color);
-  top: calc(var(--cb-input-field-height) * 1.1);
-  height: 250px;
-  overflow-y: auto;
-}
-
-.cb-phone-input-field-selection svg {
-  width: 20px;
+    color: var(--cb-text-primary-color);
 }
 
 .cb-phone-input-field-selection-item {
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  border-bottom: 1px solid var(--cb-border-color);
-}
-
-.cb-phone-input-field-selection-item-selected {
-  cursor: none;
-  background-color: var(--cb-box-color-hover);
-  color: var(--cb-primary-color);
+  gap: 1rem;
+  padding: 1rem;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: var(--cb-box-color);
+    color: var(--cb-text-primary-color);
 }
 
 .cb-phone-input-field-selection-item:hover {
   background-color: var(--cb-box-color-hover);
 }
 
-.cb-phone-input-field-input {
-  flex: 4;
-  border: 0px;
-  height: 93%;
-  background-color: var(--cb-white);
-  font-family: var(--cb-secondary-font);
-  border-top-right-radius: var(--cb-border-radius-sm);
-  border-bottom-right-radius: var(--cb-border-radius-sm);
-}
-
-.cb-phone-input-field-input:focus {
-  outline: none;
+.cb-phone-input-field-selection-item-selected {
+  cursor: none;
+  background-color: var(--cb-box-color-hover);
+  color: var(--cb-primary-color);
 }
 
 .cb-error-message {

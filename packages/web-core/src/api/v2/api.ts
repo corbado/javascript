@@ -175,10 +175,10 @@ export interface BlockBodyData {
     'identifiers': Array<LoginIdentifierWithError>;
     /**
      * 
-     * @type {GeneralBlockSignupInitFullName}
+     * @type {FullNameWithError}
      * @memberof BlockBodyData
      */
-    'fullName'?: GeneralBlockSignupInitFullName;
+    'fullName'?: FullNameWithError;
     /**
      * 
      * @type {LoginIdentifierType}
@@ -291,6 +291,25 @@ export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReason
 /**
  * 
  * @export
+ * @interface FullNameWithError
+ */
+export interface FullNameWithError {
+    /**
+     * 
+     * @type {string}
+     * @memberof FullNameWithError
+     */
+    'fullName': string;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof FullNameWithError
+     */
+    'error'?: RequestError;
+}
+/**
+ * 
+ * @export
  * @interface GeneralBlockLoginInit
  */
 export interface GeneralBlockLoginInit {
@@ -376,6 +395,12 @@ export interface GeneralBlockPasskeyVerify {
      * @memberof GeneralBlockPasskeyVerify
      */
     'challenge': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockPasskeyVerify
+     */
+    'identifierValue': string;
 }
 /**
  * 
@@ -391,29 +416,10 @@ export interface GeneralBlockSignupInit {
     'identifiers': Array<LoginIdentifierWithError>;
     /**
      * 
-     * @type {GeneralBlockSignupInitFullName}
+     * @type {FullNameWithError}
      * @memberof GeneralBlockSignupInit
      */
-    'fullName'?: GeneralBlockSignupInitFullName;
-}
-/**
- * 
- * @export
- * @interface GeneralBlockSignupInitFullName
- */
-export interface GeneralBlockSignupInitFullName {
-    /**
-     * 
-     * @type {string}
-     * @memberof GeneralBlockSignupInitFullName
-     */
-    'value': string;
-    /**
-     * 
-     * @type {RequestError}
-     * @memberof GeneralBlockSignupInitFullName
-     */
-    'error'?: RequestError;
+    'fullName'?: FullNameWithError;
 }
 /**
  * 
@@ -706,16 +712,16 @@ export interface MePasskeyDeleteRsp {
 export interface MePasskeyRsp {
     /**
      * 
-     * @type {Array<PassKeyItem>}
+     * @type {Array<Passkey>}
      * @memberof MePasskeyRsp
      */
-    'passkeys': Array<PassKeyItem>;
+    'passkeys': Array<Passkey>;
     /**
      * 
      * @type {Paging}
      * @memberof MePasskeyRsp
      */
-    'paging'?: Paging;
+    'paging': Paging;
 }
 /**
  * 
@@ -758,83 +764,99 @@ export interface Paging {
 /**
  * 
  * @export
- * @interface PassKeyItem
+ * @interface Passkey
  */
-export interface PassKeyItem {
+export interface Passkey {
     /**
      * 
      * @type {string}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
     'id': string;
     /**
      * 
      * @type {string}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
-    'credentialHash': string;
+    'credentialID': string;
     /**
      * 
      * @type {string}
-     * @memberof PassKeyItem
-     */
-    'aaguid': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassKeyItem
-     */
-    'userAgent': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
     'attestationType': string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
-    'transport': Array<string>;
+    'transport': Array<PasskeyTransportEnum>;
     /**
      * 
      * @type {boolean}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
     'backupEligible': boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
     'backupState': boolean;
     /**
-     * Timestamp of when the entity was last used in yyyy-MM-dd\'T\'HH:mm:ss format
+     * 
      * @type {string}
-     * @memberof PassKeyItem
+     * @memberof Passkey
+     */
+    'authenticatorAAGUID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Passkey
+     */
+    'sourceOS': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Passkey
+     */
+    'sourceBrowser': string;
+    /**
+     * Timestamp of when the passkey was last used in yyyy-MM-dd\'T\'HH:mm:ss format
+     * @type {string}
+     * @memberof Passkey
      */
     'lastUsed': string;
     /**
-     * Status
-     * @type {string}
-     * @memberof PassKeyItem
-     */
-    'status': PassKeyItemStatusEnum;
-    /**
      * Timestamp of when the entity was created in yyyy-MM-dd\'T\'HH:mm:ss format
      * @type {string}
-     * @memberof PassKeyItem
+     * @memberof Passkey
      */
     'created': string;
+    /**
+     * Status
+     * @type {string}
+     * @memberof Passkey
+     */
+    'status': PasskeyStatusEnum;
 }
 
-export const PassKeyItemStatusEnum = {
+export const PasskeyTransportEnum = {
+    Usb: 'usb',
+    Nfc: 'nfc',
+    Ble: 'ble',
+    Internal: 'internal',
+    Hybrid: 'hybrid',
+    SmartCard: 'smart-card'
+} as const;
+
+export type PasskeyTransportEnum = typeof PasskeyTransportEnum[keyof typeof PasskeyTransportEnum];
+export const PasskeyStatusEnum = {
     Pending: 'pending',
     Active: 'active'
 } as const;
 
-export type PassKeyItemStatusEnum = typeof PassKeyItemStatusEnum[keyof typeof PassKeyItemStatusEnum];
+export type PasskeyStatusEnum = typeof PasskeyStatusEnum[keyof typeof PasskeyStatusEnum];
 
 /**
  * tbd.
@@ -919,7 +941,15 @@ export interface ProcessInitReq {
      * @memberof ProcessInitReq
      */
     'passkeyAppendShown'?: number;
+    /**
+     * 
+     * @type {BlockType}
+     * @memberof ProcessInitReq
+     */
+    'preferredBlock'?: BlockType;
 }
+
+
 /**
  * tbd.
  * @export
@@ -1039,7 +1069,39 @@ export interface UpdateComponentConfigReq {
      * @memberof UpdateComponentConfigReq
      */
     'identifiers': Array<LoginIdentifierConfig>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateComponentConfigReq
+     */
+    'publicSignupEnabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateComponentConfigReq
+     */
+    'fullNameRequired': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateComponentConfigReq
+     */
+    'passkeyAppendInterval': UpdateComponentConfigReqPasskeyAppendIntervalEnum;
 }
+
+export const UpdateComponentConfigReqPasskeyAppendIntervalEnum = {
+    NotSpecified: 'not_specified',
+    _0d: '0d',
+    _1d: '1d',
+    _3d: '3d',
+    _1w: '1w',
+    _3w: '3w',
+    _1m: '1m',
+    _3m: '3m'
+} as const;
+
+export type UpdateComponentConfigReqPasskeyAppendIntervalEnum = typeof UpdateComponentConfigReqPasskeyAppendIntervalEnum[keyof typeof UpdateComponentConfigReqPasskeyAppendIntervalEnum];
+
 /**
  * 
  * @export
@@ -1618,10 +1680,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        processGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        processGet: async (preferredBlock?: BlockType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v2/auth/process`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1640,6 +1703,10 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
             // authentication projectID required
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+            if (preferredBlock !== undefined) {
+                localVarQueryParameter['preferredBlock'] = preferredBlock;
+            }
 
 
     
@@ -2031,11 +2098,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async processGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.processGet(options);
+        async processGet(preferredBlock?: BlockType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.processGet(preferredBlock, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2222,11 +2290,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
+         * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        processGet(options?: any): AxiosPromise<ProcessResponse> {
-            return localVarFp.processGet(options).then((request) => request(axios, basePath));
+        processGet(preferredBlock?: BlockType, options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.processGet(preferredBlock, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -2432,12 +2501,13 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
+     * @param {BlockType} [preferredBlock] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public processGet(options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).processGet(options).then((request) => request(this.axios, this.basePath));
+    public processGet(preferredBlock?: BlockType, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).processGet(preferredBlock, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

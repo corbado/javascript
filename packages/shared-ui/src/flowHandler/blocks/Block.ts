@@ -72,4 +72,17 @@ export abstract class Block<A> {
   init() {
     return;
   }
+
+  async confirmAbort(): Promise<void> {
+    const newBlock = await this.app.authProcessService.resetAuthProcess();
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  cancelAbort(originalBlock: Block<unknown>) {
+    this.updateProcessFrontend(originalBlock, originalBlock.alternatives);
+
+    return;
+  }
 }

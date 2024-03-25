@@ -37,6 +37,7 @@ export type BlockDataPasskeyAppended = Record<string, never>;
 
 export type BlockDataEmailVerify = {
   email: string;
+  verificationMethod: 'email-otp' | 'email-link';
   translatedError?: string;
   retryNotBefore?: number;
 };

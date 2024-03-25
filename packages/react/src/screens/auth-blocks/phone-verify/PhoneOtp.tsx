@@ -82,7 +82,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   async function phoneChange() {
     if (block.authType === AuthType.Login) {
       setLoading(true);
-      await block.resetProcess();
+      await block.confirmAbort();
       setLoading(false);
     }
 

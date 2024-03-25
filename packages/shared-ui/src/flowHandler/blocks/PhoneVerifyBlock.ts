@@ -75,11 +75,4 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
 
     return;
   }
-
-  async resetProcess(): Promise<void> {
-    const newBlock = await this.app.authProcessService.resetAuthProcess();
-    this.updateProcess(newBlock);
-
-    return;
-  }
 }

@@ -37,6 +37,9 @@ export async function setBackendConfigs(identifiers: Identifier[]) {
         'X-Corbado-ProjectID': process.env.PLAYWRIGHT_PROJECT_ID ?? '',
       },
       body: JSON.stringify({
+        fullNameRequired: false,
+        publicSignupEnabled: true,
+        passkeyAppendInterval: '1d',
         identifiers: identifiers,
       }),
     },

@@ -71,14 +71,17 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
       <PhoneInput
         className='cb-phone-input-field'
         limitMaxLength={true}
-        smartCaret={true}
+        smartCaret={false}
         value={phoneNumber}
         onChange={onChange_}
         countrySelectComponent={CountrySelect}
         international
-        countryCallingCodeEditable={false}
+        countryCallingCodeEditable={true}
         defaultCountry={initialCountry ?? undefined}
         autoComplete={autocomplete}
+        onCountryChange={value => {
+          console.log('Country changed:', value);
+        }}
       />
       {errorMessage && <ErrorMessage message={errorMessage} />}
     </div>

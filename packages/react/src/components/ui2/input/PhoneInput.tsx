@@ -1,14 +1,14 @@
 import parsePhoneNumberFromString, {
   AsYouType,
+  type CountryCode,
   getCountries,
   getCountryCallingCode,
-  type CountryCode,
 } from 'libphonenumber-js';
-import React, { ChangeEvent, FC } from 'react';
+import type { ChangeEvent, FC } from 'react';
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import flags from 'react-phone-number-input/flags';
 import en from 'react-phone-number-input/locale/en.json';
-import './temp2.css';
 
 interface PhoneInputProps {
   hasError?: boolean;
@@ -161,97 +161,3 @@ export const PhoneInputField: FC<PhoneInputProps> = ({ className, hasError, onCh
     </div>
   );
 };
-
-// function getSelectedOption(
-//   options: CountryOption[],
-//   value: CountryCode | undefined,
-// ): (CountryOption & { Flag: typeof flags.US }) | undefined {
-//   if (!value) {
-//     return undefined;
-//   }
-//   const selectedOption = options.find(option => option.value === value);
-
-//   if (!selectedOption) {
-//     return undefined;
-//   }
-
-//   const Flag = flags[value];
-
-//   return {
-//     ...selectedOption,
-//     Flag,
-//   };
-// }
-
-// interface CountryOption {
-//   value: CountryCode;
-//   label: string;
-//   divider?: boolean;
-// }
-
-// interface CountrySelectProps {
-//   unicodeFlags?: boolean;
-//   disabled?: boolean;
-//   readOnly?: boolean;
-//   className?: string;
-//   value?: CountryCode;
-//   options: CountryOption[];
-//   iconComponent?: ElementType<{ country: CountryCode; label: string }>;
-//   arrowComponent?: ElementType;
-//   onChange: (value: CountryCode) => void;
-// }
-
-// export const CountrySelectWithIcon: FC<CountrySelectProps> = ({
-//   value,
-//   options,
-//   iconComponent: Icon,
-//   disabled,
-//   readOnly,
-//   onChange,
-//   ...rest
-// }) => {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const selectionRef = useRef<HTMLDivElement>(null);
-//   const selectedOption = useMemo(() => {
-//     return getSelectedOption(options, value);
-//   }, [options, value]);
-
-//   const onChange_ = useCallback(
-//     (event: ChangeEvent<HTMLSelectElement>) => {
-//       const value = event.target.value as CountryCode;
-//       onChange(value);
-//     },
-//     [onChange],
-//   );
-
-//   return (
-//     <div className='phone-input-field-button'>
-//       <select
-//         {...rest}
-//         className='phone-input-field-selection'
-//         disabled={disabled || readOnly}
-//         value={value}
-//         onChange={onChange_}
-//       >
-//         {options
-//           .filter(({ value, divider }) => !divider && value)
-//           .map(({ value: countryCode, label }) => (
-//             <option
-//               key={countryCode}
-//               value={countryCode}
-//               disabled={countryCode === value}
-//               className={`phone-input-field-selection-item${countryCode === value ? ' phone-input-field-selection-item-selected' : ''}`}
-//             >
-//               {label} (+{getCountryCallingCode(countryCode) || ''})
-//             </option>
-//           ))}
-//       </select>
-//       {Icon && (
-//         <Icon
-//           country={value ?? 'US'}
-//           label={(selectedOption && selectedOption.label) ?? ''}
-//         />
-//       )}
-//     </div>
-//   );
-// };

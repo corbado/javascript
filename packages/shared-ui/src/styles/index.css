@@ -310,7 +310,7 @@
   align-items: center;
   width: 90%;
   height: 1.9rem;
-  background-color: var(--cb-edit-box-color);
+  background-color: var(--cb-box-color);
   border: 1px solid #999;
   border-radius: var(--cb-border-radius-sm);
 }

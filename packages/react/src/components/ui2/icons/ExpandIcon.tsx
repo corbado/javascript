@@ -1,4 +1,4 @@
-import emailIconSrc from '@corbado/shared-ui/assets/email.svg';
+import expandIconSrc from '@corbado/shared-ui/assets/expand.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
@@ -7,9 +7,9 @@ import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 
-export const EmailIcon: FC<IconProps> = memo(props => {
+export const ExpandIcon: FC<IconProps> = memo(props => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, emailIconSrc, '--cb-box-color-hover');
+  const { logoSVG } = useIconWithTheme(svgRef, expandIconSrc);
 
   return (
     <Icon

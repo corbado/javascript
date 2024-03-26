@@ -1,4 +1,5 @@
 import type {
+  ConfirmProcessAbortBlock,
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
@@ -14,6 +15,7 @@ import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import { ConfirmProcessAbort } from '../../screens/auth-blocks/confirm-process-abort/ConfirmProcessAbort';
 import { EditEmail } from '../../screens/auth-blocks/email-verify/EditEmail';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLinkSuccess';
@@ -45,6 +47,8 @@ export const AuthFlow: FC = () => {
     }
 
     switch (currentScreen.block.type) {
+      case BlockTypes.ConfirmProcessAbort:
+        return <ConfirmProcessAbort block={currentScreen.block as ConfirmProcessAbortBlock} />;
       case BlockTypes.LoginInit:
         return <LoginInit block={currentScreen.block as LoginInitBlock} />;
       case BlockTypes.SignupInit:

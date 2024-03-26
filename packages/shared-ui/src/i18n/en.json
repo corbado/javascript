@@ -228,6 +228,12 @@
     }
   },
   "errors": {
+    "confirm_process_abort": {
+      "header": "Abort Signup?",
+      "subheader": "Are you sure you want to abort the signup process? Any information you've entered will be lost.",
+      "confirm": "Yes, take me back to the start",
+      "back": "Back"
+    },
     "missing_identifier_type": {
       "username": "Please enter a username.",
       "email": "Please enter an email address.",

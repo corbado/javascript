@@ -6,13 +6,14 @@ import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import { Divider } from '../../../components/ui2/Divider';
 import { PasskeyErrorIcon } from '../../../components/ui2/icons/PasskeyErrorIcon';
+import { PersonIcon } from '../../../components/ui2/icons/PersonIcon';
 import { Header } from '../../../components/ui2/typography/Header';
 import { Text } from '../../../components/ui2/typography/Text';
 import { UserInfo } from '../../../components/ui2/UserInfo';
 
 export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `${block.authType}.passkey-verify.passkey-error`,
+    keyPrefix: `login.passkey-verify.passkey-error`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -30,9 +31,9 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
     setLoading(false);
   };
 
-  async function emailChange() {
+  async function userInfoChange() {
     setLoading(true);
-    await block.resetProcess();
+    await block.confirmAbort();
     setLoading(false);
   }
 
@@ -52,7 +53,8 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
         </Text>
         <UserInfo
           userData={block.data.identifierValue}
-          onRightIconClick={() => void emailChange()}
+          leftIcon={<PersonIcon className='cb-user-info-section-left-icon' />}
+          onRightIconClick={() => void userInfoChange()}
         ></UserInfo>
       </div>
       <Text

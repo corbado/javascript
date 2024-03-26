@@ -1,5 +1,5 @@
 import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
-import type { FormEvent } from 'react';
+import type { FormEvent, MutableRefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -63,6 +63,20 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     [block, phoneInput, setLoading],
   );
 
+  const attacheRef = (
+    ref: MutableRefObject<HTMLInputElement | undefined>,
+    value: string | undefined,
+    el: HTMLInputElement | null,
+  ) => {
+    if (el && !ref.current) {
+      ref.current = el;
+
+      if (!ref.current.value) {
+        ref.current.value = value || '';
+      }
+    }
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -80,7 +94,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             name='name'
             label={fullNameFieldLabel}
             errorMessage={fullName?.translatedError}
-            ref={el => el && (fullNameRef.current = el)}
+            ref={attacheRef.bind(null, fullNameRef, block.data.fullName?.value)}
           />
         )}
         {username && (
@@ -88,8 +102,9 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             label={usernameFieldLabel}
             id='username'
             name='username'
+            autoComplete='username'
             errorMessage={username?.translatedError}
-            ref={el => el && (usernameRef.current = el)}
+            ref={attacheRef.bind(null, usernameRef, block.data.userName?.value)}
           />
         )}
         {email && (
@@ -100,7 +115,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             type='email'
             autoComplete='email'
             errorMessage={email?.translatedError}
-            ref={el => el && (emailRef.current = el)}
+            ref={attacheRef.bind(null, emailRef, block.data.email?.value)}
           />
         )}
         {phone && (
@@ -111,6 +126,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             initialCountry='US'
             initialPhoneNumber={block.data.phone?.value}
             onChange={setPhoneInput}
+            // ref={attacheRef.bind(null, phoneRef, block.data.phone?.value)}
           />
         )}
 

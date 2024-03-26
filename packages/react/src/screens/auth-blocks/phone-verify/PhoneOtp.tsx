@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
+import { PhoneIcon } from '../../../components/ui2/icons/PhoneIcon';
 import { OtpInputGroup } from '../../../components/ui2/input/OtpInputGroup';
 import { Header } from '../../../components/ui2/typography/Header';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -82,7 +83,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   async function phoneChange() {
     if (block.authType === AuthType.Login) {
       setLoading(true);
-      await block.resetProcess();
+      await block.confirmAbort();
       setLoading(false);
     }
 
@@ -97,6 +98,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       <UserInfo
         className='cb-phone-otp-user-info-section'
         userData={block.data.phone}
+        leftIcon={<PhoneIcon className='cb-user-info-section-left-icon' />}
         onRightIconClick={() => void phoneChange()}
       ></UserInfo>
       <Text

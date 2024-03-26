@@ -6,7 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 import { Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import { UsersApi } from '../api/v2';
+import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
+import { ConfigsApi, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import { AuthState, CorbadoError, type PasskeyDeleteError, type PasskeyListError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
@@ -33,9 +34,10 @@ export class SessionService {
   #webAuthnService: WebAuthnService;
 
   readonly #setShortSessionCookie: boolean;
-  readonly #frontendApiUrl: string;
   readonly #isPreviewMode: boolean;
   readonly #projectId: string;
+  readonly #frontendApiUrlSuffix: string;
+  #sessionConfig: SessionConfigRsp | undefined;
 
   #shortSession: ShortSession | undefined;
   #longSession: string | undefined;
@@ -45,19 +47,25 @@ export class SessionService {
   #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
-  constructor(projectId: string, setShortSessionCookie: boolean, isPreviewMode: boolean, frontendApiUrl?: string) {
+  constructor(projectId: string, setShortSessionCookie: boolean, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
+    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#longSession = undefined;
     this.#setShortSessionCookie = setShortSessionCookie;
-    this.#frontendApiUrl = frontendApiUrl || `https://${projectId}.frontendapi.corbado.io`;
     this.#isPreviewMode = isPreviewMode;
   }
 
   /**
    * Initializes the SessionService by registering a callback that is called when the shortSession changes.
    */
-  async init() {
+  async init(): Promise<CorbadoError | null> {
+    const sessionConfig = await this.#loadSessionConfig(this.#projectId, this.#frontendApiUrlSuffix);
+    if (sessionConfig.err) {
+      return sessionConfig.val;
+    }
+
+    this.#sessionConfig = sessionConfig.val;
     this.#longSession = SessionService.#getLongSessionToken();
     this.#shortSession = SessionService.#getShortTermSessionToken();
 
@@ -79,6 +87,8 @@ export class SessionService {
     document.addEventListener('visibilitychange', () => {
       this.#handleVisibilityChange();
     });
+
+    return null;
   }
 
   /**
@@ -172,10 +182,6 @@ export class SessionService {
       await this.#usersApi.currentUserSessionLogout({});
     });
 
-    if (this.#setShortSessionCookie) {
-      // @todo clean up short session cookie
-    }
-
     this.clear();
     this.#onShortSessionChange(undefined);
   }
@@ -202,7 +208,6 @@ export class SessionService {
    */
   setSession(shortSessionValue: string, longSession: string | undefined) {
     const shortSession = new ShortSession(shortSessionValue);
-    console.log('set session', shortSession, longSession);
 
     this.#setShortTermSessionToken(shortSession);
     this.#setApisV2(longSession ?? '');
@@ -212,16 +217,19 @@ export class SessionService {
   }
 
   #setApisV2(longSession: string): void {
+    const frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#frontendApiUrl,
+      basePath: frontendApiUrl,
     });
     const axiosInstance = this.#createAxiosInstanceV2(longSession);
 
-    this.#usersApi = new UsersApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#usersApi = new UsersApi(config, frontendApiUrl, axiosInstance);
   }
 
-  #createAxiosInstanceV2(longSession: string): AxiosInstance {
+  // usually sessionService needs a longSession for all it's requests
+  // just the initial request to fetch the sessionConfig doesn't need it
+  #createAxiosInstanceV2(longSession?: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -236,13 +244,20 @@ export class SessionService {
       headers['X-Corbado-Mode'] = 'preview';
     }
 
-    const out = axios.create({
-      withCredentials: true,
-      headers: { ...headers, Authorization: `Bearer ${longSession}` },
-    });
+    let axiosInstance: AxiosInstance;
+    if (longSession) {
+      axiosInstance = axios.create({
+        withCredentials: true,
+        headers: { ...headers, Authorization: `Bearer ${longSession}` },
+      });
+    } else {
+      axiosInstance = axios.create({
+        withCredentials: true,
+      });
+    }
 
     // We transform AxiosErrors into CorbadoErrors using axios interceptors.
-    out.interceptors.response.use(
+    axiosInstance.interceptors.response.use(
       response => response,
       (error: AxiosError) => {
         const e = CorbadoError.fromAxiosError(error);
@@ -251,7 +266,7 @@ export class SessionService {
       },
     );
 
-    return out;
+    return axiosInstance;
   }
 
   /**
@@ -322,7 +337,8 @@ export class SessionService {
     this.#shortSession = value;
 
     if (this.#setShortSessionCookie) {
-      document.cookie = `${shortSessionKey}=${value.toString()}; path=/;`;
+      const cookieConfig = this.#getShortSessionCookieConfig();
+      document.cookie = this.#getShortSessionCookieString(cookieConfig, value);
     }
   }
 
@@ -334,8 +350,20 @@ export class SessionService {
     this.#shortSession = undefined;
 
     if (this.#setShortSessionCookie) {
-      document.cookie = `${shortSessionKey}=; path=/; expires=${new Date().toUTCString()}`;
+      const cookieConfig = this.#getShortSessionCookieConfig();
+      document.cookie = this.#getDeleteShortSessionCookieString(cookieConfig);
     }
+  }
+
+  #getShortSessionCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
+    const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
+    return `${shortSessionKey}=${value}; domain=${config.domain}; secure=${config.secure}; sameSite=${config.sameSite}; path=${config.path}; expires=${expires}`;
+  }
+
+  #getDeleteShortSessionCookieString(config: ShortSessionCookieConfig) {
+    return `${shortSessionKey}=; domain=${config.domain}; secure=${config.secure}; sameSite=${config.sameSite}; path=${
+      config.path
+    }; expires=${new Date().toUTCString()}`;
   }
 
   /**
@@ -437,5 +465,39 @@ export class SessionService {
     }
 
     this.#authStateChanges.next(authState);
+  };
+
+  #getSessionConfig = () => {
+    if (!this.#sessionConfig) {
+      throw CorbadoError.missingInit();
+    }
+
+    return this.#sessionConfig;
+  };
+
+  #getShortSessionCookieConfig = (): ShortSessionCookieConfig => {
+    const cfg = this.#getSessionConfig().shortSessionCookieConfig;
+    if (!cfg) {
+      throw CorbadoError.invalidConfig();
+    }
+
+    return cfg;
+  };
+
+  #loadSessionConfig = async (
+    projectId: string,
+    frontendApiSuffix: string,
+  ): Promise<Result<SessionConfigRsp, CorbadoError>> => {
+    const config = new Configuration({
+      apiKey: this.#projectId,
+    });
+
+    const axiosInstance = this.#createAxiosInstanceV2();
+    const configsApi = new ConfigsApi(config, `https://${projectId}.${frontendApiSuffix}`, axiosInstance);
+
+    return Result.wrapAsync(async () => {
+      const r = await configsApi.getSessionConfig();
+      return r.data;
+    });
   };
 }

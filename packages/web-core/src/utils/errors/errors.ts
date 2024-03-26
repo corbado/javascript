@@ -35,6 +35,14 @@ export class CorbadoError extends Error {
     this.#translatedMessage = message;
   }
 
+  static missingInit(): CorbadoError {
+    return new CorbadoError(false, false);
+  }
+
+  static invalidConfig(): CorbadoError {
+    return new CorbadoError(false, false);
+  }
+
   static ignore(): CorbadoError {
     return new CorbadoError(true, true);
   }

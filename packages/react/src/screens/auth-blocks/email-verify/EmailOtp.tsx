@@ -138,7 +138,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
         yahooButtonLabel={yahooLinkText}
         outlookButtonLabel={outlookLinkText}
       />
-      <Text fontFamilyVariant='secondary'>{bodyResendText}</Text>
+      <Text fontFamilyVariant='primary'>{bodyResendText}</Text>
       <PrimaryButton
         className='cb-email-resend-button'
         isLoading={loading}

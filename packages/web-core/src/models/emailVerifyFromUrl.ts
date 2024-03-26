@@ -1,6 +1,6 @@
 import type { GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
 import { AuthType } from '../api';
-import type { AuthProcess } from './authProcess';
+import { AuthProcess } from './authProcess';
 
 type EmailVerifyFromUrlData = {
   blockData: {
@@ -9,49 +9,56 @@ type EmailVerifyFromUrlData = {
     verificationMethod: string;
   };
   authType: number;
-  processID: string;
+  process: {
+    id: string;
+    expires: number;
+    frontendApiUrl: string;
+  };
 };
 
 export class EmailVerifyFromUrl {
   data: GeneralBlockVerifyIdentifier;
   token: string;
   isNewDevice: boolean;
-  processID: string;
+  process: AuthProcess;
   authType: AuthType;
 
   constructor(
     data: GeneralBlockVerifyIdentifier,
     token: string,
     isNewDevice: boolean,
-    processID: string,
+    process: AuthProcess,
     authType: AuthType,
   ) {
     this.data = data;
     this.token = token;
     this.isNewDevice = isNewDevice;
-    this.processID = processID;
+    this.process = process;
     this.authType = authType;
   }
 
   static fromURL(encodedProcess: string, token: string, existingProcess: AuthProcess | undefined): EmailVerifyFromUrl {
     console.log('maybeProcess', encodedProcess, existingProcess);
-    const decodedProcess = JSON.parse(atob(encodedProcess)) as EmailVerifyFromUrlData;
+    const decoded = JSON.parse(atob(encodedProcess)) as EmailVerifyFromUrlData;
+    const process = decoded.process;
 
     const data: GeneralBlockVerifyIdentifier = {
       alternativeVerificationMethods: [],
-      identifier: decodedProcess.blockData.identifier,
-      retryNotBefore: decodedProcess.blockData.retryNotBefore,
-      verificationMethod: decodedProcess.blockData.verificationMethod as VerificationMethod,
+      identifier: decoded.blockData.identifier,
+      retryNotBefore: decoded.blockData.retryNotBefore,
+      verificationMethod: decoded.blockData.verificationMethod as VerificationMethod,
     };
 
-    const isNewDevice = existingProcess?.id !== decodedProcess.processID;
+    const isNewDevice = existingProcess?.id !== process.id;
     let authType: AuthType;
-    if (decodedProcess.authType === 0) {
+    if (decoded.authType === 0) {
       authType = AuthType.Login;
     } else {
       authType = AuthType.Signup;
     }
 
-    return new EmailVerifyFromUrl(data, token, isNewDevice, decodedProcess.processID, authType);
+    const authProcess = new AuthProcess(process.id, process.expires, process.frontendApiUrl);
+
+    return new EmailVerifyFromUrl(data, token, isNewDevice, authProcess, authType);
   }
 }

@@ -18,8 +18,8 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({ target = '_blan
     >
       <span className='cb-icon-button-icon'>{icon}</span>
       <Text
-        fontFamilyVariant='secondary'
-        textColorVariant='secondary'
+        fontFamilyVariant='primary'
+        textColorVariant='primary'
       >
         {label}
       </Text>

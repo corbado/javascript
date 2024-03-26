@@ -126,7 +126,6 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             initialCountry='US'
             initialPhoneNumber={block.data.phone?.value}
             onChange={setPhoneInput}
-            // ref={attacheRef.bind(null, phoneRef, block.data.phone?.value)}
           />
         )}
 

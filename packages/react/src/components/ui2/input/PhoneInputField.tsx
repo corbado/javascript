@@ -1,12 +1,11 @@
 import type { FC } from 'react';
-import React, { useState } from 'react';
-import type { Country, Value } from 'react-phone-number-input';
-import PhoneInput from 'react-phone-number-input';
+import React from 'react';
+import type { Country } from 'react-phone-number-input';
 
 import { SecondaryButton } from '../buttons/SecondaryButton';
 import ErrorMessage from '../errors/ErrorMessage';
 import { Text } from '../typography/Text';
-import { CountrySelect } from './CountrySelect';
+import { PhoneInput } from './PhoneInput';
 
 export interface PhoneInputFieldProps {
   label?: string;
@@ -19,8 +18,8 @@ export interface PhoneInputFieldProps {
   };
   initialCountry?: Country;
   initialPhoneNumber?: string;
+  autoComplete?: string;
   onChange: (value: string) => void;
-  autocomplete?: string;
 }
 
 export const PhoneInputField: FC<PhoneInputFieldProps> = ({
@@ -28,16 +27,13 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
   labelLink,
   id,
   errorMessage,
-  initialCountry,
   initialPhoneNumber,
-  autocomplete = 'tel',
+  initialCountry = 'US',
+  autoComplete = 'tel',
   onChange,
 }) => {
-  const [phoneNumber, setPhoneNumber] = useState<Value>(initialPhoneNumber || '');
-
-  const onChange_ = (value: Value) => {
-    setPhoneNumber(value);
-    onChange(value);
+  const onChange_ = (value: string | undefined) => {
+    onChange(value || '');
   };
 
   return (
@@ -69,19 +65,11 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
       )}
 
       <PhoneInput
-        className='cb-phone-input-field'
-        limitMaxLength={true}
-        smartCaret={false}
-        value={phoneNumber}
+        initialCountry={initialCountry}
+        initialPhoneNumber={initialPhoneNumber}
+        hasError={!!errorMessage}
+        autoComplete={autoComplete}
         onChange={onChange_}
-        countrySelectComponent={CountrySelect}
-        international
-        countryCallingCodeEditable={true}
-        defaultCountry={initialCountry ?? undefined}
-        autoComplete={autocomplete}
-        onCountryChange={value => {
-          console.log('Country changed:', value);
-        }}
       />
       {errorMessage && <ErrorMessage message={errorMessage} />}
     </div>

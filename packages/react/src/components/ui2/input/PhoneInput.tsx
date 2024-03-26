@@ -4,29 +4,57 @@ import parsePhoneNumberFromString, {
   getCountries,
   getCountryCallingCode,
 } from 'libphonenumber-js';
-import type { ChangeEvent, FC } from 'react';
+import type { ChangeEvent, FC, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import flags from 'react-phone-number-input/flags';
 import en from 'react-phone-number-input/locale/en.json';
 
+import { ExpandIcon } from '../icons/ExpandIcon';
+import { Text } from '../typography/Text';
+
 interface PhoneInputProps {
   hasError?: boolean;
   className?: string;
+  initialCountry?: CountryCode;
+  initialPhoneNumber?: string;
+  autoComplete?: string;
   onChange: (value: string | undefined) => void;
 }
 
 const countries = getCountries();
 
-export const PhoneInputField: FC<PhoneInputProps> = ({ className, hasError, onChange }) => {
+export const PhoneInput: FC<PhoneInputProps> = ({
+  className,
+  hasError,
+  initialCountry,
+  initialPhoneNumber,
+  autoComplete = 'tel',
+  onChange,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState<CountryCode>('US');
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(initialCountry ?? 'US');
   const [filteredCountries, setFilteredCountries] = useState(countries);
   const asYouTypeRef = useRef(new AsYouType('US'));
   const selectionRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const Flag = flags[selectedCountry];
+
+  useEffect(() => {
+    if (!initialPhoneNumber) {
+      return;
+    }
+
+    const parsedNumber = parsePhoneNumberFromString(initialPhoneNumber);
+    if (!parsedNumber) {
+      return;
+    }
+
+    handleCountryChange(parsedNumber.country);
+    setPhoneNumber(parsedNumber.nationalNumber);
+    onChange(parsedNumber.number);
+  }, [initialPhoneNumber]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -104,40 +132,54 @@ export const PhoneInputField: FC<PhoneInputProps> = ({ className, hasError, onCh
     setFilteredCountries(countriesList);
   };
 
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (!phoneNumber) {
+        setIsOpen(true);
+        event.preventDefault();
+      }
+    }
+  };
+
   return (
-    <div className={`phone-input-field${hasError ? ' cb-input-error' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`cb-phone-input-field${hasError ? ' cb-input-error' : ''}${className ? ` ${className}` : ''}`}>
       <button
         type='button'
-        className='phone-input-field-button'
+        className='cb-phone-input-field-button'
         onClick={toggleDropdown}
       >
         {Flag && <Flag title={selectedCountry} />}{' '}
-        <div>
-          <span className='cb-text-2'>+{getCountryCallingCode(selectedCountry)}</span>
-        </div>
+        <Text
+          level='2'
+          fontFamilyVariant='secondary'
+        >
+          +{getCountryCallingCode(selectedCountry)}
+        </Text>
+        <ExpandIcon />
       </button>
       <input
-        className='cb-text-2 phone-input-field-input'
+        className='cb-text-2 cb-phone-input-field-input'
         placeholder=''
         id='phone'
         name='phone'
-        autoComplete='tel'
+        autoComplete={autoComplete}
         type='tel'
         inputMode='numeric'
         value={phoneNumber}
         onChange={onPhoneChange}
+        onKeyDown={handleKeyDown}
       />
 
       {isOpen && (
         <div
-          className='phone-input-field-selection'
+          className='cb-phone-input-field-selection'
           ref={selectionRef}
         >
           <input
             ref={searchInputRef}
             type='text'
             placeholder='Search...'
-            className='phone-input-field-search'
+            className='cb-text-2 cb-phone-input-field-search'
             onChange={onSearchChange}
           />
           {filteredCountries.map(option => {
@@ -146,13 +188,16 @@ export const PhoneInputField: FC<PhoneInputProps> = ({ className, hasError, onCh
             return (
               <div
                 key={option}
-                className={`phone-input-field-selection-item${option === selectedCountry ? ' phone-input-field-selection-item-selected' : ''}`}
+                className={`cb-phone-input-field-selection-item${option === selectedCountry ? ' cb-phone-input-field-selection-item-selected' : ''}`}
                 onClick={() => handleCountryChange(option)}
               >
                 {Flag && <Flag title={option} />}
-                <span className='cb-text-2'>
+                <Text
+                  level='2'
+                  fontFamilyVariant='secondary'
+                >
                   {en[option]} (+{getCountryCallingCode(option)})
-                </span>
+                </Text>
               </div>
             );
           })}

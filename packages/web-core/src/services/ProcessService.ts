@@ -12,6 +12,7 @@ import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
+import { BlockType } from '../api/v2';
 import { AuthApi, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
@@ -45,7 +46,11 @@ export class ProcessService {
     this.#setApisV2('');
   }
 
-  async init(abortController: AbortController, isDebug = false): Promise<Result<ProcessResponse, CorbadoError>> {
+  async init(
+    abortController: AbortController,
+    frontendPreferredBlockType?: BlockType,
+    isDebug = false,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
@@ -54,13 +59,20 @@ export class ProcessService {
 
     const process = AuthProcess.loadFromStorage();
     if (!process) {
-      return this.#initNewAuthProcess(abortController);
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     this.#setApisV2(process.id);
-    const res = await this.#getAuthProcessState(abortController);
+    const res = await this.#getAuthProcessState(abortController, frontendPreferredBlockType);
     if (res.err) {
       return this.#initNewAuthProcess(abortController);
+    }
+
+    // if the process does not contain any state yet, we recreate it from backend to get potential config changes
+    // we might disable this for PROD projects
+    const initial = isProcessInitial(res.val);
+    if (initial) {
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     return res;
@@ -128,8 +140,11 @@ export class ProcessService {
     return out;
   }
 
-  async #initNewAuthProcess(abortController: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
-    const res = await this.#initAuthProcess(abortController);
+  async #initNewAuthProcess(
+    abortController: AbortController,
+    frontendPreferredBlockType?: BlockType,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
+    const res = await this.#initAuthProcess(abortController, frontendPreferredBlockType);
     if (res.err) {
       return res;
     }
@@ -151,7 +166,10 @@ export class ProcessService {
     this.#authApi = new AuthApi(config, this.#frontendApiUrl, axiosInstance);
   }
 
-  async #initAuthProcess(abortController: AbortController): Promise<Result<ProcessInitRsp, CorbadoError>> {
+  async #initAuthProcess(
+    abortController: AbortController,
+    frontendPreferredBlockType?: BlockType,
+  ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const maybeClientHandle = localStorage.getItem(clientHandleKey);
 
     const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
@@ -163,7 +181,13 @@ export class ProcessService {
     const canUsePasskeys =
       window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 
-    const res = await this.#processInit(abortController, canUsePasskeys, maybeClientHandle, passkeyAppendShown);
+    const res = await this.#processInit(
+      abortController,
+      canUsePasskeys,
+      maybeClientHandle,
+      passkeyAppendShown,
+      frontendPreferredBlockType,
+    );
     if (res.err) {
       return res;
     }
@@ -194,6 +218,7 @@ export class ProcessService {
     canUsePasskeys: boolean,
     clientHandle: string | null,
     passkeyAppendShown: number | null,
+    frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const req: ProcessInitReq = {
       clientInformation: {
@@ -202,14 +227,18 @@ export class ProcessService {
         clientEnvHandle: clientHandle ?? undefined,
       },
       passkeyAppendShown: passkeyAppendShown ?? undefined,
+      preferredBlock: frontendPreferredBlockType,
     };
 
     return this.wrapWithErr(() => this.#authApi.processInit(req, { signal: abortController.signal }));
   }
 
-  async #getAuthProcessState(abortController: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
+  async #getAuthProcessState(
+    abortController: AbortController,
+    frontendPreferredBlockType?: BlockType,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
     return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processGet(abortController);
+      const r = await this.#authApi.processGet(frontendPreferredBlockType, { signal: abortController.signal });
       return r.data;
     });
   }
@@ -475,5 +504,17 @@ export class ProcessService {
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();
+  }
+}
+
+// returns true if the current process does not contain any meaningful data any can thus be reset to a new process
+function isProcessInitial(process: ProcessResponse): boolean {
+  switch (process.blockBody.block) {
+    case BlockType.LoginInit:
+      return process.blockBody.data.identifierValue.length === 0;
+    case BlockType.SignupInit:
+      return process.blockBody.data.identifiers.reduce((acc, curr) => acc && curr.identifier.length === 0, true);
+    default:
+      return false;
   }
 }

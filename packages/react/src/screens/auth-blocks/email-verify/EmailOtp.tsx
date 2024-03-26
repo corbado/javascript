@@ -94,7 +94,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   async function emailChange() {
     if (block.authType === AuthType.Login) {
       setLoading(true);
-      await block.resetProcess();
+      await block.confirmAbort();
       setLoading(false);
     }
 

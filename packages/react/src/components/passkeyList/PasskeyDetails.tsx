@@ -1,4 +1,4 @@
-import { aaguidMappings, getParsedUA } from '@corbado/shared-ui';
+import { aaguidMappings } from '@corbado/shared-ui';
 import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
@@ -12,8 +12,9 @@ export interface PasskeyDetailsProps {
 
 export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
-  const userAgent = getParsedUA(passkey.userAgent);
-  const title = aaguidMappings[passkey.aaguid]?.name ?? 'Passkey';
+  const sourceBrowser = passkey.sourceBrowser;
+  const sourceOS = passkey.sourceOS;
+  const title = aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey';
 
   return (
     <div className='cb-passkey-list-details'>
@@ -52,8 +53,8 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
             t={t}
             values={{
               date: passkey.created,
-              browser: userAgent.browser.name,
-              os: userAgent.os.name,
+              browser: sourceBrowser,
+              os: sourceOS,
             }}
           />
         </Text>

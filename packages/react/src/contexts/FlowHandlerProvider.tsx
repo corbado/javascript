@@ -31,7 +31,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, on
       const res = await flowHandler.init();
       if (res.ok) {
         setInitState(InitState.Success);
-      } else {
+      } else if (!res.val.ignore) {
         setInitState(InitState.Failed);
       }
     })();

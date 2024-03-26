@@ -13,7 +13,7 @@ import { UserInfo } from '../../../components/ui2/UserInfo';
 
 export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `${block.authType}.passkey-verify.passkey-error`,
+    keyPrefix: `login.passkey-verify.passkey-error`,
   });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,7 +33,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
 
   async function userInfoChange() {
     setLoading(true);
-    await block.resetProcess();
+    await block.confirmAbort();
     setLoading(false);
   }
 

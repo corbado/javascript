@@ -1,16 +1,10 @@
-import type {
-  BlockBody,
-  CorbadoApp,
-  GeneralBlockPasskeyAppend,
-  GeneralBlockVerifyIdentifier,
-  ProcessCommon,
-} from '@corbado/web-core';
+import type { BlockBody, CorbadoApp, GeneralBlockPasskeyAppend, ProcessCommon } from '@corbado/web-core';
 import { AuthType, BlockType, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataPasskeyAppend } from '../types';
+import type { BlockDataEmailVerify, BlockDataPasskeyAppend } from '../types';
 import { Block } from './Block';
 
 export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
@@ -30,12 +24,31 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     const data = blockBody.data as GeneralBlockPasskeyAppend;
     const alternatives = blockBody.alternatives ?? [];
 
-    const fallbacks = alternatives
-      .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
+    // if there is a completed alternative, the passkey-append block can be skipped and the user can log in immediately
+    const canBeSkipped = alternatives.some(a => a.block === BlockType.Completed);
+
+    this.authType = blockBody.authType;
+    const userHandleType = createLoginIdentifierType(data.identifierType);
+
+    if (this.authType === AuthType.Login) {
+      app.authProcessService.dropPasskeyAppendShown();
+    }
+
+    this.data = {
+      availableFallbacks: [],
+      userHandle: data.identifierValue,
+      userHandleType,
+      canBeSkipped,
+    };
+  }
+
+  init() {
+    this.data.availableFallbacks = this.alternatives
+      .filter(a => a.type === BlockTypes.PhoneVerify || a.type === BlockType.EmailVerify)
       .map(alternative => {
-        switch (alternative.block) {
+        switch (alternative.type) {
           case BlockType.EmailVerify: {
-            const typed = alternative.data as GeneralBlockVerifyIdentifier;
+            const typed = alternative.data as BlockDataEmailVerify;
             if (typed.verificationMethod === VerificationMethod.EmailOtp) {
               return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
             }
@@ -48,23 +61,6 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
             throw new Error('Invalid block type');
         }
       });
-
-    // if there is a completed alternative, the passkey-append block can be skipped and the user can log in immediately
-    const canBeSkipped = alternatives.some(a => a.block === BlockType.Completed);
-
-    this.authType = blockBody.authType;
-    const userHandleType = createLoginIdentifierType(data.identifierType);
-
-    if (this.authType === AuthType.Login) {
-      app.authProcessService.dropPasskeyAppendShown();
-    }
-
-    this.data = {
-      availableFallbacks: fallbacks,
-      userHandle: data.identifierValue,
-      userHandleType,
-      canBeSkipped,
-    };
   }
 
   showPasskeyBenefits() {

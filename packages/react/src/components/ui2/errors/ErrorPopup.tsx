@@ -1,7 +1,6 @@
 import type { CorbadoError } from '@corbado/web-core';
 import React from 'react';
 
-import { DeveloperError } from './DeveloperError';
 import { UserError } from './UserError';
 
 type Props = {
@@ -10,12 +9,8 @@ type Props = {
   customerSupportEmail?: string;
 };
 
-const ErrorPopup = ({ isDevMode, error, customerSupportEmail }: Props) => {
-  if (isDevMode) {
-    return <UserError customerSupportEmail={customerSupportEmail} />;
-  }
-
-  return <DeveloperError error={error} />;
+const ErrorPopup = ({ customerSupportEmail }: Props) => {
+  return <UserError customerSupportEmail={customerSupportEmail} />;
 };
 
 export default ErrorPopup;

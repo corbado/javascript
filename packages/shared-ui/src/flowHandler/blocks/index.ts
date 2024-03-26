@@ -7,3 +7,4 @@ export * from './SignupInitBlock';
 export * from './LoginInitBlock';
 export * from './PasskeyVerifyBlock';
 export * from './ContinueOnOtherEnvBlock';
+export * from './ConfirmProcessAbortBlock';

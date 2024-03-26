@@ -29,7 +29,6 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   }, [corbadoApp]);
 
   const logout = useCallback(() => {
-    corbadoApp.authProcessService.clearProcess();
     return corbadoApp.sessionService.logout();
   }, [corbadoApp]);
 

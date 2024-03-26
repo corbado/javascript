@@ -17,7 +17,7 @@ export const AuthDetails = () => {
             logout();
 
             // TODO: this should be covered by a guard (then we can remove it)
-            navigate(`/${projectId}/auth`);
+            navigate(`/${projectId}/auth#login-init`);
           }}
         >
           Logout

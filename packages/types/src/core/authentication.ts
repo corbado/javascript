@@ -38,8 +38,9 @@ export type PassKeyItemStatus = 'pending' | 'active';
  */
 export interface PassKeyItem {
   id: string;
-  aaguid: string;
-  userAgent: string;
+  authenticatorAAGUID: string;
+  sourceBrowser: string;
+  sourceOS: string;
   attestationType: string;
   transport: Array<string>;
   backupEligible: boolean;

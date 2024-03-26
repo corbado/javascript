@@ -11,6 +11,7 @@ import exclamationIcon from './assets/exclamation.svg';
 import expandIcon from './assets/expand.svg';
 import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
+import firstPageIcon from './assets/first-page.svg';
 import gmailIcon from './assets/gmail.svg';
 import logoIcon from './assets/logo.svg';
 import outlookIcon from './assets/outlook.svg';
@@ -53,4 +54,5 @@ export const assets = {
   expandIcon,
   personIcon,
   phoneIcon,
+  firstPageIcon,
 };

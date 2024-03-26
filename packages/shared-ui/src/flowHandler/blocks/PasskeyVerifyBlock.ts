@@ -29,19 +29,25 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   ) {
     super(app, flowHandler, common, errorTranslator);
     const data = blockBody.data as GeneralBlockPasskeyAppend;
-    const alternatives = blockBody.alternatives ?? [];
-    let identifierValue = data.identifierValue;
 
-    const fallbacks = alternatives
-      .filter(a => a.block === BlockType.PhoneVerify || a.block === BlockType.EmailVerify)
+    this.authType = blockBody.authType;
+    this.data = {
+      availableFallbacks: [],
+      identifierValue: data.identifierValue,
+    };
+  }
+
+  init() {
+    this.data.availableFallbacks = this.alternatives
+      .filter(a => a.type === BlockTypes.PhoneVerify || a.type === BlockType.EmailVerify)
       .map(alternative => {
         const typed = alternative.data as GeneralBlockVerifyIdentifier;
 
-        if (!identifierValue) {
-          identifierValue = typed.identifier;
+        if (!this.data.identifierValue) {
+          this.data.identifierValue = typed.identifier;
         }
 
-        switch (alternative.block) {
+        switch (alternative.type) {
           case BlockType.EmailVerify: {
             if (typed.verificationMethod === VerificationMethod.EmailOtp) {
               return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
@@ -55,12 +61,6 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
             throw new Error('Invalid block type');
         }
       });
-
-    this.authType = blockBody.authType;
-    this.data = {
-      availableFallbacks: fallbacks,
-      identifierValue: identifierValue,
-    };
   }
 
   showPasskeyBenefits() {
@@ -95,13 +95,6 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   async initFallbackEmailLink(): Promise<void> {
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();
-    this.updateProcess(newBlock);
-
-    return;
-  }
-
-  async resetProcess(): Promise<void> {
-    const newBlock = await this.app.authProcessService.resetAuthProcess();
     this.updateProcess(newBlock);
 
     return;

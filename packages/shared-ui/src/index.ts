@@ -8,6 +8,7 @@ import editIcon from './assets/edit.svg';
 import emailIcon from './assets/email.svg';
 import emaiLinkSuccessIcon from './assets/email-link-success.svg';
 import exclamationIcon from './assets/exclamation.svg';
+import expandIcon from './assets/expand.svg';
 import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import firstPageIcon from './assets/first-page.svg';
@@ -17,6 +18,8 @@ import outlookIcon from './assets/outlook.svg';
 import passkeyAppendedIcon from './assets/passkey-appended.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
+import personIcon from './assets/person.svg';
+import phoneIcon from './assets/phone.svg';
 import secureIcon from './assets/secure-icon.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
@@ -48,5 +51,8 @@ export const assets = {
   secureIcon,
   deviceIcon,
   emaiLinkSuccessIcon,
+  expandIcon,
+  personIcon,
+  phoneIcon,
   firstPageIcon,
 };

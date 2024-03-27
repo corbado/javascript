@@ -1,4 +1,5 @@
 import { type PasskeyAppendBlock } from '@corbado/shared-ui';
+import { parsePhoneNumber } from 'libphonenumber-js';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,11 +17,16 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.passkey-append`,
   });
-  const [passkeyUserHandle, setPasskeyUserHandle] = useState<string | undefined>(undefined);
+  const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setPasskeyUserHandle(block.data.userHandle);
+    if (block.data.userHandleType !== 'phone') {
+      setPasskeyUserHandle(block.data.userHandle);
+    } else {
+      const parsedUserInfo = parsePhoneNumber(block.data.userHandle);
+      setPasskeyUserHandle(parsedUserInfo ? parsedUserInfo.formatInternational() : block.data.userHandle);
+    }
 
     setLoading(false);
   }, [block]);

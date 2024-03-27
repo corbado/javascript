@@ -35,7 +35,9 @@
     "@corbado/shared-ui": "^2.0.0-alpha.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
-    "react-i18next": "13.2.2"
+    "libphonenumber-js": "^1.10.59",
+    "react-i18next": "13.2.2",
+    "react-phone-number-input": "^3.3.9"
   },
   "devDependencies": {
     "@corbado/types": "^2.0.0-alpha.0",

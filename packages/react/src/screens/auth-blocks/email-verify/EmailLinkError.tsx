@@ -26,7 +26,12 @@ export function EmailLinkError({ block }: { block: EmailVerifyBlock }) {
       <div className='cb-email-link-error-icon-container'>
         <ExclamationIcon className='cb-email-link-error-icon' />
       </div>
-      <Text level='2'>{bodyText}</Text>
+      <Text
+        level='1'
+        fontFamilyVariant='secondary'
+      >
+        {bodyText}
+      </Text>
     </div>
   );
 }

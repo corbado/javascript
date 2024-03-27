@@ -1,5 +1,6 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
-import React, { useMemo, useState } from 'react';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -16,6 +17,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
     keyPrefix: `login.passkey-verify.passkey-error`,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<string>(block.data.identifierValue);
 
   const headerText = useMemo(() => t('header'), [t]);
   const bodyTitleText = useMemo(() => t('body_title'), [t]);
@@ -24,6 +26,11 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const primaryButtonText = useMemo(() => t('button_tryAgain'), [t]);
 
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
+
+  useEffect(() => {
+    const parsedUserInfo = parsePhoneNumber(block.data.identifierValue);
+    setUserInfo(parsedUserInfo ? parsedUserInfo.formatInternational() : block.data.identifierValue);
+  }, [block]);
 
   const passkeyLogin = async () => {
     setLoading(true);
@@ -52,7 +59,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
           {bodyTitleText}
         </Text>
         <UserInfo
-          userData={block.data.identifierValue}
+          userData={userInfo}
           leftIcon={<PersonIcon className='cb-user-info-section-left-icon' />}
           onRightIconClick={() => void userInfoChange()}
         ></UserInfo>

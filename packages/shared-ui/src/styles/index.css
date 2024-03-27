@@ -120,7 +120,7 @@
   flex-grow: 1;
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: 2.2rem;
+  height: var(-field-height);
   padding-left: 0.6rem;
   justify-content: center;
   font-family: var(--cb-secondary-font);
@@ -135,8 +135,122 @@
   border: 1px solid var(--cb-primary-color);
 }
 
-.cb-input.cb-input-error {
+.cb-input-error {
   border: 1px solid var(--cb-error-text-color);
+}
+
+.cb-phone-input-field {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  margin-top: 0.3rem;
+  flex-grow: 1;
+  font-family: var(--cb-secondary-font);
+  font-weight: var(--cb-font-weight-normal);
+  background-color: var(--cb-white);
+  color: var(--cb-text-primary-color);
+  border-radius: var(--cb-border-radius-sm);
+  border: 1px solid var(--cb-border-color);
+  height: calc(var(--cb-input-field-height) * 1.075);
+}
+
+.cb-phone-input-field:focus-within {
+  outline: none;
+  border: 1px solid var(--cb-primary-color);
+}
+
+.cb-phone-input-field.cb-input-error {
+  border: 1px solid var(--cb-error-text-color);
+}
+
+.cb-phone-input-field-button {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  color: var(--cb-text-primary-color);
+  background-color: var(--cb-box-color);
+  cursor: pointer;
+  gap: 0.25rem;
+  align-items: center;
+  border: 0px;
+  padding-left: 0.8rem;
+  height: 100%;
+  border-top-left-radius: var(--cb-border-radius-sm);
+  border-bottom-left-radius: var(--cb-border-radius-sm);
+}
+
+.cb-phone-input-field-button svg {
+  width: 20px;
+}
+
+.cb-phone-input-field-button img {
+  width: 1rem;
+}
+
+.cb-phone-input-field-selection {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  background-color: var(--cb-box-color);
+  top: calc(var(--cb-input-field-height) * 1.1);
+  height: 250px;
+  overflow-y: auto;
+}
+
+.cb-phone-input-field-selection svg {
+  width: 20px;
+}
+
+.cb-phone-input-field-selection-item {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--cb-border-color);
+}
+
+.cb-phone-input-field-selection-item-selected {
+  cursor: none;
+  background-color: var(--cb-box-color-hover);
+  color: var(--cb-primary-color);
+}
+
+.cb-phone-input-field-selection-item:hover {
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-phone-input-field-input {
+  flex: 4;
+  border: 0px;
+  height: calc(var(--cb-input-field-height) * 0.8);
+  width: 100%;
+  padding-left: 0.4rem;
+  color: var(--cb-text-primary-color);
+  background-color: var(--cb-white);
+  font-family: var(--cb-secondary-font);
+  border-top-right-radius: var(--cb-border-radius-sm);
+  border-bottom-right-radius: var(--cb-border-radius-sm);
+}
+
+.cb-phone-input-field-input:focus {
+  outline: none;
+}
+
+.cb-phone-input-field-search {
+  background-color: var(--cb-white);
+  font-family: var(--cb-secondary-font);
+  color: var(--cb-text-primary-color);
+  height: var(--cb-input-field-height);
+  font-weight: var(--cb-font-weight-normal);
+  border: none;
+  margin-bottom: 0.5rem;
+  width: 98%;
+}
+
+.cb-phone-input-field-search:focus {
+  outline: none;
 }
 
 .cb-error-message {
@@ -602,15 +716,15 @@
 }
 
 .cb-email-link-success-icon-container {
-  padding: 0.85rem 2.3rem;
+  padding: 0.4rem 2rem;
   border: 1px solid var(--cb-border-color);
   border-radius: var(--cb-border-radius-lg);
-  margin-top: 0.7rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1.75rem;
 }
 
 .cb-email-link-success-icon {
-  height: 1.9rem;
+  height: 2.5rem;
 }
 
 .cb-email-link-error-block {
@@ -620,7 +734,8 @@
   align-items: center;
   align-self: center;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
+  width: 80%;
 }
 
 .cb-email-link-error-subheader {
@@ -629,13 +744,15 @@
 }
 
 .cb-email-link-error-icon-container {
-  padding: 2.4rem;
-  border-radius: 100%;
-  background-color: #d9d9d9;
+  padding: 0.75rem 2.2rem;
+  border-radius: var(--cb-border-radius-lg);
+  border: 1px solid var(--cb-border-color);
+  margin: 1rem auto;
 }
 
 .cb-email-link-error-icon {
-  height: 1.25rem;
+  height: 1.75rem;
+  width: 1.9rem;
 }
 
 .cb-email-link-verification-block {

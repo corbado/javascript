@@ -4,6 +4,7 @@ import { CORBADO_PROJECT_ID } from './environment';
 
 await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
+  darkMode: 'off',
 });
 
 if (!Corbado.user) {
@@ -32,5 +33,6 @@ if (!Corbado.user) {
   });
 
   const passkeyList = document.getElementById('passkey-list');
+  passkeyList.style.maxWidth = '500px';
   Corbado.mountPasskeyListUI(passkeyList);
 }

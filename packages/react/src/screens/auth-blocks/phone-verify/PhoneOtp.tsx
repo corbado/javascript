@@ -1,5 +1,6 @@
 import type { PhoneVerifyBlock } from '@corbado/shared-ui';
 import { AuthType } from '@corbado/shared-ui';
+import { parsePhoneNumber } from 'libphonenumber-js';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -15,6 +16,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const timer = useRef<NodeJS.Timeout>();
+  const phoneNumberRef = useRef<string>('');
 
   const otpHasError = !loading && !!block.data.translatedError;
 
@@ -27,6 +29,13 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
     }
 
     const timer = startTimer();
+
+    const parsedPhoneNumber = parsePhoneNumber(block.data.phone);
+    if (parsedPhoneNumber) {
+      phoneNumberRef.current = parsedPhoneNumber.formatInternational();
+    } else {
+      phoneNumberRef.current = block.data.phone;
+    }
 
     return () => clearInterval(timer);
   }, [block]);
@@ -97,7 +106,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       <Header className='cb-phone-otp-block-header'>{headerText}</Header>
       <UserInfo
         className='cb-phone-otp-user-info-section'
-        userData={block.data.phone}
+        userData={phoneNumberRef.current}
         leftIcon={<PhoneIcon className='cb-user-info-section-left-icon' />}
         onRightIconClick={() => void phoneChange()}
       ></UserInfo>

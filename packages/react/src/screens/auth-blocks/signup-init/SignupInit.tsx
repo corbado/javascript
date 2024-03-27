@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
+import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -21,7 +22,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const emailRef = useRef<HTMLInputElement>();
 
   const [phone, setPhone] = useState<TextFieldWithError | null>(null);
-  const phoneRef = useRef<HTMLInputElement>();
+  const [phoneInput, setPhoneInput] = useState<string>('');
 
   const [fullName, setFullName] = useState<TextFieldWithError | null>(null);
   const fullNameRef = useRef<HTMLInputElement>();
@@ -52,14 +53,14 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
       const identifiers: LoginIdentifiers = {
         email: emailRef.current?.value,
-        phone: phoneRef.current?.value,
+        phone: phoneInput,
         userName: usernameRef.current?.value,
       };
 
       const fullName = fullNameRef.current?.value;
       void block.updateUserData(identifiers, fullName);
     },
-    [block],
+    [block, phoneInput, setLoading],
   );
 
   const attacheRef = (
@@ -118,16 +119,13 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           />
         )}
         {phone && (
-          <InputField
+          <PhoneInputField
             label={phoneFieldLabel}
             id='phone'
-            name='phone'
-            autoComplete='phone'
-            type='tel'
-            inputMode='numeric'
-            pattern='\+[0-9]*'
             errorMessage={phone?.translatedError}
-            ref={attacheRef.bind(null, phoneRef, block.data.phone?.value)}
+            initialCountry='US'
+            initialPhoneNumber={block.data.phone?.value}
+            onChange={setPhoneInput}
           />
         )}
 

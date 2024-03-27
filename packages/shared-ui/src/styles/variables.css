@@ -9,8 +9,9 @@
   --cb-dark: #000000;
   --cb-border-color: #c7c7c7;
   --cb-secondary-link-color: #59acff;
-  --cb-box-color: #fafafa;
-  --cb-box-color-hover: #C5C6C5;
+  --cb-box-color: #f5f5f5;
+  --cb-box-color-hover: #bbbbbb;
+  --cb-error-text-color: #ce1212;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
@@ -18,14 +19,14 @@
   --cb-base-font-size: 0.65rem;
   --cb-border-radius-lg: 1.125rem;
   --cb-border-radius-sm: 0.5rem;
-  --cb-error-text-color: #ce1212;
   --cb-error-font-size: 0.65rem;
+  --cb-input-field-height: 2.2rem;
 }
 
 .cb-dark {
   --cb-text-primary-color: #ffffff;
   --cb-box-color: #1f1f1f;
-  --cb-box-color-hover: #797979;
+  --cb-box-color-hover: #3b3b3b;
   --cb-dark: #ffffff;
   --cb-white: #000000;
 }

@@ -165,6 +165,7 @@ export const PhoneInput: FC<PhoneInputProps> = ({
         autoComplete={autoComplete}
         type='tel'
         inputMode='numeric'
+        maxLength={13}
         value={phoneNumber}
         onChange={onPhoneChange}
         onKeyDown={handleKeyDown}

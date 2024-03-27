@@ -142,18 +142,24 @@
   display: flex;
   flex-direction: row;
   position: relative;
+  margin-top: 0.3rem;
+  flex-grow: 1;
   font-family: var(--cb-secondary-font);
   font-weight: var(--cb-font-weight-normal);
   background-color: var(--cb-white);
   color: var(--cb-text-primary-color);
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: var(--cb-input-field-height);
+  height: calc(var(--cb-input-field-height) * 1.075);
 }
 
-.cb-phone-input-field:focus {
+.cb-phone-input-field:focus-within {
   outline: none;
   border: 1px solid var(--cb-primary-color);
+}
+
+.cb-phone-input-field.cb-input-error {
+  border: 1px solid var(--cb-error-text-color);
 }
 
 .cb-phone-input-field-button {
@@ -217,7 +223,7 @@
 .cb-phone-input-field-input {
   flex: 4;
   border: 0px;
-  height: 93%;
+  height: calc(var(--cb-input-field-height) * 0.8);
   width: 100%;
   padding-left: 0.4rem;
   color: var(--cb-text-primary-color);

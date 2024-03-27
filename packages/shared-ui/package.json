@@ -51,6 +51,7 @@
   ],
   "dependencies": {
     "@corbado/web-core": "^2.0.1-alpha.0",
+    "libphonenumber-js": "^1.10.59",
     "ua-parser-js": "^1.0.37"
   },
   "gitHead": "bdc9da96c3a34574545c5d9b522464ca9d3eca57"

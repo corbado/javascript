@@ -3,13 +3,19 @@
 .cb-container {
   display: flex;
   flex-direction: column;
-  width: 350px;
-  max-width: 350px;
-  padding: 0.5rem 1.5rem;
+  width: 400px;
+  max-width: 400px;
   background-color: var(--cb-white);
   box-shadow: 0px 11.478px 28.694px 2.296px rgba(0, 0, 0, 0.25);
   border-radius: var(--cb-border-radius-lg);
   box-sizing: content-box;
+  padding: 0;
+}
+
+.cb-container-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1.5rem;
 }
 
 .cb-form {
@@ -120,7 +126,7 @@
   flex-grow: 1;
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: var(-field-height);
+  height: var(--cb-input-field-height);
   padding-left: 0.6rem;
   justify-content: center;
   font-family: var(--cb-secondary-font);
@@ -151,7 +157,7 @@
   color: var(--cb-text-primary-color);
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: calc(var(--cb-input-field-height) * 1.075);
+  height: var(--cb-input-field-height);
 }
 
 .cb-phone-input-field:focus-within {
@@ -224,9 +230,9 @@
 .cb-phone-input-field-input {
   flex: 4;
   border: 0px;
-  height: calc(var(--cb-input-field-height) * 0.8);
+  height: var(--cb-input-field-height);
   width: 100%;
-  padding-left: 0.4rem;
+  padding: 0 0.4rem;
   color: var(--cb-text-primary-color);
   background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
@@ -273,9 +279,9 @@
   display: flex;
   gap: 1.25rem;
   justify-content: between;
-  padding: 0.1rem 1.1rem;
+  padding: 0.5rem 1.5rem;
   background-color: #e9e9e9;
-  border-radius: var(--cb-border-radius-lg);
+  border-radius: var(--cb-border-radius-lg) var(--cb-border-radius-lg) 0 0;
   color: #4b5563;
 }
 
@@ -337,6 +343,7 @@
   font-weight: var(--cb-font-weight-bold);
   cursor: pointer;
   box-sizing: border-box;
+  line-height: 1.25;
 }
 
 .cb-primary-button:hover,
@@ -373,8 +380,8 @@
 .cb-primary-button-spinner {
   border-top-color: var(--cb-button-text-primary-color);
   border-right-color: var(--cb-button-text-primary-color);
-  width: 1.1rem;
-  height: 1.1rem;
+  width: calc(var(--cb-base-font-size) * 1.25 * 1.25);
+  height: calc(var(--cb-base-font-size) * 1.25 * 1.25);
   box-sizing: border-box;
 }
 
@@ -406,6 +413,8 @@
   align-items: center;
   text-align: center;
   margin: 20px 0;
+  align-self: center;
+  width: 90%;
 }
 
 .cb-divider-line {
@@ -425,7 +434,6 @@
   align-items: center;
   width: 90%;
   height: 1.9rem;
-  background-color: var(--cb-box-color);
   border: 1px solid #999;
   border-radius: var(--cb-border-radius-sm);
 }

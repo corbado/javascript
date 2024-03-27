@@ -1,5 +1,6 @@
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
+import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
@@ -60,6 +61,7 @@ export class WebAuthnService {
   }
 
   public abortOngoingOperation() {
+    log.debug('Aborting ongoing webauthn operation');
     this.#abortController?.abort();
   }
 }

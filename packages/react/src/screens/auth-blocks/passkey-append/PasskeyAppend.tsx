@@ -1,5 +1,4 @@
 import { type PasskeyAppendBlock } from '@corbado/shared-ui';
-import { parsePhoneNumber } from 'libphonenumber-js';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,8 +23,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     if (block.data.userHandleType !== 'phone') {
       setPasskeyUserHandle(block.data.userHandle);
     } else {
-      const parsedUserInfo = parsePhoneNumber(block.data.userHandle);
-      setPasskeyUserHandle(parsedUserInfo ? parsedUserInfo.formatInternational() : block.data.userHandle);
+      setPasskeyUserHandle(block.getFormattedPhoneNumber());
     }
 
     setLoading(false);
@@ -61,8 +59,8 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       </span>
       <div className='cb-pk-append-user-info-section'>
         <Text
-          textColorVariant='secondary'
-          fontFamilyVariant='secondary'
+          textColorVariant='primary'
+          fontFamilyVariant='primary'
         >
           {passkeyUserHandle ?? ''}
         </Text>

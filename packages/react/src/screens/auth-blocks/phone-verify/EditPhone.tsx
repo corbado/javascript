@@ -1,6 +1,6 @@
 import type { PhoneVerifyBlock } from '@corbado/shared-ui';
-import type { FC } from 'react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { FC, FormEvent } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -27,20 +27,27 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
   const primaryButtonText = useMemo(() => t('button_submit'), [t]);
   const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const handleConfirm = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
 
-    const error = await block.updatePhone(phone);
+      const error = await block.updatePhone(phone);
 
-    if (error) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
-  };
+      if (error) {
+        setErrorMessage(error);
+        setLoading(false);
+        return;
+      }
+    },
+    [block, phone],
+  );
 
   return (
-    <div className='cb-edit-data-section'>
+    <form
+      className='cb-edit-data-section'
+      onSubmit={e => void handleConfirm(e)}
+    >
       <Header
         size='md'
         className='cb-edit-data-section-header'
@@ -55,7 +62,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       <PrimaryButton
         isLoading={loading}
         disabled={phone === block.data.phone}
-        onClick={() => void handleConfirm()}
+        onClick={e => void handleConfirm(e)}
       >
         {primaryButtonText}
       </PrimaryButton>
@@ -65,6 +72,6 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       >
         {secondaryButtonText}
       </SecondaryButton>
-    </div>
+    </form>
   );
 };

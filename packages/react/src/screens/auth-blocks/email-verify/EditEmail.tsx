@@ -1,6 +1,6 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
-import type { FC } from 'react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { FC, FormEvent } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -30,20 +30,27 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   );
   const secondaryButtonText = useMemo(() => t('button_cancel'), [t]);
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const handleConfirm = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
 
-    const error = await block.updateEmail(email);
+      const error = await block.updateEmail(email);
 
-    if (error) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
-  };
+      if (error) {
+        setErrorMessage(error);
+        setLoading(false);
+        return;
+      }
+    },
+    [block, email],
+  );
 
   return (
-    <div className='cb-edit-data-section'>
+    <form
+      className='cb-edit-data-section'
+      onSubmit={e => void handleConfirm(e)}
+    >
       <Header
         size='md'
         className='cb-edit-data-section-header'
@@ -57,9 +64,10 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
         onChange={e => setEmail(e.target.value)}
       />
       <PrimaryButton
+        type='submit'
         isLoading={loading}
         disabled={email === block.data.email}
-        onClick={() => void handleConfirm()}
+        onClick={e => void handleConfirm(e)}
       >
         {primaryButtonText}
       </PrimaryButton>
@@ -69,6 +77,6 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
       >
         {secondaryButtonText}
       </SecondaryButton>
-    </div>
+    </form>
   );
 };

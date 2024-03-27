@@ -1,6 +1,6 @@
 import { LoginIdentifierType, type PasskeyAppendBlock } from '@corbado/shared-ui';
-import type { FC } from 'react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { FC, FormEvent } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -51,34 +51,41 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
     };
   }, [block.data.userHandleType, errorMessage, passkeyUserHandle]);
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const handleConfirm = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
 
-    let error: string | undefined;
+      let error: string | undefined;
 
-    switch (block.data.userHandleType) {
-      case LoginIdentifierType.Email:
-        error = await block.updateEmail(passkeyUserHandle);
-        break;
-      case LoginIdentifierType.Phone:
-        error = await block.updatePhone(passkeyUserHandle);
-        break;
-      case LoginIdentifierType.Username:
-        error = await block.updateUsername(passkeyUserHandle);
-        break;
-      default:
-        throw new Error('Invalid user handle type');
-    }
+      switch (block.data.userHandleType) {
+        case LoginIdentifierType.Email:
+          error = await block.updateEmail(passkeyUserHandle);
+          break;
+        case LoginIdentifierType.Phone:
+          error = await block.updatePhone(passkeyUserHandle);
+          break;
+        case LoginIdentifierType.Username:
+          error = await block.updateUsername(passkeyUserHandle);
+          break;
+        default:
+          throw new Error('Invalid user handle type');
+      }
 
-    if (error) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
-  };
+      if (error) {
+        setErrorMessage(error);
+        setLoading(false);
+        return;
+      }
+    },
+    [block, passkeyUserHandle],
+  );
 
   return (
-    <div className='cb-edit-data-section'>
+    <form
+      className='cb-edit-data-section'
+      onSubmit={e => void handleConfirm(e)}
+    >
       <Header className='cb-edit-data-section-header'>{headerText}</Header>
       {block.data.userHandleType === LoginIdentifierType.Phone ? (
         <PhoneInputField
@@ -96,9 +103,10 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         />
       )}
       <PrimaryButton
+        type='submit'
         isLoading={loading}
         disabled={passkeyUserHandle === block.data.userHandle}
-        onClick={() => void handleConfirm()}
+        onClick={e => void handleConfirm(e)}
       >
         {primaryButtonText}
       </PrimaryButton>
@@ -108,6 +116,6 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       >
         {secondaryButtonText}
       </SecondaryButton>
-    </div>
+    </form>
   );
 };

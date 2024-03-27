@@ -709,15 +709,15 @@
 }
 
 .cb-email-link-success-icon-container {
-  padding: 0.85rem 2.3rem;
+  padding: 0.4rem 2rem;
   border: 1px solid var(--cb-border-color);
   border-radius: var(--cb-border-radius-lg);
-  margin-top: 0.7rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1.75rem;
 }
 
 .cb-email-link-success-icon {
-  height: 1.9rem;
+  height: 2.5rem;
 }
 
 .cb-email-link-error-block {
@@ -727,7 +727,8 @@
   align-items: center;
   align-self: center;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
+  width: 80%;
 }
 
 .cb-email-link-error-subheader {
@@ -736,13 +737,15 @@
 }
 
 .cb-email-link-error-icon-container {
-  padding: 2.4rem;
-  border-radius: 100%;
-  background-color: #d9d9d9;
+  padding: 0.75rem 2.2rem;
+  border-radius: var(--cb-border-radius-lg);
+  border: 1px solid var(--cb-border-color);
+  margin: 1rem auto;
 }
 
 .cb-email-link-error-icon {
-  height: 1.25rem;
+  height: 1.75rem;
+  width: 1.9rem;
 }
 
 .cb-email-link-verification-block {

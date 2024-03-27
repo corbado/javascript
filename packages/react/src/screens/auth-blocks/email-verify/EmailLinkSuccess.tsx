@@ -33,7 +33,12 @@ export const EmailLinkSuccess: FC<EmailLinkSuccessProps> = ({ block, isOldTab = 
       <div className='cb-email-link-success-icon-container'>
         <EmailLinkSuccessIcon className='cb-email-link-success-icon' />
       </div>
-      <Text level='2'>{bodyText}</Text>
+      <Text
+        level='1'
+        fontFamilyVariant='secondary'
+      >
+        {bodyText}
+      </Text>
     </div>
   );
 };

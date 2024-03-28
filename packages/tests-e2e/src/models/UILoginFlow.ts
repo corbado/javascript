@@ -81,6 +81,15 @@ export class UILoginFlow {
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
   }
+  
+  async failPasskeyInput(trigger: () => Promise<void>, check: () => Promise<void>) {
+    if (this.#cdpClient) {
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      await trigger();
+      await check();
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+    }
+  }
 
   async fillOTP(otpType: OtpType) {
     await fillOtpCode(this.page, otpType);

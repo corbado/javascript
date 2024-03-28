@@ -56,8 +56,7 @@ export class UISignupFlow {
   async addPasskeyInput(trigger: () => Promise<void>) {
     if (this.#cdpClient) {
       const credentialAddedPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
-          console.log(payload);
+        this.#cdpClient?.on('WebAuthn.credentialAdded', () => {
           resolve();
         });
       });

@@ -57,8 +57,7 @@ export class UILoginFlow {
   async addPasskeyInput(trigger: () => Promise<void>) {
     if (this.#cdpClient) {
       const credentialAddedPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
-          console.log(payload);
+        this.#cdpClient?.on('WebAuthn.credentialAdded', () => {
           resolve();
         });
       });
@@ -72,8 +71,7 @@ export class UILoginFlow {
   async assertPasskeyInput(trigger: () => Promise<void>) {
     if (this.#cdpClient) {
       const credentialAssertedPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAsserted', payload => {
-          console.log(payload);
+        this.#cdpClient?.on('WebAuthn.credentialAsserted', () => {
           resolve();
         });
       });

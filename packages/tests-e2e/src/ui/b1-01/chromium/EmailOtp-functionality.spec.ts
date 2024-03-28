@@ -4,7 +4,7 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 test.describe('Signup with email OTP proper user behavior', () => {
   test('with passkey support', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(true);
+    await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);

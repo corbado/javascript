@@ -28,15 +28,9 @@ export class UILoginFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
   }
 
-  async addWebAuthn(successful: boolean) {
+  async addWebAuthn() {
     if (this.#cdpClient) {
-      this.#authenticatorId = await addWebAuthn(this.#cdpClient, successful);
-    }
-  }
-
-  async setWebAuthnUserVerified(successful: boolean) {
-    if (this.#cdpClient) {
-      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, successful);
+      this.#authenticatorId = await addWebAuthn(this.#cdpClient);
     }
   }
 
@@ -61,6 +55,7 @@ export class UILoginFlow {
           resolve();
         });
       });
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
       await trigger();
       await credentialAddedPromise;
@@ -75,15 +70,17 @@ export class UILoginFlow {
           resolve();
         });
       });
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
       await trigger();
       await credentialAssertedPromise;
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
   }
-  
+
   async failPasskeyInput(trigger: () => Promise<void>, check: () => Promise<void>) {
     if (this.#cdpClient) {
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
       await trigger();
       await check();
@@ -130,9 +127,7 @@ export class UILoginFlow {
       await this.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
       if (registerPasskey) {
-        await this.addPasskeyInput(async () => {
-          await this.page.getByRole('button', { name: 'Create account' }).click();
-        });
+        await this.addPasskeyInput(() => this.page.getByRole('button', { name: 'Create account' }).click());
         await this.checkLandedOnScreen(ScreenNames.PasskeyAppended);
         await this.page.getByRole('button', { name: 'Continue' }).click();
       } else {

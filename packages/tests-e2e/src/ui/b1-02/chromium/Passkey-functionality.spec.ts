@@ -4,16 +4,14 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 test.describe('Signup with passkey proper user behavior', () => {
   test('before verifying identifier', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(true);
+    await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
     const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await signupFlow.addPasskeyInput(async () => {
-      await page.getByRole('button', { name: 'Create account' }).click();
-    });
+    await signupFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Create account' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -26,7 +24,7 @@ test.describe('Signup with passkey proper user behavior', () => {
 
   test('after verifying identifier', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(true);
+    await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
     const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
@@ -39,9 +37,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.fillOTP(OtpType.Phone);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await signupFlow.addPasskeyInput(async () => {
-      await page.getByRole('button', { name: 'Create passkey' }).click();
-    });
+    await signupFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();

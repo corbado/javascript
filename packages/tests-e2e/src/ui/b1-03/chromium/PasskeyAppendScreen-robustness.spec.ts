@@ -4,7 +4,7 @@ import { ScreenNames } from '../../../utils/constants';
 test.describe('PasskeyAppendScreen unproductive user behavior', () => {
   test('modify email identifier', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(true);
+    await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
     let [, email] = await signupFlow.fillIdentifiers(true, true, true);

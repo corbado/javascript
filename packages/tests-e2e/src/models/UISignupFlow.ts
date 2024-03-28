@@ -27,15 +27,9 @@ export class UISignupFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
   }
 
-  async addWebAuthn(successful: boolean) {
+  async addWebAuthn() {
     if (this.#cdpClient) {
-      this.#authenticatorId = await addWebAuthn(this.#cdpClient, successful);
-    }
-  }
-
-  async setWebAuthnUserVerified(successful: boolean) {
-    if (this.#cdpClient) {
-      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, successful);
+      this.#authenticatorId = await addWebAuthn(this.#cdpClient);
     }
   }
 
@@ -60,6 +54,7 @@ export class UISignupFlow {
           resolve();
         });
       });
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
       await trigger();
       await credentialAddedPromise;
@@ -69,6 +64,7 @@ export class UISignupFlow {
 
   async failPasskeyInput(trigger: () => Promise<void>, check: () => Promise<void>) {
     if (this.#cdpClient) {
+      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
       await trigger();
       await check();
@@ -147,12 +143,8 @@ export class UISignupFlow {
     const [username, email, phone] = await this.navigateToPasskeyAppendScreen();
 
     await this.failPasskeyInput(
-      async () => {
-        await this.page.getByRole('button', { name: 'Create account' }).click();
-      },
-      async () => {
-        await this.checkLandedOnScreen(ScreenNames.PasskeyError);
-      },
+      () => this.page.getByRole('button', { name: 'Create account' }).click(),
+      () => this.checkLandedOnScreen(ScreenNames.PasskeyError),
     );
 
     return [username, email, phone];
@@ -174,6 +166,7 @@ export class UISignupFlow {
   }
 
   async checkNoPasskeyRegistered() {
+    await expect(this.page.locator('.cb-passkey-list-card')).toHaveCount(0);
     // await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 

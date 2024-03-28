@@ -157,6 +157,13 @@ export class PasskeyAlreadyExistsError extends RecoverableError {
   }
 }
 
+export class PasskeysNotSupported extends RecoverableError {
+  constructor() {
+    super('Passkeys are not supported for this device');
+    this.name = 'errors.passkeysNotSupported';
+  }
+}
+
 export class UnknownUserError extends RecoverableError {
   constructor() {
     super('User does not exist');

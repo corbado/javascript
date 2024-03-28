@@ -61,6 +61,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/sessionConfigRsp'
 
+  /v2/me:
+    get:
+      description: Gets current user
+      operationId: CurrentUserGet
+      tags:
+        - Users
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/meRsp'
+
   /v2/me/passkeys:
     get:
       description: Gets current user's passkeys
@@ -77,7 +91,7 @@ paths:
 
   /v2/me/passkeys/append/start:
     post:
-      description: Start passkey append
+      description: Starts passkey append for current user
       operationId: CurrentUserPasskeyAppendStart
       tags:
         - Users
@@ -86,18 +100,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/passkeyAppendStartReq'
+              $ref: '#/components/schemas/mePasskeysAppendStartReq'
       responses:
         '200':
           description: tbd
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/mePasskeyAppendStartRsp'
+                $ref: '#/components/schemas/mePasskeysAppendStartRsp'
 
   /v2/me/passkeys/append/finish:
     post:
-      description: Finish passkey append
+      description: Finishes passkey append for current user
       operationId: CurrentUserPasskeyAppendFinish
       tags:
         - Users
@@ -106,9 +120,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/passkeyAppendFinishReq'
+              $ref: '#/components/schemas/mePasskeysAppendFinishReq'
       responses:
-        '204':
+        '200':
           description: tbd
 
   /v2/me/passkeys/{credentialID}:
@@ -642,20 +656,6 @@ components:
       type: object
       description: tbd.
 
-    #    passkeyAppendStartRsp:
-    #      $ref: '#/components/schemas/blockBody'
-
-    mePasskeyAppendStartRsp:
-      type: object
-      required:
-        - challenge
-        - clientInformation
-      properties:
-        challenge:
-          type: string
-        clientInformation:
-          $ref: '#/components/schemas/clientInformation'
-
     passkeyAppendFinishReq:
       type: object
       description: tbd.
@@ -664,6 +664,43 @@ components:
       properties:
         signedChallenge:
           type: string
+
+    #    passkeyAppendStartRsp:
+    #      $ref: '#/components/schemas/blockBody'
+
+    mePasskeysAppendStartReq:
+      type: object
+      required:
+        - clientInformation
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+
+    mePasskeysAppendStartRsp:
+      type: object
+      required:
+        - attestationOptions
+      properties:
+        newClientEnvHandle:
+          type: string
+        appendNotAllowedReason:
+          type: string
+          enum: [ 'passkey_already_exists', 'passkeys_not_supported' ]
+        attestationOptions:
+          type: string
+          example: '{"publicKey":{"challenge":"2m6...0w9/MgW...KE=","rp":{"name":"demo","id":"localhost"},"user":{"name":"example@mail.com","id":"dXN...zk5"},"pubKeyCredParams":[{"type":"public-key","alg":-7},{"type":"public-key","alg":-35},{"type":"public-key","alg":-36},{"type":"public-key","alg":-257},{"type":"public-key","alg":-258},{"type":"public-key","alg":-259},{"type":"public-key","alg":-37},{"type":"public-key","alg":-38},{"type":"public-key","alg":-39},{"type":"public-key","alg":-8}],"authenticatorSelection":{"authenticatorAttachment":"platform","requireResidentKey":false,"userVerification":"required"},"timeout":60000,"attestation":"none"}}'
+
+    mePasskeysAppendFinishReq:
+      type: object
+      required:
+        - attestationResponse
+        - clientInformation
+      properties:
+        attestationResponse:
+          type: string
+          example: '{"type":"public-key","id":"JM6...J_Q","rawId":"JM6...J_Q","authenticatorAttachment":null,"response":{"clientDataJSON":"eyJ...ZX0","authenticatorData":"SZY...AAQ","signature":"Ni7...YAg","userHandle":"dXN...zk5"},"clientExtensionResults":{}}'
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
 
     #    passkeyAppendFinishRsp:
     #      $ref: '#/components/schemas/blockBody'
@@ -1009,7 +1046,6 @@ components:
         error:
           $ref: '#/components/schemas/requestError'
 
-
     generalBlockSocialVerify:
       type: object
 
@@ -1111,6 +1147,36 @@ components:
         reason:
           type: string
           enum: [ 'email-link-verified', 'process-already-completed' ]
+
+    meRsp:
+      type: object
+      required:
+        - id
+        - fullName
+        - identifiers
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/identifier'
+
+    identifier:
+      type: object
+      required:
+        - value
+        - type
+        - status
+      properties:
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     requestError:
       type: object

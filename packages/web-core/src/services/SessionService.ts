@@ -3,13 +3,20 @@ import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, 
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
 import { BehaviorSubject } from 'rxjs';
-import { Ok, Result } from 'ts-results';
+import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
 import { ConfigsApi, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
-import { AuthState, CorbadoError, type PasskeyDeleteError, type PasskeyListError } from '../utils';
+import {
+  AuthState,
+  CorbadoError,
+  PasskeyAlreadyExistsError,
+  type PasskeyDeleteError,
+  type PasskeyListError,
+  PasskeysNotSupported,
+} from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const shortSessionKey = 'cbo_short_session';
@@ -146,17 +153,43 @@ export class SessionService {
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const clientHandle = WebAuthnService.getClientHandle();
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
-      clientInfo: {},
+      clientInformation: {
+        bluetoothAvailable: false,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: clientHandle ?? undefined,
+      },
     });
 
-    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.challenge);
+    if (respStart.data.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(respStart.data.newClientEnvHandle);
+    }
+
+    if (respStart.data.appendNotAllowedReason) {
+      switch (respStart.data.appendNotAllowedReason) {
+        case 'passkey_already_exists':
+          return Err(new PasskeyAlreadyExistsError());
+        case 'passkeys_not_supported':
+          return Err(new PasskeysNotSupported());
+        default:
+          return Err(CorbadoError.ignore());
+      }
+    }
+
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.attestationOptions);
     if (signedChallenge.err) {
       return signedChallenge;
     }
 
     await this.#usersApi.currentUserPasskeyAppendFinish({
-      signedChallenge: signedChallenge.val,
+      attestationResponse: signedChallenge.val,
+      clientInformation: {
+        bluetoothAvailable: false,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: clientHandle ?? undefined,
+      },
     });
 
     return Ok(void 0);

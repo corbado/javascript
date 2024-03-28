@@ -6,6 +6,8 @@ import { Err, Ok } from 'ts-results';
 
 import { CorbadoError } from '../utils';
 
+const clientHandleKey = 'cbo_client_handle';
+
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
  * Currently, this includes the creation of passkeys and the login with existing passkeys.
@@ -63,5 +65,19 @@ export class WebAuthnService {
   public abortOngoingOperation() {
     log.debug('Aborting ongoing webauthn operation');
     this.#abortController?.abort();
+  }
+
+  static async doesBrowserSupportPasskeys(): Promise<boolean> {
+    return (
+      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())
+    );
+  }
+
+  static getClientHandle(): string | null {
+    return localStorage.getItem(clientHandleKey);
+  }
+
+  static setClientHandle(clientHandle: string) {
+    localStorage.setItem(clientHandleKey, clientHandle);
   }
 }

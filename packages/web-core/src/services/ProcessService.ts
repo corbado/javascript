@@ -21,7 +21,6 @@ import { WebAuthnService } from './WebAuthnService';
 
 // TODO: set this version
 const packageVersion = '0.0.0';
-const clientHandleKey = 'cbo_client_handle';
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
 
 export class ProcessService {
@@ -173,7 +172,7 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
-    const maybeClientHandle = localStorage.getItem(clientHandleKey);
+    const maybeClientHandle = WebAuthnService.getClientHandle();
 
     const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
     let passkeyAppendShown: number | null = null;
@@ -181,9 +180,7 @@ export class ProcessService {
       passkeyAppendShown = parseInt(passkeyAppendShownRaw, 10);
     }
 
-    const canUsePasskeys =
-      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
-
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const res = await this.#processInit(
       abortController,
       canUsePasskeys,
@@ -197,7 +194,7 @@ export class ProcessService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      localStorage.setItem(clientHandleKey, res.val.newClientEnvHandle);
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     return res;

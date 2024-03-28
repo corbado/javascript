@@ -288,6 +288,7 @@
 .cb-error-popup-icon {
   margin: auto;
   width: 1.3rem;
+  vertical-align: middle;
 }
 
 .cb-error-popup-text {
@@ -461,6 +462,7 @@
 .cb-user-info-section-right {
   flex: 1;
   height: 1.2rem;
+  padding-right: .25rem;
 }
 
 .cb-user-info-section-right-icon {
@@ -981,8 +983,7 @@
 
 @media screen and (max-width: 481px) {
   .cb-container {
-    width: 293px;
-    max-width: 293px;
+    width: 360px;
   }
 }
 

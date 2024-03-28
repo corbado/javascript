@@ -1,6 +1,7 @@
 import type { AnchorHTMLAttributes, FunctionComponent, ReactNode } from 'react';
 import React from 'react';
 
+import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 
 export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -9,6 +10,7 @@ export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement>
   href: string;
   showIconOnly?: boolean;
   className?: string;
+  labelProps?: TextProps;
 }
 
 export const IconButton: FunctionComponent<IconButtonProps> = ({
@@ -16,6 +18,7 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({
   label,
   href,
   className,
+  labelProps,
   showIconOnly = false,
   target = '_blank',
 }) => {
@@ -30,6 +33,7 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({
         <Text
           fontFamilyVariant='secondary'
           textColorVariant='secondary'
+          {...labelProps}
         >
           {label}
         </Text>

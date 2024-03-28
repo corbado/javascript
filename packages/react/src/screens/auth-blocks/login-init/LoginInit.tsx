@@ -173,6 +173,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
                 label={t(`social_signup.${social.name}`)}
                 href={social.url}
                 showIconOnly={socialLoginButtonSize === 'small'}
+                labelProps={{
+                  level: '2',
+                  textColorVariant: 'primary',
+                }}
                 target='_blank'
               />
             ))}

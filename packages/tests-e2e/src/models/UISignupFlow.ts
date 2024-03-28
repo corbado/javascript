@@ -45,16 +45,33 @@ export class UISignupFlow {
     }
   }
 
-  async inputPasskey(check: () => Promise<void>) {
+  // async inputPasskey(check: () => Promise<void>) {
+  //   if (this.#cdpClient) {
+  //     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+  //     await check();
+  //     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+  //   }
+  // }
+
+  async addPasskeyInput(trigger: () => Promise<void>) {
     if (this.#cdpClient) {
-      // const credentialAddedPromise = new Promise<void>((resolve) => {
-      //   this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
-      //     console.log(payload);
-      //     resolve();
-      //   });
-      // });
+      const credentialAddedPromise = new Promise<void>(resolve => {
+        this.#cdpClient?.on('WebAuthn.credentialAdded', payload => {
+          console.log(payload);
+          resolve();
+        });
+      });
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
-      // await credentialAddedPromise;
+      await trigger();
+      await credentialAddedPromise;
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+    }
+  }
+
+  async failPasskeyInput(trigger: () => Promise<void>, check: () => Promise<void>) {
+    if (this.#cdpClient) {
+      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+      await trigger();
       await check();
       await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
     }
@@ -87,8 +104,8 @@ export class UISignupFlow {
       phone = `+1650555${id.slice(-4)}`;
 
       await this.page.getByRole('textbox', { name: 'phone' }).click();
-      await this.page.getByRole('textbox', { name: 'phone' }).fill(phone);
-      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone);
+      await this.page.getByRole('textbox', { name: 'phone' }).fill(phone); // UI automatically removes +1 and sets country code to US
+      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone.slice(2)); // check if only the phone number remains in textbox (without country code)
     }
 
     return [username, email, phone];
@@ -130,10 +147,14 @@ export class UISignupFlow {
   async navigateToPasskeyErrorScreen() {
     const [username, email, phone] = await this.navigateToPasskeyAppendScreen();
 
-    await this.page.getByRole('button', { name: 'Create account' }).click();
-    await this.inputPasskey(async () => {
-      await this.checkLandedOnScreen(ScreenNames.PasskeyError);
-    });
+    await this.failPasskeyInput(
+      async () => {
+        await this.page.getByRole('button', { name: 'Create account' }).click();
+      },
+      async () => {
+        await this.checkLandedOnScreen(ScreenNames.PasskeyError);
+      },
+    );
 
     return [username, email, phone];
   }
@@ -187,18 +208,21 @@ export class UISignupFlow {
       case ScreenNames.EmailEdit:
         await expect(this.page.getByText('Type new email address')).toBeVisible();
         break;
-      case ScreenNames.PhoneOtpSignup:
+      case ScreenNames.PhoneOtpSignup: {
         if (!phone) {
           throw new Error('checkLandedOnScreen: Phone is required');
         }
         await expect(this.page.getByText('Enter code to create account')).toBeVisible();
-        await expect(this.page.getByText(phone)).toBeVisible();
+        const formattedPhone =
+          phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 8) + ' ' + phone.slice(8);
+        await expect(this.page.getByText(formattedPhone)).toBeVisible();
         break;
+      }
       case ScreenNames.PhoneEdit:
         await expect(this.page.getByText('Type new phone number')).toBeVisible();
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-[0-9]+/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+(#completed)?$/);
         break;
     }
   }

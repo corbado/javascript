@@ -11,10 +11,10 @@ test.describe('Signup with passkey proper user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await page.getByRole('button', { name: 'Create account' }).click();
-    await signupFlow.inputPasskey(async () => {
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
+    await signupFlow.addPasskeyInput(async () => {
+      await page.getByRole('button', { name: 'Create account' }).click();
     });
+    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);

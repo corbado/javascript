@@ -15,12 +15,11 @@ test.describe('Login with passkey proper user behavior', () => {
     await page.getByRole('textbox', { name: 'email' }).click();
     await page.getByRole('textbox', { name: 'email' }).fill(email);
     await expect(page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
-    await page.getByRole('button', { name: 'Continue' }).click();
-    await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyBackground);
 
-    await loginFlow.inputPasskey(async () => {
-      await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
+    await loginFlow.assertPasskeyInput(async () => {
+      await page.getByRole('button', { name: 'Continue' }).click();
     });
+    await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
 
     await loginFlow.fillOTP(OtpType.Email);
     await loginFlow.checkLandedOnScreen(ScreenNames.End);

@@ -11,10 +11,10 @@ test.describe('Signup with passkey proper user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await page.getByRole('button', { name: 'Create account' }).click();
-    await signupFlow.inputPasskey(async () => {
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
+    await signupFlow.addPasskeyInput(async () => {
+      await page.getByRole('button', { name: 'Create account' }).click();
     });
+    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
@@ -45,43 +45,15 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.fillOTP(OtpType.Phone);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await page.getByRole('button', { name: 'Create passkey' }).click();
-    await signupFlow.inputPasskey(async () => {
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
+    await signupFlow.addPasskeyInput(async () => {
+      await page.getByRole('button', { name: 'Create passkey' }).click();
     });
+    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkPasskeyRegistered();
   });
-
-  // test('from PasskeyBenefitsScreen', async ({ signupFlow, page }) => {
-  //   await signupFlow.initializeCDPSession();
-  //   await signupFlow.addWebAuthn(true);
-  //   await signupFlow.loadAuth();
-
-  //   const [, email, phone] = await signupFlow.fillIdentifiers(true, true, true);
-  //   await page.getByRole('button', { name: 'Continue' }).click();
-  //   await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
-
-  //   await page.getByText('Passkeys').click();
-  //   await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyBenefits);
-
-  //   await page.getByRole('button', { name: 'Create passkey' }).click();
-  //   await signupFlow.inputPasskey(async () => {
-  //     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
-  //   });
-
-  //   await page.getByRole('button', { name: 'Continue' }).click();
-  //   await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtp, email);
-
-  //   await signupFlow.fillOTP(OtpType.Email);
-  //   await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtp, undefined, phone);
-
-  //   await signupFlow.fillOTP(OtpType.Phone);
-  //   await signupFlow.checkLandedOnScreen(ScreenNames.End);
-  //   await signupFlow.checkPasskeyRegistered();
-  // });
 
   test('from PasskeyErrorScreen', async ({ signupFlow, page }) => {
     await signupFlow.initializeCDPSession();
@@ -92,18 +64,21 @@ test.describe('Signup with passkey proper user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await page.getByRole('button', { name: 'Create account' }).click();
-
-    await signupFlow.inputPasskey(async () => {
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);
-    });
+    await signupFlow.failPasskeyInput(
+      async () => {
+        await page.getByRole('button', { name: 'Create account' }).click();
+      },
+      async () => {
+        await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);
+      },
+    );
 
     await signupFlow.setWebAuthnUserVerified(true);
 
-    await page.getByRole('button', { name: 'Try again' }).click();
-    await signupFlow.inputPasskey(async () => {
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
+    await signupFlow.addPasskeyInput(async () => {
+      await page.getByRole('button', { name: 'Try again' }).click();
     });
+    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);

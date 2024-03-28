@@ -18,11 +18,14 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
     await signupFlow.loadAuth();
 
     await signupFlow.navigateToPasskeyErrorScreen();
-    await page.getByRole('button', { name: 'Try again' }).click();
-    await signupFlow.setWebAuthnUserVerified(true);
-    await signupFlow.inputPasskey(async () => {
-      await page.waitForTimeout(300);
-      await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);
-    });
+    await signupFlow.failPasskeyInput(
+      async () => {
+        await page.getByRole('button', { name: 'Try again' }).click();
+      },
+      async () => {
+        await page.waitForTimeout(300);
+        await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);
+      },
+    );
   });
 });

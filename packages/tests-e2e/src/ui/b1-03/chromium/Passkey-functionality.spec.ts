@@ -11,7 +11,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await signupFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Create account' }).click());
+    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create account' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -43,7 +43,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.fillOTP(OtpType.Phone);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await signupFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
+    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -60,12 +60,12 @@ test.describe('Signup with passkey proper user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await signupFlow.failPasskeyInput(
+    await signupFlow.simulateFailedPasskeyInput(
       () => page.getByRole('button', { name: 'Create account' }).click(),
       () => signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError),
     );
 
-    await signupFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Try again' }).click());
+    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Try again' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();

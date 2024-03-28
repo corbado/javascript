@@ -16,7 +16,7 @@ test.describe('Login with passkey proper user behavior', () => {
     await page.getByRole('textbox', { name: 'email' }).fill(email);
     await expect(page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
 
-    await loginFlow.assertPasskeyInput(() => page.getByRole('button', { name: 'Continue' }).click());
+    await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Continue' }).click());
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
 
     await loginFlow.fillOTP(OtpType.Email);

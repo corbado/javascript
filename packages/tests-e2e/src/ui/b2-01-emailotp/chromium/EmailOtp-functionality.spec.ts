@@ -54,7 +54,7 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.fillOTP(OtpType.Email);
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await loginFlow.addPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
+    await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();

@@ -28,40 +28,44 @@ export class UISignupFlow {
   }
 
   async addWebAuthn() {
-    if (this.#cdpClient) {
-      this.#authenticatorId = await addWebAuthn(this.#cdpClient);
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    this.#authenticatorId = await addWebAuthn(this.#cdpClient);
   }
 
   async removeWebAuthn() {
-    if (this.#cdpClient) {
-      await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
   }
 
-  async addPasskeyInput(trigger: () => Promise<void>) {
-    if (this.#cdpClient) {
-      const credentialAddedPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAdded', () => {
-          resolve();
-        });
-      });
-      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
-      await trigger();
-      await credentialAddedPromise;
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+  async simulateSuccessfulPasskeyInput(operationTrigger: () => Promise<void>) {
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    const operationCompleted = new Promise<void>(resolve => {
+      this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
+      this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
+    });
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 500));
+    await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await operationTrigger();
+    await Promise.race([operationCompleted, wait.then(() => Promise.reject('Passkey input timeout'))]);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
   }
 
-  async failPasskeyInput(trigger: () => Promise<void>, check: () => Promise<void>) {
-    if (this.#cdpClient) {
-      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
-      await trigger();
-      await check();
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+  async simulateFailedPasskeyInput(operationTrigger: () => Promise<void>, postOperationCheck: () => Promise<void>) {
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await operationTrigger();
+    await postOperationCheck();
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
   }
 
   async fillOTP(otpType: OtpType) {
@@ -134,7 +138,7 @@ export class UISignupFlow {
   async navigateToPasskeyErrorScreen() {
     const [username, email, phone] = await this.navigateToPasskeyAppendScreen();
 
-    await this.failPasskeyInput(
+    await this.simulateFailedPasskeyInput(
       () => this.page.getByRole('button', { name: 'Create account' }).click(),
       () => this.checkLandedOnScreen(ScreenNames.PasskeyError),
     );

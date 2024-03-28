@@ -44,4 +44,4 @@ export enum IdentifierVerification {
   PhoneOtp = 'phone-otp',
 }
 
-export const waitAfterLoad = 600; // timeout to reduce flakiness due to repetitive reloads
+export const waitAfterLoad = 500; // timeout to reduce flakiness due to repetitive reloads

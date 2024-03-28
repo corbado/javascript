@@ -7,22 +7,33 @@ export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement>
   icon: ReactNode;
   label: string;
   href: string;
+  showIconOnly?: boolean;
+  className?: string;
 }
 
-export const IconButton: FunctionComponent<IconButtonProps> = ({ target = '_blank', icon, label, href }) => {
+export const IconButton: FunctionComponent<IconButtonProps> = ({
+  icon,
+  label,
+  href,
+  className,
+  showIconOnly = false,
+  target = '_blank',
+}) => {
   return (
     <a
       target={target}
-      className='cb-icon-button'
+      className={`cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`}
       href={href}
     >
       <span className='cb-icon-button-icon'>{icon}</span>
-      <Text
-        fontFamilyVariant='secondary'
-        textColorVariant='secondary'
-      >
-        {label}
-      </Text>
+      {!showIconOnly && (
+        <Text
+          fontFamilyVariant='secondary'
+          textColorVariant='secondary'
+        >
+          {label}
+        </Text>
+      )}
     </a>
   );
 };

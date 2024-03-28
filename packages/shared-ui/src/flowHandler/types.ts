@@ -14,10 +14,10 @@ export type BlockDataLoginInit = {
   loginIdentifierError: string;
   conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
-
   emailEnabled: boolean;
   usernameEnabled: boolean;
   phoneEnabled: boolean;
+  socialLogins: SocialLogin[];
 };
 
 export type BlockDataPasskeyAppend = {

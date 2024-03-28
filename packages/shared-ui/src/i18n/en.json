@@ -10,7 +10,13 @@
         "textField_fullName": "Name",
         "textField_username": "Username",
         "textField_email": "Email address",
-        "textField_phone": "Phone number"
+        "textField_phone": "Phone number",
+        "text_divider": "or",
+        "social_signup": {
+          "google": "Continue with Google",
+          "hotmail": "Continue with Microsoft",
+          "github": "Continue with GitHub"
+        }
       }
     },
     "passkey-append": {
@@ -154,6 +160,12 @@
           "username": "Use username",
           "emailOrUsername": "Use email or username",
           "phone": "Use phone"
+        },
+        "text_divider": "or",
+        "social_signup": {
+          "google": "Continue with Google",
+          "hotmail": "Continue with Microsoft",
+          "github": "Continue with GitHub"
         }
       }
     },

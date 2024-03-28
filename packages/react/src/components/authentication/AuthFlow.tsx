@@ -8,6 +8,7 @@ import type {
   PasskeyVerifyBlock,
   PhoneVerifyBlock,
   SignupInitBlock,
+  SocialVerifyBlock,
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
@@ -33,6 +34,7 @@ import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-bl
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
+import { SocialLinkVerification } from '../../screens/auth-blocks/social-verify/SocialLinkVerification';
 import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
 import ErrorPopup from '../ui2/errors/ErrorPopup';
 import { LoadingSpinner } from '../ui2/LoadingSpinner';
@@ -75,6 +77,8 @@ export const AuthFlow: FC = () => {
           default:
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }
+      case BlockTypes.SocialVerify:
+        return <SocialLinkVerification block={currentScreen.block as SocialVerifyBlock} />;
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppend:

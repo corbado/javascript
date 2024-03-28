@@ -18,6 +18,7 @@ import {
 import { CompletedBlock } from './blocks/CompletedBlock';
 import { ConfirmProcessAbortBlock } from './blocks/ConfirmProcessAbortBlock';
 import { ContinueOnOtherEnvBlock } from './blocks/ContinueOnOtherEnvBlock';
+import { SocialVerifyBlock } from './blocks/SocialVerifyBlock';
 import type { BlockTypes } from './constants';
 import type { ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
@@ -290,6 +291,9 @@ export class ProcessHandler {
         break;
       case BlockType.PasskeyVerify:
         block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
+      case BlockType.SocialVerify:
+        block = new SocialVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);

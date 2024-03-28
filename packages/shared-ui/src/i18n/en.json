@@ -139,6 +139,10 @@
         "button_submit": "Resend code",
         "button_cancel": "Back"
       }
+    },
+    "social-link-verification": {
+      "header": "Signing up...",
+      "subheader": "You will be redirected soon"
     }
   },
   "login": {
@@ -237,6 +241,10 @@
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)"
       }
+    },
+    "social-link-verification": {
+      "header": "Logging in...",
+      "subheader": "You will be redirected soon"
     }
   },
   "errors": {

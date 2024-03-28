@@ -39,14 +39,6 @@ export class UISignupFlow {
     }
   }
 
-  // async inputPasskey(check: () => Promise<void>) {
-  //   if (this.#cdpClient) {
-  //     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
-  //     await check();
-  //     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
-  //   }
-  // }
-
   async addPasskeyInput(trigger: () => Promise<void>) {
     if (this.#cdpClient) {
       const credentialAddedPromise = new Promise<void>(resolve => {

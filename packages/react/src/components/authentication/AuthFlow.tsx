@@ -3,6 +3,7 @@ import type {
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
+  MissingFieldsBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
   PasskeyVerifyBlock,
@@ -23,6 +24,7 @@ import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLi
 import { EmailLinkVerification } from '../../screens/auth-blocks/email-verify/EmailLinkVerification';
 import { EmailOtp } from '../../screens/auth-blocks/email-verify/EmailOtp';
 import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
+import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingFields';
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyBenefits as PasskeyAppendPasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
@@ -109,6 +111,8 @@ export const AuthFlow: FC = () => {
         return null;
       case BlockTypes.ContinueOnOtherEnv:
         return <EmailLinkSuccess block={currentScreen.block as ContinueOnOtherEnvBlock} />;
+      case BlockTypes.MissingFields:
+        return <MissingFields block={currentScreen.block as MissingFieldsBlock} />;
     }
   }, [currentScreen]);
 

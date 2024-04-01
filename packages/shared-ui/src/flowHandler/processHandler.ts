@@ -295,6 +295,10 @@ export class ProcessHandler {
       case BlockType.SocialVerify:
         block = new SocialVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
+      //TODO: Add MissingFieldsBlock
+      // case BlockType.MissingFields:
+      // block = new MissingFieldsBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+      // break;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);
     }

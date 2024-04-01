@@ -37,6 +37,11 @@ export type BlockDataPasskeyAppended = Record<string, never>;
 
 export type BlockDataSocialVerify = Record<string, never>;
 
+export type BlockDataMissingFields = {
+  phone: TextFieldWithError | null;
+  userName: TextFieldWithError | null;
+};
+
 export type BlockDataEmailVerify = {
   email: string;
   verificationMethod: 'email-otp' | 'email-link';

@@ -143,6 +143,11 @@
     "social-link-verification": {
       "header": "Signing up...",
       "subheader": "You will be redirected soon"
+    },
+    "missing-fields": {
+      "header": "Fill missing fields",
+      "subheader": "to create an account",
+      "button": "Continue"
     }
   },
   "login": {

@@ -4,7 +4,7 @@ import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '..
 test.describe('Login with email OTP proper user behavior', () => {
   test('fallback without appending passkey', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
-    await loginFlow.addWebAuthn(true);
+    await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
     let [, email] = await loginFlow.createAccount(
@@ -32,7 +32,7 @@ test.describe('Login with email OTP proper user behavior', () => {
 
   test('fallback then append passkey', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
-    await loginFlow.addWebAuthn(true);
+    await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
     let [, email] = await loginFlow.createAccount(
@@ -54,10 +54,8 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.fillOTP(OtpType.Email);
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await page.getByRole('button', { name: 'Create passkey' }).click();
-    await loginFlow.inputPasskey(async () => {
-      await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
-    });
+    await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
+    await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.End);

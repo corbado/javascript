@@ -28,37 +28,45 @@ export class UILoginFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
   }
 
-  async addWebAuthn(successful: boolean) {
-    if (this.#cdpClient) {
-      this.#authenticatorId = await addWebAuthn(this.#cdpClient, successful);
+  async addWebAuthn() {
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
-  }
-
-  async setWebAuthnUserVerified(successful: boolean) {
-    if (this.#cdpClient) {
-      await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, successful);
-    }
+    this.#authenticatorId = await addWebAuthn(this.#cdpClient);
   }
 
   async removeWebAuthn() {
-    if (this.#cdpClient) {
-      await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    await removeWebAuthn(this.#cdpClient, this.#authenticatorId);
   }
 
-  async inputPasskey(check: () => Promise<void>) {
-    if (this.#cdpClient) {
-      // const credentialAssertedPromise = new Promise<void>((resolve) => {
-      //   this.#cdpClient?.on('WebAuthn.credentialAsserted', payload => {
-      //     console.log(payload);
-      //     resolve();
-      //   });
-      // });
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
-      // await credentialAssertedPromise;
-      await check();
-      await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+  async simulateSuccessfulPasskeyInput(operationTrigger: () => Promise<void>) {
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
     }
+    const operationCompleted = new Promise<void>(resolve => {
+      this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
+      this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
+    });
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 1000));
+    await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await operationTrigger();
+    await Promise.race([operationCompleted, wait.then(() => Promise.reject('Passkey input timeout'))]);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+  }
+
+  async simulateFailedPasskeyInput(operationTrigger: () => Promise<void>, postOperationCheck: () => Promise<void>) {
+    if (!this.#cdpClient) {
+      throw new Error('CDP client not intialized');
+    }
+    await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await operationTrigger();
+    await postOperationCheck();
+    await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
   }
 
   async fillOTP(otpType: OtpType) {
@@ -92,7 +100,7 @@ export class UILoginFlow {
       phone = `+1650555${id.slice(-4)}`;
       await this.page.getByRole('textbox', { name: 'phone' }).click();
       await this.page.getByRole('textbox', { name: 'phone' }).fill(phone);
-      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone);
+      await expect(this.page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone.slice(2));
     }
     await this.page.getByRole('button', { name: 'Continue' }).click();
 
@@ -100,10 +108,10 @@ export class UILoginFlow {
       await this.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
       if (registerPasskey) {
-        await this.page.getByRole('button', { name: 'Create account' }).click();
-        await this.inputPasskey(async () => {
-          await this.checkLandedOnScreen(ScreenNames.PasskeyAppended);
-        });
+        await this.simulateSuccessfulPasskeyInput(() =>
+          this.page.getByRole('button', { name: 'Create account' }).click(),
+        );
+        await this.checkLandedOnScreen(ScreenNames.PasskeyAppended);
         await this.page.getByRole('button', { name: 'Continue' }).click();
       } else {
         if (
@@ -150,6 +158,7 @@ export class UILoginFlow {
   }
 
   async checkNoPasskeyRegistered() {
+    await expect(this.page.locator('.cb-passkey-list-card')).toHaveCount(0);
     // await expect(this.page.getByText("You don't have any passkeys yet.")).toHaveCount(1);
   }
 
@@ -204,20 +213,26 @@ export class UILoginFlow {
       case ScreenNames.EmailEdit:
         await expect(this.page.getByText('Type new email address')).toBeVisible();
         break;
-      case ScreenNames.PhoneOtpSignup:
+      case ScreenNames.PhoneOtpSignup: {
         if (!phone) {
           throw new Error('checkLandedOnScreen: Phone is required');
         }
         await expect(this.page.getByText('Enter code to create account')).toBeVisible();
-        await expect(this.page.getByText(phone)).toBeVisible();
+        const formattedPhone =
+          phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 8) + ' ' + phone.slice(8);
+        await expect(this.page.getByText(formattedPhone)).toBeVisible();
         break;
-      case ScreenNames.PhoneOtpLogin:
+      }
+      case ScreenNames.PhoneOtpLogin: {
         if (!phone) {
           throw new Error('checkLandedOnScreen: Phone is required');
         }
         await expect(this.page.getByText('Enter code to log in')).toBeVisible();
-        await expect(this.page.getByText(phone)).toBeVisible();
+        const formattedPhone =
+          phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 8) + ' ' + phone.slice(8);
+        await expect(this.page.getByText(formattedPhone)).toBeVisible();
         break;
+      }
       case ScreenNames.PhoneEdit:
         await expect(this.page.getByText('Type new phone number')).toBeVisible();
         break;
@@ -225,7 +240,7 @@ export class UILoginFlow {
         await expect(this.page.getByText('Passkey login in process...')).toBeVisible();
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+(#completed)?$/);
         break;
     }
   }

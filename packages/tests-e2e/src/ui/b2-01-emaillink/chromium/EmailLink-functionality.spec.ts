@@ -4,7 +4,7 @@ import { IdentifierType, IdentifierVerification, ScreenNames } from '../../../ut
 test.describe('Login with phone OTP proper user behavior', () => {
   test('fallback without appending passkey', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
-    await loginFlow.addWebAuthn(true);
+    await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
     let [, email] = await loginFlow.createAccount(

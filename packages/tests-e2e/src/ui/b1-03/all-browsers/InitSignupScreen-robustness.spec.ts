@@ -1,7 +1,7 @@
 import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
-// TODO: remove skips when error messages are fixed in InitSignup
+// TODO: remove skips when passkey-unsupported devices do not prompt passkeys
 test.describe('InitSignupScreen unproductive user behavior', () => {
   test('with empty username', async ({ signupFlow, page }) => {
     await signupFlow.fillIdentifiers(false, true, true);
@@ -17,7 +17,9 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await page.getByRole('textbox', { name: 'Username' }).fill(username);
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue(username);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await expect(page.getByText('That username is taken. Please try another one.')).toBeVisible();
+    await expect(
+      page.getByText('This username is already taken. Please try another one or log in with this one.'),
+    ).toBeVisible();
   });
 
   test('with invalid username (illegal characters)', async ({ signupFlow, page }) => {
@@ -93,8 +95,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
 
   test('with invalid phone number', async ({ signupFlow, page }) => {
     await signupFlow.fillIdentifiers(true, true, false);
-    await page.getByRole('textbox', { name: 'Phone number' }).fill('a');
-    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('a');
+    await page.getByRole('textbox', { name: 'Phone number' }).fill('69');
+    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('69');
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
     await expect(page.getByText('Please enter a valid phone number.')).toBeVisible();

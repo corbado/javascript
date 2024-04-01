@@ -11,7 +11,7 @@ export interface PasskeyCreateProps {
 }
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const { corbadoApp } = useCorbado();
 
   const [isDialogOpen, setDialogOpen] = useState(false);

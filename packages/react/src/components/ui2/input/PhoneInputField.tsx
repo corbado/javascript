@@ -19,7 +19,9 @@ export interface PhoneInputFieldProps {
   initialCountry?: Country;
   initialPhoneNumber?: string;
   autoComplete?: string;
-  onChange: (value: string) => void;
+  disabled?: boolean;
+  className?: string;
+  onChange?: (value: string) => void;
 }
 
 export const PhoneInputField: FC<PhoneInputFieldProps> = ({
@@ -28,16 +30,20 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
   id,
   errorMessage,
   initialPhoneNumber,
+  disabled,
+  className,
   initialCountry = 'US',
   autoComplete = 'tel',
   onChange,
 }) => {
   const onChange_ = (value: string | undefined) => {
-    onChange(value || '');
+    if (onChange) {
+      onChange(value || '');
+    }
   };
 
   return (
-    <div className='cb-input-field'>
+    <div className={`cb-input-field${className ? ` ${className}` : ''}`}>
       {label && (
         <label
           htmlFor={id}
@@ -69,6 +75,7 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
         initialPhoneNumber={initialPhoneNumber}
         hasError={!!errorMessage}
         autoComplete={autoComplete}
+        disabled={disabled}
         onChange={onChange_}
       />
       {errorMessage && <ErrorMessage message={errorMessage} />}

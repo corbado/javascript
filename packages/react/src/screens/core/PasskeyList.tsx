@@ -9,7 +9,7 @@ import { LoadingSpinner } from '../../components/ui2/LoadingSpinner';
 
 const PasskeyList: FC = () => {
   const { getPasskeys, globalError, isAuthenticated } = useCorbado();
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
 

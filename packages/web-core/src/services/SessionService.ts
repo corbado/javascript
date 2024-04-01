@@ -1,4 +1,4 @@
-import type { PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
 import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
@@ -135,18 +135,32 @@ export class SessionService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
+  public async getFullUser(): Promise<Result<CorbadoUser, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const resp = await this.#usersApi.currentUserGet();
+      return resp.data;
+    });
+  }
+
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
-      clientInfo: {},
+      clientInformation: {
+        bluetoothAvailable: false,
+        canUsePasskeys: true,
+      },
     });
 
-    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.challenge);
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.attestationOptions);
     if (signedChallenge.err) {
       return signedChallenge;
     }
 
     await this.#usersApi.currentUserPasskeyAppendFinish({
-      signedChallenge: signedChallenge.val,
+      attestationResponse: signedChallenge.val,
+      clientInformation: {
+        bluetoothAvailable: false,
+        canUsePasskeys: true,
+      },
     });
 
     return Ok(void 0);

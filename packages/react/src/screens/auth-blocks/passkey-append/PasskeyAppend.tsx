@@ -67,7 +67,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         {!block.data.canBeSkipped && (
           <EditIcon
             className='cb-pk-append-user-info-section-edit-icon'
-            color='secondary'
+            color='primary'
             onClick={() => block.showEditUserData()}
           />
         )}

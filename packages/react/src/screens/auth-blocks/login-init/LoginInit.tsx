@@ -2,13 +2,12 @@ import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { IconButton } from '../../../components/ui2/buttons/IconButton';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { Divider } from '../../../components/ui2/Divider';
 import type { InputFieldProps } from '../../../components/ui2/input/InputField';
 import InputField from '../../../components/ui2/input/InputField';
 import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
+import { SocialLoginButtons } from '../../../components/ui2/SocialLoginButtons';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -130,9 +129,6 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     [block, usePhone, phoneInput],
   );
 
-  const socialLoginsAvailable = block.data.socialLogins.length > 0;
-  const socialLoginButtonSize = block.data.socialLogins.length > 2 ? 'small' : 'large';
-
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -153,36 +149,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           {submitButtonText}
         </PrimaryButton>
       </form>
-      {socialLoginsAvailable && (
-        <>
-          <Divider
-            label={textDivider}
-            className='cb-social-login-divider'
-          />
-          <div className={`cb-social-login-buttons-section cb-social-login-buttons-section-${socialLoginButtonSize}`}>
-            {block.data.socialLogins.map(social => (
-              <IconButton
-                key={social.name}
-                className={`cb-social-login-buttton-${socialLoginButtonSize}`}
-                icon={
-                  <img
-                    src={social.icon}
-                    alt={social.name}
-                  />
-                }
-                label={t(`social_signup.${social.name}`)}
-                href={social.url}
-                showIconOnly={socialLoginButtonSize === 'small'}
-                labelProps={{
-                  level: '2',
-                  textColorVariant: 'primary',
-                }}
-                target='_blank'
-              />
-            ))}
-          </div>
-        </>
-      )}
+      <SocialLoginButtons
+        dividerText={textDivider}
+        socialLogins={block.data.socialLogins}
+        t={t}
+      />
       {block.isSignupEnabled() && (
         <Text
           level='2'

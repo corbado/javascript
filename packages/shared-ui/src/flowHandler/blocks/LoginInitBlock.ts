@@ -40,7 +40,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
           url: 'https://www.corbado.com/',
         },
         {
-          name: 'hotmail',
+          name: 'microsoft',
           icon: `https://s3-alpha-sig.figma.com/img/028b/e4eb/67b2160da9762ec3df8b2cbd88ffeacd?Expires=1712534400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=REQGH-rXlt5jjIDv225KjzjTMlMJJ9AxqcIkmtizpsAjjqL1D~Mgc80kp6jr3W5KRsuAVsMiUD2RkAlSKEAI5hW6A-Z6QKI4zEux4e82C4RQkrehlMz3~oM3Z1vGU~tRi3lI-PFeVqE5tTLniT3TNboD5SXh3JP2SQ6ls6JuCe4XII4ZKI-AKl-VZrUEJMsR1W9FktalOyEDpwIKl178BQkEpp8JgfjpMESTSrWy7jYnsnM6~6h46nrq3V6xFWlkwjX3PCNOhrK1ubjU9K903Y~IyDYTupEK0VqJjBddYBocpLtWTVFXm7p5rIwkRrGeTS6Cq3K5~hZSDzcd600STw__`,
           url: 'https://www.corbado.com/',
         },

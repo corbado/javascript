@@ -14,7 +14,7 @@
         "text_divider": "or",
         "social_signup": {
           "google": "Continue with Google",
-          "hotmail": "Continue with Microsoft",
+          "microsoft": "Continue with Microsoft",
           "github": "Continue with GitHub"
         }
       }
@@ -168,7 +168,7 @@
         "text_divider": "or",
         "social_signup": {
           "google": "Continue with Google",
-          "hotmail": "Continue with Microsoft",
+          "microsoft": "Continue with Microsoft",
           "github": "Continue with GitHub"
         }
       }

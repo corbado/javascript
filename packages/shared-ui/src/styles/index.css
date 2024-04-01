@@ -704,6 +704,10 @@
   background-color: #f5f5f5;
 }
 
+.cb-icon-button-with-icon-only:hover {
+  background-color: #f5f5f5;
+}
+
 .cb-icon-button-icon img {
   height: 1.5rem;
   padding-top: 0.15rem;

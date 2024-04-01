@@ -3,12 +3,11 @@ import type { FormEvent, MutableRefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { IconButton } from '../../../components/ui2/buttons/IconButton';
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { Divider } from '../../../components/ui2/Divider';
 import InputField from '../../../components/ui2/input/InputField';
 import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
+import { SocialLoginButtons } from '../../../components/ui2/SocialLoginButtons';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -80,9 +79,6 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     }
   };
 
-  const socialLoginsAvailable = block.data.socialLogins.length > 0;
-  const socialLoginButtonSize = block.data.socialLogins.length > 2 ? 'small' : 'large';
-
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -144,36 +140,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           {submitButtonText}
         </PrimaryButton>
       </form>
-      {socialLoginsAvailable && (
-        <>
-          <Divider
-            label={textDivider}
-            className='cb-social-login-divider'
-          />
-          <div className={`cb-social-login-buttons-section cb-social-login-buttons-section-${socialLoginButtonSize}`}>
-            {block.data.socialLogins.map(social => (
-              <IconButton
-                key={social.name}
-                className={`cb-social-login-buttton-${socialLoginButtonSize}`}
-                icon={
-                  <img
-                    src={social.icon}
-                    alt={social.name}
-                  />
-                }
-                label={t(`social_signup.${social.name}`)}
-                href={social.url}
-                showIconOnly={socialLoginButtonSize === 'small'}
-                labelProps={{
-                  level: '2',
-                  textColorVariant: 'primary',
-                }}
-                target='_blank'
-              />
-            ))}
-          </div>
-        </>
-      )}
+      <SocialLoginButtons
+        socialLogins={block.data.socialLogins}
+        dividerText={textDivider}
+        t={t}
+      />
       <Text
         level='2'
         fontWeight='normal'

@@ -61,8 +61,15 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       />
       <PrimaryButton
         isLoading={loading}
-        disabled={phone === block.data.phone}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = phone === block.data.phone;
+          if (noChange) {
+            block.showPhoneOtpScreen();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

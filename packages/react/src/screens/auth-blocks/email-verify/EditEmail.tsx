@@ -66,8 +66,15 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
       <PrimaryButton
         type='submit'
         isLoading={loading}
-        disabled={email === block.data.email}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = email === block.data.email;
+          if (noChange) {
+            block.showEmailVerificationScreen();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

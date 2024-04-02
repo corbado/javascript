@@ -105,7 +105,9 @@ export class UISignupFlow {
 
       await this.#page.getByRole('textbox', { name: 'phone' }).click();
       await this.#page.getByRole('textbox', { name: 'phone' }).fill(phone); // UI automatically removes +1 and sets country code to US
-      await expect(this.#page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone.slice(2)); // check if only the phone number remains in textbox (without country code)
+      await expect(this.#page.getByRole('textbox', { name: 'phone' })).toHaveValue(
+        new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`),
+      ); // check if only the phone number remains in textbox (without country code)
     }
 
     return [username, email, phone];

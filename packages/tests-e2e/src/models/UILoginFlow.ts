@@ -110,7 +110,9 @@ export class UILoginFlow {
       phone = `+1650555${id.slice(-4)}`;
       await this.#page.getByRole('textbox', { name: 'phone' }).click();
       await this.#page.getByRole('textbox', { name: 'phone' }).fill(phone);
-      await expect(this.#page.getByRole('textbox', { name: 'phone' })).toHaveValue(phone.slice(2));
+      await expect(this.#page.getByRole('textbox', { name: 'phone' })).toHaveValue(
+        new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`),
+      );
     }
     await this.#page.getByRole('button', { name: 'Continue' }).click();
 

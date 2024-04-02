@@ -24,7 +24,7 @@ export async function getEmailLink(context: BrowserContext, email: string, authT
       id: cboAuthProcess.id,
       expires: cboAuthProcess.expires,
       frontendApiUrl: cboAuthProcess.frontendApiUrl,
-    }
+    },
   };
   console.log(JSON.stringify(urlBlock));
 

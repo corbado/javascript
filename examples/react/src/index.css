@@ -30,3 +30,7 @@
 input:checked ~ .dot {
   transform: translateX(100%);
 }
+
+.cb-primary-button {
+  background-color: var(--cb-primary-color);
+}

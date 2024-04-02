@@ -12,8 +12,7 @@ import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
-import { BlockType } from '../api/v2';
-import { AuthApi, LoginIdentifierType, VerificationMethod } from '../api/v2';
+import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import { CorbadoError } from '../utils';
@@ -158,14 +157,18 @@ export class ProcessService {
   }
 
   #setApisV2(process?: AuthProcess): void {
-    const initialFrontendApiUrl = this.#getInitialFrontendApiUrl();
+    let frontendApiUrl = this.#getDefaultFrontendApiUrl();
+    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
+      frontendApiUrl = process.frontendApiUrl;
+    }
+
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: process?.frontendApiUrl ?? initialFrontendApiUrl,
+      basePath: frontendApiUrl,
     });
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
-    this.#authApi = new AuthApi(config, initialFrontendApiUrl, axiosInstance);
+    this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
   }
 
   async #initAuthProcess(
@@ -506,7 +509,7 @@ export class ProcessService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
-  #getInitialFrontendApiUrl() {
+  #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
 }

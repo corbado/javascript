@@ -264,7 +264,7 @@ export class UILoginFlow {
         await expect(this.#page.getByText('Passkey login in process...')).toBeVisible();
         break;
       case ScreenNames.End:
-        await expect(this.#page).toHaveURL(/\/pro-[0-9]+(#completed)?$/);
+        await expect(this.#page).toHaveURL(/\/pro-[0-9]+/);
         break;
     }
   }

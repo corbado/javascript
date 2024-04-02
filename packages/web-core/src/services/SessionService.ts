@@ -67,7 +67,7 @@ export class SessionService {
    * Initializes the SessionService by registering a callback that is called when the shortSession changes.
    */
   async init(): Promise<CorbadoError | null> {
-    const sessionConfig = await this.#loadSessionConfig(this.#projectId, this.#frontendApiUrlSuffix);
+    const sessionConfig = await this.#loadSessionConfig();
     if (sessionConfig.err) {
       return sessionConfig.val;
     }
@@ -250,7 +250,11 @@ export class SessionService {
   }
 
   #setApisV2(longSession: string): void {
-    const frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
+    let frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
+    if (!frontendApiUrl || frontendApiUrl.length === 0) {
+      frontendApiUrl = this.#getDefaultFrontendApiUrl();
+    }
+
     const config = new Configuration({
       apiKey: this.#projectId,
       basePath: frontendApiUrl,
@@ -517,20 +521,21 @@ export class SessionService {
     return cfg;
   };
 
-  #loadSessionConfig = async (
-    projectId: string,
-    frontendApiSuffix: string,
-  ): Promise<Result<SessionConfigRsp, CorbadoError>> => {
+  #loadSessionConfig = async (): Promise<Result<SessionConfigRsp, CorbadoError>> => {
     const config = new Configuration({
       apiKey: this.#projectId,
     });
 
     const axiosInstance = this.#createAxiosInstanceV2();
-    const configsApi = new ConfigsApi(config, `https://${projectId}.${frontendApiSuffix}`, axiosInstance);
+    const configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
 
     return Result.wrapAsync(async () => {
       const r = await configsApi.getSessionConfig();
       return r.data;
     });
   };
+
+  #getDefaultFrontendApiUrl() {
+    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+  }
 }

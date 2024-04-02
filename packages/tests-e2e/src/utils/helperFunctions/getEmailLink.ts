@@ -4,7 +4,6 @@ import type { AuthType } from '../constants';
 import { emailLinkUrlToken } from '../constants';
 
 export async function getEmailLink(context: BrowserContext, email: string, authType: AuthType) {
-  console.log("origins: ", (await context.storageState()).origins);
   const cboAuthProcessRaw = (await context.storageState()).origins
     .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
     ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;

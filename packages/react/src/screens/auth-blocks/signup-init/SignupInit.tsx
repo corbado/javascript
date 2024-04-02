@@ -8,6 +8,7 @@ import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
 import InputField from '../../../components/ui2/input/InputField';
 import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
+import { SocialLoginButtons } from '../../../components/ui2/SocialLoginButtons';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -34,6 +35,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const emailFieldLabel = useMemo(() => t('textField_email'), [t]);
   const phoneFieldLabel = useMemo(() => t('textField_phone'), [t]);
   const usernameFieldLabel = useMemo(() => t('textField_username'), [t]);
+  const textDivider = useMemo(() => t('text_divider'), [t]);
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -132,6 +134,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           {submitButtonText}
         </PrimaryButton>
       </form>
+      <SocialLoginButtons
+        socialLogins={block.data.socialLogins}
+        dividerText={textDivider}
+        t={t}
+      />
       <Text
         level='2'
         fontWeight='normal'

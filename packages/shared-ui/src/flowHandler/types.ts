@@ -14,10 +14,10 @@ export type BlockDataLoginInit = {
   loginIdentifierError: string;
   conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
-
   emailEnabled: boolean;
   usernameEnabled: boolean;
   phoneEnabled: boolean;
+  socialLogins: SocialLogin[];
 };
 
 export type BlockDataPasskeyAppend = {
@@ -34,6 +34,13 @@ export type BlockDataPasskeyVerify = {
 };
 
 export type BlockDataPasskeyAppended = Record<string, never>;
+
+export type BlockDataSocialVerify = Record<string, never>;
+
+export type BlockDataMissingFields = {
+  phone: TextFieldWithError | null;
+  userName: TextFieldWithError | null;
+};
 
 export type BlockDataEmailVerify = {
   email: string;

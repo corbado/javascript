@@ -170,7 +170,8 @@
   color: var(--cb-text-primary-color);
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: var(--cb-input-field-height);
+  height: calc(var(--cb-input-field-height) * 1.075);
+  align-items: center;
 }
 
 .cb-phone-input-field:focus-within {
@@ -709,8 +710,27 @@
   padding-left: 0.3rem;
 }
 
+.cb-icon-button-with-icon-only {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  border: 1px solid var(--cb-border-color);
+  border-radius: var(--cb-border-radius-sm);
+  text-decoration: none;
+  color: var(--cb-primary-text-color);
+  font-family: var(--cb-secondary-font);
+  cursor: pointer;
+  width: 5.25rem;
+}
+
 .cb-icon-button:hover {
-  border-color: var(--cb-primary-color);
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-icon-button-with-icon-only:hover {
+  background-color: var(--cb-box-color-hover);
 }
 
 .cb-icon-button-icon img {
@@ -1019,4 +1039,35 @@
 
 .cb-confirm-process-abort-icon {
   height: 1.9rem;
+}
+
+.cb-social-login-divider {
+  margin: 0 0 0.75rem 0;
+}
+
+.cb-social-login-buttons-section {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-around;
+  width: 90%;
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+.cb-social-login-buttons-section-large {
+  flex-direction: column;
+}
+
+.cb-social-login-buttons-section-small {
+  flex-direction: row;
+}
+
+.cb-social-login-buttton-large {
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+}
+
+.cb-social-login-buttton-large img{
+  height: 1.25rem;
+  padding-right: 0.75rem;
 }

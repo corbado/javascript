@@ -1,6 +1,7 @@
 export * from './Block';
 export * from './EmailVerifyBlock';
 export * from './PhoneVerifyBlock';
+export * from './SocialVerifyBlock';
 export * from './PasskeyAppendBlock';
 export * from './PasskeyAppendedBlock';
 export * from './SignupInitBlock';
@@ -8,3 +9,4 @@ export * from './LoginInitBlock';
 export * from './PasskeyVerifyBlock';
 export * from './ContinueOnOtherEnvBlock';
 export * from './ConfirmProcessAbortBlock';
+export * from './MissingFieldsBlock';

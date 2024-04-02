@@ -12,8 +12,12 @@ import expandIcon from './assets/expand.svg';
 import faceId from './assets/face-id.svg';
 import fingerprintIcon from './assets/fingerprint.svg';
 import firstPageIcon from './assets/first-page.svg';
+import githubIcon from './assets/github.svg';
+import githubDarkIcon from './assets/github_dark.svg';
 import gmailIcon from './assets/gmail.svg';
+import googleIcon from './assets/google.svg';
 import logoIcon from './assets/logo.svg';
+import microsoftIcon from './assets/microsoft.svg';
 import outlookIcon from './assets/outlook.svg';
 import passkeyAppendedIcon from './assets/passkey-appended.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
@@ -55,4 +59,8 @@ export const assets = {
   personIcon,
   phoneIcon,
   firstPageIcon,
+  githubIcon,
+  githubDarkIcon,
+  googleIcon,
+  microsoftIcon,
 };

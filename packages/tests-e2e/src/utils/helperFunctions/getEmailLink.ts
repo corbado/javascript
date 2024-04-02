@@ -5,7 +5,11 @@ import { emailLinkUrlToken } from '../constants';
 
 export async function getEmailLink(context: BrowserContext, email: string, authType: AuthType) {
   const cboAuthProcessRaw = (await context.storageState()).origins
-    .find(origin => origin.origin === process.env.PLAYWRIGHT_TEST_URL)
+    .find(origin => {
+      console.log("origin.origin: ", origin.origin);
+      console.log("process.env.PLAYWRIGHT_TEST_URL: ", process.env.PLAYWRIGHT_TEST_URL);
+      return origin.origin === process.env.PLAYWRIGHT_TEST_URL;
+    })
     ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;
   if (!cboAuthProcessRaw) {
     throw new Error('getCboAuthProcess: cbo_auth_process not found in local storage');

@@ -11,7 +11,7 @@ import { Block } from './Block';
 export class MissingFieldsBlock extends Block<BlockDataMissingFields> {
   readonly data: BlockDataMissingFields;
   readonly type = BlockTypes.MissingFields;
-  readonly initialScreen = ScreenNames.MissingField;
+  readonly initialScreen = ScreenNames.MissingFields;
   readonly authType: AuthType;
 
   constructor(

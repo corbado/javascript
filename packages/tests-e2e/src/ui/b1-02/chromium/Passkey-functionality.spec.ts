@@ -7,7 +7,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
-    const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
@@ -15,9 +15,9 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
-    await signupFlow.fillOTP(OtpType.Phone);
+    await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkPasskeyRegistered();
   });
@@ -27,14 +27,14 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
 
-    const [, , phone] = await signupFlow.fillIdentifiers(false, false, true);
+    const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
-    await page.getByText('Phone verification').click();
-    await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
+    await page.getByText('Email verification').click();
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
-    await signupFlow.fillOTP(OtpType.Phone);
+    await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
     await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());

@@ -39,6 +39,10 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const getFullUser = useCallback(() => {
+    return corbadoApp?.sessionService.getFullUser();
+  }, [corbadoApp]);
+
   return (
     <CorbadoSessionContext.Provider
       value={{
@@ -47,6 +51,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         loading,
         user,
         isAuthenticated,
+        getFullUser,
         getPasskeys,
         deletePasskey,
         logout,

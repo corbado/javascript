@@ -18,7 +18,7 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +57,7 @@ export const User: FC = () => {
 
   const getCurrentUser = useCallback(async () => {
     setLoading(true);
-    const result = await corbadoApp?.sessionService.getFullUser();
+    const result = await getFullUser();
 
     if (!result || result?.err) {
       throw new Error(result?.val.name);

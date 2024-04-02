@@ -17,6 +17,7 @@ export enum ScreenNames {
   PhoneEdit,
   PasskeyBackground,
   End,
+  AbortSignup,
 }
 
 export enum OtpType {

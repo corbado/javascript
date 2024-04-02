@@ -18,7 +18,10 @@ test.describe('Flow-based unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
   });
 
-  test('abort signup from enforced identifier verification after passkey registration', async ({ signupFlow, page }) => {
+  test('abort signup from enforced identifier verification after passkey registration', async ({
+    signupFlow,
+    page,
+  }) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();

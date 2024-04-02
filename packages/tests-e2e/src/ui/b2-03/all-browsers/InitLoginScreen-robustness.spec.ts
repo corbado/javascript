@@ -12,7 +12,7 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
     await expect(page.getByText('Please enter an email address.')).toBeVisible();
   });
-  
+
   test.skip('with invalid email address', async ({ loginFlow, page }) => {
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
@@ -34,7 +34,7 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await expect(page.getByRole('textbox', { name: 'email' })).toHaveValue('bob@corbado.com');
     await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
-    await expect(page.getByText('Couldn\'t find your account.')).toBeVisible();
+    await expect(page.getByText("Couldn't find your account.")).toBeVisible();
   });
 
   test.skip('switch to Signup flow', async ({ loginFlow, page }) => {

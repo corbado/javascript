@@ -7,7 +7,12 @@ test.describe('Flow-based unproductive user behavior', () => {
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailOtp],
+      true,
+      false,
+    );
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);

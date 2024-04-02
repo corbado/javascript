@@ -4,12 +4,13 @@ import type { AuthType } from '../constants';
 import { emailLinkUrlToken } from '../constants';
 
 export async function getEmailLink(context: BrowserContext, email: string, authType: AuthType) {
-  const cboAuthProcess = (await context.storageState()).origins
+  const cboAuthProcessRaw = (await context.storageState()).origins
     .find(origin => origin.origin === process.env.PLAYWRIGHT_TEST_URL)
     ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;
-  if (!cboAuthProcess) {
+  if (!cboAuthProcessRaw) {
     throw new Error('getCboAuthProcess: cbo_auth_process not found in local storage');
   }
+  const cboAuthProcess = JSON.parse(cboAuthProcessRaw);
 
   const urlBlock = {
     blockData: {
@@ -19,7 +20,11 @@ export async function getEmailLink(context: BrowserContext, email: string, authT
       verificationMethod: 'email-link',
     },
     authType: authType,
-    processID: JSON.parse(cboAuthProcess).id,
+    process: {
+      id: cboAuthProcess.id,
+      expires: cboAuthProcess.expires,
+      frontendApiUrl: cboAuthProcess.frontendApiUrl,
+    }
   };
   console.log(JSON.stringify(urlBlock));
 

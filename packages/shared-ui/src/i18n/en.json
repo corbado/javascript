@@ -322,6 +322,11 @@
       "header": "Passkey already exists",
       "body": "A passkey for this device already exists. If you are facing issues with your passkey, please delete it and create a new one.",
       "button_confirm": "Ok"
+    },
+    "dialog_passkeysNotSupported": {
+      "header": "Passkeys are not supported",
+      "body": "Unfortunately, passkeys are not supported on your device.",
+      "button_confirm": "Ok"
     }
   }
 }

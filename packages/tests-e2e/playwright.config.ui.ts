@@ -39,18 +39,18 @@ export default defineConfig({
   ],
   timeout: 15000, // default: 30000ms
   expect: {
-    timeout: 5000, // default: 5000ms
+    timeout: 3000, // default: 5000ms
   },
   use: {
-    actionTimeout: 5000, // default: none
-    navigationTimeout: 5000, // default: none
+    actionTimeout: 3000, // default: none
+    navigationTimeout: 3000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
   projects: [
     //////////////////////////////////////////////////////
-    // B1.1 configs: SignUp with Identifier (unverified)
+    // B1.1 configs (Email OTP): SignUp with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | false
@@ -58,21 +58,57 @@ export default defineConfig({
     //  Social   | false   |
     //  Username | false   |
     {
-      name: 'b1-01-setup',
-      testMatch: ['ui/b1-01/setup.ts'],
+      name: 'b1-01-emailotp-setup',
+      testMatch: ['ui/b1-01-emailotp/setup.ts'],
     },
     {
-      name: 'b1-01-chromium',
+      name: 'b1-01-emailotp-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-01/all-browsers/*.*', 'ui/b1-01/chromium/*.*'],
-      dependencies: ['b1-01-setup'],
+      testMatch: ['ui/b1-01-emailotp/all-browsers/*.*', 'ui/b1-01-emailotp/chromium/*.*'],
+      dependencies: ['b1-01-emailotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B1.1 configs (Phone OTP): SignUp with Identifier (unverified)
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | false   | false
+    //  Phone    | true    | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b1-01-phoneotp-setup',
+      testMatch: ['ui/b1-01-phoneotp/setup.ts'],
+    },
+    {
+      name: 'b1-01-phoneotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-01-phoneotp/all-browsers/*.*', 'ui/b1-01-phoneotp/chromium/*.*'],
+      dependencies: ['b1-01-phoneotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B1.1 configs (Email Link): SignUp with Identifier (unverified)
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b1-01-emaillink-setup',
+      testMatch: ['ui/b1-01-emaillink/setup.ts'],
+    },
+    {
+      name: 'b1-01-emaillink-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-01-emaillink/all-browsers/*.*', 'ui/b1-01-emaillink/chromium/*.*'],
+      dependencies: ['b1-01-emaillink-setup'],
     },
     //////////////////////////////////////////////////////
     // B1.2 configs: SignUp with Identifier (verified)
     //           | enabled | enforced
     //  ---------|---------|----------
-    //  Email    | false   | false
-    //  Phone    | true    | true
+    //  Email    | true    | true
+    //  Phone    | false   | false
     //  Social   | false   |
     //  Username | false   |
     {
@@ -258,6 +294,24 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b2-01-phoneotp/all-browsers/*.*', 'ui/b2-01-phoneotp/chromium/*.*'],
       dependencies: ['b2-01-phoneotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B2.1 configs (Email Link): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-emaillink-setup',
+      testMatch: ['ui/b2-01-emaillink/setup.ts'],
+    },
+    {
+      name: 'b2-01-emaillink-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-emaillink/all-browsers/*.*', 'ui/b2-01-emaillink/chromium/*.*'],
+      dependencies: ['b2-01-emaillink-setup'],
     },
     //////////////////////////////////////////////////////
     // B2.3 configs: Login with Identifier - enforce single verification before login

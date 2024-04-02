@@ -463,6 +463,33 @@ export interface GeneralBlockVerifyIdentifier {
 /**
  * 
  * @export
+ * @interface Identifier
+ */
+export interface Identifier {
+    /**
+     * 
+     * @type {string}
+     * @memberof Identifier
+     */
+    'value': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof Identifier
+     */
+    'type': LoginIdentifierType;
+    /**
+     * 
+     * @type {string}
+     * @memberof Identifier
+     */
+    'status': string;
+}
+
+
+/**
+ * 
+ * @export
  * @interface IdentifierUpdateReq
  */
 export interface IdentifierUpdateReq {
@@ -675,25 +702,6 @@ export interface LoginInitReq {
 /**
  * 
  * @export
- * @interface MePasskeyAppendStartRsp
- */
-export interface MePasskeyAppendStartRsp {
-    /**
-     * 
-     * @type {string}
-     * @memberof MePasskeyAppendStartRsp
-     */
-    'challenge': string;
-    /**
-     * 
-     * @type {ClientInformation}
-     * @memberof MePasskeyAppendStartRsp
-     */
-    'clientInformation': ClientInformation;
-}
-/**
- * 
- * @export
  * @interface MePasskeyDeleteRsp
  */
 export interface MePasskeyDeleteRsp {
@@ -726,6 +734,71 @@ export interface MePasskeyRsp {
 /**
  * 
  * @export
+ * @interface MePasskeysAppendFinishReq
+ */
+export interface MePasskeysAppendFinishReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeysAppendFinishReq
+     */
+    'attestationResponse': string;
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof MePasskeysAppendFinishReq
+     */
+    'clientInformation': ClientInformation;
+}
+/**
+ * 
+ * @export
+ * @interface MePasskeysAppendStartReq
+ */
+export interface MePasskeysAppendStartReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof MePasskeysAppendStartReq
+     */
+    'clientInformation': ClientInformation;
+}
+/**
+ * 
+ * @export
+ * @interface MePasskeysAppendStartRsp
+ */
+export interface MePasskeysAppendStartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeysAppendStartRsp
+     */
+    'newClientEnvHandle'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeysAppendStartRsp
+     */
+    'appendNotAllowedReason'?: MePasskeysAppendStartRspAppendNotAllowedReasonEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeysAppendStartRsp
+     */
+    'attestationOptions': string;
+}
+
+export const MePasskeysAppendStartRspAppendNotAllowedReasonEnum = {
+    PasskeyAlreadyExists: 'passkey_already_exists',
+    PasskeysNotSupported: 'passkeys_not_supported'
+} as const;
+
+export type MePasskeysAppendStartRspAppendNotAllowedReasonEnum = typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum[keyof typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum];
+
+/**
+ * 
+ * @export
  * @interface MeRefreshRsp
  */
 export interface MeRefreshRsp {
@@ -735,6 +808,31 @@ export interface MeRefreshRsp {
      * @memberof MeRefreshRsp
      */
     'shortSession': string;
+}
+/**
+ * 
+ * @export
+ * @interface MeRsp
+ */
+export interface MeRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeRsp
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeRsp
+     */
+    'fullName': string;
+    /**
+     * 
+     * @type {Array<Identifier>}
+     * @memberof MeRsp
+     */
+    'identifiers': Array<Identifier>;
 }
 /**
  * 
@@ -922,6 +1020,12 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'appName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessCommon
+     */
+    'frontendApiUrl': string;
 }
 /**
  * tbd.
@@ -1019,6 +1123,77 @@ export interface RequestError {
      */
     'message': string;
 }
+/**
+ * 
+ * @export
+ * @interface SessionConfigRsp
+ */
+export interface SessionConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SessionConfigRsp
+     */
+    'useSessionManagement': boolean;
+    /**
+     * 
+     * @type {ShortSessionCookieConfig}
+     * @memberof SessionConfigRsp
+     */
+    'shortSessionCookieConfig'?: ShortSessionCookieConfig;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionConfigRsp
+     */
+    'frontendApiUrl'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ShortSessionCookieConfig
+ */
+export interface ShortSessionCookieConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'domain': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShortSessionCookieConfig
+     */
+    'secure': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'sameSite': ShortSessionCookieConfigSameSiteEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'path': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShortSessionCookieConfig
+     */
+    'lifetimeSeconds': number;
+}
+
+export const ShortSessionCookieConfigSameSiteEnum = {
+    Lax: 'lax',
+    Strict: 'strict',
+    None: 'none'
+} as const;
+
+export type ShortSessionCookieConfigSameSiteEnum = typeof ShortSessionCookieConfigSameSiteEnum[keyof typeof ShortSessionCookieConfigSameSiteEnum];
+
 /**
  * tbd.
  * @export
@@ -2585,6 +2760,42 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/session-config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2637,6 +2848,15 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSessionConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2655,6 +2875,14 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
 export const ConfigsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ConfigsApiFp(configuration)
     return {
+        /**
+         * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionConfig(options?: any): AxiosPromise<SessionConfigRsp> {
+            return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
+        },
         /**
          * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
@@ -2676,6 +2904,16 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
 export class ConfigsApi extends BaseAPI {
     /**
      * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getSessionConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
      * @param {UpdateComponentConfigReq} updateComponentConfigReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2695,14 +2933,50 @@ export class ConfigsApi extends BaseAPI {
 export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Finish passkey append
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendFinish: async (passkeyAppendFinishReq: PasskeyAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'passkeyAppendFinishReq' is not null or undefined
-            assertParamExists('currentUserPasskeyAppendFinish', 'passkeyAppendFinishReq', passkeyAppendFinishReq)
+        currentUserGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/me`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Finishes passkey append for current user
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendFinish: async (mePasskeysAppendFinishReq: MePasskeysAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'mePasskeysAppendFinishReq' is not null or undefined
+            assertParamExists('currentUserPasskeyAppendFinish', 'mePasskeysAppendFinishReq', mePasskeysAppendFinishReq)
             const localVarPath = `/v2/me/passkeys/append/finish`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2729,7 +3003,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(passkeyAppendFinishReq, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mePasskeysAppendFinishReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2737,14 +3011,14 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Start passkey append
-         * @param {object} body 
+         * Starts passkey append for current user
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendStart: async (body: object, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('currentUserPasskeyAppendStart', 'body', body)
+        currentUserPasskeyAppendStart: async (mePasskeysAppendStartReq: MePasskeysAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'mePasskeysAppendStartReq' is not null or undefined
+            assertParamExists('currentUserPasskeyAppendStart', 'mePasskeysAppendStartReq', mePasskeysAppendStartReq)
             const localVarPath = `/v2/me/passkeys/append/start`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2771,7 +3045,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mePasskeysAppendStartReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2937,23 +3211,32 @@ export const UsersApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
     return {
         /**
-         * Finish passkey append
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options);
+        async currentUserGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserGet(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Start passkey append
-         * @param {object} body 
+         * Finishes passkey append for current user
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async currentUserPasskeyAppendStart(body: object, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeyAppendStartRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendStart(body, options);
+        async currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq: MePasskeysAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Starts passkey append for current user
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserPasskeyAppendStart(mePasskeysAppendStartReq: MePasskeysAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MePasskeysAppendStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserPasskeyAppendStart(mePasskeysAppendStartReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -3004,22 +3287,30 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = UsersApiFp(configuration)
     return {
         /**
-         * Finish passkey append
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: any): AxiosPromise<void> {
-            return localVarFp.currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(axios, basePath));
+        currentUserGet(options?: any): AxiosPromise<MeRsp> {
+            return localVarFp.currentUserGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Start passkey append
-         * @param {object} body 
+         * Finishes passkey append for current user
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        currentUserPasskeyAppendStart(body: object, options?: any): AxiosPromise<MePasskeyAppendStartRsp> {
-            return localVarFp.currentUserPasskeyAppendStart(body, options).then((request) => request(axios, basePath));
+        currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq: MePasskeysAppendFinishReq, options?: any): AxiosPromise<void> {
+            return localVarFp.currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Starts passkey append for current user
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserPasskeyAppendStart(mePasskeysAppendStartReq: MePasskeysAppendStartReq, options?: any): AxiosPromise<MePasskeysAppendStartRsp> {
+            return localVarFp.currentUserPasskeyAppendStart(mePasskeysAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete current user\'s passkeys
@@ -3065,25 +3356,35 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  */
 export class UsersApi extends BaseAPI {
     /**
-     * Finish passkey append
-     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+     * Gets current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public currentUserPasskeyAppendFinish(passkeyAppendFinishReq: PasskeyAppendFinishReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserPasskeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+    public currentUserGet(options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Start passkey append
-     * @param {object} body 
+     * Finishes passkey append for current user
+     * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public currentUserPasskeyAppendStart(body: object, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserPasskeyAppendStart(body, options).then((request) => request(this.axios, this.basePath));
+    public currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq: MePasskeysAppendFinishReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Starts passkey append for current user
+     * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserPasskeyAppendStart(mePasskeysAppendStartReq: MePasskeysAppendStartReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserPasskeyAppendStart(mePasskeysAppendStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

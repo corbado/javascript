@@ -63,6 +63,8 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
       });
   }
 
+  getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.userHandle);
+
   showPasskeyBenefits() {
     this.updateScreen(ScreenNames.PasskeyBenefits);
   }

@@ -9,7 +9,8 @@ export enum ScreenNames {
   EmailOtpLogin,
   EmailLinkSentSignup,
   EmailLinkSentLogin,
-  EmailLinkSuccess,
+  EmailLinkSuccessSignup,
+  EmailLinkSuccessLogin,
   EmailEdit,
   PhoneOtpSignup,
   PhoneOtpLogin,
@@ -43,5 +44,12 @@ export enum IdentifierVerification {
   EmailLink = 'email-link',
   PhoneOtp = 'phone-otp',
 }
+
+export enum AuthType {
+  Signup = 1,
+  Login = 0,
+}
+
+export const emailLinkUrlToken = 'UaTwjBJwyDLMGVbR7WHh';
 
 export const waitAfterLoad = 600; // timeout to reduce flakiness due to repetitive reloads

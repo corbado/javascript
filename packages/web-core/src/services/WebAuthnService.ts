@@ -1,9 +1,12 @@
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
+import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import { CorbadoError } from '../utils';
+
+const clientHandleKey = 'cbo_client_handle';
 
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
@@ -60,6 +63,21 @@ export class WebAuthnService {
   }
 
   public abortOngoingOperation() {
+    log.debug('Aborting ongoing webauthn operation');
     this.#abortController?.abort();
+  }
+
+  static async doesBrowserSupportPasskeys(): Promise<boolean> {
+    return (
+      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())
+    );
+  }
+
+  static getClientHandle(): string | null {
+    return localStorage.getItem(clientHandleKey);
+  }
+
+  static setClientHandle(clientHandle: string) {
+    localStorage.setItem(clientHandleKey, clientHandle);
   }
 }

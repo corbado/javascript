@@ -1,6 +1,7 @@
-import type { LoginIdentifiers, SignupInitBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { LoginIdentifiers, SignupInitBlock } from '@corbado/shared-ui';
 import type { FormEvent, MutableRefObject } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
@@ -16,24 +17,12 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [username, setUsername] = useState<TextFieldWithError | null>(null);
   const usernameRef = useRef<HTMLInputElement>();
-
-  const [email, setEmail] = useState<TextFieldWithError | null>(null);
   const emailRef = useRef<HTMLInputElement>();
-
-  const [phone, setPhone] = useState<TextFieldWithError | null>(null);
   const [phoneInput, setPhoneInput] = useState<string>('');
-
-  const [fullName, setFullName] = useState<TextFieldWithError | null>(null);
   const fullNameRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    setUsername(block.data.userName);
-    setEmail(block.data.email);
-    setPhone(block.data.phone);
-    setFullName(block.data.fullName);
-
     setLoading(false);
   }, [block]);
 
@@ -79,6 +68,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
     }
   };
 
+  const fullName = block.data.fullName;
+  const userName = block.data.userName;
+  const email = block.data.email;
+  const phone = block.data.phone;
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -96,17 +90,17 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             name='name'
             label={fullNameFieldLabel}
             errorMessage={fullName?.translatedError}
-            ref={attacheRef.bind(null, fullNameRef, block.data.fullName?.value)}
+            ref={attacheRef.bind(null, fullNameRef, fullName?.value)}
           />
         )}
-        {username && (
+        {userName && (
           <InputField
             label={usernameFieldLabel}
             id='username'
             name='username'
             autoComplete='username'
-            errorMessage={username?.translatedError}
-            ref={attacheRef.bind(null, usernameRef, block.data.userName?.value)}
+            errorMessage={userName?.translatedError}
+            ref={attacheRef.bind(null, usernameRef, userName?.value)}
           />
         )}
         {email && (
@@ -117,7 +111,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             type='email'
             autoComplete='email'
             errorMessage={email?.translatedError}
-            ref={attacheRef.bind(null, emailRef, block.data.email?.value)}
+            ref={attacheRef.bind(null, emailRef, email?.value)}
           />
         )}
         {phone && (
@@ -126,7 +120,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             id='phone'
             errorMessage={phone?.translatedError}
             initialCountry='US'
-            initialPhoneNumber={block.data.phone?.value}
+            initialPhoneNumber={phone?.value}
             onChange={setPhoneInput}
           />
         )}

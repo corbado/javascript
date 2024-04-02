@@ -35,6 +35,14 @@ export class CorbadoError extends Error {
     this.#translatedMessage = message;
   }
 
+  static missingInit(): CorbadoError {
+    return new CorbadoError(false, false);
+  }
+
+  static invalidConfig(): CorbadoError {
+    return new CorbadoError(false, false);
+  }
+
   static ignore(): CorbadoError {
     return new CorbadoError(true, true);
   }
@@ -146,6 +154,13 @@ export class PasskeyAlreadyExistsError extends RecoverableError {
   constructor() {
     super('Passkey for this device already exists');
     this.name = 'errors.passkeyAlreadyExists';
+  }
+}
+
+export class PasskeysNotSupported extends RecoverableError {
+  constructor() {
+    super('Passkeys are not supported for this device');
+    this.name = 'errors.passkeysNotSupported';
   }
 }
 

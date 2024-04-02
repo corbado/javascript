@@ -45,7 +45,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   });
 
   // Skipped because loading external links take a long time
-  // (navigationTimeout should be extended, but this doesn't seem worth it for this single test)
+  // (navigationTimeout should be extended, but it doesn't seem worth it for this single test)
   test.skip('click external links', async ({ signupFlow, page }) => {
     await signupFlow.navigateToEmailOtpScreen();
 

@@ -39,6 +39,7 @@ import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import { SocialLinkVerification } from '../../screens/auth-blocks/social-verify/SocialLinkVerification';
 import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
 import ErrorPopup from '../ui2/errors/ErrorPopup';
+import { FreemiumBadge } from '../ui2/FreemiumBadge';
 import { LoadingSpinner } from '../ui2/LoadingSpinner';
 
 export const AuthFlow: FC = () => {
@@ -116,21 +117,39 @@ export const AuthFlow: FC = () => {
     }
   }, [currentScreen]);
 
-  // Render the component if it exists, otherwise a fallback or null
-  return initState === InitState.Failed ? (
-    <ComponentUnavailableError />
-  ) : initState === InitState.Initializing ? (
-    <LoadingSpinner className='cb-initital-loading-spinner' />
-  ) : (
-    <>
-      {currentScreen?.block.error && (
-        <ErrorPopup
-          isDevMode={isDevMode}
-          error={currentScreen?.block.error}
-          customerSupportEmail={customerSupportEmail}
-        />
-      )}
-      {screenComponent}
-    </>
+  const renderContent = () => {
+    if (initState === InitState.Failed) {
+      return <ComponentUnavailableError />;
+    }
+
+    if (initState === InitState.Initializing) {
+      return <LoadingSpinner className='cb-initital-loading-spinner' />;
+    }
+
+    return (
+      <>
+        {currentScreen?.block.error && (
+          <ErrorPopup
+            isDevMode={isDevMode}
+            error={currentScreen?.block.error}
+            customerSupportEmail={customerSupportEmail}
+          />
+        )}
+        <div className='cb-container-body'>{screenComponent}</div>
+      </>
+    );
+  };
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <div className='cb-container'>{renderContent()}</div>
+      <FreemiumBadge />
+    </div>
   );
 };

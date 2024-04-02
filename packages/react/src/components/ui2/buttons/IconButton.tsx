@@ -29,15 +29,7 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({
       href={href}
     >
       <span className='cb-icon-button-icon'>{icon}</span>
-      {!showIconOnly && (
-        <Text
-          fontFamilyVariant='secondary'
-          textColorVariant='secondary'
-          {...labelProps}
-        >
-          {label}
-        </Text>
-      )}
+      {!showIconOnly && <Text {...labelProps}>{label}</Text>}
     </a>
   );
 };

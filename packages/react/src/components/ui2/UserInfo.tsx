@@ -43,8 +43,8 @@ export const UserInfo: FC<UserInfoProps> = ({
         <Text
           level='2'
           fontWeight='normal'
-          fontFamilyVariant='secondary'
-          textColorVariant='secondary'
+          fontFamilyVariant='primary'
+          textColorVariant='primary'
         >
           {userData}
         </Text>

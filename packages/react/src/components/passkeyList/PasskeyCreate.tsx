@@ -1,4 +1,5 @@
 import { useCorbado } from '@corbado/react-sdk';
+import type { CorbadoError } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,39 +11,67 @@ export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;
 }
 
+type TranslatedError = {
+  dialogHeader: string;
+  dialogBody: string;
+  dialogConfirmText: string;
+};
+
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
   const { corbadoApp } = useCorbado();
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [dialogError, setDialogError] = useState<CorbadoError | undefined>();
   const [loading, setLoading] = useState(false);
 
   const translatedTexts = useMemo(
     () => ({
       buttonText: t('button_createPasskey'),
-      dialogHeader: t('dialog_passkeyAlreadyExists.header'),
-      dialogBody: t('dialog_passkeyAlreadyExists.body'),
-      dialogConfirmText: t('dialog_passkeyAlreadyExists.button_confirm'),
     }),
     [t],
   );
 
-  const openDialog = () => {
-    setDialogOpen(true);
+  const translatedError: TranslatedError | null = useMemo(() => {
+    if (!dialogError) {
+      return null;
+    }
+
+    switch (dialogError.name) {
+      case 'errors.passkeyAlreadyExists':
+        return {
+          dialogHeader: t('dialog_passkeyAlreadyExists.header'),
+          dialogBody: t('dialog_passkeyAlreadyExists.body'),
+          dialogConfirmText: t('dialog_passkeyAlreadyExists.button_confirm'),
+        };
+      case 'errors.passkeysNotSupported':
+        return {
+          dialogHeader: t('dialog_passkeysNotSupported.header'),
+          dialogBody: t('dialog_passkeysNotSupported.body'),
+          dialogConfirmText: t('dialog_passkeysNotSupported.button_confirm'),
+        };
+      default:
+        return null;
+    }
+  }, [t, dialogError]);
+
+  const showError = (error: CorbadoError | undefined) => {
+    setDialogError(error);
   };
 
   const closeDialog = () => {
-    setDialogOpen(false);
+    setDialogError(undefined);
   };
 
   const createPasskey = async () => {
     setLoading(true);
-    const result = await corbadoApp?.authProcessService.appendPasskey();
+    const result = await corbadoApp?.sessionService.appendPasskey();
+
+    if (result?.err) {
+      showError(result.val);
+    }
 
     if (result?.ok) {
       await fetchPasskeys();
-    } else if (result?.val?.name === 'errors.passkeyAlreadyExists') {
-      openDialog();
     }
 
     setLoading(false);
@@ -58,10 +87,10 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
         {translatedTexts.buttonText}
       </PrimaryButton>
       <Dialog
-        isOpen={isDialogOpen}
-        header={translatedTexts.dialogHeader}
-        body={translatedTexts.dialogBody}
-        confirmText={translatedTexts.dialogConfirmText}
+        isOpen={translatedError !== null}
+        header={translatedError?.dialogHeader ?? ''}
+        body={translatedError?.dialogBody ?? ''}
+        confirmText={translatedError?.dialogConfirmText ?? ''}
         onClose={closeDialog}
         onConfirm={closeDialog}
       />

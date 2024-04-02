@@ -2,11 +2,13 @@ const storageKey = 'cbo_auth_process';
 
 export class AuthProcess {
   readonly id: string;
+  readonly frontendApiUrl: string;
   readonly expiresAt: number;
 
-  constructor(id: string, expiresAt: number) {
+  constructor(id: string, expiresAt: number, frontendApiUrl: string) {
     this.id = id;
     this.expiresAt = expiresAt;
+    this.frontendApiUrl = frontendApiUrl;
   }
 
   isValid(): boolean {
@@ -19,8 +21,8 @@ export class AuthProcess {
       return undefined;
     }
 
-    const { id, expiresAt } = JSON.parse(serialized);
-    const process = new AuthProcess(id, expiresAt);
+    const { id, expiresAt, frontendApiUrl } = JSON.parse(serialized);
+    const process = new AuthProcess(id, expiresAt, frontendApiUrl);
     if (!process.isValid()) {
       return undefined;
     }
@@ -34,6 +36,7 @@ export class AuthProcess {
       JSON.stringify({
         id: this.id,
         expiresAt: this.expiresAt,
+        frontendApiUrl: this.frontendApiUrl,
       }),
     );
   }

@@ -8,9 +8,9 @@ class UserManager {
 
   // This method is used to generate a unique user for each test run.
   public static getUserForSignup(): string {
-    const timestamp = Date.now().toString();
-    const randomness = Math.floor(Math.random() * 1000);
-    const user = `integration-test+${timestamp.slice(4)}${randomness}${this.#index}`;
+    const timestamp = Date.now();
+    const randomness = Math.floor(Math.random() * 10000);
+    const user = `integration-test+${timestamp % 9}${randomness}${this.#index}`;
     this.#userList.push(user);
     this.#index++;
     return user;

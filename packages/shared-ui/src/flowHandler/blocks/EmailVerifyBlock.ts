@@ -82,7 +82,8 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     isNewDevice: boolean,
     emailLinkToken: string,
   ): EmailVerifyBlock {
-    const emptyCommon = {
+    const emptyCommon: ProcessCommon = {
+      frontendApiUrl: '',
       appName: '',
     };
 

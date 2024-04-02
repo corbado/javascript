@@ -27,7 +27,6 @@ export async function getEmailLink(context: BrowserContext, email: string, authT
       frontendApiUrl: cboAuthProcess.frontendApiUrl,
     },
   };
-  console.log(JSON.stringify(urlBlock));
 
   return `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}/auth?corbadoEmailLinkID=${btoa(
     JSON.stringify(urlBlock),

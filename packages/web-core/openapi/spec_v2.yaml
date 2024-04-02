@@ -47,6 +47,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/updateComponentConfigRsp'
 
+  /v2/session-config:
+    get:
+      description: tbd
+      operationId: GetSessionConfig
+      tags:
+        - Configs
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sessionConfigRsp'
+
   /v2/me:
     get:
       description: Gets current user
@@ -665,11 +679,13 @@ components:
     mePasskeysAppendStartRsp:
       type: object
       required:
-        - appendAllow
         - attestationOptions
       properties:
-        appendAllow:
-          type: boolean
+        newClientEnvHandle:
+          type: string
+        appendNotAllowedReason:
+          type: string
+          enum: [ 'passkey_already_exists', 'passkeys_not_supported' ]
         attestationOptions:
           type: string
           example: '{"publicKey":{"challenge":"2m6...0w9/MgW...KE=","rp":{"name":"demo","id":"localhost"},"user":{"name":"example@mail.com","id":"dXN...zk5"},"pubKeyCredParams":[{"type":"public-key","alg":-7},{"type":"public-key","alg":-35},{"type":"public-key","alg":-36},{"type":"public-key","alg":-257},{"type":"public-key","alg":-258},{"type":"public-key","alg":-259},{"type":"public-key","alg":-37},{"type":"public-key","alg":-38},{"type":"public-key","alg":-39},{"type":"public-key","alg":-8}],"authenticatorSelection":{"authenticatorAttachment":"platform","requireResidentKey":false,"userVerification":"required"},"timeout":60000,"attestation":"none"}}'
@@ -762,20 +778,11 @@ components:
         value:
           type: string
 
-    #    phoneCollectRsp:
-    #      $ref: '#/components/schemas/blockBody'
-
     socialVerifyStartReq:
       type: object
       properties:
         placeholder:
           type: string
-
-    #    socialVerifyStartRsp:
-    #      $ref: '#/components/schemas/blockBody'
-    #
-    #    socialVerifyFinishRsp:
-    #      $ref: '#/components/schemas/blockBody'
 
     identifierUpdateReq:
       type: object
@@ -788,16 +795,17 @@ components:
         value:
           type: string
 
-    #    verifyPasskeyRsp:
-    #      type: object
-    #      required:
-    #        - primary
-    #        - alternatives
-    #      properties:
-    #        primary:
-    #          type: object
-    #        alternatives:
-    #          type: object
+    sessionConfigRsp:
+      type: object
+      required:
+        - useSessionManagement
+      properties:
+        useSessionManagement:
+          type: boolean
+        shortSessionCookieConfig:
+          $ref: '#/components/schemas/shortSessionCookieConfig'
+        frontendApiUrl:
+          type: string
 
     mePasskeyRsp:
       type: object
@@ -891,9 +899,33 @@ components:
       type: object
       required:
         - appName
+        - frontendApiUrl
       properties:
         appName:
           type: string
+        frontendApiUrl:
+          type: string
+
+    shortSessionCookieConfig:
+      type: object
+      required:
+        - domain
+        - secure
+        - sameSite
+        - path
+        - lifetimeSeconds
+      properties:
+        domain:
+          type: string
+        secure:
+          type: boolean
+        sameSite:
+          type: string
+          enum: [ 'lax', 'strict', 'none' ]
+        path:
+          type: string
+        lifetimeSeconds:
+          type: integer
 
     blockBody:
       type: object
@@ -1135,16 +1167,16 @@ components:
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     requestError:
       type: object

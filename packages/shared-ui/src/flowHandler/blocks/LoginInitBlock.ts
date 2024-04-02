@@ -33,6 +33,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       usernameEnabled: data.isUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
       conditionalUIChallenge: data.conditionalUIChallenge,
+      socialLogins: [],
     };
   }
 

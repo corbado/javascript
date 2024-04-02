@@ -7,6 +7,7 @@ import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton
 import type { InputFieldProps } from '../../../components/ui2/input/InputField';
 import InputField from '../../../components/ui2/input/InputField';
 import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
+import { SocialLoginButtons } from '../../../components/ui2/SocialLoginButtons';
 import { Header } from '../../../components/ui2/typography/Header';
 import { SubHeader } from '../../../components/ui2/typography/SubHeader';
 import { Text } from '../../../components/ui2/typography/Text';
@@ -44,6 +45,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const signUpText = useMemo(() => t('text_signup'), [t]);
   const flowChangeButtonText = useMemo(() => t('button_signup'), [t]);
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
+  const textDivider = useMemo(() => t('text_divider'), [t]);
   const IdentifierInputField = useMemo(() => {
     const commonProps: Partial<InputFieldProps> & React.RefAttributes<HTMLInputElement> = {
       errorMessage: textField?.translatedError,
@@ -72,7 +74,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         <PhoneInputField
           label={t('textField.phone')}
           labelLink={fieldLink}
-          autoComplete='tel webauthn'
+          autoComplete='tel'
           initialCountry='US'
           initialPhoneNumber={textField?.value}
           errorMessage={textField?.translatedError}
@@ -147,6 +149,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           {submitButtonText}
         </PrimaryButton>
       </form>
+      <SocialLoginButtons
+        dividerText={textDivider}
+        socialLogins={block.data.socialLogins}
+        t={t}
+      />
       {block.isSignupEnabled() && (
         <Text
           level='2'

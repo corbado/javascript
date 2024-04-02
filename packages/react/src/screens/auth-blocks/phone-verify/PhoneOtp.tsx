@@ -1,6 +1,5 @@
 import type { PhoneVerifyBlock } from '@corbado/shared-ui';
 import { AuthType } from '@corbado/shared-ui';
-import { parsePhoneNumber } from 'libphonenumber-js';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -30,12 +29,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
 
     const timer = startTimer();
 
-    const parsedPhoneNumber = parsePhoneNumber(block.data.phone);
-    if (parsedPhoneNumber) {
-      phoneNumberRef.current = parsedPhoneNumber.formatInternational();
-    } else {
-      phoneNumberRef.current = block.data.phone;
-    }
+    phoneNumberRef.current = block.getFormattedPhoneNumber();
 
     return () => clearInterval(timer);
   }, [block]);

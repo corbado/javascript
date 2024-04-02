@@ -5,6 +5,6 @@ import { makeIdentifier, setBackendConfigs } from '../../utils/helperFunctions/s
 
 setup('set b1.2 configs', async (/* { page } */) => {
   await setBackendConfigs([
-    makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.PhoneOtp]),
+    makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, true, [IdentifierVerification.EmailOtp]),
   ]);
 });

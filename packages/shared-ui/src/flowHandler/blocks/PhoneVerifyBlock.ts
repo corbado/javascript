@@ -32,6 +32,8 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
     };
   }
 
+  getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.phone);
+
   showEditPhone() {
     this.updateScreen(ScreenNames.EditPhone);
   }

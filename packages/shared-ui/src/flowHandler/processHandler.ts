@@ -1,12 +1,14 @@
 import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
-import { AuthType } from '@corbado/web-core';
-import { BlockType, type CorbadoApp } from '@corbado/web-core';
+import { AuthType, BlockType, type CorbadoApp } from '@corbado/web-core';
+import type { AuthenticationResponse } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
 import {
+  ConfirmProcessAbortBlock,
+  ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
   PasskeyAppendBlock,
@@ -16,10 +18,8 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
-import { ConfirmProcessAbortBlock } from './blocks/ConfirmProcessAbortBlock';
-import { ContinueOnOtherEnvBlock } from './blocks/ContinueOnOtherEnvBlock';
-import type { BlockTypes } from './constants';
-import type { ScreenNames } from './constants';
+import { SocialVerifyBlock } from './blocks/SocialVerifyBlock';
+import type { BlockTypes, ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
@@ -92,8 +92,10 @@ export class ProcessHandler {
     return Ok(void 0);
   }
 
-  onProcessCompleted() {
+  onProcessCompleted(data: AuthenticationResponse) {
     this.#corbadoApp.authProcessService.clearProcess();
+    this.#currentBlock = null;
+    this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
     this.#postProcess();
   }
 
@@ -114,7 +116,6 @@ export class ProcessHandler {
       newAlternatives.push(this.#currentBlock);
     }
 
-    console.log('switching to block', blockType, newBlock, newAlternatives);
     this.handleProcessUpdateFrontend(newBlock, newAlternatives);
 
     return true;
@@ -226,6 +227,12 @@ export class ProcessHandler {
   }
 
   #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
+    // if process has been completed, we don't want to update the screen anymore
+    if (newPrimaryBlock instanceof CompletedBlock) {
+      this.onProcessCompleted(newPrimaryBlock.data);
+      return;
+    }
+
     const blockHasChanged = this.#currentBlock == null || newPrimaryBlock.type !== this.#currentBlock.type;
     if (blockHasChanged) {
       this.#currentScreen = newPrimaryBlock.initialScreen;
@@ -291,6 +298,13 @@ export class ProcessHandler {
       case BlockType.PasskeyVerify:
         block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
+      case BlockType.SocialVerify:
+        block = new SocialVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
+      //TODO: Add MissingFieldsBlock
+      // case BlockType.MissingFields:
+      // block = new MissingFieldsBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+      // break;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);
     }

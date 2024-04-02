@@ -771,10 +771,16 @@ export interface MePasskeysAppendStartReq {
 export interface MePasskeysAppendStartRsp {
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof MePasskeysAppendStartRsp
      */
-    'appendAllow': boolean;
+    'newClientEnvHandle'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MePasskeysAppendStartRsp
+     */
+    'appendNotAllowedReason'?: MePasskeysAppendStartRspAppendNotAllowedReasonEnum;
     /**
      * 
      * @type {string}
@@ -782,6 +788,14 @@ export interface MePasskeysAppendStartRsp {
      */
     'attestationOptions': string;
 }
+
+export const MePasskeysAppendStartRspAppendNotAllowedReasonEnum = {
+    PasskeyAlreadyExists: 'passkey_already_exists',
+    PasskeysNotSupported: 'passkeys_not_supported'
+} as const;
+
+export type MePasskeysAppendStartRspAppendNotAllowedReasonEnum = typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum[keyof typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum];
+
 /**
  * 
  * @export
@@ -1006,6 +1020,12 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'appName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessCommon
+     */
+    'frontendApiUrl': string;
 }
 /**
  * tbd.
@@ -1103,6 +1123,77 @@ export interface RequestError {
      */
     'message': string;
 }
+/**
+ * 
+ * @export
+ * @interface SessionConfigRsp
+ */
+export interface SessionConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SessionConfigRsp
+     */
+    'useSessionManagement': boolean;
+    /**
+     * 
+     * @type {ShortSessionCookieConfig}
+     * @memberof SessionConfigRsp
+     */
+    'shortSessionCookieConfig'?: ShortSessionCookieConfig;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionConfigRsp
+     */
+    'frontendApiUrl'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ShortSessionCookieConfig
+ */
+export interface ShortSessionCookieConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'domain': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShortSessionCookieConfig
+     */
+    'secure': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'sameSite': ShortSessionCookieConfigSameSiteEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShortSessionCookieConfig
+     */
+    'path': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShortSessionCookieConfig
+     */
+    'lifetimeSeconds': number;
+}
+
+export const ShortSessionCookieConfigSameSiteEnum = {
+    Lax: 'lax',
+    Strict: 'strict',
+    None: 'none'
+} as const;
+
+export type ShortSessionCookieConfigSameSiteEnum = typeof ShortSessionCookieConfigSameSiteEnum[keyof typeof ShortSessionCookieConfigSameSiteEnum];
+
 /**
  * tbd.
  * @export
@@ -2669,6 +2760,42 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/session-config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2721,6 +2848,15 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSessionConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2741,6 +2877,14 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * tbd
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionConfig(options?: any): AxiosPromise<SessionConfigRsp> {
+            return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
          * @param {UpdateComponentConfigReq} updateComponentConfigReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2758,6 +2902,16 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class ConfigsApi extends BaseAPI {
+    /**
+     * tbd
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getSessionConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * tbd
      * @param {UpdateComponentConfigReq} updateComponentConfigReq 

@@ -19,7 +19,9 @@ export const Text: FC<PropsWithChildren<TextProps>> = ({
 }) => {
   return (
     <span
-      className={`cb-${textColorVariant}-text-color cb-${fontWeight}-text-weight cb-${fontFamilyVariant}-text-font cb-text-${level}${className ? ` ${className}` : ''}`}
+      className={`cb-${textColorVariant}-text-color cb-${fontWeight}-text-weight cb-${fontFamilyVariant}-text-font cb-text-${level}${
+        className ? ` ${className}` : ''
+      }`}
     >
       {children}
     </span>

@@ -50,7 +50,7 @@ export default defineConfig({
   },
   projects: [
     //////////////////////////////////////////////////////
-    // B1.1 configs: SignUp with Identifier (unverified)
+    // B1.1 configs (Email OTP): SignUp with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | false
@@ -58,21 +58,57 @@ export default defineConfig({
     //  Social   | false   |
     //  Username | false   |
     {
-      name: 'b1-01-setup',
-      testMatch: ['ui/b1-01/setup.ts'],
+      name: 'b1-01-emailotp-setup',
+      testMatch: ['ui/b1-01-emailotp/setup.ts'],
     },
     {
-      name: 'b1-01-chromium',
+      name: 'b1-01-emailotp-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-01/all-browsers/*.*', 'ui/b1-01/chromium/*.*'],
-      dependencies: ['b1-01-setup'],
+      testMatch: ['ui/b1-01-emailotp/all-browsers/*.*', 'ui/b1-01-emailotp/chromium/*.*'],
+      dependencies: ['b1-01-emailotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B1.1 configs (Phone OTP): SignUp with Identifier (unverified)
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | false   | false
+    //  Phone    | true    | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b1-01-phoneotp-setup',
+      testMatch: ['ui/b1-01-phoneotp/setup.ts'],
+    },
+    {
+      name: 'b1-01-phoneotp-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-01-phoneotp/all-browsers/*.*', 'ui/b1-01-phoneotp/chromium/*.*'],
+      dependencies: ['b1-01-phoneotp-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // B1.1 configs (Email Link): SignUp with Identifier (unverified)
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b1-01-emaillink-setup',
+      testMatch: ['ui/b1-01-emaillink/setup.ts'],
+    },
+    {
+      name: 'b1-01-emaillink-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-01-emaillink/all-browsers/*.*', 'ui/b1-01-emaillink/chromium/*.*'],
+      dependencies: ['b1-01-emaillink-setup'],
     },
     //////////////////////////////////////////////////////
     // B1.2 configs: SignUp with Identifier (verified)
     //           | enabled | enforced
     //  ---------|---------|----------
-    //  Email    | false   | false
-    //  Phone    | true    | true
+    //  Email    | true    | true
+    //  Phone    | false   | false
     //  Social   | false   |
     //  Username | false   |
     {
@@ -260,6 +296,24 @@ export default defineConfig({
       dependencies: ['b2-01-phoneotp-setup'],
     },
     //////////////////////////////////////////////////////
+    // B2.1 configs (Email Link): Login with Identifier
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | false   |
+    //  Username | false   |
+    {
+      name: 'b2-01-emaillink-setup',
+      testMatch: ['ui/b2-01-emaillink/setup.ts'],
+    },
+    {
+      name: 'b2-01-emaillink-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-01-emaillink/all-browsers/*.*', 'ui/b2-01-emaillink/chromium/*.*'],
+      dependencies: ['b2-01-emaillink-setup'],
+    },
+    //////////////////////////////////////////////////////
     // B2.3 configs: Login with Identifier - enforce single verification before login
     //           | enabled | enforced
     //  ---------|---------|----------
@@ -276,6 +330,48 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
       dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-firefox',
+      use: { ...devices['Desktop Firefox'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-webkit',
+      use: { ...devices['Desktop Safari'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-mobile-chrome',
+      use: { ...devices['Pixel 7'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-mobile-safari',
+      use: { ...devices['iPhone 14 Pro Max'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-msedge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-all-browsers',
+      testMatch: ['ui/b2-03/teardown.ts'],
+      dependencies: [
+        'b2-03-chromium',
+        'b2-03-firefox',
+        'b2-03-webkit',
+        'b2-03-mobile-chrome',
+        'b2-03-mobile-safari',
+        'b2-03-msedge',
+      ],
     },
   ],
 });

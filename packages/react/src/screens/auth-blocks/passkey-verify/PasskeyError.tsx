@@ -1,5 +1,4 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
-import { parsePhoneNumber } from 'libphonenumber-js';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,8 +27,7 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
   useEffect(() => {
-    const parsedUserInfo = parsePhoneNumber(block.data.identifierValue);
-    setUserInfo(parsedUserInfo ? parsedUserInfo.formatInternational() : block.data.identifierValue);
+    setUserInfo(block.getFormattedPhoneNumber());
   }, [block]);
 
   const passkeyLogin = async () => {

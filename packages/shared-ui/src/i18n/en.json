@@ -10,7 +10,13 @@
         "textField_fullName": "Name",
         "textField_username": "Username",
         "textField_email": "Email address",
-        "textField_phone": "Phone number"
+        "textField_phone": "Phone number",
+        "text_divider": "or",
+        "social_signup": {
+          "google": "Continue with Google",
+          "microsoft": "Continue with Microsoft",
+          "github": "Continue with GitHub"
+        }
       }
     },
     "passkey-append": {
@@ -133,6 +139,15 @@
         "button_submit": "Resend code",
         "button_cancel": "Back"
       }
+    },
+    "social-link-verification": {
+      "header": "Signing up...",
+      "subheader": "You will be redirected soon"
+    },
+    "missing-fields": {
+      "header": "Fill missing fields",
+      "subheader": "to create an account",
+      "button": "Continue"
     }
   },
   "login": {
@@ -154,6 +169,12 @@
           "username": "Use username",
           "emailOrUsername": "Use email or username",
           "phone": "Use phone"
+        },
+        "text_divider": "or",
+        "social_signup": {
+          "google": "Continue with Google",
+          "microsoft": "Continue with Microsoft",
+          "github": "Continue with GitHub"
         }
       }
     },
@@ -225,6 +246,10 @@
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)"
       }
+    },
+    "social-link-verification": {
+      "header": "Logging in...",
+      "subheader": "You will be redirected soon"
     }
   },
   "errors": {
@@ -296,6 +321,11 @@
     "dialog_passkeyAlreadyExists": {
       "header": "Passkey already exists",
       "body": "A passkey for this device already exists. If you are facing issues with your passkey, please delete it and create a new one.",
+      "button_confirm": "Ok"
+    },
+    "dialog_passkeysNotSupported": {
+      "header": "Passkeys are not supported",
+      "body": "Unfortunately, passkeys are not supported on your device.",
       "button_confirm": "Ok"
     }
   },

@@ -22,12 +22,6 @@ export class CompletedBlock extends Block<AuthenticationResponse> {
     super(app, flowHandler, common, errorTranslator);
 
     this.authType = blockBody.authType;
-
     this.data = blockBody.data as AuthenticationResponse;
-  }
-
-  init() {
-    this.app.sessionService.setSession(this.data.shortSession, this.data.longSession);
-    this.flowHandler.onProcessCompleted();
   }
 }

@@ -2,6 +2,7 @@ import type { CorbadoProviderProps } from '@corbado/react';
 import { CorbadoProvider } from '@corbado/react';
 import type { FC } from 'react';
 import React from 'react';
+import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
 
 import type { CorbadoAppState } from '../models/CorbadoAppState';
@@ -35,4 +36,10 @@ export function mountComponent<T extends Record<string, any>>(
       componentProps={componentOptions}
     />,
   );
+
+  return root;
+}
+
+export function unmountComponent(root: Root) {
+  root.unmount();
 }

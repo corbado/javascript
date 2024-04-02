@@ -1,6 +1,4 @@
-import type { BlockBody, CorbadoApp, CorbadoError, ProcessCommon } from '@corbado/web-core';
-import type { AuthType } from '@corbado/web-core';
-import { Ok, type Result } from 'ts-results';
+import type { AuthType, BlockBody, CorbadoApp, GeneralBlockSocialVerify, ProcessCommon } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -11,9 +9,9 @@ import { Block } from './Block';
 export class SocialVerifyBlock extends Block<BlockDataSocialVerify> {
   readonly data: BlockDataSocialVerify = {};
   readonly type = BlockTypes.SocialVerify;
-  readonly initialScreen = ScreenNames.SocialLinkVerification;
+  readonly initialScreen = ScreenNames.SocialVerify;
   readonly authType: AuthType;
-  readonly socialLinkToken?: string;
+  readonly oAuthUrl: string;
 
   constructor(
     app: CorbadoApp,
@@ -21,23 +19,15 @@ export class SocialVerifyBlock extends Block<BlockDataSocialVerify> {
     common: ProcessCommon,
     errorTranslator: ErrorTranslator,
     blockBody: BlockBody,
-    socialLinkToken?: string,
   ) {
     super(app, flowHandler, common, errorTranslator);
+    const data = blockBody.data as GeneralBlockSocialVerify;
 
     this.authType = blockBody.authType;
-    this.socialLinkToken = socialLinkToken;
+    this.oAuthUrl = data.oauthUrl;
   }
 
-  async startSocialVerification(_: AbortController): Promise<Result<void, CorbadoError>> {
-    if (!this.socialLinkToken) {
-      throw new Error('Social link token is missing');
-    }
-
-    const res = await this.app.authProcessService.resetAuthProcess();
-
-    this.updateProcess(res);
-
-    return Ok(void 0);
+  startSocialVerification(_: AbortController): void {
+    window.location.href = this.oAuthUrl;
   }
 }

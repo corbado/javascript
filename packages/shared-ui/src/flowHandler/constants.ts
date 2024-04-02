@@ -45,7 +45,7 @@ export enum ScreenNames {
   EmailLinkSent = 'email-link-sent',
   PhoneOtp = 'phone-otp',
   EmailLinkVerification = 'email-link-verification',
-  SocialLinkVerification = 'social-link-verification',
+  SocialVerify = 'social-verify',
   MissingFields = 'missing-fields',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',

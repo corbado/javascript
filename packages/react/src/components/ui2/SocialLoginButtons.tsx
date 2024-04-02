@@ -1,4 +1,5 @@
 import type { SocialLogin } from '@corbado/shared-ui';
+import type { SocialProviderType } from '@corbado/web-core';
 import type { TFunction } from 'i18next';
 import type { FC, ReactNode } from 'react';
 import React from 'react';
@@ -13,6 +14,7 @@ export interface SocialLoginButtonsProps {
   dividerText?: string;
   socialLogins: SocialLogin[];
   t: TFunction;
+  onClick: (providerType: SocialProviderType) => void;
 }
 
 const Icons: Record<string, ReactNode> = {
@@ -21,7 +23,7 @@ const Icons: Record<string, ReactNode> = {
   microsoft: <MicrosoftIcon />,
 };
 
-export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({ dividerText, socialLogins, t }) => {
+export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({ dividerText, socialLogins, t, onClick }) => {
   const socialLoginsAvailable = socialLogins.length > 0;
   const socialLoginButtonSize = socialLogins.length > 2 ? 'small' : 'large';
 
@@ -42,7 +44,7 @@ export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({ dividerText, s
             className={`cb-social-login-buttton-${socialLoginButtonSize}`}
             icon={Icons[social.name] ?? null}
             label={t(`social_signup.${social.name}`)}
-            href={social.url}
+            onClick={() => onClick(social.name as SocialProviderType)}
             showIconOnly={socialLoginButtonSize === 'small'}
             labelProps={{
               level: '2',

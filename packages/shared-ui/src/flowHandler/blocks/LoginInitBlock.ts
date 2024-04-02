@@ -1,6 +1,6 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { AuthType } from '@corbado/web-core';
+import { AuthType, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -33,8 +33,15 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       usernameEnabled: data.isUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
       conditionalUIChallenge: data.conditionalUIChallenge,
-      socialLogins: [],
+      socialLogins: data.socialProviders.map(provider => {
+        return { name: provider };
+      }),
     };
+  }
+
+  async startSocialVerify(providerType: SocialProviderType) {
+    const res = await this.app.authProcessService.startSocialVerification(providerType);
+    this.updateProcess(res);
   }
 
   async start(loginIdentifier: string, isPhone: boolean) {

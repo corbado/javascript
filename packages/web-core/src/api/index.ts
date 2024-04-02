@@ -8,8 +8,10 @@ export {
   BlockBody,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
+  GeneralBlockSocialVerify,
   ProcessResponse,
   ProcessCommon,
   ContinueOnOtherDevice,
   ContinueOnOtherDeviceReasonEnum,
+  SocialProviderType,
 } from './v2';

@@ -138,6 +138,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         socialLogins={block.data.socialLogins}
         dividerText={textDivider}
         t={t}
+        onClick={_ => void 0}
       />
       <Text
         level='2'

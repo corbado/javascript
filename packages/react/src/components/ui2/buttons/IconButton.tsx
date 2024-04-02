@@ -7,7 +7,8 @@ import { Text } from '../typography/Text';
 export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   icon: ReactNode;
   label: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
   showIconOnly?: boolean;
   className?: string;
   labelProps?: TextProps;
@@ -20,16 +21,30 @@ export const IconButton: FunctionComponent<IconButtonProps> = ({
   className,
   labelProps,
   showIconOnly = false,
+  onClick,
   target = '_blank',
 }) => {
+  // TODO @Abdullah: Maybe we should rely on buttons instead of href for IconButton
+  if (href) {
+    return (
+      <a
+        target={target}
+        className={`cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`}
+        href={href}
+      >
+        <span className='cb-icon-button-icon'>{icon}</span>
+        {!showIconOnly && <Text {...labelProps}>{label}</Text>}
+      </a>
+    );
+  }
+
   return (
-    <a
-      target={target}
+    <button
       className={`cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`}
-      href={href}
+      onClick={onClick}
     >
       <span className='cb-icon-button-icon'>{icon}</span>
       {!showIconOnly && <Text {...labelProps}>{label}</Text>}
-    </a>
+    </button>
   );
 };

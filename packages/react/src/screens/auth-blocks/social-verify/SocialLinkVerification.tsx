@@ -13,7 +13,7 @@ export const SocialLinkVerification = ({ block }: { block: SocialVerifyBlock }) 
 
   useEffect(() => {
     const abortController = new AbortController();
-    // void block.startSocialVerification(abortController);
+    void block.startSocialVerification(abortController);
 
     return () => {
       abortController.abort();

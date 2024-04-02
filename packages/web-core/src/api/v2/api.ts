@@ -181,6 +181,18 @@ export interface BlockBodyData {
     'fullName'?: FullNameWithError;
     /**
      * 
+     * @type {Array<SocialProviderType>}
+     * @memberof BlockBodyData
+     */
+    'socialProviders': Array<SocialProviderType>;
+    /**
+     * 
+     * @type {string}
+     * @memberof BlockBodyData
+     */
+    'oauthUrl': string;
+    /**
+     * 
      * @type {LoginIdentifierType}
      * @memberof BlockBodyData
      */
@@ -351,6 +363,12 @@ export interface GeneralBlockLoginInit {
     'isUsernameAvailable': boolean;
     /**
      * 
+     * @type {Array<SocialProviderType>}
+     * @memberof GeneralBlockLoginInit
+     */
+    'socialProviders': Array<SocialProviderType>;
+    /**
+     * 
      * @type {RequestError}
      * @memberof GeneralBlockLoginInit
      */
@@ -420,6 +438,25 @@ export interface GeneralBlockSignupInit {
      * @memberof GeneralBlockSignupInit
      */
     'fullName'?: FullNameWithError;
+    /**
+     * 
+     * @type {Array<SocialProviderType>}
+     * @memberof GeneralBlockSignupInit
+     */
+    'socialProviders': Array<SocialProviderType>;
+}
+/**
+ * 
+ * @export
+ * @interface GeneralBlockSocialVerify
+ */
+export interface GeneralBlockSocialVerify {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockSocialVerify
+     */
+    'oauthUrl': string;
 }
 /**
  * 
@@ -1216,16 +1253,52 @@ export interface SignupInitReq {
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const SocialProviderType = {
+    Google: 'google',
+    Github: 'github',
+    Microsoft: 'microsoft'
+} as const;
+
+export type SocialProviderType = typeof SocialProviderType[keyof typeof SocialProviderType];
+
+
+/**
+ * 
+ * @export
+ * @interface SocialVerifyFinishReq
+ */
+export interface SocialVerifyFinishReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialVerifyFinishReq
+     */
+    'code': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialVerifyFinishReq
+     */
+    'state': string;
+}
+/**
+ * 
+ * @export
  * @interface SocialVerifyStartReq
  */
 export interface SocialVerifyStartReq {
     /**
      * 
-     * @type {string}
+     * @type {SocialProviderType}
      * @memberof SocialVerifyStartReq
      */
-    'placeholder'?: string;
+    'providerType': SocialProviderType;
 }
+
+
 /**
  * tbd.
  * @export
@@ -2016,10 +2089,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
+         * @param {SocialVerifyFinishReq} socialVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        socialVerifyFinish: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        socialVerifyFinish: async (socialVerifyFinishReq: SocialVerifyFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'socialVerifyFinishReq' is not null or undefined
+            assertParamExists('socialVerifyFinish', 'socialVerifyFinishReq', socialVerifyFinishReq)
             const localVarPath = `/v2/auth/social/verify/finish`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2041,9 +2117,12 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(socialVerifyFinishReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2312,11 +2391,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
+         * @param {SocialVerifyFinishReq} socialVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async socialVerifyFinish(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.socialVerifyFinish(options);
+        async socialVerifyFinish(socialVerifyFinishReq: SocialVerifyFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.socialVerifyFinish(socialVerifyFinishReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2500,11 +2580,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
+         * @param {SocialVerifyFinishReq} socialVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        socialVerifyFinish(options?: any): AxiosPromise<ProcessResponse> {
-            return localVarFp.socialVerifyFinish(options).then((request) => request(axios, basePath));
+        socialVerifyFinish(socialVerifyFinishReq: SocialVerifyFinishReq, options?: any): AxiosPromise<ProcessResponse> {
+            return localVarFp.socialVerifyFinish(socialVerifyFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
          * tbd
@@ -2719,12 +2800,13 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
+     * @param {SocialVerifyFinishReq} socialVerifyFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public socialVerifyFinish(options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).socialVerifyFinish(options).then((request) => request(this.axios, this.basePath));
+    public socialVerifyFinish(socialVerifyFinishReq: SocialVerifyFinishReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).socialVerifyFinish(socialVerifyFinishReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

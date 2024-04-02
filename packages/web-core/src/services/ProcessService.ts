@@ -11,7 +11,7 @@ import log from 'loglevel';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
+import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse, SocialProviderType } from '../api/v2';
 import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
@@ -443,6 +443,16 @@ export class ProcessService {
         identifierType: 'phone',
         code: code,
         isNewDevice: false,
+      });
+
+      return r.data;
+    });
+  }
+
+  startSocialVerification(providerType: SocialProviderType): Promise<Result<ProcessResponse, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const r = await this.#authApi.socialVerifyStart({
+        providerType: providerType,
       });
 
       return r.data;

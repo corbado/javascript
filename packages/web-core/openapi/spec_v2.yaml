@@ -493,6 +493,12 @@ paths:
       operationId: SocialVerifyFinish
       tags:
         - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/socialVerifyFinishReq'
       responses:
         '200':
           description: tbd
@@ -780,8 +786,21 @@ components:
 
     socialVerifyStartReq:
       type: object
+      required:
+        - providerType
       properties:
-        placeholder:
+        providerType:
+          $ref: '#/components/schemas/socialProviderType'
+
+    socialVerifyFinishReq:
+      type: object
+      required:
+        - code
+        - state
+      properties:
+        code:
+          type: string
+        state:
           type: string
 
     identifierUpdateReq:
@@ -998,6 +1017,10 @@ components:
       type: string
       enum: [ email, phone, username ]
 
+    socialProviderType:
+      type: string
+      enum: [ google, github, microsoft ]
+
     blockType:
       type: string
       enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed ]
@@ -1014,6 +1037,7 @@ components:
       type: object
       required:
         - identifiers
+        - socialProviders
       properties:
         identifiers:
           type: array
@@ -1021,6 +1045,10 @@ components:
             $ref: '#/components/schemas/loginIdentifierWithError'
         fullName:
           $ref: '#/components/schemas/fullNameWithError'
+        socialProviders:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialProviderType'
 
     generalBlockLoginInit:
       type: object
@@ -1030,6 +1058,7 @@ components:
         - isPhoneAvailable
         - isEmailAvailable
         - isUsernameAvailable
+        - socialProviders
       properties:
         conditionalUIChallenge:
           type: string
@@ -1043,11 +1072,21 @@ components:
           type: boolean
         isUsernameAvailable:
           type: boolean
+        socialProviders:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialProviderType'
+
         error:
           $ref: '#/components/schemas/requestError'
 
     generalBlockSocialVerify:
       type: object
+      required:
+        - oauthUrl
+      properties:
+        oauthUrl:
+          type: string
 
     generalBlockUsernameCollect:
       $ref: '#/components/schemas/loginIdentifierWithError'

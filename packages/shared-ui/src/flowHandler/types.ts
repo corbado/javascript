@@ -66,8 +66,8 @@ export type PasskeyFallback = {
 
 export type SocialLogin = {
   name: string;
-  icon: string;
-  url: string;
+  // icon: string;
+  // url: string;
 };
 
 export type TextFieldWithError = {

@@ -1,4 +1,5 @@
 import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { SocialProviderType } from '@corbado/web-core';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -153,6 +154,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         dividerText={textDivider}
         socialLogins={block.data.socialLogins}
         t={t}
+        onClick={(providerType: SocialProviderType) => block.startSocialVerify(providerType)}
       />
       {block.isSignupEnabled() && (
         <Text

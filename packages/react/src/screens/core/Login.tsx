@@ -4,7 +4,6 @@ import type { FC } from 'react';
 import React from 'react';
 
 import { AuthFlow } from '../../components';
-import { FreemiumBadge } from '../../components/ui2/FreemiumBadge';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
 const Login: FC<CorbadoLoginConfig> = ({ onLoggedIn, navigateToSignUp }) => {
@@ -14,18 +13,7 @@ const Login: FC<CorbadoLoginConfig> = ({ onLoggedIn, navigateToSignUp }) => {
       onChangeFlow={navigateToSignUp}
       initialFlowType={AuthType.Login}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <div className='cb-container'>
-          <AuthFlow />
-        </div>
-        <FreemiumBadge />
-      </div>
+      <AuthFlow />
     </FlowHandlerProvider>
   );
 };

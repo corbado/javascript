@@ -21,7 +21,6 @@ import { WebAuthnService } from './WebAuthnService';
 
 // TODO: set this version
 const packageVersion = '0.0.0';
-const clientHandleKey = 'cbo_client_handle';
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
 
 export class ProcessService {
@@ -32,18 +31,18 @@ export class ProcessService {
   #projectId: string;
   #timeout: number;
   readonly #isPreviewMode: boolean;
-  readonly #frontendApiUrl: string;
+  readonly #frontendApiUrlSuffix: string;
 
-  constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrl?: string) {
+  constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
     this.#timeout = timeout;
-    this.#frontendApiUrl = frontendApiUrl || `https://${this.#projectId}.frontendapi.corbado.io`;
+    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#isPreviewMode = isPreviewMode;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
-    this.#setApisV2('');
+    this.#setApisV2();
   }
 
   async init(
@@ -57,12 +56,14 @@ export class ProcessService {
       log.setLevel('error');
     }
 
+    // we check if there is a process in local storage, if not we have to create a new one
     const process = AuthProcess.loadFromStorage();
     if (!process) {
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
-    this.#setApisV2(process.id);
+    // if the process is already in local storage, we configure the client to use the existing process (we do not know about the
+    this.#setApisV2(process);
     const res = await this.#getAuthProcessState(abortController, frontendPreferredBlockType);
     if (res.err) {
       return this.#initNewAuthProcess(abortController);
@@ -98,7 +99,7 @@ export class ProcessService {
       const maybeProcess = AuthProcess.loadFromStorage();
       const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
 
-      this.#setApisV2(emailVerifyFromUrl.processID);
+      this.#setApisV2(emailVerifyFromUrl.process);
 
       return Ok(emailVerifyFromUrl);
     } catch (e) {
@@ -149,28 +150,29 @@ export class ProcessService {
       return res;
     }
 
-    this.#setApisV2(res.val.token);
-    const newProcess = new AuthProcess(res.val.token, res.val.expiresAt);
+    const newProcess = new AuthProcess(res.val.token, res.val.expiresAt, res.val.processResponse.common.frontendApiUrl);
+    this.#setApisV2(newProcess);
     newProcess.persistToStorage();
 
     return Ok(res.val.processResponse);
   }
 
-  #setApisV2(processId: string): void {
+  #setApisV2(process?: AuthProcess): void {
+    const initialFrontendApiUrl = this.#getInitialFrontendApiUrl();
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#frontendApiUrl,
+      basePath: process?.frontendApiUrl ?? initialFrontendApiUrl,
     });
-    const axiosInstance = this.#createAxiosInstanceV2(processId);
+    const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
-    this.#authApi = new AuthApi(config, this.#frontendApiUrl, axiosInstance);
+    this.#authApi = new AuthApi(config, initialFrontendApiUrl, axiosInstance);
   }
 
   async #initAuthProcess(
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
-    const maybeClientHandle = localStorage.getItem(clientHandleKey);
+    const maybeClientHandle = WebAuthnService.getClientHandle();
 
     const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
     let passkeyAppendShown: number | null = null;
@@ -178,9 +180,7 @@ export class ProcessService {
       passkeyAppendShown = parseInt(passkeyAppendShownRaw, 10);
     }
 
-    const canUsePasskeys =
-      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
-
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const res = await this.#processInit(
       abortController,
       canUsePasskeys,
@@ -194,7 +194,7 @@ export class ProcessService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      localStorage.setItem(clientHandleKey, res.val.newClientEnvHandle);
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     return res;
@@ -504,6 +504,10 @@ export class ProcessService {
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();
+  }
+
+  #getInitialFrontendApiUrl() {
+    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
 }
 

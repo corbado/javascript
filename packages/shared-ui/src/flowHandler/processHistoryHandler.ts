@@ -1,4 +1,4 @@
-import type { BlockTypes } from './constants';
+import { BlockTypes } from './constants';
 
 export class ProcessHistoryHandler {
   #enabled: boolean;
@@ -41,6 +41,11 @@ export class ProcessHistoryHandler {
 
   registerBlockChange(blockType: BlockTypes) {
     if (!this.#enabled) {
+      return;
+    }
+
+    // for block types that mark the end of an auth process we do not want to change the hash
+    if (blockType === BlockTypes.Completed || blockType === BlockTypes.ContinueOnOtherEnv) {
       return;
     }
 

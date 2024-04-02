@@ -1,6 +1,7 @@
 import type { AuthType, CorbadoApp, ProcessCommon } from '@corbado/web-core';
 import { CorbadoError } from '@corbado/web-core';
 import type { ProcessResponse, RequestError } from '@corbado/web-core/dist/api/v2';
+import { parsePhoneNumber } from 'libphonenumber-js';
 import type { Result } from 'ts-results';
 
 import type { BlockTypes, ScreenNames } from '../constants';
@@ -51,6 +52,20 @@ export abstract class Block<A> {
     this.flowHandler.handleProcessUpdateFrontend(newPrimaryBlock, newAlternatives);
 
     return;
+  }
+
+  protected static getFormattedPhoneNumber(raw: string) {
+    // for obscured phone numbers, parsePhoneNumber will throw an error
+    try {
+      const parsedPhoneNumber = parsePhoneNumber(raw);
+      if (parsedPhoneNumber) {
+        return parsedPhoneNumber.formatInternational();
+      }
+
+      return raw;
+    } catch (e) {
+      return raw;
+    }
   }
 
   setAlternatives(alternatives: Block<unknown>[]) {

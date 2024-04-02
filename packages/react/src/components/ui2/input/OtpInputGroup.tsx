@@ -115,7 +115,10 @@ export const OtpInputGroup: FC<OtpInputGroupProps> = memo(
 
     return (
       <div className={className}>
-        <div className='cb-otp-input-container'>
+        <form
+          className='cb-otp-input-container'
+          autoComplete={'off'}
+        >
           {otpState.map((data, index) => (
             <OtpInput
               key={index}
@@ -129,7 +132,7 @@ export const OtpInputGroup: FC<OtpInputGroupProps> = memo(
               hasError={showErrorMessage}
             />
           ))}
-        </div>
+        </form>
         {showErrorMessage && <ErrorMessage message={error ?? ''} />}
       </div>
     );

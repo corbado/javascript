@@ -15,7 +15,7 @@ export const EditIcon: FC<EditIconProp> = ({ color, ...props }) => {
   const { logoSVG } = useIconWithTheme(
     svgRef,
     editSrc,
-    color === 'secondary' ? '--cb-text-secondary-color' : '--cb-primary-color',
+    color === 'secondary' ? '--cb-text-secondary-color' : '--cb-text-primary-color',
   );
 
   return (

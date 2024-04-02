@@ -72,7 +72,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         <PhoneInputField
           label={t('textField.phone')}
           labelLink={fieldLink}
-          autoComplete='tel webauthn'
+          autoComplete='tel'
           initialCountry='US'
           initialPhoneNumber={textField?.value}
           errorMessage={textField?.translatedError}

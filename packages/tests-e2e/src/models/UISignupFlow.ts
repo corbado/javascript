@@ -210,7 +210,7 @@ export class UISignupFlow {
         await expect(this.page.getByText('Type new phone number')).toBeVisible();
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-[0-9]+(#completed)?$/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+/);
         break;
     }
   }

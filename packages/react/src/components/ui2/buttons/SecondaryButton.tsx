@@ -11,7 +11,6 @@ export interface SecondaryButtonProps {
 }
 
 export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
-  colorVariant = 'default',
   disabled,
   className,
   children,
@@ -24,8 +23,9 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
     onClick();
   };
 
-  const variant = colorVariant === 'link' ? 'secondary' : 'primary';
-  const computedClassName = `cb-link cb-${variant}-link ${disabled ? 'cb-disabled' : ''} ${className ? ` ${className}` : ''}`;
+  const computedClassName = `cb-link cb-secondary-link ${disabled ? 'cb-disabled' : ''} ${
+    className ? ` ${className}` : ''
+  }`;
 
   return (
     <span onClick={handleClick}>

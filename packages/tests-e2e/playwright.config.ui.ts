@@ -331,5 +331,47 @@ export default defineConfig({
       testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
       dependencies: ['b2-03-setup'],
     },
+    {
+      name: 'b2-03-firefox',
+      use: { ...devices['Desktop Firefox'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-webkit',
+      use: { ...devices['Desktop Safari'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-mobile-chrome',
+      use: { ...devices['Pixel 7'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-mobile-safari',
+      use: { ...devices['iPhone 14 Pro Max'] },
+      testMatch: ['ui/b2-03/all-browsers/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-msedge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      testMatch: ['ui/b2-03/all-browsers/*.*', 'ui/b2-03/chromium/*.*'],
+      dependencies: ['b2-03-setup'],
+    },
+    {
+      name: 'b2-03-all-browsers',
+      testMatch: ['ui/b2-03/teardown.ts'],
+      dependencies: [
+        'b2-03-chromium',
+        'b2-03-firefox',
+        'b2-03-webkit',
+        'b2-03-mobile-chrome',
+        'b2-03-mobile-safari',
+        'b2-03-msedge',
+      ],
+    },
   ],
 });

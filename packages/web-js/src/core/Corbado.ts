@@ -79,7 +79,7 @@ export class Corbado {
       throw new Error('Please call load() before logging out');
     }
 
-    this.#corbadoAppState.logout();
+    return this.#corbadoAppState.logout();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

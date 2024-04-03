@@ -1,22 +1,51 @@
 const en = {
-  authentication: {
-    signup: {
-      start: {
+  signup: {
+    'signup-init': {
+      'signup-init': {
         header: 'Create your account',
-        subheader: 'You already have an account? ',
+        subheader: 'to access ',
+        text_login: 'You already have an account? ',
         button_login: 'Log in',
         button_submit: 'Continue',
-        textField_name: 'Name',
+        textField_fullName: 'Name',
+        textField_username: 'Username',
         textField_email: 'Email address',
+        textField_phone: 'Phone number',
+        text_divider: 'or',
+        social_signup: {
+          google: 'Continue with Google',
+          microsoft: 'Continue with Microsoft',
+          github: 'Continue with GitHub',
+        },
       },
     },
-    login: {
-      start: {
-        header: 'Welcome back!',
-        subheader: "Don't have an account yet? ",
-        button_signup: 'Create account',
+  },
+  login: {
+    'login-init': {
+      'login-init': {
+        header: 'Log in',
+        subheader: 'to access ',
+        text_signup: 'No account? ',
+        button_signup: 'Sign up',
         button_submit: 'Continue',
-        textField_email: 'Email address',
+        textField: {
+          email: 'Email address',
+          username: 'Username',
+          emailOrUsername: 'Email address or username',
+          phone: 'Phone number',
+        },
+        button_switchToAlternate: {
+          email: 'Use email',
+          username: 'Use username',
+          emailOrUsername: 'Use email or username',
+          phone: 'Use phone',
+        },
+        text_divider: 'or',
+        social_signup: {
+          google: 'Continue with Google',
+          microsoft: 'Continue with Microsoft',
+          github: 'Continue with GitHub',
+        },
       },
     },
   },
@@ -38,6 +67,11 @@ const en = {
     dialog_passkeyAlreadyExists: {
       header: 'Passkey already exists',
       body: 'A passkey for this device already exists. If you are facing issues with your passkey, please delete it and create a new one.',
+      button_confirm: 'Ok',
+    },
+    dialog_passkeysNotSupported: {
+      header: 'Passkeys are not supported',
+      body: 'Unfortunately, passkeys are not supported on your device.',
       button_confirm: 'Ok',
     },
   },

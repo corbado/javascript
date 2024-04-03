@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@corbado/types": "1.0.0",
+    "@corbado/types": "^2.1.2-alpha.0",
     "@types/prismjs": "^1.26.3",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
@@ -18,7 +18,7 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@corbado/web-js": "^1.0.3",
+    "@corbado/web-js": "^2.1.2-alpha.0",
     "prismjs": "^1.29.0"
   }
 }

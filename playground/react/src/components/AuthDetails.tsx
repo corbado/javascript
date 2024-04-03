@@ -14,7 +14,7 @@ export const AuthDetails = () => {
         <UserDetails />
         <button
           onClick={async () => {
-            logout();
+            await logout();
 
             // TODO: this should be covered by a guard (then we can remove it)
             navigate(`/${projectId}/auth`);

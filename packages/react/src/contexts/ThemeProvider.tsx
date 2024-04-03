@@ -7,7 +7,6 @@ import ThemeContext from './ThemeContext';
 
 interface ThemeProviderProps extends PropsWithChildren {
   theme?: string | CustomThemes;
-  darkMode?: 'on' | 'off' | 'auto';
   darkModeSubject: BehaviorSubject<boolean> | undefined;
 }
 

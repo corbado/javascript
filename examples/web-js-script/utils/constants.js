@@ -2,7 +2,7 @@ export const authGuideHeader = `Setup Passkey-based Authentication in 3 Steps`;
 export const passkeyGuideHeader = 'How about we check your list of Passkeys?';
 export const authComponentBody = `
     Adding SignUp/Login screens is simple with <code class='language-bash'>@corbado/web-js</code>. The
-    <code class='language-typescript'>Corbado.mountAuthUI()</code> function allows your users to signUp and login with their
+    <code class='language-typescript'>Corbado.mountAuthUI()</code> function allows your users to sign up and login with their
     passkeys. Additionally, it provides fallback options like email one-time passcode for users who don't have a passkey
     yet.
 `;

@@ -2,7 +2,7 @@ import { insertRadioButton } from './radioButton';
 
 const translationsOptionsHtml = `
 <div class='flex flex-col gap-2'>
-    <label class='subheading' htmlFor='translations'>Change Dark Mode</label>
+    <label class='subheading' htmlFor='translations'>Use Custom Translations</label>
     <div id="translations-options" class='flex gap-2 font-bold'></div>
     <p class='paragraph'>
         Documentation for customizing translations are

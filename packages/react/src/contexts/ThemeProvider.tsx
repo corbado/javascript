@@ -1,3 +1,4 @@
+import type { BehaviorSubject } from '@corbado/shared-ui';
 import type { CustomThemes } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useState } from 'react';
@@ -6,12 +7,12 @@ import ThemeContext from './ThemeContext';
 
 interface ThemeProviderProps extends PropsWithChildren {
   theme?: string | CustomThemes;
-  darkMode?: 'on' | 'off' | 'auto';
+  darkModeSubject: BehaviorSubject<boolean> | undefined;
 }
 
-export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme, darkMode }) => {
+export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme, darkModeSubject }) => {
   const [themeState, setThemeState] = useState(theme);
-  const [darkModeState, setDarkModeState] = useState(darkMode);
+  const [darkMode, setDarkMode] = useState<boolean>(darkModeSubject?.getValue() ?? false);
   const [themeUpdateTS, setThemeUpdatedTs] = useState(0);
 
   useEffect(() => {
@@ -34,18 +35,29 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme, darkMod
   }, []);
 
   useEffect(() => {
-    updateTheme(theme ?? '', darkMode ?? 'auto');
-  }, [theme, darkMode]);
+    updateTheme(theme ?? '');
+  }, [theme]);
 
-  const updateTheme = (theme: string | CustomThemes, darkMode: 'on' | 'off' | 'auto') => {
+  useEffect(() => {
+    if (!darkModeSubject) {
+      return;
+    }
+
+    darkModeSubject.subscribe(isDarkMode => {
+      setDarkMode(isDarkMode);
+    });
+
+    return () => {
+      darkModeSubject.unsubscribe();
+    };
+  }, [darkModeSubject]);
+
+  const updateTheme = (theme: string | CustomThemes) => {
     setThemeState(theme);
-    setDarkModeState(darkMode);
     setThemeUpdatedTs(Date.now());
   };
 
   return (
-    <ThemeContext.Provider value={{ theme: themeState, darkMode: darkModeState, themeUpdateTS, updateTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme: themeState, darkMode, themeUpdateTS }}>{children}</ThemeContext.Provider>
   );
 };

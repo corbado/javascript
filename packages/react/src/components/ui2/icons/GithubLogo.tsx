@@ -11,7 +11,7 @@ export const GithubIcon: FC<IconProps> = props => {
   const { darkMode } = useTheme();
   return (
     <Icon
-      src={darkMode === 'on' ? githubDarkSrc : githubSrc}
+      src={darkMode ? githubDarkSrc : githubSrc}
       {...props}
     />
   );

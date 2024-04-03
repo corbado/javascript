@@ -25,8 +25,8 @@ const insertPasskeyList = (demoComponent, corbadoApp) => {
   const logoutButton = demoComponent.appendChild(document.createElement('button'));
   logoutButton.setAttribute('class', 'bg-lightBrown hover:bg-darkBrown text-white font-bold py-2 px-4 rounded-full');
   logoutButton.innerHTML = 'Logout';
-  logoutButton.onclick = () => {
-    corbadoApp.logout();
+  logoutButton.onclick = async () => {
+    await corbadoApp.logout();
     location.reload();
   };
 };

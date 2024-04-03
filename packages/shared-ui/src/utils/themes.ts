@@ -58,8 +58,10 @@ const autoDetectSystemTheme = (darkModeState: BehaviorSubject<boolean>, customTh
 
   if (darkModeMediaQuery.matches) {
     addDarkMode();
+    darkModeState.next(true);
   } else {
     removeDarkMode();
+    darkModeState.next(false);
   }
 
   if (customTheme) {

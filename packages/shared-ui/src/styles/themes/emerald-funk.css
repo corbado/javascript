@@ -1,0 +1,17 @@
+.cb-emerald-funk-theme {
+  --cb-primary-color: #21ba45;
+  --cb-primary-color-hover: #136e29;
+  --cb-primary-color-disabled: #87c459;
+  --cb-button-text-primary-color: #ffffff;
+  --cb-text-primary-color: #ffffff;
+  --cb-text-secondary-color: #6e6d6d;
+  --cb-border-color: #21ba45;
+  --cb-error-text-color: #ff6b6b;
+  --cb-secondary-link-color: #b5ff7d;
+  --cb-box-color: #1f1f1f;
+  --cb-box-color-hover: #3b3b3b;
+  --cb-dark: #ffffff;
+  --cb-white: #1b1d1b;
+  --cb-primary-font: 'Comic Sans MS', cursive, sans-serif;
+  --cb-secondary-font: 'Comic Sans MS', cursive, sans-serif;
+}

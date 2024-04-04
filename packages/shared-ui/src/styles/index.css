@@ -1,4 +1,5 @@
 @import './variables.css';
+@import './themes/emerald-funk.css';
 
 .cb-container {
   display: flex;
@@ -497,7 +498,7 @@
 .cb-user-info-section-right {
   flex: 1;
   height: 1.2rem;
-  padding-right: .25rem;
+  padding-right: 0.25rem;
 }
 
 .cb-user-info-section-right-icon {
@@ -1137,7 +1138,7 @@
   padding-left: 0.5rem;
 }
 
-.cb-social-login-buttton-large img{
+.cb-social-login-buttton-large img {
   height: 1.25rem;
   padding-right: 0.75rem;
 }

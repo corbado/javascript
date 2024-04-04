@@ -5,7 +5,8 @@ import { emailLinkUrlToken } from '../constants';
 
 export async function getEmailLink(context: BrowserContext, email: string, authType: AuthType) {
   const cboAuthProcessRaw = (await context.storageState()).origins
-    .find(origin => origin.origin === process.env.PLAYWRIGHT_TEST_URL)
+    // remove trailing slashes from the end of URLs
+    .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
     ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;
   if (!cboAuthProcessRaw) {
     throw new Error('getCboAuthProcess: cbo_auth_process not found in local storage');
@@ -26,7 +27,6 @@ export async function getEmailLink(context: BrowserContext, email: string, authT
       frontendApiUrl: cboAuthProcess.frontendApiUrl,
     },
   };
-  console.log(JSON.stringify(urlBlock));
 
   return `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}/auth?corbadoEmailLinkID=${btoa(
     JSON.stringify(urlBlock),

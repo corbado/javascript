@@ -105,8 +105,15 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       <PrimaryButton
         type='submit'
         isLoading={loading}
-        disabled={passkeyUserHandle === block.data.userHandle}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = passkeyUserHandle === block.data.userHandle;
+          if (noChange) {
+            block.showPasskeyAppend();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

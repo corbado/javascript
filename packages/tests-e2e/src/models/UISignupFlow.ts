@@ -233,6 +233,9 @@ export class UISignupFlow {
       case ScreenNames.End:
         await expect(this.#page).toHaveURL(/\/pro-[0-9]+/);
         break;
+      case ScreenNames.AbortSignup:
+        await expect(this.#page.getByText('Abort Signup?')).toBeVisible();
+        break;
     }
   }
 }

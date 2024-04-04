@@ -11,7 +11,7 @@ export interface PasskeyDeleteProps {
 }
 
 export const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList.dialog_delete' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list.dialog_delete' });
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = () => {

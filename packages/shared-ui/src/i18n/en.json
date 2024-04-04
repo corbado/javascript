@@ -303,7 +303,7 @@
       "button": "Refresh page"
     }
   },
-  "passkeysList": {
+  "passkey-list": {
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",
@@ -328,5 +328,15 @@
       "body": "Unfortunately, passkeys are not supported on your device.",
       "button_confirm": "Ok"
     }
+  },
+  "user": {
+    "header": "Your Account",
+    "name": "Name",
+    "username": "Username",
+    "email": "Email",
+    "phone": "Phone number",
+    "verified": "verified",
+    "unverified": "pending",
+    "warning_notLoggedIn": "Please log in to see your current user information."
   }
 }

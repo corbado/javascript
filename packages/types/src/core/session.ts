@@ -21,58 +21,46 @@ export interface SessionUser {
 }
 
 /**
- * Represents an email associated with a user.
- * @interface UserEmail
- * @property {string} ID - Generic ID.
- * @property {string} email - Email address.
- * @property {string} created - Timestamp of creation in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {string} updated - Timestamp of last update in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {Status} status - Status of the email.
- */
-export interface UserEmail {
-  ID: string;
-  email: string;
-  created: string;
-  updated: string;
-  status: Status;
-}
-
-/**
- * Represents a phone number associated with a user.
- * @interface UserPhoneNumber
- * @property {string} ID - Generic ID.
- * @property {string} phoneNumber - Phone number.
- * @property {string} created - Timestamp of creation in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {string} updated - Timestamp of last update in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {Status} status - Status of the phone number.
- */
-export interface UserPhoneNumber {
-  ID: string;
-  phoneNumber: string;
-  created: string;
-  updated: string;
-  status: Status;
-}
-
-/**
- * Represents a full user with detailed information.
- * @interface CorbadoUser
- * @property {string} ID - ID of the user.
- * @property {string} name - Name of the user.
- * @property {string} fullName - Full name of the user.
- * @property {string} created - Timestamp of creation in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {string} updated - Timestamp of last update in yyyy-MM-dd'T'HH:mm:ss format.
- * @property {Status} status - Status of the user.
- * @property {UserEmail[]} emails - Array of user's emails.
- * @property {UserPhoneNumber[]} phoneNumbers - Array of user's phone numbers.
+ * Interface for CorbadoUser.
+ * @interface
+ * @property {string} id - The unique identifier for the user.
+ * @property {string} fullName - The full name of the user.
+ * @property {Array<Identifier>} identifiers - The array of identifiers for the user.
  */
 export interface CorbadoUser {
-  ID: string;
-  name: string;
+  id: string;
   fullName: string;
-  created: string;
-  updated: string;
-  status: Status;
-  emails: UserEmail[];
-  phoneNumbers: UserPhoneNumber[];
+  identifiers: Array<Identifier>;
 }
+
+/**
+ * Interface for Identifier.
+ * @interface
+ * @property {string} value - The value of the identifier.
+ * @property {LoginIdentifierType} type - The type of the identifier.
+ * @property {string} status - The status of the identifier.
+ */
+export interface Identifier {
+  value: string;
+  type: LoginIdentifierType;
+  status: string;
+}
+
+/**
+ * Object for LoginIdentifierType.
+ * @typedef {Object} LoginIdentifierType
+ * @property {string} Email - Represents an email identifier.
+ * @property {string} Phone - Represents a phone identifier.
+ * @property {string} Username - Represents a username identifier.
+ */
+export const LoginIdentifierType = {
+  Email: 'email',
+  Phone: 'phone',
+  Username: 'username',
+} as const;
+
+/**
+ * Type for LoginIdentifierType.
+ * @typedef {string} LoginIdentifierType
+ */
+export type LoginIdentifierType = (typeof LoginIdentifierType)[keyof typeof LoginIdentifierType];

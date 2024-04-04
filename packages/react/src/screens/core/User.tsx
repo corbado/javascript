@@ -120,7 +120,7 @@ export const User: FC = () => {
                   level='2'
                   fontFamilyVariant='secondary'
                   fontWeight='bold'
-                  textColorVariant='tertiary'
+                  className='cb-user-details-section-indentifiers-list-item-badge-text'
                 >
                   {email.status === 'verified' ? verifiedText : unverifiedText}
                 </Text>
@@ -147,7 +147,7 @@ export const User: FC = () => {
                   level='2'
                   fontFamilyVariant='secondary'
                   fontWeight='bold'
-                  textColorVariant='tertiary'
+                  className='cb-user-details-section-indentifiers-list-item-badge-text'
                 >
                   {phone.status === 'verified' ? verifiedText : unverifiedText}
                 </Text>

@@ -37,10 +37,6 @@
   color: var(--cb-text-secondary-color);
 }
 
-.cb-tertiary-text-color {
-  color: var(--cb-button-text-primary-color);
-}
-
 .cb-bold-text-weight {
   font-weight: var(--cb-font-weight-bold);
 }
@@ -1110,6 +1106,10 @@
 .cb-user-details-section-indentifiers-list-item-badge-secondary {
   background-color: var(--cb-text-secondary-color);
   color: var(--cb-text-primary-color);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-text {
+  color: var(--cb-button-text-primary-color);
 }
 
 .cb-social-login-divider {

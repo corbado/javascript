@@ -17,18 +17,17 @@ export async function middleware(request: NextRequest) {
 
   const cookie = request.cookies.get('cbo_short_session');
   const shortSession = cookie?.value;
-  //TODO: Uncomment the following line to enable session validation after Node SDK has added support for frontend API v2
-  // const isSessionValid = await validateSession(shortSession);
+  const isSessionValid = await validateSession(shortSession);
 
-  // if (isSessionValid && routes.authPaths.includes(url.pathname)) {
-  //   url.pathname = '/dashboard';
-  //   return NextResponse.redirect(url);
-  // }
+  if (isSessionValid && routes.authPaths.includes(url.pathname)) {
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
 
-  // if (!isSessionValid && routes.privatePaths.find(path => url.pathname.startsWith(path))) {
-  //   url.pathname = '/login';
-  //   return NextResponse.redirect(url);
-  // }
+  if (!isSessionValid && routes.privatePaths.find(path => url.pathname.startsWith(path))) {
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
 
   return NextResponse.next();
 }

@@ -1,4 +1,5 @@
 import type { CustomThemes } from '@corbado/types';
+import { BehaviorSubject } from 'rxjs';
 
 const loadTheme = (theme: string | CustomThemes, isDarkMode: boolean) => {
   const classList = document.body.classList;
@@ -36,13 +37,15 @@ const removeDarkMode = () => {
   document.body.classList.remove('cb-dark');
 };
 
-const autoDetectSystemTheme = (customTheme?: string | CustomThemes) => {
+const autoDetectSystemTheme = (darkModeState: BehaviorSubject<boolean>, customTheme?: string | CustomThemes) => {
   const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const darkModeListener = (e: MediaQueryListEvent) => {
     if (e.matches) {
+      darkModeState.next(true);
       addDarkMode();
     } else {
+      darkModeState.next(false);
       removeDarkMode();
     }
 
@@ -55,8 +58,10 @@ const autoDetectSystemTheme = (customTheme?: string | CustomThemes) => {
 
   if (darkModeMediaQuery.matches) {
     addDarkMode();
+    darkModeState.next(true);
   } else {
     removeDarkMode();
+    darkModeState.next(false);
   }
 
   if (customTheme) {
@@ -70,6 +75,7 @@ const autoDetectSystemTheme = (customTheme?: string | CustomThemes) => {
 
 export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: string | CustomThemes) => {
   let removeDarkModeListener: (() => void) | undefined;
+  const darkModeState = new BehaviorSubject<boolean>(darkMode === 'on');
   switch (darkMode) {
     case 'on':
       addDarkMode();
@@ -86,20 +92,23 @@ export const handleTheming = (darkMode: 'on' | 'off' | 'auto', customTheme?: str
       }
       break;
     case 'auto':
-      removeDarkModeListener = autoDetectSystemTheme(customTheme);
+      removeDarkModeListener = autoDetectSystemTheme(darkModeState, customTheme);
       break;
     default:
       break;
   }
 
-  return () => {
-    if (customTheme) {
-      removeTheme(customTheme);
-    }
+  return {
+    darkModeState,
+    removeTheme: () => {
+      if (customTheme) {
+        removeTheme(customTheme);
+      }
 
-    if (darkMode === 'auto' && removeDarkModeListener) {
-      removeDarkModeListener();
-    }
+      if (darkMode === 'auto' && removeDarkModeListener) {
+        removeDarkModeListener();
+      }
+    },
   };
 };
 

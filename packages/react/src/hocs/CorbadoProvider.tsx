@@ -2,6 +2,7 @@ import '../i18n';
 
 import type { CorbadoProviderParams } from '@corbado/react-sdk';
 import { CorbadoProvider as CorbadoSDKProvider } from '@corbado/react-sdk';
+import type { BehaviorSubject } from '@corbado/shared-ui';
 import { handleTheming } from '@corbado/shared-ui';
 import type { CorbadoUIConfig } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
@@ -15,15 +16,17 @@ export type CorbadoProviderProps = PropsWithChildren<CorbadoUIConfig & CorbadoPr
 
 const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
   const { defaultLanguage, autoDetectLanguage, customTranslations, darkMode, theme, ...providerConfig } = config;
+  const [darkModeState, setDarkModeState] = React.useState<BehaviorSubject<boolean> | undefined>();
 
   useEffect(() => {
     handleDynamicLocaleSetup(autoDetectLanguage, defaultLanguage, customTranslations);
   }, [autoDetectLanguage, defaultLanguage, customTranslations]);
 
   useEffect(() => {
-    const themesCleanup = handleTheming(darkMode ?? 'auto', theme);
+    const { darkModeState, removeTheme } = handleTheming(darkMode ?? 'auto', theme);
+    setDarkModeState(darkModeState);
 
-    return themesCleanup;
+    return removeTheme;
   }, [darkMode, theme]);
 
   return (
@@ -34,7 +37,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
       >
         <ThemeProvider
           theme={theme}
-          darkMode={darkMode}
+          darkModeSubject={darkModeState}
         >
           {children}
         </ThemeProvider>

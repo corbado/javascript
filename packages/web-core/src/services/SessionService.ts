@@ -1,4 +1,4 @@
-import type { PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
 import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
@@ -150,6 +150,13 @@ export class SessionService {
 
   abortOngoingPasskeyOperation() {
     this.#webAuthnService.abortOngoingOperation();
+  }
+
+  public async getFullUser(): Promise<Result<CorbadoUser, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const resp = await this.#usersApi.currentUserGet();
+      return resp.data;
+    });
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {

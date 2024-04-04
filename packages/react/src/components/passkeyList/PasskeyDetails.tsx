@@ -11,7 +11,7 @@ export interface PasskeyDetailsProps {
 }
 
 export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const sourceBrowser = passkey.sourceBrowser;
   const sourceOS = passkey.sourceOS;
   const title = aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey';

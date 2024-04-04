@@ -19,6 +19,7 @@ interface PhoneInputProps {
   initialCountry?: CountryCode;
   initialPhoneNumber?: string;
   autoComplete?: string;
+  disabled?: boolean;
   onChange: (value: string | undefined) => void;
 }
 
@@ -29,6 +30,7 @@ export const PhoneInput: FC<PhoneInputProps> = ({
   hasError,
   initialCountry,
   initialPhoneNumber,
+  disabled,
   autoComplete = 'tel',
   onChange,
 }) => {
@@ -142,10 +144,13 @@ export const PhoneInput: FC<PhoneInputProps> = ({
   };
 
   return (
-    <div className={`cb-phone-input-field${hasError ? ' cb-input-error' : ''}${className ? ` ${className}` : ''}`}>
+    <div
+      className={`cb-phone-input-field${hasError ? ' cb-input-error' : ''}${disabled ? ' cb-phone-input-field-disabled' : ''}${className ? ` ${className}` : ''}`}
+    >
       <button
         type='button'
-        className='cb-phone-input-field-button'
+        className={`cb-phone-input-field-button cb-text-2${disabled ? ' cb-phone-input-field-button-disabled' : ''}`}
+        disabled={disabled}
         onClick={toggleDropdown}
       >
         {Flag && <Flag title={selectedCountry} />}{' '}
@@ -167,6 +172,7 @@ export const PhoneInput: FC<PhoneInputProps> = ({
         inputMode='numeric'
         maxLength={13}
         value={phoneNumber}
+        disabled={disabled}
         onChange={onPhoneChange}
         onKeyDown={handleKeyDown}
       />

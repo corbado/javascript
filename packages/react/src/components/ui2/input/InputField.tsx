@@ -18,8 +18,8 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, labelLink, type = 'text', id, errorMessage, ...props }, ref) => (
-    <div className='cb-input-field'>
+  ({ label, labelLink, type = 'text', id, errorMessage, className, ...props }, ref) => (
+    <div className={`cb-input-field${className ? ` ${className}` : ''}`}>
       {label && (
         <label
           htmlFor={id}

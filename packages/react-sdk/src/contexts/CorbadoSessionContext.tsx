@@ -1,4 +1,4 @@
-import type { PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
 import type { CorbadoApp, NonRecoverableError, PasskeyDeleteError, PasskeyListError } from '@corbado/web-core';
 import { createContext } from 'react';
 import type { Result } from 'ts-results';
@@ -16,6 +16,7 @@ export interface CorbadoSessionContextProps {
   logout: () => Promise<void>;
   getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
+  getFullUser: () => Promise<Result<CorbadoUser, NonRecoverableError>>;
   globalError: NonRecoverableError | undefined;
 }
 
@@ -29,6 +30,7 @@ export const initialContext: CorbadoSessionContextProps = {
   logout: missingImplementation,
   getPasskeys: missingImplementation,
   deletePasskey: missingImplementation,
+  getFullUser: missingImplementation,
 };
 
 export const CorbadoSessionContext = createContext<CorbadoSessionContextProps>(initialContext);

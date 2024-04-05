@@ -25,20 +25,15 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 
-  // TODO: Why is conditional UI no longer triggered? Compare with previous test
-  test.skip('with conditional UI', async ({ loginFlow, page }) => {
+  test('with conditional UI', async ({ loginFlow, page }) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
     await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, true);
-    await page.getByText('Log in').click();
-    await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
-
-    await loginFlow.simulateSuccessfulPasskeyInput(
-      // conditional UI triggered when textbox is activated
-      () => page.getByRole('textbox', { name: 'email' }).click(),
-    );
+    
+    // condition UI is prompted on page load, not on textbox click
+    await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByText('Log in').click());
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 });

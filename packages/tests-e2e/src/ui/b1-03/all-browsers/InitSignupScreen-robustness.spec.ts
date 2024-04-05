@@ -101,7 +101,7 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid phone number.')).toBeVisible();
   });
 
-  test.skip('switch to Login flow', async ({ signupFlow, page }) => {
+  test('switch to Login flow', async ({ signupFlow, page }) => {
     await page.getByText('Log in').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });

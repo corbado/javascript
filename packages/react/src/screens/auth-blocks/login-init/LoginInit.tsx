@@ -74,6 +74,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         <PhoneInputField
           label={t('textField.phone')}
           labelLink={fieldLink}
+          id='phone'
           autoComplete='tel'
           initialCountry='US'
           initialPhoneNumber={textField?.value}

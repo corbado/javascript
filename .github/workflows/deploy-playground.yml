@@ -11,7 +11,7 @@ on:
       - main
       - develop
       - feature-refactor-to-thin-frontend
-      - robustness-tests
+      - passkey-unsupported-tests
 
 jobs:
   deploy:

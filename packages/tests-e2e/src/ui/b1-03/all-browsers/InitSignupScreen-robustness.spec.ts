@@ -11,7 +11,7 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a username.')).toBeVisible();
   });
 
-  test.skip('with duplicate username', async ({ signupFlow, page }) => {
+  test('with duplicate username', async ({ signupFlow, page }) => {
     const [username] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill(username);
@@ -54,7 +54,7 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter an email address.')).toBeVisible();
   });
 
-  test.skip('with duplicate email address', async ({ signupFlow, page }) => {
+  test('with duplicate email address', async ({ signupFlow, page }) => {
     const [, email] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, false, true);
     await page.getByRole('textbox', { name: 'Email address' }).fill(email);
@@ -81,11 +81,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a phone number.')).toBeVisible();
   });
 
-  test.skip('with duplicate phone number', async ({ signupFlow, page }) => {
+  test('with duplicate phone number', async ({ signupFlow, page }) => {
     const [, , phone] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill(phone);
-    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue(phone);
+    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue(new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`));
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
     await expect(

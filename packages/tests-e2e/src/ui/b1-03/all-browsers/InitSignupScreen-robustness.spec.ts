@@ -1,7 +1,6 @@
 import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
-// TODO: remove skips when passkey-unsupported devices do not prompt passkeys
 test.describe('InitSignupScreen unproductive user behavior', () => {
   test('with empty username', async ({ signupFlow, page }) => {
     await signupFlow.fillIdentifiers(false, true, true);

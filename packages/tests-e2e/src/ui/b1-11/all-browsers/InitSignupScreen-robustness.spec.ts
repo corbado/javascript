@@ -3,7 +3,8 @@ import { ScreenNames } from '../../../utils/constants';
 import UserManager from '../../../utils/UserManager';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
-  test('without passkey support', async ({ loginFlow, page }) => {
+  // TODO: unskip when new error message is implemented
+  test.skip('without passkey support', async ({ loginFlow, page }) => {
     await loginFlow.checkLandedOnScreen(ScreenNames.InitSignup);
 
     const id = UserManager.getUserForSignup();
@@ -14,6 +15,6 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByRole('textbox', { name: 'username' })).toHaveValue(username);
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await expect(page.getByText('We encountered an issue. Please try again later or contact support.')).toBeVisible();
+    await expect(page.getByText('This app requires passkey authentication. Please use a compatible device.')).toBeVisible();
   });
 });

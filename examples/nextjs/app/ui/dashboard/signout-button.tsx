@@ -10,7 +10,7 @@ export default function SignoutButton() {
 
   const handleSignout = async () => {
     await logout();
-    push('/');
+    push('/#login-init');
   };
 
   return (

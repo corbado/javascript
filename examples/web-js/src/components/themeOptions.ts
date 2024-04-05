@@ -46,13 +46,14 @@ const updateRadioButtons = (value: string) => {
   }
 };
 
-export function insertThemeOptions(onThemeChange: (value: string) => void) {
+export function insertThemeOptions(initialValue: string, onThemeChange: (value: string) => void) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent!.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
   optionsElement.innerHTML = themeOptionsHtml;
 
   const options = document.getElementById('theme-options');
+  console.log('theme initial value:', initialValue);
 
   insertRadioButton(
     'basic-theme',
@@ -62,7 +63,7 @@ export function insertThemeOptions(onThemeChange: (value: string) => void) {
       onThemeChange('');
     },
     'Basic',
-    true,
+    !initialValue,
   );
 
   insertRadioButton(
@@ -73,6 +74,7 @@ export function insertThemeOptions(onThemeChange: (value: string) => void) {
       onThemeChange('cb-emerald-funk-theme');
     },
     'Emerald Funk',
+    initialValue === 'cb-emerald-funk-theme',
   );
 
   insertRadioButton(
@@ -83,5 +85,6 @@ export function insertThemeOptions(onThemeChange: (value: string) => void) {
       onThemeChange('corbado-custom-theme');
     },
     'Customized Theme',
+    initialValue === 'corbado-custom-theme',
   );
 }

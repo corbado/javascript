@@ -29,7 +29,7 @@ const updateRadioButtons = state => {
   }
 };
 
-export function insertTranslationOptions(onTranslationChange) {
+export function insertTranslationOptions(initialValue, onTranslationChange) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
@@ -45,7 +45,7 @@ export function insertTranslationOptions(onTranslationChange) {
       updateRadioButtons(false);
     },
     'Default',
-    true,
+    !initialValue,
   );
 
   insertRadioButton(
@@ -56,5 +56,6 @@ export function insertTranslationOptions(onTranslationChange) {
       updateRadioButtons(true);
     },
     'Custom Translation',
+    initialValue,
   );
 }

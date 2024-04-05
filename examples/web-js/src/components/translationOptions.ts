@@ -29,7 +29,7 @@ const updateRadioButtons = (state: boolean) => {
   }
 };
 
-export function insertTranslationOptions(onTranslationChange: (state: boolean) => void) {
+export function insertTranslationOptions(initialState: boolean, onTranslationChange: (state: boolean) => void) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent!.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
@@ -45,7 +45,7 @@ export function insertTranslationOptions(onTranslationChange: (state: boolean) =
       updateRadioButtons(false);
     },
     'Default',
-    true,
+    !initialState,
   );
 
   insertRadioButton(
@@ -56,5 +56,6 @@ export function insertTranslationOptions(onTranslationChange: (state: boolean) =
       updateRadioButtons(true);
     },
     'Custom Translation',
+    initialState,
   );
 }

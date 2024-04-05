@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components';
+import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
 
 const NonRecoverableErrorForCustomer = (customerSupportEmail: { customerSupportEmail: string }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'authentication.unexpectedError' });

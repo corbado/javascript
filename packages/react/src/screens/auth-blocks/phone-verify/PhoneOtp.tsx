@@ -3,12 +3,12 @@ import { AuthType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { PhoneIcon } from '../../../components/ui2/icons/PhoneIcon';
-import { OtpInputGroup } from '../../../components/ui2/input/OtpInputGroup';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
-import { UserInfo } from '../../../components/ui2/UserInfo';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { PhoneIcon } from '../../../components/ui/icons/PhoneIcon';
+import { OtpInputGroup } from '../../../components/ui/input/OtpInputGroup';
+import { Header } from '../../../components/ui/typography/Header';
+import { Text } from '../../../components/ui/typography/Text';
+import { UserInfo } from '../../../components/ui/UserInfo';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.phone-verify.phone-otp` });

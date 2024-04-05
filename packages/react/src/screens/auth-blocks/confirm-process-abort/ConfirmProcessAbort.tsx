@@ -2,11 +2,8 @@ import type { ConfirmProcessAbortBlock } from '@corbado/shared-ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { FirstPageIcon } from '../../../components/ui2/icons/FirstPageIcon';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
+import { Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
+import { FirstPageIcon } from '../../../components/ui/icons/FirstPageIcon';
 
 export const ConfirmProcessAbort = ({ block }: { block: ConfirmProcessAbortBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'errors.confirm_process_abort' });

@@ -3,10 +3,10 @@ import type { FC } from 'react';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
-import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
-import { LoadingSpinner } from '../../../components/ui2/LoadingSpinner';
-import { Text } from '../../../components/ui2/typography/Text';
+import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
+import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
+import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
+import { Text } from '../../../components/ui/typography/Text';
 
 export interface PasskeyBackgroundProps {
   block: PasskeyVerifyBlock;

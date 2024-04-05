@@ -2,14 +2,14 @@ import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { Divider } from '../../../components/ui2/Divider';
-import { PasskeyErrorIcon } from '../../../components/ui2/icons/PasskeyErrorIcon';
-import { PersonIcon } from '../../../components/ui2/icons/PersonIcon';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
-import { UserInfo } from '../../../components/ui2/UserInfo';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
+import { Divider } from '../../../components/ui/Divider';
+import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
+import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
+import { Header } from '../../../components/ui/typography/Header';
+import { Text } from '../../../components/ui/typography/Text';
+import { UserInfo } from '../../../components/ui/UserInfo';
 
 export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
   const { t } = useTranslation('translation', {

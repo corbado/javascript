@@ -35,10 +35,10 @@ import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import { SocialLinkVerification } from '../../screens/auth-blocks/social-verify/SocialLinkVerification';
-import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
-import ErrorPopup from '../ui2/errors/ErrorPopup';
-import { FreemiumBadge } from '../ui2/FreemiumBadge';
-import { LoadingSpinner } from '../ui2/LoadingSpinner';
+import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
+import ErrorPopup from '../ui/errors/ErrorPopup';
+import { FreemiumBadge } from '../ui/FreemiumBadge';
+import { LoadingSpinner } from '../ui/LoadingSpinner';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();

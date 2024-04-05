@@ -2,11 +2,7 @@ import { AuthType, type EmailVerifyBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { EmailLinks } from '../../../components/ui2/EmailLinks';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
-import { UserInfo } from '../../../components/ui2/UserInfo';
+import { EmailLinks, Header, PrimaryButton, Text, UserInfo } from '../../../components';
 import { EmailLinkSuccess } from './EmailLinkSuccess';
 
 // we poll for a maximum of 10 minutes (120 * 5000ms = 10min)

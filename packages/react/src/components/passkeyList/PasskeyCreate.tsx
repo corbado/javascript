@@ -4,8 +4,8 @@ import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../ui2/buttons/PrimaryButton';
-import { Dialog } from '../ui2/Dialog';
+import { PrimaryButton } from '../ui/buttons/PrimaryButton';
+import { Dialog } from '../ui/Dialog';
 
 export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;

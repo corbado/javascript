@@ -2,9 +2,7 @@ import type { EmailVerifyBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LoadingSpinner } from '../../../components/ui2/LoadingSpinner';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
+import { Header, LoadingSpinner, Text } from '../../../components';
 import { EmailLinkError } from './EmailLinkError';
 
 export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) => {

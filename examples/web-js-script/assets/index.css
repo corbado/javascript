@@ -1,9 +1,31 @@
+.logout-button {
+  border-radius: 9999px;
+  background-color: #d2b48c;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  color: white;
+}
+
+.logout-button:hover {
+  background-color: #654321;
+}
+
 .corbado-custom-theme {
   --cb-primary-color: #d2b48c;
   --cb-primary-color-hover: #654321;
   --cb-primary-color-disabled: #eedcc4;
   --cb-button-text-primary-color: #000000;
   --cb-secondary-link-color: #654321;
+  --cb-primary-font: 'Roboto';
+  --cb-secondary-font: 'Roboto';
+}
+
+.cb-dark.corbado-custom-theme {
+  --cb-primary-color: #d2b48c;
+  --cb-primary-color-hover: #654321;
+  --cb-primary-color-disabled: #eedcc4;
+  --cb-button-text-primary-color: #000000;
+  --cb-secondary-link-color: #D2B48C;
   --cb-primary-font: 'Roboto';
   --cb-secondary-font: 'Roboto';
 }

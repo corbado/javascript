@@ -4,14 +4,14 @@ import type { FC } from 'react';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { Text } from '../ui2/typography/Text';
+import { Text } from '../ui/typography/Text';
 
 export interface PasskeyDetailsProps {
   passkey: PassKeyItem;
 }
 
 export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const sourceBrowser = passkey.sourceBrowser;
   const sourceOS = passkey.sourceOS;
   const title = aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey';

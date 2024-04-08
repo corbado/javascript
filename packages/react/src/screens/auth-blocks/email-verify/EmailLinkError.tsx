@@ -2,9 +2,8 @@ import type { EmailVerifyBlock } from '@corbado/shared-ui';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ExclamationIcon } from '../../../components/ui2/icons/ExclamationIcon';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
+import { Header, Text } from '../../../components';
+import { ExclamationIcon } from '../../../components/ui/icons/ExclamationIcon';
 
 export function EmailLinkError({ block }: { block: EmailVerifyBlock }) {
   const { t } = useTranslation('translation', {

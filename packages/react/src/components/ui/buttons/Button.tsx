@@ -1,72 +1,23 @@
-import type { ButtonHTMLAttributes } from 'react';
-import React, { forwardRef } from 'react';
+import React from 'react';
+import { type ButtonHTMLAttributes, forwardRef } from 'react';
 
-import { Spinner } from '../Spinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 
-export type ButtonVariants = 'primary' | 'secondary' | 'tertiary' | 'close';
-
-interface AdditionalProps {
-  variant?: ButtonVariants;
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
+  spinnerClassName?: string;
 }
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & AdditionalProps;
-
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading = false, disabled, children, ...rest }, ref) => {
+  ({ isLoading = false, spinnerClassName, disabled, children, ...rest }, ref) => {
     return (
       <button
         disabled={isLoading || disabled}
         ref={ref}
         {...rest}
       >
-        {isLoading ? <Spinner /> : children}
+        {isLoading ? <LoadingSpinner className={spinnerClassName} /> : children}
       </button>
-    );
-  },
-);
-
-export const PrimaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, disabled, className, children, ...rest }, ref) => {
-    return (
-      <Button
-        className={`${className} cb-button-primary`}
-        isLoading={isLoading}
-        disabled={disabled}
-        ref={ref}
-        children={children}
-        {...rest}
-      />
-    );
-  },
-);
-
-export const SecondaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, disabled, className, children, ...rest }, ref) => {
-    return (
-      <Button
-        className={`${className} cb-button-secondary`}
-        isLoading={isLoading}
-        disabled={disabled}
-        ref={ref}
-        children={children}
-        {...rest}
-      />
-    );
-  },
-);
-
-export const TertiaryButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, disabled, className, children, ...rest }, ref) => {
-    return (
-      <Button
-        className={`${className} cb-button-tertiary`}
-        isLoading={isLoading}
-        disabled={disabled}
-        ref={ref}
-        children={children}
-        {...rest}
-      />
     );
   },
 );

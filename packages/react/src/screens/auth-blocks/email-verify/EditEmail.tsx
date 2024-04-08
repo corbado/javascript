@@ -3,10 +3,7 @@ import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/input/InputField';
-import { Header } from '../../../components/ui2/typography/Header';
+import { Header, InputField, PrimaryButton, SecondaryButton } from '../../../components';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;
@@ -66,8 +63,15 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
       <PrimaryButton
         type='submit'
         isLoading={loading}
-        disabled={email === block.data.email}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = email === block.data.email;
+          if (noChange) {
+            block.showEmailVerificationScreen();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

@@ -3,10 +3,10 @@ import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
-import { Header } from '../../../components/ui2/typography/Header';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
+import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
+import { Header } from '../../../components/ui/typography/Header';
 
 export interface EditPhoneProps {
   block: PhoneVerifyBlock;
@@ -61,8 +61,15 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       />
       <PrimaryButton
         isLoading={loading}
-        disabled={phone === block.data.phone}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = phone === block.data.phone;
+          if (noChange) {
+            block.showPhoneOtpScreen();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

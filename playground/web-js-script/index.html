@@ -27,53 +27,47 @@
         <div id="passkey-list"></div>
       </div>
     </div>
-    <div id="fallback-ui">
-      <p>This is the fallback UI. You should not see this unless you are not logged in.</p>
-      <button
-        id="login"
-        style="margin: 2rem 0.2rem"
-      >
-        Login
-      </button>
-    </div>
+    <div id="corbado-auth"></div>
 
     <script type="module">
-      import { jwtDecode } from 'https://unpkg.com/jwt-decode@4.0.0/build/esm/index.js';
-
       const projectID = window.location.href.includes('localhost')
         ? 'pro-1743528526530787479'
-        : 'pro-3652881945085154854';
+        : 'pro-6698593986287122356';
 
-      Corbado.load({
+      await Corbado.load({
         projectId: projectID,
+        darkMode: 'off',
       });
 
       if (!Corbado.user) {
         const corbadoAppElement = document.getElementById('corbado-app');
         corbadoAppElement.style.display = 'none';
-        const corbadoAuthElement = document.getElementById('login');
-        corbadoAuthElement.onclick = () => {
-          window.location.href = '/auth.html';
-        };
+
+        const authElement = document.getElementById('corbado-auth');
+        Corbado.mountAuthUI(authElement, {
+          onLoggedIn: () => {
+            window.location.reload();
+          },
+        });
       } else {
-        const fallbackUI = document.getElementById('fallback-ui');
+        const fallbackUI = document.getElementById('corbado-auth');
         fallbackUI.style.display = 'none';
 
         const header = document.getElementById('header');
         header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
 
-        const decodedShortSession = jwtDecode(Corbado.shortSession);
-        const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);
         const shortSession = document.getElementById('short-session');
-        shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
+        shortSession.style.maxWidth = '550px';
+        Corbado.mountUserUI(shortSession);
 
         const logoutButton = document.getElementById('logout');
-        logoutButton.addEventListener('click', () => {
-          Corbado.logout();
-          window.location.href = '/auth.html';
+        logoutButton.addEventListener('click', async () => {
+          await Corbado.logout();
+          window.location.reload();
         });
 
         const passkeyList = document.getElementById('passkey-list');
+        passkeyList.style.maxWidth = '550px';
         Corbado.mountPasskeyListUI(passkeyList);
       }
     </script>

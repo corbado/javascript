@@ -1,11 +1,11 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { CorbadoError } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../ui2/buttons/PrimaryButton';
-import { Dialog } from '../ui2/Dialog';
+import { useCorbado } from '../../hooks/useCorbado';
+import { PrimaryButton } from '../ui/buttons/PrimaryButton';
+import { Dialog } from '../ui/Dialog';
 
 export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;
@@ -18,7 +18,7 @@ type TranslatedError = {
 };
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const { corbadoApp } = useCorbado();
 
   const [dialogError, setDialogError] = useState<CorbadoError | undefined>();

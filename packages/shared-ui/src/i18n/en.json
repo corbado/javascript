@@ -289,7 +289,7 @@
     "invalid_challenge_solution_email-link": "This link has expired",
     "invalid_challenge_solution_phone-otp": "The provided one-time passcode is not valid",
     "noConditionalUiSupport": "Conditional UI is not supported by your device",
-    "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identify first by logging in with your email address.",
+    "conditionalUiUnconfirmedCredential": "This passkey can not be used yet. Please confirm your identity first by logging in with your email address.",
     "unknown": "Something went wrong. Please try again later",
     "unexpectedError": {
       "withCustomerSupport": "We encountered an issue. Please try again later or contact support at {{customerSupportEmail}}.",
@@ -303,7 +303,7 @@
       "button": "Refresh page"
     }
   },
-  "passkeysList": {
+  "passkey-list": {
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",
@@ -328,5 +328,15 @@
       "body": "Unfortunately, passkeys are not supported on your device.",
       "button_confirm": "Ok"
     }
+  },
+  "user": {
+    "header": "Your Account",
+    "name": "Name",
+    "username": "Username",
+    "email": "Email",
+    "phone": "Phone number",
+    "verified": "verified",
+    "unverified": "pending",
+    "warning_notLoggedIn": "Please log in to see your current user information."
   }
 }

@@ -3,11 +3,11 @@ import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/input/InputField';
-import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
-import { Header } from '../../../components/ui2/typography/Header';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
+import InputField from '../../../components/ui/input/InputField';
+import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
+import { Header } from '../../../components/ui/typography/Header';
 
 export interface EditUserDataProps {
   block: PasskeyAppendBlock;
@@ -105,8 +105,15 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       <PrimaryButton
         type='submit'
         isLoading={loading}
-        disabled={passkeyUserHandle === block.data.userHandle}
-        onClick={e => void handleConfirm(e)}
+        onClick={e => {
+          const noChange = passkeyUserHandle === block.data.userHandle;
+          if (noChange) {
+            block.showPasskeyAppend();
+            return;
+          }
+
+          void handleConfirm(e);
+        }}
       >
         {primaryButtonText}
       </PrimaryButton>

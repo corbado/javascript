@@ -1,5 +1,4 @@
-import { PasskeyList, useCorbado } from '@corbado/react';
-import { UserDetails } from './UserDetails';
+import { PasskeyList, useCorbado, User } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const AuthDetails = () => {
@@ -11,10 +10,10 @@ export const AuthDetails = () => {
     <div className='component'>
       <div>
         <p>Welcome</p>
-        <UserDetails />
+        <User />
         <button
           onClick={async () => {
-            logout();
+            await logout();
 
             // TODO: this should be covered by a guard (then we can remove it)
             navigate(`/${projectId}/auth`);

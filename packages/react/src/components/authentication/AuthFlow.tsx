@@ -26,19 +26,17 @@ import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingFields';
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
-import { PasskeyBenefits as PasskeyAppendPasskeyBenefits } from '../../screens/auth-blocks/passkey-append/PasskeyBenefits';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
-import { PasskeyBenefits as PasskeyVerifyPasskeyBenefits } from '../../screens/auth-blocks/passkey-verify/PasskeyBenefits';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
-import { ComponentUnavailableError } from '../ui2/errors/ComponentUnavailable';
-import ErrorPopup from '../ui2/errors/ErrorPopup';
-import { FreemiumBadge } from '../ui2/FreemiumBadge';
-import { LoadingSpinner } from '../ui2/LoadingSpinner';
+import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
+import ErrorPopup from '../ui/errors/ErrorPopup';
+import { FreemiumBadge } from '../ui/FreemiumBadge';
+import { LoadingSpinner } from '../ui/LoadingSpinner';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
@@ -82,8 +80,6 @@ export const AuthFlow: FC = () => {
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppend:
             return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
-          case ScreenNames.PasskeyBenefits:
-            return <PasskeyAppendPasskeyBenefits block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
             return <PasskeyAppendPasskeyError block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.EditUserData:
@@ -95,8 +91,6 @@ export const AuthFlow: FC = () => {
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyBackground:
             return <PasskeyBackground block={currentScreen.block as PasskeyVerifyBlock} />;
-          case ScreenNames.PasskeyBenefits:
-            return <PasskeyVerifyPasskeyBenefits block={currentScreen.block as PasskeyVerifyBlock} />;
           case ScreenNames.PasskeyError:
             return <PasskeyVerifyPasskeyError block={currentScreen.block as PasskeyVerifyBlock} />;
           default:

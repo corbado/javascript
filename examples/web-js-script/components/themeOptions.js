@@ -46,7 +46,7 @@ const updateRadioButtons = value => {
   }
 };
 
-export function insertThemeOptions(onThemeChange) {
+export function insertThemeOptions(initialValue, onThemeChange) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
@@ -62,7 +62,7 @@ export function insertThemeOptions(onThemeChange) {
       onThemeChange('');
     },
     'Basic',
-    true,
+    !initialValue,
   );
 
   insertRadioButton(
@@ -73,6 +73,7 @@ export function insertThemeOptions(onThemeChange) {
       onThemeChange('cb-emerald-funk-theme');
     },
     'Emerald Funk',
+    initialValue === 'cb-emerald-funk-theme',
   );
 
   insertRadioButton(
@@ -83,5 +84,6 @@ export function insertThemeOptions(onThemeChange) {
       onThemeChange('corbado-custom-theme');
     },
     'Customized Theme',
+    initialValue === 'corbado-custom-theme',
   );
 }

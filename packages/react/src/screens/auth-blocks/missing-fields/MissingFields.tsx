@@ -3,11 +3,11 @@ import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import InputField from '../../../components/ui2/input/InputField';
-import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
-import { Header } from '../../../components/ui2/typography/Header';
-import { SubHeader } from '../../../components/ui2/typography/SubHeader';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import InputField from '../../../components/ui/input/InputField';
+import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
+import { Header } from '../../../components/ui/typography/Header';
+import { SubHeader } from '../../../components/ui/typography/SubHeader';
 
 export const MissingFields = ({ block }: { block: MissingFieldsBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.missing-fields` });

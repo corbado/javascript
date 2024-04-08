@@ -1,4 +1,5 @@
-@import "./variables.css";
+@import './variables.css';
+@import './themes/emerald-funk.css';
 
 .cb-container {
   display: flex;
@@ -141,6 +142,10 @@
   border: 1px solid var(--cb-primary-color);
 }
 
+.cb-input:disabled {
+  background-color: var(--cb-box-color-hover);
+}
+
 .cb-input-error {
   border: 1px solid var(--cb-error-text-color);
 }
@@ -170,8 +175,12 @@
   color: var(--cb-text-primary-color);
   border-radius: var(--cb-border-radius-sm);
   border: 1px solid var(--cb-border-color);
-  height: calc(var(--cb-input-field-height) * 1.075);
+  height: var(--cb-input-field-height);
   align-items: center;
+}
+
+.cb-phone-input-field-disabled {
+  background-color: var(--cb-box-color-hover);
 }
 
 .cb-phone-input-field:focus-within {
@@ -205,6 +214,11 @@
 
 .cb-phone-input-field-button img {
   width: 1rem;
+}
+
+.cb-phone-input-field-button-disabled {
+  background-color: var(--cb-box-color-hover);
+  cursor: not-allowed;
 }
 
 .cb-phone-input-field-selection {
@@ -256,6 +270,10 @@
 
 .cb-phone-input-field-input:focus {
   outline: none;
+}
+
+.cb-phone-input-field-input:disabled {
+  background-color: var(--cb-box-color-hover);
 }
 
 .cb-phone-input-field-search {
@@ -476,7 +494,7 @@
 .cb-user-info-section-right {
   flex: 1;
   height: 1.2rem;
-  padding-right: .25rem;
+  padding-right: 0.25rem;
 }
 
 .cb-user-info-section-right-icon {
@@ -1014,12 +1032,6 @@
   margin: 2rem auto 2.25rem auto;
 }
 
-@media screen and (max-width: 481px) {
-  .cb-container {
-    width: 360px;
-  }
-}
-
 .cb-confirm-process-abort {
   display: flex;
   flex-direction: column;
@@ -1039,6 +1051,65 @@
 
 .cb-confirm-process-abort-icon {
   height: 1.9rem;
+}
+
+.cb-user-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--cb-border-color);
+  border-radius: var(--cb-border-radius-lg);
+  padding: 1rem 1.25rem;
+}
+
+.cb-user-details-section-header {
+  margin-bottom: 1rem;
+}
+
+.cb-user-details-section-indentifier {
+  width: 85%;
+  align-self: self-start;
+}
+
+.cb-user-details-section-indentifiers-list {
+  margin-top: 1rem;
+}
+
+.cb-user-details-section-indentifiers-list-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cb-user-details-section-indentifiers-list-item-field {
+  flex: 8;
+}
+
+.cb-user-details-section-indentifiers-list-item-field-input {
+  width: 100%;
+}
+
+.cb-user-details-section-indentifiers-list-item-badge {
+  padding: 0.5rem;
+  flex: 1;
+  margin-top: 0.75rem;
+  border-radius: var(--cb-border-radius-sm);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-primary {
+  background-color: var(--cb-primary-color);
+  color: var(--cb-button-text-primary-color);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-secondary {
+  background-color: var(--cb-text-secondary-color);
+  color: var(--cb-text-primary-color);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-text {
+  color: var(--cb-button-text-primary-color);
 }
 
 .cb-social-login-divider {
@@ -1067,7 +1138,17 @@
   padding-left: 0.5rem;
 }
 
-.cb-social-login-buttton-large img{
+.cb-social-login-buttton-large img {
   height: 1.25rem;
   padding-right: 0.75rem;
+}
+
+@media screen and (max-width: 481px) {
+  .cb-container {
+    width: 360px;
+  }
+
+  .cb-user-details-section-indentifier {
+    width: 75%;
+  }
 }

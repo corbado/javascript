@@ -1,4 +1,4 @@
-import { useCorbadoSession } from '@corbado/react';
+import { useCorbado } from '@corbado/react';
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import 'prismjs/themes/prism-tomorrow.min.css';
 import { useState } from 'react';
 
 export const Header = () => {
-  const { user, isAuthenticated } = useCorbadoSession();
+  const { user, isAuthenticated } = useCorbado();
   const [bounceGihub, setBounceGithub] = useState(false);
   const [bounceDocumentation, setBounceDocumentation] = useState(false);
 

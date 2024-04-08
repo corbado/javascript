@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog } from '../ui2/Dialog';
-import { DeleteIcon } from '../ui2/icons/DeleteIcon';
+import { Dialog } from '../ui/Dialog';
+import { DeleteIcon } from '../ui/icons/DeleteIcon';
 
 export interface PasskeyDeleteProps {
   passkeyId: string;
@@ -11,7 +11,7 @@ export interface PasskeyDeleteProps {
 }
 
 export const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDelete }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList.dialog_delete' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list.dialog_delete' });
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = () => {

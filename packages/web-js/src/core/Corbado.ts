@@ -1,4 +1,4 @@
-import { CorbadoAuth, Login, PasskeyList, SignUp } from '@corbado/react';
+import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
 import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
@@ -74,12 +74,20 @@ export class Corbado {
     this.#unmountComponent(element);
   }
 
+  mountUserUI(element: HTMLElement) {
+    this.#mountComponent(element, User, {});
+  }
+
+  unmountUserUI(element: HTMLElement) {
+    this.#unmountComponent(element);
+  }
+
   logout() {
     if (!this.#corbadoAppState) {
       throw new Error('Please call load() before logging out');
     }
 
-    this.#corbadoAppState.logout();
+    return this.#corbadoAppState.logout();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

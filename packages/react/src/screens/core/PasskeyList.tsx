@@ -1,15 +1,14 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { PassKeyList } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem } from '../../components';
-import { LoadingSpinner } from '../../components/ui2/LoadingSpinner';
+import { LoadingSpinner, PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem } from '../../components';
+import { useCorbado } from '../../hooks/useCorbado';
 
 const PasskeyList: FC = () => {
   const { getPasskeys, globalError, isAuthenticated } = useCorbado();
-  const { t } = useTranslation('translation', { keyPrefix: 'passkeysList' });
+  const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
   const [passkeys, setPasskeys] = useState<PassKeyList | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
 

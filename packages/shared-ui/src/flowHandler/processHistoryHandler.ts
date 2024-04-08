@@ -33,6 +33,16 @@ export class ProcessHistoryHandler {
 
     const currentLocationHash = this.#getCurrentLocationHash();
     if (currentLocationHash) {
+      console.log('currentLocationHash', currentLocationHash);
+      // we define those two overrides because they are more intuitive than the hash values
+      if (currentLocationHash === 'register') {
+        return BlockTypes.SignupInit;
+      }
+
+      if (currentLocationHash === 'login') {
+        return BlockTypes.LoginInit;
+      }
+
       return currentLocationHash as BlockTypes;
     }
 

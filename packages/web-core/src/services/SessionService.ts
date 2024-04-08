@@ -1,4 +1,4 @@
-import type { PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
 import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
@@ -152,6 +152,13 @@ export class SessionService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
+  public async getFullUser(): Promise<Result<CorbadoUser, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      const resp = await this.#usersApi.currentUserGet();
+      return resp.data;
+    });
+  }
+
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const clientHandle = WebAuthnService.getClientHandle();
@@ -275,6 +282,9 @@ export class SessionService {
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
 
     if (this.#isPreviewMode) {

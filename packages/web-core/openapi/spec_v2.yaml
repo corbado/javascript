@@ -1201,16 +1201,16 @@ components:
     identifier:
       type: object
       required:
-        - value
-        - type
-        - status
+          - value
+          - type
+          - status
       properties:
-        value:
-          type: string
-        type:
-          $ref: '#/components/schemas/loginIdentifierType'
-        status:
-          type: string
+          value:
+            type: string
+          type:
+            $ref: '#/components/schemas/loginIdentifierType'
+          status:
+            type: string
 
     socialData:
       type: object

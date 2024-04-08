@@ -35,6 +35,7 @@ export const i18n = {
 };
 export * from './utils';
 export * from './flowHandler';
+export type { BehaviorSubject } from 'rxjs';
 
 export const assets = {
   deleteIcon,

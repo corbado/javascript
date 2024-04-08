@@ -5,14 +5,14 @@ import { useEffect } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/input/InputField';
-import { PhoneInputField } from '../../../components/ui2/input/PhoneInputField';
-import { SocialLoginButtons } from '../../../components/ui2/SocialLoginButtons';
-import { Header } from '../../../components/ui2/typography/Header';
-import { SubHeader } from '../../../components/ui2/typography/SubHeader';
-import { Text } from '../../../components/ui2/typography/Text';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
+import InputField from '../../../components/ui/input/InputField';
+import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
+import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
+import { Header } from '../../../components/ui/typography/Header';
+import { SubHeader } from '../../../components/ui/typography/SubHeader';
+import { Text } from '../../../components/ui/typography/Text';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });

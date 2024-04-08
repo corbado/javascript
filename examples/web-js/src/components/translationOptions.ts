@@ -2,7 +2,7 @@ import { insertRadioButton } from './radioButton';
 
 const translationsOptionsHtml = `
 <div class='flex flex-col gap-2'>
-    <label class='subheading' htmlFor='translations'>Change Dark Mode</label>
+    <label class='subheading' htmlFor='translations'>Use Custom Translations</label>
     <div id="translations-options" class='flex gap-2 font-bold'></div>
     <p class='paragraph'>
         Documentation for customizing translations are
@@ -29,7 +29,7 @@ const updateRadioButtons = (state: boolean) => {
   }
 };
 
-export function insertTranslationOptions(onTranslationChange: (state: boolean) => void) {
+export function insertTranslationOptions(initialState: boolean, onTranslationChange: (state: boolean) => void) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent!.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
@@ -45,7 +45,7 @@ export function insertTranslationOptions(onTranslationChange: (state: boolean) =
       updateRadioButtons(false);
     },
     'Default',
-    true,
+    !initialState,
   );
 
   insertRadioButton(
@@ -56,5 +56,6 @@ export function insertTranslationOptions(onTranslationChange: (state: boolean) =
       updateRadioButtons(true);
     },
     'Custom Translation',
+    initialState,
   );
 }

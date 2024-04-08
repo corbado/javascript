@@ -26,6 +26,4 @@ test.describe('PasskeyAppendScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
     await expect(page.getByText(newEmail)).toBeVisible();
   });
-
-  // TODO: add tests for redirecting to specific identifier verification (not email, just phone)
 });

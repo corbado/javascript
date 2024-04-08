@@ -1,5 +1,4 @@
 import Corbado from '@corbado/web-js';
-import { jwtDecode } from 'jwt-decode';
 import { CORBADO_PROJECT_ID } from './environment';
 
 await Corbado.load({
@@ -21,18 +20,17 @@ if (!Corbado.user) {
   const header = document.getElementById('header');
   header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
 
-  const decodedShortSession = jwtDecode(Corbado.shortSession);
-  const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);
   const shortSession = document.getElementById('short-session');
-  shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
+  shortSession.style.maxWidth = '550px';
+  Corbado.mountUserUI(shortSession);
 
   const logoutButton = document.getElementById('logout');
-  logoutButton.addEventListener('click', () => {
-    Corbado.logout();
+  logoutButton.addEventListener('click', async () => {
+    await Corbado.logout();
     window.location.href = '/auth.html';
   });
 
   const passkeyList = document.getElementById('passkey-list');
-  passkeyList.style.maxWidth = '500px';
+  passkeyList.style.maxWidth = '550px';
   Corbado.mountPasskeyListUI(passkeyList);
 }

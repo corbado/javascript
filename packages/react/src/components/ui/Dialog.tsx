@@ -1,8 +1,11 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
 
-import { PrimaryButton, SecondaryButton } from './buttons/Button';
-import { CancelIcon } from './icons/Icons';
+import { PrimaryButton } from './buttons/PrimaryButton';
+import { SecondaryButton } from './buttons/SecondaryButton';
+import { CancelIcon } from './icons/CancelIcon';
+import { Header } from './typography/Header';
+import { Text } from './typography/Text';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -56,16 +59,26 @@ export const Dialog: FC<DialogProps> = ({
         onClick={e => e.stopPropagation()}
       >
         <div className='cb-dialog-header'>
-          {header}
+          <Header className='cb-dialog-header-text'>{header}</Header>
           <CancelIcon
-            className={'cb-dialog-x-button'}
+            className='cb-dialog-x-button'
             onClick={() => void closeAction()}
           />
         </div>
-        {body ? <div className='cb-dialog-body'>{body}</div> : null}
+        {body ? (
+          <div className='cb-dialog-body'>
+            <Text
+              level='3'
+              fontFamilyVariant='secondary'
+            >
+              {body}
+            </Text>
+          </div>
+        ) : null}
         <div className='cb-dialog-footer'>
           <PrimaryButton
-            className={'cb-dialog-button'}
+            className='cb-dialog-button'
+            colorVariant='error'
             isLoading={loadingConfirmAction}
             disabled={loadingCloseAction}
             onClick={() => void confirmAction()}
@@ -73,14 +86,14 @@ export const Dialog: FC<DialogProps> = ({
             {confirmText}
           </PrimaryButton>
           {cancelText ? (
-            <SecondaryButton
-              className={'cb-dialog-button'}
-              isLoading={loadingCloseAction}
-              disabled={loadingCloseAction}
-              onClick={() => void closeAction()}
-            >
-              {cancelText}
-            </SecondaryButton>
+            <span className='cb-dialog-button'>
+              <SecondaryButton
+                disabled={loadingCloseAction}
+                onClick={() => void closeAction()}
+              >
+                {cancelText}
+              </SecondaryButton>
+            </span>
           ) : null}
         </div>
       </div>

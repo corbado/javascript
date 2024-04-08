@@ -11,8 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@corbado/web-js": "*",
-    "jwt-decode": "^4.0.0"
+    "@corbado/web-js": "*"
   },
   "devDependencies": {
     "dotenv-webpack": "^8.0.1"

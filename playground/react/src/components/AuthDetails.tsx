@@ -1,5 +1,4 @@
 import { PasskeyList, useCorbado, User } from '@corbado/react';
-// import { UserDetails } from './UserDetails';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const AuthDetails = () => {
@@ -11,7 +10,6 @@ export const AuthDetails = () => {
     <div className='component'>
       <div>
         <p>Welcome</p>
-        {/* <UserDetails /> */}
         <User />
         <button
           onClick={async () => {

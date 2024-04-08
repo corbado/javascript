@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog } from '../ui2/Dialog';
-import { DeleteIcon } from '../ui2/icons/DeleteIcon';
+import { Dialog } from '../ui/Dialog';
+import { DeleteIcon } from '../ui/icons/DeleteIcon';
 
 export interface PasskeyDeleteProps {
   passkeyId: string;

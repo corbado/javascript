@@ -1,21 +1,33 @@
 import '../i18n';
 
-import type { CorbadoProviderParams } from '@corbado/react-sdk';
-import { CorbadoProvider as CorbadoSDKProvider } from '@corbado/react-sdk';
 import type { BehaviorSubject } from '@corbado/shared-ui';
 import { handleTheming } from '@corbado/shared-ui';
-import type { CorbadoUIConfig } from '@corbado/types';
+import type { CorbadoConfig } from '@corbado/types';
+import type { CorbadoApp } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect } from 'react';
 
+import { CorbadoSessionProvider } from '../contexts/CorbadoSessionProvider';
 import ErrorHandlingProvider from '../contexts/ErrorHandlingProvider';
 import { ThemeProvider } from '../contexts/ThemeProvider';
 import { handleDynamicLocaleSetup } from '../i18n';
 
-export type CorbadoProviderProps = PropsWithChildren<CorbadoUIConfig & CorbadoProviderParams>;
+export interface CorbadoProviderProps extends PropsWithChildren<CorbadoConfig> {
+  corbadoAppInstance?: CorbadoApp;
+}
 
-const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
-  const { defaultLanguage, autoDetectLanguage, customTranslations, darkMode, theme, ...providerConfig } = config;
+const CorbadoProvider: FC<CorbadoProviderProps> = ({
+  children,
+  defaultLanguage,
+  autoDetectLanguage,
+  customTranslations,
+  darkMode,
+  theme,
+  corbadoAppInstance,
+  customerSupportEmail,
+  isDevMode,
+  ...corbadoAppParams
+}) => {
   const [darkModeState, setDarkModeState] = React.useState<BehaviorSubject<boolean> | undefined>();
 
   useEffect(() => {
@@ -30,10 +42,13 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
   }, [darkMode, theme]);
 
   return (
-    <CorbadoSDKProvider {...providerConfig}>
+    <CorbadoSessionProvider
+      corbadoAppInstance={corbadoAppInstance}
+      corbadoAppParams={corbadoAppParams}
+    >
       <ErrorHandlingProvider
-        customerSupportEmail={config.customerSupportEmail ?? ''}
-        isDevMode={config.isDevMode ?? false}
+        customerSupportEmail={customerSupportEmail ?? ''}
+        isDevMode={isDevMode ?? false}
       >
         <ThemeProvider
           theme={theme}
@@ -42,7 +57,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({ children, ...config }) => {
           {children}
         </ThemeProvider>
       </ErrorHandlingProvider>
-    </CorbadoSDKProvider>
+    </CorbadoSessionProvider>
   );
 };
 export default CorbadoProvider;

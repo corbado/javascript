@@ -3,10 +3,7 @@ import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import InputField from '../../../components/ui2/input/InputField';
-import { Header } from '../../../components/ui2/typography/Header';
+import { Header, InputField, PrimaryButton, SecondaryButton } from '../../../components';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;

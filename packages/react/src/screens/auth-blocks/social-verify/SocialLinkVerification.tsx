@@ -2,9 +2,9 @@ import type { SocialVerifyBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LoadingSpinner } from '../../../components/ui2/LoadingSpinner';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
+import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
+import { Header } from '../../../components/ui/typography/Header';
+import { Text } from '../../../components/ui/typography/Text';
 
 export const SocialLinkVerification = ({ block }: { block: SocialVerifyBlock }) => {
   const { t } = useTranslation('translation', {

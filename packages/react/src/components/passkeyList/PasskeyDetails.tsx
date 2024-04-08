@@ -4,7 +4,7 @@ import type { FC } from 'react';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { Text } from '../ui2/typography/Text';
+import { Text } from '../ui/typography/Text';
 
 export interface PasskeyDetailsProps {
   passkey: PassKeyItem;

@@ -1,3 +1,4 @@
+import type { CorbadoAppParams } from './common';
 import type { CustomThemes } from './theme';
 
 /**
@@ -12,7 +13,7 @@ import type { CustomThemes } from './theme';
  * @property {string} [customerSupportEmail] - The email address to be used for customer support.
  * @property {boolean} [isDevMode] - A boolean indicating whether the app is running in development mode. Defaults to false if not provided.
  */
-export interface CorbadoUIConfig {
+export interface CorbadoConfig extends CorbadoAppParams {
   defaultLanguage?: string;
   autoDetectLanguage?: boolean;
   customTranslations?: Record<string, object> | null;

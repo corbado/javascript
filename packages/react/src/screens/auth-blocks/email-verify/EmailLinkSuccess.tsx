@@ -3,9 +3,8 @@ import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { EmailLinkSuccessIcon } from '../../../components/ui2/icons/EmailLinkSuccess';
-import { Header } from '../../../components/ui2/typography/Header';
-import { Text } from '../../../components/ui2/typography/Text';
+import { Header, Text } from '../../../components/ui';
+import { EmailLinkSuccessIcon } from '../../../components/ui/icons/EmailLinkSuccess';
 
 export interface EmailLinkSuccessProps {
   block: EmailVerifyBlock | ContinueOnOtherEnvBlock;

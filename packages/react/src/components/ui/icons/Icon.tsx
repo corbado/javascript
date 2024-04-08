@@ -1,14 +1,15 @@
 import type { CSSProperties } from 'react';
 import React, { forwardRef } from 'react';
 
-import type { CustomizableComponent } from '../../../types';
-
-export interface Props extends Omit<CustomizableComponent, 'children'> {
-  src: string;
-  alt?: string;
+export interface IconProps {
   onClick?: () => void;
   className?: string;
   style?: CSSProperties;
+}
+
+interface Props extends IconProps {
+  src: string;
+  alt?: string;
 }
 
 export const Icon = forwardRef<HTMLImageElement, Props>(({ src, style, alt = '', onClick, className = '' }, ref) => {

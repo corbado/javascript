@@ -2,15 +2,15 @@ import { type PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui2/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui2/buttons/SecondaryButton';
-import { Divider } from '../../../components/ui2/Divider';
-import { DeviceIcon } from '../../../components/ui2/icons/DeviceIcon';
-import { EditIcon } from '../../../components/ui2/icons/EditIcon';
-import { FaceIdIcon } from '../../../components/ui2/icons/FaceIdIcon';
-import { FingerPrintIcon } from '../../../components/ui2/icons/FingerPrintIcon';
-import { SecureIcon } from '../../../components/ui2/icons/SecureIcon';
-import { Text } from '../../../components/ui2/typography/Text';
+import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
+import { Divider } from '../../../components/ui/Divider';
+import { DeviceIcon } from '../../../components/ui/icons/DeviceIcon';
+import { EditIcon } from '../../../components/ui/icons/EditIcon';
+import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
+import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
+import { SecureIcon } from '../../../components/ui/icons/SecureIcon';
+import { Text } from '../../../components/ui/typography/Text';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {

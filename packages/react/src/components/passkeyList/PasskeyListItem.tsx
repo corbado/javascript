@@ -1,11 +1,11 @@
-import { useCorbado } from '@corbado/react-sdk';
 import { aaguidMappings } from '@corbado/shared-ui';
 import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React, { memo } from 'react';
 
+import { useCorbado } from '../../hooks/useCorbado';
 import useTheme from '../../hooks/useTheme';
-import { PasskeyDefaultIcon } from '../ui2/icons/PasskeyDefaultIcon';
+import { PasskeyDefaultIcon } from '../ui/icons/PasskeyDefaultIcon';
 import { PasskeyDelete } from './PasskeyDelete';
 import { PasskeyDetails } from './PasskeyDetails';
 

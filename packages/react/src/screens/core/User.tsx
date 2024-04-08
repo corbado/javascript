@@ -1,14 +1,10 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { CorbadoUser, Identifier } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PasskeyListErrorBoundary } from '../../components';
-import InputField from '../../components/ui2/input/InputField';
-import { PhoneInputField } from '../../components/ui2/input/PhoneInputField';
-import { LoadingSpinner } from '../../components/ui2/LoadingSpinner';
-import { Text } from '../../components/ui2/typography/Text';
+import { InputField, LoadingSpinner, PasskeyListErrorBoundary, PhoneInputField, Text } from '../../components';
+import { useCorbado } from '../../hooks/useCorbado';
 
 interface ProcessedUser {
   name: string;

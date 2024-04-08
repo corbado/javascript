@@ -31,7 +31,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/react-sdk": "^2.3.0-alpha.0",
+    "@corbado/web-core": "^2.2.0-alpha.0",
     "@corbado/shared-ui": "^2.4.0-alpha.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@corbado/types": "^2.2.0-alpha.0",
-    "@corbado/web-core": "^2.2.0-alpha.0",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.0",
     "ts-results": "^3.3.0",

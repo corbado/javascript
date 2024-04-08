@@ -3,7 +3,6 @@
   "compilerOptions": {
     "paths": {
       "@corbado/web-core": ["../web-core/src"],
-      "@corbado/react-sdk": ["../react-sdk/src"],
       "@corbado/shared-ui": ["../shared-ui/src"],
       "@corbado/react": ["../react/src"]
     }

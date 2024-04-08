@@ -1,7 +1,6 @@
 export * from './Block';
 export * from './EmailVerifyBlock';
 export * from './PhoneVerifyBlock';
-export * from './SocialVerifyBlock';
 export * from './PasskeyAppendBlock';
 export * from './PasskeyAppendedBlock';
 export * from './SignupInitBlock';

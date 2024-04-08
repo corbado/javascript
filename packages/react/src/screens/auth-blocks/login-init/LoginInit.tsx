@@ -26,6 +26,12 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+    const abortController = new AbortController();
+    if (block.data.socialData.finished) {
+      void block.finishSocialVerification(abortController);
+      return;
+    }
+
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
     if (shouldUsePhone) {
       setUsePhone(true);
@@ -39,6 +45,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     }
 
     void block.continueWithConditionalUI();
+
+    return () => {
+      abortController.abort();
+    };
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -152,9 +162,9 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       </form>
       <SocialLoginButtons
         dividerText={textDivider}
-        socialLogins={block.data.socialLogins}
+        socialLogins={block.data.socialData.providers}
         t={t}
-        onClick={(providerType: SocialProviderType) => block.startSocialVerify(providerType)}
+        onClick={(providerType: SocialProviderType) => void block.startSocialVerify(providerType)}
       />
       {block.isSignupEnabled() && (
         <Text

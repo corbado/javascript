@@ -1,4 +1,5 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
+import { SocialDataStatusEnum } from '@corbado/web-core';
 import { AuthType, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 
@@ -33,14 +34,25 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       usernameEnabled: data.isUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
       conditionalUIChallenge: data.conditionalUIChallenge,
-      socialLogins: data.socialProviders.map(provider => {
-        return { name: provider };
-      }),
+      socialData: {
+        providers:
+          data.socialData?.providers.map(provider => {
+            return { name: provider };
+          }) || [],
+        oAuthUrl: data.socialData?.oauthUrl,
+        started: data.socialData?.status === SocialDataStatusEnum.Started || false,
+        finished: data.socialData?.status === SocialDataStatusEnum.Finished || false,
+      },
     };
   }
 
   async startSocialVerify(providerType: SocialProviderType) {
-    const res = await this.app.authProcessService.startSocialVerification(providerType);
+    const redirectUrl = window.location.origin + window.location.pathname;
+    const res = await this.app.authProcessService.startSocialVerification(providerType, redirectUrl, AuthType.Login);
+    if (!res) {
+      return;
+    }
+
     this.updateProcess(res);
   }
 
@@ -71,5 +83,10 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     }
 
     this.updateProcess(b);
+  }
+
+  async finishSocialVerification(abortController: AbortController) {
+    const res = await this.app.authProcessService.finishSocialVerification(abortController);
+    this.updateProcess(res);
   }
 }

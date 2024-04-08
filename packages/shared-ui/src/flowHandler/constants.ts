@@ -64,7 +64,6 @@ export enum BlockTypes {
   SignupInit = 'signup-init',
   EmailVerify = 'email-verify',
   PhoneVerify = 'phone-verify',
-  SocialVerify = 'social-verify',
   MissingFields = 'missing-fields',
   PasskeyAppend = 'passkey-append',
   PasskeyVerify = 'passkey-verify',

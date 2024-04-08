@@ -487,6 +487,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/auth/social/verify/callback:
+    get:
+      description: tbd
+      operationId: SocialVerifyCallback
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+
   /v2/auth/social/verify/finish:
     post:
       description: tbd
@@ -788,20 +798,18 @@ components:
       type: object
       required:
         - providerType
+        - redirectUrl
+        - authType
       properties:
         providerType:
           $ref: '#/components/schemas/socialProviderType'
+        redirectUrl:
+          type: string
+        authType:
+          $ref: '#/components/schemas/authType'
 
     socialVerifyFinishReq:
       type: object
-      required:
-        - code
-        - state
-      properties:
-        code:
-          type: string
-        state:
-          type: string
 
     identifierUpdateReq:
       type: object
@@ -966,7 +974,6 @@ components:
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
             - $ref: '#/components/schemas/generalBlockCompleted'
             - $ref: '#/components/schemas/generalBlockSignupInit'
-            - $ref: '#/components/schemas/generalBlockSocialVerify'
             - $ref: '#/components/schemas/generalBlockUsernameCollect'
             - $ref: '#/components/schemas/generalPhoneCollect'
             - $ref: '#/components/schemas/generalBlockLoginInit'
@@ -1045,10 +1052,8 @@ components:
             $ref: '#/components/schemas/loginIdentifierWithError'
         fullName:
           $ref: '#/components/schemas/fullNameWithError'
-        socialProviders:
-          type: array
-          items:
-            $ref: '#/components/schemas/socialProviderType'
+        socialData:
+          $ref: '#/components/schemas/socialData'
 
     generalBlockLoginInit:
       type: object
@@ -1072,21 +1077,11 @@ components:
           type: boolean
         isUsernameAvailable:
           type: boolean
-        socialProviders:
-          type: array
-          items:
-            $ref: '#/components/schemas/socialProviderType'
+        socialData:
+          $ref: '#/components/schemas/socialData'
 
         error:
           $ref: '#/components/schemas/requestError'
-
-    generalBlockSocialVerify:
-      type: object
-      required:
-        - oauthUrl
-      properties:
-        oauthUrl:
-          type: string
 
     generalBlockUsernameCollect:
       $ref: '#/components/schemas/loginIdentifierWithError'
@@ -1215,6 +1210,22 @@ components:
         type:
           $ref: '#/components/schemas/loginIdentifierType'
         status:
+          type: string
+
+    socialData:
+      type: object
+      required:
+        - providers
+        - status
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialProviderType'
+        status:
+          type: string
+          enum: [ 'initial', 'started', 'finished' ]
+        oauthUrl:
           type: string
 
     requestError:

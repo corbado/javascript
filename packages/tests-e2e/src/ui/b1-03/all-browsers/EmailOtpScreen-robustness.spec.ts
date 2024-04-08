@@ -2,7 +2,7 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
-  test.skip('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
+  test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
     const [, email] = await signupFlow.navigateToEmailOtpScreen();
 
     await signupFlow.fillOTP(OtpType.Incorrect);
@@ -10,7 +10,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await expect(page.getByText('The code is invalid or expired')).toBeVisible();
   });
 
-  test.skip('modify email identifier', async ({ signupFlow, page }) => {
+  test('modify email identifier', async ({ signupFlow, page }) => {
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
     email = email ?? '';
 
@@ -27,7 +27,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, newEmail);
   });
 
-  test.skip('cancel modifying email identifier', async ({ signupFlow, page }) => {
+  test('cancel modifying email identifier', async ({ signupFlow, page }) => {
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
     email = email ?? '';
 

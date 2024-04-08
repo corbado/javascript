@@ -72,7 +72,7 @@ export default App;
 ### CorbadoAuth component
 
 Adding SignUp/Login screens is simple with `@corbado/react`.
-The `CorbadoAuth` component allows your users to signUp and login with their passkeys.
+The `CorbadoAuth` component allows your users to sign up and login with their passkeys.
 Additionally, it provides fallback options like email one-time passcode for users who don't have a passkey yet.
 
 ```tsx

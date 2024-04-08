@@ -3,9 +3,9 @@ export const passkeyGuideHeader = 'How about we check your list of Passkeys?';
 export const authComponentBody = (
   <>
     Adding SignUp/Login screens is simple with <code className='language-bash'>@corbado/react</code>. The{' '}
-    <code className='language-tsx'>{`<CorbadoAuth />`}</code> component allows your users to signUp and login with their
-    passkeys. Additionally, it provides fallback options like email one-time passcode for users who don't have a passkey
-    yet.
+    <code className='language-tsx'>{`<CorbadoAuth />`}</code> component allows your users to sign up and login with
+    their passkeys. Additionally, it provides fallback options like email one-time passcode for users who don't have a
+    passkey yet.
   </>
 );
 export const passkeyComponentBody = (

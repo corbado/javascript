@@ -15,7 +15,6 @@ on:
       - main
       - develop
       - feature-refactor-to-thin-frontend
-      - robustness-tests
 
 jobs:
   prepare:

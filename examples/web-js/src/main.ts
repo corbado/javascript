@@ -13,8 +13,8 @@ import { insertDemo } from './components/demo';
     projectId: import.meta.env.VITE_CORBADO_PROJECT_ID,
   });
 
-  insertHeader(!!Corbado.isAuthenticated, Corbado.user);
-  insertGuide(!!Corbado.isAuthenticated);
+  insertHeader(Corbado.isAuthenticated, Corbado.user);
+  insertGuide(Corbado.isAuthenticated);
   insertDemo(Corbado);
 
   Prism.highlightAll();

@@ -10,11 +10,14 @@ const demoHtml = `
 <div id="demo" class='flex gap-2 justify-items-center flex-col px-2'></div>
 `;
 
-export function insertDemo(initialCorbadoApp: typeof Corbado) {
+export async function insertDemo(initialCorbadoApp: typeof Corbado) {
   let corbadoApp = initialCorbadoApp;
-  let darkMode: 'auto' | 'on' | 'off' = 'auto';
-  let theme = '';
-  let translations: Record<string, object> = defaultEnglishTranslations;
+  let darkMode: 'auto' | 'on' | 'off' = (localStorage.getItem('darkMode') as 'auto' | 'on' | 'off') || 'auto';
+  let theme = localStorage.getItem('theme') || '';
+  const useCustomTranslations = localStorage.getItem('translations') === 'custom';
+  let translations: Record<string, object> = useCustomTranslations
+    ? customEnglishTranslations
+    : defaultEnglishTranslations;
   document.getElementById('right-section')!.innerHTML = demoHtml;
 
   const initializeCorbado = async () => {
@@ -29,20 +32,23 @@ export function insertDemo(initialCorbadoApp: typeof Corbado) {
     insertDemoComponent(corbadoApp);
   };
 
-  insertDemoComponent(corbadoApp);
+  await initializeCorbado();
 
-  insertDarkModeOptions(async value => {
+  insertDarkModeOptions(darkMode, async value => {
     darkMode = value as 'auto' | 'on' | 'off';
+    localStorage.setItem('darkMode', darkMode);
     await initializeCorbado();
   });
 
-  insertThemeOptions(async value => {
+  insertThemeOptions(theme, async value => {
     theme = value;
+    localStorage.setItem('theme', theme);
     await initializeCorbado();
   });
 
-  insertTranslationOptions(async state => {
+  insertTranslationOptions(useCustomTranslations, async state => {
     translations = state ? customEnglishTranslations : defaultEnglishTranslations;
+    localStorage.setItem('translations', state ? 'custom' : 'default');
     await initializeCorbado();
   });
 }

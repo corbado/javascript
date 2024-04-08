@@ -13,7 +13,7 @@ export interface CorbadoSessionContextProps {
   loading: boolean;
   isAuthenticated: boolean;
   user: SessionUser | undefined;
-  logout: () => void;
+  logout: () => Promise<void>;
   getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getFullUser: () => Promise<Result<CorbadoUser, NonRecoverableError>>;

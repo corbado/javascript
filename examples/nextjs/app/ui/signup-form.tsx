@@ -11,7 +11,7 @@ export default function SignupForm() {
   };
 
   const navigateToLogin = () => {
-    router.push('/login');
+    router.push('/login#login-init');
   };
 
   return (

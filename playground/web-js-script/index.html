@@ -27,15 +27,7 @@
         <div id="passkey-list"></div>
       </div>
     </div>
-    <div id="fallback-ui">
-      <p>This is the fallback UI. You should not see this unless you are not logged in.</p>
-      <button
-        id="login"
-        style="margin: 2rem 0.2rem"
-      >
-        Login
-      </button>
-    </div>
+    <div id="corbado-auth"></div>
 
     <script type="module">
       import { jwtDecode } from 'https://unpkg.com/jwt-decode@4.0.0/build/esm/index.js';
@@ -44,19 +36,23 @@
         ? 'pro-1743528526530787479'
         : 'pro-3652881945085154854';
 
-      Corbado.load({
+      await Corbado.load({
         projectId: projectID,
+        darkMode: 'off',
       });
 
       if (!Corbado.user) {
         const corbadoAppElement = document.getElementById('corbado-app');
         corbadoAppElement.style.display = 'none';
-        const corbadoAuthElement = document.getElementById('login');
-        corbadoAuthElement.onclick = () => {
-          window.location.href = '/auth.html';
-        };
+
+        const authElement = document.getElementById('corbado-auth');
+        Corbado.mountAuthUI(authElement, {
+          onLoggedIn: () => {
+            window.location.reload();
+          },
+        });
       } else {
-        const fallbackUI = document.getElementById('fallback-ui');
+        const fallbackUI = document.getElementById('corbado-auth');
         fallbackUI.style.display = 'none';
 
         const header = document.getElementById('header');
@@ -68,9 +64,9 @@
         shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
 
         const logoutButton = document.getElementById('logout');
-        logoutButton.addEventListener('click', () => {
-          Corbado.logout();
-          window.location.href = '/auth.html';
+        logoutButton.addEventListener('click', async () => {
+          await Corbado.logout();
+          window.location.reload();
         });
 
         const passkeyList = document.getElementById('passkey-list');

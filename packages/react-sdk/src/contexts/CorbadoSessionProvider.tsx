@@ -29,7 +29,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   }, [corbadoApp]);
 
   const logout = useCallback(() => {
-    return void corbadoApp.sessionService.logout();
+    return corbadoApp.sessionService.logout();
   }, [corbadoApp]);
 
   const deletePasskey = useCallback(

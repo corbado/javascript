@@ -27,8 +27,8 @@ if (!Corbado.user) {
   shortSession.innerHTML = `<pre>${serializedDecodedShortSession}</pre>`;
 
   const logoutButton = document.getElementById('logout');
-  logoutButton.addEventListener('click', () => {
-    Corbado.logout();
+  logoutButton.addEventListener('click', async () => {
+    await Corbado.logout();
     window.location.href = '/auth.html';
   });
 

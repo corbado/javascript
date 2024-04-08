@@ -9,11 +9,12 @@ const demoHtml = `
 <div id="demo" class='flex gap-2 justify-items-center flex-col px-2'></div>
 `;
 
-export function insertDemo(initialCorbadoApp) {
+export async function insertDemo(initialCorbadoApp) {
   let corbadoApp = initialCorbadoApp;
-  let darkMode = 'auto';
-  let theme = '';
-  let translations = defaultEnglishTranslations;
+  let darkMode = localStorage.getItem('darkMode') || 'auto';
+  let theme = localStorage.getItem('theme') || '';
+  const useCustomTranslations = localStorage.getItem('translations') === 'custom';
+  let translations = useCustomTranslations ? customEnglishTranslations : defaultEnglishTranslations;
   document.getElementById('right-section').innerHTML = demoHtml;
 
   const initializeCorbado = async () => {
@@ -30,20 +31,23 @@ export function insertDemo(initialCorbadoApp) {
     insertDemoComponent(corbadoApp);
   };
 
-  insertDemoComponent(corbadoApp);
+  await initializeCorbado();
 
-  insertDarkModeOptions(async value => {
+  insertDarkModeOptions(darkMode, async value => {
     darkMode = value;
+    localStorage.setItem('darkMode', darkMode);
     await initializeCorbado();
   });
 
-  insertThemeOptions(async value => {
+  insertThemeOptions(theme, async value => {
     theme = value;
+    localStorage.setItem('theme', theme);
     await initializeCorbado();
   });
 
-  insertTranslationOptions(async state => {
+  insertTranslationOptions(useCustomTranslations, async state => {
     translations = state ? customEnglishTranslations : defaultEnglishTranslations;
+    localStorage.setItem('translations', state ? 'custom' : 'default');
     await initializeCorbado();
   });
 }

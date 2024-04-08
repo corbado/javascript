@@ -67,7 +67,7 @@ export default function Page() {
             and integrate it with Next.js for a seamless user experience.
           </p>
           <Link
-            href='/login'
+            href='/login#login-init'
             className='flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base'
           >
             <span>Go to Application</span> <ArrowRightIcon className='w-5 md:w-6' />
@@ -76,13 +76,9 @@ export default function Page() {
         <div className='flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12'>
           <Suspense
             fallback={
-              <Image
-                src='/flow-diagram.png'
-                width={1000}
-                height={760}
-                className='md:block'
-                alt='Corbado Flow Diagram'
-              />
+              <div className='flex items-center justify-center w-10 h-10'>
+                <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500'></div>
+              </div>
             }
           >
             <RightIntroSection />

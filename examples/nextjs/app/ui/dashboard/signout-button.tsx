@@ -9,8 +9,8 @@ export default function SignoutButton() {
   const { push } = useRouter();
 
   const handleSignout = async () => {
-    logout();
-    push('/');
+    await logout();
+    push('/#login-init');
   };
 
   return (

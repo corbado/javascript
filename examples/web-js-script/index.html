@@ -13,7 +13,7 @@
     <title>Corbado's WebJS (script) App</title>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/@corbado/web-js@1.0.3/dist/bundle/index.css"
+      href="https://unpkg.com/@corbado/web-js@2.4.0-alpha.0/dist/bundle/index.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,6 +37,10 @@
       type="text/tailwindcss"
       rel="stylesheet"
       href="./style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./assets/index.css"
     />
     <link
       rel="stylesheet"
@@ -68,7 +72,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="./assets/prism.js"></script>
-    <script src="https://unpkg.com/@corbado/web-js@1.0.3/dist/bundle/index.js"></script>
+    <script src="https://unpkg.com/@corbado/web-js@2.4.0-alpha.0/dist/bundle/index.js"></script>
 
     <script type="module">
       import { insertHeader, insertGuide, insertDemo } from './components/index.js';
@@ -81,9 +85,9 @@
         projectId: projectID,
       });
 
-      insertHeader(!!Corbado.isAuthenticated, Corbado.user);
-      insertGuide(!!Corbado.isAuthenticated);
-      insertDemo(Corbado);
+      insertHeader(Corbado.isAuthenticated, Corbado.user);
+      insertGuide(Corbado.isAuthenticated);
+      await insertDemo(Corbado);
       Prism.highlightAll();
     </script>
   </body>

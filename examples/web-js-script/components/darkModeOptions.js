@@ -30,7 +30,7 @@ const updateRadioButtons = value => {
   }
 };
 
-export function insertDarkModeOptions(onDarkModeChange) {
+export function insertDarkModeOptions(initialValue, onDarkModeChange) {
   const demoComponent = document.getElementById('demo');
   const optionsElement = demoComponent.appendChild(document.createElement('div'));
   optionsElement.setAttribute('class', 'flex mt-8 flex-col gap-2');
@@ -46,7 +46,7 @@ export function insertDarkModeOptions(onDarkModeChange) {
       updateRadioButtons('auto');
     },
     'Auto',
-    true,
+    initialValue === 'auto',
   );
 
   insertRadioButton(
@@ -57,6 +57,7 @@ export function insertDarkModeOptions(onDarkModeChange) {
       updateRadioButtons('on');
     },
     'On',
+    initialValue === 'on',
   );
 
   insertRadioButton(
@@ -67,5 +68,6 @@ export function insertDarkModeOptions(onDarkModeChange) {
       updateRadioButtons('off');
     },
     'Off',
+    initialValue === 'off',
   );
 }

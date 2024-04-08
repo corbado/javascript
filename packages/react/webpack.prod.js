@@ -15,7 +15,6 @@ module.exports = merge(common, {
     },
   },
   externals: {
-    '@corbado/react-sdk': '@corbado/react-sdk',
     '@corbado/shared-ui': '@corbado/shared-ui',
     react: 'react',
     i18next: 'i18next',

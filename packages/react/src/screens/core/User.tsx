@@ -1,10 +1,10 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { CorbadoUser, Identifier } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { InputField, LoadingSpinner, PasskeyListErrorBoundary, PhoneInputField, Text } from '../../components';
+import { useCorbado } from '../../hooks/useCorbado';
 
 interface ProcessedUser {
   name: string;

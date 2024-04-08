@@ -2,14 +2,22 @@ import type { CorbadoAppParams, SessionUser } from '@corbado/types';
 import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 
-import { CorbadoSessionProvider } from './CorbadoSessionProvider';
+import { CorbadoSessionContext } from './CorbadoSessionContext';
 
-export type CorbadoProviderParams = PropsWithChildren<CorbadoAppParams & { corbadoAppInstance?: CorbadoApp }>;
+type CorbadoSessionProviderParams = PropsWithChildren<{
+  corbadoAppInstance?: CorbadoApp;
+  corbadoAppParams: CorbadoAppParams;
+}>;
 
-export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAppInstance, ...corbadoParams }) => {
-  const [corbadoApp] = useState(() => corbadoAppInstance ?? new CorbadoApp(corbadoParams));
+export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
+  children,
+  corbadoAppInstance,
+  corbadoAppParams,
+}) => {
+  const [corbadoApp] = useState(() => corbadoAppInstance ?? new CorbadoApp(corbadoAppParams));
   const [globalError, setGlobalError] = useState<NonRecoverableError | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<SessionUser | undefined>();
@@ -49,16 +57,41 @@ export const CorbadoProvider: FC<CorbadoProviderParams> = ({ children, corbadoAp
     };
   }, []);
 
+  const getPasskeys = useCallback(() => {
+    return corbadoApp.sessionService.passkeyList();
+  }, [corbadoApp]);
+
+  const logout = useCallback(() => {
+    return void corbadoApp.sessionService.logout();
+  }, [corbadoApp]);
+
+  const deletePasskey = useCallback(
+    (id: string) => {
+      return corbadoApp.sessionService.passkeyDelete(id);
+    },
+    [corbadoApp],
+  );
+
+  const getFullUser = useCallback(() => {
+    return corbadoApp?.sessionService.getFullUser();
+  }, [corbadoApp]);
+
   return (
-    <CorbadoSessionProvider
-      loading={loading}
-      user={user}
-      isAuthenticated={isAuthenticated}
-      shortSession={shortSession}
-      corbadoApp={corbadoApp}
-      globalError={globalError}
+    <CorbadoSessionContext.Provider
+      value={{
+        corbadoApp,
+        shortSession,
+        loading,
+        user,
+        isAuthenticated,
+        getFullUser,
+        getPasskeys,
+        deletePasskey,
+        logout,
+        globalError,
+      }}
     >
       {children}
-    </CorbadoSessionProvider>
+    </CorbadoSessionContext.Provider>
   );
 };

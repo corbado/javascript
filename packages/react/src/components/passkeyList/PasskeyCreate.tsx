@@ -1,9 +1,9 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { CorbadoError } from '@corbado/web-core';
 import type { FC } from 'react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useCorbado } from '../../hooks/useCorbado';
 import { PrimaryButton } from '../ui/buttons/PrimaryButton';
 import { Dialog } from '../ui/Dialog';
 

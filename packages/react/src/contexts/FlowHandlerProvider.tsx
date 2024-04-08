@@ -1,10 +1,10 @@
-import { useCorbado } from '@corbado/react-sdk';
 import type { AuthType, ScreenWithBlock } from '@corbado/shared-ui';
 import { InitState, ProcessHandler } from '@corbado/shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useCorbado } from '../hooks/useCorbado';
 import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 

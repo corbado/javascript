@@ -31,7 +31,7 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.loadAuth();
 
     await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, true);
-    
+
     // condition UI is prompted on page load, not on textbox click
     await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByText('Log in').click());
     await loginFlow.checkLandedOnScreen(ScreenNames.End);

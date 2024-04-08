@@ -37,7 +37,7 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await expect(page.getByText("Couldn't find your account.")).toBeVisible();
   });
 
-  test.skip('switch to Signup flow', async ({ loginFlow, page }) => {
+  test('switch to Signup flow', async ({ loginFlow, page }) => {
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 

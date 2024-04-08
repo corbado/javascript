@@ -2,7 +2,7 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with email OTP proper user behavior', () => {
-  test.skip('with no passkey support', async ({ loginFlow, page }) => {
+  test('with no passkey support', async ({ loginFlow, page }) => {
     let [, email] = await loginFlow.createAccount(
       [IdentifierType.Email],
       [IdentifierVerification.EmailOtp],

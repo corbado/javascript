@@ -282,6 +282,9 @@ export class SessionService {
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
 
     if (this.#isPreviewMode) {

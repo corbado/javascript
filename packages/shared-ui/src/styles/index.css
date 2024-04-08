@@ -529,6 +529,7 @@
   font-family: var(--cb-secondary-font);
   padding: 0;
   overflow: hidden;
+  width: 100%;
 }
 
 .cb-otp-input-container {

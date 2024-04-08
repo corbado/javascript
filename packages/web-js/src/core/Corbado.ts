@@ -1,4 +1,4 @@
-import { CorbadoAuth, Login, PasskeyList, SignUp } from '@corbado/react';
+import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
 import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
@@ -71,6 +71,14 @@ export class Corbado {
   }
 
   unmountPasskeyListUI(element: HTMLElement) {
+    this.#unmountComponent(element);
+  }
+
+  mountUserUI(element: HTMLElement) {
+    this.#mountComponent(element, User, {});
+  }
+
+  unmountUserUI(element: HTMLElement) {
     this.#unmountComponent(element);
   }
 

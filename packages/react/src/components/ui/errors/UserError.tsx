@@ -5,9 +5,10 @@ import { ExclamationIcon } from '../icons/ExclamationIcon';
 
 type Props = {
   customerSupportEmail?: string;
+  error: string;
 };
-export const UserError = ({ customerSupportEmail }: Props) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'errors.unexpectedError' });
+export const UserError = ({ error, customerSupportEmail }: Props) => {
+  const { t } = useTranslation('translation', { keyPrefix: `errors.${error ? error : 'unexpectedError'}` });
 
   return (
     <div className='cb-error-popup'>

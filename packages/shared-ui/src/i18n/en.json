@@ -278,6 +278,10 @@
     "identifier_not_allowed": "Couldn't find your account",
     "login_identifier_unknown_user": "Couldn't find your account.",
     "invalid_conditional_ui_login": "The provided passkey is no longer valid. Please enter your identifier (e.g. email) manually.",
+    "no_fallback_available": {
+      "withCustomerSupport": "This app requires passkey authentication. Please use a compatible device.",
+      "noCustomerSupport": "This app requires passkey authentication. Please use a compatible device."
+    },
     "invalidName": "Please enter a valid email",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use. If this account is yours, please log in instead.",

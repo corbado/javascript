@@ -598,6 +598,10 @@ components:
         passkeyAppendInterval:
           type: string
           enum: [ 'not_specified', '0d', '1d', '3d', '1w', '3w', '1m', '3m' ]
+        socialProviders:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialProvider'
 
     updateComponentConfigRsp:
       type: object
@@ -802,7 +806,7 @@ components:
         - authType
       properties:
         providerType:
-          $ref: '#/components/schemas/socialProviderType'
+          $ref: 'common.yml#/components/schemas/socialProviderType'
         redirectUrl:
           type: string
         authType:
@@ -1024,10 +1028,6 @@ components:
       type: string
       enum: [ email, phone, username ]
 
-    socialProviderType:
-      type: string
-      enum: [ google, github, microsoft ]
-
     blockType:
       type: string
       enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed ]
@@ -1063,7 +1063,7 @@ components:
         - isPhoneAvailable
         - isEmailAvailable
         - isUsernameAvailable
-        - socialProviders
+        - socialData
       properties:
         conditionalUIChallenge:
           type: string
@@ -1201,16 +1201,16 @@ components:
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     socialData:
       type: object
@@ -1221,11 +1221,38 @@ components:
         providers:
           type: array
           items:
-            $ref: '#/components/schemas/socialProviderType'
+            $ref: 'common.yml#/components/schemas/socialProviderType'
         status:
           type: string
           enum: [ 'initial', 'started', 'finished' ]
         oauthUrl:
+          type: string
+        error:
+          $ref: '#/components/schemas/requestError'
+
+    socialProvider:
+      type: object
+      required:
+        - providerType
+        - enabled
+        - useOwnAccount
+        - scopes
+      properties:
+        providerType:
+          $ref: 'common.yml#/components/schemas/socialProviderType'
+        enabled:
+          type: boolean
+        useOwnAccount:
+          type: boolean
+        scopes:
+          type: array
+          items:
+            type: string
+        clientID:
+          type: string
+        clientSecret:
+          type: string
+        redirectURI:
           type: string
 
     requestError:

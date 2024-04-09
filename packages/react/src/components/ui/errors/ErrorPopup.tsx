@@ -9,8 +9,13 @@ type Props = {
   customerSupportEmail?: string;
 };
 
-const ErrorPopup = ({ customerSupportEmail }: Props) => {
-  return <UserError customerSupportEmail={customerSupportEmail} />;
+const ErrorPopup = ({ customerSupportEmail, error }: Props) => {
+  return (
+    <UserError
+      customerSupportEmail={customerSupportEmail}
+      error={error}
+    />
+  );
 };
 
 export default ErrorPopup;

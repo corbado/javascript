@@ -1,3 +1,5 @@
+import type { CorbadoError } from '@corbado/web-core';
+
 import type { Block } from './blocks';
 import type { ContinueOnOtherEnvReasons, LoginIdentifierType, ScreenNames } from './constants';
 
@@ -75,6 +77,7 @@ export type SocialData = {
   oAuthUrl?: string;
   started: boolean;
   finished: boolean;
+  error?: CorbadoError;
 };
 
 export type TextFieldWithError = {

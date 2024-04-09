@@ -44,16 +44,11 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
         finished: data.socialData?.status === SocialDataStatusEnum.Finished || false,
       },
     };
-  }
 
-  async startSocialVerify(providerType: SocialProviderType) {
-    const redirectUrl = window.location.origin + window.location.pathname;
-    const res = await this.app.authProcessService.startSocialVerification(providerType, redirectUrl, AuthType.Login);
-    if (!res) {
-      return;
+    // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
+    if (data.socialData.error) {
+      this.setError(data.socialData.error);
     }
-
-    this.updateProcess(res);
   }
 
   async start(loginIdentifier: string, isPhone: boolean) {
@@ -85,7 +80,16 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     this.updateProcess(b);
   }
 
-  async finishSocialVerification(abortController: AbortController) {
+  async startSocialVerify(providerType: SocialProviderType) {
+    const redirectUrl = window.location.origin + window.location.pathname;
+    const res = await this.app.authProcessService.startSocialVerification(providerType, redirectUrl, AuthType.Login);
+    if (!res) {
+      return;
+    }
+
+    this.updateProcess(res);
+  }
+  async finishSocialVerify(abortController: AbortController) {
     const res = await this.app.authProcessService.finishSocialVerification(abortController);
     this.updateProcess(res);
   }

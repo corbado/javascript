@@ -27,8 +27,8 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   useEffect(() => {
     setLoading(false);
     const abortController = new AbortController();
-    if (block.data.socialData.finished) {
-      void block.finishSocialVerification(abortController);
+    if (block.data.socialData.finished && !block.error) {
+      void block.finishSocialVerify(abortController);
       return;
     }
 

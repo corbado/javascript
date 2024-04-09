@@ -184,7 +184,7 @@ export interface BlockBodyData {
      * @type {SocialData}
      * @memberof BlockBodyData
      */
-    'socialData'?: SocialData;
+    'socialData': SocialData;
     /**
      * 
      * @type {LoginIdentifierType}
@@ -360,7 +360,7 @@ export interface GeneralBlockLoginInit {
      * @type {SocialData}
      * @memberof GeneralBlockLoginInit
      */
-    'socialData'?: SocialData;
+    'socialData': SocialData;
     /**
      * 
      * @type {RequestError}
@@ -636,7 +636,7 @@ export interface LoginIdentifierConfig {
 export const LoginIdentifierConfigEnforceVerificationEnum = {
     None: 'none',
     Signup: 'signup',
-    BeforePasskeyLogin: 'before-passkey-login'
+    AtFirstLogin: 'at_first_login'
 } as const;
 
 export type LoginIdentifierConfigEnforceVerificationEnum = typeof LoginIdentifierConfigEnforceVerificationEnum[keyof typeof LoginIdentifierConfigEnforceVerificationEnum];
@@ -1255,6 +1255,12 @@ export interface SocialData {
      * @memberof SocialData
      */
     'oauthUrl'?: string;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof SocialData
+     */
+    'error'?: RequestError;
 }
 
 export const SocialDataStatusEnum = {
@@ -1268,13 +1274,64 @@ export type SocialDataStatusEnum = typeof SocialDataStatusEnum[keyof typeof Soci
 /**
  * 
  * @export
+ * @interface SocialProvider
+ */
+export interface SocialProvider {
+    /**
+     * 
+     * @type {SocialProviderType}
+     * @memberof SocialProvider
+     */
+    'providerType': SocialProviderType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SocialProvider
+     */
+    'enabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SocialProvider
+     */
+    'useOwnAccount': boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof SocialProvider
+     */
+    'scopes': Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialProvider
+     */
+    'clientID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialProvider
+     */
+    'clientSecret'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialProvider
+     */
+    'redirectURI'?: string;
+}
+
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
 export const SocialProviderType = {
     Google: 'google',
-    Github: 'github',
-    Microsoft: 'microsoft'
+    Microsoft: 'microsoft',
+    Github: 'github'
 } as const;
 
 export type SocialProviderType = typeof SocialProviderType[keyof typeof SocialProviderType];
@@ -1343,6 +1400,12 @@ export interface UpdateComponentConfigReq {
      * @memberof UpdateComponentConfigReq
      */
     'passkeyAppendInterval': UpdateComponentConfigReqPasskeyAppendIntervalEnum;
+    /**
+     * 
+     * @type {Array<SocialProvider>}
+     * @memberof UpdateComponentConfigReq
+     */
+    'socialProviders'?: Array<SocialProvider>;
 }
 
 export const UpdateComponentConfigReqPasskeyAppendIntervalEnum = {

@@ -10,7 +10,5 @@ test.describe('Signup with email OTP proper user behavior', () => {
     await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkNoPasskeyRegistered();
-
-    await signupFlow.checkPasskeyRegistered();
   });
 });

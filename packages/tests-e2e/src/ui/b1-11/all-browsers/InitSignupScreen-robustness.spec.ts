@@ -15,6 +15,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByRole('textbox', { name: 'username' })).toHaveValue(username);
 
     await page.getByRole('button', { name: 'Continue' }).click();
-    await expect(page.getByText('This app requires passkey authentication. Please use a compatible device.')).toBeVisible();
+    await expect(
+      page.getByText('This app requires passkey authentication. Please use a compatible device.'),
+    ).toBeVisible();
   });
 });

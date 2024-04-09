@@ -8,7 +8,7 @@ type Props = {
   error: string;
 };
 export const UserError = ({ error, customerSupportEmail }: Props) => {
-  const { t } = useTranslation('translation', { keyPrefix: `errors.${error ? error : 'unexpectedError'}` });
+  const { t } = useTranslation('translation', { keyPrefix: 'errors' });
 
   return (
     <div className='cb-error-popup'>
@@ -17,7 +17,11 @@ export const UserError = ({ error, customerSupportEmail }: Props) => {
       </div>
       <div>
         <p className='cb-error-popup-text'>
-          {customerSupportEmail ? t('withCustomerSupport', customerSupportEmail) : t('noCustomerSupport')}
+          {error
+            ? error
+            : customerSupportEmail
+              ? t('unexpectedError.withCustomerSupport', customerSupportEmail)
+              : t('unexpectedError.noCustomerSupport')}
         </p>
       </div>
     </div>

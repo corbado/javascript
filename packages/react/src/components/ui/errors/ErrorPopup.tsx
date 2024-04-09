@@ -1,4 +1,4 @@
-import { CorbadoError } from '@corbado/web-core';
+import type { CorbadoError } from '@corbado/web-core';
 import React from 'react';
 
 import { UserError } from './UserError';
@@ -9,11 +9,12 @@ type Props = {
   customerSupportEmail?: string;
 };
 
-const ErrorPopup = ({ customerSupportEmail }: Props) => {
+const ErrorPopup = ({ customerSupportEmail, error }: Props) => {
+  console.log(error);
   return (
     <UserError
       customerSupportEmail={customerSupportEmail}
-      error={CorbadoError.name}
+      error={error.translatedMessage}
     />
   );
 };

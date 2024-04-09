@@ -84,7 +84,9 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     const [, , phone] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill(phone);
-    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue(new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`));
+    await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue(
+      new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`),
+    );
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
     await expect(

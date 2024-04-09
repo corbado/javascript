@@ -37,11 +37,11 @@ export const EmailLinks: FC<EmailLinksProps> = ({ email: initialEmail, t, classN
         label: t('button_yahoo'),
         href: 'https://mail.yahoo.com/d/folders/1/messages/new?reason=U&filterBy=Inbox&filterIn=Inbox&sort=date&order=desc',
       };
-    } else if (email.includes('@outlook') || email.includes('@hotmail')) {
+    } else if (email.includes('@outlook') || email.includes('@hotmail') || email.includes('@live')) {
       iconButtonProps = {
         icon: <OutlookIcon />,
         label: t('button_outlook'),
-        href: 'https://outlook.live.com/mail/inbox',
+        href: 'https://outlook.office.com/mail/0/inbox',
       };
     } else if (email.includes('@icloud')) {
       iconButtonProps = {
@@ -65,5 +65,9 @@ export const EmailLinks: FC<EmailLinksProps> = ({ email: initialEmail, t, classN
     return null;
   }, [initialEmail]);
 
-  return emailButton ? <div className={`cb-email-links ${className ? ` ${className}` : ''}`}>{emailButton}</div> : null;
+  return emailButton ? (
+    <div className={`cb-email-links ${className ? ` ${className}` : ''}`}>{emailButton}</div>
+  ) : (
+    <div className='cb-phone-otp-input-container'></div>
+  );
 };

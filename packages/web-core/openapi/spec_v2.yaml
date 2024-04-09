@@ -951,6 +951,7 @@ components:
             - $ref: '#/components/schemas/generalBlockUsernameCollect'
             - $ref: '#/components/schemas/generalPhoneCollect'
             - $ref: '#/components/schemas/generalBlockLoginInit'
+            - $ref: '#/components/schemas/generalBlockPostSignupEmailVerify'
         alternatives:
           type: array
           items:
@@ -1000,7 +1001,7 @@ components:
 
     blockType:
       type: string
-      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed ]
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify ]
 
     authType:
       type: string
@@ -1115,6 +1116,12 @@ components:
             identifier:
               type: string
 
+    generalBlockPostSignupEmailVerify:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/requestError'
+
     clientInformation:
       type: object
       required:
@@ -1126,6 +1133,22 @@ components:
         clientEnvHandle:
           type: string
         canUsePasskeys:
+          type: boolean
+        javaScriptHighEntropy:
+          $ref: '#/components/schemas/javaScriptHighEntropy'
+
+    javaScriptHighEntropy:
+      type: object
+      required:
+        - platform
+        - platformVersion
+        - mobile
+      properties:
+        platform:
+          type: string
+        platformVersion:
+          type: string
+        mobile:
           type: boolean
 
     authenticationResponse:
@@ -1167,16 +1190,16 @@ components:
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     requestError:
       type: object

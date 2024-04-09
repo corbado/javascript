@@ -236,7 +236,8 @@ export const BlockType = {
     PhoneCollect: 'phone-collect',
     LoginInit: 'login-init',
     PasskeyVerify: 'passkey-verify',
-    ConditionalUiCompleted: 'conditional-ui-completed'
+    ConditionalUiCompleted: 'conditional-ui-completed',
+    PostSignupEmailVerify: 'post-signup-email-verify'
 } as const;
 
 export type BlockType = typeof BlockType[keyof typeof BlockType];
@@ -266,6 +267,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'canUsePasskeys': boolean;
+    /**
+     * 
+     * @type {JavaScriptHighEntropy}
+     * @memberof ClientInformation
+     */
+    'javaScriptHighEntropy'?: JavaScriptHighEntropy;
 }
 /**
  * 
@@ -401,6 +408,19 @@ export interface GeneralBlockPasskeyVerify {
      * @memberof GeneralBlockPasskeyVerify
      */
     'identifierValue': string;
+}
+/**
+ * 
+ * @export
+ * @interface GeneralBlockPostSignupEmailVerify
+ */
+export interface GeneralBlockPostSignupEmailVerify {
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof GeneralBlockPostSignupEmailVerify
+     */
+    'error'?: RequestError;
 }
 /**
  * 
@@ -562,6 +582,31 @@ export interface IdentifierVerifyStartReq {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface JavaScriptHighEntropy
+ */
+export interface JavaScriptHighEntropy {
+    /**
+     * 
+     * @type {string}
+     * @memberof JavaScriptHighEntropy
+     */
+    'platform': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JavaScriptHighEntropy
+     */
+    'platformVersion': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof JavaScriptHighEntropy
+     */
+    'mobile': boolean;
+}
 /**
  * 
  * @export

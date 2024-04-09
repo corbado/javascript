@@ -303,8 +303,16 @@
   font-weight: var(--cb-font-weight-normal);
 }
 
-.cb-error-icon {
-  width: 1.15rem;
+.cb-error-message-icon-container {
+  height: 1.3rem;
+}
+
+.cb-error-message-icon {
+  width: 1.2rem;
+}
+
+.cb-error-message-text {
+  line-height: 1.2;
 }
 
 .cb-error-popup {

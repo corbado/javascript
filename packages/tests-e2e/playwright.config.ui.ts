@@ -26,7 +26,6 @@ export default defineConfig({
       : undefined
     : undefined,
   // reporter: 'html',
-  // reporter: 'blob',
   reporter: [
     [
       'blob',

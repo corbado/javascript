@@ -712,6 +712,15 @@
   justify-content: space-around;
 }
 
+.cb-email-link {
+  justify-content: center;
+  width: 100%;
+}
+
+.cb-email-link img {
+  height: 1.25rem;
+}
+
 .cb-icon-button {
   display: flex;
   gap: 0.3rem;

@@ -27,7 +27,7 @@ export const EmailLinks: FC<EmailLinksProps> = ({ email: initialEmail, t, classN
 
     if (email.includes('@gmail') || email.includes('@googlemail')) {
       iconButtonProps = {
-        icon: <AppleIcon />,
+        icon: <GmailIcon />,
         label: t('button_gmail'),
         href: 'https://mail.google.com/mail/u/0/#search/from%3A%40corbado+in%3Aanywhere',
       };
@@ -45,7 +45,7 @@ export const EmailLinks: FC<EmailLinksProps> = ({ email: initialEmail, t, classN
       };
     } else if (email.includes('@icloud')) {
       iconButtonProps = {
-        icon: <GmailIcon />,
+        icon: <AppleIcon />,
         label: t('button_icloud'),
         //TODO: Update this link to the correct one for iCloud mail
         href: 'https://www.icloud.com/mail',

@@ -1,5 +1,5 @@
 import { type PasskeyAppendBlock } from '@corbado/shared-ui';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -21,11 +21,25 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const skipButtonText = useMemo(() => t('button_cancel'), [t]);
   const dividerLabel = useMemo(() => t('text_divider'), [t]);
 
-  const passkeyAppend = async () => {
+  const passkeyAppend = useCallback(async () => {
     setLoading(true);
     await block.passkeyAppend();
     setLoading(false);
-  };
+  }, [block]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        void passkeyAppend();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [passkeyAppend]);
 
   const showDivider = !block.data.canBeSkipped && block.data.availableFallbacks.length > 0;
 

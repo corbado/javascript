@@ -1,5 +1,5 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -26,15 +26,29 @@ export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
 
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
+  const passkeyLogin = useCallback(async () => {
+    setLoading(true);
+    await block.passkeyLogin();
+    setLoading(false);
+  }, [block]);
+
   useEffect(() => {
     setUserInfo(block.getFormattedPhoneNumber());
   }, [block]);
 
-  const passkeyLogin = async () => {
-    setLoading(true);
-    await block.passkeyLogin();
-    setLoading(false);
-  };
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        void passkeyLogin();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [passkeyLogin]);
 
   async function userInfoChange() {
     setLoading(true);

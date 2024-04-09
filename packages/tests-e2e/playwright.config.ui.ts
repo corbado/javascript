@@ -32,7 +32,7 @@ export default defineConfig({
       {
         // Saving all blobs to the same directory deletes every other blob in the directory
         // so we temporarily make a directory for each project (ref: run-all-projects.sh)
-        outputDir: `playwright-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
+        outputDir: `blob-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
         fileName: `report-${process.env.PLAYWRIGHT_PROJECT_NAME}.zip`,
       },
     ],
@@ -45,7 +45,7 @@ export default defineConfig({
     actionTimeout: 3000, // default: none
     navigationTimeout: 3000, // default: none
     baseURL: `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}`,
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
   projects: [

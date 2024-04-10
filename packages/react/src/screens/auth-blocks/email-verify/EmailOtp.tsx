@@ -126,7 +126,6 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
         {bodyDescriptionText}
       </Text>
       <OtpInputGroup
-        className='cb-email-otp-input-container'
         emittedOTP={handleOtpChange}
         loading={loading}
         error={block.data.translatedError}

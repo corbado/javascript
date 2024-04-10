@@ -278,6 +278,7 @@ export class ProcessHandler {
       case BlockType.PasskeyAppended:
         block = new PasskeyAppendedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
+      case BlockType.PostSignupEmailVerify:
       case BlockType.EmailVerify:
         block = EmailVerifyBlock.fromBackend(
           this.#corbadoApp,

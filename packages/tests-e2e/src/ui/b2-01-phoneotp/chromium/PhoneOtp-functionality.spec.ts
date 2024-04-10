@@ -19,7 +19,9 @@ test.describe('Login with phone OTP proper user behavior', () => {
 
     await page.getByRole('textbox', { name: 'phone' }).click();
     await page.getByRole('textbox', { name: 'phone' }).fill(phone);
-    await expect(page.getByRole('textbox', { name: 'phone' })).toHaveValue(new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`));
+    await expect(page.getByRole('textbox', { name: 'phone' })).toHaveValue(
+      new RegExp(`^(\\${phone.slice(0, 2)})?${phone.slice(2)}$`),
+    );
 
     await page.getByRole('button', { name: 'Continue' }).click();
     await loginFlow.checkLandedOnScreen(ScreenNames.PhoneOtpLogin, undefined, phone);

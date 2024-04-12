@@ -1,7 +1,6 @@
 import { SignUp } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
-import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const SignUpPage = () => {
   const navigate = useNavigate();

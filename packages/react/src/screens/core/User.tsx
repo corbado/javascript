@@ -95,7 +95,7 @@ export const User: FC = () => {
         {processUser.name && (
           <InputField
             className='cb-user-details-section-indentifier'
-            key={'user-entry-' + processUser.name}
+            key={`user-entry-${processUser.name}`}
             label={nameFieldLabel}
             value={processUser.name}
             disabled
@@ -104,7 +104,7 @@ export const User: FC = () => {
         {processUser.username && (
           <InputField
             className='cb-user-details-section-indentifier'
-            key={'user-entry-' + processUser.username}
+            key={`user-entry-${processUser.username}`}
             label={usernameFieldLabel}
             value={processUser.username}
             disabled
@@ -114,7 +114,7 @@ export const User: FC = () => {
           {processUser.emails.map((email, i) => (
             <div
               className='cb-user-details-section-indentifiers-list-item'
-              key={'user-details-email-' + email.value}
+              key={`user-details-email-${email.value}`}
             >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <InputField
@@ -146,7 +146,7 @@ export const User: FC = () => {
           {processUser.phoneNumbers.map((phone, i) => (
             <div
               className='cb-user-details-section-indentifiers-list-item'
-              key={'user-details-phone-' + phone.value}
+              key={`user-details-phone-${phone.value}`}
             >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <PhoneInputField

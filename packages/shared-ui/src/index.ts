@@ -1,5 +1,6 @@
 import './styles/index.css';
 
+import appleIcon from './assets/apple.svg';
 import cancelIcon from './assets/cancel.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
 import deleteIcon from './assets/delete.svg';
@@ -40,6 +41,7 @@ export type { BehaviorSubject } from 'rxjs';
 export const assets = {
   deleteIcon,
   passkeyDefaultIcon,
+  appleIcon,
   yahooIcon,
   gmailIcon,
   outlookIcon,

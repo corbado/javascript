@@ -36,9 +36,6 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   const bodyTitleText = useMemo(() => t('body_title'), [t]);
   const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
   const bodyResendText = useMemo(() => t('body_resend'), [t]);
-  const gmailLinkText = useMemo(() => t('button_gmail'), [t]);
-  const yahooLinkText = useMemo(() => t('button_yahoo'), [t]);
-  const outlookLinkText = useMemo(() => t('button_outlook'), [t]);
   const resendButtonText = useMemo(() => {
     if (remainingTime < 1) {
       if (resendTimer.current) {
@@ -163,9 +160,8 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
       </Text>
       <EmailLinks
         className='cb-email-link-buton-group'
-        gmailButtonLabel={gmailLinkText}
-        yahooButtonLabel={yahooLinkText}
-        outlookButtonLabel={outlookLinkText}
+        email={block.data.email}
+        t={t}
       />
       <Text fontFamilyVariant='secondary'>{bodyResendText}</Text>
       <PrimaryButton

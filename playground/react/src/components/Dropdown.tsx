@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useContext, useEffect, useRef, useState } from 'react';
+import SettingsContext from '../contexts/SettingsContext';
 
 const dropdownItems = [
-  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp!, label: 'Email OTP' },
-  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_EmailLink!, label: 'Email Link' },
+  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!, label: 'Manual Testing' },
+  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_Tests!, label: 'Tests' },
+  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_LocalDevelopment!, label: 'Local Development' },
 ];
 
 const Dropdown = () => {
-  const navigate = useNavigate();
-  const { projectId } = useParams<{ projectId: string }>();
+  const { projectId } = useContext(SettingsContext);
   const [isVisible, setIsVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -24,9 +24,7 @@ const Dropdown = () => {
   }, [dropdownRef]);
 
   const handleItemClick = (id: string) => {
-    if (projectId === id) return;
-
-    navigate(`/${id}/auth`);
+    window.location.pathname = `/${id}/auth`;
   };
 
   const toggleDropdown = () => setIsVisible(!isVisible);

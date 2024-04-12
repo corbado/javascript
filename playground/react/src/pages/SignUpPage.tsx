@@ -28,4 +28,4 @@ const SignUpPage = () => {
   );
 };
 
-export default withCorbadoProvider(SignUpPage);
+export default SignUpPage;

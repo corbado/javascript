@@ -543,7 +543,7 @@ function isProcessInitial(process: ProcessResponse): boolean {
         false,
       );
       const socialInProgress = process.blockBody.data.socialData.status !== SocialDataStatusEnum.Initial;
-      console.log('identifiersExist', identifiersExist, process.blockBody.data.identifiers);
+
       return !identifiersExist && !socialInProgress;
     }
     default:

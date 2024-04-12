@@ -1,5 +1,12 @@
 import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
-import type { AxiosHeaders, AxiosInstance, AxiosRequestConfig, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import type {
+  AxiosHeaders,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HeadersDefaults,
+  RawAxiosRequestHeaders,
+} from 'axios';
 import axios, { type AxiosError } from 'axios';
 import log from 'loglevel';
 import { BehaviorSubject } from 'rxjs';
@@ -14,7 +21,6 @@ import {
   CorbadoError,
   PasskeyAlreadyExistsError,
   type PasskeyDeleteError,
-  type PasskeyListError,
   PasskeysNotSupported,
 } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
@@ -148,11 +154,8 @@ export class SessionService {
     return this.#authStateChanges;
   }
 
-  public async getFullUser(): Promise<Result<CorbadoUser, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const resp = await this.#usersApi.currentUserGet();
-      return resp.data;
-    });
+  public async getFullUser(abortController: AbortController): Promise<Result<CorbadoUser, CorbadoError>> {
+    return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
   async appendPasskey(maybeAbortController?: AbortController): Promise<Result<void, CorbadoError | undefined>> {
@@ -202,11 +205,8 @@ export class SessionService {
     return Ok(void 0);
   }
 
-  async passkeyList(): Promise<Result<PassKeyList, PasskeyListError>> {
-    return Result.wrapAsync(async () => {
-      const resp = await this.#usersApi.currentUserPasskeyGet();
-      return resp.data;
-    });
+  async passkeyList(abortController: AbortController): Promise<Result<PassKeyList, CorbadoError>> {
+    return this.wrapWithErr(async () => this.#usersApi.currentUserPasskeyGet({ signal: abortController.signal }));
   }
 
   async passkeyDelete(id: string): Promise<Result<void, PasskeyDeleteError>> {
@@ -547,5 +547,18 @@ export class SessionService {
 
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+  }
+
+  async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
+    try {
+      const r = await callback();
+      return Ok(r.data);
+    } catch (e) {
+      if (e instanceof CorbadoError) {
+        return Err(e);
+      }
+
+      return Err(CorbadoError.fromUnknownFrontendError(e));
+    }
   }
 }

@@ -28,4 +28,4 @@ const LoginPage = () => {
   );
 };
 
-export default withCorbadoProvider(LoginPage);
+export default LoginPage;

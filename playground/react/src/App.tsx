@@ -1,12 +1,12 @@
 import './App.css';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 import RouteProvider from './routes';
 
 function App() {
   return (
-    <ThemeProvider>
+    <SettingsProvider>
       <RouteProvider />
-    </ThemeProvider>
+    </SettingsProvider>
   );
 }
 

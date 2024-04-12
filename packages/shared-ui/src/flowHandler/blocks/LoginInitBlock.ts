@@ -66,12 +66,15 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     return this.alternatives.filter(b => b.type === BlockTypes.SignupInit).length > 0;
   }
 
-  async continueWithConditionalUI() {
+  async continueWithConditionalUI(abortController: AbortController) {
     if (!this.data.conditionalUIChallenge) {
       return;
     }
 
-    const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
+    const b = await this.app.authProcessService.loginWithPasskeyChallenge(
+      this.data.conditionalUIChallenge,
+      abortController,
+    );
     if (b.err && b.val instanceof PasskeyChallengeCancelledError) {
       // we ignore this type of error
       return;

@@ -26,10 +26,13 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
-    const abortController = new AbortController();
+    const socialAbort = new AbortController();
     if (block.data.socialData.finished && !block.error) {
-      void block.finishSocialVerify(abortController);
-      return;
+      void block.finishSocialVerify(socialAbort);
+
+      return () => {
+        socialAbort.abort();
+      };
     }
 
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
@@ -44,10 +47,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
     }
 
-    void block.continueWithConditionalUI();
+    const conditionalUIAbort = new AbortController();
+    void block.continueWithConditionalUI(conditionalUIAbort);
 
     return () => {
-      abortController.abort();
+      conditionalUIAbort.abort();
     };
   }, [block]);
 

@@ -12,6 +12,7 @@ import type {
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
@@ -41,6 +42,24 @@ import { LoadingSpinner } from '../ui/LoadingSpinner';
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // this delays showing a loading screen for a very short period of time
+    // the idea is to reduce flickering when the loading screen is only shown for a very short time
+    if (initState !== InitState.Initializing || loading) {
+      setLoading(initState === InitState.Initializing);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setLoading(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [initState]);
 
   const screenComponent = useMemo(() => {
     if (!currentScreen) {
@@ -112,7 +131,7 @@ export const AuthFlow: FC = () => {
       return <ComponentUnavailableError />;
     }
 
-    if (initState === InitState.Initializing) {
+    if (loading) {
       return <LoadingSpinner className='cb-initital-loading-spinner' />;
     }
 

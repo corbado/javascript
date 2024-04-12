@@ -25,15 +25,13 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
-
-    const abortController = new AbortController();
-    if (block.data.socialData.finished) {
-      void block.finishSocialVerification(abortController);
-      return;
+    const socialAbort = new AbortController();
+    if (block.data.socialData.finished && !block.error) {
+      void block.finishSocialVerification(socialAbort);
     }
 
     return () => {
-      abortController.abort();
+      socialAbort.abort();
     };
   }, [block]);
 

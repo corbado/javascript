@@ -532,14 +532,14 @@ export class ProcessService {
 function isProcessInitial(process: ProcessResponse): boolean {
   switch (process.blockBody.block) {
     case BlockType.LoginInit: {
-      const identifiersExist = process.blockBody.data.identifierValue.length === 0;
+      const identifiersExist = process.blockBody.data.identifierValue.length > 0;
       const socialInProgress = process.blockBody.data.socialData.status !== SocialDataStatusEnum.Initial;
 
       return !identifiersExist && !socialInProgress;
     }
     case BlockType.SignupInit: {
       const identifiersExist = process.blockBody.data.identifiers.reduce(
-        (acc, curr) => acc || curr.identifier.length === 0,
+        (acc, curr) => acc || curr.identifier.length > 0,
         false,
       );
       const socialInProgress = process.blockBody.data.socialData.status !== SocialDataStatusEnum.Initial;

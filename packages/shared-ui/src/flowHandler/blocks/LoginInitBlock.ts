@@ -36,7 +36,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       conditionalUIChallenge: data.conditionalUIChallenge,
       socialData: {
         providers:
-          data.socialData?.providers.map(provider => {
+          data.socialData?.providers?.map(provider => {
             return { name: provider };
           }) || [],
         oAuthUrl: data.socialData?.oauthUrl,
@@ -46,7 +46,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     };
 
     // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
-    if (data.socialData.error) {
+    if (data.socialData?.error) {
       this.setError(data.socialData.error);
     }
   }

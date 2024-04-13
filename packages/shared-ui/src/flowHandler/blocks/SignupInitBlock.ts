@@ -68,7 +68,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
       userName: userName,
       socialData: {
         providers:
-          data.socialData?.providers.map(provider => {
+          data.socialData?.providers?.map(provider => {
             return { name: provider };
           }) || [],
         oAuthUrl: data.socialData?.oauthUrl,

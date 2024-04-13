@@ -533,7 +533,7 @@ function isProcessInitial(process: ProcessResponse): boolean {
   switch (process.blockBody.block) {
     case BlockType.LoginInit: {
       const identifiersExist = process.blockBody.data.identifierValue.length > 0;
-      const socialInProgress = process.blockBody.data.socialData.status !== SocialDataStatusEnum.Initial;
+      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
 
       return !identifiersExist && !socialInProgress;
     }
@@ -542,7 +542,7 @@ function isProcessInitial(process: ProcessResponse): boolean {
         (acc, curr) => acc || curr.identifier.length > 0,
         false,
       );
-      const socialInProgress = process.blockBody.data.socialData.status !== SocialDataStatusEnum.Initial;
+      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
 
       return !identifiersExist && !socialInProgress;
     }

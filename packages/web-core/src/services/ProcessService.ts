@@ -228,6 +228,7 @@ export class ProcessService {
         bluetoothAvailable: false,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
+        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
       },
       passkeyAppendShown: passkeyAppendShown ?? undefined,
       preferredBlock: frontendPreferredBlockType,

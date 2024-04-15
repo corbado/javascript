@@ -20,7 +20,7 @@ export const AuthButtons = () => {
       </button>
       <button
         className='primary-auth-button'
-        onClick={() => navigate(`/${projectId}/login`)}
+        onClick={() => navigate(`/${projectId}/login#login-init`)}
       >
         Login Page
       </button>

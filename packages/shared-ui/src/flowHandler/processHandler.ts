@@ -19,7 +19,7 @@ import {
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
 import { SocialVerifyBlock } from './blocks/SocialVerifyBlock';
-import type { BlockTypes, ScreenNames } from './constants';
+import { type BlockTypes, initScreenBlocks, type ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
@@ -87,7 +87,7 @@ export class ProcessHandler {
       return res;
     }
 
-    this.handleProcessUpdateBackend(res.val);
+    this.handleProcessUpdateBackend(res.val, undefined, true);
 
     return Ok(void 0);
   }
@@ -128,6 +128,11 @@ export class ProcessHandler {
       return;
     }
 
+    if (initScreenBlocks.includes(currentBlock.type)) {
+      history.back();
+      return;
+    }
+
     // in login processes we don't want to ask for abort (we auto-confirm it)
     if (currentBlock.authType === AuthType.Login) {
       void currentBlock.confirmAbort();
@@ -142,7 +147,7 @@ export class ProcessHandler {
       currentBlock,
     );
 
-    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives]);
+    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives], false);
   }
 
   dispose() {
@@ -190,7 +195,7 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newBlock);
   }
 
-  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError) {
+  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError, forcePush = false) {
     const newPrimaryBlock = this.#parseBlockData(processResponse.blockBody, processResponse.common);
 
     if (error) {
@@ -202,14 +207,18 @@ export class ProcessHandler {
     newPrimaryBlock.setAlternatives(alternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock);
+    this.#updatePrimaryBlock(newPrimaryBlock, true, forcePush);
   }
 
-  handleProcessUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
+  handleProcessUpdateFrontend(
+    newPrimaryBlock: Block<unknown>,
+    newAlternatives: Block<unknown>[] = [],
+    shouldUpdateUrl = true,
+  ) {
     newPrimaryBlock.setAlternatives(newAlternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock);
+    this.#updatePrimaryBlock(newPrimaryBlock, shouldUpdateUrl);
   }
 
   // @todo: make sure that this error is shown as a message on the first screen
@@ -226,7 +235,7 @@ export class ProcessHandler {
     return;
   }
 
-  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
+  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>, shouldUpdateUrl = true, forcePush = false) => {
     // if process has been completed, we don't want to update the screen anymore
     if (newPrimaryBlock instanceof CompletedBlock) {
       this.onProcessCompleted(newPrimaryBlock.data);
@@ -248,8 +257,8 @@ export class ProcessHandler {
       }),
     );
 
-    if (blockHasChanged) {
-      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type);
+    if (blockHasChanged && shouldUpdateUrl) {
+      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type, forcePush);
     }
   };
 

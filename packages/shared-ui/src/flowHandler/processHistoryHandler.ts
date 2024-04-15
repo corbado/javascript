@@ -33,7 +33,6 @@ export class ProcessHistoryHandler {
 
     const currentLocationHash = this.#getCurrentLocationHash();
     if (currentLocationHash) {
-      console.log('currentLocationHash', currentLocationHash);
       // we define those two overrides because they are more intuitive than the hash values
       if (currentLocationHash === 'register') {
         return BlockTypes.SignupInit;
@@ -49,7 +48,7 @@ export class ProcessHistoryHandler {
     return null;
   }
 
-  registerBlockChange(blockType: BlockTypes) {
+  registerBlockChange(blockType: BlockTypes, forcePush = false) {
     if (!this.#enabled) {
       return;
     }
@@ -59,7 +58,11 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    window.location.hash = blockType;
+    if (location.hash && !forcePush) {
+      history.replaceState(null, '', `#${blockType}`);
+    } else {
+      history.pushState(null, '', `#${blockType}`);
+    }
   }
 
   dispose() {

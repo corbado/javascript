@@ -5,9 +5,10 @@ import { ExclamationIcon } from '../icons/ExclamationIcon';
 
 type Props = {
   customerSupportEmail?: string;
+  error: string;
 };
-export const UserError = ({ customerSupportEmail }: Props) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'errors.unexpectedError' });
+export const UserError = ({ error, customerSupportEmail }: Props) => {
+  const { t } = useTranslation('translation', { keyPrefix: 'errors' });
 
   return (
     <div className='cb-error-popup'>
@@ -16,7 +17,11 @@ export const UserError = ({ customerSupportEmail }: Props) => {
       </div>
       <div>
         <p className='cb-error-popup-text'>
-          {customerSupportEmail ? t('withCustomerSupport', customerSupportEmail) : t('noCustomerSupport')}
+          {error
+            ? error
+            : customerSupportEmail
+              ? t('unexpectedError.withCustomerSupport', customerSupportEmail)
+              : t('unexpectedError.noCustomerSupport')}
         </p>
       </div>
     </div>

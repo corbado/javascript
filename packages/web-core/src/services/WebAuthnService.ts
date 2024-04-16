@@ -2,6 +2,7 @@
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
+import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
@@ -95,7 +96,7 @@ export class WebAuthnService {
       const mobile = ua.mobile;
       const platformVersion = ua.platformVersion;
 
-      if (!platform || !mobile || !platformVersion) {
+      if (!platform || mobile === undefined || !platformVersion) {
         return;
       }
 

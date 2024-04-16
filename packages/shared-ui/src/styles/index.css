@@ -150,19 +150,6 @@
   border: 1px solid var(--cb-error-text-color);
 }
 
-/* copied over from old styles to fight strange autofill color change on Windows */
-.cb-input:-webkit-autofill,
-.cb-input:-webkit-autofill:hover,
-.cb-input:-webkit-autofill:focus,
-.cb-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset !important;
-  box-shadow: 0 0 0 1000px var(--cb-white) inset;
-}
-
-.cb-input:-webkit-autofill {
-  -webkit-text-fill-color: var(--cb-input-color) !important;
-}
-
 .cb-phone-input-field {
   display: flex;
   flex-direction: row;
@@ -289,6 +276,18 @@
 
 .cb-phone-input-field-search:focus {
   outline: none;
+}
+
+.cb-input:-webkit-autofill,
+.cb-input:-webkit-autofill:hover,
+.cb-input:-webkit-autofill:focus,
+.cb-input:-webkit-autofill:active,
+.cb-phone-input-field-input:-webkit-autofill,
+.cb-phone-input-field-input:-webkit-autofill:hover,
+.cb-phone-input-field-input:-webkit-autofill:focus,
+.cb-phone-input-field-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset;
+  -webkit-text-fill-color: var(--cb-text-primary-color);
 }
 
 .cb-error-message {

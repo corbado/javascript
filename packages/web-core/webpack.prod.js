@@ -13,7 +13,7 @@ module.exports = merge(common, {
   mode: 'production',
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.FE_LIBRARY_VERSION': JSON.stringify(pkg.version)
-    })
-  ]
+      'process.env.FE_LIBRARY_VERSION': JSON.stringify(pkg.version),
+    }),
+  ],
 });

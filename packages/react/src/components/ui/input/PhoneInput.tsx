@@ -145,7 +145,9 @@ export const PhoneInput: FC<PhoneInputProps> = ({
 
   return (
     <div
-      className={`cb-phone-input-field${hasError ? ' cb-input-error' : ''}${disabled ? ' cb-phone-input-field-disabled' : ''}${className ? ` ${className}` : ''}`}
+      className={`cb-phone-input-field${hasError ? ' cb-input-error' : ''}${
+        disabled ? ' cb-phone-input-field-disabled' : ''
+      }${className ? ` ${className}` : ''}`}
     >
       <button
         type='button'
@@ -195,7 +197,9 @@ export const PhoneInput: FC<PhoneInputProps> = ({
             return (
               <div
                 key={option}
-                className={`cb-phone-input-field-selection-item${option === selectedCountry ? ' cb-phone-input-field-selection-item-selected' : ''}`}
+                className={`cb-phone-input-field-selection-item${
+                  option === selectedCountry ? ' cb-phone-input-field-selection-item-selected' : ''
+                }`}
                 onClick={() => handleCountryChange(option)}
               >
                 {Flag && <Flag title={option} />}

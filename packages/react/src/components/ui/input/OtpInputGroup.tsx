@@ -38,9 +38,29 @@ export const OtpInputGroup: FC<OtpInputGroupProps> = memo(
       [emittedOTP],
     );
 
+    const updateOtpFromPaste = useCallback(
+      (pastedOtp: string) => {
+        const pasteData = pastedOtp.slice(0, 6).split('');
+
+        if (pasteData.every(d => numberRegex.test(d))) {
+          updateOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
+          inputRefs.current[pasteData.length - 1].focus();
+        }
+      },
+      [updateOtp],
+    );
+
     const handleOtpChange = useCallback(
       (element: HTMLInputElement, index: number) => {
         const value = element.value;
+
+        if (value.length > 1) {
+          element.value = '';
+          updateOtpFromPaste(value);
+
+          return;
+        }
+
         if (notANumberRegex.test(value)) {
           return;
         }
@@ -103,12 +123,9 @@ export const OtpInputGroup: FC<OtpInputGroupProps> = memo(
       (e: React.ClipboardEvent<HTMLInputElement>) => {
         e.preventDefault();
 
-        const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
+        const pasteData = e.clipboardData.getData('text/plain');
 
-        if (pasteData.every(d => numberRegex.test(d))) {
-          updateOtp(pasteData.concat(new Array(6 - pasteData.length).fill('')));
-          inputRefs.current[pasteData.length - 1].focus();
-        }
+        updateOtpFromPaste(pasteData);
       },
       [updateOtp],
     );

@@ -87,7 +87,8 @@
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
         "button_gmail": "Open in Gmail",
         "button_outlook": "Open in Outlook",
-        "button_yahoo": "Open in Yahoo"
+        "button_yahoo": "Open in Yahoo",
+        "button_icloud": "Open in iCloud"
       },
       "email-link-sent": {
         "header": "Check your inbox to create your account",
@@ -98,7 +99,8 @@
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
         "button_gmail": "Open in Gmail",
         "button_outlook": "Open in Outlook",
-        "button_yahoo": "Open in Yahoo"
+        "button_yahoo": "Open in Yahoo",
+        "button_icloud": "Open in iCloud"
       },
       "email-link-verification": {
         "header": "Signing up...",
@@ -207,7 +209,8 @@
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
         "button_gmail": "Open in Gmail",
         "button_outlook": "Open in Outlook",
-        "button_yahoo": "Open in Yahoo"
+        "button_yahoo": "Open in Yahoo",
+        "button_icloud": "Open in iCloud"
       },
       "email-link-sent": {
         "header": "Check your inbox to log in",
@@ -218,7 +221,8 @@
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
         "button_gmail": "Open in Gmail",
         "button_outlook": "Open in Outlook",
-        "button_yahoo": "Open in Yahoo"
+        "button_yahoo": "Open in Yahoo",
+        "button_icloud": "Open in iCloud"
       },
       "email-link-verification": {
         "header": "Logging in...",
@@ -278,6 +282,7 @@
     "identifier_not_allowed": "Couldn't find your account",
     "login_identifier_unknown_user": "Couldn't find your account.",
     "invalid_conditional_ui_login": "The provided passkey is no longer valid. Please enter your identifier (e.g. email) manually.",
+    "no_fallback_available": "This app requires passkey authentication. Please use a compatible device.",
     "invalidName": "Please enter a valid email",
     "passkeyChallengeCancelled": "Passkey challenge cancelled",
     "userAlreadyExists": "Email address is already in use. If this account is yours, please log in instead.",

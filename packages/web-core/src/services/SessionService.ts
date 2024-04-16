@@ -1,3 +1,4 @@
+/// <reference types="user-agent-data-types" /> <- add this line
 import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
 import type {
   AxiosHeaders,
@@ -164,12 +165,14 @@ export class SessionService {
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+
     const clientHandle = WebAuthnService.getClientHandle();
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
       clientInformation: {
-        bluetoothAvailable: false,
+        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
+        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
       },
     });
 
@@ -196,9 +199,10 @@ export class SessionService {
     await this.#usersApi.currentUserPasskeyAppendFinish({
       attestationResponse: signedChallenge.val,
       clientInformation: {
-        bluetoothAvailable: false,
+        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
+        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
       },
     });
 

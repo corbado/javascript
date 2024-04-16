@@ -28,14 +28,6 @@ jobs:
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_NEXT_EXAMPLE }}
 
-      - name: Deploy React SDK example to Vercel
-        run: |
-          cd examples/react-sdk
-          npx vercel pull -t $VERCEL_TOKEN
-          url="$(npx vercel deploy --prod -t $VERCEL_TOKEN)"
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_SDK_EXAMPLE }}
-
       - name: Deploy React example to Vercel
         run: |
           cd examples/react

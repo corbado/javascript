@@ -150,19 +150,6 @@
   border: 1px solid var(--cb-error-text-color);
 }
 
-/* copied over from old styles to fight strange autofill color change on Windows */
-.cb-input:-webkit-autofill,
-.cb-input:-webkit-autofill:hover,
-.cb-input:-webkit-autofill:focus,
-.cb-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset !important;
-  box-shadow: 0 0 0 1000px var(--cb-white) inset;
-}
-
-.cb-input:-webkit-autofill {
-  -webkit-text-fill-color: var(--cb-input-color) !important;
-}
-
 .cb-phone-input-field {
   display: flex;
   flex-direction: row;
@@ -291,6 +278,18 @@
   outline: none;
 }
 
+.cb-input:-webkit-autofill,
+.cb-input:-webkit-autofill:hover,
+.cb-input:-webkit-autofill:focus,
+.cb-input:-webkit-autofill:active,
+.cb-phone-input-field-input:-webkit-autofill,
+.cb-phone-input-field-input:-webkit-autofill:hover,
+.cb-phone-input-field-input:-webkit-autofill:focus,
+.cb-phone-input-field-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset;
+  -webkit-text-fill-color: var(--cb-text-primary-color);
+}
+
 .cb-error-message {
   display: flex;
   gap: 0.1rem;
@@ -303,8 +302,16 @@
   font-weight: var(--cb-font-weight-normal);
 }
 
-.cb-error-icon {
-  width: 1.15rem;
+.cb-error-message-icon-container {
+  height: 1.3rem;
+}
+
+.cb-error-message-icon {
+  width: 1.2rem;
+}
+
+.cb-error-message-text {
+  line-height: 1.2;
 }
 
 .cb-error-popup {
@@ -710,6 +717,15 @@
   flex-direction: row;
   gap: 0.3rem;
   justify-content: space-around;
+}
+
+.cb-email-link {
+  justify-content: center;
+  width: 100%;
+}
+
+.cb-email-link img {
+  height: 1.25rem;
 }
 
 .cb-icon-button {

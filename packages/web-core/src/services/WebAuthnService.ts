@@ -1,8 +1,11 @@
+/// <reference types="web-bluetooth" />
+/// <reference types="user-agent-data-types" /> <- add this line
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
+import type { JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
 const clientHandleKey = 'cbo_client_handle';
 
@@ -63,8 +66,47 @@ export class WebAuthnService {
     );
   }
 
+  static async canUseBluetooth(): Promise<boolean> {
+    try {
+      const availability = await navigator.bluetooth.getAvailability();
+      if (availability) {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      log.error('Error checking bluetooth availability', e);
+      return false;
+    }
+  }
+
   static getClientHandle(): string | null {
     return localStorage.getItem(clientHandleKey);
+  }
+
+  static async getHighEntropyValues(): Promise<JavaScriptHighEntropy | undefined> {
+    try {
+      if (!navigator.userAgentData) {
+        return;
+      }
+
+      const ua = await navigator.userAgentData.getHighEntropyValues(['platformVersion']);
+      const platform = ua.platform;
+      const mobile = ua.mobile;
+      const platformVersion = ua.platformVersion;
+
+      if (!platform || !mobile || !platformVersion) {
+        return;
+      }
+
+      return {
+        platform,
+        mobile,
+        platformVersion,
+      };
+    } catch (e) {
+      return;
+    }
   }
 
   static setClientHandle(clientHandle: string) {

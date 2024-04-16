@@ -9,10 +9,10 @@ interface ErrorMessageProps {
 
 const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => (
   <div className='cb-error-message'>
-    <div className='cb-error-icon'>
-      <CircleExclamationIcon className='cb-error-icon' />
+    <div className='cb-error-message-icon-container'>
+      <CircleExclamationIcon className='cb-error-message-icon' />
     </div>
-    <div>{message}</div>
+    <div className='cb-error-message-text'>{message}</div>
   </div>
 );
 

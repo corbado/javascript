@@ -27,8 +27,7 @@ import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
-// TODO: set this version
-const packageVersion = '0.0.0';
+const packageVersion = process.env.FE_LIBRARY_VERSION;
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
 
 export class ProcessService {
@@ -130,7 +129,7 @@ export class ProcessService {
 
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
-      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
     };
 
     if (this.#isPreviewMode) {
@@ -245,6 +244,7 @@ export class ProcessService {
         bluetoothAvailable: false,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
+        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
       },
       passkeyAppendShown: passkeyAppendShown ?? undefined,
       preferredBlock: frontendPreferredBlockType,

@@ -110,7 +110,9 @@ export const User: FC = () => {
                 />
               </div>
               <div
-                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${email.status === 'verified' ? 'primary' : 'secondary'}`}
+                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
+                  email.status === 'verified' ? 'primary' : 'secondary'
+                }`}
               >
                 <Text
                   level='2'
@@ -137,7 +139,9 @@ export const User: FC = () => {
                 />
               </div>
               <div
-                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${phone.status === 'verified' ? 'primary' : 'secondary'}`}
+                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
+                  phone.status === 'verified' ? 'primary' : 'secondary'
+                }`}
               >
                 <Text
                   level='2'

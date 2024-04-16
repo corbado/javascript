@@ -154,11 +154,15 @@ export class SessionService {
     return this.#authStateChanges;
   }
 
+  dispose() {
+    this.#webAuthnService.abortOngoingOperation();
+  }
+
   public async getFullUser(abortController: AbortController): Promise<Result<CorbadoUser, CorbadoError>> {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
-  async appendPasskey(maybeAbortController?: AbortController): Promise<Result<void, CorbadoError | undefined>> {
+  async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const clientHandle = WebAuthnService.getClientHandle();
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
@@ -184,11 +188,7 @@ export class SessionService {
       }
     }
 
-    const abortController = maybeAbortController ?? new AbortController();
-    const signedChallenge = await this.#webAuthnService.createPasskey(
-      respStart.data.attestationOptions,
-      abortController,
-    );
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.data.attestationOptions);
     if (signedChallenge.err) {
       return signedChallenge;
     }

@@ -11,13 +11,14 @@ const clientHandleKey = 'cbo_client_handle';
  * Currently, this includes the creation of passkeys and the login with existing passkeys.
  */
 export class WebAuthnService {
-  async createPasskey(
-    serializedChallenge: string,
-    abortController: AbortController,
-  ): Promise<Result<string, CorbadoError>> {
+  #abortController: AbortController | undefined;
+
+  async createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     try {
+      const abortController = this.abortOngoingOperation();
       const challenge = JSON.parse(serializedChallenge);
       challenge.signal = abortController.signal;
+      this.#abortController = abortController;
 
       const signedChallenge = await create(challenge);
       const serializedResponse = JSON.stringify(signedChallenge);
@@ -32,14 +33,13 @@ export class WebAuthnService {
     }
   }
 
-  async login(
-    serializedChallenge: string,
-    abortController: AbortController,
-    conditional: boolean,
-  ): Promise<Result<string, CorbadoError>> {
+  async login(serializedChallenge: string, conditional: boolean): Promise<Result<string, CorbadoError>> {
     try {
+      const abortController = this.abortOngoingOperation();
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
       challenge.signal = abortController.signal;
+      this.#abortController = abortController;
+
       if (conditional) {
         challenge.mediation = 'conditional';
       }
@@ -69,5 +69,13 @@ export class WebAuthnService {
 
   static setClientHandle(clientHandle: string) {
     localStorage.setItem(clientHandleKey, clientHandle);
+  }
+
+  public abortOngoingOperation(): AbortController {
+    if (this.#abortController) {
+      this.#abortController.abort();
+    }
+
+    return new AbortController();
   }
 }

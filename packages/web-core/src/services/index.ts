@@ -62,6 +62,11 @@ export class CorbadoApp {
     return Ok(void 0);
   }
 
+  dispose() {
+    this.#authProcessService.dispose();
+    this.#sessionService.dispose();
+  }
+
   #validateProjectId(projectId: string): boolean {
     return /^pro-\d+$/.test(projectId);
   }

@@ -455,7 +455,7 @@ export class ProcessService {
     return this.wrapWithErr(() => this.#authApi.socialVerifyFinish({}, { signal: abortController.signal }));
   }
 
-  async appendPasskey(maybeAbortController?: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
+  async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyAppend();
     if (respStart.err) {
       return respStart;
@@ -465,11 +465,7 @@ export class ProcessService {
       return respStart;
     }
 
-    const abortController = maybeAbortController ?? new AbortController();
-    const signedChallenge = await this.#webAuthnService.createPasskey(
-      respStart.val.blockBody.data.challenge,
-      abortController,
-    );
+    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val.blockBody.data.challenge);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error
       return signedChallenge;
@@ -478,7 +474,7 @@ export class ProcessService {
     return await this.finishPasskeyAppend(signedChallenge.val);
   }
 
-  async loginWithPasskey(maybeAbortController?: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
+  async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       return respStart;
@@ -488,12 +484,7 @@ export class ProcessService {
       return respStart;
     }
 
-    const abortController = maybeAbortController ?? new AbortController();
-    const signedChallenge = await this.#webAuthnService.login(
-      respStart.val.blockBody.data.challenge,
-      abortController,
-      false,
-    );
+    const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error
       return signedChallenge;
@@ -502,11 +493,8 @@ export class ProcessService {
     return await this.finishPasskeyLogin(signedChallenge.val);
   }
 
-  async loginWithPasskeyChallenge(
-    challenge: string,
-    abortController: AbortController,
-  ): Promise<Result<ProcessResponse, CorbadoError>> {
-    const signedChallenge = await this.#webAuthnService.login(challenge, abortController, true);
+  async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
+    const signedChallenge = await this.#webAuthnService.login(challenge, true);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error
       return signedChallenge;
@@ -521,6 +509,10 @@ export class ProcessService {
     const utcSeconds = Math.floor((now.getTime() + now.getTimezoneOffset() * 60 * 1000) / 1000);
 
     localStorage.setItem(passkeyAppendShownKey, utcSeconds.toString());
+  }
+
+  dispose() {
+    this.#webAuthnService.abortOngoingOperation();
   }
 
   #getDefaultFrontendApiUrl() {

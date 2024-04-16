@@ -145,6 +145,7 @@ export class ProcessHandler {
   }
 
   dispose() {
+    this.#corbadoApp.dispose();
     this.#abortController.abort();
     this.#processHistoryHandler.dispose();
   }

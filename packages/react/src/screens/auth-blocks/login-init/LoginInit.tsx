@@ -26,8 +26,8 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
-    const socialAbort = new AbortController();
     if (block.data.socialData.finished && !block.error) {
+      const socialAbort = new AbortController();
       void block.finishSocialVerify(socialAbort);
 
       return () => {
@@ -47,11 +47,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
     }
 
-    const conditionalUIAbort = new AbortController();
-    void block.continueWithConditionalUI(conditionalUIAbort);
+    void block.continueWithConditionalUI();
 
     return () => {
-      conditionalUIAbort.abort();
+      // cleanup
     };
   }, [block]);
 
@@ -119,13 +118,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       );
     }
 
+    // we set autocomplete to username webauthn because Safari and Firefox need this for conditional UI to work
     return (
       <InputField
         label={t('textField.email')}
         id='email'
         name='email'
         type='email'
-        autoComplete='email webauthn'
+        autoComplete='username webauthn'
         {...commonProps}
       />
     );

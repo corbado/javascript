@@ -1,5 +1,5 @@
 import type { PasskeyAppendedBlock } from '@corbado/shared-ui';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -17,6 +17,25 @@ export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const subHeaderText = useMemo(() => t('subheader'), [t]);
   const bodyText = useMemo(() => t('body'), [t]);
   const primaryButtonText = useMemo(() => t('button'), [t]);
+
+  const handleContinue = useCallback(() => {
+    setLoading(true);
+    return void block.continue();
+  }, [block]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        void handleContinue();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleContinue]);
 
   return (
     <div className='cb-pk-appended-bloc'>
@@ -38,10 +57,7 @@ export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
         {bodyText}
       </Text>
       <PrimaryButton
-        onClick={() => {
-          setLoading(true);
-          return void block.continue();
-        }}
+        onClick={handleContinue}
         isLoading={loading}
       >
         {primaryButtonText}

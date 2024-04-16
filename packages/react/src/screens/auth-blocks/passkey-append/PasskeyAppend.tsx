@@ -1,5 +1,5 @@
 import { type PasskeyAppendBlock } from '@corbado/shared-ui';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -19,6 +19,11 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const appendPasskey = useCallback(() => {
+    setLoading(true);
+    void block.passkeyAppend();
+  }, [block]);
+
   useEffect(() => {
     if (block.data.userHandleType !== 'phone') {
       setPasskeyUserHandle(block.data.userHandle);
@@ -29,6 +34,20 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     setLoading(false);
   }, [block]);
 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        appendPasskey();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [appendPasskey]);
+
   const headerText = useMemo(() => t(`header.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
   const bodyPoint1Text = useMemo(() => t('body_point1'), [t]);
   const bodyPoint2Text = useMemo(() => t('body_point2'), [t]);
@@ -38,11 +57,6 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const skipButtonText = useMemo(() => t('button_skip'), [t]);
 
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
-
-  const appendPasskey = () => {
-    setLoading(true);
-    void block.passkeyAppend();
-  };
 
   return (
     <div className='cb-pk-append'>

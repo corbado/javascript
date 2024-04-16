@@ -23,7 +23,6 @@ export const OtpInput = forwardRef<HTMLInputElement, OtpInputProps>(
         type='tel'
         inputMode='numeric'
         pattern='[0-9]*'
-        maxLength={1}
         onChange={e => handleOtpChange(e.target, index)}
         onKeyDown={e => handleKeyDown(e, index)}
         onPaste={handlePaste}

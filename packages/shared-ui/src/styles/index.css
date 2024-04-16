@@ -122,17 +122,6 @@
   align-self: flex-end;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset;
-}
-
-input:-webkit-autofill {
-  -webkit-text-fill-color: var(--cb-text-primary-color);
-}
-
 .cb-input {
   margin-top: 0.3rem;
   flex-grow: 1;
@@ -287,6 +276,18 @@ input:-webkit-autofill {
 
 .cb-phone-input-field-search:focus {
   outline: none;
+}
+
+.cb-input:-webkit-autofill,
+.cb-input:-webkit-autofill:hover,
+.cb-input:-webkit-autofill:focus,
+.cb-input:-webkit-autofill:active,
+.cb-phone-input-field-input:-webkit-autofill,
+.cb-phone-input-field-input:-webkit-autofill:hover,
+.cb-phone-input-field-input:-webkit-autofill:focus,
+.cb-phone-input-field-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset;
+  -webkit-text-fill-color: var(--cb-text-primary-color);
 }
 
 .cb-error-message {

@@ -109,7 +109,6 @@ export const PhoneInput: FC<PhoneInputProps> = ({
     const parsedNumber = parsePhoneNumberFromString(input);
 
     if (parsedNumber) {
-      console.log(parsedNumber);
       handleCountryChange(parsedNumber.country);
       setPhoneNumber(parsedNumber.nationalNumber);
       onChange(parsedNumber.number);

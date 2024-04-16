@@ -66,6 +66,7 @@ export class CorbadoError extends Error {
   }
 
   static fromDOMException(e: DOMException): CorbadoError {
+    console.log('e', e.name, e.message);
     switch (e.name) {
       case 'NotAllowedError':
       case 'AbortError':

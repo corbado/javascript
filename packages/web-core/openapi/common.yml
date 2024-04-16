@@ -184,6 +184,7 @@ components:
         - status
         - emails
         - phoneNumbers
+        - usernames
       properties:
         ID:
           $ref: '#/components/schemas/userID'
@@ -205,6 +206,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/userPhoneNumber'
+        usernames:
+          type: array
+          items:
+            $ref: '#/components/schemas/userUsername'
+
 
     userEmail:
       type: object
@@ -240,6 +246,27 @@ components:
         ID:
           $ref: '#/components/schemas/ID'
         phoneNumber:
+          type: string
+        created:
+          $ref: '#/components/schemas/created'
+        updated:
+          $ref: '#/components/schemas/updated'
+        status:
+          $ref: '#/components/schemas/status'
+
+    userUsername:
+      type: object
+      description: User's username
+      required:
+        - ID
+        - username
+        - created
+        - updated
+        - status
+      properties:
+        ID:
+          $ref: '#/components/schemas/ID'
+        username:
           type: string
         created:
           $ref: '#/components/schemas/created'
@@ -362,11 +389,15 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         enforceVerification:
           type: string
-          enum: [ none, signup, before-passkey-login ]
+          enum: [ none, signup, at_first_login ]
         useAsLoginIdentifier:
           type: boolean
         metadata:
           type: object
+
+    socialProviderType:
+      type: string
+      enum: [ 'google', 'microsoft', 'github' ]
 
     # this is necessary so that code generator doesn't ignore "unused" types
     allTypes:
@@ -420,6 +451,8 @@ components:
           $ref: '#/components/schemas/highEntropyValues'
         p24:
           $ref: '#/components/schemas/loginIdentifierConfig'
+        p25:
+          $ref: '#/components/schemas/socialProviderType'
 
     genericRsp:
       type: object

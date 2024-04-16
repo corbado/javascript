@@ -1,7 +1,7 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 export const AuthButtons = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const projectId = process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!;
 
   return (
     <div className='auth-buttons'>

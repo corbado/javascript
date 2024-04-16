@@ -8,7 +8,6 @@ import { Err, Ok } from 'ts-results';
 
 import type { JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
-
 const clientHandleKey = 'cbo_client_handle';
 
 /**
@@ -20,13 +19,11 @@ export class WebAuthnService {
 
   async createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     try {
-      this.abortOngoingOperation();
-
+      const abortController = this.abortOngoingOperation();
       const challenge = JSON.parse(serializedChallenge);
-      const abortController = new AbortController();
       challenge.signal = abortController.signal;
-
       this.#abortController = abortController;
+
       const signedChallenge = await create(challenge);
       const serializedResponse = JSON.stringify(signedChallenge);
 
@@ -42,16 +39,15 @@ export class WebAuthnService {
 
   async login(serializedChallenge: string, conditional: boolean): Promise<Result<string, CorbadoError>> {
     try {
-      this.abortOngoingOperation();
-
+      const abortController = this.abortOngoingOperation();
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
-      const abortController = new AbortController();
       challenge.signal = abortController.signal;
+      this.#abortController = abortController;
+
       if (conditional) {
         challenge.mediation = 'conditional';
       }
 
-      this.#abortController = abortController;
       const signedChallenge = await get(challenge);
       const serializedResponse = JSON.stringify(signedChallenge);
 
@@ -63,11 +59,6 @@ export class WebAuthnService {
         return Err(CorbadoError.fromUnknownFrontendError(e));
       }
     }
-  }
-
-  public abortOngoingOperation() {
-    log.debug('Aborting ongoing webauthn operation');
-    this.#abortController?.abort();
   }
 
   static async doesBrowserSupportPasskeys(): Promise<boolean> {
@@ -105,7 +96,7 @@ export class WebAuthnService {
       const mobile = ua.mobile;
       const platformVersion = ua.platformVersion;
 
-      if (!platform || !mobile || !platformVersion) {
+      if (!platform || mobile === undefined || !platformVersion) {
         return;
       }
 
@@ -121,5 +112,13 @@ export class WebAuthnService {
 
   static setClientHandle(clientHandle: string) {
     localStorage.setItem(clientHandleKey, clientHandle);
+  }
+
+  public abortOngoingOperation(): AbortController {
+    if (this.#abortController) {
+      this.#abortController.abort();
+    }
+
+    return new AbortController();
   }
 }

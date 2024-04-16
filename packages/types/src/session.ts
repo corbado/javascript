@@ -22,7 +22,7 @@ export interface SessionUser {
 
 /**
  * Interface for CorbadoUser.
- * @interface
+ * @interfaceCorbadoUser
  * @property {string} id - The unique identifier for the user.
  * @property {string} fullName - The full name of the user.
  * @property {Array<Identifier>} identifiers - The array of identifiers for the user.

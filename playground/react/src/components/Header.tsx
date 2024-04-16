@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
 import Dropdown from './Dropdown';
-import ThemeContext from '../contexts/ThemeContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 const Header = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+  const { darkMode, toggleDarkMode } = useContext(SettingsContext);
   const darkModeButtonTitle = darkMode ? 'Light Mode' : 'Dark Mode';
 
   return (

@@ -9,10 +9,10 @@ import type {
   PasskeyVerifyBlock,
   PhoneVerifyBlock,
   SignupInitBlock,
-  SocialVerifyBlock,
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import React, { useMemo } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
@@ -34,7 +34,6 @@ import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-bl
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
-import { SocialLinkVerification } from '../../screens/auth-blocks/social-verify/SocialLinkVerification';
 import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
 import ErrorPopup from '../ui/errors/ErrorPopup';
 import { FreemiumBadge } from '../ui/FreemiumBadge';
@@ -43,6 +42,24 @@ import { LoadingSpinner } from '../ui/LoadingSpinner';
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // this delays showing a loading screen for a very short period of time
+    // the idea is to reduce flickering when the loading screen is only shown for a very short time
+    if (initState !== InitState.Initializing || loading) {
+      setLoading(initState === InitState.Initializing);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setLoading(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [initState]);
 
   const screenComponent = useMemo(() => {
     if (!currentScreen) {
@@ -78,8 +95,6 @@ export const AuthFlow: FC = () => {
           default:
             throw new Error(`Invalid screen: ${currentScreen.screen}`);
         }
-      case BlockTypes.SocialVerify:
-        return <SocialLinkVerification block={currentScreen.block as SocialVerifyBlock} />;
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppend:
@@ -116,7 +131,7 @@ export const AuthFlow: FC = () => {
       return <ComponentUnavailableError />;
     }
 
-    if (initState === InitState.Initializing) {
+    if (loading) {
       return <LoadingSpinner className='cb-initital-loading-spinner' />;
     }
 

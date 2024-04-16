@@ -10,11 +10,10 @@ type Props = {
 };
 
 const ErrorPopup = ({ customerSupportEmail, error }: Props) => {
-  console.log(error);
   return (
     <UserError
       customerSupportEmail={customerSupportEmail}
-      error={error.translatedMessage}
+      error={error}
     />
   );
 };

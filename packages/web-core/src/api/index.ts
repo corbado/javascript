@@ -11,5 +11,9 @@ export {
   ProcessResponse,
   ProcessCommon,
   ContinueOnOtherDevice,
+  GeneralBlockSignupInit,
+  LoginIdentifier,
   ContinueOnOtherDeviceReasonEnum,
+  SocialProviderType,
+  SocialDataStatusEnum,
 } from './v2';

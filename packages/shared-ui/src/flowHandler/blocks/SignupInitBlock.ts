@@ -1,6 +1,12 @@
-import type { CorbadoApp, ProcessCommon } from '@corbado/web-core';
+import type {
+  CorbadoApp,
+  GeneralBlockSignupInit,
+  LoginIdentifier,
+  ProcessCommon,
+  SocialProviderType,
+} from '@corbado/web-core';
+import { SocialDataStatusEnum } from '@corbado/web-core';
 import { AuthType } from '@corbado/web-core';
-import type { GeneralBlockSignupInit, LoginIdentifier } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -60,8 +66,31 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
       email: email,
       phone: phone,
       userName: userName,
-      socialLogins: [],
+      socialData: {
+        providers:
+          data.socialData?.providers?.map(provider => {
+            return { name: provider };
+          }) || [],
+        oAuthUrl: data.socialData?.oauthUrl,
+        started: data.socialData?.status === SocialDataStatusEnum.Started || false,
+        finished: data.socialData?.status === SocialDataStatusEnum.Finished || false,
+      },
     };
+
+    // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
+    if (data.socialData?.error) {
+      this.setError(data.socialData.error);
+    }
+  }
+
+  async startSocialVerify(providerType: SocialProviderType) {
+    const redirectUrl = window.location.origin + window.location.pathname;
+    const res = await this.app.authProcessService.startSocialVerification(providerType, redirectUrl, AuthType.Signup);
+    if (!res) {
+      return;
+    }
+
+    this.updateProcess(res);
   }
 
   async updateUserData(identifiers: LoginIdentifiers, fullName?: string) {
@@ -84,5 +113,10 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     const newPrimary = this.alternatives[0];
     const newAlternatives = [this];
     this.updateProcessFrontend(newPrimary, newAlternatives);
+  }
+
+  async finishSocialVerification(abortController: AbortController) {
+    const res = await this.app.authProcessService.finishSocialVerification(abortController);
+    this.updateProcess(res);
   }
 }

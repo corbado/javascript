@@ -917,6 +917,11 @@
   margin: 1rem auto;
 }
 
+.cb-pk-verify-fallbacks {
+  align-self: center;
+  margin: 1.25rem auto 1rem;
+}
+
 /********** Dialog / Modal **********/
 .cb-dialog {
   position: fixed;

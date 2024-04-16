@@ -1,17 +1,17 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
-import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
-import { Divider } from '../../../components/ui/Divider';
+import { Divider, Header, PrimaryButton, SecondaryButton, Text, UserInfo } from '../../../components';
 import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
-import { Header } from '../../../components/ui/typography/Header';
-import { Text } from '../../../components/ui/typography/Text';
-import { UserInfo } from '../../../components/ui/UserInfo';
 
-export const PasskeyError = ({ block }: { block: PasskeyVerifyBlock }) => {
+export interface PasskeyErrorProps {
+  block: PasskeyVerifyBlock;
+}
+
+export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-error`,
   });

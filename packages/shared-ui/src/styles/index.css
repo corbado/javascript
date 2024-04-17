@@ -919,8 +919,8 @@
 
 .cb-pk-verify-fallbacks {
   display: flex;
-  flex-direction: row;
-  gap: 0.3rem;
+  flex-direction: column;
+  gap: 0.6rem;
   align-self: center;
   margin: 1.25rem auto 1rem;
 }

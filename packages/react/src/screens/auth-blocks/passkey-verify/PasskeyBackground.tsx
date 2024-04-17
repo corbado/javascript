@@ -63,7 +63,6 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
       <div className='cb-pk-verify-fallbacks'>
         {block.data.availableFallbacks.map(fallback => (
           <SecondaryButton
-            className='cb-row'
             key={fallback.label}
             disabled={loading}
             onClick={() => {

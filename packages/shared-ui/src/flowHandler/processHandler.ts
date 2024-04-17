@@ -87,7 +87,7 @@ export class ProcessHandler {
       return res;
     }
 
-    this.handleProcessUpdateBackend(res.val, undefined, true);
+    this.handleProcessUpdateBackend(res.val);
 
     return Ok(void 0);
   }
@@ -129,7 +129,9 @@ export class ProcessHandler {
     }
 
     if (initScreenBlocks.includes(currentBlock.type)) {
-      history.back();
+      void currentBlock.confirmAbort().then(() => {
+        history.back();
+      });
       return;
     }
 
@@ -195,7 +197,7 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newBlock);
   }
 
-  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError, forcePush = false) {
+  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError) {
     const newPrimaryBlock = this.#parseBlockData(processResponse.blockBody, processResponse.common);
 
     if (error) {
@@ -207,7 +209,7 @@ export class ProcessHandler {
     newPrimaryBlock.setAlternatives(alternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock, true, forcePush);
+    this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
   handleProcessUpdateFrontend(
@@ -235,7 +237,7 @@ export class ProcessHandler {
     return;
   }
 
-  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>, shouldUpdateUrl = true, forcePush = false) => {
+  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>, shouldUpdateUrl = true) => {
     // if process has been completed, we don't want to update the screen anymore
     if (newPrimaryBlock instanceof CompletedBlock) {
       this.onProcessCompleted(newPrimaryBlock.data);
@@ -258,7 +260,7 @@ export class ProcessHandler {
     );
 
     if (blockHasChanged && shouldUpdateUrl) {
-      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type, forcePush);
+      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type);
     }
   };
 

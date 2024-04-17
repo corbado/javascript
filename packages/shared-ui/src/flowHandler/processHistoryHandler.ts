@@ -48,7 +48,7 @@ export class ProcessHistoryHandler {
     return null;
   }
 
-  registerBlockChange(blockType: BlockTypes, forcePush = false) {
+  registerBlockChange(blockType: BlockTypes) {
     if (!this.#enabled) {
       return;
     }
@@ -58,11 +58,7 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    if (location.hash && !forcePush) {
-      history.replaceState(null, '', `#${blockType}`);
-    } else {
-      history.pushState(null, '', `#${blockType}`);
-    }
+    window.location.hash = blockType;
   }
 
   dispose() {

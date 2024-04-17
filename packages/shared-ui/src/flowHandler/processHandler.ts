@@ -128,10 +128,14 @@ export class ProcessHandler {
       return;
     }
 
+    if (currentBlock instanceof ConfirmProcessAbortBlock) {
+      const originalBlock = currentBlock.data as ConfirmProcessAbortBlock;
+      originalBlock.cancelAbort(originalBlock.data);
+      return;
+    }
+
     if (initScreenBlocks.includes(currentBlock.type)) {
-      void currentBlock.confirmAbort().then(() => {
-        history.back();
-      });
+      history.back();
       return;
     }
 
@@ -149,7 +153,7 @@ export class ProcessHandler {
       currentBlock,
     );
 
-    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives], false);
+    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives]);
   }
 
   dispose() {
@@ -212,15 +216,11 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
-  handleProcessUpdateFrontend(
-    newPrimaryBlock: Block<unknown>,
-    newAlternatives: Block<unknown>[] = [],
-    shouldUpdateUrl = true,
-  ) {
+  handleProcessUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
     newPrimaryBlock.setAlternatives(newAlternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock, shouldUpdateUrl);
+    this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
   // @todo: make sure that this error is shown as a message on the first screen
@@ -237,7 +237,7 @@ export class ProcessHandler {
     return;
   }
 
-  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>, shouldUpdateUrl = true) => {
+  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
     // if process has been completed, we don't want to update the screen anymore
     if (newPrimaryBlock instanceof CompletedBlock) {
       this.onProcessCompleted(newPrimaryBlock.data);
@@ -259,7 +259,7 @@ export class ProcessHandler {
       }),
     );
 
-    if (blockHasChanged && shouldUpdateUrl) {
+    if (blockHasChanged) {
       this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type);
     }
   };

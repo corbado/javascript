@@ -24,7 +24,12 @@ export const User: FC = () => {
       return;
     }
 
-    void getCurrentUser();
+    const abortController = new AbortController();
+    void getCurrentUser(abortController);
+
+    return () => {
+      abortController.abort();
+    };
   }, [isAuthenticated]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -51,17 +56,23 @@ export const User: FC = () => {
     };
   }, [currentUser]);
 
-  const getCurrentUser = useCallback(async () => {
-    setLoading(true);
-    const result = await getFullUser();
+  const getCurrentUser = useCallback(
+    async (abortController: AbortController) => {
+      setLoading(true);
+      const result = await getFullUser(abortController);
+      if (result.err && result.val.ignore) {
+        return;
+      }
 
-    if (!result || result?.err) {
-      throw new Error(result?.val.name);
-    }
+      if (!result || result?.err) {
+        throw new Error(result?.val.name);
+      }
 
-    setCurrentUser(result.val);
-    setLoading(false);
-  }, [corbadoApp]);
+      setCurrentUser(result.val);
+      setLoading(false);
+    },
+    [corbadoApp],
+  );
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
@@ -84,6 +95,7 @@ export const User: FC = () => {
         {processUser.name && (
           <InputField
             className='cb-user-details-section-indentifier'
+            key={`user-entry-${processUser.name}`}
             label={nameFieldLabel}
             value={processUser.name}
             disabled
@@ -92,6 +104,7 @@ export const User: FC = () => {
         {processUser.username && (
           <InputField
             className='cb-user-details-section-indentifier'
+            key={`user-entry-${processUser.username}`}
             label={usernameFieldLabel}
             value={processUser.username}
             disabled
@@ -99,7 +112,10 @@ export const User: FC = () => {
         )}
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.emails.map((email, i) => (
-            <div className='cb-user-details-section-indentifiers-list-item'>
+            <div
+              className='cb-user-details-section-indentifiers-list-item'
+              key={`user-details-email-${email.value}`}
+            >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <InputField
                   className='cb-user-details-section-indentifiers-list-item-field-input'
@@ -128,7 +144,10 @@ export const User: FC = () => {
         </div>
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.phoneNumbers.map((phone, i) => (
-            <div className='cb-user-details-section-indentifiers-list-item'>
+            <div
+              className='cb-user-details-section-indentifiers-list-item'
+              key={`user-details-phone-${phone.value}`}
+            >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <PhoneInputField
                   className='cb-user-details-section-indentifiers-list-item-field-input'

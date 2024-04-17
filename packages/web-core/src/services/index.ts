@@ -64,7 +64,7 @@ export class CorbadoApp {
 
   dispose() {
     this.#authProcessService.dispose();
-    this.#sessionService.abortOngoingPasskeyOperation();
+    this.#sessionService.dispose();
   }
 
   #validateProjectId(projectId: string): boolean {

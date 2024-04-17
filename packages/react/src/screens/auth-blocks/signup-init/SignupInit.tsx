@@ -1,4 +1,5 @@
 import type { LoginIdentifiers, SignupInitBlock } from '@corbado/shared-ui';
+import type { SocialProviderType } from '@corbado/web-core';
 import type { FormEvent, MutableRefObject } from 'react';
 import { useEffect } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
@@ -24,6 +25,14 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+    const socialAbort = new AbortController();
+    if (block.data.socialData.finished && !block.error) {
+      void block.finishSocialVerification(socialAbort);
+    }
+
+    return () => {
+      socialAbort.abort();
+    };
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -135,9 +144,10 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         </PrimaryButton>
       </form>
       <SocialLoginButtons
-        socialLogins={block.data.socialLogins}
+        socialLogins={block.data.socialData.providers}
         dividerText={textDivider}
         t={t}
+        onClick={(providerType: SocialProviderType) => void block.startSocialVerify(providerType)}
       />
       <Text
         level='2'

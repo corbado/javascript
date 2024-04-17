@@ -1,7 +1,6 @@
 import { Login } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
-import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -28,4 +27,4 @@ const LoginPage = () => {
   );
 };
 
-export default withCorbadoProvider(LoginPage);
+export default LoginPage;

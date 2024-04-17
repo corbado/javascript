@@ -1,3 +1,5 @@
+import type { CorbadoError } from '@corbado/web-core';
+
 import type { Block } from './blocks';
 import type { ContinueOnOtherEnvReasons, LoginIdentifierType, ScreenNames } from './constants';
 
@@ -6,7 +8,7 @@ export type BlockDataSignupInit = {
   email: TextFieldWithError | null;
   phone: TextFieldWithError | null;
   userName: TextFieldWithError | null;
-  socialLogins: SocialLogin[];
+  socialData: SocialData;
 };
 
 export type BlockDataLoginInit = {
@@ -17,7 +19,7 @@ export type BlockDataLoginInit = {
   emailEnabled: boolean;
   usernameEnabled: boolean;
   phoneEnabled: boolean;
-  socialLogins: SocialLogin[];
+  socialData: SocialData;
 };
 
 export type BlockDataPasskeyAppend = {
@@ -66,8 +68,16 @@ export type PasskeyFallback = {
 
 export type SocialLogin = {
   name: string;
-  icon: string;
-  url: string;
+  // icon: string;
+  // url: string;
+};
+
+export type SocialData = {
+  providers: SocialLogin[];
+  oAuthUrl?: string;
+  started: boolean;
+  finished: boolean;
+  error?: CorbadoError;
 };
 
 export type TextFieldWithError = {

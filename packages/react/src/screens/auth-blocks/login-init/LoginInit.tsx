@@ -1,4 +1,5 @@
 import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { SocialProviderType } from '@corbado/web-core';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +26,15 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+    if (block.data.socialData.finished && !block.error) {
+      const socialAbort = new AbortController();
+      void block.finishSocialVerify(socialAbort);
+
+      return () => {
+        socialAbort.abort();
+      };
+    }
+
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
     if (shouldUsePhone) {
       setUsePhone(true);
@@ -38,6 +48,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     }
 
     void block.continueWithConditionalUI();
+
+    return () => {
+      // cleanup
+    };
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -104,13 +118,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       );
     }
 
+    // we set autocomplete to username webauthn because Safari and Firefox need this for conditional UI to work
     return (
       <InputField
         label={t('textField.email')}
         id='email'
         name='email'
         type='email'
-        autoComplete='email webauthn'
+        autoComplete='username webauthn'
         {...commonProps}
       />
     );
@@ -152,8 +167,9 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       </form>
       <SocialLoginButtons
         dividerText={textDivider}
-        socialLogins={block.data.socialLogins}
+        socialLogins={block.data.socialData.providers}
         t={t}
+        onClick={(providerType: SocialProviderType) => void block.startSocialVerify(providerType)}
       />
       {block.isSignupEnabled() && (
         <Text

@@ -57,9 +57,12 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     };
   }, []);
 
-  const getPasskeys = useCallback(() => {
-    return corbadoApp.sessionService.passkeyList();
-  }, [corbadoApp]);
+  const getPasskeys = useCallback(
+    (abortController?: AbortController) => {
+      return corbadoApp.sessionService.passkeyList(abortController ?? new AbortController());
+    },
+    [corbadoApp],
+  );
 
   const logout = useCallback(() => {
     return corbadoApp.sessionService.logout();
@@ -72,9 +75,12 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
-  const getFullUser = useCallback(() => {
-    return corbadoApp?.sessionService.getFullUser();
-  }, [corbadoApp]);
+  const getFullUser = useCallback(
+    (abortController?: AbortController) => {
+      return corbadoApp?.sessionService.getFullUser(abortController ?? new AbortController());
+    },
+    [corbadoApp],
+  );
 
   return (
     <CorbadoSessionContext.Provider

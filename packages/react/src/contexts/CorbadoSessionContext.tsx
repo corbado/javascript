@@ -1,5 +1,5 @@
 import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
-import type { CorbadoApp, NonRecoverableError, PasskeyDeleteError, PasskeyListError } from '@corbado/web-core';
+import type { CorbadoApp, CorbadoError, NonRecoverableError, PasskeyDeleteError } from '@corbado/web-core';
 import { createContext } from 'react';
 import type { Result } from 'ts-results';
 
@@ -14,9 +14,9 @@ export interface CorbadoSessionContextProps {
   isAuthenticated: boolean;
   user: SessionUser | undefined;
   logout: () => Promise<void>;
-  getPasskeys: () => Promise<Result<PassKeyList, PasskeyListError>>;
+  getPasskeys: (abortController?: AbortController) => Promise<Result<PassKeyList, CorbadoError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
-  getFullUser: () => Promise<Result<CorbadoUser, NonRecoverableError>>;
+  getFullUser: (abortController?: AbortController) => Promise<Result<CorbadoUser, CorbadoError>>;
   globalError: NonRecoverableError | undefined;
 }
 

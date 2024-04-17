@@ -9,8 +9,8 @@ export const AuthDetails = () => {
   return (
     <div className='component'>
       <div>
-        <p>Welcome</p>
         <User />
+        <PasskeyList />
         <button
           onClick={async () => {
             await logout();
@@ -21,7 +21,6 @@ export const AuthDetails = () => {
         >
           Logout
         </button>
-        <PasskeyList />
       </div>
     </div>
   );

@@ -18,8 +18,8 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
-import { SocialVerifyBlock } from './blocks/SocialVerifyBlock';
-import { type BlockTypes, initScreenBlocks, type ScreenNames } from './constants';
+import type { BlockTypes, ScreenNames } from './constants';
+import { initScreenBlocks } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
@@ -309,9 +309,6 @@ export class ProcessHandler {
         break;
       case BlockType.PasskeyVerify:
         block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
-        break;
-      case BlockType.SocialVerify:
-        block = new SocialVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       //TODO: Add MissingFieldsBlock
       // case BlockType.MissingFields:

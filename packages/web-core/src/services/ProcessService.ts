@@ -509,6 +509,10 @@ export class ProcessService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
+  cancelPasskeyOperation() {
+    this.#webAuthnService.abortOngoingOperation();
+  }
+
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }

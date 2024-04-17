@@ -71,6 +71,11 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   async passkeyLogin() {
     const res = await this.app.authProcessService.loginWithPasskey();
+    if (res.err && res.val.ignore) {
+      console.log('passkey login ignored');
+      return;
+    }
+
     if (res.err) {
       this.updateScreen(ScreenNames.PasskeyError);
       return;
@@ -100,5 +105,13 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     this.updateProcess(newBlock);
 
     return;
+  }
+
+  // cancels the current passkey operation (if one has been started)
+  // this should be called if a user leaves the passkey verify block without completing the passkey operation
+  // (otherwise the operation will continue in the background and a passkey popup might occur much later when the user no longer expects it)
+  cancelPasskeyOperation() {
+    console.log('canceling passkey operation');
+    return this.app.authProcessService.cancelPasskeyOperation();
   }
 }

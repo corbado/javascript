@@ -133,11 +133,14 @@ export class ProcessHandler {
     }
 
     // in login processes we don't want to ask for abort (we auto-confirm it)
-    // in signup processes we want to ask for abort
+    if (currentBlock.authType === AuthType.Login) {
+      void currentBlock.confirmAbort();
+      return;
+    }
+
     // The default action is to continue on yes and abort on no because mobile Safari will auto-cancel.
     // For reference see (unsolved bug): https://stackoverflow.com/questions/38083702/alert-confirm-and-prompt-not-working-after-using-history-api-on-safari-ios
     if (
-      currentBlock.authType === AuthType.Login ||
       confirm(
         'Going back will restart the signup process and your current progress will be lost. Do you wish to complete the current signup first?',
       )

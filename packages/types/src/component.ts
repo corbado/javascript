@@ -21,7 +21,6 @@ export interface CorbadoConfig extends CorbadoAppParams {
   theme?: string | CustomThemes;
   customerSupportEmail?: string;
   isDevMode?: boolean;
-  skipHashedUrls?: boolean;
 }
 
 /**

@@ -13,7 +13,6 @@ export interface CorbadoSessionContextProps {
   loading: boolean;
   isAuthenticated: boolean;
   user: SessionUser | undefined;
-  skipHashedUrls: boolean;
   logout: () => Promise<void>;
   getPasskeys: (abortController?: AbortController) => Promise<Result<PassKeyList, CorbadoError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
@@ -26,7 +25,6 @@ export const initialContext: CorbadoSessionContextProps = {
   shortSession: undefined,
   loading: true,
   isAuthenticated: false,
-  skipHashedUrls: false,
   user: undefined,
   globalError: undefined,
   logout: missingImplementation,

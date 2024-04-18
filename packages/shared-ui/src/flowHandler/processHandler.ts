@@ -44,14 +44,19 @@ export class ProcessHandler {
    * The constructor initializes the ProcessHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
-  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, postProcess: () => void, skipHashedUrls = false) {
+  constructor(
+    i18next: i18n,
+    corbadoApp: CorbadoApp | undefined,
+    postProcess: () => void,
+    handleNavigationEvents = true,
+  ) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
     const errorTranslator = new ErrorTranslator(i18next);
     this.#corbadoApp = corbadoApp;
-    this.#processHistoryHandler = new ProcessHistoryHandler(skipHashedUrls);
+    this.#processHistoryHandler = new ProcessHistoryHandler(handleNavigationEvents);
     this.#errorTranslator = errorTranslator;
     this.#postProcess = postProcess;
   }

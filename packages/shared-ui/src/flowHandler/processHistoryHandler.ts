@@ -1,16 +1,16 @@
 import { BlockTypes } from './constants';
 
 export class ProcessHistoryHandler {
-  #enabled: boolean;
+  #skipHasedUrls: boolean;
   #abortController: AbortController;
 
-  constructor(enabled: boolean) {
-    this.#enabled = enabled;
+  constructor(skipHasedUrls: boolean) {
+    this.#skipHasedUrls = skipHasedUrls;
     this.#abortController = new AbortController();
   }
 
   init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void): BlockTypes | null {
-    if (!this.#enabled) {
+    if (this.#skipHasedUrls) {
       return null;
     }
 
@@ -49,7 +49,7 @@ export class ProcessHistoryHandler {
   }
 
   registerBlockChange(blockType: BlockTypes) {
-    if (!this.#enabled) {
+    if (this.#skipHasedUrls) {
       return;
     }
 
@@ -62,7 +62,7 @@ export class ProcessHistoryHandler {
   }
 
   dispose() {
-    if (!this.#enabled) {
+    if (this.#skipHasedUrls) {
       return;
     }
 

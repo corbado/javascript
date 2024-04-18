@@ -15,13 +15,13 @@ type Props = {
 };
 
 export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({ children, onLoggedIn }) => {
-  const { corbadoApp } = useCorbado();
+  const { corbadoApp, skipHashedUrls } = useCorbado();
   const [currentScreen, setCurrentScreen] = useState<ScreenWithBlock>();
   const [initState, setInitState] = useState<InitState>(InitState.Initializing);
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
-    const flowHandler = new ProcessHandler(i18n, corbadoApp, onLoggedIn);
+    const flowHandler = new ProcessHandler(i18n, corbadoApp, onLoggedIn, skipHashedUrls);
 
     onFlowChangeCbId.current = flowHandler.onScreenChange(value => {
       setCurrentScreen(value);

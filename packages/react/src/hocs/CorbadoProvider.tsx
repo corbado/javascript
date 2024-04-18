@@ -26,6 +26,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
   corbadoAppInstance,
   customerSupportEmail,
   isDevMode,
+  skipHashedUrls,
   ...corbadoAppParams
 }) => {
   const [darkModeState, setDarkModeState] = React.useState<BehaviorSubject<boolean> | undefined>();
@@ -45,6 +46,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
     <CorbadoSessionProvider
       corbadoAppInstance={corbadoAppInstance}
       corbadoAppParams={corbadoAppParams}
+      skipHashedUrls={skipHashedUrls}
     >
       <ErrorHandlingProvider
         customerSupportEmail={customerSupportEmail ?? ''}

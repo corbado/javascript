@@ -10,10 +10,12 @@ import { CorbadoSessionContext } from './CorbadoSessionContext';
 type CorbadoSessionProviderParams = PropsWithChildren<{
   corbadoAppInstance?: CorbadoApp;
   corbadoAppParams: CorbadoAppParams;
+  skipHashedUrls?: boolean;
 }>;
 
 export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   children,
+  skipHashedUrls = false,
   corbadoAppInstance,
   corbadoAppParams,
 }) => {
@@ -90,6 +92,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         loading,
         user,
         isAuthenticated,
+        skipHashedUrls,
         getFullUser,
         getPasskeys,
         deletePasskey,

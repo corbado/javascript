@@ -61,7 +61,7 @@ export class ProcessHandler {
    * Call this function after registering all callbacks.
    */
   async init(): Promise<Result<void, CorbadoError>> {
-    const frontendPreferredBlockType = this.#processHistoryHandler.init(
+    const [frontendPreferredBlockType, preferredScreenName] = this.#processHistoryHandler.init(
       (blockType: BlockTypes) => this.switchToBlock(blockType),
       () => this.startAskForAbort(),
     );
@@ -86,7 +86,7 @@ export class ProcessHandler {
       return res;
     }
 
-    this.handleProcessUpdateBackend(res.val);
+    this.handleProcessUpdateBackend(res.val, undefined, preferredScreenName ?? undefined);
 
     return Ok(void 0);
   }
@@ -154,15 +154,8 @@ export class ProcessHandler {
   }
 
   updateScreen(newScreen: ScreenNames) {
-    this.#currentScreen = newScreen;
-
-    this.#onScreenChangeCallbacks.forEach(cb =>
-      cb({
-        screen: newScreen,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        block: this.#currentBlock!,
-      }),
-    );
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.#updatePrimaryBlock(this.#currentBlock!, newScreen);
   }
 
   onScreenChange(cb: (value: ScreenWithBlock) => void) {
@@ -188,7 +181,7 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newBlock);
   }
 
-  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError) {
+  handleProcessUpdateBackend(processResponse: ProcessResponse, error?: CorbadoError, initialScreen?: ScreenNames) {
     const newPrimaryBlock = this.#parseBlockData(processResponse.blockBody, processResponse.common);
 
     if (error) {
@@ -200,14 +193,18 @@ export class ProcessHandler {
     newPrimaryBlock.setAlternatives(alternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock);
+    this.#updatePrimaryBlock(newPrimaryBlock, initialScreen);
   }
 
-  handleProcessUpdateFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
+  handleProcessUpdateFrontend(
+    newPrimaryBlock: Block<unknown>,
+    newAlternatives: Block<unknown>[] = [],
+    initialScreen?: ScreenNames,
+  ) {
     newPrimaryBlock.setAlternatives(newAlternatives);
     newPrimaryBlock.init();
 
-    this.#updatePrimaryBlock(newPrimaryBlock);
+    this.#updatePrimaryBlock(newPrimaryBlock, initialScreen);
   }
 
   // @todo: make sure that this error is shown as a message on the first screen
@@ -224,7 +221,7 @@ export class ProcessHandler {
     return;
   }
 
-  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
+  #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>, newScreen?: ScreenNames) => {
     // if process has been completed, we don't want to update the screen anymore
     if (newPrimaryBlock instanceof CompletedBlock) {
       this.onProcessCompleted(newPrimaryBlock.data);
@@ -232,8 +229,8 @@ export class ProcessHandler {
     }
 
     const blockHasChanged = this.#currentBlock == null || newPrimaryBlock.type !== this.#currentBlock.type;
-    if (blockHasChanged) {
-      this.#currentScreen = newPrimaryBlock.initialScreen;
+    if (blockHasChanged || newScreen) {
+      this.#currentScreen = newScreen ?? newPrimaryBlock.initialScreen;
     }
 
     this.#currentBlock = newPrimaryBlock;
@@ -246,9 +243,7 @@ export class ProcessHandler {
       }),
     );
 
-    if (blockHasChanged) {
-      this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type);
-    }
+    this.#processHistoryHandler.registerBlockChange(newPrimaryBlock.type, this.#currentScreen);
   };
 
   #parseBlockData = (blockBody: BlockBody, common: ProcessCommon) => {

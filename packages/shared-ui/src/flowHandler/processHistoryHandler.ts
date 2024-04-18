@@ -1,3 +1,4 @@
+import type { ScreenNames } from './constants';
 import { BlockTypes } from './constants';
 
 export class ProcessHistoryHandler {
@@ -9,15 +10,18 @@ export class ProcessHistoryHandler {
     this.#abortController = new AbortController();
   }
 
-  init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void): BlockTypes | null {
+  init(
+    maybeSwitchToBlock: (blockType: BlockTypes) => boolean,
+    askForAbort: () => void,
+  ): [BlockTypes | null, ScreenNames | null] {
     if (this.#skipHasedUrls) {
-      return null;
+      return [null, null];
     }
 
     window.addEventListener(
       'hashchange',
       () => {
-        const blockNameFromHash = this.#getCurrentLocationHash();
+        const [blockNameFromHash] = this.#getCurrentLocationHash();
 
         const blockType = blockNameFromHash as BlockTypes;
 
@@ -31,24 +35,24 @@ export class ProcessHistoryHandler {
       { signal: this.#abortController.signal },
     );
 
-    const currentLocationHash = this.#getCurrentLocationHash();
+    const [currentLocationHash, currentScreenHash] = this.#getCurrentLocationHash();
     if (currentLocationHash) {
       // we define those two overrides because they are more intuitive than the hash values
       if (currentLocationHash === 'register') {
-        return BlockTypes.SignupInit;
+        return [BlockTypes.SignupInit, currentScreenHash as ScreenNames];
       }
 
       if (currentLocationHash === 'login') {
-        return BlockTypes.LoginInit;
+        return [BlockTypes.LoginInit, currentScreenHash as ScreenNames];
       }
 
-      return currentLocationHash as BlockTypes;
+      return [currentLocationHash as BlockTypes, currentScreenHash as ScreenNames];
     }
 
-    return null;
+    return [null, null];
   }
 
-  registerBlockChange(blockType: BlockTypes) {
+  registerBlockChange(blockType: BlockTypes, screenType: ScreenNames) {
     if (this.#skipHasedUrls) {
       return;
     }
@@ -58,7 +62,7 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    history.pushState(null, '', `#${blockType}`);
+    window.location.hash = `${blockType}/${screenType}`;
   }
 
   dispose() {
@@ -70,6 +74,6 @@ export class ProcessHistoryHandler {
   }
 
   #getCurrentLocationHash() {
-    return window.location.hash.replace('#', '');
+    return window.location.hash.replace('#', '').split('/');
   }
 }

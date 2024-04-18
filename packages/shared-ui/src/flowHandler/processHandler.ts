@@ -7,7 +7,6 @@ import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
 import {
-  // ConfirmProcessAbortBlock,
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
@@ -137,7 +136,7 @@ export class ProcessHandler {
     if (confirm("Are you sure you want to abort the signup process? Any information you've entered will be lost.")) {
       void currentBlock.confirmAbort();
     } else {
-      currentBlock.cancelAbort(currentBlock);
+      history.forward();
     }
   }
 

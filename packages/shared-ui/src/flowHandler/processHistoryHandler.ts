@@ -58,7 +58,7 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    history.pushState(null, '', `#${blockType}`);
+    window.location.hash = blockType;
   }
 
   dispose() {

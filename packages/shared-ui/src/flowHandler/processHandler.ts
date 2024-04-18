@@ -7,7 +7,7 @@ import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
 import {
-  ConfirmProcessAbortBlock,
+  // ConfirmProcessAbortBlock,
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
@@ -124,18 +124,7 @@ export class ProcessHandler {
   // this adds a ConfirmProcessAbortBlock to the process
   startAskForAbort() {
     const currentBlock = this.#currentBlock;
-    if (!currentBlock) {
-      return;
-    }
-
-    if (currentBlock instanceof ConfirmProcessAbortBlock) {
-      const originalBlock = currentBlock.data as ConfirmProcessAbortBlock;
-      originalBlock.cancelAbort(originalBlock.data);
-      return;
-    }
-
-    if (initScreenBlocks.includes(currentBlock.type)) {
-      history.back();
+    if (!currentBlock || initScreenBlocks.includes(currentBlock.type)) {
       return;
     }
 
@@ -145,15 +134,11 @@ export class ProcessHandler {
       return;
     }
 
-    const confirmProcessAbort = new ConfirmProcessAbortBlock(
-      this.#corbadoApp,
-      this,
-      currentBlock.common,
-      this.#errorTranslator,
-      currentBlock,
-    );
-
-    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives]);
+    if (confirm("Are you sure you want to abort the signup process? Any information you've entered will be lost.")) {
+      void currentBlock.confirmAbort();
+    } else {
+      currentBlock.cancelAbort(currentBlock);
+    }
   }
 
   dispose() {

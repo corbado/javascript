@@ -5,9 +5,12 @@ import React from 'react';
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn }) => {
+const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn, handleNavigationEvents }) => {
   return (
-    <FlowHandlerProvider onLoggedIn={onLoggedIn}>
+    <FlowHandlerProvider
+      onLoggedIn={onLoggedIn}
+      handleNavigationEvents={handleNavigationEvents}
+    >
       <AuthFlow />
     </FlowHandlerProvider>
   );

@@ -31,6 +31,7 @@ export interface CorbadoConfig extends CorbadoAppParams {
  */
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
+  handleNavigationEvents?: boolean;
 }
 
 /**
@@ -43,6 +44,7 @@ export interface CorbadoAuthConfig {
 export interface CorbadoSignUpConfig {
   onSignedUp: () => void;
   navigateToLogin?: () => void;
+  handleNavigationEvents?: boolean;
 }
 
 /**
@@ -55,4 +57,5 @@ export interface CorbadoSignUpConfig {
 export interface CorbadoLoginConfig {
   onLoggedIn: () => void;
   navigateToSignUp?: () => void;
+  handleNavigationEvents?: boolean;
 }

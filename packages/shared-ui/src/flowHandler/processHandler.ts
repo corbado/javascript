@@ -7,7 +7,6 @@ import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
 import {
-  ConfirmProcessAbortBlock,
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
@@ -19,6 +18,7 @@ import {
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
 import type { BlockTypes, ScreenNames } from './constants';
+import { initScreenBlocks } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
@@ -44,14 +44,19 @@ export class ProcessHandler {
    * The constructor initializes the ProcessHandler with a flow name, a project configuration, and a flow handler configuration.
    * It sets the current flow to the specified flow, the current screen to the InitSignup screen, and initializes the screen history as an empty array.
    */
-  constructor(i18next: i18n, corbadoApp: CorbadoApp | undefined, postProcess: () => void) {
+  constructor(
+    i18next: i18n,
+    corbadoApp: CorbadoApp | undefined,
+    postProcess: () => void,
+    handleNavigationEvents = true,
+  ) {
     if (!corbadoApp) {
       throw new Error('corbadoApp is undefined. This should not happen.');
     }
 
     const errorTranslator = new ErrorTranslator(i18next);
     this.#corbadoApp = corbadoApp;
-    this.#processHistoryHandler = new ProcessHistoryHandler(true);
+    this.#processHistoryHandler = new ProcessHistoryHandler(handleNavigationEvents);
     this.#errorTranslator = errorTranslator;
     this.#postProcess = postProcess;
   }
@@ -123,7 +128,7 @@ export class ProcessHandler {
   // this adds a ConfirmProcessAbortBlock to the process
   startAskForAbort() {
     const currentBlock = this.#currentBlock;
-    if (!currentBlock) {
+    if (!currentBlock || initScreenBlocks.includes(currentBlock.type)) {
       return;
     }
 
@@ -133,15 +138,17 @@ export class ProcessHandler {
       return;
     }
 
-    const confirmProcessAbort = new ConfirmProcessAbortBlock(
-      this.#corbadoApp,
-      this,
-      currentBlock.common,
-      this.#errorTranslator,
-      currentBlock,
-    );
-
-    this.handleProcessUpdateFrontend(confirmProcessAbort, [currentBlock, ...currentBlock.alternatives]);
+    // The default action is to continue on yes and abort on no because mobile Safari will auto-cancel.
+    // For reference see (unsolved bug): https://stackoverflow.com/questions/38083702/alert-confirm-and-prompt-not-working-after-using-history-api-on-safari-ios
+    if (
+      confirm(
+        'Going back will restart the signup process and your current progress will be lost. Do you wish to complete the current signup first?',
+      )
+    ) {
+      history.forward();
+    } else {
+      void currentBlock.confirmAbort();
+    }
   }
 
   dispose() {

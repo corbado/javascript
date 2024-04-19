@@ -83,3 +83,5 @@ export enum ContinueOnOtherEnvReasons {
   EmailLinkVerified = 'email-link-verified',
   ProcessAlreadyCompleted = 'process-already-completed',
 }
+
+export const initScreenBlocks = [BlockTypes.SignupInit, BlockTypes.LoginInit];

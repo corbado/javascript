@@ -316,22 +316,22 @@
 
 .cb-error-popup {
   display: flex;
-  gap: 1.25rem;
-  justify-content: between;
-  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
+  padding: 0.1rem 1.5rem;
   background-color: #e9e9e9;
   border-radius: var(--cb-border-radius-lg) var(--cb-border-radius-lg) 0 0;
   color: #4b5563;
 }
 
 .cb-error-popup-icon {
+  flex: 1;
   margin: auto;
   width: 1.3rem;
   vertical-align: middle;
 }
 
 .cb-error-popup-text {
-  flex: auto;
+  flex: 11;
   font-size: var(--cb-error-font-size);
   line-height: 0.9rem;
   font-family: var(--cb-secondary-font);
@@ -739,6 +739,7 @@
   border-radius: var(--cb-border-radius-sm);
   text-decoration: none;
   color: var(--cb-primary-text-color);
+  background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
   cursor: pointer;
   padding-right: 0.5rem;
@@ -755,6 +756,7 @@
   border-radius: var(--cb-border-radius-sm);
   text-decoration: none;
   color: var(--cb-primary-text-color);
+  background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
   cursor: pointer;
   width: 5.25rem;
@@ -1150,14 +1152,16 @@
   flex-direction: row;
 }
 
-.cb-social-login-buttton-large {
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-}
-
 .cb-social-login-buttton-large img {
   height: 1.25rem;
-  padding-right: 0.75rem;
+  padding-right: 0.25rem;
+}
+
+.cb-social-login-button-loading-spinner {
+  border-top-color: var(--cb-primary-color);
+  border-right-color: var(--cb-primary-color);
+  width: 0.9rem;
+  height: 0.9rem;
 }
 
 @media screen and (max-width: 481px) {

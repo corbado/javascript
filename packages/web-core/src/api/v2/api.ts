@@ -896,6 +896,12 @@ export interface MeRsp {
      * @memberof MeRsp
      */
     'identifiers': Array<Identifier>;
+    /**
+     * 
+     * @type {Array<SocialAccount>}
+     * @memberof MeRsp
+     */
+    'socialAccounts': Array<SocialAccount>;
 }
 /**
  * 
@@ -1276,6 +1282,39 @@ export interface SignupInitReq {
      */
     'identifiers': Array<LoginIdentifier>;
 }
+/**
+ * 
+ * @export
+ * @interface SocialAccount
+ */
+export interface SocialAccount {
+    /**
+     * 
+     * @type {SocialProviderType}
+     * @memberof SocialAccount
+     */
+    'providerType': SocialProviderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialAccount
+     */
+    'identifierValue': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialAccount
+     */
+    'avatarUrl': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SocialAccount
+     */
+    'fullName': string;
+}
+
+
 /**
  * 
  * @export

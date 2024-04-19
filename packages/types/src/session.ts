@@ -31,6 +31,7 @@ export interface CorbadoUser {
   id: string;
   fullName: string;
   identifiers: Array<Identifier>;
+  socialAccounts: Array<SocialAccount>;
 }
 
 /**
@@ -44,6 +45,21 @@ export interface Identifier {
   value: string;
   type: LoginIdentifierType;
   status: string;
+}
+
+/**
+ * Interface for SocialAccount.
+ * @interface
+ * @property {string} providerType - The provider type of the social account. Currently, only 'google' | 'microsoft' | 'github' is supported.
+ * @property {string} identifierValue - The identifier value of the social account.
+ * @property {string} avatarUrl - The avatar URL of the social account.
+ * @property {string} fullName - The full name of the social account.
+ */
+export interface SocialAccount {
+  providerType: string;
+  identifierValue: string;
+  avatarUrl: string;
+  fullName: string;
 }
 
 /**

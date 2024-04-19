@@ -1,10 +1,9 @@
-import type { AnchorHTMLAttributes, FunctionComponent, ReactNode } from 'react';
-import React from 'react';
+import type { FC, ReactNode } from 'react';
+import React, { useMemo } from 'react';
 
-import type { TextProps } from '../typography/Text';
-import { Text } from '../typography/Text';
+import { LoadingSpinner, Text, type TextProps } from '..';
 
-export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface IconButtonProps {
   icon: ReactNode;
   label: string;
   href?: string;
@@ -12,39 +11,51 @@ export interface IconButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement>
   showIconOnly?: boolean;
   className?: string;
   labelProps?: TextProps;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
-export const IconButton: FunctionComponent<IconButtonProps> = ({
+export const IconButton: FC<IconButtonProps> = ({
   icon,
   label,
   href,
   className,
   labelProps,
+  disabled,
+  loading,
   showIconOnly = false,
   onClick,
-  target = '_blank',
 }) => {
-  // TODO @Abdullah: Maybe we should rely on buttons instead of href for IconButton
+  const buttonClasses = `cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`;
+  const content = useMemo(() => {
+    return (
+      <>
+        <span className='cb-icon-button-icon'>{icon}</span>
+        {!showIconOnly && <Text {...labelProps}>{label}</Text>}
+      </>
+    );
+  }, [icon, label, showIconOnly, labelProps]);
+
   if (href) {
     return (
       <a
-        target={target}
-        className={`cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`}
+        className={buttonClasses}
         href={href}
+        target='_blank'
       >
-        <span className='cb-icon-button-icon'>{icon}</span>
-        {!showIconOnly && <Text {...labelProps}>{label}</Text>}
+        {content}
       </a>
     );
   }
 
   return (
     <button
-      className={`cb-icon-button${showIconOnly ? `-with-icon-only` : ''}${className ? ` ${className}` : ''}`}
+      className={buttonClasses}
       onClick={onClick}
+      title={showIconOnly ? label : undefined}
+      disabled={disabled || loading}
     >
-      <span className='cb-icon-button-icon'>{icon}</span>
-      {!showIconOnly && <Text {...labelProps}>{label}</Text>}
+      {loading ? <LoadingSpinner className='cb-social-login-button-loading-spinner' /> : content}
     </button>
   );
 };

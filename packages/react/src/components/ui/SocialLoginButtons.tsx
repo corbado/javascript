@@ -2,7 +2,7 @@ import type { SocialLogin } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { TFunction } from 'i18next';
 import type { FC, ReactNode } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { IconButton } from './buttons/IconButton';
 import { Divider } from './Divider';
@@ -14,6 +14,7 @@ export interface SocialLoginButtonsProps {
   dividerText?: string;
   socialLogins: SocialLogin[];
   t: TFunction;
+  socialLoadingInProgress: boolean;
   onClick: (providerType: SocialProviderType) => void;
 }
 
@@ -23,9 +24,33 @@ const Icons: Record<string, ReactNode> = {
   microsoft: <MicrosoftIcon />,
 };
 
-export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({ dividerText, socialLogins, t, onClick }) => {
+export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({
+  dividerText,
+  socialLogins,
+  t,
+  socialLoadingInProgress,
+  onClick,
+}) => {
+  const [loadingSocial, setLoadingSocial] = React.useState<string | undefined>();
   const socialLoginsAvailable = socialLogins.length > 0;
   const socialLoginButtonSize = socialLogins.length > 2 ? 'small' : 'large';
+
+  useEffect(() => {
+    if (!socialLoadingInProgress) {
+      return;
+    }
+
+    const socialLogin = localStorage.getItem('socialLogin');
+    if (socialLogin) {
+      setLoadingSocial(socialLogin);
+    }
+  }, [socialLoadingInProgress]);
+
+  const handleSocialLoginClick = (socialName: string) => {
+    localStorage.setItem('socialLogin', socialName);
+    setLoadingSocial(socialName);
+    onClick(socialName as SocialProviderType);
+  };
 
   if (!socialLoginsAvailable) {
     return null;
@@ -41,16 +66,16 @@ export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({ dividerText, s
         {socialLogins.map(social => (
           <IconButton
             key={social.name}
-            className={`cb-social-login-buttton-${socialLoginButtonSize}`}
             icon={Icons[social.name] ?? null}
-            label={t(`social_signup.${social.name}`)}
-            onClick={() => onClick(social.name as SocialProviderType)}
+            label={t(`social_signup.${social.name}`) || t(`social_signup.default`, social.name)}
+            onClick={() => handleSocialLoginClick(social.name)}
             showIconOnly={socialLoginButtonSize === 'small'}
+            disabled={!!(loadingSocial && loadingSocial !== social.name)}
+            loading={loadingSocial === social.name}
             labelProps={{
               level: '2',
               textColorVariant: 'primary',
             }}
-            target='_blank'
           />
         ))}
       </div>

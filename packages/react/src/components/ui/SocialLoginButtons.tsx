@@ -14,9 +14,11 @@ export interface SocialLoginButtonsProps {
   dividerText?: string;
   socialLogins: SocialLogin[];
   t: TFunction;
-  socialLoadingInProgress: boolean;
+  socialLoadingInProgress: boolean | undefined;
   onClick: (providerType: SocialProviderType) => void;
 }
+
+const socialLoginKey = 'socialLogin';
 
 const Icons: Record<string, ReactNode> = {
   github: <GithubIcon />,
@@ -36,19 +38,21 @@ export const SocialLoginButtons: FC<SocialLoginButtonsProps> = ({
   const socialLoginButtonSize = socialLogins.length > 2 ? 'small' : 'large';
 
   useEffect(() => {
-    if (!socialLoadingInProgress) {
-      return;
-    }
-
-    const socialLogin = localStorage.getItem('socialLogin');
-    if (socialLogin) {
-      setLoadingSocial(socialLogin);
+    if (socialLoadingInProgress) {
+      const socialLogin = localStorage.getItem(socialLoginKey);
+      if (socialLogin) {
+        setLoadingSocial(socialLogin);
+      }
+    } else if (socialLoadingInProgress === false) {
+      setLoadingSocial(undefined);
+      localStorage.removeItem(socialLoginKey);
     }
   }, [socialLoadingInProgress]);
 
   const handleSocialLoginClick = (socialName: string) => {
-    localStorage.setItem('socialLogin', socialName);
+    localStorage.setItem(socialLoginKey, socialName);
     setLoadingSocial(socialName);
+
     onClick(socialName as SocialProviderType);
   };
 

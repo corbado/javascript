@@ -21,7 +21,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
   );
   const [phoneInput, setPhoneInput] = useState<string>('');
-  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean>(false);
+  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
 
   const textFieldRef = useRef<HTMLInputElement>();
   const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
@@ -31,12 +31,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
     if (block.data.socialData.finished && !block.error) {
       const socialAbort = new AbortController();
-      void block.finishSocialVerify(socialAbort);
+      void block.finishSocialVerify(socialAbort).finally(() => setSocialLoadingInProgress(false));
       setSocialLoadingInProgress(true);
 
       return () => {
         socialAbort.abort();
       };
+    } else {
+      setSocialLoadingInProgress(false);
     }
 
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);

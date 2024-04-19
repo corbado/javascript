@@ -17,7 +17,7 @@ import { Text } from '../../../components/ui/typography/Text';
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
-  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean>(false);
+  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
 
   const usernameRef = useRef<HTMLInputElement>();
   const emailRef = useRef<HTMLInputElement>();
@@ -29,8 +29,10 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
     const socialAbort = new AbortController();
     if (block.data.socialData.finished && !block.error) {
-      void block.finishSocialVerification(socialAbort);
+      void block.finishSocialVerification(socialAbort).finally(() => setSocialLoadingInProgress(false));
       setSocialLoadingInProgress(true);
+    } else if (block.data.socialData.finished) {
+      setSocialLoadingInProgress(false);
     }
 
     return () => {

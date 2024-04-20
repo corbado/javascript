@@ -25,9 +25,7 @@ export const UserError = ({ customerSupportEmail, error }: Props) => {
       <div className='cb-error-popup-icon'>
         <ExclamationIcon className='cb-error-popup-icon' />
       </div>
-      <div className='cb-error-popup-text'>
-        <p>{errorString}</p>
-      </div>
+      <div className='cb-error-popup-text'>{errorString}</div>
     </div>
   );
 };

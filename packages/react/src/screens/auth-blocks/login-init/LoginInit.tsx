@@ -21,18 +21,24 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
   );
   const [phoneInput, setPhoneInput] = useState<string>('');
+  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
+
   const textFieldRef = useRef<HTMLInputElement>();
   const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
 
   useEffect(() => {
     setLoading(false);
+
     if (block.data.socialData.finished && !block.error) {
       const socialAbort = new AbortController();
-      void block.finishSocialVerify(socialAbort);
+      void block.finishSocialVerify(socialAbort).finally(() => setSocialLoadingInProgress(false));
+      setSocialLoadingInProgress(true);
 
       return () => {
         socialAbort.abort();
       };
+    } else {
+      setSocialLoadingInProgress(false);
     }
 
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
@@ -145,6 +151,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     [block, usePhone, phoneInput],
   );
 
+  const startSocialLogin = (providerType: SocialProviderType) => {
+    setSocialLoadingInProgress(true);
+    void block.startSocialVerify(providerType);
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -161,6 +172,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           type='submit'
           className='cb-signup-form-submit-button'
           isLoading={loading}
+          disabled={socialLoadingInProgress}
         >
           {submitButtonText}
         </PrimaryButton>
@@ -169,7 +181,8 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         dividerText={textDivider}
         socialLogins={block.data.socialData.providers}
         t={t}
-        onClick={(providerType: SocialProviderType) => void block.startSocialVerify(providerType)}
+        socialLoadingInProgress={socialLoadingInProgress}
+        onClick={startSocialLogin}
       />
       {block.isSignupEnabled() && (
         <Text

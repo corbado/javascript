@@ -1169,7 +1169,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-          $ref: '#/components/schemas/javaScriptHighEntropy'
+            $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1211,6 +1211,7 @@ components:
         - id
         - fullName
         - identifiers
+        - socialAccounts
       properties:
         id:
           type: string
@@ -1220,19 +1221,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/identifier'
+        socialAccounts:
+          type: array
+          items:
+              $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-        - value
-        - type
-        - status
+          - value
+          - type
+          - status
       properties:
-        value:
+          value:
+            type: string
+          type:
+            $ref: '#/components/schemas/loginIdentifierType'
+          status:
+            type: string
+
+    socialAccount:
+      type: object
+      required:
+        - providerType
+        - identifierValue
+        - avatarUrl
+        - fullName
+      properties:
+        providerType:
+          $ref: 'common.yml#/components/schemas/socialProviderType'
+        identifierValue:
           type: string
-        type:
-          $ref: '#/components/schemas/loginIdentifierType'
-        status:
+        avatarUrl:
+          type: string
+        fullName:
           type: string
 
     socialData:

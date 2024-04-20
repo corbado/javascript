@@ -17,6 +17,7 @@ import { Text } from '../../../components/ui/typography/Text';
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const [loading, setLoading] = useState<boolean>(false);
+  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
 
   const usernameRef = useRef<HTMLInputElement>();
   const emailRef = useRef<HTMLInputElement>();
@@ -25,9 +26,13 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
 
   useEffect(() => {
     setLoading(false);
+
     const socialAbort = new AbortController();
     if (block.data.socialData.finished && !block.error) {
-      void block.finishSocialVerification(socialAbort);
+      void block.finishSocialVerification(socialAbort).finally(() => setSocialLoadingInProgress(false));
+      setSocialLoadingInProgress(true);
+    } else if (block.data.socialData.finished) {
+      setSocialLoadingInProgress(false);
     }
 
     return () => {
@@ -75,6 +80,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         ref.current.value = value || '';
       }
     }
+  };
+
+  const startSocialLogin = (providerType: SocialProviderType) => {
+    setSocialLoadingInProgress(true);
+    void block.startSocialVerify(providerType);
   };
 
   const fullName = block.data.fullName;
@@ -138,6 +148,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
           type='submit'
           className='cb-signup-form-submit-button'
           isLoading={loading}
+          disabled={socialLoadingInProgress}
           onClick={handleSubmit}
         >
           {submitButtonText}
@@ -147,7 +158,8 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         socialLogins={block.data.socialData.providers}
         dividerText={textDivider}
         t={t}
-        onClick={(providerType: SocialProviderType) => void block.startSocialVerify(providerType)}
+        socialLoadingInProgress={socialLoadingInProgress}
+        onClick={startSocialLogin}
       />
       <Text
         level='2'

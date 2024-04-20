@@ -15,7 +15,8 @@
         "social_signup": {
           "google": "Continue with Google",
           "microsoft": "Continue with Microsoft",
-          "github": "Continue with GitHub"
+          "github": "Continue with GitHub",
+          "default": "Continue with {{provider}}"
         }
       }
     },
@@ -176,7 +177,8 @@
         "social_signup": {
           "google": "Continue with Google",
           "microsoft": "Continue with Microsoft",
-          "github": "Continue with GitHub"
+          "github": "Continue with GitHub",
+          "default": "Continue with {{provider}}"
         }
       }
     },
@@ -340,8 +342,14 @@
     "username": "Username",
     "email": "Email",
     "phone": "Phone number",
+    "social": "Social accounts",
     "verified": "verified",
     "unverified": "pending",
-    "warning_notLoggedIn": "Please log in to see your current user information."
+    "warning_notLoggedIn": "Please log in to see your current user information.",
+    "providers": {
+      "google": "Google",
+      "microsoft": "Microsoft",
+      "github": "GitHub"
+    }
   }
 }

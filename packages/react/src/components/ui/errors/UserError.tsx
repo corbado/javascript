@@ -9,13 +9,15 @@ type Props = {
   error: CorbadoError;
 };
 export const UserError = ({ customerSupportEmail, error }: Props) => {
-  // by default, we show a generic error message with a customer support email
   const { t } = useTranslation('translation', { keyPrefix: 'errors.unexpectedError' });
-  let errorString = customerSupportEmail ? t('withCustomerSupport', customerSupportEmail) : t('noCustomerSupport');
+  let errorString = '';
 
   // if we have more information though, we show a more detailed error (sometimes we show custom error messages at the top, e.g. for social logins)
   if (error.translatedMessage.length > 0) {
     errorString = error.translatedMessage;
+  } else {
+    // by default, we show a generic error message with a customer support email
+    errorString = customerSupportEmail ? t('withCustomerSupport', customerSupportEmail) : t('noCustomerSupport');
   }
 
   return (
@@ -23,8 +25,8 @@ export const UserError = ({ customerSupportEmail, error }: Props) => {
       <div className='cb-error-popup-icon'>
         <ExclamationIcon className='cb-error-popup-icon' />
       </div>
-      <div>
-        <p className='cb-error-popup-text'>{errorString}</p>
+      <div className='cb-error-popup-text'>
+        <p>{errorString}</p>
       </div>
     </div>
   );

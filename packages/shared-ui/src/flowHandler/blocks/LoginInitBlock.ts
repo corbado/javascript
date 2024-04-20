@@ -25,7 +25,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
   ) {
     super(app, flowHandler, common, errorTranslator);
 
-    const loginIdentifierError = errorTranslator.translate(data.error);
+    const loginIdentifierError = errorTranslator.translate(data.fieldError);
 
     this.data = {
       loginIdentifier: data.identifierValue ?? '',
@@ -47,8 +47,8 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     };
 
     // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
-    if (data.socialData?.error) {
-      this.setError(data.socialData.error);
+    if (data.error) {
+      this.setError(data.error);
     }
   }
 

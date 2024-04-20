@@ -9,6 +9,7 @@ export type BlockDataSignupInit = {
   phone: TextFieldWithError | null;
   userName: TextFieldWithError | null;
   socialData: SocialData;
+  error?: CorbadoError;
 };
 
 export type BlockDataLoginInit = {
@@ -77,7 +78,6 @@ export type SocialData = {
   oAuthUrl?: string;
   started: boolean;
   finished: boolean;
-  error?: CorbadoError;
 };
 
 export type TextFieldWithError = {

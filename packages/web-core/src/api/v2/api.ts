@@ -221,6 +221,12 @@ export interface BlockBodyData {
      * @memberof BlockBodyData
      */
     'isUsernameAvailable': boolean;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof BlockBodyData
+     */
+    'fieldError'?: RequestError;
 }
 
 
@@ -373,6 +379,12 @@ export interface GeneralBlockLoginInit {
      * @type {RequestError}
      * @memberof GeneralBlockLoginInit
      */
+    'fieldError'?: RequestError;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof GeneralBlockLoginInit
+     */
     'error'?: RequestError;
 }
 /**
@@ -458,6 +470,12 @@ export interface GeneralBlockSignupInit {
      * @memberof GeneralBlockSignupInit
      */
     'socialData'?: SocialData;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof GeneralBlockSignupInit
+     */
+    'error'?: RequestError;
 }
 /**
  * 

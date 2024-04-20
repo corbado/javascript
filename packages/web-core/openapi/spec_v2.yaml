@@ -1068,6 +1068,8 @@ components:
           $ref: '#/components/schemas/fullNameWithError'
         socialData:
           $ref: '#/components/schemas/socialData'
+        error:
+          $ref: '#/components/schemas/requestError'
 
     generalBlockLoginInit:
       type: object
@@ -1093,7 +1095,8 @@ components:
           type: boolean
         socialData:
           $ref: '#/components/schemas/socialData'
-
+        fieldError:
+          $ref: '#/components/schemas/requestError'
         error:
           $ref: '#/components/schemas/requestError'
 

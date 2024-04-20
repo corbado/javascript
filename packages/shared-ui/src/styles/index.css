@@ -317,7 +317,7 @@
 .cb-error-popup {
   display: flex;
   gap: 0.5rem;
-  padding: 0.1rem 1.5rem;
+  padding: 1rem 1.5rem;
   background-color: #e9e9e9;
   border-radius: var(--cb-border-radius-lg) var(--cb-border-radius-lg) 0 0;
   color: #4b5563;
@@ -333,7 +333,7 @@
 .cb-error-popup-text {
   flex: 11;
   font-size: var(--cb-error-font-size);
-  line-height: 0.9rem;
+  line-height: 1.2rem;
   font-family: var(--cb-secondary-font);
   font-weight: var(--cb-font-weight-normal);
 }
@@ -371,7 +371,7 @@
   color: var(--cb-secondary-link-color);
 }
 
-.cb-primary-button {
+button.cb-primary-button {
   align-self: center;
   padding: 0.6rem;
   color: var(--cb-button-text-primary-color);

@@ -78,8 +78,8 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     };
 
     // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
-    if (data.socialData?.error) {
-      this.setError(data.socialData.error);
+    if (data.error) {
+      this.setError(data.error);
     }
   }
 

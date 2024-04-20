@@ -925,6 +925,19 @@ components:
           $ref: '#/components/schemas/blockBody'
         common:
           $ref: '#/components/schemas/processCommon'
+        newProcess:
+          $ref: '#/components/schemas/processStaticInfo'
+
+    processStaticInfo:
+      type: object
+      required:
+        - token
+        - expiresAt
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: integer
 
     processCommon:
       type: object
@@ -1055,6 +1068,8 @@ components:
           $ref: '#/components/schemas/fullNameWithError'
         socialData:
           $ref: '#/components/schemas/socialData'
+        error:
+          $ref: '#/components/schemas/requestError'
 
     generalBlockLoginInit:
       type: object
@@ -1080,7 +1095,8 @@ components:
           type: boolean
         socialData:
           $ref: '#/components/schemas/socialData'
-
+        fieldError:
+          $ref: '#/components/schemas/requestError'
         error:
           $ref: '#/components/schemas/requestError'
 
@@ -1169,7 +1185,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-            $ref: '#/components/schemas/javaScriptHighEntropy'
+          $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1224,21 +1240,21 @@ components:
         socialAccounts:
           type: array
           items:
-              $ref: '#/components/schemas/socialAccount'
+            $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     socialAccount:
       type: object

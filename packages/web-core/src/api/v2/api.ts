@@ -1172,6 +1172,31 @@ export interface ProcessResponse {
      * @memberof ProcessResponse
      */
     'common': ProcessCommon;
+    /**
+     * 
+     * @type {ProcessStaticInfo}
+     * @memberof ProcessResponse
+     */
+    'newProcess'?: ProcessStaticInfo;
+}
+/**
+ * 
+ * @export
+ * @interface ProcessStaticInfo
+ */
+export interface ProcessStaticInfo {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessStaticInfo
+     */
+    'token': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProcessStaticInfo
+     */
+    'expiresAt': number;
 }
 /**
  * 

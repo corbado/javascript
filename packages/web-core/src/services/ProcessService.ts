@@ -267,7 +267,18 @@ export class ProcessService {
   }
 
   async resetAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return this.wrapWithErr(() => this.#authApi.processReset());
+    const res = await this.wrapWithErr(() => this.#authApi.processReset());
+    if (res.ok && res.val.newProcess) {
+      const newProcess = new AuthProcess(
+        res.val.newProcess.token,
+        res.val.newProcess.expiresAt,
+        res.val.common.frontendApiUrl,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
+
+    return res;
   }
 
   async initSignup(identifiers: LoginIdentifier[], fullName?: string): Promise<Result<ProcessResponse, CorbadoError>> {

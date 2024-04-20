@@ -775,7 +775,7 @@ button.cb-primary-button {
   padding-top: 0.15rem;
 }
 
-.cb-email-resend-button {
+button.cb-email-resend-button {
   width: 100%;
   margin-top: 0.2rem;
 }
@@ -874,7 +874,7 @@ button.cb-primary-button {
   margin-bottom: 2rem;
 }
 
-.cb-phone-otp-resend-button {
+button.cb-phone-otp-resend-button {
   width: 100%;
   margin-top: 0.2rem;
 }

@@ -132,9 +132,7 @@ export class ProcessService {
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
     };
 
-    if (this.#isPreviewMode) {
-      headers['X-Corbado-Mode'] = 'preview';
-    }
+    headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
 
     const out = axios.create({
       timeout: this.#timeout,
@@ -529,6 +527,15 @@ export class ProcessService {
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
+
+  #buildCorbadoFlags = (): string => {
+    const flags: string[] = [];
+    if (this.#isPreviewMode) {
+      flags.push('preview');
+    }
+
+    return flags.join(',');
+  };
 }
 
 // returns true if the current process does not contain any meaningful data any can thus be reset to a new process

@@ -291,9 +291,7 @@ export class SessionService {
       Expires: '0',
     };
 
-    if (this.#isPreviewMode) {
-      headers['X-Corbado-Mode'] = 'preview';
-    }
+    headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
 
     let axiosInstance: AxiosInstance;
     if (longSession) {
@@ -565,4 +563,13 @@ export class SessionService {
       return Err(CorbadoError.fromUnknownFrontendError(e));
     }
   }
+
+  #buildCorbadoFlags = (): string => {
+    const flags: string[] = [];
+    if (this.#isPreviewMode) {
+      flags.push('preview');
+    }
+
+    return flags.join(',');
+  };
 }

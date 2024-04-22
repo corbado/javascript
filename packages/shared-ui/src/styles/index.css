@@ -464,7 +464,7 @@ button.cb-primary-button {
 .cb-divider-line {
   flex: 1;
   height: 1px;
-  background-color: var(--cb-divider-line-color)
+  background-color: var(--cb-divider-line-color);
 }
 
 .cb-divider-text {

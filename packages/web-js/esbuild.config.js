@@ -1,4 +1,5 @@
 const esbuild = require('esbuild');
+const { define } = require('./esbuild.helper');
 
 esbuild
   .build({
@@ -16,5 +17,6 @@ esbuild
     alias: {
       '@corbado/shared-ui': '../shared-ui/src',
     },
+    define,
   })
   .catch(() => process.exit(1));

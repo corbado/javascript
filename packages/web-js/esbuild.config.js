@@ -17,6 +17,6 @@ esbuild
     alias: {
       '@corbado/shared-ui': '../shared-ui/src',
     },
-    define
+    define,
   })
   .catch(() => process.exit(1));

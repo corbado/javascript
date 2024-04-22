@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
 @import './variables.css';
 @import './themes/emerald-funk.css';
 
@@ -35,6 +36,10 @@
 
 .cb-secondary-text-color {
   color: var(--cb-text-secondary-color);
+}
+
+.cb-header-text-color {
+  color: var(--cb-header-text-color);
 }
 
 .cb-bold-text-weight {
@@ -135,7 +140,7 @@
   font-family: var(--cb-secondary-font);
   font-weight: var(--cb-font-weight-normal);
   background-color: var(--cb-white);
-  color: var(--cb-text-primary-color);
+  color: var(--cb-input-text-color);
   box-sizing: border-box;
 }
 
@@ -250,7 +255,7 @@
   height: var(--cb-input-field-height);
   width: 100%;
   padding: 0 0.4rem;
-  color: var(--cb-text-primary-color);
+  color: var(--cb-input-text-color);
   background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
   border-top-right-radius: var(--cb-border-radius-sm);
@@ -268,7 +273,7 @@
 .cb-phone-input-field-search {
   background-color: var(--cb-white);
   font-family: var(--cb-secondary-font);
-  color: var(--cb-text-primary-color);
+  color: var(--cb-input-text-color);
   height: var(--cb-input-field-height);
   font-weight: var(--cb-font-weight-normal);
   border: none;
@@ -289,7 +294,7 @@
 .cb-phone-input-field-input:-webkit-autofill:focus,
 .cb-phone-input-field-input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px var(--cb-white) inset;
-  -webkit-text-fill-color: var(--cb-text-primary-color);
+  -webkit-text-fill-color: var(--cb-input-text-color);
 }
 
 .cb-error-message {
@@ -323,7 +328,6 @@
   margin-bottom: -0.75rem;
   background-color: var(--cb-error-popup-background-color);
   border-radius: var(--cb-border-radius-lg) var(--cb-border-radius-lg) 0 0;
-  color: #4b5563;
 }
 
 .cb-error-popup-icon {
@@ -339,7 +343,7 @@
 }
 
 .cb-error-popup-text {
-  color: var(--cb-header-text-color);
+  color: var(--cb-error-popup-text-color);
 }
 
 .cb-auth-change-section {
@@ -715,6 +719,10 @@ button.cb-primary-button {
   margin: 2rem 0 1.25rem 0;
 }
 
+.cb-email-block-user-info-left-icon {
+  width: 1.4rem;
+}
+
 .cb-email-link-buton-group {
   align-self: center;
   margin: 0.6rem 0 1.75rem 0;
@@ -865,17 +873,16 @@ button.cb-email-resend-button {
   width: 90%;
   margin-bottom: 1.5rem;
   align-self: center;
-  margin-top: 1.5rem;
 }
 
 .cb-phone-otp-block-header {
-  padding-left: 1rem;
+  display: block;
 }
 
 .cb-phone-otp-user-info-section {
   width: 100%;
   margin-top: 2.5rem;
-  margin-bottom: 2.75rem;
+  margin-bottom: 1.75rem;
 }
 
 .cb-phone-otp-input-container {

@@ -9,7 +9,7 @@ import { Icon } from './Icon';
 
 export const PersonIcon: FC<IconProps> = memo(props => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, personIconSrc, '--cb-box-color-hover');
+  const { logoSVG } = useIconWithTheme(svgRef, personIconSrc);
 
   return (
     <Icon

@@ -85,12 +85,14 @@
   text-align: center;
   word-wrap: break-word;
   margin-top: 1.5rem;
+  color: var(--cb-header-text-color);
 }
 
 .cb-subheader {
   display: block;
   text-align: center;
   margin-bottom: 1rem;
+  color: var(--cb-header-text-color);
 }
 
 .cb-input-field {
@@ -143,7 +145,7 @@
 }
 
 .cb-input:disabled {
-  background-color: var(--cb-box-color-hover);
+  background-color: var(--cb-input-disabled-color);
 }
 
 .cb-input-error {
@@ -167,7 +169,7 @@
 }
 
 .cb-phone-input-field-disabled {
-  background-color: var(--cb-box-color-hover);
+  background-color: var(--cb-input-disabled-color);
 }
 
 .cb-phone-input-field:focus-within {
@@ -204,7 +206,7 @@
 }
 
 .cb-phone-input-field-button-disabled {
-  background-color: var(--cb-box-color-hover);
+  background-color: var(--cb-input-disabled-color);
   cursor: not-allowed;
 }
 
@@ -260,7 +262,7 @@
 }
 
 .cb-phone-input-field-input:disabled {
-  background-color: var(--cb-box-color-hover);
+  background-color: var(--cb-input-disabled-color);
 }
 
 .cb-phone-input-field-search {
@@ -317,8 +319,9 @@
 .cb-error-popup {
   display: flex;
   gap: 0.5rem;
-  padding: 1rem 1.5rem;
-  background-color: #e9e9e9;
+  padding: 1rem 2.2rem;
+  margin-bottom: -0.75rem;
+  background-color: var(--cb-error-popup-background-color);
   border-radius: var(--cb-border-radius-lg) var(--cb-border-radius-lg) 0 0;
   color: #4b5563;
 }
@@ -326,16 +329,17 @@
 .cb-error-popup-icon {
   flex: 1;
   margin: auto;
-  width: 1.3rem;
-  vertical-align: middle;
+  width: 1.25rem;
+  height: 1rem;
+}
+
+.cb-error-popup-text-container {
+  flex: 11;
+  line-height: 1.2rem;
 }
 
 .cb-error-popup-text {
-  flex: 11;
-  font-size: var(--cb-error-font-size);
-  line-height: 1.2rem;
-  font-family: var(--cb-secondary-font);
-  font-weight: var(--cb-font-weight-normal);
+  color: var(--cb-header-text-color);
 }
 
 .cb-auth-change-section {
@@ -460,7 +464,7 @@ button.cb-primary-button {
 .cb-divider-line {
   flex: 1;
   height: 1px;
-  background-color: #d6d6d6;
+  background-color: var(--cb-divider-line-color)
 }
 
 .cb-divider-text {
@@ -537,6 +541,10 @@ button.cb-primary-button {
   padding: 0;
   overflow: hidden;
   width: 100%;
+}
+
+.cb-otp-input:disabled {
+  background-color: var(--cb-otp-disabled-color);
 }
 
 .cb-otp-input-container {

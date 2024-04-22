@@ -78,10 +78,6 @@ export class CorbadoAppState {
   }
 
   logout() {
-    if (!this.corbadoApp) {
-      throw new Error('Please call load() before logging out');
-    }
-
     return this.corbadoApp.sessionService.logout();
   }
 }

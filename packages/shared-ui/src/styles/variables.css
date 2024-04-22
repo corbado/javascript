@@ -1,7 +1,7 @@
 :root {
   --cb-primary-color: #1953ff;
   --cb-primary-color-hover: rgba(25, 83, 255, 0.75);
-  --cb-primary-color-disabled: #DFDFE0;
+  --cb-primary-color-disabled: #dfdfe0;
   --cb-button-text-primary-color: #fff;
   --cb-text-primary-color: #000000;
   --cb-text-secondary-color: #6e6d6d;
@@ -42,7 +42,7 @@
   --cb-otp-disabled-color: #0e0e0e;
   --cb-border-color: rgb(132 140 166 / 65%);
   --cb-primary-color-hover: rgba(25, 83, 255, 0.5);
-  --cb-primary-color-disabled: #6F7486;
+  --cb-primary-color-disabled: #6f7486;
   --cb-divider-line-color: rgba(255, 255, 255, 0.4);
   --cb-input-disabled-color: #6f7486;
   --cb-input-text-color: #ffffff;

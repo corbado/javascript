@@ -64,6 +64,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         level='6'
         fontWeight='bold'
         className='cb-pk-append-header'
+        textColorVariant='header'
       >
         {headerText}
       </Text>
@@ -73,7 +74,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       </span>
       <div className='cb-pk-append-user-info-section'>
         <Text
-          textColorVariant='primary'
+          textColorVariant='script'
           fontFamilyVariant='primary'
         >
           {passkeyUserHandle ?? ''}

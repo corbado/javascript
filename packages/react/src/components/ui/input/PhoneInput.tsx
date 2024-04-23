@@ -20,6 +20,7 @@ interface PhoneInputProps {
   initialPhoneNumber?: string;
   autoComplete?: string;
   disabled?: boolean;
+  autoFocus?: boolean;
   onChange: (value: string | undefined) => void;
 }
 
@@ -31,6 +32,7 @@ export const PhoneInput: FC<PhoneInputProps> = ({
   initialCountry,
   initialPhoneNumber,
   disabled,
+  autoFocus,
   autoComplete = 'tel',
   onChange,
 }) => {
@@ -172,6 +174,7 @@ export const PhoneInput: FC<PhoneInputProps> = ({
         type='tel'
         inputMode='numeric'
         maxLength={13}
+        autoFocus={autoFocus}
         value={phoneNumber}
         disabled={disabled}
         onChange={onPhoneChange}

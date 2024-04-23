@@ -7,12 +7,13 @@
   --cb-text-secondary-color: #6e6d6d;
   --cb-header-text-color: #000000;
   --cb-error-popup-text-color: #4b5563;
+  --cb-script-text-color: #000000;
   --cb-white: #ffffff;
   --cb-dark: #000000;
   --cb-border-color: rgb(212 212 212 / 60%);
   --cb-secondary-link-color: #59acff;
   --cb-box-color: #f5f5f5;
-  --cb-box-color-hover: #d9d9d9;
+  --cb-box-color-hover: #F5F5F5;
   --cb-error-text-color: #fa5f55;
   --cb-otp-disabled-color: #fbfbfb;
   --cb-divider-line-color: rgba(0, 0, 0, 0.3);
@@ -32,8 +33,9 @@
 
 .cb-dark {
   --cb-header-text-color: #ffffff;
-  --cb-text-primary-color: #a1a1a1;
+  --cb-text-primary-color: #ffffff;
   --cb-error-popup-text-color: #ffffff;
+  --cb-script-text-color: #a1a1a1;
   --cb-box-color: #1f1f1f;
   --cb-box-color-hover: #3b3b3b;
   --cb-secondary-link-color: #a5d2ff;

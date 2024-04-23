@@ -42,6 +42,14 @@
   color: var(--cb-header-text-color);
 }
 
+.cb-script-text-color {
+  color: var(--cb-script-text-color);
+}
+
+.cb-error-text-color {
+  color: var(--cb-error-text-color);
+}
+
 .cb-bold-text-weight {
   font-weight: var(--cb-font-weight-bold);
 }

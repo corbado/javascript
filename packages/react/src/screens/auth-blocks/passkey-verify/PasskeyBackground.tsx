@@ -26,6 +26,10 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
     passkeyLoginStarted.current = true;
 
     void block.passkeyLogin();
+
+    return () => {
+      block.cancelPasskeyOperation();
+    };
   }, []);
 
   const headerText = useMemo(() => <span>{t('header')}</span>, [t]);

@@ -16,6 +16,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     keyPrefix: `login.passkey-verify.passkey-error`,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [changingBlock, setChangingBlock] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<string>(block.data.identifierValue);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -34,6 +35,10 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
 
   useEffect(() => {
     setUserInfo(block.getFormattedPhoneNumber());
+
+    () => {
+      return block.cancelPasskeyOperation();
+    };
   }, [block]);
 
   useEffect(() => {
@@ -86,6 +91,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
       <PrimaryButton
         onClick={() => void passkeyLogin()}
         isLoading={loading}
+        disabled={changingBlock}
       >
         {primaryButtonText}
       </PrimaryButton>
@@ -98,9 +104,9 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton
           key={fallback.label}
-          disabled={loading}
+          disabled={changingBlock}
           onClick={() => {
-            setLoading(true);
+            setChangingBlock(true);
             return void fallback.action();
           }}
         >

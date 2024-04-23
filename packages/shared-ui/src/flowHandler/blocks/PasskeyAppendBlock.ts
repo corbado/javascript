@@ -70,6 +70,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   showEditUserData() {
+    this.cancelPasskeyOperation();
     this.updateScreen(ScreenNames.EditUserData);
   }
 
@@ -90,6 +91,8 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async initFallbackEmailOtp(): Promise<void> {
+    this.cancelPasskeyOperation();
+
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
     this.updateProcess(newBlock);
 
@@ -97,21 +100,27 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async initFallbackSmsOtp(): Promise<void> {
+    this.cancelPasskeyOperation();
+
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
     this.updateProcess(newBlock);
 
     return;
   }
 
-  async skipPasskeyAppend(): Promise<void> {
-    const newBlock = await this.app.authProcessService.finishAuthProcess();
+  async initFallbackEmailLink(): Promise<void> {
+    this.cancelPasskeyOperation();
+
+    const newBlock = await this.app.authProcessService.startEmailLinkVerification();
     this.updateProcess(newBlock);
 
     return;
   }
 
-  async initFallbackEmailLink(): Promise<void> {
-    const newBlock = await this.app.authProcessService.startEmailLinkVerification();
+  async skipPasskeyAppend(): Promise<void> {
+    this.cancelPasskeyOperation();
+
+    const newBlock = await this.app.authProcessService.finishAuthProcess();
     this.updateProcess(newBlock);
 
     return;
@@ -181,5 +190,12 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.showPasskeyAppend();
 
     return;
+  }
+
+  // cancels the current passkey operation (if one has been started)
+  // this should be called if a user leaves the passkey verify block without completing the passkey operation
+  // (otherwise the operation will continue in the background and a passkey popup might occur much later when the user no longer expects it)
+  cancelPasskeyOperation() {
+    return this.app.authProcessService.dispose();
   }
 }

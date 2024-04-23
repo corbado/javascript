@@ -18,6 +18,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
+  const [changingBlock, setChangingBlock] = useState<boolean>(false);
 
   const appendPasskey = useCallback(() => {
     setLoading(true);
@@ -32,6 +33,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     }
 
     setLoading(false);
+
+    return () => {
+      block.cancelPasskeyOperation();
+    };
   }, [block]);
 
   useEffect(() => {
@@ -108,6 +113,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       </div>
       <PrimaryButton
         isLoading={loading}
+        disabled={changingBlock}
         onClick={appendPasskey}
       >
         {primaryButtonText}
@@ -122,8 +128,11 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             {block.data.availableFallbacks.map(fallback => (
               <SecondaryButton
                 key={fallback.label}
-                onClick={() => void fallback.action()}
-                disabled={loading}
+                onClick={() => {
+                  setChangingBlock(true);
+                  return void fallback.action();
+                }}
+                disabled={changingBlock}
               >
                 {t(fallback.label)}
               </SecondaryButton>

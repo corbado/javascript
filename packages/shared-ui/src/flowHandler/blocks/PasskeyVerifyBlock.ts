@@ -82,6 +82,8 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackEmailOtp(): Promise<void> {
+    this.cancelPasskeyOperation();
+
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
     this.updateProcess(newBlock);
 
@@ -89,6 +91,8 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackSmsOtp(): Promise<void> {
+    this.cancelPasskeyOperation();
+
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
     this.updateProcess(newBlock);
 
@@ -96,9 +100,18 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackEmailLink(): Promise<void> {
+    this.cancelPasskeyOperation();
+
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();
     this.updateProcess(newBlock);
 
     return;
+  }
+
+  // cancels the current passkey operation (if one has been started)
+  // this should be called if a user leaves the passkey verify block without completing the passkey operation
+  // (otherwise the operation will continue in the background and a passkey popup might occur much later when the user no longer expects it)
+  cancelPasskeyOperation() {
+    return this.app.authProcessService.dispose();
   }
 }

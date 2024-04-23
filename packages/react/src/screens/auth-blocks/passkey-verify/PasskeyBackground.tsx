@@ -42,6 +42,7 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
         level='6'
         fontWeight='bold'
         className='cb-pk-verify-header'
+        textColorVariant='header'
       >
         {headerText}
       </Text>

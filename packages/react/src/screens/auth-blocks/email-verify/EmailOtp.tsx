@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
 import { EmailLinks } from '../../../components/ui/EmailLinks';
+import { EmailIcon } from '../../../components/ui/icons/EmailIcon';
 import { OtpInputGroup } from '../../../components/ui/input/OtpInputGroup';
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
@@ -105,6 +106,7 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       <Header className='cb-email-block-header'>{headerText}</Header>
       <UserInfo
         className='cb-email-user-info-section'
+        leftIcon={<EmailIcon className='cb-email-block-user-info-left-icon' />}
         userData={block.data.email}
         onRightIconClick={() => void emailChange()}
       ></UserInfo>

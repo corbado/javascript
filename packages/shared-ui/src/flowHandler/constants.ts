@@ -45,7 +45,7 @@ export enum ScreenNames {
   EmailLinkSent = 'email-link-sent',
   PhoneOtp = 'phone-otp',
   EmailLinkVerification = 'email-link-verification',
-  SocialLinkVerification = 'social-link-verification',
+  SocialVerify = 'social-verify',
   MissingFields = 'missing-fields',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
@@ -64,7 +64,6 @@ export enum BlockTypes {
   SignupInit = 'signup-init',
   EmailVerify = 'email-verify',
   PhoneVerify = 'phone-verify',
-  SocialVerify = 'social-verify',
   MissingFields = 'missing-fields',
   PasskeyAppend = 'passkey-append',
   PasskeyVerify = 'passkey-verify',
@@ -84,3 +83,5 @@ export enum ContinueOnOtherEnvReasons {
   EmailLinkVerified = 'email-link-verified',
   ProcessAlreadyCompleted = 'process-already-completed',
 }
+
+export const initScreenBlocks = [BlockTypes.SignupInit, BlockTypes.LoginInit];

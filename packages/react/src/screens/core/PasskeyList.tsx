@@ -17,20 +17,30 @@ const PasskeyList: FC = () => {
       return;
     }
 
-    void fetchPasskeys();
+    const abortController = new AbortController();
+    void fetchPasskeys(abortController);
+    return () => {
+      abortController.abort();
+    };
   }, [isAuthenticated]);
 
-  const fetchPasskeys = useCallback(async () => {
-    setLoading(true);
-    const result = await getPasskeys();
+  const fetchPasskeys = useCallback(
+    async (abortController?: AbortController) => {
+      setLoading(true);
+      const result = await getPasskeys(abortController);
+      if (result.err && result.val.ignore) {
+        return;
+      }
 
-    if (result.err) {
-      throw new Error(result.val.name);
-    }
+      if (result.err) {
+        throw new Error(result.val.name);
+      }
 
-    setPasskeys(result.val);
-    setLoading(false);
-  }, [getPasskeys]);
+      setPasskeys(result.val);
+      setLoading(false);
+    },
+    [getPasskeys],
+  );
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;

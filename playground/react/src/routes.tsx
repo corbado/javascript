@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import SignUpPage from './pages/SignUpPage';
 import LoginPage from './pages/LoginPage';
+import withCorbadoProvider from './hoc/withCorbadoProvider';
 
 const RouteProvider = () => {
   const routes = [
@@ -31,4 +32,4 @@ const RouteProvider = () => {
   return <RouterProvider router={createBrowserRouter(routes)} />;
 };
 
-export default RouteProvider;
+export default withCorbadoProvider(RouteProvider);

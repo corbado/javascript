@@ -1,7 +1,7 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 export const AuthButtons = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const projectId = process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!;
 
   return (
     <div className='auth-buttons'>
@@ -20,7 +20,7 @@ export const AuthButtons = () => {
       </button>
       <button
         className='primary-auth-button'
-        onClick={() => navigate(`/${projectId}/login`)}
+        onClick={() => navigate(`/${projectId}/login#login-init`)}
       >
         Login Page
       </button>

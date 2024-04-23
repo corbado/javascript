@@ -1,6 +1,7 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { AuthType } from '@corbado/web-core';
+import { SocialDataStatusEnum } from '@corbado/web-core';
+import { AuthType, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -13,6 +14,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
   readonly type = BlockTypes.LoginInit;
   readonly authType = AuthType.Login;
   readonly initialScreen = ScreenNames.LoginInit;
+  #conditionalUIStarted = false;
 
   constructor(
     app: CorbadoApp,
@@ -23,7 +25,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
   ) {
     super(app, flowHandler, common, errorTranslator);
 
-    const loginIdentifierError = errorTranslator.translate(data.error);
+    const loginIdentifierError = errorTranslator.translate(data.fieldError);
 
     this.data = {
       loginIdentifier: data.identifierValue ?? '',
@@ -33,8 +35,21 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       usernameEnabled: data.isUsernameAvailable,
       phoneEnabled: data.isPhoneAvailable,
       conditionalUIChallenge: data.conditionalUIChallenge,
-      socialLogins: [],
+      socialData: {
+        providers:
+          data.socialData?.providers?.map(provider => {
+            return { name: provider };
+          }) || [],
+        oAuthUrl: data.socialData?.oauthUrl,
+        started: data.socialData?.status === SocialDataStatusEnum.Started || false,
+        finished: data.socialData?.status === SocialDataStatusEnum.Finished || false,
+      },
     };
+
+    // errors in social logins should not be displayed in the login form (like we do for identifiers) but should appear on top of the screen
+    if (data.error) {
+      this.setError(data.error);
+    }
   }
 
   async start(loginIdentifier: string, isPhone: boolean) {
@@ -57,12 +72,32 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       return;
     }
 
-    const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
-    if (b.err && b.val instanceof PasskeyChallengeCancelledError) {
-      // we ignore this type of error
+    if (this.#conditionalUIStarted) {
+      console.log('Conditional UI already started');
       return;
     }
 
+    this.#conditionalUIStarted = true;
+    const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
+    if (b.err && (b.val instanceof PasskeyChallengeCancelledError || b.val.ignore)) {
+      // we ignore this type of error
+      return;
+    }
     this.updateProcess(b);
+  }
+
+  async startSocialVerify(providerType: SocialProviderType) {
+    const redirectUrl = window.location.origin + window.location.pathname;
+    const res = await this.app.authProcessService.startSocialVerification(providerType, redirectUrl, AuthType.Login);
+    if (!res) {
+      return;
+    }
+
+    this.updateProcess(res);
+  }
+
+  async finishSocialVerify(abortController: AbortController) {
+    const res = await this.app.authProcessService.finishSocialVerification(abortController);
+    this.updateProcess(res);
   }
 }

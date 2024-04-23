@@ -1,4 +1,4 @@
-import type { CorbadoUser, Identifier } from '@corbado/types';
+import type { CorbadoUser, Identifier, SocialAccount } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ interface ProcessedUser {
   username?: string;
   emails: Identifier[];
   phoneNumbers: Identifier[];
+  socialAccounts: SocialAccount[];
 }
 
 export const User: FC = () => {
@@ -24,7 +25,12 @@ export const User: FC = () => {
       return;
     }
 
-    void getCurrentUser();
+    const abortController = new AbortController();
+    void getCurrentUser(abortController);
+
+    return () => {
+      abortController.abort();
+    };
   }, [isAuthenticated]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -32,6 +38,7 @@ export const User: FC = () => {
   const usernameFieldLabel = useMemo(() => t('username'), [t]);
   const emailFieldLabel = useMemo(() => t('email'), [t]);
   const phoneFieldLabel = useMemo(() => t('phone'), [t]);
+  const socialFieldLabel = useMemo(() => t('social'), [t]);
   const verifiedText = useMemo(() => t('verified'), [t]);
   const unverifiedText = useMemo(() => t('unverified'), [t]);
   const processUser = useMemo((): ProcessedUser => {
@@ -40,6 +47,7 @@ export const User: FC = () => {
         name: '',
         emails: [],
         phoneNumbers: [],
+        socialAccounts: [],
       };
     }
 
@@ -48,20 +56,27 @@ export const User: FC = () => {
       username: currentUser.identifiers.find(id => id.type === 'username')?.value,
       emails: currentUser.identifiers.filter(id => id.type === 'email'),
       phoneNumbers: currentUser.identifiers.filter(id => id.type === 'phone'),
+      socialAccounts: currentUser.socialAccounts,
     };
   }, [currentUser]);
 
-  const getCurrentUser = useCallback(async () => {
-    setLoading(true);
-    const result = await getFullUser();
+  const getCurrentUser = useCallback(
+    async (abortController: AbortController) => {
+      setLoading(true);
+      const result = await getFullUser(abortController);
+      if (result.err && result.val.ignore) {
+        return;
+      }
 
-    if (!result || result?.err) {
-      throw new Error(result?.val.name);
-    }
+      if (!result || result?.err) {
+        throw new Error(result?.val.name);
+      }
 
-    setCurrentUser(result.val);
-    setLoading(false);
-  }, [corbadoApp]);
+      setCurrentUser(result.val);
+      setLoading(false);
+    },
+    [corbadoApp],
+  );
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
@@ -84,6 +99,7 @@ export const User: FC = () => {
         {processUser.name && (
           <InputField
             className='cb-user-details-section-indentifier'
+            key={`user-entry-${processUser.name}`}
             label={nameFieldLabel}
             value={processUser.name}
             disabled
@@ -92,6 +108,7 @@ export const User: FC = () => {
         {processUser.username && (
           <InputField
             className='cb-user-details-section-indentifier'
+            key={`user-entry-${processUser.username}`}
             label={usernameFieldLabel}
             value={processUser.username}
             disabled
@@ -99,7 +116,10 @@ export const User: FC = () => {
         )}
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.emails.map((email, i) => (
-            <div className='cb-user-details-section-indentifiers-list-item'>
+            <div
+              className='cb-user-details-section-indentifiers-list-item'
+              key={`user-details-email-${email.value}`}
+            >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <InputField
                   className='cb-user-details-section-indentifiers-list-item-field-input'
@@ -110,7 +130,9 @@ export const User: FC = () => {
                 />
               </div>
               <div
-                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${email.status === 'verified' ? 'primary' : 'secondary'}`}
+                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
+                  email.status === 'verified' ? 'primary' : 'secondary'
+                }`}
               >
                 <Text
                   level='2'
@@ -126,7 +148,10 @@ export const User: FC = () => {
         </div>
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.phoneNumbers.map((phone, i) => (
-            <div className='cb-user-details-section-indentifiers-list-item'>
+            <div
+              className='cb-user-details-section-indentifiers-list-item'
+              key={`user-details-phone-${phone.value}`}
+            >
               <div className='cb-user-details-section-indentifiers-list-item-field'>
                 <PhoneInputField
                   className='cb-user-details-section-indentifiers-list-item-field-input'
@@ -137,7 +162,9 @@ export const User: FC = () => {
                 />
               </div>
               <div
-                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${phone.status === 'verified' ? 'primary' : 'secondary'}`}
+                className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
+                  phone.status === 'verified' ? 'primary' : 'secondary'
+                }`}
               >
                 <Text
                   level='2'
@@ -146,6 +173,34 @@ export const User: FC = () => {
                   className='cb-user-details-section-indentifiers-list-item-badge-text'
                 >
                   {phone.status === 'verified' ? verifiedText : unverifiedText}
+                </Text>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className='cb-user-details-section-indentifiers-list'>
+          {processUser.socialAccounts.map((social, i) => (
+            <div
+              className='cb-user-details-section-indentifiers-list-item'
+              key={`user-details-email-${social.providerType}`}
+            >
+              <div className='cb-user-details-section-indentifiers-list-item-field'>
+                <InputField
+                  className='cb-user-details-section-indentifiers-list-item-field-input'
+                  key={social.providerType}
+                  label={i === 0 ? socialFieldLabel : undefined}
+                  value={`${social.fullName} - ${social.identifierValue}`}
+                  disabled
+                />
+              </div>
+              <div className='cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-primary'>
+                <Text
+                  level='2'
+                  fontFamilyVariant='secondary'
+                  fontWeight='bold'
+                  className='cb-user-details-section-indentifiers-list-item-badge-text'
+                >
+                  {t(`providers.${social.providerType}`) || social.providerType}
                 </Text>
               </div>
             </div>

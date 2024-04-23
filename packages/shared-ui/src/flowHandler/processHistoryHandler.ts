@@ -1,16 +1,16 @@
 import { BlockTypes } from './constants';
 
 export class ProcessHistoryHandler {
-  #enabled: boolean;
+  #handleNavigationEvents: boolean;
   #abortController: AbortController;
 
-  constructor(enabled: boolean) {
-    this.#enabled = enabled;
+  constructor(handleNavigationEvents: boolean) {
+    this.#handleNavigationEvents = handleNavigationEvents;
     this.#abortController = new AbortController();
   }
 
   init(maybeSwitchToBlock: (blockType: BlockTypes) => boolean, askForAbort: () => void): BlockTypes | null {
-    if (!this.#enabled) {
+    if (!this.#handleNavigationEvents) {
       return null;
     }
 
@@ -33,7 +33,6 @@ export class ProcessHistoryHandler {
 
     const currentLocationHash = this.#getCurrentLocationHash();
     if (currentLocationHash) {
-      console.log('currentLocationHash', currentLocationHash);
       // we define those two overrides because they are more intuitive than the hash values
       if (currentLocationHash === 'register') {
         return BlockTypes.SignupInit;
@@ -50,7 +49,7 @@ export class ProcessHistoryHandler {
   }
 
   registerBlockChange(blockType: BlockTypes) {
-    if (!this.#enabled) {
+    if (!this.#handleNavigationEvents) {
       return;
     }
 
@@ -59,11 +58,11 @@ export class ProcessHistoryHandler {
       return;
     }
 
-    window.location.hash = blockType;
+    history.pushState(null, '', `#${blockType}`);
   }
 
   dispose() {
-    if (!this.#enabled) {
+    if (!this.#handleNavigationEvents) {
       return;
     }
 

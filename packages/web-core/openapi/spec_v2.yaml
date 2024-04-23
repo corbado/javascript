@@ -487,12 +487,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/auth/social/verify/callback:
+    get:
+      description: tbd
+      operationId: SocialVerifyCallback
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: tbd
+
   /v2/auth/social/verify/finish:
     post:
       description: tbd
       operationId: SocialVerifyFinish
       tags:
         - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/socialVerifyFinishReq'
       responses:
         '200':
           description: tbd
@@ -582,6 +598,10 @@ components:
         passkeyAppendInterval:
           type: string
           enum: [ 'not_specified', '0d', '1d', '3d', '1w', '3w', '1m', '3m' ]
+        socialProviders:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialProvider'
 
     updateComponentConfigRsp:
       type: object
@@ -780,9 +800,20 @@ components:
 
     socialVerifyStartReq:
       type: object
+      required:
+        - providerType
+        - redirectUrl
+        - authType
       properties:
-        placeholder:
+        providerType:
+          $ref: 'common.yml#/components/schemas/socialProviderType'
+        redirectUrl:
           type: string
+        authType:
+          $ref: '#/components/schemas/authType'
+
+    socialVerifyFinishReq:
+      type: object
 
     identifierUpdateReq:
       type: object
@@ -894,6 +925,19 @@ components:
           $ref: '#/components/schemas/blockBody'
         common:
           $ref: '#/components/schemas/processCommon'
+        newProcess:
+          $ref: '#/components/schemas/processStaticInfo'
+
+    processStaticInfo:
+      type: object
+      required:
+        - token
+        - expiresAt
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: integer
 
     processCommon:
       type: object
@@ -947,7 +991,6 @@ components:
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
             - $ref: '#/components/schemas/generalBlockCompleted'
             - $ref: '#/components/schemas/generalBlockSignupInit'
-            - $ref: '#/components/schemas/generalBlockSocialVerify'
             - $ref: '#/components/schemas/generalBlockUsernameCollect'
             - $ref: '#/components/schemas/generalPhoneCollect'
             - $ref: '#/components/schemas/generalBlockLoginInit'
@@ -1015,6 +1058,7 @@ components:
       type: object
       required:
         - identifiers
+        - socialProviders
       properties:
         identifiers:
           type: array
@@ -1022,6 +1066,10 @@ components:
             $ref: '#/components/schemas/loginIdentifierWithError'
         fullName:
           $ref: '#/components/schemas/fullNameWithError'
+        socialData:
+          $ref: '#/components/schemas/socialData'
+        error:
+          $ref: '#/components/schemas/requestError'
 
     generalBlockLoginInit:
       type: object
@@ -1031,6 +1079,7 @@ components:
         - isPhoneAvailable
         - isEmailAvailable
         - isUsernameAvailable
+        - socialData
       properties:
         conditionalUIChallenge:
           type: string
@@ -1044,11 +1093,12 @@ components:
           type: boolean
         isUsernameAvailable:
           type: boolean
+        socialData:
+          $ref: '#/components/schemas/socialData'
+        fieldError:
+          $ref: '#/components/schemas/requestError'
         error:
           $ref: '#/components/schemas/requestError'
-
-    generalBlockSocialVerify:
-      type: object
 
     generalBlockUsernameCollect:
       $ref: '#/components/schemas/loginIdentifierWithError'
@@ -1177,6 +1227,7 @@ components:
         - id
         - fullName
         - identifiers
+        - socialAccounts
       properties:
         id:
           type: string
@@ -1186,6 +1237,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/identifier'
+        socialAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
@@ -1199,6 +1254,66 @@ components:
         type:
           $ref: '#/components/schemas/loginIdentifierType'
         status:
+          type: string
+
+    socialAccount:
+      type: object
+      required:
+        - providerType
+        - identifierValue
+        - avatarUrl
+        - fullName
+      properties:
+        providerType:
+          $ref: 'common.yml#/components/schemas/socialProviderType'
+        identifierValue:
+          type: string
+        avatarUrl:
+          type: string
+        fullName:
+          type: string
+
+    socialData:
+      type: object
+      required:
+        - providers
+        - status
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: 'common.yml#/components/schemas/socialProviderType'
+        status:
+          type: string
+          enum: [ 'initial', 'started', 'finished' ]
+        oauthUrl:
+          type: string
+        error:
+          $ref: '#/components/schemas/requestError'
+
+    socialProvider:
+      type: object
+      required:
+        - providerType
+        - enabled
+        - useOwnAccount
+        - scopes
+      properties:
+        providerType:
+          $ref: 'common.yml#/components/schemas/socialProviderType'
+        enabled:
+          type: boolean
+        useOwnAccount:
+          type: boolean
+        scopes:
+          type: array
+          items:
+            type: string
+        clientID:
+          type: string
+        clientSecret:
+          type: string
+        redirectURI:
           type: string
 
     requestError:

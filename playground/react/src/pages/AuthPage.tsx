@@ -1,7 +1,6 @@
 import { CorbadoAuth } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
-import withCorbadoProvider from '../hoc/withCorbadoProvider';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -21,4 +20,4 @@ const AuthPage = () => {
   );
 };
 
-export default withCorbadoProvider(AuthPage);
+export default AuthPage;

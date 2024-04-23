@@ -1,4 +1,5 @@
 import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { SocialProviderType } from '@corbado/web-core';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,11 +21,26 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
   );
   const [phoneInput, setPhoneInput] = useState<string>('');
+  const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
+
   const textFieldRef = useRef<HTMLInputElement>();
   const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
 
   useEffect(() => {
     setLoading(false);
+
+    if (block.data.socialData.finished && !block.error) {
+      const socialAbort = new AbortController();
+      void block.finishSocialVerify(socialAbort).finally(() => setSocialLoadingInProgress(false));
+      setSocialLoadingInProgress(true);
+
+      return () => {
+        socialAbort.abort();
+      };
+    } else {
+      setSocialLoadingInProgress(false);
+    }
+
     const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
     if (shouldUsePhone) {
       setUsePhone(true);
@@ -38,6 +54,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     }
 
     void block.continueWithConditionalUI();
+
+    return () => {
+      // cleanup
+    };
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -104,13 +124,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       );
     }
 
+    // we set autocomplete to username webauthn because Safari and Firefox need this for conditional UI to work
     return (
       <InputField
         label={t('textField.email')}
         id='email'
         name='email'
         type='email'
-        autoComplete='email webauthn'
+        autoComplete='username webauthn'
         {...commonProps}
       />
     );
@@ -130,6 +151,11 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     [block, usePhone, phoneInput],
   );
 
+  const startSocialLogin = (providerType: SocialProviderType) => {
+    setSocialLoadingInProgress(true);
+    void block.startSocialVerify(providerType);
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -146,14 +172,17 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           type='submit'
           className='cb-signup-form-submit-button'
           isLoading={loading}
+          disabled={socialLoadingInProgress}
         >
           {submitButtonText}
         </PrimaryButton>
       </form>
       <SocialLoginButtons
         dividerText={textDivider}
-        socialLogins={block.data.socialLogins}
+        socialLogins={block.data.socialData.providers}
         t={t}
+        socialLoadingInProgress={socialLoadingInProgress}
+        onClick={startSocialLogin}
       />
       {block.isSignupEnabled() && (
         <Text

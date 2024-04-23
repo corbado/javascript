@@ -8,10 +8,19 @@ import type {
 } from 'axios';
 import axios from 'axios';
 import log from 'loglevel';
-import { Err, Ok, Result } from 'ts-results';
+import type { Result } from 'ts-results';
+import { Err, Ok } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { LoginIdentifier, ProcessInitReq, ProcessInitRsp, ProcessResponse } from '../api/v2';
+import type {
+  AuthType,
+  LoginIdentifier,
+  ProcessInitReq,
+  ProcessInitRsp,
+  ProcessResponse,
+  SocialProviderType,
+} from '../api/v2';
+import { SocialDataStatusEnum } from '../api/v2';
 import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
@@ -57,13 +66,19 @@ export class ProcessService {
     // we check if there is a process in local storage, if not we have to create a new one
     const process = AuthProcess.loadFromStorage();
     if (!process) {
+      console.log('process is missing');
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     // if the process is already in local storage, we configure the client to use the existing process (we do not know about the
     this.#setApisV2(process);
     const res = await this.#getAuthProcessState(abortController, frontendPreferredBlockType);
+    if (res.err && res.val.ignore) {
+      return res;
+    }
+
     if (res.err) {
+      console.log('process has error', res.val);
       return this.#initNewAuthProcess(abortController);
     }
 
@@ -71,6 +86,7 @@ export class ProcessService {
     // we might disable this for PROD projects
     const initial = isProcessInitial(res.val);
     if (initial) {
+      console.log('process is initial');
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
@@ -116,9 +132,7 @@ export class ProcessService {
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
     };
 
-    if (this.#isPreviewMode) {
-      headers['X-Corbado-Mode'] = 'preview';
-    }
+    headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
 
     const out = axios.create({
       timeout: this.#timeout,
@@ -143,6 +157,7 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
+    console.log('initNewAuthProcess');
     const res = await this.#initAuthProcess(abortController, frontendPreferredBlockType);
     if (res.err) {
       return res;
@@ -224,7 +239,7 @@ export class ProcessService {
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const req: ProcessInitReq = {
       clientInformation: {
-        bluetoothAvailable: false,
+        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
         javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
@@ -240,134 +255,115 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processGet(frontendPreferredBlockType, { signal: abortController.signal });
-      return r.data;
-    });
+    return this.wrapWithErr(() =>
+      this.#authApi.processGet(frontendPreferredBlockType, { signal: abortController.signal }),
+    );
   }
 
   async finishAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processComplete();
-      return r.data;
-    });
+    return this.wrapWithErr(() => this.#authApi.processComplete());
   }
 
   async resetAuthProcess(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.processReset();
-      return r.data;
-    });
+    const res = await this.wrapWithErr(() => this.#authApi.processReset());
+    if (res.ok && res.val.newProcess) {
+      const newProcess = new AuthProcess(
+        res.val.newProcess.token,
+        res.val.newProcess.expiresAt,
+        res.val.common.frontendApiUrl,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
+
+    return res;
   }
 
   async initSignup(identifiers: LoginIdentifier[], fullName?: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.signupInit({
+    return this.wrapWithErr(() =>
+      this.#authApi.signupInit({
         identifiers: identifiers,
         fullName: fullName,
-      });
-      return r.data;
-    });
+      }),
+    );
   }
 
   async initLogin(identifierValue: string, isPhone: boolean): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.loginInit({
+    return this.wrapWithErr(() =>
+      this.#authApi.loginInit({
         isPhone: isPhone,
         identifierValue: identifierValue,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async skipBlock(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.blockSkip();
-      return r.data;
-    });
+    return this.wrapWithErr(() => this.#authApi.blockSkip());
   }
 
   async startPasskeyAppend(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.passkeyAppendStart({
+    return this.wrapWithErr(() =>
+      this.#authApi.passkeyAppendStart({
         clientInfo: {},
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async finishPasskeyAppend(signedChallenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.passkeyAppendFinish({
+    return this.wrapWithErr(() =>
+      this.#authApi.passkeyAppendFinish({
         signedChallenge: signedChallenge,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async startPasskeyLogin(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.passkeyLoginStart({});
-      return r.data;
-    });
+    return this.wrapWithErr(() => this.#authApi.passkeyLoginStart({}));
   }
 
   async finishPasskeyLogin(signedChallenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.passkeyLoginFinish({
+    return this.wrapWithErr(() =>
+      this.#authApi.passkeyLoginFinish({
         signedChallenge: signedChallenge,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async finishPasskeyMediation(signedChallenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.passkeyMediationFinish({
+    return this.wrapWithErr(() =>
+      this.#authApi.passkeyMediationFinish({
         signedChallenge: signedChallenge,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async startEmailCodeVerification(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyStart({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierVerifyStart({
         verificationType: 'email-otp',
         identifierType: 'email',
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async finishEmailCodeVerification(code: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyFinish({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierVerifyFinish({
         verificationType: 'email-otp',
         identifierType: 'email',
         code: code,
         isNewDevice: false,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async startEmailLinkVerification(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyStart({
-        verificationType: 'email-link',
-        identifierType: 'email',
-      });
-
-      return r.data;
-    });
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierVerifyStart({
+        verificationType: VerificationMethod.EmailLink,
+        identifierType: LoginIdentifierType.Email,
+      }),
+    );
   }
 
   finishEmailLinkVerification(
@@ -386,67 +382,86 @@ export class ProcessService {
   }
 
   getVerificationStatus(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyStatus();
-      return r.data;
-    });
+    return this.wrapWithErr(() => this.#authApi.identifierVerifyStatus());
   }
 
   async updateEmail(email: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierUpdate({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierUpdate({
         identifierType: 'email',
         value: email,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async updatePhone(phone: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierUpdate({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierUpdate({
         identifierType: 'phone',
         value: phone,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async updateUsername(username: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierUpdate({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierUpdate({
         identifierType: 'username',
         value: username,
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async startPhoneOtpVerification(): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyStart({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierVerifyStart({
         verificationType: 'phone-otp',
         identifierType: 'phone',
-      });
-
-      return r.data;
-    });
+      }),
+    );
   }
 
   async finishPhoneOtpVerification(code: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    return Result.wrapAsync(async () => {
-      const r = await this.#authApi.identifierVerifyFinish({
+    return this.wrapWithErr(() =>
+      this.#authApi.identifierVerifyFinish({
         verificationType: 'phone-otp',
         identifierType: 'phone',
         code: code,
         isNewDevice: false,
-      });
+      }),
+    );
+  }
 
-      return r.data;
-    });
+  async startSocialVerification(
+    providerType: SocialProviderType,
+    redirectUrl: string,
+    authType: AuthType,
+  ): Promise<Result<ProcessResponse, CorbadoError> | null> {
+    const res = await this.wrapWithErr(() =>
+      this.#authApi.socialVerifyStart({
+        providerType: providerType,
+        redirectUrl: redirectUrl,
+        authType: authType,
+      }),
+    );
+
+    // redirects must be done carefully => we don't want to trigger that redirect during the usual process update cycle but immediately after we received a response from the backend
+    if (
+      res.ok &&
+      res.val.blockBody.data.socialData &&
+      res.val.blockBody.data.socialData.status === SocialDataStatusEnum.Started &&
+      res.val.blockBody.data.socialData.oauthUrl
+    ) {
+      window.location.href = res.val.blockBody.data.socialData.oauthUrl;
+
+      return null;
+    }
+
+    return res;
+  }
+
+  finishSocialVerification(abortController: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
+    return this.wrapWithErr(() => this.#authApi.socialVerifyFinish({}, { signal: abortController.signal }));
   }
 
   async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
@@ -512,15 +527,35 @@ export class ProcessService {
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
+
+  #buildCorbadoFlags = (): string => {
+    const flags: string[] = [];
+    if (this.#isPreviewMode) {
+      flags.push('preview');
+    }
+
+    return flags.join(',');
+  };
 }
 
 // returns true if the current process does not contain any meaningful data any can thus be reset to a new process
 function isProcessInitial(process: ProcessResponse): boolean {
   switch (process.blockBody.block) {
-    case BlockType.LoginInit:
-      return process.blockBody.data.identifierValue.length === 0;
-    case BlockType.SignupInit:
-      return process.blockBody.data.identifiers.reduce((acc, curr) => acc && curr.identifier.length === 0, true);
+    case BlockType.LoginInit: {
+      const identifiersExist = process.blockBody.data.identifierValue.length > 0;
+      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
+
+      return !identifiersExist && !socialInProgress;
+    }
+    case BlockType.SignupInit: {
+      const identifiersExist = process.blockBody.data.identifiers.reduce(
+        (acc, curr) => acc || curr.identifier.length > 0,
+        false,
+      );
+      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
+
+      return !identifiersExist && !socialInProgress;
+    }
     default:
       return false;
   }

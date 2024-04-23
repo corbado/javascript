@@ -20,6 +20,8 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   readonly initialScreen = ScreenNames.PasskeyBackground;
   readonly authType: AuthType;
 
+  #passkeyAborted = false;
+
   constructor(
     app: CorbadoApp,
     flowHandler: ProcessHandler,
@@ -70,9 +72,13 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async passkeyLogin() {
+    this.#passkeyAborted = false;
+
     const res = await this.app.authProcessService.loginWithPasskey();
     if (res.err) {
-      this.updateScreen(ScreenNames.PasskeyError);
+      if (!this.#passkeyAborted) {
+        this.updateScreen(ScreenNames.PasskeyError);
+      }
       return;
     }
 
@@ -112,6 +118,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   // this should be called if a user leaves the passkey verify block without completing the passkey operation
   // (otherwise the operation will continue in the background and a passkey popup might occur much later when the user no longer expects it)
   cancelPasskeyOperation() {
+    this.#passkeyAborted = true;
     return this.app.authProcessService.dispose();
   }
 }

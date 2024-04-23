@@ -26,6 +26,12 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   }, [block]);
 
   useEffect(() => {
+    return () => {
+      block.cancelPasskeyOperation();
+    };
+  }, []);
+
+  useEffect(() => {
     if (block.data.userHandleType !== 'phone') {
       setPasskeyUserHandle(block.data.userHandle);
     } else {
@@ -33,10 +39,6 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     }
 
     setLoading(false);
-
-    return () => {
-      block.cancelPasskeyOperation();
-    };
   }, [block]);
 
   useEffect(() => {

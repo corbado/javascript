@@ -32,7 +32,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     return () => {
       block.cancelPasskeyOperation();
     };
-  }, [block]);
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

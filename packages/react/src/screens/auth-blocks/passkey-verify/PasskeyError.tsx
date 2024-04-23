@@ -34,11 +34,13 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   }, [block]);
 
   useEffect(() => {
-    setUserInfo(block.getFormattedPhoneNumber());
-
-    () => {
-      return block.cancelPasskeyOperation();
+    return () => {
+      block.cancelPasskeyOperation();
     };
+  }, []);
+
+  useEffect(() => {
+    setUserInfo(block.getFormattedPhoneNumber());
   }, [block]);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
     const { darkMode, projectId } = useContext(SettingsContext);
 
     return (
-      <div key={projectId}>
+      <div key={`${projectId}-${darkMode}`}>
         <CorbadoProvider
           projectId={projectId ?? process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp ?? ''}
           customTranslations={{

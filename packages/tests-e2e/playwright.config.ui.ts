@@ -49,6 +49,7 @@ export default defineConfig({
     {
       name: 'b1-01-emailotp-setup',
       testMatch: ['ui/b1-01-emailotp/setup.ts'],
+      teardown: 'b1-01-emailotp-teardown',
     },
     {
       name: 'b1-01-emailotp-chromium',
@@ -59,7 +60,6 @@ export default defineConfig({
     {
       name: 'b1-01-emailotp-teardown',
       testMatch: ['ui/b1-01-emailotp/teardown.ts'],
-      dependencies: ['b1-01-emailotp-chromium'],
     },
     //////////////////////////////////////////////////////
     // B1.1 configs (Phone OTP): SignUp with Identifier (unverified)
@@ -72,6 +72,7 @@ export default defineConfig({
     {
       name: 'b1-01-phoneotp-setup',
       testMatch: ['ui/b1-01-phoneotp/setup.ts'],
+      teardown: 'b1-01-phoneotp-teardown',
     },
     {
       name: 'b1-01-phoneotp-chromium',
@@ -82,7 +83,6 @@ export default defineConfig({
     {
       name: 'b1-01-phoneotp-teardown',
       testMatch: ['ui/b1-01-phoneotp/teardown.ts'],
-      dependencies: ['b1-01-phoneotp-chromium'],
     },
     //////////////////////////////////////////////////////
     // B1.1 configs (Email Link): SignUp with Identifier (unverified)
@@ -95,6 +95,7 @@ export default defineConfig({
     {
       name: 'b1-01-emaillink-setup',
       testMatch: ['ui/b1-01-emaillink/setup.ts'],
+      teardown: 'b1-01-emaillink-teardown',
     },
     {
       name: 'b1-01-emaillink-chromium',
@@ -105,7 +106,6 @@ export default defineConfig({
     {
       name: 'b1-01-emaillink-teardown',
       testMatch: ['ui/b1-01-emaillink/teardown.ts'],
-      dependencies: ['b1-01-emaillink-chromium'],
     },
     //////////////////////////////////////////////////////
     // B1.2 configs: SignUp with Identifier (verified)
@@ -118,6 +118,7 @@ export default defineConfig({
     {
       name: 'b1-02-setup',
       testMatch: ['ui/b1-02/setup.ts'],
+      teardown: 'b1-02-teardown',
     },
     {
       name: 'b1-02-chromium',
@@ -128,7 +129,6 @@ export default defineConfig({
     {
       name: 'b1-02-teardown',
       testMatch: ['ui/b1-02/teardown.ts'],
-      dependencies: ['b1-02-chromium'],
     },
     //////////////////////////////////////////////////////
     // B1.3 configs: SignUp with Identifiers (verified)
@@ -141,6 +141,7 @@ export default defineConfig({
     {
       name: 'b1-03-setup',
       testMatch: ['ui/b1-03/setup.ts'],
+      teardown: 'b1-03-teardown',
     },
     {
       name: 'b1-03-chromium',
@@ -181,14 +182,6 @@ export default defineConfig({
     {
       name: 'b1-03-teardown',
       testMatch: ['ui/b1-03/teardown.ts'],
-      dependencies: [
-        'b1-03-chromium',
-        'b1-03-firefox',
-        'b1-03-webkit',
-        'b1-03-mobilechrome',
-        'b1-03-mobilesafari',
-        'b1-03-msedge',
-      ],
     },
     //////////////////////////////////////////////////////
     // B1.9 configs: SignUp with Identifiers (verified)
@@ -201,6 +194,7 @@ export default defineConfig({
     // {
     //   name: 'b1-09-setup',
     //   testMatch: ['ui/b1-09/setup.ts'],
+    //   teardown: 'b1-09-teardown',
     // },
     // {
     //   name: 'b1-09-chromium',
@@ -241,14 +235,6 @@ export default defineConfig({
     // {
     //   name: 'b1-09-teardown',
     //   testMatch: ['ui/b1-09/teardown.ts'],
-    //   dependencies: [
-    //     'b1-09-chromium',
-    //     'b1-09-firefox',
-    //     'b1-09-webkit',
-    //     'b1-09-mobilechrome',
-    //     'b1-09-mobilesafari',
-    //     'b1-09-msedge',
-    //   ],
     // },
     //////////////////////////////////////////////////////
     // B1.11 configs: SignUp with Username
@@ -261,6 +247,7 @@ export default defineConfig({
     {
       name: 'b1-11-setup',
       testMatch: ['ui/b1-11/setup.ts'],
+      teardown: 'b1-11-teardown',
     },
     {
       name: 'b1-11-chromium',
@@ -271,7 +258,6 @@ export default defineConfig({
     {
       name: 'b1-11-teardown',
       testMatch: ['ui/b1-11/teardown.ts'],
-      dependencies: ['b1-11-chromium'],
     },
     //////////////////////////////////////////////////////
     // B2.1 configs (Email OTP): Login with Identifier
@@ -284,6 +270,7 @@ export default defineConfig({
     {
       name: 'b2-01-emailotp-setup',
       testMatch: ['ui/b2-01-emailotp/setup.ts'],
+      teardown: 'b2-01-emailotp-teardown',
     },
     {
       name: 'b2-01-emailotp-chromium',
@@ -294,7 +281,6 @@ export default defineConfig({
     {
       name: 'b2-01-emailotp-teardown',
       testMatch: ['ui/b2-01-emailotp/teardown.ts'],
-      dependencies: ['b2-01-emailotp-chromium'],
     },
     //////////////////////////////////////////////////////
     // B2.1 configs (Phone OTP): Login with Identifier
@@ -307,6 +293,7 @@ export default defineConfig({
     {
       name: 'b2-01-phoneotp-setup',
       testMatch: ['ui/b2-01-phoneotp/setup.ts'],
+      teardown: 'b2-01-phoneotp-teardown',
     },
     {
       name: 'b2-01-phoneotp-chromium',
@@ -317,7 +304,6 @@ export default defineConfig({
     {
       name: 'b2-01-phoneotp-teardown',
       testMatch: ['ui/b2-01-phoneotp/teardown.ts'],
-      dependencies: ['b2-01-phoneotp-chromium'],
     },
     //////////////////////////////////////////////////////
     // B2.1 configs (Email Link): Login with Identifier
@@ -330,6 +316,7 @@ export default defineConfig({
     {
       name: 'b2-01-emaillink-setup',
       testMatch: ['ui/b2-01-emaillink/setup.ts'],
+      teardown: 'b2-01-emaillink-teardown',
     },
     {
       name: 'b2-01-emaillink-chromium',
@@ -340,7 +327,6 @@ export default defineConfig({
     {
       name: 'b2-01-emaillink-teardown',
       testMatch: ['ui/b2-01-emaillink/teardown.ts'],
-      dependencies: ['b2-01-emaillink-chromium'],
     },
     //////////////////////////////////////////////////////
     // B2.3 configs: Login with Identifier - enforce single verification before login
@@ -353,6 +339,7 @@ export default defineConfig({
     {
       name: 'b2-03-setup',
       testMatch: ['ui/b2-03/setup.ts'],
+      teardown: 'b2-03-teardown',
     },
     {
       name: 'b2-03-chromium',
@@ -393,14 +380,6 @@ export default defineConfig({
     {
       name: 'b2-03-teardown',
       testMatch: ['ui/b2-03/teardown.ts'],
-      dependencies: [
-        'b2-03-chromium',
-        'b2-03-firefox',
-        'b2-03-webkit',
-        'b2-03-mobilechrome',
-        'b2-03-mobilesafari',
-        'b2-03-msedge',
-      ],
     },
   ],
 });

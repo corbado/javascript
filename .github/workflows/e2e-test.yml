@@ -93,7 +93,6 @@ jobs:
       - name: Install Playwright Browsers
         run: |
           npx playwright install --with-deps
-          npx playwright install msedge
 
       - name: Run E2E Test for ${{ matrix.app }}
         run: |

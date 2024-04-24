@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ExclamationIcon } from '../icons/ExclamationIcon';
+import { Text } from '../typography';
 
 type Props = {
   customerSupportEmail?: string;
@@ -25,7 +26,15 @@ export const UserError = ({ customerSupportEmail, error }: Props) => {
       <div className='cb-error-popup-icon'>
         <ExclamationIcon className='cb-error-popup-icon' />
       </div>
-      <div className='cb-error-popup-text'>{errorString}</div>
+      <div className='cb-error-popup-text-container'>
+        <Text
+          level='2'
+          fontFamilyVariant='secondary'
+          className='cb-error-popup-text'
+        >
+          {errorString}
+        </Text>
+      </div>
     </div>
   );
 };

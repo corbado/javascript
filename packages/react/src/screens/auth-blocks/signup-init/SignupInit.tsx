@@ -16,13 +16,15 @@ import { Text } from '../../../components/ui/typography/Text';
 
 export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
+
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
+  const [phoneInput, setPhoneInput] = useState<string>('');
 
   const usernameRef = useRef<HTMLInputElement>();
   const emailRef = useRef<HTMLInputElement>();
-  const [phoneInput, setPhoneInput] = useState<string>('');
   const fullNameRef = useRef<HTMLInputElement>();
+  const hasFocusField = useRef<boolean>(false);
 
   useEffect(() => {
     setLoading(false);
@@ -79,6 +81,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
       if (!ref.current.value) {
         ref.current.value = value || '';
       }
+
+      if (!hasFocusField.current) {
+        ref.current.focus();
+        hasFocusField.current = true;
+      }
     }
   };
 
@@ -91,6 +98,11 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const userName = block.data.userName;
   const email = block.data.email;
   const phone = block.data.phone;
+  const foucsPhoneField = !!(phone && !email && !userName && !fullName);
+
+  if (foucsPhoneField) {
+    hasFocusField.current = true;
+  }
 
   return (
     <>
@@ -140,6 +152,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
             errorMessage={phone?.translatedError}
             initialCountry='US'
             initialPhoneNumber={phone?.value}
+            autoFocus={foucsPhoneField}
             onChange={setPhoneInput}
           />
         )}
@@ -164,6 +177,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
       <Text
         level='2'
         fontWeight='normal'
+        textColorVariant='script'
         className='cb-auth-change-section'
       >
         {loginText}

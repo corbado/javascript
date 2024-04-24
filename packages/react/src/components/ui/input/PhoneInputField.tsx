@@ -21,6 +21,7 @@ export interface PhoneInputFieldProps {
   autoComplete?: string;
   disabled?: boolean;
   className?: string;
+  autoFocus?: boolean;
   onChange?: (value: string) => void;
 }
 
@@ -32,6 +33,7 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
   initialPhoneNumber,
   disabled,
   className,
+  autoFocus,
   initialCountry = 'US',
   autoComplete = 'tel',
   onChange,
@@ -76,6 +78,7 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
         hasError={!!errorMessage}
         autoComplete={autoComplete}
         disabled={disabled}
+        autoFocus={autoFocus}
         onChange={onChange_}
       />
       {errorMessage && <ErrorMessage message={errorMessage} />}

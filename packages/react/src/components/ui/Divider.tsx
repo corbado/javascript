@@ -15,7 +15,7 @@ export const Divider: FC<DividerProps> = ({ label, className }) => {
       <div className='cb-divider-text'>
         <Text
           level='1'
-          textColorVariant='primary'
+          textColorVariant='script'
           fontWeight='normal'
           className='cb-row'
         >

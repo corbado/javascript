@@ -99,6 +99,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           initialCountry='US'
           initialPhoneNumber={textField?.value}
           errorMessage={textField?.translatedError}
+          autoFocus={true}
           onChange={setPhoneInput}
         />
       );
@@ -119,6 +120,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           name='username'
           type='username'
           autoComplete='username webauthn'
+          autoFocus={true}
           {...commonProps}
         />
       );
@@ -132,6 +134,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         name='email'
         type='email'
         autoComplete='username webauthn'
+        autoFocus={true}
         {...commonProps}
       />
     );
@@ -188,6 +191,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         <Text
           level='2'
           fontWeight='normal'
+          textColorVariant='script'
           className='cb-auth-change-section'
         >
           {signUpText}

@@ -18,11 +18,18 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   });
   const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
+  const [changingBlock, setChangingBlock] = useState<boolean>(false);
 
   const appendPasskey = useCallback(() => {
     setLoading(true);
     void block.passkeyAppend();
   }, [block]);
+
+  useEffect(() => {
+    return () => {
+      block.cancelPasskeyOperation();
+    };
+  }, []);
 
   useEffect(() => {
     if (block.data.userHandleType !== 'phone') {
@@ -64,6 +71,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         level='6'
         fontWeight='bold'
         className='cb-pk-append-header'
+        textColorVariant='header'
       >
         {headerText}
       </Text>
@@ -73,7 +81,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       </span>
       <div className='cb-pk-append-user-info-section'>
         <Text
-          textColorVariant='primary'
+          textColorVariant='script'
           fontFamilyVariant='primary'
         >
           {passkeyUserHandle ?? ''}
@@ -108,6 +116,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       </div>
       <PrimaryButton
         isLoading={loading}
+        disabled={changingBlock}
         onClick={appendPasskey}
       >
         {primaryButtonText}
@@ -122,8 +131,11 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
             {block.data.availableFallbacks.map(fallback => (
               <SecondaryButton
                 key={fallback.label}
-                onClick={() => void fallback.action()}
-                disabled={loading}
+                onClick={() => {
+                  setChangingBlock(true);
+                  return void fallback.action();
+                }}
+                disabled={changingBlock}
               >
                 {t(fallback.label)}
               </SecondaryButton>

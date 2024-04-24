@@ -186,7 +186,12 @@
       "passkey-background": {
         "header": "Passkey login in process...",
         "body_title": "Please wait",
-        "body_description": "We are connecting to your authenticator."
+        "body_description": "We are connecting to your authenticator.",
+        "button_switchToAlternate": {
+          "emailOtp": "Use email verification",
+          "emailLink": "Use email verification",
+          "phone": "Use phone verification"
+        }
       },
       "passkey-error": {
         "header": "Something went wrong...",

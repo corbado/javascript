@@ -92,7 +92,7 @@ jobs:
 
       - name: Install Playwright Browsers
         run: |
-          apt-get update
+          sudo apt-get update
           npx playwright install --with-deps
           npx playwright install msedge
 

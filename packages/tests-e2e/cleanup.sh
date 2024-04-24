@@ -3,7 +3,7 @@
 directory="test-states"
 
 function iterate() {
-    local dir="test-states"
+    local dir="$1"
 
     for file in "$dir"/*; do
         if [ -f "$file" ]; then

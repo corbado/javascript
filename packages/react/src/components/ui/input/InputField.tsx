@@ -29,6 +29,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             level='2'
             fontFamilyVariant='secondary'
             className='cb-input-label-text'
+            textColorVariant='script'
           >
             {label}
           </Text>

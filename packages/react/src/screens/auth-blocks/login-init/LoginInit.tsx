@@ -191,6 +191,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         <Text
           level='2'
           fontWeight='normal'
+          textColorVariant='script'
           className='cb-auth-change-section'
         >
           {signUpText}

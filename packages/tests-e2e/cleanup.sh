@@ -12,7 +12,7 @@ function iterate() {
                 --header 'Content-Type: text/plain' \
                 --header 'Cookie: cbo_short_session='"$PLAYWRIGHT_JWT_TOKEN"'' \
                 --data '{ "id": "'"$PROJECT_ID"'" }'
-            # rm "$file"
+            rm "$file"
         fi
     done
 }

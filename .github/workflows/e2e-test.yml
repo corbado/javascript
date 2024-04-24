@@ -114,6 +114,9 @@ jobs:
           retention-days: 30
       - name: Clean up any remaining project IDs
         if: always()
-        run: bash cleanup.sh
+        run: |
+          echo $PWD
+          ls
+          bash cleanup.sh
         env:
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}

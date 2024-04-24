@@ -112,3 +112,8 @@ jobs:
           name: playwright-report
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
+      - name: Clean up any remaining project IDs
+        if: always()
+        run: bash cleanup.sh
+        env:
+          PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}

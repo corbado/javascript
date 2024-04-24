@@ -29,7 +29,5 @@ test.describe('Signup with email link proper user behavior', () => {
     await page.getByText('Maybe later').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkNoPasskeyRegistered();
-
-    await signupFlow.checkPasskeyRegistered();
   });
 });

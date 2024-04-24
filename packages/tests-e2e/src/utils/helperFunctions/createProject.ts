@@ -32,6 +32,8 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
   expect(createRes.ok).toBeTruthy();
 
   const projectId = (await createRes.json()).data.project.id;
+  StateManager.setProjectId(playwrightProjectName, projectId);
+  
   const configureRes = await fetch(`${process.env.BACKEND_API_URL}/v1/projectConfig`, {
     method: 'POST',
     headers: {
@@ -56,8 +58,6 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
     },
   });
   expect(activateRes.ok).toBeTruthy();
-
-  StateManager.setProjectId(playwrightProjectName, projectId);
 
   return projectId;
 }

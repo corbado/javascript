@@ -19,7 +19,7 @@ on:
 jobs:
   prepare:
     # runs-on: [ self-hosted, "javascript" ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-large
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:
@@ -92,7 +92,6 @@ jobs:
 
       - name: Install Playwright Browsers
         run: |
-          sudo apt-get update
           npx playwright install --with-deps
           npx playwright install msedge
 

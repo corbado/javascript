@@ -76,6 +76,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
     const res = await this.app.authProcessService.loginWithPasskey();
     if (res.err) {
+      // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {
         this.updateScreen(ScreenNames.PasskeyError);
       }

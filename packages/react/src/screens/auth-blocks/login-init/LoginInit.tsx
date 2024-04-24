@@ -3,11 +3,8 @@ import type { SocialProviderType } from '@corbado/web-core';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
+import { LoginForm } from '../../../components/authentication/LoginForm';
 import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
-import type { InputFieldProps } from '../../../components/ui/input/InputField';
-import InputField from '../../../components/ui/input/InputField';
-import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
 import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
@@ -24,7 +21,6 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
 
   const textFieldRef = useRef<HTMLInputElement>();
-  const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
 
   useEffect(() => {
     setLoading(false);
@@ -55,90 +51,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
     void block.continueWithConditionalUI();
 
-    return () => {
-      // cleanup
-    };
+    return void 0;
   }, [block]);
 
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);
   const signUpText = useMemo(() => t('text_signup'), [t]);
   const flowChangeButtonText = useMemo(() => t('button_signup'), [t]);
-  const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const textDivider = useMemo(() => t('text_divider'), [t]);
-  const IdentifierInputField = useMemo(() => {
-    const commonProps: Partial<InputFieldProps> & React.RefAttributes<HTMLInputElement> = {
-      errorMessage: textField?.translatedError,
-      ref: (el: HTMLInputElement | null) => el && (textFieldRef.current = el),
-    };
-
-    if (usePhone) {
-      let fieldLinkText: string | undefined = undefined;
-
-      if (hasBothEmailAndUsername) {
-        fieldLinkText = t('button_switchToAlternate.emailOrUsername');
-      } else if (block.data.emailEnabled) {
-        fieldLinkText = t('button_switchToAlternate.email');
-      } else if (block.data.usernameEnabled) {
-        fieldLinkText = t('button_switchToAlternate.username');
-      }
-
-      const fieldLink = fieldLinkText
-        ? {
-            text: fieldLinkText,
-            onClick: () => setUsePhone(false),
-          }
-        : undefined;
-
-      return (
-        <PhoneInputField
-          label={t('textField.phone')}
-          labelLink={fieldLink}
-          id='phone'
-          autoComplete='tel'
-          initialCountry='US'
-          initialPhoneNumber={textField?.value}
-          errorMessage={textField?.translatedError}
-          autoFocus={true}
-          onChange={setPhoneInput}
-        />
-      );
-    }
-
-    commonProps.labelLink = block.data.phoneEnabled
-      ? {
-          text: t('button_switchToAlternate.phone'),
-          onClick: () => setUsePhone(true),
-        }
-      : undefined;
-
-    if (hasBothEmailAndUsername || block.data.usernameEnabled) {
-      return (
-        <InputField
-          label={hasBothEmailAndUsername ? t('textField.emailOrUsername') : t('textField.username')}
-          id='username'
-          name='username'
-          type='username'
-          autoComplete='username webauthn'
-          autoFocus={true}
-          {...commonProps}
-        />
-      );
-    }
-
-    // we set autocomplete to username webauthn because Safari and Firefox need this for conditional UI to work
-    return (
-      <InputField
-        label={t('textField.email')}
-        id='email'
-        name='email'
-        type='email'
-        autoComplete='username webauthn'
-        autoFocus={true}
-        {...commonProps}
-      />
-    );
-  }, [block, t, textField, usePhone]);
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -166,20 +86,17 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         {subheaderText}
         {block.common.appName}
       </SubHeader>
-      <form
-        className='cb-form'
-        onSubmit={handleSubmit}
-      >
-        {IdentifierInputField}
-        <PrimaryButton
-          type='submit'
-          className='cb-signup-form-submit-button'
-          isLoading={loading}
-          disabled={socialLoadingInProgress}
-        >
-          {submitButtonText}
-        </PrimaryButton>
-      </form>
+      <LoginForm
+        block={block}
+        loading={loading}
+        socialLoadingInProgress={socialLoadingInProgress}
+        textField={textField}
+        inputRef={textFieldRef}
+        usePhone={usePhone}
+        setUsePhone={setUsePhone}
+        setPhoneInput={setPhoneInput}
+        handleSubmit={handleSubmit}
+      />
       <SocialLoginButtons
         dividerText={textDivider}
         socialLogins={block.data.socialData.providers}

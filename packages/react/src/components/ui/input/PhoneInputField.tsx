@@ -54,6 +54,7 @@ export const PhoneInputField: FC<PhoneInputFieldProps> = ({
           <Text
             level='2'
             fontFamilyVariant='secondary'
+            textColorVariant='script'
             className='cb-input-label-text'
           >
             {label}

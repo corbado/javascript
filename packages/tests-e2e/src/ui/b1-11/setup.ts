@@ -8,5 +8,7 @@ import { makeIdentifier, setBackendConfigs } from '../../utils/helperFunctions/s
 setup('set b1.11 configs', async ({}, testInfo) => {
   const projectId = await createProject('b1-11', testInfo.project.name);
 
-  await setBackendConfigs(projectId, [makeIdentifier(IdentifierType.Username, IdentifierEnforceVerification.None, true, [])]);
+  await setBackendConfigs(projectId, [
+    makeIdentifier(IdentifierType.Username, IdentifierEnforceVerification.None, true, []),
+  ]);
 });

@@ -54,7 +54,7 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   // (navigationTimeout should be extended, but it doesn't seem worth it for this single test)
   test.skip('click external links', async ({ signupFlow, page }) => {
     await signupFlow.loadAuth();
-    
+
     await signupFlow.navigateToEmailOtpScreen();
 
     const newTabPromise1 = page.waitForEvent('popup');

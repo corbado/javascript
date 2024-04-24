@@ -19,51 +19,42 @@ function generateProjectName(prefix: string) {
 export async function createProject(namePrefix: string, playwrightProjectName: string) {
   const name = generateProjectName(namePrefix);
 
-  const createRes = await fetch(
-    `${process.env.CORE_API_URL}/v1/projects`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
-      },
-      body: JSON.stringify({
-        name,
-      }),
+  const createRes = await fetch(`${process.env.CORE_API_URL}/v1/projects`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
     },
-  );
+    body: JSON.stringify({
+      name,
+    }),
+  });
   expect(createRes.ok).toBeTruthy();
-  
+
   const projectId = (await createRes.json()).data.project.id;
-  const configureRes = await fetch(
-    `${process.env.BACKEND_API_URL}/v1/projectConfig`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
-        'X-Corbado-ProjectID': projectId,
-      },
-      body: JSON.stringify({
-        frontendFramework: 'react',
-        allowStaticChallenges: true,
-        webauthnRPID: process.env.CI ? 'playground.corbado.io' : 'localhost',
-      }),
+  const configureRes = await fetch(`${process.env.BACKEND_API_URL}/v1/projectConfig`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      'X-Corbado-ProjectID': projectId,
     },
-  );
+    body: JSON.stringify({
+      frontendFramework: 'react',
+      allowStaticChallenges: true,
+      webauthnRPID: process.env.CI ? 'playground.corbado.io' : 'localhost',
+    }),
+  });
   expect(configureRes.ok).toBeTruthy();
 
-  const activateRes = await fetch(
-    `${process.env.BACKEND_API_URL}/v1/projects/activate`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
-        'X-Corbado-ProjectID': projectId,
-      },
-    }
-  );
+  const activateRes = await fetch(`${process.env.BACKEND_API_URL}/v1/projects/activate`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      'X-Corbado-ProjectID': projectId,
+    },
+  });
   expect(activateRes.ok).toBeTruthy();
 
   StateManager.setProjectId(playwrightProjectName, projectId);

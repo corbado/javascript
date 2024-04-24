@@ -1,4 +1,4 @@
-import { readFileSync, rmSync, writeFileSync } from "fs";
+import { readFileSync, rmSync, writeFileSync } from 'fs';
 
 class StateManager {
   public static setProjectId(playwrightProjectName: string, projectId: string) {

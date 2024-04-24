@@ -88,7 +88,7 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
 
   test('with empty phone number', async ({ signupFlow, page }) => {
     await signupFlow.loadAuth();
-    
+
     await signupFlow.fillIdentifiers(true, true, false);
     await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -125,7 +125,7 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
 
   test('switch to Login flow', async ({ signupFlow, page }) => {
     await signupFlow.loadAuth();
-    
+
     await page.getByText('Log in').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });

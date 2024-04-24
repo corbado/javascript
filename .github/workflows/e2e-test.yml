@@ -115,6 +115,7 @@ jobs:
       - name: Clean up any remaining project IDs
         if: always()
         run: |
-          bash packages/tests-e2e/cleanup.sh
+          cd packages/tests-e2e
+          bash cleanup.sh
         env:
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}

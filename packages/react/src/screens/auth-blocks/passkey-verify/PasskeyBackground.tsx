@@ -1,12 +1,11 @@
 import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { LoadingSpinner, SecondaryButton, Text } from '../../../components';
 import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
-import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
-import { Text } from '../../../components/ui/typography/Text';
 
 export interface PasskeyBackgroundProps {
   block: PasskeyVerifyBlock;
@@ -16,6 +15,7 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-background`,
   });
+  const [loading, setLoading] = useState<boolean>(false);
   const passkeyLoginStarted = useRef(false);
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
     }
 
     passkeyLoginStarted.current = true;
+
     void block.passkeyLogin();
   }, []);
 
@@ -60,6 +61,20 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
         </Text>
       </div>
       <LoadingSpinner className='cb-pk-verify-spinner' />
+      <div className='cb-pk-verify-fallbacks'>
+        {block.data.availableFallbacks.map(fallback => (
+          <SecondaryButton
+            key={fallback.label}
+            disabled={loading}
+            onClick={() => {
+              setLoading(true);
+              return void fallback.action();
+            }}
+          >
+            {t(fallback.label)}
+          </SecondaryButton>
+        ))}
+      </div>
     </div>
   );
 };

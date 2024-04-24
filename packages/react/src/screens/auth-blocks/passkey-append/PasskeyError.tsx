@@ -14,6 +14,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     keyPrefix: `signup.passkey-append.passkey-error`,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [changingBlock, setChangingBlock] = useState<boolean>(false);
 
   const headerText = useMemo(() => t('header'), [t]);
   const bodyText = useMemo(() => t('body'), [t]);
@@ -26,6 +27,12 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     await block.passkeyAppend();
     setLoading(false);
   }, [block]);
+
+  useEffect(() => {
+    return () => {
+      block.cancelPasskeyOperation();
+    };
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -59,6 +66,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       <PrimaryButton
         onClick={() => void passkeyAppend()}
         isLoading={loading}
+        disabled={changingBlock}
       >
         {primaryButtonText}
       </PrimaryButton>
@@ -71,8 +79,11 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       {block.data.availableFallbacks.map(fallback => (
         <SecondaryButton
           key={fallback.label}
-          disabled={loading}
-          onClick={() => void fallback.action()}
+          disabled={changingBlock}
+          onClick={() => {
+            setChangingBlock(true);
+            void fallback.action();
+          }}
         >
           {t(fallback.label)}
         </SecondaryButton>
@@ -80,8 +91,11 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
       {block.data.canBeSkipped && (
         <SecondaryButton
           className='cb-pk-error-bloc-skip-button'
-          disabled={loading}
-          onClick={() => void block.skipPasskeyAppend()}
+          disabled={changingBlock}
+          onClick={() => {
+            setChangingBlock(true);
+            void block.skipPasskeyAppend();
+          }}
         >
           {skipButtonText}
         </SecondaryButton>

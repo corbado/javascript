@@ -942,6 +942,14 @@ button.cb-phone-otp-resend-button {
   margin: 1rem auto;
 }
 
+.cb-pk-verify-fallbacks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-self: center;
+  margin: 1.25rem auto 1rem;
+}
+
 /********** Dialog / Modal **********/
 .cb-dialog {
   position: fixed;

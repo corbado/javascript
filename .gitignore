@@ -24,3 +24,4 @@ packages/tests-e2e/blob-report
 packages/tests-e2e/all-blob-reports
 packages/tests-e2e/playwright/.cach/
 packages/tests-e2e/test-states
+packages/tests-e2e/.env.local

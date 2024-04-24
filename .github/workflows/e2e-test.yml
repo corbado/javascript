@@ -19,7 +19,7 @@ on:
 jobs:
   prepare:
     # runs-on: [ self-hosted, "javascript" ]
-    runs-on: ubuntu-latest-large
+    runs-on: ubuntu-latest-xlarge
     outputs:
       BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
     steps:

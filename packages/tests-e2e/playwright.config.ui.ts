@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './src',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 2,
   // Using all cores increases flakiness due to slow browsers.
   // Recommended # of workers = # of cores / 2, but leaving only 1 free
   // core seems enough to prevent flakiness on our self-hosted runners.
@@ -25,18 +25,7 @@ export default defineConfig({
       ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
       : undefined
     : undefined,
-  // reporter: 'html',
-  reporter: [
-    [
-      'blob',
-      {
-        // Saving all blobs to the same directory deletes every other blob in the directory
-        // so we temporarily make a directory for each project (ref: run-all-projects.sh)
-        outputDir: `blob-report/${process.env.PLAYWRIGHT_PROJECT_NAME}`,
-        fileName: `report-${process.env.PLAYWRIGHT_PROJECT_NAME}.zip`,
-      },
-    ],
-  ],
+  reporter: 'html',
   timeout: 15000, // default: 30000ms
   expect: {
     timeout: 3000, // default: 5000ms
@@ -250,7 +239,7 @@ export default defineConfig({
     //   dependencies: ['b1-09-setup'],
     // },
     // {
-    //   name: 'b1-09-all-browsers',
+    //   name: 'b1-09-teardown',
     //   testMatch: ['ui/b1-09/teardown.ts'],
     //   dependencies: [
     //     'b1-09-chromium',
@@ -402,7 +391,7 @@ export default defineConfig({
       dependencies: ['b2-03-setup'],
     },
     {
-      name: 'b2-03-all-browsers',
+      name: 'b2-03-teardown',
       testMatch: ['ui/b2-03/teardown.ts'],
       dependencies: [
         'b2-03-chromium',

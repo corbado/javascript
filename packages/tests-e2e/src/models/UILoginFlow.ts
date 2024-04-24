@@ -53,7 +53,7 @@ export class UILoginFlow {
       this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
       this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
-    const wait = new Promise<void>(resolve => setTimeout(resolve, 1000));
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 3000));
     await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
     await operationTrigger();

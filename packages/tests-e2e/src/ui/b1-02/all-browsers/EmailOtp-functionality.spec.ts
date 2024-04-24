@@ -3,6 +3,8 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with email OTP proper user behavior', () => {
   test('with no passkey support', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);

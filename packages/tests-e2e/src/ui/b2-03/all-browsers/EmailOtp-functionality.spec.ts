@@ -3,6 +3,8 @@ import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '..
 
 test.describe('Login with email OTP proper user behavior', () => {
   test('with no passkey support', async ({ loginFlow, page }) => {
+    await loginFlow.loadAuth();
+
     let [, email] = await loginFlow.createAccount(
       [IdentifierType.Email],
       [IdentifierVerification.EmailOtp],

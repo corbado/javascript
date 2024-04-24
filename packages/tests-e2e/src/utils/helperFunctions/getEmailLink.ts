@@ -3,7 +3,7 @@ import type { BrowserContext } from '@playwright/test';
 import type { AuthType } from '../constants';
 import { emailLinkUrlToken } from '../constants';
 
-export async function getEmailLink(context: BrowserContext, email: string, authType: AuthType) {
+export async function getEmailLink(projectId: string, context: BrowserContext, email: string, authType: AuthType) {
   const cboAuthProcessRaw = (await context.storageState()).origins
     // remove trailing slashes from the end of URLs
     .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
@@ -28,7 +28,7 @@ export async function getEmailLink(context: BrowserContext, email: string, authT
     },
   };
 
-  return `${process.env.PLAYWRIGHT_TEST_URL}/${process.env.PLAYWRIGHT_PROJECT_ID}/auth?corbadoEmailLinkID=${btoa(
+  return `${process.env.PLAYWRIGHT_TEST_URL}/${projectId}/auth?corbadoEmailLinkID=${btoa(
     JSON.stringify(urlBlock),
   )}&corbadoToken=${emailLinkUrlToken}`;
 }

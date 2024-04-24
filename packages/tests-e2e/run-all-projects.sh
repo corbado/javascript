@@ -1,16 +1,16 @@
 #!/bin/bash
 
 project_names=(
-  "b1-01-emailotp-chromium"
-  "b1-01-phoneotp-chromium"
-  "b1-01-emaillink-chromium"
-  "b1-02-chromium"
-  "b1-03-all-browsers"
-  "b1-11-chromium"
-  "b2-01-emailotp-chromium"
-  "b2-01-phoneotp-chromium"
-  "b2-01-emaillink-chromium"
-  "b2-03-all-browsers"
+  "b1-01-emailotp-teardown"
+  "b1-01-phoneotp-teardown"
+  "b1-01-emaillink-teardown"
+  "b1-02-teardown"
+  "b1-03-teardown"
+  "b1-11-teardown"
+  "b2-01-emailotp-teardown"
+  "b2-01-phoneotp-teardown"
+  "b2-01-emaillink-teardown"
+  "b2-03-teardown"
 )
 
 mkdir all-blob-reports

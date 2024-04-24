@@ -1,11 +1,12 @@
-import { expect, test } from '../../../fixtures/UILoginTest';
+import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 import UserManager from '../../../utils/UserManager';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
   // TODO: unskip when new error message is implemented
-  test.skip('without passkey support', async ({ loginFlow, page }) => {
-    await loginFlow.checkLandedOnScreen(ScreenNames.InitSignup);
+  test.skip('without passkey support', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+    await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
 
     const id = UserManager.getUserForSignup();
     const username = id.replace('+', '-');

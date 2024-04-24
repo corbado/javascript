@@ -3,6 +3,8 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitLoginScreen unproductive user behavior', () => {
   test.skip('with empty email address', async ({ loginFlow, page }) => {
+    await loginFlow.loadAuth();
+
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 
@@ -14,6 +16,8 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
   });
 
   test.skip('with invalid email address', async ({ loginFlow, page }) => {
+    await loginFlow.loadAuth();
+
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 
@@ -26,6 +30,8 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
   });
 
   test('with nonexistent email address', async ({ loginFlow, page }) => {
+    await loginFlow.loadAuth();
+
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 
@@ -38,6 +44,8 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
   });
 
   test('switch to Signup flow', async ({ loginFlow, page }) => {
+    await loginFlow.loadAuth();
+
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 

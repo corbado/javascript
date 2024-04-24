@@ -27,20 +27,21 @@ export function makeIdentifier(
   };
 }
 
-export async function setBackendConfigs(identifiers: Identifier[]) {
+export async function setBackendConfigs(projectId: string, identifiers: Identifier[]) {
   const response = await fetch(
-    `https://${process.env.PLAYWRIGHT_PROJECT_ID}.frontendapi.corbado.io/v2/component-config?=`,
+    `${process.env.CORE_API_URL}/v1/projects/${projectId}/componentConfig`,
     {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'X-Corbado-ProjectID': process.env.PLAYWRIGHT_PROJECT_ID ?? '',
+        'Cookie': `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
       },
       body: JSON.stringify({
         fullNameRequired: false,
         publicSignupEnabled: true,
         passkeyAppendInterval: '1d',
         identifiers: identifiers,
+        socialProviders: [],
       }),
     },
   );

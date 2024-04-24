@@ -3,6 +3,8 @@ import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
   test('with empty username', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -11,6 +13,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with duplicate username', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     const [username] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill(username);
@@ -22,6 +26,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with invalid username (illegal characters)', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill('!@#$%^&*()');
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('!@#$%^&*()');
@@ -34,6 +40,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with invalid username (length)', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill('a');
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('a');
@@ -46,6 +54,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with empty email address', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, false, true);
     await expect(page.getByRole('textbox', { name: 'Email address' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -54,6 +64,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with duplicate email address', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     const [, email] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, false, true);
     await page.getByRole('textbox', { name: 'Email address' }).fill(email);
@@ -65,6 +77,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with invalid email address', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, false, true);
     await page.getByRole('textbox', { name: 'Email address' }).fill('a');
     await expect(page.getByRole('textbox', { name: 'Email address' })).toHaveValue('a');
@@ -73,6 +87,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with empty phone number', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+    
     await signupFlow.fillIdentifiers(true, true, false);
     await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -81,6 +97,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with duplicate phone number', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     const [, , phone] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill(phone);
@@ -95,6 +113,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('with invalid phone number', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill('69');
     await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('69');
@@ -104,6 +124,8 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
   });
 
   test('switch to Login flow', async ({ signupFlow, page }) => {
+    await signupFlow.loadAuth();
+    
     await page.getByText('Log in').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });

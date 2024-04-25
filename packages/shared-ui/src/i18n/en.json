@@ -179,6 +179,11 @@
           "microsoft": "Continue with Microsoft",
           "github": "Continue with GitHub",
           "default": "Continue with {{provider}}"
+        },
+        "last_identifier": {
+          "title": "Login with Passkey",
+          "text_skip": "Not you? ",
+          "button_skip": "Switch account"
         }
       }
     },

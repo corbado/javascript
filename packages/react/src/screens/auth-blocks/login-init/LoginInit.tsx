@@ -3,7 +3,8 @@ import type { SocialProviderType } from '@corbado/web-core';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LoginForm } from '../../../components/authentication/LoginForm';
+import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
+import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
 import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
 import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
 import { Header } from '../../../components/ui/typography/Header';
@@ -19,11 +20,16 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   );
   const [phoneInput, setPhoneInput] = useState<string>('');
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
+  const [showLastIdentifier, setShowLastIdentifier] = useState<boolean>(false);
 
   const textFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     setLoading(false);
+
+    if (block.data.lastIdentifier) {
+      setShowLastIdentifier(true);
+    }
 
     if (block.data.socialData.finished && !block.error) {
       const socialAbort = new AbortController();
@@ -86,17 +92,25 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         {subheaderText}
         {block.common.appName}
       </SubHeader>
-      <LoginForm
-        block={block}
-        loading={loading}
-        socialLoadingInProgress={socialLoadingInProgress}
-        textField={textField}
-        inputRef={textFieldRef}
-        usePhone={usePhone}
-        setUsePhone={setUsePhone}
-        setPhoneInput={setPhoneInput}
-        handleSubmit={handleSubmit}
-      />
+      {showLastIdentifier ? (
+        <LastIdentifier
+          block={block}
+          socialLoadingInProgress={socialLoadingInProgress}
+          switchToLoginForm={() => setShowLastIdentifier(false)}
+        />
+      ) : (
+        <LoginForm
+          block={block}
+          loading={loading}
+          socialLoadingInProgress={socialLoadingInProgress}
+          textField={textField}
+          inputRef={textFieldRef}
+          usePhone={usePhone}
+          setUsePhone={setUsePhone}
+          setPhoneInput={setPhoneInput}
+          handleSubmit={handleSubmit}
+        />
+      )}
       <SocialLoginButtons
         dividerText={textDivider}
         socialLogins={block.data.socialData.providers}

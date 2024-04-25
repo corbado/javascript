@@ -3,8 +3,8 @@ import type { FC, FormEvent, MutableRefObject } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { InputFieldProps } from '../ui';
-import { InputField, PhoneInputField, PrimaryButton } from '../ui';
+import type { InputFieldProps } from '../../ui';
+import { InputField, PhoneInputField, PrimaryButton } from '../../ui';
 
 export interface LoginFormProps {
   block: LoginInitBlock;

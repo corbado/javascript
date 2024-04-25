@@ -125,13 +125,7 @@ export class SessionService {
     const sessionParts = this.#shortSession.value.split('.');
     const sessionPayload = JSON.parse(atob(sessionParts[1]));
 
-    return {
-      email: sessionPayload.email,
-      name: sessionPayload.name,
-      orig: sessionPayload.orig,
-      sub: sessionPayload.sub,
-      exp: sessionPayload.exp,
-    };
+    return sessionPayload as SessionUser | undefined;
   }
 
   /**

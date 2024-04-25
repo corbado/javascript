@@ -18,10 +18,10 @@ import {
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
 import type { BlockTypes, ScreenNames } from './constants';
-import { initScreenBlocks } from './constants';
+import { initScreenBlocks, LoginIdentifierType } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
-import type { ScreenWithBlock } from './types';
+import type { LastIdentifier, ScreenWithBlock } from './types';
 
 /**
  * ProcessHandler is a class that manages the navigation flow of the application.
@@ -29,6 +29,7 @@ import type { ScreenWithBlock } from './types';
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
 export class ProcessHandler {
+  #lastIdentifierKey = 'cbo_last_identifier';
   #currentScreen!: ScreenNames;
   #currentBlock: Block<unknown> | null = null;
   #abortController = new AbortController();
@@ -100,6 +101,9 @@ export class ProcessHandler {
     this.#corbadoApp.authProcessService.clearProcess();
     this.#currentBlock = null;
     this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
+
+    this.#setLastIdentifier();
+
     this.#postProcess();
   }
 
@@ -280,7 +284,14 @@ export class ProcessHandler {
         block = new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
         break;
       case BlockType.LoginInit:
-        block = new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        block = new LoginInitBlock(
+          this.#corbadoApp,
+          this,
+          common,
+          this.#errorTranslator,
+          blockBody.data,
+          this.#getLastIdentifier(),
+        );
         break;
       case BlockType.PasskeyAppended:
         block = new PasskeyAppendedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
@@ -318,5 +329,39 @@ export class ProcessHandler {
     }
 
     return block;
+  };
+
+  #setLastIdentifier = () => {
+    const hasPasskey = !this.#currentBlock?.alternatives.some(b => b.type === BlockType.PasskeyAppend);
+
+    if (!hasPasskey) {
+      localStorage.removeItem(this.#lastIdentifierKey);
+      return;
+    }
+
+    const user = this.#corbadoApp.sessionService.getUser();
+
+    if (!user) {
+      localStorage.removeItem(this.#lastIdentifierKey);
+      return;
+    }
+
+    localStorage.setItem(
+      this.#lastIdentifierKey,
+      JSON.stringify({
+        value: user.orig,
+        type: user.email
+          ? LoginIdentifierType.Email
+          : user.phone_number
+            ? LoginIdentifierType.Phone
+            : LoginIdentifierType.Username,
+      }),
+    );
+  };
+
+  #getLastIdentifier = (): LastIdentifier | undefined => {
+    const lastIdentifierStore = localStorage.getItem(this.#lastIdentifierKey);
+
+    return lastIdentifierStore ? (JSON.parse(lastIdentifierStore) as LastIdentifier) : undefined;
   };
 }

@@ -125,7 +125,7 @@ export class SessionService {
     const sessionParts = this.#shortSession.value.split('.');
     const sessionPayload = JSON.parse(atob(sessionParts[1]));
 
-    return sessionPayload as SessionUser | undefined;
+    return sessionPayload;
   }
 
   /**

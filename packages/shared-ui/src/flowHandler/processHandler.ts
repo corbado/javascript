@@ -82,10 +82,21 @@ export class ProcessHandler {
       return Ok(void 0);
     }
 
-    const res = await this.#corbadoApp.authProcessService.init(
-      this.#abortController,
-      frontendPreferredBlockType as BlockType,
-    );
+    // There are two condtions for initializing the process:
+    // 1. Refreshing a page in an ongoing process keeps the user at the current page and does NOT reset the process
+    // 2. Navigating to the component-url WITHOUT the hash loads the component in initial state and starts a new process
+    let res = frontendPreferredBlockType
+      ? await this.#corbadoApp.authProcessService.init(this.#abortController, frontendPreferredBlockType as BlockType)
+      : await this.#corbadoApp.authProcessService.init(this.#abortController, BlockType.SignupInit, false, true);
+
+    if (res.err) {
+      return res;
+    }
+
+    //If the frontend hashcode does not match the current block returned by the backend, we should start a new process.
+    if (res.val.blockBody.block !== frontendPreferredBlockType) {
+      res = await this.#corbadoApp.authProcessService.init(this.#abortController, BlockType.SignupInit, false, true);
+    }
 
     if (res.err) {
       return res;

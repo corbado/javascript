@@ -56,11 +56,17 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
     isDebug = false,
+    forceInitNewProcess = false,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
+    }
+
+    // if we are forced to create a new process, we do not need to check for existing processes
+    if (forceInitNewProcess) {
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     // we check if there is a process in local storage, if not we have to create a new one

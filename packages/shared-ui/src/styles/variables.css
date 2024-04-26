@@ -8,6 +8,7 @@
   --cb-header-text-color: #000000;
   --cb-error-popup-text-color: #4b5563;
   --cb-script-text-color: #000000;
+  --cb-input-text-color: #000000;
   --cb-white: #ffffff;
   --cb-dark: #000000;
   --cb-border-color: rgb(212 212 212 / 60%);
@@ -18,7 +19,6 @@
   --cb-otp-disabled-color: #fbfbfb;
   --cb-divider-line-color: rgba(0, 0, 0, 0.3);
   --cb-input-disabled-color: #dfdfe0;
-  --cb-input-text-color: #000000;
   --cb-error-popup-background-color: #e9e9e9;
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
@@ -34,6 +34,7 @@
 .cb-dark {
   --cb-header-text-color: #ffffff;
   --cb-text-primary-color: #ffffff;
+  --cb-text-secondary-color: #a1a1a1;
   --cb-error-popup-text-color: #ffffff;
   --cb-script-text-color: #a1a1a1;
   --cb-box-color: #1f1f1f;

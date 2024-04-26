@@ -1185,7 +1185,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-          $ref: '#/components/schemas/javaScriptHighEntropy'
+            $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1211,6 +1211,17 @@ components:
           description: Only given when project environment is dev
         shortSession:
           type: string
+        passkeyOperation:
+          $ref: '#/components/schemas/passkeyOperation'
+
+    passkeyOperation:
+      type: object
+      required:
+          - operationType
+      properties:
+        operationType:
+          type: string
+          enum: [ 'append', 'verify' ]
 
     continueOnOtherDevice:
       type: object
@@ -1240,21 +1251,21 @@ components:
         socialAccounts:
           type: array
           items:
-            $ref: '#/components/schemas/socialAccount'
+              $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-        - value
-        - type
-        - status
+          - value
+          - type
+          - status
       properties:
-        value:
-          type: string
-        type:
-          $ref: '#/components/schemas/loginIdentifierType'
-        status:
-          type: string
+          value:
+            type: string
+          type:
+            $ref: '#/components/schemas/loginIdentifierType'
+          status:
+            type: string
 
     socialAccount:
       type: object

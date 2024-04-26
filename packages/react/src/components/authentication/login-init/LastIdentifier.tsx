@@ -1,6 +1,6 @@
 import { LoginIdentifierType, type LoginInitBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingSpinner, SecondaryButton, Text } from '../../ui';
@@ -10,12 +10,19 @@ import { RightIcon } from '../../ui/icons/RightIcon';
 export interface LastIdentifierProps {
   block: LoginInitBlock;
   socialLoadingInProgress: boolean | undefined;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
   switchToLoginForm: () => void;
 }
 
-export const LastIdentifier: FC<LastIdentifierProps> = ({ block, socialLoadingInProgress, switchToLoginForm }) => {
+export const LastIdentifier: FC<LastIdentifierProps> = ({
+  block,
+  socialLoadingInProgress,
+  loading,
+  setLoading,
+  switchToLoginForm,
+}) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init.last_identifier` });
-  const [loading, setLoading] = useState<boolean>(false);
 
   const title = useMemo(() => t('title'), [t]);
   const skipText = useMemo(() => t('text_skip'), [t]);

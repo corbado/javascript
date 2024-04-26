@@ -1,6 +1,6 @@
 import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
-import type { FC, FormEvent, MutableRefObject } from 'react';
-import React, { useMemo } from 'react';
+import type { FC, FormEvent } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { InputFieldProps } from '../../ui';
@@ -8,36 +8,42 @@ import { InputField, PhoneInputField, PrimaryButton } from '../../ui';
 
 export interface LoginFormProps {
   block: LoginInitBlock;
-  loading: boolean;
   socialLoadingInProgress: boolean | undefined;
-  textField: TextFieldWithError | null;
-  inputRef: MutableRefObject<HTMLInputElement | undefined>;
-  usePhone: boolean;
-  setUsePhone: (usePhone: boolean) => void;
-  setPhoneInput: (phone: string) => void;
-  handleSubmit: (e: FormEvent) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({
-  block,
-  loading,
-  socialLoadingInProgress,
-  textField,
-  inputRef,
-  usePhone,
-  setUsePhone,
-  setPhoneInput,
-  handleSubmit,
-}) => {
+export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInProgress, setLoading }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
 
+  const [textField, setTextField] = useState<TextFieldWithError | null>(null);
+  const [usePhone, setUsePhone] = useState<boolean>(
+    block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled),
+  );
+  const [phoneInput, setPhoneInput] = useState<string>('');
   const hasBothEmailAndUsername = block.data.emailEnabled && block.data.usernameEnabled;
+
+  const textFieldRef = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    const shouldUsePhone = block.data.isPhoneFocused || !(block.data.emailEnabled || block.data.usernameEnabled);
+    if (shouldUsePhone) {
+      setUsePhone(true);
+    }
+
+    setTextField({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });
+
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
+    }
+  }, [block]);
 
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const IdentifierInputField = useMemo(() => {
     const commonProps: Partial<InputFieldProps> & React.RefAttributes<HTMLInputElement> = {
       errorMessage: textField?.translatedError,
-      ref: (el: HTMLInputElement | null) => el && (inputRef.current = el),
+      ref: (el: HTMLInputElement | null) => el && (textFieldRef.current = el),
     };
 
     if (usePhone) {
@@ -107,6 +113,20 @@ export const LoginForm: FC<LoginFormProps> = ({
       />
     );
   }, [block, t, textField, usePhone]);
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+
+      if (usePhone) {
+        void block.start(phoneInput, true);
+      } else {
+        void block.start(textFieldRef.current?.value ?? '', false);
+      }
+    },
+    [block, usePhone, phoneInput],
+  );
 
   return (
     <form

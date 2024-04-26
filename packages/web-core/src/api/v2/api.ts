@@ -55,6 +55,12 @@ export interface AuthenticationResponse {
      * @memberof AuthenticationResponse
      */
     'shortSession': string;
+    /**
+     * 
+     * @type {PasskeyOperation}
+     * @memberof AuthenticationResponse
+     */
+    'passkeyOperation'?: PasskeyOperation;
 }
 /**
  * 
@@ -167,6 +173,12 @@ export interface BlockBodyData {
      * @memberof BlockBodyData
      */
     'shortSession': string;
+    /**
+     * 
+     * @type {PasskeyOperation}
+     * @memberof BlockBodyData
+     */
+    'passkeyOperation'?: PasskeyOperation;
     /**
      * 
      * @type {Array<LoginIdentifierWithError>}
@@ -1082,6 +1094,27 @@ export interface PasskeyMediationFinishReq {
      */
     'signedChallenge': string;
 }
+/**
+ * 
+ * @export
+ * @interface PasskeyOperation
+ */
+export interface PasskeyOperation {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasskeyOperation
+     */
+    'operationType': PasskeyOperationOperationTypeEnum;
+}
+
+export const PasskeyOperationOperationTypeEnum = {
+    Append: 'append',
+    Verify: 'verify'
+} as const;
+
+export type PasskeyOperationOperationTypeEnum = typeof PasskeyOperationOperationTypeEnum[keyof typeof PasskeyOperationOperationTypeEnum];
+
 /**
  * 
  * @export

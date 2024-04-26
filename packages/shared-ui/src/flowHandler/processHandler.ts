@@ -102,7 +102,7 @@ export class ProcessHandler {
     this.#currentBlock = null;
     this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
 
-    this.#setLastIdentifier();
+    this.#setLastIdentifier(!!data.passkeyOperation?.operationType);
 
     this.#postProcess();
   }
@@ -331,9 +331,7 @@ export class ProcessHandler {
     return block;
   };
 
-  #setLastIdentifier = () => {
-    const hasPasskey = !this.#currentBlock?.alternatives.some(b => b.type === BlockType.PasskeyAppend);
-
+  #setLastIdentifier = (hasPasskey: boolean) => {
     if (!hasPasskey) {
       localStorage.removeItem(this.#lastIdentifierKey);
       return;

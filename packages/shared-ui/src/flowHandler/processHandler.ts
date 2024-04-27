@@ -93,6 +93,8 @@ export class ProcessHandler {
 
     const block = res.val.blockBody.block;
 
+    // if the frontend preferred block is not in the initScreenBlocks, we need to init the signup process
+    // another condition to check that the new block is not in the initScreenBlocks is because in social login we come back to the signup process with addional data
     if (
       (!frontendPreferredBlockType || initScreenBlocks.includes(frontendPreferredBlockType)) &&
       !initScreenBlocks.includes(block as BlockTypes)

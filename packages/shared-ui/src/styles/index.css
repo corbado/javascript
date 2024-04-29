@@ -1209,8 +1209,13 @@ button.cb-phone-otp-resend-button {
   width: 83%;
 }
 
+.cb-last-identifier:hover {
+  background-color: var(--cb-box-color-hover);
+}
+
 .cb-last-identifier-disabled {
   cursor: default;
+  background-color: var(--cb-box-color-hover);
 }
 
 .cb-last-identifier-icon {

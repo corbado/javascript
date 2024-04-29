@@ -26,13 +26,13 @@ export default defineConfig({
       : undefined
     : undefined,
   reporter: 'html',
-  timeout: process.env.CI ? 15000 : 30000, // default: 30000ms
+  timeout: 15000, // default: 30000ms
   expect: {
-    timeout: process.env.CI ? 3000 : 5000, // default: 5000ms
+    timeout: 3000, // default: 5000ms
   },
   use: {
-    actionTimeout: process.env.CI ? 3000 : 5000, // default: none
-    navigationTimeout: process.env.CI? 3000 : 5000, // default: none
+    actionTimeout: 3000, // default: none
+    navigationTimeout: 3000, // default: none
     baseURL: process.env.PLAYWRIGHT_TEST_URL,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',

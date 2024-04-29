@@ -53,7 +53,7 @@ export class UILoginFlow {
       this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
       this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
-    const wait = new Promise<void>(resolve => setTimeout(resolve, process.env.CI ? 3000 : 5000));
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 3000));
     await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
     await operationTrigger();
@@ -162,6 +162,8 @@ export class UILoginFlow {
     await this.checkLandedOnScreen(ScreenNames.End);
     if (registerPasskey) {
       await this.checkPasskeyRegistered();
+    } else {
+      await this.checkNoPasskeyRegistered();
     }
     await this.page.getByRole('button', { name: 'Logout' }).click();
 
@@ -183,65 +185,65 @@ export class UILoginFlow {
   async checkLandedOnScreen(screenName: ScreenNames, email?: string, phone?: string) {
     switch (screenName) {
       case ScreenNames.InitSignup:
-        await expect(this.page.getByText('Create your account')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Create your account');
         break;
       case ScreenNames.InitLogin:
-        await expect(this.page.getByText('Log In')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Log in');
         break;
       case ScreenNames.PasskeyAppend1:
-        await expect(this.page.getByText('Create account with passkeys')).toBeVisible();
+        await expect(this.page.locator('.cb-pk-append-header')).toHaveText('Create account with passkeys');
         break;
       case ScreenNames.PasskeyAppend2:
-        await expect(this.page.getByText('Set up passkey for easier login')).toBeVisible();
+        await expect(this.page.locator('.cb-pk-append-header')).toHaveText('Set up passkey for easier login');
         break;
       case ScreenNames.PasskeyAppended:
-        await expect(this.page.getByText('Success!')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Success!');
         break;
       case ScreenNames.PasskeyError:
-        await expect(this.page.getByText('Something went wrong...')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Something went wrong...');
         break;
       case ScreenNames.EmailOtpSignup:
         if (!email) {
           throw new Error('checkLandedOnScreen: Email is required');
         }
-        await expect(this.page.getByText('Enter code to create account')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Enter code to create account');
         await expect(this.page.getByText(email)).toBeVisible();
         break;
       case ScreenNames.EmailOtpLogin:
         if (!email) {
           throw new Error('checkLandedOnScreen: Email is required');
         }
-        await expect(this.page.getByText('Enter code to log in')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Enter code to log in');
         await expect(this.page.getByText(email)).toBeVisible();
         break;
       case ScreenNames.EmailLinkSentSignup:
         if (!email) {
           throw new Error('checkLandedOnScreen: Email is required');
         }
-        await expect(this.page.getByText('Check your inbox to create your account')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Check your inbox to create your account');
         await expect(this.page.getByText(email)).toBeVisible();
         break;
       case ScreenNames.EmailLinkSentLogin:
         if (!email) {
           throw new Error('checkLandedOnScreen: Email is required');
         }
-        await expect(this.page.getByText('Check your inbox to log in')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Check your inbox to log in');
         await expect(this.page.getByText(email)).toBeVisible();
         break;
       case ScreenNames.EmailLinkSuccessSignup:
-        await expect(this.page.getByText('Successful email verification')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Successful email verification');
         break;
       case ScreenNames.EmailLinkSuccessLogin:
-        await expect(this.page.getByText('Successful email login')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Successful email login');
         break;
       case ScreenNames.EmailEdit:
-        await expect(this.page.getByText('Type new email address')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Type new email address');
         break;
       case ScreenNames.PhoneOtpSignup: {
         if (!phone) {
           throw new Error('checkLandedOnScreen: Phone is required');
         }
-        await expect(this.page.getByText('Enter code to create account')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Enter code to create account');
         const formattedPhone =
           phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 8) + ' ' + phone.slice(8);
         await expect(this.page.getByText(formattedPhone)).toBeVisible();
@@ -251,17 +253,17 @@ export class UILoginFlow {
         if (!phone) {
           throw new Error('checkLandedOnScreen: Phone is required');
         }
-        await expect(this.page.getByText('Enter code to log in')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Enter code to log in');
         const formattedPhone =
           phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 8) + ' ' + phone.slice(8);
         await expect(this.page.getByText(formattedPhone)).toBeVisible();
         break;
       }
       case ScreenNames.PhoneEdit:
-        await expect(this.page.getByText('Type new phone number')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Type new phone number');
         break;
       case ScreenNames.PasskeyBackground:
-        await expect(this.page.getByText('Passkey login in process...')).toBeVisible();
+        await expect(this.page.locator('.cb-header')).toHaveText('Passkey login in process...');
         break;
       case ScreenNames.End:
         await expect(this.page).toHaveURL(/\/pro-[0-9]+/);

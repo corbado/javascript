@@ -14,10 +14,16 @@ export type Status = 'active' | 'pending' | 'deleted'; // Type derived from the 
  */
 export interface SessionUser {
   email: string;
+  phone_number: string;
   name: string;
   orig: string;
   sub: string;
   exp: number;
+  iat: number;
+  iss: string;
+  jti: string;
+  nbf: number;
+  version: number;
 }
 
 /**

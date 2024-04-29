@@ -1196,6 +1196,63 @@ button.cb-phone-otp-resend-button {
   height: 0.9rem;
 }
 
+.cb-last-identifier {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  border-radius: var(--cb-border-radius-sm);
+  border: var(--cb-border-color) 1px solid;
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.5rem 0.6rem 1rem;
+  align-self: center;
+  cursor: pointer;
+  width: 83%;
+}
+
+.cb-last-identifier:hover {
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-last-identifier-disabled {
+  cursor: default;
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-last-identifier-icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.cb-last-identifier-icon img {
+  width: 2rem;
+  height: 2rem;
+}
+
+.cb-last-identifier-details {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  line-height: normal;
+  gap: 0.35rem;
+}
+
+.cb-last-identifier-spinner {
+  border-top-color: var(--cb-text-primary-color);
+  border-right-color: var(--cb-text-primary-color);
+  border-left-color: var(--cb-text-primary-color);
+  width: 1.5rem;
+  height: 1.5rem;
+  box-sizing: border-box;
+}
+
+.cb-last-identifier-skip-button {
+  margin: 0.5rem auto 0.75rem auto;
+  width: 90%;
+}
+
 @media screen and (max-width: 481px) {
   .cb-container {
     width: 360px;

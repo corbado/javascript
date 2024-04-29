@@ -6,7 +6,7 @@ import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataLoginInit } from '../types';
+import type { BlockDataLoginInit, LastIdentifier } from '../types';
 import { Block } from './Block';
 
 export class LoginInitBlock extends Block<BlockDataLoginInit> {
@@ -22,6 +22,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     common: ProcessCommon,
     errorTranslator: ErrorTranslator,
     data: GeneralBlockLoginInit,
+    lastIdentifier: LastIdentifier | undefined,
   ) {
     super(app, flowHandler, common, errorTranslator);
 
@@ -30,6 +31,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     this.data = {
       loginIdentifier: data.identifierValue ?? '',
       loginIdentifierError: loginIdentifierError ?? '',
+      lastIdentifier: lastIdentifier,
       isPhoneFocused: data.isPhone,
       emailEnabled: data.isEmailAvailable,
       usernameEnabled: data.isUsernameAvailable,

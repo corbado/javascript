@@ -47,6 +47,10 @@ export class CorbadoError extends Error {
     return new CorbadoError(true, true);
   }
 
+  static conditionalUINotSupported(): CorbadoError {
+    return new CorbadoError(false, true);
+  }
+
   static fromAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
     log.error('axios error', error);
 

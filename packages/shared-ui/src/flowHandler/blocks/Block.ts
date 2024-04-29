@@ -40,7 +40,7 @@ export abstract class Block<A> {
     }
 
     if (processUpdateRes.err) {
-      void this.flowHandler.handleError(processUpdateRes.val);
+      this.flowHandler.handleError(processUpdateRes.val);
       return;
     }
 

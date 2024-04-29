@@ -73,7 +73,7 @@ export class ProcessHandler {
 
     const emailVerifyFromUrl = this.#corbadoApp.authProcessService.initEmailVerifyFromUrl();
     if (emailVerifyFromUrl.err) {
-      await this.handleError(emailVerifyFromUrl.val);
+      this.handleError(emailVerifyFromUrl.val);
       return Ok(void 0);
     }
 
@@ -218,16 +218,17 @@ export class ProcessHandler {
     this.#updatePrimaryBlock(newPrimaryBlock);
   }
 
-  // @todo: make sure that this error is shown as a message on the first screen
-  async handleError(corbadoError: CorbadoError) {
-    console.log('handleError', corbadoError);
-    // get a new process
-    const res = await this.#corbadoApp.authProcessService.init(this.#abortController);
-    if (res.err) {
-      return res;
+  // updates the current block with the error and updates the screen
+  handleError(corbadoError: CorbadoError) {
+    console.log('handleError', corbadoError.name, corbadoError.message);
+
+    const primaryBlockWithError = this.#currentBlock;
+    if (!primaryBlockWithError) {
+      return;
     }
 
-    this.handleProcessUpdateBackend(res.val, corbadoError);
+    primaryBlockWithError.error = corbadoError;
+    this.#updatePrimaryBlock(primaryBlockWithError);
 
     return;
   }

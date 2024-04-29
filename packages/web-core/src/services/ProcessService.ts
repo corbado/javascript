@@ -503,6 +503,12 @@ export class ProcessService {
   }
 
   async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
+    const conditionalUISupported = await WebAuthnService.doesBrowserSupportConditionalUI();
+    if (!conditionalUISupported) {
+      console.log('conditional UI not supported');
+      return Err(CorbadoError.conditionalUINotSupported());
+    }
+
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
     if (signedChallenge.err) {
       // TODO: return block body with client generated error

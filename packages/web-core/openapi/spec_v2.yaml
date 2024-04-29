@@ -1218,10 +1218,16 @@ components:
       type: object
       required:
           - operationType
+          - identifierValue
+          - identifierType
       properties:
         operationType:
           type: string
           enum: [ 'append', 'verify' ]
+        identifierValue:
+          type: string
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
 
     continueOnOtherDevice:
       type: object

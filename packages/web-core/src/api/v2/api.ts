@@ -1106,6 +1106,18 @@ export interface PasskeyOperation {
      * @memberof PasskeyOperation
      */
     'operationType': PasskeyOperationOperationTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof PasskeyOperation
+     */
+    'identifierValue': string;
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof PasskeyOperation
+     */
+    'identifierType': LoginIdentifierType;
 }
 
 export const PasskeyOperationOperationTypeEnum = {

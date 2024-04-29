@@ -1,6 +1,6 @@
 import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
 import { AuthType, BlockType, type CorbadoApp } from '@corbado/web-core';
-import type { AuthenticationResponse } from '@corbado/web-core/dist/api/v2';
+import type { AuthenticationResponse, PasskeyOperation } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
@@ -18,7 +18,7 @@ import {
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
 import type { BlockTypes, ScreenNames } from './constants';
-import { initScreenBlocks, LoginIdentifierType } from './constants';
+import { initScreenBlocks } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { LastIdentifier, ScreenWithBlock } from './types';
@@ -102,7 +102,7 @@ export class ProcessHandler {
     this.#currentBlock = null;
     this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
 
-    this.#setLastIdentifier(!!data.passkeyOperation?.operationType);
+    this.#setLastIdentifier(data.passkeyOperation);
 
     this.#postProcess();
   }
@@ -331,15 +331,9 @@ export class ProcessHandler {
     return block;
   };
 
-  #setLastIdentifier = (hasPasskey: boolean) => {
-    if (!hasPasskey) {
-      localStorage.removeItem(this.#lastIdentifierKey);
-      return;
-    }
-
-    const user = this.#corbadoApp.sessionService.getUser();
-
-    if (!user) {
+  #setLastIdentifier = (passkeyOperations: PasskeyOperation | undefined) => {
+    const hasPasskey = passkeyOperations?.operationType;
+    if (!hasPasskey || !passkeyOperations) {
       localStorage.removeItem(this.#lastIdentifierKey);
       return;
     }
@@ -347,12 +341,8 @@ export class ProcessHandler {
     localStorage.setItem(
       this.#lastIdentifierKey,
       JSON.stringify({
-        value: user.orig,
-        type: user.email
-          ? LoginIdentifierType.Email
-          : user.phone_number
-            ? LoginIdentifierType.Phone
-            : LoginIdentifierType.Username,
+        value: passkeyOperations.identifierValue,
+        type: passkeyOperations.identifierType,
       }),
     );
   };

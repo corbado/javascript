@@ -28,8 +28,10 @@ export const LastIdentifier: FC<LastIdentifierProps> = ({
   const skipText = useMemo(() => t('text_skip'), [t]);
   const skipButtonText = useMemo(() => t('button_skip'), [t]);
 
+  const isLoginButtonDisabled = socialLoadingInProgress || loading;
+
   const login = () => {
-    if (socialLoadingInProgress) {
+    if (isLoginButtonDisabled) {
       return;
     }
 
@@ -49,7 +51,7 @@ export const LastIdentifier: FC<LastIdentifierProps> = ({
   return (
     <>
       <div
-        className={`cb-last-identifier ${socialLoadingInProgress ? 'cb-last-identifier-disabled' : ''}`}
+        className={`cb-last-identifier ${isLoginButtonDisabled ? 'cb-last-identifier-disabled' : ''}`}
         onClick={login}
       >
         <div className='cb-last-identifier-icon'>
@@ -71,13 +73,9 @@ export const LastIdentifier: FC<LastIdentifierProps> = ({
             {block.data.lastIdentifier?.value}
           </Text>
         </div>
-        {loading ? (
-          <LoadingSpinner className='cb-last-identifier-spinner' />
-        ) : (
-          <div className='cb-last-identifier-icon'>
-            <RightIcon />
-          </div>
-        )}
+        <div className='cb-last-identifier-icon'>
+          {loading ? <LoadingSpinner className='cb-last-identifier-spinner' /> : <RightIcon />}
+        </div>
       </div>
       <Text
         level='2'

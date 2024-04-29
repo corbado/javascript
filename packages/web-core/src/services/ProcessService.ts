@@ -56,17 +56,11 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
     isDebug = false,
-    forceInitNewProcess = false,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     if (isDebug) {
       log.setLevel('debug');
     } else {
       log.setLevel('error');
-    }
-
-    // if we are forced to create a new process, we do not need to check for existing processes
-    if (forceInitNewProcess) {
-      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     // we check if there is a process in local storage, if not we have to create a new one
@@ -86,6 +80,19 @@ export class ProcessService {
     if (res.err) {
       console.log('process has error', res.val);
       return this.#initNewAuthProcess(abortController);
+    }
+
+    const block = res.val.blockBody.block;
+
+    const initScreenBlocks = ['signup-init', 'login-init'];
+
+    // if the frontend preferred block is in the initScreenBlocks, we need to init the signup/login process
+    // another condition we need to check is that the new block is not in the initScreenBlocks. This is because in social login we come back to the signup/login process with addional data
+    if (
+      (!frontendPreferredBlockType || initScreenBlocks.includes(frontendPreferredBlockType)) &&
+      !initScreenBlocks.includes(block)
+    ) {
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     // if the process does not contain any state yet, we recreate it from backend to get potential config changes

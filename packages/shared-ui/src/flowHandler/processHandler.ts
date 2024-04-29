@@ -83,25 +83,10 @@ export class ProcessHandler {
       return Ok(void 0);
     }
 
-    let res = await this.#corbadoApp.authProcessService.init(
+    const res = await this.#corbadoApp.authProcessService.init(
       this.#abortController,
       frontendPreferredBlockType as BlockType,
     );
-
-    if (res.err) {
-      return res;
-    }
-
-    const block = res.val.blockBody.block;
-
-    // if the frontend preferred block is not in the initScreenBlocks, we need to init the signup process
-    // another condition to check that the new block is not in the initScreenBlocks is because in social login we come back to the signup process with addional data
-    if (
-      (!frontendPreferredBlockType || initScreenBlocks.includes(frontendPreferredBlockType)) &&
-      !initScreenBlocks.includes(block as BlockTypes)
-    ) {
-      res = await this.#corbadoApp.authProcessService.init(this.#abortController, BlockType.SignupInit, false, true);
-    }
 
     if (res.err) {
       return res;

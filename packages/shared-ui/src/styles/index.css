@@ -797,7 +797,7 @@ button.cb-primary-button {
 
 .cb-icon-button-icon img {
   height: 1.5rem;
-  padding-top: 0.15rem;
+  vertical-align: middle;
 }
 
 button.cb-email-resend-button {

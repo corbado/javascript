@@ -3,6 +3,11 @@ import type { CorbadoError } from '@corbado/web-core';
 import type { Block } from './blocks';
 import type { ContinueOnOtherEnvReasons, LoginIdentifierType, ScreenNames } from './constants';
 
+export interface LastIdentifier {
+  value: string;
+  type: LoginIdentifierType;
+}
+
 export type BlockDataSignupInit = {
   fullName: TextFieldWithError | null;
   email: TextFieldWithError | null;
@@ -15,6 +20,7 @@ export type BlockDataSignupInit = {
 export type BlockDataLoginInit = {
   loginIdentifier: string;
   loginIdentifierError: string;
+  lastIdentifier: LastIdentifier | undefined;
   conditionalUIChallenge: string | undefined;
   isPhoneFocused: boolean;
   emailEnabled: boolean;

@@ -25,6 +25,7 @@ import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
 import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
+import rightIcon from './assets/right-arrow.svg';
 import secureIcon from './assets/secure-icon.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
@@ -39,6 +40,7 @@ export * from './flowHandler';
 export type { BehaviorSubject } from 'rxjs';
 
 export const assets = {
+  rightIcon,
   deleteIcon,
   passkeyDefaultIcon,
   appleIcon,

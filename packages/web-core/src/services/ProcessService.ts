@@ -82,6 +82,19 @@ export class ProcessService {
       return this.#initNewAuthProcess(abortController);
     }
 
+    const block = res.val.blockBody.block;
+
+    const initScreenBlocks = ['signup-init', 'login-init'];
+
+    // if the frontend preferred block is in the initScreenBlocks, we need to init the signup/login process
+    // another condition we need to check is that the new block is not in the initScreenBlocks. This is because in social login we come back to the signup/login process with addional data
+    if (
+      (!frontendPreferredBlockType || initScreenBlocks.includes(frontendPreferredBlockType)) &&
+      !initScreenBlocks.includes(block)
+    ) {
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
+    }
+
     // if the process does not contain any state yet, we recreate it from backend to get potential config changes
     // we might disable this for PROD projects
     const initial = isProcessInitial(res.val);

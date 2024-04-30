@@ -1,12 +1,8 @@
-import type { CorbadoError } from '@corbado/web-core';
+import type { LoginIdentifierType } from '@corbado/types';
+import type { CorbadoError, LastIdentifier } from '@corbado/web-core';
 
 import type { Block } from './blocks';
-import type { ContinueOnOtherEnvReasons, LoginIdentifierType, ScreenNames } from './constants';
-
-export interface LastIdentifier {
-  value: string;
-  type: LoginIdentifierType;
-}
+import type { ContinueOnOtherEnvReasons, ScreenNames } from './constants';
 
 export type BlockDataSignupInit = {
   fullName: TextFieldWithError | null;

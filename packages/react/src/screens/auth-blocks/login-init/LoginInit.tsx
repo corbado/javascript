@@ -52,6 +52,12 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     void block.startSocialVerify(providerType);
   };
 
+  // user explicitly discards the last identifier offered to him => we will clear if from localstorage
+  const discardOfferedLastIdentifier = () => {
+    block.discardOfferedLastIdentifier();
+    setShowLastIdentifier(false);
+  };
+
   return (
     <>
       <Header size='lg'>{headerText}</Header>
@@ -65,7 +71,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           socialLoadingInProgress={socialLoadingInProgress}
           loading={loading}
           setLoading={setLoading}
-          switchToLoginForm={() => setShowLastIdentifier(false)}
+          switchToLoginForm={discardOfferedLastIdentifier}
         />
       ) : (
         <LoginForm

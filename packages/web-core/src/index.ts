@@ -5,3 +5,4 @@ export * from './services';
 export * from './api';
 
 export * from './models/emailVerifyFromUrl';
+export * from './models/lastIdentifier';

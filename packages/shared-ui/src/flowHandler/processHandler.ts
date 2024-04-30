@@ -1,6 +1,6 @@
 import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
 import { AuthType, BlockType, type CorbadoApp } from '@corbado/web-core';
-import type { AuthenticationResponse, PasskeyOperation } from '@corbado/web-core/dist/api/v2';
+import type { AuthenticationResponse } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
@@ -21,7 +21,7 @@ import type { BlockTypes, ScreenNames } from './constants';
 import { initScreenBlocks } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
-import type { LastIdentifier, ScreenWithBlock } from './types';
+import type { ScreenWithBlock } from './types';
 
 /**
  * ProcessHandler is a class that manages the navigation flow of the application.
@@ -29,7 +29,6 @@ import type { LastIdentifier, ScreenWithBlock } from './types';
  * It also provides methods for navigating to the next screen, navigating back, and changing the flow.
  */
 export class ProcessHandler {
-  #lastIdentifierKey = 'cbo_last_identifier';
   #currentScreen!: ScreenNames;
   #currentBlock: Block<unknown> | null = null;
   #abortController = new AbortController();
@@ -99,10 +98,9 @@ export class ProcessHandler {
 
   onProcessCompleted(data: AuthenticationResponse) {
     this.#corbadoApp.authProcessService.clearProcess();
+    this.#corbadoApp.authProcessService.dropLastIdentifier(data.passkeyOperation);
     this.#currentBlock = null;
     this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
-
-    this.#setLastIdentifier(data.passkeyOperation);
 
     this.#postProcess();
   }
@@ -284,14 +282,7 @@ export class ProcessHandler {
         block = new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
         break;
       case BlockType.LoginInit:
-        block = new LoginInitBlock(
-          this.#corbadoApp,
-          this,
-          common,
-          this.#errorTranslator,
-          blockBody.data,
-          this.#getLastIdentifier(),
-        );
+        block = new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
         break;
       case BlockType.PasskeyAppended:
         block = new PasskeyAppendedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
@@ -329,27 +320,5 @@ export class ProcessHandler {
     }
 
     return block;
-  };
-
-  #setLastIdentifier = (passkeyOperations: PasskeyOperation | undefined) => {
-    const hasPasskey = passkeyOperations?.operationType;
-    if (!hasPasskey || !passkeyOperations) {
-      localStorage.removeItem(this.#lastIdentifierKey);
-      return;
-    }
-
-    localStorage.setItem(
-      this.#lastIdentifierKey,
-      JSON.stringify({
-        value: passkeyOperations.identifierValue,
-        type: passkeyOperations.identifierType,
-      }),
-    );
-  };
-
-  #getLastIdentifier = (): LastIdentifier | undefined => {
-    const lastIdentifierStore = localStorage.getItem(this.#lastIdentifierKey);
-
-    return lastIdentifierStore ? (JSON.parse(lastIdentifierStore) as LastIdentifier) : undefined;
   };
 }

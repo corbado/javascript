@@ -15,6 +15,7 @@ import { Configuration } from '../api/v1';
 import type {
   AuthType,
   LoginIdentifier,
+  PasskeyOperation,
   ProcessInitReq,
   ProcessInitRsp,
   ProcessResponse,
@@ -24,11 +25,13 @@ import { SocialDataStatusEnum } from '../api/v2';
 import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
+import type { LastIdentifier } from '../models/lastIdentifier';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
+const lastIdentifierKey = 'cbo_last_identifier';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -496,19 +499,24 @@ export class ProcessService {
     return await this.finishPasskeyAppend(signedChallenge.val);
   }
 
+  // perform a passkey login
+  // if the procedure fails, clear the last identifier
   async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       return respStart;
     }
 
-    if (respStart.val.blockBody.error) {
+    if (respStart.err || respStart.val.blockBody.error) {
+      this.dropLastIdentifier(undefined);
+
       return respStart;
     }
 
     const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
     if (signedChallenge.err) {
-      // TODO: return block body with client generated error
+      this.dropLastIdentifier(undefined);
+
       return signedChallenge;
     }
 
@@ -532,6 +540,28 @@ export class ProcessService {
 
     localStorage.setItem(passkeyAppendShownKey, utcSeconds.toString());
   }
+
+  dropLastIdentifier = (passkeyOperations: PasskeyOperation | undefined) => {
+    const hasPasskey = passkeyOperations?.operationType;
+    if (!hasPasskey || !passkeyOperations) {
+      localStorage.removeItem(lastIdentifierKey);
+      return;
+    }
+
+    localStorage.setItem(
+      lastIdentifierKey,
+      JSON.stringify({
+        value: passkeyOperations.identifierValue,
+        type: passkeyOperations.identifierType,
+      }),
+    );
+  };
+
+  getLastIdentifier = (): LastIdentifier | undefined => {
+    const lastIdentifierStore = localStorage.getItem(lastIdentifierKey);
+
+    return lastIdentifierStore ? (JSON.parse(lastIdentifierStore) as LastIdentifier) : undefined;
+  };
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();

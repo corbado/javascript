@@ -1,12 +1,11 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
-import { SocialDataStatusEnum } from '@corbado/web-core';
-import { AuthType, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { AuthType, PasskeyChallengeCancelledError, SocialDataStatusEnum } from '@corbado/web-core';
 import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataLoginInit, LastIdentifier } from '../types';
+import type { BlockDataLoginInit } from '../types';
 import { Block } from './Block';
 
 export class LoginInitBlock extends Block<BlockDataLoginInit> {
@@ -22,16 +21,16 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     common: ProcessCommon,
     errorTranslator: ErrorTranslator,
     data: GeneralBlockLoginInit,
-    lastIdentifier: LastIdentifier | undefined,
   ) {
     super(app, flowHandler, common, errorTranslator);
 
     const loginIdentifierError = errorTranslator.translate(data.fieldError);
+    const lastIdentifierError = app.authProcessService.getLastIdentifier();
 
     this.data = {
       loginIdentifier: data.identifierValue ?? '',
       loginIdentifierError: loginIdentifierError ?? '',
-      lastIdentifier: lastIdentifier,
+      lastIdentifier: lastIdentifierError,
       isPhoneFocused: data.isPhone,
       emailEnabled: data.isEmailAvailable,
       usernameEnabled: data.isUsernameAvailable,
@@ -101,5 +100,9 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
   async finishSocialVerify(abortController: AbortController) {
     const res = await this.app.authProcessService.finishSocialVerification(abortController);
     this.updateProcess(res);
+  }
+
+  discardOfferedLastIdentifier() {
+    this.app.authProcessService.dropLastIdentifier(undefined);
   }
 }

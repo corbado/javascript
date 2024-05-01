@@ -22,8 +22,7 @@ test.describe('Signup with email link proper user behavior', () => {
 
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailLinkSuccessSignup);
     await page.close();
-    page = newPage;
-    signupFlow.setPage(page);
+    page = signupFlow.page = newPage;
 
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 

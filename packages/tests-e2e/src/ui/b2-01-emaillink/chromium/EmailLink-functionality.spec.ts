@@ -31,8 +31,7 @@ test.describe('Login with email link proper user behavior', () => {
 
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailLinkSuccessLogin);
     await page.close();
-    page = newPage;
-    loginFlow.setPage(page);
+    page = loginFlow.page = newPage;
 
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 

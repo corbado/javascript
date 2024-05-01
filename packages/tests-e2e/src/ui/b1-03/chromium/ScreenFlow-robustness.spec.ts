@@ -36,10 +36,12 @@ test.describe('Flow-based unproductive user behavior', () => {
     await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
+    page.once('dialog', dialog => void dialog.accept());
     await page.goBack();
-    await signupFlow.checkLandedOnScreen(ScreenNames.AbortSignup);
+    await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
-    await page.getByRole('button', { name: 'Yes, take me back to the start' }).click();
+    page.once('dialog', dialog => void dialog.dismiss());
+    await page.goBack();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
   });
 });

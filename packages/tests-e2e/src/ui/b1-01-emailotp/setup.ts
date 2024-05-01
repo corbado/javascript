@@ -1,14 +1,13 @@
-import { test as setup } from '@playwright/test';
-
+import { test as setup } from '../../fixtures/UISignupTest';
 import { IdentifierEnforceVerification, IdentifierType, IdentifierVerification } from '../../utils/constants';
+import { createProject } from '../../utils/helperFunctions/createProject';
 import { makeIdentifier, setBackendConfigs } from '../../utils/helperFunctions/setBackendConfigs';
 
-setup('set b1.1 configs', async (/* { page } */) => {
-  // Get project ID
-  // await page.goto('/');
-  // const projectId = new URL(page.url()).pathname.split('/').filter(segment => segment !== '')[0];
+// eslint-disable-next-line no-empty-pattern
+setup('create b1.1 project', async ({}, testInfo) => {
+  const projectId = await createProject('b1-01-emailotp', testInfo.project.name);
 
-  await setBackendConfigs([
+  await setBackendConfigs(projectId, [
     makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.None, true, [IdentifierVerification.EmailOtp]),
   ]);
 });

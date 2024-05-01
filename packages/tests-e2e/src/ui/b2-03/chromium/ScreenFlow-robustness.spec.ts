@@ -36,12 +36,12 @@ test.describe('Flow-based unproductive user behavior', () => {
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
-    await page.goto(`/${process.env.PLAYWRIGHT_PROJECT_ID}/auth#signup-init`);
+    await page.goto(`/${loginFlow.projectId}/auth#signup-init`);
     await loginFlow.checkLandedOnScreen(ScreenNames.InitSignup);
 
     await page.waitForTimeout(waitAfterLoad);
 
-    await page.goto(`/${process.env.PLAYWRIGHT_PROJECT_ID}/auth#login-init`);
+    await page.goto(`/${loginFlow.projectId}/auth#login-init`);
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });
 });

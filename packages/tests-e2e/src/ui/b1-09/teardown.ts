@@ -1,5 +1,6 @@
-import { test as teardown } from '@playwright/test';
+import { test as teardown } from '../../fixtures/UISignupTest';
+import { deleteProject } from '../../utils/helperFunctions/deleteProject';
 
-teardown('b1.9 teardown', () => {
-  // Only exists as a way to run b1.9 tests for all browsers with 1 command
+teardown('delete b1.9 project', async ({ signupFlow }, testInfo) => {
+  await deleteProject(signupFlow.projectId, testInfo.project.name);
 });

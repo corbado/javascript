@@ -2,7 +2,13 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
-  test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
+  test('try to continue with incorrect OTP', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     const [, email] = await signupFlow.navigateToEmailOtpScreen();
 
     await signupFlow.fillOTP(OtpType.Incorrect);
@@ -10,7 +16,13 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await expect(page.getByText('The code is invalid or expired')).toBeVisible();
   });
 
-  test('modify email identifier', async ({ signupFlow, page }) => {
+  test('modify email identifier', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
     email = email ?? '';
 
@@ -27,7 +39,13 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, newEmail);
   });
 
-  test('cancel modifying email identifier', async ({ signupFlow, page }) => {
+  test('cancel modifying email identifier', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
     email = email ?? '';
 
@@ -46,7 +64,13 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
 
   // Skipped because loading external links take a long time
   // (navigationTimeout should be extended, but it doesn't seem worth it for this single test)
-  test.skip('click external links', async ({ signupFlow, page }) => {
+  test.skip('click external links', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.navigateToEmailOtpScreen();
 
     const newTabPromise1 = page.waitForEvent('popup');

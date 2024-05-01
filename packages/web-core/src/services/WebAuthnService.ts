@@ -67,6 +67,10 @@ export class WebAuthnService {
     );
   }
 
+  static async doesBrowserSupportConditionalUI(): Promise<boolean> {
+    return window.PublicKeyCredential && (await window.PublicKeyCredential.isConditionalMediationAvailable());
+  }
+
   static async canUseBluetooth(): Promise<boolean> {
     try {
       const availability = await navigator.bluetooth.getAvailability();

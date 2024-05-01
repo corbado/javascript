@@ -1,5 +1,6 @@
-import { test as teardown } from '@playwright/test';
+import { test as teardown } from '../../fixtures/UILoginTest';
+import { deleteProject } from '../../utils/helperFunctions/deleteProject';
 
-teardown('b2.3 teardown', () => {
-  // Only exists as a way to run b2.3 tests for all browsers with 1 command
+teardown('delete b2.3 project', async ({ loginFlow }, testInfo) => {
+  await deleteProject(loginFlow.projectId, testInfo.project.name);
 });

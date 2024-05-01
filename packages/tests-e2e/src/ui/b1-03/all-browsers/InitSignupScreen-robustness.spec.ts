@@ -2,7 +2,13 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
-  test('with empty username', async ({ signupFlow, page }) => {
+  test('with empty username', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -10,7 +16,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a username.')).toBeVisible();
   });
 
-  test('with duplicate username', async ({ signupFlow, page }) => {
+  test('with duplicate username', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     const [username] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill(username);
@@ -21,7 +33,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid username (illegal characters)', async ({ signupFlow, page }) => {
+  test('with invalid username (illegal characters)', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill('!@#$%^&*()');
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('!@#$%^&*()');
@@ -33,7 +51,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid username (length)', async ({ signupFlow, page }) => {
+  test('with invalid username (length)', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(false, true, true);
     await page.getByRole('textbox', { name: 'Username' }).fill('a');
     await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('a');
@@ -45,7 +69,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with empty email address', async ({ signupFlow, page }) => {
+  test('with empty email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, false, true);
     await expect(page.getByRole('textbox', { name: 'Email address' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -53,7 +83,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter an email address.')).toBeVisible();
   });
 
-  test('with duplicate email address', async ({ signupFlow, page }) => {
+  test('with duplicate email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     const [, email] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, false, true);
     await page.getByRole('textbox', { name: 'Email address' }).fill(email);
@@ -64,7 +100,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid email address', async ({ signupFlow, page }) => {
+  test('with invalid email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, false, true);
     await page.getByRole('textbox', { name: 'Email address' }).fill('a');
     await expect(page.getByRole('textbox', { name: 'Email address' })).toHaveValue('a');
@@ -72,7 +114,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid email address.')).toBeVisible();
   });
 
-  test('with empty phone number', async ({ signupFlow, page }) => {
+  test('with empty phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, true, false);
     await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -80,7 +128,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a phone number.')).toBeVisible();
   });
 
-  test('with duplicate phone number', async ({ signupFlow, page }) => {
+  test('with duplicate phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     const [, , phone] = await signupFlow.createAccount();
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill(phone);
@@ -94,7 +148,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid phone number', async ({ signupFlow, page }) => {
+  test('with invalid phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await signupFlow.fillIdentifiers(true, true, false);
     await page.getByRole('textbox', { name: 'Phone number' }).fill('69');
     await expect(page.getByRole('textbox', { name: 'Phone number' })).toHaveValue('69');
@@ -103,7 +163,13 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid phone number.')).toBeVisible();
   });
 
-  test('switch to Login flow', async ({ signupFlow, page }) => {
+  test('switch to Login flow', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
+    await signupFlow.loadAuth();
+
     await page.getByText('Log in').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.InitLogin);
   });

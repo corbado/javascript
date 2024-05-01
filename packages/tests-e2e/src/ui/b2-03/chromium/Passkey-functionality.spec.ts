@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/UILoginTest';
+import { test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with passkey proper user behavior', () => {

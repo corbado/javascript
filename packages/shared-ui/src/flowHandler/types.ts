@@ -31,11 +31,13 @@ export type BlockDataPasskeyAppend = {
   userHandle: string;
   userHandleType: LoginIdentifierType;
   translatedError?: string;
+  preferredFallbackOnError?: PasskeyFallback;
 };
 
 export type BlockDataPasskeyVerify = {
   availableFallbacks: PasskeyFallback[];
   identifierValue: string;
+  preferredFallbackOnError?: PasskeyFallback;
 };
 
 export type BlockDataPasskeyAppended = Record<string, never>;

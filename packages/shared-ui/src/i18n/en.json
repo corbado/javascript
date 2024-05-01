@@ -50,21 +50,14 @@
         "button_submit": "Confirm",
         "button_cancel": "Back"
       },
-      "passkey-benefits": {
-        "header": "Passkeys",
-        "body_introduction": "With passkeys, you don't need to remember complex passwords anymore. Log in securely by using ",
-        "body_loginMethods": "Face ID, Touch ID or screen lock code.",
-        "button_start": "Create passkey",
-        "button_skip": "Maybe later"
-      },
       "passkey-error": {
         "header": "Something went wrong...",
         "body": "Adding a passkey to your account was not possible. Please try again or use another method.",
-        "text_divider": "Or continue with",
+        "text_divider": "or",
         "button_switchToAlternate": {
-          "emailOtp": "Email verification",
-          "emailLink": "Email verification",
-          "phone": "Phone verification"
+          "emailOtp": "Continue with email",
+          "emailLink": "Continue with email",
+          "phone": "Continue with phone"
         },
         "button_tryAgain": "Try again",
         "button_cancel": "Continue without passkeys"
@@ -204,9 +197,9 @@
         "body_description": "Login with passkeys was not possible. Try again or use other method.",
         "text_divider": "or",
         "button_switchToAlternate": {
-          "emailOtp": "Use email verification",
-          "emailLink": "Use email verification",
-          "phone": "Use phone verification"
+          "emailOtp": "Continue with email",
+          "emailLink": "Continue with email",
+          "phone": "Continue with phone"
         },
         "button_tryAgain": "Try again"
       }

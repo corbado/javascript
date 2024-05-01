@@ -4,7 +4,7 @@ import { AuthType, BlockType, VerificationMethod } from '@corbado/web-core';
 import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
-import type { BlockDataEmailVerify, BlockDataPasskeyAppend } from '../types';
+import type { BlockDataEmailVerify, BlockDataPasskeyAppend, PasskeyFallback } from '../types';
 import { Block } from './Block';
 
 export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
@@ -45,6 +45,8 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   init() {
+    let result: PasskeyFallback | undefined = undefined;
+
     this.data.availableFallbacks = this.alternatives
       .filter(a => a.type === BlockTypes.PhoneVerify || a.type === BlockType.EmailVerify)
       .map(alternative => {
@@ -52,13 +54,22 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
           case BlockType.EmailVerify: {
             const typed = alternative.data as BlockDataEmailVerify;
             if (typed.verificationMethod === VerificationMethod.EmailOtp) {
-              return { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
+              result = { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
+            } else {
+              result = { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
             }
 
-            return { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
+            this.data.preferredFallbackOnError = result;
+            return result;
           }
           case BlockType.PhoneVerify:
-            return { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
+            result = { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
+
+            if (this.data.preferredFallbackOnError === undefined) {
+              this.data.preferredFallbackOnError = result;
+            }
+
+            return result;
           default:
             throw new Error('Invalid block type');
         }
@@ -66,10 +77,6 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.userHandle);
-
-  showPasskeyBenefits() {
-    this.updateScreen(ScreenNames.PasskeyBenefits);
-  }
 
   showEditUserData() {
     this.cancelPasskeyOperation();

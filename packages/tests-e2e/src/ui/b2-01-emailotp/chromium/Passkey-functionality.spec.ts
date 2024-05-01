@@ -7,21 +7,16 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount(
+    await loginFlow.createAccount(
       [IdentifierType.Email],
       [IdentifierVerification.EmailOtp],
       true,
       true,
     );
-    email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 
-    await page.getByRole('textbox', { name: 'email' }).click();
-    await page.getByRole('textbox', { name: 'email' }).fill(email);
-    await expect(page.getByRole('textbox', { name: 'email' })).toHaveValue(email);
-
-    await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Continue' }).click());
+    await loginFlow.simulateSuccessfulPasskeyInput(() => page.locator('.cb-last-identifier').click());
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 

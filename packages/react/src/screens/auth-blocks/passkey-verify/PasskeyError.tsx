@@ -29,7 +29,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     [t, block.data.preferredFallbackOnError],
   );
 
-  const login = useCallback(async () => {
+  const primaryAction = useCallback(async () => {
     setLoading(true);
 
     if (block.data.preferredFallbackOnError) {
@@ -55,7 +55,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        void login();
+        void primaryAction();
       }
     }
 
@@ -64,7 +64,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [login]);
+  }, [primaryAction]);
 
   async function userInfoChange() {
     setLoading(true);
@@ -72,7 +72,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     setLoading(false);
   }
 
-  async function tryAgain() {
+  async function secondaryAction() {
     setLoading(true);
     await block.passkeyLogin();
     setLoading(false);
@@ -106,7 +106,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
         {bodyDescriptionText}
       </Text>
       <PrimaryButton
-        onClick={() => void login()}
+        onClick={() => void primaryAction()}
         isLoading={loading}
         disabled={changingBlock}
       >
@@ -119,7 +119,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
             className='cb-pk-error-bloc-divider'
           />
           <SecondaryButton
-            onClick={() => void tryAgain()}
+            onClick={() => void secondaryAction()}
             disabled={changingBlock}
           >
             {tryAgainButtonText}

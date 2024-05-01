@@ -26,7 +26,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     [t, block.data.preferredFallbackOnError],
   );
 
-  const signup = useCallback(async () => {
+  const primaryAction = useCallback(async () => {
     setLoading(true);
 
     if (block.data.preferredFallbackOnError) {
@@ -48,7 +48,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        void signup();
+        void primaryAction();
       }
     }
 
@@ -57,9 +57,9 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [signup]);
+  }, [primaryAction]);
 
-  async function tryAgain() {
+  async function secondaryAction() {
     setLoading(true);
     await block.passkeyAppend();
     setLoading(false);
@@ -81,7 +81,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
         {bodyText}
       </Text>
       <PrimaryButton
-        onClick={() => void signup()}
+        onClick={() => void primaryAction()}
         isLoading={loading}
         disabled={changingBlock}
       >
@@ -95,7 +95,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
           />
           <SecondaryButton
             disabled={changingBlock}
-            onClick={() => void tryAgain()}
+            onClick={() => void secondaryAction()}
           >
             {tryAgainButtonText}
           </SecondaryButton>

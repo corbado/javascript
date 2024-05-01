@@ -2,9 +2,11 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
-  test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
-    await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(false);
+  test('try to continue with incorrect OTP', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.navigateToEmailOtpScreen();
@@ -14,9 +16,11 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await expect(page.getByText('The code is invalid or expired')).toBeVisible();
   });
 
-  test('modify email identifier', async ({ signupFlow, page }) => {
-    await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(false);
+  test('modify email identifier', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
@@ -35,9 +39,11 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, newEmail);
   });
 
-  test('cancel modifying email identifier', async ({ signupFlow, page }) => {
-    await signupFlow.initializeCDPSession();
-    await signupFlow.addWebAuthn(false);
+  test('cancel modifying email identifier', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     let [, email] = await signupFlow.navigateToEmailOtpScreen();

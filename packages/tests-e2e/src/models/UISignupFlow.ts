@@ -126,7 +126,7 @@ export class UISignupFlow {
     await this.checkNoPasskeyRegistered();
 
     await this.page.getByRole('button', { name: 'Logout' }).click();
-    
+
     await this.loadAuth();
     await this.checkLandedOnScreen(ScreenNames.InitSignup);
 

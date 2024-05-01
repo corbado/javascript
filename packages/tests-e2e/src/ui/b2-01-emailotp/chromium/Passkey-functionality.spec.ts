@@ -7,12 +7,7 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
 
-    await loginFlow.createAccount(
-      [IdentifierType.Email],
-      [IdentifierVerification.EmailOtp],
-      true,
-      true,
-    );
+    await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, true);
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 

@@ -27,7 +27,7 @@ if (!Corbado.user) {
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', async () => {
     await Corbado.logout();
-    window.location.href = '/auth.html';
+    window.location.href = '/auth.html#login-init';
   });
 
   const passkeyList = document.getElementById('passkey-list');

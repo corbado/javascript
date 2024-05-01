@@ -15,6 +15,7 @@ import { Configuration } from '../api/v1';
 import type {
   AuthType,
   LoginIdentifier,
+  PasskeyOperation,
   ProcessInitReq,
   ProcessInitRsp,
   ProcessResponse,
@@ -24,11 +25,13 @@ import { SocialDataStatusEnum } from '../api/v2';
 import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
+import type { LastIdentifier } from '../models/lastIdentifier';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
+const lastIdentifierKey = 'cbo_last_identifier';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
@@ -80,6 +83,19 @@ export class ProcessService {
     if (res.err) {
       console.log('process has error', res.val);
       return this.#initNewAuthProcess(abortController);
+    }
+
+    const block = res.val.blockBody.block;
+
+    const initScreenBlocks = ['signup-init', 'login-init'];
+
+    // if the frontend preferred block is in the initScreenBlocks, we need to init the signup/login process
+    // another condition we need to check is that the new block is not in the initScreenBlocks. This is because in social login we come back to the signup/login process with addional data
+    if (
+      (!frontendPreferredBlockType || initScreenBlocks.includes(frontendPreferredBlockType)) &&
+      !initScreenBlocks.includes(block)
+    ) {
+      return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
 
     // if the process does not contain any state yet, we recreate it from backend to get potential config changes
@@ -483,19 +499,24 @@ export class ProcessService {
     return await this.finishPasskeyAppend(signedChallenge.val);
   }
 
+  // perform a passkey login
+  // if the procedure fails, clear the last identifier
   async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       return respStart;
     }
 
-    if (respStart.val.blockBody.error) {
+    if (respStart.err || respStart.val.blockBody.error) {
+      this.dropLastIdentifier(undefined);
+
       return respStart;
     }
 
     const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
     if (signedChallenge.err) {
-      // TODO: return block body with client generated error
+      this.dropLastIdentifier(undefined);
+
       return signedChallenge;
     }
 
@@ -525,6 +546,28 @@ export class ProcessService {
 
     localStorage.setItem(passkeyAppendShownKey, utcSeconds.toString());
   }
+
+  dropLastIdentifier = (passkeyOperations: PasskeyOperation | undefined) => {
+    const hasPasskey = passkeyOperations?.operationType;
+    if (!hasPasskey || !passkeyOperations) {
+      localStorage.removeItem(lastIdentifierKey);
+      return;
+    }
+
+    localStorage.setItem(
+      lastIdentifierKey,
+      JSON.stringify({
+        value: passkeyOperations.identifierValue,
+        type: passkeyOperations.identifierType,
+      }),
+    );
+  };
+
+  getLastIdentifier = (): LastIdentifier | undefined => {
+    const lastIdentifierStore = localStorage.getItem(lastIdentifierKey);
+
+    return lastIdentifierStore ? (JSON.parse(lastIdentifierStore) as LastIdentifier) : undefined;
+  };
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();

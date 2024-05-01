@@ -98,8 +98,10 @@ export class ProcessHandler {
 
   onProcessCompleted(data: AuthenticationResponse) {
     this.#corbadoApp.authProcessService.clearProcess();
+    this.#corbadoApp.authProcessService.dropLastIdentifier(data.passkeyOperation);
     this.#currentBlock = null;
     this.#corbadoApp.sessionService.setSession(data.shortSession, data.longSession);
+
     this.#postProcess();
   }
 

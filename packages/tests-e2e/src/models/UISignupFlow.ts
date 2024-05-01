@@ -1,7 +1,7 @@
 import type { BrowserContext, CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { OtpType, ScreenNames } from '../utils/constants';
+import { operationTimeout, OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { getEmailLink } from '../utils/helperFunctions/getEmailLink';
 import { loadAuth } from '../utils/helperFunctions/loadAuth';
@@ -52,7 +52,7 @@ export class UISignupFlow {
       this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
       this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
-    const wait = new Promise<void>(resolve => setTimeout(resolve, process.env.CI ? 3000 : 5000));
+    const wait = new Promise<void>(resolve => setTimeout(resolve, operationTimeout));
     await setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
     await setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
     await operationTrigger();

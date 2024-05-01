@@ -2,7 +2,11 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with email OTP proper user behavior', () => {
-  test('with no passkey support', async ({ loginFlow, page }) => {
+  test('with no passkey support', async ({ loginFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await loginFlow.initializeCDPSession();
+      await loginFlow.addWebAuthn(false);
+    }
     await loginFlow.loadAuth();
 
     let [, email] = await loginFlow.createAccount(

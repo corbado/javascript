@@ -3,6 +3,8 @@ import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('EnterOtpScreen unproductive user behavior', () => {
   test('try to continue with incorrect OTP', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(false);
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.navigateToEmailOtpScreen();
@@ -13,6 +15,8 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   });
 
   test('modify email identifier', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(false);
     await signupFlow.loadAuth();
 
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
@@ -32,6 +36,8 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
   });
 
   test('cancel modifying email identifier', async ({ signupFlow, page }) => {
+    await signupFlow.initializeCDPSession();
+    await signupFlow.addWebAuthn(false);
     await signupFlow.loadAuth();
 
     let [, email] = await signupFlow.navigateToEmailOtpScreen();
@@ -52,7 +58,11 @@ test.describe('EnterOtpScreen unproductive user behavior', () => {
 
   // Skipped because loading external links take a long time
   // (navigationTimeout should be extended, but it doesn't seem worth it for this single test)
-  test.skip('click external links', async ({ signupFlow, page }) => {
+  test.skip('click external links', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.navigateToEmailOtpScreen();

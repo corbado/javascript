@@ -2,7 +2,11 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
-  test('with empty username', async ({ signupFlow, page }) => {
+  test('with empty username', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(false, true, true);
@@ -12,7 +16,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a username.')).toBeVisible();
   });
 
-  test('with duplicate username', async ({ signupFlow, page }) => {
+  test('with duplicate username', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     const [username] = await signupFlow.createAccount();
@@ -25,7 +33,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid username (illegal characters)', async ({ signupFlow, page }) => {
+  test('with invalid username (illegal characters)', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(false, true, true);
@@ -39,7 +51,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid username (length)', async ({ signupFlow, page }) => {
+  test('with invalid username (length)', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(false, true, true);
@@ -53,7 +69,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with empty email address', async ({ signupFlow, page }) => {
+  test('with empty email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(true, false, true);
@@ -63,7 +83,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter an email address.')).toBeVisible();
   });
 
-  test('with duplicate email address', async ({ signupFlow, page }) => {
+  test('with duplicate email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.createAccount();
@@ -76,7 +100,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid email address', async ({ signupFlow, page }) => {
+  test('with invalid email address', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(true, false, true);
@@ -86,7 +114,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid email address.')).toBeVisible();
   });
 
-  test('with empty phone number', async ({ signupFlow, page }) => {
+  test('with empty phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(true, true, false);
@@ -96,7 +128,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a phone number.')).toBeVisible();
   });
 
-  test('with duplicate phone number', async ({ signupFlow, page }) => {
+  test('with duplicate phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     const [, , phone] = await signupFlow.createAccount();
@@ -112,7 +148,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     ).toBeVisible();
   });
 
-  test('with invalid phone number', async ({ signupFlow, page }) => {
+  test('with invalid phone number', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await signupFlow.fillIdentifiers(true, true, false);
@@ -123,7 +163,11 @@ test.describe('InitSignupScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid phone number.')).toBeVisible();
   });
 
-  test('switch to Login flow', async ({ signupFlow, page }) => {
+  test('switch to Login flow', async ({ signupFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await signupFlow.initializeCDPSession();
+      await signupFlow.addWebAuthn(false);
+    }
     await signupFlow.loadAuth();
 
     await page.getByText('Log in').click();

@@ -31,11 +31,11 @@ export class UILoginFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
   }
 
-  async addWebAuthn() {
+  async addWebAuthn(passkeySupported = true) {
     if (!this.#cdpClient) {
       throw new Error('CDP client not intialized');
     }
-    this.#authenticatorId = await addWebAuthn(this.#cdpClient);
+    this.#authenticatorId = await addWebAuthn(this.#cdpClient, passkeySupported);
   }
 
   async removeWebAuthn() {
@@ -266,7 +266,7 @@ export class UILoginFlow {
         await expect(this.page.locator('.cb-header')).toHaveText('Passkey login in process...');
         break;
       case ScreenNames.End:
-        await expect(this.page).toHaveURL(/\/pro-[0-9]+/);
+        await expect(this.page).toHaveURL(/\/pro-[0-9]+$/);
         break;
     }
   }

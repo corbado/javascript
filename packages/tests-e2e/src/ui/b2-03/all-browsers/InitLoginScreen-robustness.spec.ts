@@ -2,7 +2,11 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('InitLoginScreen unproductive user behavior', () => {
-  test.skip('with empty email address', async ({ loginFlow, page }) => {
+  test.skip('with empty email address', async ({ loginFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await loginFlow.initializeCDPSession();
+      await loginFlow.addWebAuthn(false);
+    }
     await loginFlow.loadAuth();
 
     await page.getByText('Log in').click();
@@ -15,7 +19,11 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter an email address.')).toBeVisible();
   });
 
-  test.skip('with invalid email address', async ({ loginFlow, page }) => {
+  test.skip('with invalid email address', async ({ loginFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await loginFlow.initializeCDPSession();
+      await loginFlow.addWebAuthn(false);
+    }
     await loginFlow.loadAuth();
 
     await page.getByText('Log in').click();
@@ -29,7 +37,11 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await expect(page.getByText('Please enter a valid email address.')).toBeVisible();
   });
 
-  test('with nonexistent email address', async ({ loginFlow, page }) => {
+  test('with nonexistent email address', async ({ loginFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await loginFlow.initializeCDPSession();
+      await loginFlow.addWebAuthn(false);
+    }
     await loginFlow.loadAuth();
 
     await page.getByText('Log in').click();
@@ -43,7 +55,11 @@ test.describe('InitLoginScreen unproductive user behavior', () => {
     await expect(page.getByText("Couldn't find your account.")).toBeVisible();
   });
 
-  test('switch to Signup flow', async ({ loginFlow, page }) => {
+  test('switch to Signup flow', async ({ loginFlow, page, browserName }) => {
+    if (browserName === 'chromium') {
+      await loginFlow.initializeCDPSession();
+      await loginFlow.addWebAuthn(false);
+    }
     await loginFlow.loadAuth();
 
     await page.getByText('Log in').click();

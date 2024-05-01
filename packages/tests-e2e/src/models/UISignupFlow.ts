@@ -30,11 +30,11 @@ export class UISignupFlow {
     this.#cdpClient = await initializeCDPSession(this.page);
   }
 
-  async addWebAuthn() {
+  async addWebAuthn(passkeySupported = true) {
     if (!this.#cdpClient) {
       throw new Error('CDP client not intialized');
     }
-    this.#authenticatorId = await addWebAuthn(this.#cdpClient);
+    this.#authenticatorId = await addWebAuthn(this.#cdpClient, passkeySupported);
   }
 
   async removeWebAuthn() {
@@ -126,6 +126,8 @@ export class UISignupFlow {
     await this.checkNoPasskeyRegistered();
 
     await this.page.getByRole('button', { name: 'Logout' }).click();
+    
+    await this.loadAuth();
     await this.checkLandedOnScreen(ScreenNames.InitSignup);
 
     return [username ?? '', email ?? '', phone ?? ''];

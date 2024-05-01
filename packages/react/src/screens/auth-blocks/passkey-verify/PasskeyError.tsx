@@ -23,13 +23,22 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   const bodyTitleText = useMemo(() => t('body_title'), [t]);
   const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
   const dividerText = useMemo(() => t('text_divider'), [t]);
-  const primaryButtonText = useMemo(() => t('button_tryAgain'), [t]);
+  const tryAgainButtonText = useMemo(() => t('button_tryAgain'), [t]);
+  const fallbackButtonText = useMemo(
+    () => t(block.data.preferredFallbackOnError?.label ?? ''),
+    [t, block.data.preferredFallbackOnError],
+  );
 
-  const fallbacksAvailable = block.data.availableFallbacks.length > 0;
-
-  const passkeyLogin = useCallback(async () => {
+  const login = useCallback(async () => {
     setLoading(true);
-    await block.passkeyLogin();
+
+    if (block.data.preferredFallbackOnError) {
+      setChangingBlock(true);
+      await block.data.preferredFallbackOnError.action();
+    } else {
+      await block.passkeyLogin();
+    }
+
     setLoading(false);
   }, [block]);
 
@@ -46,7 +55,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        void passkeyLogin();
+        void login();
       }
     }
 
@@ -55,11 +64,17 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [passkeyLogin]);
+  }, [login]);
 
   async function userInfoChange() {
     setLoading(true);
     await block.confirmAbort();
+    setLoading(false);
+  }
+
+  async function tryAgain() {
+    setLoading(true);
+    await block.passkeyLogin();
     setLoading(false);
   }
 
@@ -91,30 +106,26 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
         {bodyDescriptionText}
       </Text>
       <PrimaryButton
-        onClick={() => void passkeyLogin()}
+        onClick={() => void login()}
         isLoading={loading}
         disabled={changingBlock}
       >
-        {primaryButtonText}
+        {block.data.preferredFallbackOnError ? fallbackButtonText : tryAgainButtonText}
       </PrimaryButton>
-      {fallbacksAvailable && (
-        <Divider
-          label={dividerText}
-          className='cb-pk-error-bloc-divider'
-        />
+      {block.data.preferredFallbackOnError && (
+        <>
+          <Divider
+            label={dividerText}
+            className='cb-pk-error-bloc-divider'
+          />
+          <SecondaryButton
+            onClick={() => void tryAgain()}
+            disabled={changingBlock}
+          >
+            {tryAgainButtonText}
+          </SecondaryButton>
+        </>
       )}
-      {block.data.availableFallbacks.map(fallback => (
-        <SecondaryButton
-          key={fallback.label}
-          disabled={changingBlock}
-          onClick={() => {
-            setChangingBlock(true);
-            return void fallback.action();
-          }}
-        >
-          {t(fallback.label)}
-        </SecondaryButton>
-      ))}
     </div>
   );
 };

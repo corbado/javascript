@@ -49,7 +49,6 @@ export enum ScreenNames {
   MissingFields = 'missing-fields',
   PasskeyError = 'passkey-error',
   PasskeyAppend = 'passkey-append',
-  PasskeyBenefits = 'passkey-benefits',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',
   EditUserData = 'edit-user-data',

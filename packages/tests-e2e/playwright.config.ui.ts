@@ -2,6 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
+import { operationTimeout, totalTimeout } from './src/utils/constants';
+
 if (process.env.CI) {
   // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
   // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the
@@ -26,13 +28,13 @@ export default defineConfig({
       : undefined
     : undefined,
   reporter: 'html',
-  timeout: process.env.CI ? 15000 : 30000, // default: 30000ms
+  timeout: totalTimeout, // default: 30000ms
   expect: {
-    timeout: process.env.CI ? 3000 : 5000, // default: 5000ms
+    timeout: operationTimeout, // default: 5000ms
   },
   use: {
-    actionTimeout: process.env.CI ? 3000 : 5000, // default: none
-    navigationTimeout: process.env.CI ? 3000 : 5000, // default: none
+    actionTimeout: operationTimeout, // default: none
+    navigationTimeout: operationTimeout, // default: none
     baseURL: process.env.PLAYWRIGHT_TEST_URL,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',

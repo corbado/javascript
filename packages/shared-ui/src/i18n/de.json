@@ -1,184 +1,358 @@
 {
-  "authentication": {
-    "signup": {
-      "start": {
-        "header": "Erstellen Sie Ihr Konto",
-        "subheader": "Haben Sie bereits ein Konto? ",
+  "signup": {
+    "signup-init": {
+      "signup-init": {
+        "header": "Erstelle dein Konto",
+        "subheader": "um Zugang zu erhalten",
+        "text_login": "Hast du bereits ein Konto? ",
         "button_login": "Einloggen",
-        "button_submit": "Weiter mit E-Mail",
-        "textField_name": "Name",
-        "textField_email": "E-Mail-Adresse"
-      },
-      "emailOtp": {
-        "header": "Einmalkennwort eingeben, um Konto zu erstellen",
-        "body_text1": "Wir haben gerade ein Einmalkennwort an ",
-        "body_text2": " gesendet. Das Einmalkennwort läuft bald ab, bitte geben Sie es bald ein.",
-        "button_verify": "Fortfahren",
-        "button_sendOtpAgain": "Einmalkennwort erneut senden",
-        "button_back": "Abbrechen"
-      },
-      "emailLinkSent": {
-        "header": "Prüfen Sie Ihr Email Postfach",
-        "body_text1": "Wir haben ihnen eine E-Mail an ",
-        "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
-        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}} sec)",
-        "button_sendLinkAgain": "Link erneut senden",
-        "button_back": "Abbrechen"
-      },
-      "emailLinkVerification": {
-        "header": "Verifizierung läuft...",
-        "button_back": "Abbrechen"
-      },
-      "passkeyCreate": {
-        "header": "Starten Sie mit ",
-        "headerButton_showPasskeyBenefits": "Passkeys",
-        "body": "Wir erstellen einen Account für ",
-        "button_start": "Account erstellen",
-        "button_switchToAlternate": {
-          "emailOtp": "E-Mail-Einmalkennwort senden",
-          "emailLink": "E-Mail-Link senden"
-        },
-        "button_back": "Zurück"
-      },
-      "passkeyError": {
-        "header": "Starten Sie mit",
-        "body_errorMessage": "Ihr Konto konnte nicht erstellt werden mit ",
-        "button_showPasskeyBenefits": "Passkeys",
-        "body_tryAgainMessage": {
-          "emailOtp": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Einmalkennwort an.",
-          "emailLink": ". Versuchen Sie es erneut oder melden Sie sich mit E-Mail-Links an."
-        },
-        "button_switchToAlternate": {
-          "emailOtp": "E-Mail-Einmalkennwort senden",
-          "emailLink": "E-Mail-Link senden"
-        },
-        "button_retry": "Erneut versuchen",
-        "button_back": "Zurück",
-        "button_cancel": "Abbrechen"
-      },
-      "passkeySuccess": {
-        "header": "Willkommen!",
-        "subheader": "Passkey wurde erstellt",
-        "body_text1": "Sie können jetzt Ihre Identität mit Ihrem ",
-        "body_text2": {
-          "emailOtp": "Passkey oder per E-Mail-Einmalkennwort",
-          "emailLink": "Passkey oder per E-Mail-Link"
-        },
-        "body_text3": " beim Einloggen bestätigen.",
-        "button": "Weiter"
-      },
-      "passkeyBenefits": {
-        "header": "Passkeys",
-        "body_introduction": "Mit Passkeys müssen Sie sich keine komplexen Passwörter mehr merken. Melden Sie sich sicher mit ",
-        "body_loginMethods": "Face ID, Touch ID oder Sperrcode an.",
-        "button_start": "Passkey erstellen",
-        "button_skip": "Vielleicht später"
-      },
-      "passkeyPrompt": {
-        "header": "Schneller einloggen mit ",
-        "button_showPasskeyBenefits": "Passkeys",
-        "button_start": "Aktivieren",
-        "button_skip": "Vielleicht später"
-      }
-    },
-    "login": {
-      "start": {
-        "header": "Willkommen zurück!",
-        "subheader": "Noch kein Konto? ",
-        "button_signup": "Konto erstellen",
         "button_submit": "Weiter",
-        "textField_email": "E-Mail-Adresse"
-      },
-      "emailOtp": {
-        "header": "Einmalkennwort zum Login eingeben",
-        "body_text1": "Wir haben gerade ein Einmalkennwort an ",
-        "body_text2": " gesendet. Das Einmalkennwort läuft bald ab, bitte geben Sie es bald ein.",
-        "button_verify": "Weiter",
-        "button_sendOtpAgain": "Einmalkennwort erneut senden",
-        "button_back": "Abbrechen"
-      },
-      "emailLinkSent": {
-        "header": "Prüfen Sie Ihr E-Mail Postfach",
-        "body_text1": "Wir haben ihnen eine E-Mail an ",
-        "body_text2": "gesendet. Bitte öffnen sie diese und klicken sie auf den Link, um ihre Anmeldung abzuschließen.",
-        "button_sendLinkAgainWaitingText": "Link erneut senden ({{remainingTime}} sec)",
-        "button_sendLinkAgain": "Link erneut senden",
-        "button_back": "Abbrechen"
-      },
-      "emailLinkVerification": {
-        "header": "Verifizierung läuft...",
-        "button_back": "Abbrechen"
-      },
-      "passkeyError": {
-        "header": "Mit Passkeys anmelden",
-        "body": {
-          "emailOtp": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich per E-Mail-Einmalkennwort an.",
-          "emailLink": "Einloggen mit Passkeys nicht möglich. Versuchen Sie es erneut oder melden Sie sich per E-Mail-Link an."
-        },
-        "button_switchToAlternate": {
-          "emailOtp": "Einmalkennwort senden",
-          "emailLink": "Link senden"
-        },
-        "button_retry": "Erneut versuchen",
-        "button_back": "Zurück",
-        "button_cancel": "Abbrechen"
-      },
-      "passkeyAppend": {
-        "header": "Schneller einloggen mit ",
-        "button_showPasskeyBenefits": "Passkeys",
-        "button_start": "Aktivieren",
-        "button_skip": "Vielleicht später"
-      },
-      "passkeyBenefits": {
-        "header": "Passkeys",
-        "body_introduction": "Mit Passkeys müssen Sie sich keine komplexen Passwörter mehr merken. Melden Sie sich sicher mit ",
-        "body_loginMethods": "Face ID, Touch ID oder Sperrcode an.",
-        "button_start": "Passkey erstellen",
-        "button_skip": "Vielleicht später"
+        "textField_fullName": "Name",
+        "textField_username": "Benutzername",
+        "textField_email": "E-Mail-Adresse",
+        "textField_phone": "Telefonnummer",
+        "text_divider": "oder",
+        "social_signup": {
+          "google": "Mit Google fortfahren",
+          "microsoft": "Mit Microsoft fortfahren",
+          "github": "Mit GitHub fortfahren",
+          "default": "Mit {{provider}} fortfahren"
+        }
       }
     },
-    "unexpectedError": {
-      "header": "Hier ist etwas schief gelaufen",
-      "subheader": "Dieser Service ist aktuell leider nicht verfügbar",
-      "body_withCustomerSupport": "Bitte versuchen Sie es später noch einmal. Sollte das Problem bestehen bleiben, wenden Sie sich bitte an {{customerSupportEmail}}.",
-      "body_noCustomerSupport": "Bitte versuchen Sie es später noch einmal.",
-      "button": "Seite neu laden"
+    "passkey-append": {
+      "passkey-append": {
+        "header": {
+          "create": "Konto mit Passkeys erstellen",
+          "append": "Passkey für einfacheren Login einrichten"
+        },
+        "body_point1": "Schneller und sicherer Login mit Face ID, Touch ID oder PIN statt Passwort.",
+        "body_point2": "Passkeys sind auf dem Gerät oder in der Cloud gespeichert (verfügbar auf verbundenen Geräten).",
+        "body_subtext": "Biometrische Daten verlassen niemals dein Gerät.",
+        "button_start": {
+          "create": "Konto erstellen",
+          "append": "Passkey erstellen"
+        },
+        "button_skip": "Vielleicht später",
+        "text_divider": "oder ein Konto erstellen via",
+        "button_switchToAlternate": {
+          "emailOtp": "E-Mail OTP",
+          "emailLink": "E-Mail Magic Link",
+          "phone": "SMS OTP"
+        }
+      },
+      "edit-user-data": {
+        "header": {
+          "username": "Neuen Benutzernamen eingeben",
+          "email": "Neue E-Mail-Adresse eingeben",
+          "phone": "Neue Telefonnummer eingeben"
+        },
+        "button_submit": "Bestätigen",
+        "button_cancel": "Zurück"
+      },
+      "passkey-error": {
+        "header": "Etwas ist schief gelaufen...",
+        "body": "Das Hinzufügen eines Passkeys zu deinem Konto war nicht möglich. Bitte versuche es erneut oder verwende eine andere Methode.",
+        "text_divider": "oder",
+        "button_switchToAlternate": {
+          "emailOtp": "Mit E-Mail fortfahren",
+          "emailLink": "Mit E-Mail fortfahren",
+          "phone": "Mit Telefon fortfahren"
+        },
+        "button_tryAgain": "Erneut versuchen",
+        "button_cancel": "Ohne Passkeys fortfahren"
+      }
+    },
+    "passkey-appended": {
+      "passkey-appended": {
+        "header": "Erfolg!",
+        "subheader": "Passkey erstellt",
+        "body": "Du kannst dich nun mit deinem Passkey einloggen.",
+        "button": "Fortsetzen"
+      }
+    },
+    "email-verify": {
+      "email-otp": {
+        "header": "OTP eingeben, um Konto zu erstellen",
+        "body_title": "Einmal-Code",
+        "body_description": "Gib den Einmal-Code ein, der an deine E-Mail-Adresse gesendet wurde",
+        "body_resend": "Keine E-Mail erhalten?",
+        "button_resend": "Code erneut senden",
+        "button_resendWaitingText": "Code erneut senden ({{remainingTime}} Sek)",
+        "button_gmail": "In Gmail öffnen",
+        "button_outlook": "In Outlook öffnen",
+        "button_yahoo": "In Yahoo öffnen",
+        "button_icloud": "In iCloud öffnen"
+      },
+      "email-link-sent": {
+        "header": "Überprüfe dein Postfach, um dein Konto zu erstellen",
+        "body_title": "E-Magic Link Link",
+        "body_description": "Wir haben soeben einen E-Mail Magic Link an deine E-Mail-Adresse gesendet",
+        "body_resend": "Keine E-Mail erhalten?",
+        "button_resend": "E-Mail erneut senden",
+        "button_resendWaitingText": "E-Mail erneut senden ({{remainingTime}} Sek)",
+        "button_gmail": "In Gmail öffnen",
+        "button_outlook": "In Outlook öffnen",
+        "button_yahoo": "In Yahoo öffnen",
+        "button_icloud": "In iCloud öffnen"
+      },
+      "email-link-verification": {
+        "header": "Anmeldung...",
+        "subheader": "Du wirst gleich weitergeleitet"
+      },
+      "email-link-success": {
+        "header": "Erfolgreiche E-Mail-Verifizierung",
+        "subheader": {
+          "isOldTab": "Kehre zu dem Tab zurück, in dem du die E-Mail verifiziert hast",
+          "isNewTab": "Kehre zu dem Tab zurück, in dem du dich gerade anmeldest, um fortzufahren"
+        },
+        "body": "Du kannst diesen Tab nun schließen"
+      },
+      "email-link-error": {
+        "subheader": "Kehre zu dem Tab zurück, in dem du dich gerade anmeldest, und versuche es erneut",
+        "body": "Du kannst diesen Tab nun schließen"
+      },
+      "edit-email": {
+        "header": "Neue E-Mail-Adresse eingeben",
+        "button_submit": {
+          "emailOtp": "Code erneut senden",
+          "emailLink": "E-Mail erneut senden"
+        },
+        "button_cancel": "Zurück"
+      }
+    },
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Einmal-Code eingeben, um Konto zu erstellen",
+        "body_title": "Einmal-Code",
+        "body_description": "Gib den Einmal-Code ein, der an deine Telefonnummer gesendet wurde",
+        "body_resend": "Keine SMS erhalten?",
+        "button_resend": "Code erneut senden",
+        "button_resendWaitingText": "Code erneut senden ({{remainingTime}} Sek)"
+      },
+      "edit-phone": {
+        "header": "Neue Telefonnummer eingeben",
+        "button_submit": "Code erneut senden",
+        "button_cancel": "Zurück"
+      }
+    },
+    "social-link-verification": {
+      "header": "Anmeldung...",
+      "subheader": "Du wirst gleich weitergeleitet"
+    },
+    "missing-fields": {
+      "header": "Fülle die fehlenden Felder aus",
+      "subheader": "um ein Konto zu erstellen",
+      "button": "Weiter"
+    }
+  },
+  "login": {
+    "login-init": {
+      "login-init": {
+        "header": "Einloggen",
+        "subheader": "um Zugang zu erhalten",
+        "text_signup": "Noch kein Konto? ",
+        "button_signup": "Anmelden",
+        "button_submit": "Fortsetzen",
+        "textField": {
+          "email": "E-Mail-Adresse",
+          "username": "Benutzername",
+          "emailOrUsername": "E-Mail-Adresse oder Benutzername",
+          "phone": "Telefonnummer"
+        },
+        "button_switchToAlternate": {
+          "email": "E-Mail verwenden",
+          "username": "Benutzername verwenden",
+          "emailOrUsername": "E-Mail oder Benutzername verwenden",
+          "phone": "Telefonnummer verwenden"
+        },
+        "text_divider": "oder",
+        "social_signup": {
+          "google": "Mit Google fortfahren",
+          "microsoft": "Mit Microsoft fortfahren",
+          "github": "Mit GitHub fortfahren",
+          "default": "Mit {{provider}} fortfahren"
+        },
+        "last_identifier": {
+          "title": "Einloggen mit Passkey",
+          "text_skip": "Nicht du? ",
+          "button_skip": "Konto wechseln"
+        }
+      }
+    },
+    "passkey-verify": {
+      "passkey-background": {
+        "header": "Passkey-Login läuft...",
+        "body_title": "Bitte warten",
+        "body_description": "Wir verbinden uns mit deinem Authenticator.",
+        "button_switchToAlternate": {
+          "emailOtp": "E-Mail OTP verwenden",
+          "emailLink": "E-Mail Magic Link verwenden",
+          "phone": "SMS OTP verwenden"
+        }
+      },
+      "passkey-error": {
+        "header": "Etwas ist schief gelaufen...",
+        "body_title": "Einloggen für",
+        "body_description": "Login mit Passkeys war nicht möglich. Versuche es erneut oder verwende eine andere Methode.",
+        "text_divider": "oder",
+        "button_switchToAlternate": {
+          "emailOtp": "Mit E-Mail OTP fortfahren",
+          "emailLink": "Mit E-Mail Magic Link fortfahren",
+          "phone": "Mit SMS OTP fortfahren"
+        },
+        "button_tryAgain": "Erneut versuchen"
+      }
+    },
+    "email-verify": {
+      "email-otp": {
+        "header": "Code für Login eingeben",
+        "body_title": "Einmal-Code",
+        "body_description": "Gib den Einmal-Code ein, der an deine E-Mail-Adresse gesendet wurde",
+        "body_resend": "Keine E-Mail erhalten?",
+        "button_resend": "Code erneut senden",
+        "button_resendWaitingText": "Code erneut senden ({{remainingTime}} Sek)",
+        "button_gmail": "In Gmail öffnen",
+        "button_outlook": "In Outlook öffnen",
+        "button_yahoo": "In Yahoo öffnen",
+        "button_icloud": "In iCloud öffnen"
+      },
+      "email-link-sent": {
+        "header": "Überprüfe dein Postfach, um dich einzuloggen",
+        "body_title": "E-Mail Magic Link",
+        "body_description": "Wir haben soeben einen E-Mail Magic Link an deine E-Mail-Adresse gesendet",
+        "body_resend": "Keine E-Mail erhalten?",
+        "button_resend": "E-Mail erneut senden",
+        "button_resendWaitingText": "E-Mail erneut senden ({{remainingTime}} Sek)",
+        "button_gmail": "In Gmail öffnen",
+        "button_outlook": "In Outlook öffnen",
+        "button_yahoo": "In Yahoo öffnen",
+        "button_icloud": "In iCloud öffnen"
+      },
+      "email-link-verification": {
+        "header": "Einloggen...",
+        "subheader": "Du wirst bald weitergeleitet"
+      },
+      "email-link-success": {
+        "header": "Erfolgreicher E-Mail-Login",
+        "subheader": {
+          "isOldTab": "Kehre zu dem Tab zurück, in dem du die E-Mail verifiziert hast",
+          "isNewTab": "Kehre zu dem Tab zurück, in dem du dich gerade einloggst, um fortzufahren"
+        },
+        "body": "Du kannst diesen Tab nun schließen"
+      },
+      "email-link-error": {
+        "subheader": "Kehre zu dem Tab zurück, in dem du dich gerade einloggst, und versuche es erneut",
+        "body": "Du kannst diesen Tab nun schließen"
+      }
+    },
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Code für Login eingeben",
+        "body_title": "Einmal-Code",
+        "body_description": "Wir haben soeben einen Einaml-Code an deine Telefonnummer gesendet",
+        "body_resend": "Keine SMS erhalten?",
+        "button_resend": "Code erneut senden",
+        "button_resendWaitingText": "Code erneut senden ({{remainingTime}} Sek)"
+      }
+    },
+    "social-link-verification": {
+      "header": "Einloggen...",
+      "subheader": "Du wirst bald weitergeleitet"
     }
   },
   "errors": {
-    "invalidName": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "invalidFullname": "Bitte geben Sie einen Namen ein",
-    "passkeyChallengeCancelled": "Passkey Challenge abgebrochen",
-    "userAlreadyExists": "E-Mail-Adresse wird bereits verwendet",
-    "passkeyAlreadyExists": "Für dieses Gerät wurde bereits ein Passkey erstellt",
+    "confirm_process_abort": {
+      "header": "Anmeldung abbrechen?",
+      "subheader": "Bist du sicher, dass du den Anmeldevorgang abbrechen möchtest? Alle eingegebenen Informationen gehen verloren.",
+      "confirm": "Ja, bring mich zurück zum Start",
+      "back": "Zurück"
+    },
+    "missing_identifier_type": {
+      "username": "Bitte gib einen Benutzernamen ein.",
+      "email": "Bitte gib eine E-Mail-Adresse ein.",
+      "phone": "Bitte gib eine Telefonnummer ein."
+    },
+    "missing_full_name": "Bitte gib einen gültigen Namen ein.",
+    "identifier_already_in_use": {
+      "username": "Dieser Benutzername ist bereits vergeben. Bitte versuche einen anderen oder logge dich mit diesem ein.",
+      "email": "Diese E-Mail-Adresse ist bereits vergeben. Bitte versuche eine andere oder logge dich mit dieser ein.",
+      "phone": "Diese Telefonnummer ist bereits vergeben. Bitte versuche eine andere oder logge dich mit dieser ein."
+    },
+    "identifier_invalid_format": {
+      "username": "Der Benutzername muss zwischen 4 und 32 Zeichen lang sein und darf nur alphanumerische Zeichen sowie \"-\" oder \"_\" enthalten.",
+      "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+      "phone": "Bitte gib eine gültige Telefonnummer ein."
+    },
+    "identifier_not_allowed": "Konnte dein Konto nicht finden",
+    "login_identifier_unknown_user": "Konnte dein Konto nicht finden.",
+    "invalid_conditional_ui_login": "Der bereitgestellte Passkey ist nicht mehr gültig. Bitte gib deine Anmeldedaten (z.B. E-Mail) manuell ein.",
+    "no_fallback_available": "Diese App benötigt eine Passkey-Authentifizierung. Bitte verwende ein kompatibles Gerät.",
+    "invalidName": "Bitte gib eine gültige E-Mail ein",
+    "passkeyChallengeCancelled": "Passkey-Herausforderung abgebrochen",
+    "userAlreadyExists": "E-Mail-Adresse wird bereits verwendet. Wenn dieses Konto dir gehört, logge dich bitte stattdessen ein.",
+    "passkeyAlreadyExists": "Ein Passkey für dieses Gerät existiert bereits",
     "unknownUser": "Benutzer existiert nicht",
     "noPasskeyAvailable": "Kein Passkey verfügbar",
-    "invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig",
-    "invalidOtp": "Der eingegebene Code ist nicht gültig",
-    "invalidToken": "Der bereitgestellte Token ist nicht mehr gültig",
-    "noConditionalUiSupport": "Conditional UI wird auf diesem Gerät nicht unterstützt",
-    "conditionalUiUnconfirmedCredential": "Dieser Passkey kann noch nicht verwendet werden. Bitte bestätigen Sie Ihr Konto, indem Sie sich mit Ihrer E-Mail-Adresse anmelden.",
-    "unknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
+    "invalidPasskey": "Der bereitgestellte Passkey ist nicht mehr gültig. Logge dich mit deiner E-Mail-Adresse ein.",
+    "invalid_challenge_solution_email-otp": "Der Einmal-Code ist ungültig oder abgelaufen",
+    "invalid_challenge_solution_email-link": "Dieser Link ist abgelaufen",
+    "invalid_challenge_solution_phone-otp": "Der bereitgestellte Einmal-Code ist nicht gültig",
+    "noConditionalUiSupport": "Conditional UI wird von deinem Gerät nicht unterstützt",
+    "conditionalUiUnconfirmedCredential": "Dieser Passkey kann noch nicht verwendet werden. Bitte bestätige zuerst deine Identität, indem du dich mit deiner E-Mail-Adresse einloggst.",
+    "unknown": "Etwas ist schief gelaufen. Bitte versuche es später erneut",
+    "unexpectedError": {
+      "withCustomerSupport": "Wir sind auf ein Problem gestoßen. Bitte versuche es später erneut oder kontaktiere den Support unter {{customerSupportEmail}}.",
+      "noCustomerSupport": "Wir sind auf ein Problem gestoßen. Bitte versuche es später erneut oder kontaktiere den Support."
+    },
+    "componentUnavailable": {
+      "header": "Etwas ist schief gelaufen",
+      "subheader": "Unser Dienst ist derzeit nicht verfügbar.",
+      "body_withCustomerSupport": "Bitte aktualisiere die Seite und wenn das Problem weiterhin besteht, kontaktiere den Support unter {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Bitte aktualisiere die Seite und wenn das Problem weiterhin besteht, kontaktiere den Support.",
+      "button": "Seite neu laden"
+    }
   },
-  "passkeysList": {
-    "warning_notLoggedIn": "Bitte loggen Sie sich ein, um Ihre Passkeys zu sehen.",
-    "message_noPasskeys": "Sie haben noch keine Passkeys.",
+  "passkey-list": {
+    "warning_notLoggedIn": "Bitte logge dich ein, um deine Passkeys zu sehen.",
+    "message_noPasskeys": "Du hast noch keine Passkeys.",
     "button_createPasskey": "Passkey erstellen",
     "badge_synced": "Synchronisiert",
     "field_credentialId": "Anmelde-ID: ",
-    "field_created": "Erstellt: {{date}} mit {{browser}} am {{os}}",
+    "field_created": "Erstellt: {{date}} mit {{browser}} auf {{os}}",
     "field_lastUsed": "Zuletzt verwendet: ",
     "field_status": "Status: ",
     "dialog_delete": {
       "header": "Passkey löschen",
-      "body": "Sind Sie sicher, dass Sie diesen Passkey löschen möchten?",
+      "body": "Bist du sicher, dass du diesen Passkey löschen möchtest?",
       "button_cancel": "Abbrechen",
-      "button_delete": "Ja, löschen"
+      "button_confirm": "Ja, löschen"
     },
     "dialog_passkeyAlreadyExists": {
       "header": "Passkey bereits vorhanden",
-      "body": "Für dieses Gerät wurde bereits ein Passkey erstellt. Sie können diesen Passkey löschen und einen neuen erstellen.",
+      "body": "Ein Passkey für dieses Gerät existiert bereits. Wenn du Probleme mit deinem Passkey hast, lösche ihn bitte und erstelle einen neuen.",
       "button_confirm": "Ok"
+    },
+    "dialog_passkeysNotSupported": {
+      "header": "Passkeys werden nicht unterstützt",
+      "body": "Leider werden Passkeys auf deinem Gerät nicht unterstützt.",
+      "button_confirm": "Ok"
+    }
+  },
+  "user": {
+    "header": "Dein Konto",
+    "name": "Name",
+    "username": "Benutzername",
+    "email": "E-Mail",
+    "phone": "Telefonnummer",
+    "social": "Soziale Konten",
+    "verified": "verifiziert",
+    "unverified": "ausstehend",
+    "warning_notLoggedIn": "Bitte logge dich ein, um deine aktuellen Benutzerinformationen zu sehen.",
+    "providers": {
+      "google": "Google",
+      "microsoft": "Microsoft",
+      "github": "GitHub"
     }
   }
 }

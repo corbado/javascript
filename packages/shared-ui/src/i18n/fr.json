@@ -1,0 +1,358 @@
+{
+  "signup": {
+    "signup-init": {
+      "signup-init": {
+        "header": "Créez votre compte",
+        "subheader": "pour accéder ",
+        "text_login": "Vous avez déjà un compte? ",
+        "button_login": "Se connecter",
+        "button_submit": "Continuer",
+        "textField_fullName": "Nom",
+        "textField_username": "Nom d'utilisateur",
+        "textField_email": "Adresse e-mail",
+        "textField_phone": "Numéro de téléphone",
+        "text_divider": "ou",
+        "social_signup": {
+          "google": "Continuer avec Google",
+          "microsoft": "Continuer avec Microsoft",
+          "github": "Continuer avec GitHub",
+          "default": "Continuer avec {{provider}}"
+        }
+      }
+    },
+    "passkey-append": {
+      "passkey-append": {
+        "header": {
+          "create": "Créer un compte avec des clés d'accès",
+          "append": "Configurer une clé d'accès pour une connexion plus facile"
+        },
+        "body_point1": "Connexion rapide et sécurisée en utilisant le visage, l'empreinte digitale ou un PIN plutôt que des mots de passe.",
+        "body_point2": "Les clés d'accès sont stockées sur l'appareil ou dans le cloud, accessibles depuis des appareils connectés.",
+        "body_subtext": "Les données biométriques ne quitteront jamais votre appareil.",
+        "button_start": {
+          "create": "Créer un compte",
+          "append": "Créer une clé d'accès"
+        },
+        "button_skip": "Peut-être plus tard",
+        "text_divider": "ou créez un compte avec",
+        "button_switchToAlternate": {
+          "emailOtp": "Vérification par e-mail",
+          "emailLink": "Vérification par e-mail",
+          "phone": "Vérification par téléphone"
+        }
+      },
+      "edit-user-data": {
+        "header": {
+          "username": "Tapez le nouveau nom d'utilisateur",
+          "email": "Tapez la nouvelle adresse e-mail",
+          "phone": "Tapez le nouveau numéro de téléphone"
+        },
+        "button_submit": "Confirmer",
+        "button_cancel": "Retour"
+      },
+      "passkey-error": {
+        "header": "Un problème est survenu...",
+        "body": "L'ajout d'une clé d'accès à votre compte n'a pas été possible. Veuillez réessayer ou utiliser une autre méthode.",
+        "text_divider": "ou",
+        "button_switchToAlternate": {
+          "emailOtp": "Continuer avec l'e-mail",
+          "emailLink": "Continuer avec l'e-mail",
+          "phone": "Continuer avec le téléphone"
+        },
+        "button_tryAgain": "Réessayer",
+        "button_cancel": "Continuer sans clés d'accès"
+      }
+    },
+    "passkey-appended": {
+      "passkey-appended": {
+        "header": "Succès!",
+        "subheader": "Clé d'accès créée",
+        "body": "Vous pouvez maintenant confirmer votre identité en utilisant votre clé d'accès lors de la connexion.",
+        "button": "Continuer"
+      }
+    },
+    "email-verify": {
+      "email-otp": {
+        "header": "Entrez le code pour créer un compte",
+        "body_title": "Code à usage unique",
+        "body_description": "Entrez le code envoyé à votre adresse e-mail",
+        "body_resend": "Vous n'avez pas reçu d'e-mail?",
+        "button_resend": "Renvoyer le code",
+        "button_resendWaitingText": "Renvoyer le code ({{remainingTime}} sec)",
+        "button_gmail": "Ouvrir dans Gmail",
+        "button_outlook": "Ouvrir dans Outlook",
+        "button_yahoo": "Ouvrir dans Yahoo",
+        "button_icloud": "Ouvrir dans iCloud"
+      },
+      "email-link-sent": {
+        "header": "Vérifiez votre boîte de réception pour créer votre compte",
+        "body_title": "Lien magique",
+        "body_description": "Nous venons d'envoyer un lien magique à votre adresse e-mail ",
+        "body_resend": "Vous n'avez pas reçu d'e-mail?",
+        "button_resend": "Renvoyer l'e-mail",
+        "button_resendWaitingText": "Renvoyer l'e-mail ({{remainingTime}} sec)",
+        "button_gmail": "Ouvrir dans Gmail",
+        "button_outlook": "Ouvrir dans Outlook",
+        "button_yahoo": "Ouvrir dans Yahoo",
+        "button_icloud": "Ouvrir dans iCloud"
+      },
+      "email-link-verification": {
+        "header": "Inscription en cours...",
+        "subheader": "Vous serez redirigé sous peu"
+      },
+      "email-link-success": {
+        "header": "Vérification de l'e-mail réussie",
+        "subheader": {
+          "isOldTab": "Retournez à l'onglet où vous avez vérifié l'e-mail",
+          "isNewTab": "Retournez à l'onglet où vous effectuez l'inscription pour continuer"
+        },
+        "body": "Vous pouvez fermer cet onglet"
+      },
+      "email-link-error": {
+        "subheader": "Retournez à l'onglet où vous effectuez l'inscription et réessayez",
+        "body": "Vous pouvez fermer cet onglet"
+      },
+      "edit-email": {
+        "header": "Tapez la nouvelle adresse e-mail",
+        "button_submit": {
+          "emailOtp": "Renvoyer le code",
+          "emailLink": "Renvoyer l'e-mail"
+        },
+        "button_cancel": "Retour"
+      }
+    },
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Entrez le code pour créer un compte",
+        "body_title": "Code de vérification",
+        "body_description": "Entrez le code envoyé à votre numéro de téléphone",
+        "body_resend": "Vous n'avez pas reçu de SMS?",
+        "button_resend": "Renvoyer le code",
+        "button_resendWaitingText": "Renvoyer le code ({{remainingTime}} sec)"
+      },
+      "edit-phone": {
+        "header": "Tapez le nouveau numéro de téléphone",
+        "button_submit": "Renvoyer le code",
+        "button_cancel": "Retour"
+      }
+    },
+    "social-link-verification": {
+      "header": "Inscription en cours...",
+      "subheader": "Vous serez redirigé sous peu"
+    },
+    "missing-fields": {
+      "header": "Remplissez les champs manquants",
+      "subheader": "pour créer un compte",
+      "button": "Continuer"
+    }
+  },
+  "login": {
+    "login-init": {
+      "login-init": {
+        "header": "Connectez-vous",
+        "subheader": "pour accéder ",
+        "text_signup": "Pas de compte? ",
+        "button_signup": "S'inscrire",
+        "button_submit": "Continuer",
+        "textField": {
+          "email": "Adresse e-mail",
+          "username": "Nom d'utilisateur",
+          "emailOrUsername": "Adresse e-mail ou nom d'utilisateur",
+          "phone": "Numéro de téléphone"
+        },
+        "button_switchToAlternate": {
+          "email": "Utiliser l'e-mail",
+          "username": "Utiliser le nom d'utilisateur",
+          "emailOrUsername": "Utiliser l'e-mail ou le nom d'utilisateur",
+          "phone": "Utiliser le téléphone"
+        },
+        "text_divider": "ou",
+        "social_signup": {
+          "google": "Continuer avec Google",
+          "microsoft": "Continuer avec Microsoft",
+          "github": "Continuer avec GitHub",
+          "default": "Continuer avec {{provider}}"
+        },
+        "last_identifier": {
+          "title": "Connexion avec clé d'accès",
+          "text_skip": "Pas vous? ",
+          "button_skip": "Changer de compte"
+        }
+      }
+    },
+    "passkey-verify": {
+      "passkey-background": {
+        "header": "Connexion avec clé d'accès en cours...",
+        "body_title": "Veuillez patienter",
+        "body_description": "Nous sommes en train de nous connecter à votre authentificateur.",
+        "button_switchToAlternate": {
+          "emailOtp": "Utiliser la vérification par e-mail",
+          "emailLink": "Utiliser la vérification par e-mail",
+          "phone": "Utiliser la vérification par téléphone"
+        }
+      },
+      "passkey-error": {
+        "header": "Un problème est survenu...",
+        "body_title": "Connexion pour",
+        "body_description": "La connexion avec les clés d'accès n'a pas été possible. Réessayez ou utilisez une autre méthode.",
+        "text_divider": "ou",
+        "button_switchToAlternate": {
+          "emailOtp": "Continuer avec l'e-mail",
+          "emailLink": "Continuer avec l'e-mail",
+          "phone": "Continuer avec le téléphone"
+        },
+        "button_tryAgain": "Réessayer"
+      }
+    },
+    "email-verify": {
+      "email-otp": {
+        "header": "Entrez le code pour vous connecter",
+        "body_title": "Code à usage unique",
+        "body_description": "Entrez le code envoyé à votre adresse e-mail",
+        "body_resend": "Vous n'avez pas reçu d'e-mail?",
+        "button_resend": "Renvoyer le code",
+        "button_resendWaitingText": "Renvoyer le code ({{remainingTime}} sec)",
+        "button_gmail": "Ouvrir dans Gmail",
+        "button_outlook": "Ouvrir dans Outlook",
+        "button_yahoo": "Ouvrir dans Yahoo",
+        "button_icloud": "Ouvrir dans iCloud"
+      },
+      "email-link-sent": {
+        "header": "Vérifiez votre boîte de réception pour vous connecter",
+        "body_title": "Lien magique",
+        "body_description": "Nous venons d'envoyer un lien magique à votre adresse e-mail ",
+        "body_resend": "Vous n'avez pas reçu d'e-mail?",
+        "button_resend": "Renvoyer l'e-mail",
+        "button_resendWaitingText": "Renvoyer l'e-mail ({{remainingTime}} sec)",
+        "button_gmail": "Ouvrir dans Gmail",
+        "button_outlook": "Ouvrir dans Outlook",
+        "button_yahoo": "Ouvrir dans Yahoo",
+        "button_icloud": "Ouvrir dans iCloud"
+      },
+      "email-link-verification": {
+        "header": "Connexion en cours...",
+        "subheader": "Vous serez redirigé sous peu"
+      },
+      "email-link-success": {
+        "header": "Connexion par e-mail réussie",
+        "subheader": {
+          "isOldTab": "Retournez à l'onglet où vous avez vérifié l'e-mail",
+          "isNewTab": "Retournez à l'onglet où vous effectuez la connexion pour continuer"
+        },
+        "body": "Vous pouvez fermer cet onglet"
+      },
+      "email-link-error": {
+        "subheader": "Retournez à l'onglet où vous effectuez la connexion et réessayez",
+        "body": "Vous pouvez fermer cet onglet"
+      }
+    },
+    "phone-verify": {
+      "phone-otp": {
+        "header": "Entrez le code pour vous connecter",
+        "body_title": "Code de vérification",
+        "body_description": "Nous venons d'envoyer un code de vérification à votre numéro de téléphone",
+        "body_resend": "Vous n'avez pas reçu de SMS?",
+        "button_resend": "Renvoyer le code",
+        "button_resendWaitingText": "Renvoyer le code ({{remainingTime}} sec)"
+      }
+    },
+    "social-link-verification": {
+      "header": "Connexion en cours...",
+      "subheader": "Vous serez redirigé sous peu"
+    }
+  },
+  "errors": {
+    "confirm_process_abort": {
+      "header": "Interrompre l'inscription?",
+      "subheader": "Êtes-vous sûr de vouloir interrompre le processus d'inscription? Toutes les informations que vous avez saisies seront perdues.",
+      "confirm": "Oui, ramenez-moi au début",
+      "back": "Retour"
+    },
+    "missing_identifier_type": {
+      "username": "Veuillez saisir un nom d'utilisateur.",
+      "email": "Veuillez saisir une adresse e-mail.",
+      "phone": "Veuillez saisir un numéro de téléphone."
+    },
+    "missing_full_name": "Veuillez saisir un nom valide.",
+    "identifier_already_in_use": {
+      "username": "Ce nom d'utilisateur est déjà pris. Veuillez en essayer un autre ou vous connecter avec celui-ci.",
+      "email": "Cette adresse e-mail est déjà prise. Veuillez en essayer une autre ou vous connecter avec celle-ci.",
+      "phone": "Ce numéro de téléphone est déjà pris. Veuillez en essayer un autre ou vous connecter avec celui-ci."
+    },
+    "identifier_invalid_format": {
+      "username": "Le nom d'utilisateur doit être composé de 4 à 32 caractères et ne peut contenir que des caractères alphanumériques ainsi que '-' ou '_'.",
+      "email": "Veuillez saisir une adresse e-mail valide.",
+      "phone": "Veuillez saisir un numéro de téléphone valide."
+    },
+    "identifier_not_allowed": "Impossible de trouver votre compte",
+    "login_identifier_unknown_user": "Impossible de trouver votre compte.",
+    "invalid_conditional_ui_login": "La clé d'accès fournie n'est plus valide. Veuillez saisir manuellement votre identifiant (par exemple, votre adresse e-mail).",
+    "no_fallback_available": "Cette application nécessite une authentification par clé d'accès. Veuillez utiliser un appareil compatible.",
+    "invalidName": "Veuillez saisir un e-mail valide",
+    "passkeyChallengeCancelled": "Défi de clé d'accès annulé",
+    "userAlreadyExists": "L'adresse e-mail est déjà utilisée. Si ce compte vous appartient, veuillez vous connecter à la place.",
+    "passkeyAlreadyExists": "Une clé d'accès pour cet appareil existe déjà",
+    "unknownUser": "L'utilisateur n'existe pas",
+    "noPasskeyAvailable": "Aucune clé d'accès disponible",
+    "invalidPasskey": "La clé d'accès fournie n'est plus valide. Connectez-vous en utilisant votre adresse e-mail.",
+    "invalid_challenge_solution_email-otp": "Le code est invalide ou expiré",
+    "invalid_challenge_solution_email-link": "Ce lien a expiré",
+    "invalid_challenge_solution_phone-otp": "Le code à usage unique fourni n'est pas valide",
+    "noConditionalUiSupport": "L'interface utilisateur conditionnelle n'est pas prise en charge par votre appareil",
+    "conditionalUiUnconfirmedCredential": "Cette clé d'accès ne peut pas encore être utilisée. Veuillez d'abord confirmer votre identité en vous connectant avec votre adresse e-mail.",
+    "unknown": "Un problème est survenu. Veuillez réessayer plus tard",
+    "unexpectedError": {
+      "withCustomerSupport": "Nous avons rencontré un problème. Veuillez réessayer plus tard ou contacter le support à {{customerSupportEmail}}.",
+      "noCustomerSupport": "Nous avons rencontré un problème. Veuillez réessayer plus tard ou contacter le support."
+    },
+    "componentUnavailable": {
+      "header": "Un problème est survenu",
+      "subheader": "Notre service n'est actuellement pas disponible.",
+      "body_withCustomerSupport": "Veuillez rafraîchir la page et si le problème persiste, contactez le support à {{customerSupportEmail}}.",
+      "body_noCustomerSupport": "Veuillez rafraîchir la page et si le problème persiste, contactez le support.",
+      "button": "Rafraîchir la page"
+    }
+  },
+  "passkey-list": {
+    "warning_notLoggedIn": "Veuillez vous connecter pour voir vos clés d'accès.",
+    "message_noPasskeys": "Vous n'avez pas encore de clés d'accès.",
+    "button_createPasskey": "Créer une clé d'accès",
+    "badge_synced": "Synchronisé",
+    "field_credentialId": "ID de l'identifiant : ",
+    "field_created": "Créé : {{date}} avec {{browser}} sur {{os}}",
+    "field_lastUsed": "Dernière utilisation : ",
+    "field_status": "Statut : ",
+    "dialog_delete": {
+      "header": "Supprimer la clé d'accès",
+      "body": "Êtes-vous sûr de vouloir supprimer cette clé d'accès?",
+      "button_cancel": "Annuler",
+      "button_confirm": "Oui, supprimer"
+    },
+    "dialog_passkeyAlreadyExists": {
+      "header": "La clé d'accès existe déjà",
+      "body": "Une clé d'accès pour cet appareil existe déjà. Si vous rencontrez des problèmes avec votre clé d'accès, veuillez la supprimer et en créer une nouvelle.",
+      "button_confirm": "Ok"
+    },
+    "dialog_passkeysNotSupported": {
+      "header": "Les clés d'accès ne sont pas prises en charge",
+      "body": "Malheureusement, les clés d'accès ne sont pas prises en charge sur votre appareil.",
+      "button_confirm": "Ok"
+    }
+  },
+  "user": {
+    "header": "Votre compte",
+    "name": "Nom",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "phone": "Numéro de téléphone",
+    "social": "Comptes sociaux",
+    "verified": "vérifié",
+    "unverified": "en attente",
+    "warning_notLoggedIn": "Veuillez vous connecter pour voir vos informations utilisateur actuelles.",
+    "providers": {
+      "google": "Google",
+      "microsoft": "Microsoft",
+      "github": "GitHub"
+    }
+  }
+}

@@ -1,13 +1,13 @@
 ## 2.6.0
 ### Minor changes
-- Added a login state button, similar to Gmail, allowing quicker re-authentication with a passkey for previously authenticated accounts.
-- Improved state management when component is refreshed => allow the user to reset the authentication process by navigating to the initial URL where the process has started
-- Fixed icon alignment issues for smail email shortcut buttons and social login buttons
-- Changed in passkey error screens which have improved the user experience.
+- Added a login state button for quicker re-authentication with a passkey on previously authenticated accounts.
+- Improved state management. The user can reset the authentication process by navigating to the initial URL where it started.
+- Fixed icon alignment issues for smart email shortcut and social login buttons.
+- Improved the user experience of passkey error screens.
 
 ## 2.5.4
 ### Major Changes
-- Introduced social login capabilities using OAuth services. For now we support Google, Microsoft and Github.
+- Introduced social login capabilities using OAuth services (Google, Microsoft, and GitHub).
 - Added support for authentication with phone numbers using sms otp.
 - Added support for authentication with just the username which uses passkeys for signup and login.
 - Improved email link authentication with added support for cross-device verification.
@@ -29,6 +29,18 @@
 - Users can now change typography settings more easily using CSS variables.
 - If an authentication process is interrupted, the initial screens will now be pre-filled with the last entered data, reducing the need for users to re-enter information.
 - We now only see smart email shortcut button on email authentication screens of the mail client we are using (e.g. if we are using someemail@gmail.com then we only see Open in Gmail button).
-- We can also ask for Name of the user during signup.
 
-## 1.1.14
+## 1.x.x
+- Introduced the `CorbadoProvider` component, making it possible to use the Corbado application's state throughout the application.
+- Created components: `Signup`, `Login`, and `CorbadoAuth` to enable user authentication.
+- Added support for signup/login with email OTPs and email magic links.
+- Added support for passkey-based authentication.
+- Added support for custom stylings.
+- Added support for custom translations.
+- Introduced the `useCorbado` hook to access authentication state and the currently authenticated user's data.
+- Created the `PasskeyList` component, which provides a ready-to-use interface for passkey management for logged-in users.
+- Added error handling screens.
+- Added support to store user's session details as cookies for support in full-stack applications (e.g., NextJS) and multi-page applications (e.g., PHP).
+- Added support for auto language detection from the browser and default language selection in cases where we don't have the translation for that language.
+- Added support for dark mode and auto dark mode detection from the browser.
+- Added the pre-configured custom theme `corbado-funk`.

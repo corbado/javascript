@@ -35,6 +35,10 @@ This repository contains all of Corbado's frontend JavaScript packages, each des
 
 For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/overview/welcome).
 
+## Release Notes
+
+Find out what we've shipped! Check out the changelog files [here](./docs/changelogs/) for each package.
+
 ---
 
 ## License

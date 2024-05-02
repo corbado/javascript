@@ -26,6 +26,7 @@
     - [Handling User Authentication State](#handling-user-authentication-state)
 - [💡 Example Applications](#-example-applications)
 - [📄 Documentation & Support](#-documentation--support)
+- [ 🚢 Release Notes](#-release-notes)
 - [🔒 License](#-license)
 
 ---
@@ -183,6 +184,10 @@ Use JavaScript to manage login/logout states and to mount the passkey list UI:
 
 For support and questions please visit our [Slack channel](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ).
 For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/frontend-integration/vanilla-js).
+
+## 🚢 Release Notes
+
+Find out what we've shipped! Check out the changelog files [here](../../docs/changelogs/web-js.md)
 
 ---
 

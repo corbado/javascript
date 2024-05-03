@@ -317,11 +317,13 @@
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",
-    "badge_synced": "Synced",
-    "field_credentialId": "Credential ID: ",
+    "badge": {
+      "synced": "Synced",
+      "hybrid": "Hybrid",
+      "seen": "Seen on this device"
+    },
     "field_created": "Created: {{date}} with {{browser}} on {{os}}",
     "field_lastUsed": "Last used: ",
-    "field_status": "Status: ",
     "dialog_delete": {
       "header": "Delete Passkey",
       "body": "Are you sure you want to delete this passkey?",

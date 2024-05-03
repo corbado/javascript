@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useCorbado } from '../../hooks/useCorbado';
 import { PrimaryButton } from '../ui/buttons/PrimaryButton';
 import { Dialog } from '../ui/Dialog';
+import { AddIcon } from '../ui/icons/AddIcon';
 
 export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;
@@ -80,11 +81,11 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
   return (
     <div>
       <PrimaryButton
-        className='cb-passkey-list-primary-button'
+        className='cb-passkey-list-primary-button cb-text-4'
         isLoading={loading}
         onClick={() => void createPasskey()}
       >
-        {translatedTexts.buttonText}
+        <AddIcon /> {translatedTexts.buttonText}
       </PrimaryButton>
       <Dialog
         isOpen={translatedError !== null}

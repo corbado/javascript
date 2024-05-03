@@ -1069,7 +1069,7 @@ button.cb-phone-otp-resend-button {
   border: none;
   color: var(--cb-passkey-list-badge-color);
   background-color: var(--cb-passkey-list-badge-background-color);
-  padding: 0.35rem 0.70rem;
+  padding: 0.35rem 0.7rem;
   margin: auto;
   align-items: center;
   justify-content: center;

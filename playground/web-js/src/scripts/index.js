@@ -33,7 +33,7 @@ if (!Corbado.user) {
   const passkeyList = document.getElementById('passkey-list');
   passkeyList.style.maxWidth = '550px';
   Corbado.mountPasskeyListUI(passkeyList);
-  
+
   /******************* Section for customised passkey management component ************************/
   //Uncomment the below code to use the customised passkey management component
   // const passkeysResp = await Corbado.getPasskeys();

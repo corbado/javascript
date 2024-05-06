@@ -33,4 +33,54 @@ if (!Corbado.user) {
   const passkeyList = document.getElementById('passkey-list');
   passkeyList.style.maxWidth = '550px';
   Corbado.mountPasskeyListUI(passkeyList);
+  
+  /******************* Section for customised passkey management component ************************/
+  //Uncomment the below code to use the customised passkey management component
+  // const passkeysResp = await Corbado.getPasskeys();
+
+  // if (passkeysResp.err) {
+  //   passkeyList.innerHTML = `
+  //     <h2>Passkeys</h2>
+  //     <p>There was an error fetching your passkeys. Please try again later.</p>
+  //   `;
+  // } else {
+  //   const passkeys = passkeysResp.val;
+  //   passkeyList.innerHTML = `
+  //     <h2>Passkeys</h2>
+  //     <p>Here are your passkeys:</p>
+  //     <ul>
+  //       ${passkeys.passkeys.map((passkey) => {
+  //         const passkeyDetails = JSON.stringify(passkey, null, 2);
+  //         const passkeyId = passkey.id;
+  //         return `<li>${passkeyDetails}</li> <button id="revoke-passkey-${passkeyId}"}">Revoke Passkey</button> `
+  //       }).join('')}
+  //     </ul>
+  //     <button id="create-passkey">Create Passkey</button>
+  //   `;
+
+  //   passkeys.passkeys.forEach((passkey) => {
+  //     const passkeyId = passkey.id;
+  //     const revokeButton = document.getElementById(`revoke-passkey-${passkeyId}`);
+  //     revokeButton.addEventListener('click', async () => {
+  //       const revokeResp = await Corbado.deletePasskey(passkeyId);
+  //       if (revokeResp.err) {
+  //         alert('There was an error revoking the passkey. Please try again later.');
+  //       } else {
+  //         alert('Passkey revoked successfully.');
+  //         window.location.reload();
+  //       }
+  //     });
+  //   });
+
+  //   const createButton = document.getElementById('create-passkey');
+  //   createButton.addEventListener('click', async () => {
+  //     const createResp = await Corbado.appendPasskey();
+  //     if (createResp.err) {
+  //       alert('There was an error creating the passkey. Please try again later.');
+  //     } else {
+  //       alert('Passkey created successfully.');
+  //       window.location.reload();
+  //     }
+  //   });
+  // }
 }

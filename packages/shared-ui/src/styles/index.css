@@ -308,7 +308,6 @@
 
 .cb-error-message {
   display: flex;
-  gap: 0.1rem;
   font-family: var(--cb-secondary-font);
   font-size: var(--cb-error-font-size);
   color: var(--cb-error-text-color);
@@ -319,6 +318,7 @@
 }
 
 .cb-error-message-icon-container {
+  flex: 1;
   height: 1.3rem;
 }
 
@@ -327,6 +327,7 @@
 }
 
 .cb-error-message-text {
+  flex: 11;
   line-height: 1.2;
 }
 

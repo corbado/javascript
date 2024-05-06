@@ -28,7 +28,7 @@ export const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDele
   };
 
   return (
-    <div className='cb-passkey-list-icon'>
+    <div className='cb-passkey-list-icon cb-passkey-list-icon-right'>
       <CancelIcon
         className='cb-passkey-list-delete'
         onClick={openDialog}

@@ -1010,11 +1010,15 @@ button.cb-phone-otp-resend-button {
   flex-direction: row;
   gap: 1rem;
   border-radius: var(--cb-border-radius-sm);
-  border: var(--cb-border-color) 1px solid;
+  border: var(--cb-passkey-list-border-color) 1px solid;
   margin: 0.5rem 0;
   padding: 1.75rem 0.5rem;
   background-color: var(--cb-white);
   line-height: 1.4;
+}
+
+.cb-passkey-list-card:hover {
+  border: var(--cb-passkey-list-border-hover-color) 1px solid;
 }
 
 .cb-passkey-list-icon {
@@ -1024,7 +1028,7 @@ button.cb-phone-otp-resend-button {
   align-items: center;
 }
 
-.cb-passkey-list-icon img {
+.cb-passkey-list-icon-left img {
   width: 2rem;
   height: 2rem;
 }
@@ -1033,6 +1037,11 @@ button.cb-phone-otp-resend-button {
   width: 2rem;
   height: 2rem;
   fill: var(--cb-text-primary-color);
+}
+
+.cb-passkey-list-icon-right img {
+  width: 2rem;
+  height: 2rem;
 }
 
 .cb-passkey-list-details {
@@ -1302,6 +1311,14 @@ button.cb-phone-otp-resend-button {
     width: 75%;
   }
 
+  .cb-passkey-list-card {
+    gap: 0.75rem;
+  }
+
+  .cb-passkey-list-details {
+    gap: 0.2rem;
+  }
+
   .cb-passkey-list-header-badge-section.cb-has-multiple-badges {
     display: none;
   }
@@ -1311,5 +1328,9 @@ button.cb-phone-otp-resend-button {
     gap: 0.5rem;
     align-self: flex-start;
     flex-wrap: wrap;
+  }
+
+  .cb-passkey-list-icon-right img {
+    width: 1.5rem;
   }
 }

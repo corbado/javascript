@@ -23,6 +23,8 @@
   --cb-passkey-list-badge-color: #359aff;
   --cb-passkey-list-badge-background-color: #e5f1ff;
   --cb-passkey-list-description-text-color: #8d8d8d;
+  --cb-passkey-list-border-color: rgb(212 212 212 / 60%);
+  --cb-passkey-list-border-hover-color: rgb(212 212 212);
   --cb-primary-font: 'Space Grotesk', sans-serif;
   --cb-secondary-font: 'Inter', sans-serif;
   --cb-font-weight-bold: 700;
@@ -56,4 +58,6 @@
   --cb-passkey-list-badge-color: #7cb6fd;
   --cb-passkey-list-badge-background-color: #092045;
   --cb-passkey-list-description-text-color: #d9d9d9;
+  --cb-passkey-list-border-color: rgb(132 140 166 / 65%);
+  --cb-passkey-list-border-hover-color: #ffffff;
 }

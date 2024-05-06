@@ -9,7 +9,7 @@ import { Icon } from './Icon';
 
 export const CancelIcon: FC<IconProps> = memo(props => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, cancelSrc);
+  const { logoSVG } = useIconWithTheme(svgRef, cancelSrc, '--cb-passkey-list-description-text-color');
 
   return (
     <Icon

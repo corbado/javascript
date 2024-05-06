@@ -10,6 +10,7 @@ export const useCorbadoExported = (): Omit<CorbadoSessionContextProps, 'corbadoA
     throw new Error('Please make sure that your components are wrapped inside <CorbadoProvider />');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { corbadoApp: _, ...resp } = corbadoSession;
 
   return resp;

@@ -261,7 +261,7 @@
 .cb-phone-input-field-input {
   flex: 4;
   border: 0px;
-  height: var(--cb-input-field-height);
+  height: calc(var(--cb-input-field-height) - 0.2rem);
   width: 100%;
   padding: 0 0.4rem;
   color: var(--cb-input-text-color);

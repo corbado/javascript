@@ -1007,7 +1007,7 @@ button.cb-phone-otp-resend-button {
 /********** Passkey List **********/
 .cb-passkey-list-tile {
   font-size: calc(var(--cb-base-font-size) * 1.9);
-  margin: 1rem 0rem 2rem 0rem; 
+  margin: 1rem 0rem 2rem 0rem;
 }
 
 .cb-passkey-list-card {
@@ -1365,6 +1365,6 @@ button.cb-phone-otp-resend-button {
   }
 
   .cb-passkey-list-primary-button .cb-icon {
-    height: 1.1rem;  
+    height: 1.1rem;
   }
 }

@@ -1005,6 +1005,11 @@ button.cb-phone-otp-resend-button {
 }
 
 /********** Passkey List **********/
+.cb-passkey-list-tile {
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+  margin: 1rem 0rem 2rem 0rem; 
+}
+
 .cb-passkey-list-card {
   display: flex;
   flex-direction: row;
@@ -1058,6 +1063,8 @@ button.cb-phone-otp-resend-button {
 
 .cb-passkey-list-header-title {
   margin: auto 0;
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-passkey-list-header-badge-section {
@@ -1100,6 +1107,8 @@ button.cb-phone-otp-resend-button {
 
 .cb-passkey-list-description-text {
   color: var(--cb-passkey-list-description-text-color);
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.5);
 }
 
 .cb-passkey-list-delete:hover {
@@ -1110,10 +1119,12 @@ button.cb-phone-otp-resend-button {
 .cb-passkey-list-primary-button {
   margin: 1.25rem 0;
   max-width: 225px;
+  height: 2.5rem;
   display: flex;
   gap: 0.35rem;
   align-items: center;
   justify-content: center;
+  font-size: calc(var(--cb-base-font-size) * 1.9);
 }
 
 .cb-passkey-list-primary-button .cb-icon {
@@ -1311,12 +1322,24 @@ button.cb-phone-otp-resend-button {
     width: 75%;
   }
 
+  .cb-passkey-list-tile {
+    font-size: 14px;
+  }
+
   .cb-passkey-list-card {
     gap: 0.75rem;
   }
 
   .cb-passkey-list-details {
     gap: 0.2rem;
+  }
+
+  .cb-passkey-list-header-title {
+    font-size: 14px;
+  }
+
+  .cb-passkey-list-description-text {
+    font-size: 12px;
   }
 
   .cb-passkey-list-header-badge-section.cb-has-multiple-badges {
@@ -1328,9 +1351,20 @@ button.cb-phone-otp-resend-button {
     gap: 0.5rem;
     align-self: flex-start;
     flex-wrap: wrap;
+    margin-bottom: 0.75rem;
   }
 
   .cb-passkey-list-icon-right img {
     width: 1.5rem;
+  }
+  .cb-passkey-list-primary-button {
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 160px;
+    height: 2.2rem;
+  }
+
+  .cb-passkey-list-primary-button .cb-icon {
+    height: 1.1rem;  
   }
 }

@@ -314,6 +314,7 @@
     }
   },
   "passkey-list": {
+    "title": "PASSKEYS",
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",

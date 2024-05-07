@@ -20,7 +20,7 @@ type TranslatedError = {
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
-  const { corbadoApp } = useCorbado();
+  const { appendPasskey } = useCorbado();
 
   const [dialogError, setDialogError] = useState<CorbadoError | undefined>();
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
 
   const createPasskey = async () => {
     setLoading(true);
-    const result = await corbadoApp?.sessionService.appendPasskey();
+    const result = await appendPasskey();
 
     if (result?.err) {
       showError(result.val);
@@ -81,7 +81,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
   return (
     <div>
       <PrimaryButton
-        className='cb-passkey-list-primary-button cb-text-4'
+        className='cb-passkey-list-primary-button'
         isLoading={loading}
         onClick={() => void createPasskey()}
       >

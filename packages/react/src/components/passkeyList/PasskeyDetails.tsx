@@ -65,6 +65,7 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
             level='4'
             fontWeight='bold'
             fontFamilyVariant='secondary'
+            className='cb-passkey-list-header-title'
           >
             {title}
           </Text>

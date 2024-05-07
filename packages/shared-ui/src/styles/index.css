@@ -1163,6 +1163,11 @@ button.cb-phone-otp-resend-button {
   color: var(--cb-button-text-primary-color);
 }
 
+.cb-login-init {
+  display: flex;
+  flex-direction: column;
+}
+
 .cb-social-login-divider {
   margin: 0 0 0.75rem 0;
 }

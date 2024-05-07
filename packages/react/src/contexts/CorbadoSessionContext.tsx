@@ -14,6 +14,7 @@ export interface CorbadoSessionContextProps {
   isAuthenticated: boolean;
   user: SessionUser | undefined;
   logout: () => Promise<void>;
+  appendPasskey: () => Promise<Result<void, CorbadoError | undefined>>;
   getPasskeys: (abortController?: AbortController) => Promise<Result<PassKeyList, CorbadoError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getFullUser: (abortController?: AbortController) => Promise<Result<CorbadoUser, CorbadoError>>;
@@ -28,6 +29,7 @@ export const initialContext: CorbadoSessionContextProps = {
   user: undefined,
   globalError: undefined,
   logout: missingImplementation,
+  appendPasskey: missingImplementation,
   getPasskeys: missingImplementation,
   deletePasskey: missingImplementation,
   getFullUser: missingImplementation,

@@ -90,6 +90,22 @@ export class Corbado {
     return this.#corbadoAppState.logout();
   }
 
+  getPasskeys(abortController?: AbortController) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.passkeyList(abortController ?? new AbortController());
+  }
+
+  appendPasskey() {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.appendPasskey();
+  }
+
+  deletePasskey(id: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.passkeyDelete(id);
+  }
+
+  getFullUser(abortController?: AbortController) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.getFullUser(abortController ?? new AbortController());
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #mountComponent = <T extends Record<string, any>>(element: HTMLElement, Component: FC<T>, componentOptions: T) => {
     if (!this.#corbadoAppState) {

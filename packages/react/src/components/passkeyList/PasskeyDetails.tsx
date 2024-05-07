@@ -50,25 +50,13 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
             className='cb-passkey-list-header-badge'
           >
             {badge.icon}
-            <Text
-              level='2'
-              className='cb-passkey-list-header-badge-text'
-            >
-              {badge.text}
-            </Text>
+            <Text className='cb-passkey-list-header-badge-text'>{badge.text}</Text>
           </div>
         ))}
       </div>
       <div className='cb-passkey-list-header'>
         <div className='cb-passkey-list-header-title'>
-          <Text
-            level='4'
-            fontWeight='bold'
-            fontFamilyVariant='secondary'
-            className='cb-passkey-list-header-title'
-          >
-            {title}
-          </Text>
+          <Text className='cb-passkey-list-header-title'>{title}</Text>
         </div>
         <div className={`cb-passkey-list-header-badge-section${hasMultipleBadgesClassName}`}>
           {passkeyBadges.map((badge, index) => (
@@ -77,12 +65,7 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
               className='cb-passkey-list-header-badge'
             >
               {badge.icon}
-              <Text
-                level='2'
-                className='cb-passkey-list-header-badge-text'
-              >
-                {badge.text}
-              </Text>
+              <Text className='cb-passkey-list-header-badge-text'>{badge.text}</Text>
             </div>
           ))}
         </div>

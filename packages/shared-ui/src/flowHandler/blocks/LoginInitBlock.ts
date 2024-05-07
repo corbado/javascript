@@ -133,20 +133,26 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     const isWebKit = userAgent.includes('WebKit');
     const isIOS = userAgent.includes('iPhone') || userAgent.includes('iPad');
 
-    const m = userAgent.match(/Version\/([\d.]+)/);
-    let safariVersionBelow174 = false;
+    if (!isWebKit || !isIOS) {
+      return false;
+    }
+
+    // we are pessimistic here and assume that by default the version is below 17.4
+    const m = userAgent.match(/iPhone OS ([\d_]+)/);
+    let safariVersionAboveOrEqual174 = false;
     if (m && m.length > 1) {
       const version = m[1];
       const versionParts = version.split('.');
       if (versionParts.length > 1) {
         const major = parseInt(versionParts[0], 10);
         const minor = parseInt(versionParts[1], 10);
-        safariVersionBelow174 = major < 17 || (major === 17 && minor < 4);
+        safariVersionAboveOrEqual174 = major > 17 || (major === 17 && minor >= 4);
       }
     }
 
-    console.log('isWebKit', isWebKit, 'isIOS', isIOS, safariVersionBelow174);
+    console.log(isWebKit, isIOS, safariVersionAboveOrEqual174);
 
-    return isWebKit && isIOS && safariVersionBelow174;
+    // all mobile WebKit browsers that have a iOS version < 17.4 are affected by user gesture detection
+    return !safariVersionAboveOrEqual174;
   }
 }

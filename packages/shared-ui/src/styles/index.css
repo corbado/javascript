@@ -786,6 +786,7 @@ button.cb-primary-button {
   font-family: var(--cb-secondary-font);
   cursor: pointer;
   width: 5.25rem;
+  line-height: 1;
 }
 
 .cb-icon-button:hover {

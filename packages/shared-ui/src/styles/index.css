@@ -1363,13 +1363,13 @@ button.cb-passkey-list-primary-button .cb-icon {
     gap: 0.25rem;
     padding: 0.2rem 0.5rem;
   }
-  
+
   .cb-passkey-list-header-badge-icon {
-    height: 0.8rem; 
+    height: 0.8rem;
   }
 
   .cb-passkey-list-header-badge-text {
-    font-size: 10px; 
+    font-size: 10px;
   }
 
   .cb-passkey-list-icon {
@@ -1383,7 +1383,7 @@ button.cb-passkey-list-primary-button .cb-icon {
   .cb-passkey-list-icon-right img {
     width: 1.5rem;
   }
-  
+
   button.cb-passkey-list-primary-button {
     font-size: 14px;
     font-weight: 500;

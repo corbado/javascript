@@ -10,7 +10,7 @@ env:
 
 on:
   schedule:
-    - cron: '30 1 * * *'  # 1:30 AM UTC = 3:30 AM CEST
+    - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
 
 jobs:
   prepare:

@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - migration-of-demo-apps-to-new-version
+      - styling-fixes-for-ui-frameworks
 
 jobs:
   deploy:

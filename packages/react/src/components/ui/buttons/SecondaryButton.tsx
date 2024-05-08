@@ -28,7 +28,10 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
   }`;
 
   return (
-    <span onClick={handleClick}>
+    <button
+      onClick={handleClick}
+      className='cb-link'
+    >
       <Text
         level='2'
         fontWeight='normal'
@@ -38,6 +41,6 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
       >
         {children}
       </Text>
-    </span>
+    </button>
   );
 };

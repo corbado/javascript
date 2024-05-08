@@ -65,7 +65,7 @@ test.describe('Signup with passkey proper user behavior', () => {
       () => signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError),
     );
 
-    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByText('Try again').click());
+    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Try again' }).click());
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
     await page.getByRole('button', { name: 'Continue' }).click();

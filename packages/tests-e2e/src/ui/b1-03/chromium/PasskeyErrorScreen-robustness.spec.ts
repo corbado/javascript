@@ -19,7 +19,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
 
     await signupFlow.navigateToPasskeyErrorScreen();
     await signupFlow.simulateFailedPasskeyInput(
-      () => page.getByText('Try again').click(),
+      () => page.getByRole('button', { name: 'Try again' }).click(),
       async () => {
         await page.waitForTimeout(300);
         await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);

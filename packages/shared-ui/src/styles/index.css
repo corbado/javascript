@@ -370,6 +370,8 @@
   font-weight: var(--cb-font-weight-bold);
   text-decoration: none;
   cursor: pointer;
+  background-color: transparent;
+  border: none;
 }
 
 .cb-primary-link {

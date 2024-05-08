@@ -1,5 +1,5 @@
 import { expect, test } from '../../../fixtures/UISignupTest';
-import { microsoftEmail, microsoftPassword, ScreenNames } from '../../../utils/constants';
+import { ScreenNames } from '../../../utils/constants';
 
 // Google and Github require 2FA; only Microsoft social login is suitable for automated testing
 test.describe('Signup with Microsoft proper user behavior', () => {
@@ -9,6 +9,9 @@ test.describe('Signup with Microsoft proper user behavior', () => {
       await signupFlow.addWebAuthn(false);
     }
     await signupFlow.loadAuth();
+
+    const microsoftEmail = process.env.MICROSOFT_ACCOUNT_EMAIL ?? '';
+    const microsoftPassword = process.env.MICROSOFT_ACCOUNT_PASSWORD ?? '';
 
     await page.getByTitle('Continue with Microsoft').click();
     await expect(page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);

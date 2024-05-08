@@ -5,8 +5,6 @@ import {
   AuthType,
   IdentifierType,
   IdentifierVerification,
-  microsoftEmail,
-  microsoftPassword,
   operationTimeout,
 } from '../utils/constants';
 import { OtpType, ScreenNames } from '../utils/constants';
@@ -181,6 +179,9 @@ export class UILoginFlow {
   }
 
   async createAccountWithSocial() {
+    const microsoftEmail = process.env.MICROSOFT_ACCOUNT_EMAIL ?? '';
+    const microsoftPassword = process.env.MICROSOFT_ACCOUNT_PASSWORD ?? '';
+
     await this.page.getByTitle('Continue with Microsoft').click();
     await expect(this.page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);
     await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Sign in');

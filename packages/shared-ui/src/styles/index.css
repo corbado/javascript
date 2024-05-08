@@ -414,7 +414,7 @@ button.cb-primary-button {
   background-color: var(--cb-primary-color-disabled);
 }
 
-.cb-primary-button-error-variant {
+button.cb-primary-button-error-variant {
   background-color: var(--cb-error-text-color);
 }
 
@@ -1007,15 +1007,25 @@ button.cb-phone-otp-resend-button {
 }
 
 /********** Passkey List **********/
+.cb-passkey-list-tile {
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+  margin: 1rem 0rem 2rem 0rem;
+}
+
 .cb-passkey-list-card {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  border-radius: var(--cb-border-radius-lg);
-  border: var(--cb-border-color) 1px solid;
+  border-radius: var(--cb-border-radius-sm);
+  border: var(--cb-passkey-list-border-color) 1px solid;
   margin: 0.5rem 0;
-  padding: 0.5rem;
+  padding: 1.75rem 0.5rem;
   background-color: var(--cb-white);
+  line-height: 1.4;
+}
+
+.cb-passkey-list-card:hover {
+  border: var(--cb-passkey-list-border-hover-color) 1px solid;
 }
 
 .cb-passkey-list-icon {
@@ -1025,7 +1035,7 @@ button.cb-phone-otp-resend-button {
   align-items: center;
 }
 
-.cb-passkey-list-icon img {
+.cb-passkey-list-icon-left img {
   width: 2rem;
   height: 2rem;
 }
@@ -1036,30 +1046,73 @@ button.cb-phone-otp-resend-button {
   fill: var(--cb-text-primary-color);
 }
 
+.cb-passkey-list-icon-right img {
+  width: 2rem;
+  height: 2rem;
+}
+
 .cb-passkey-list-details {
-  flex: 5;
+  flex: 10;
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  line-height: normal;
   gap: 0.5rem;
 }
 
 .cb-passkey-list-header {
   display: flex;
-  flex-direction: row;
-  justify-content: left;
-  gap: 1rem;
+  gap: 2.5rem;
 }
 
 .cb-passkey-list-header-title {
   margin: auto 0;
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+  font-family: var(--cb-primary-font);
+}
+
+.cb-passkey-list-header-badge-section {
+  margin: auto 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cb-passkey-list-header-badge-top-section {
+  display: none;
 }
 
 .cb-passkey-list-header-badge {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
   border-radius: var(--cb-border-radius-lg);
-  border: var(--cb-dark) 1px solid;
-  padding: 0.5rem;
+  border: none;
+  color: var(--cb-passkey-list-badge-color);
+  background-color: var(--cb-passkey-list-badge-background-color);
+  padding: 0.35rem 0.7rem;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.cb-passkey-list-header-badge-icon {
+  flex: 2;
+  height: 1rem;
+}
+
+.cb-passkey-list-header-badge-text {
+  flex: 10;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: visible;
+  color: var(--cb-passkey-list-badge-color);
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.25);
+}
+
+.cb-passkey-list-description-text {
+  color: var(--cb-passkey-list-description-text-color);
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.5);
 }
 
 .cb-passkey-list-delete:hover {
@@ -1067,10 +1120,20 @@ button.cb-phone-otp-resend-button {
   cursor: pointer;
 }
 
-.cb-passkey-list-primary-button {
-  margin: 1.25rem auto;
+button.cb-passkey-list-primary-button {
+  margin: 1.25rem 0;
+  max-width: 225px;
+  height: 2.5rem;
   display: flex;
+  gap: 0.35rem;
+  align-items: center;
   justify-content: center;
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+  font-weight: 500;
+}
+
+button.cb-passkey-list-primary-button .cb-icon {
+  height: 1.6rem;
 }
 
 .cb-error-page {
@@ -1262,5 +1325,75 @@ button.cb-phone-otp-resend-button {
 
   .cb-user-details-section-indentifier {
     width: 75%;
+  }
+
+  .cb-passkey-list-tile {
+    font-size: 14px;
+  }
+
+  .cb-passkey-list-card {
+    gap: 0.25rem;
+    padding: 1.5rem 0.5rem 0.8rem;
+    line-height: 1.2;
+  }
+
+  .cb-passkey-list-details {
+    gap: 0.2rem;
+  }
+
+  .cb-passkey-list-header-title {
+    font-size: 14px;
+  }
+
+  .cb-passkey-list-description-text {
+    font-size: 12px;
+  }
+
+  .cb-passkey-list-header-badge-section.cb-has-multiple-badges {
+    display: none;
+  }
+
+  .cb-passkey-list-header-badge-top-section.cb-has-multiple-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+  }
+
+  .cb-passkey-list-header-badge {
+    gap: 0.25rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .cb-passkey-list-header-badge-icon {
+    height: 0.8rem;
+  }
+
+  .cb-passkey-list-header-badge-text {
+    font-size: 10px;
+  }
+
+  .cb-passkey-list-icon {
+    flex: 2;
+  }
+
+  .cb-passkey-list-details {
+    flex: 8;
+  }
+
+  .cb-passkey-list-icon-right img {
+    width: 1.5rem;
+  }
+
+  button.cb-passkey-list-primary-button {
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 160px;
+    height: 2.2rem;
+  }
+
+  button.cb-passkey-list-primary-button .cb-icon {
+    height: 1.1rem;
   }
 }

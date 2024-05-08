@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Dialog } from '../ui/Dialog';
-import { DeleteIcon } from '../ui/icons/DeleteIcon';
+import { CancelIcon } from '../ui/icons/CancelIcon';
 
 export interface PasskeyDeleteProps {
   passkeyId: string;
@@ -28,8 +28,8 @@ export const PasskeyDelete: FC<PasskeyDeleteProps> = ({ passkeyId, onPasskeyDele
   };
 
   return (
-    <div className='cb-passkey-list-icon'>
-      <DeleteIcon
+    <div className='cb-passkey-list-icon cb-passkey-list-icon-right'>
+      <CancelIcon
         className='cb-passkey-list-delete'
         onClick={openDialog}
       />

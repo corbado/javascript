@@ -64,6 +64,10 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const appendPasskey = useCallback(() => {
+    return corbadoApp.sessionService.appendPasskey();
+  }, [corbadoApp]);
+
   const logout = useCallback(() => {
     return corbadoApp.sessionService.logout();
   }, [corbadoApp]);
@@ -90,6 +94,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         loading,
         user,
         isAuthenticated,
+        appendPasskey,
         getFullUser,
         getPasskeys,
         deletePasskey,

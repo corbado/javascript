@@ -4,13 +4,13 @@
 #   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
 #      match the number of cores on the server
 
-name: End-to-End testing check for Playground Apps
+name: Nightly End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
   schedule:
-    - cron: '0 14 * * *'  # 1:30 AM UTC = 3:30 AM CEST
+    - cron: '0 15 * * *'  # 1:30 AM UTC = 3:30 AM CEST
 
 jobs:
   prepare:

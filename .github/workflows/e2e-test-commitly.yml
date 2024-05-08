@@ -4,7 +4,7 @@
 #   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
 #      match the number of cores on the server
 
-name: End-to-End testing check for Playground Apps
+name: Commitly End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 

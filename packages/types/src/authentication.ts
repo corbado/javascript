@@ -42,13 +42,23 @@ export interface PassKeyItem {
   sourceBrowser: string;
   sourceOS: string;
   attestationType: string;
-  transport: Array<string>;
+  transport: Array<PasskeyTransportEnum>;
   backupEligible: boolean;
   backupState: boolean;
   status: PassKeyItemStatus;
   created: string;
   lastUsed?: string;
 }
+
+export const PasskeyTransportEnum = {
+  Usb: 'usb',
+  Nfc: 'nfc',
+  Ble: 'ble',
+  Internal: 'internal',
+  Hybrid: 'hybrid',
+  SmartCard: 'smart-card',
+} as const;
+export type PasskeyTransportEnum = (typeof PasskeyTransportEnum)[keyof typeof PasskeyTransportEnum];
 
 /**
  * Represents a list of pass key items.

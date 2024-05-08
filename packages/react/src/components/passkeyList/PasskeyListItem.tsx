@@ -31,7 +31,7 @@ export const PasskeyListItem: FC<PasskeyListItemProps> = memo(({ passkey, fetchP
       key={passkey.id}
       className='cb-passkey-list-card'
     >
-      <div className='cb-passkey-list-icon'>
+      <div className='cb-passkey-list-icon cb-passkey-list-icon-left'>
         {icon ? (
           <img
             src={icon}

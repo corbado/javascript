@@ -1,5 +1,6 @@
 import './styles/index.css';
 
+import addIcon from './assets/add.svg';
 import appleIcon from './assets/apple.svg';
 import cancelIcon from './assets/cancel.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
@@ -27,6 +28,9 @@ import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
 import rightIcon from './assets/right-arrow.svg';
 import secureIcon from './assets/secure-icon.svg';
+import shieldIcon from './assets/shield.svg';
+import syncIcon from './assets/sync.svg';
+import visibilityIcon from './assets/visibility.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
@@ -68,4 +72,8 @@ export const assets = {
   githubDarkIcon,
   googleIcon,
   microsoftIcon,
+  shieldIcon,
+  syncIcon,
+  visibilityIcon,
+  addIcon,
 };

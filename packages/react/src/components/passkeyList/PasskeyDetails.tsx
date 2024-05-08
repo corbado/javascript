@@ -4,6 +4,9 @@ import type { FC } from 'react';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { ShieldIcon } from '../ui/icons/ShieldIcon';
+import { SyncIcon } from '../ui/icons/SyncIcon';
+// import { VisibilityIcon } from '../ui/icons/VisibilityIcon';
 import { Text } from '../ui/typography/Text';
 
 export interface PasskeyDetailsProps {
@@ -12,41 +15,67 @@ export interface PasskeyDetailsProps {
 
 export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
+  const passkeyBadges = [
+    // {
+    //   icon: <VisibilityIcon className='cb-passkey-list-header-badge-icon' />,
+    //   text: t('badge.seen'),
+    // },
+  ];
+
+  if (passkey.backupState) {
+    passkeyBadges.push({
+      icon: <SyncIcon className='cb-passkey-list-header-badge-icon' />,
+      text: t('badge.synced'),
+    });
+  }
+
+  if (passkey.transport.includes('hybrid')) {
+    passkeyBadges.push({
+      icon: <ShieldIcon className='cb-passkey-list-header-badge-icon' />,
+      text: t('badge.hybrid'),
+    });
+  }
+
   const sourceBrowser = passkey.sourceBrowser;
   const sourceOS = passkey.sourceOS;
   const title = aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey';
+  const hasMultipleBadgesClassName = passkeyBadges.length > 1 ? ' cb-has-multiple-badges' : '';
 
   return (
     <div className='cb-passkey-list-details'>
+      <div className={`cb-passkey-list-header-badge-top-section${hasMultipleBadgesClassName}`}>
+        {passkeyBadges.map((badge, index) => (
+          <div
+            key={index}
+            className='cb-passkey-list-header-badge'
+          >
+            {badge.icon}
+            <Text className='cb-passkey-list-header-badge-text'>{badge.text}</Text>
+          </div>
+        ))}
+      </div>
       <div className='cb-passkey-list-header'>
         <div className='cb-passkey-list-header-title'>
-          <Text
-            level='4'
-            fontWeight='bold'
-            fontFamilyVariant='secondary'
-          >
-            {title}
-          </Text>
+          <Text className='cb-passkey-list-header-title'>{title}</Text>
         </div>
-        {passkey.backupState ? (
-          <div className='cb-passkey-list-header-badge'>
-            <Text fontFamilyVariant='secondary'>{t('badge_synced')}</Text>
-          </div>
-        ) : null}
+        <div className={`cb-passkey-list-header-badge-section${hasMultipleBadgesClassName}`}>
+          {passkeyBadges.map((badge, index) => (
+            <div
+              key={index}
+              className='cb-passkey-list-header-badge'
+            >
+              {badge.icon}
+              <Text className='cb-passkey-list-header-badge-text'>{badge.text}</Text>
+            </div>
+          ))}
+        </div>
       </div>
       <div>
         <Text
           level='3'
           fontFamilyVariant='secondary'
-        >
-          {t('field_credentialId')}
-          {passkey.id}
-        </Text>
-      </div>
-      <div>
-        <Text
-          level='3'
-          fontFamilyVariant='secondary'
+          textColorVariant='secondary'
+          className='cb-passkey-list-description-text'
         >
           <Trans
             i18nKey='field_created'
@@ -63,18 +92,11 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
         <Text
           level='3'
           fontFamilyVariant='secondary'
+          textColorVariant='secondary'
+          className='cb-passkey-list-description-text'
         >
           {t('field_lastUsed')}
           {passkey.lastUsed}
-        </Text>
-      </div>
-      <div>
-        <Text
-          level='3'
-          fontFamilyVariant='secondary'
-        >
-          {t('field_status')}
-          {passkey.status}
         </Text>
       </div>
     </div>

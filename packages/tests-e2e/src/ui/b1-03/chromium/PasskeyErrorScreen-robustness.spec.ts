@@ -8,7 +8,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.navigateToPasskeyErrorScreen();
-    await page.getByText('Email verification').click();
+    await page.getByText('Continue with email').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
   });
 

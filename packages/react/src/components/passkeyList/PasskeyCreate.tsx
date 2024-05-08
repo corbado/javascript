@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useCorbado } from '../../hooks/useCorbado';
 import { PrimaryButton } from '../ui/buttons/PrimaryButton';
 import { Dialog } from '../ui/Dialog';
+import { AddIcon } from '../ui/icons/AddIcon';
 
 export interface PasskeyCreateProps {
   fetchPasskeys: () => Promise<void>;
@@ -19,7 +20,7 @@ type TranslatedError = {
 
 export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'passkey-list' });
-  const { corbadoApp } = useCorbado();
+  const { appendPasskey } = useCorbado();
 
   const [dialogError, setDialogError] = useState<CorbadoError | undefined>();
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
 
   const createPasskey = async () => {
     setLoading(true);
-    const result = await corbadoApp?.sessionService.appendPasskey();
+    const result = await appendPasskey();
 
     if (result?.err) {
       showError(result.val);
@@ -84,7 +85,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
         isLoading={loading}
         onClick={() => void createPasskey()}
       >
-        {translatedTexts.buttonText}
+        <AddIcon /> {translatedTexts.buttonText}
       </PrimaryButton>
       <Dialog
         isOpen={translatedError !== null}

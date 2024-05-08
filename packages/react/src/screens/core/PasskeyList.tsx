@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LoadingSpinner, PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem } from '../../components';
+import { LoadingSpinner, PasskeyCreate, PasskeyListErrorBoundary, PasskeyListItem, Text } from '../../components';
 import { useCorbado } from '../../hooks/useCorbado';
 
 const PasskeyList: FC = () => {
@@ -52,6 +52,9 @@ const PasskeyList: FC = () => {
 
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
+      <div className='cb-passkey-list-tile'>
+        <Text className='cb-passkey-list-tile'>{t('title')}</Text>
+      </div>
       {passkeys?.passkeys.map(passkey => (
         <PasskeyListItem
           key={passkey.id}

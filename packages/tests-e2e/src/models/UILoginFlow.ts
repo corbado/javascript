@@ -1,7 +1,7 @@
 import type { BrowserContext, CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { AuthType, IdentifierType, IdentifierVerification, operationTimeout } from '../utils/constants';
+import { AuthType, IdentifierType, IdentifierVerification, microsoftEmail, microsoftPassword, operationTimeout } from '../utils/constants';
 import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { getEmailLink } from '../utils/helperFunctions/getEmailLink';
@@ -171,6 +171,37 @@ export class UILoginFlow {
     await this.checkLandedOnScreen(ScreenNames.InitSignup);
 
     return [username, email, phone];
+  }
+
+  async createAccountWithSocial() {
+    await this.page.getByTitle('Continue with Microsoft').click();
+    await expect(this.page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Sign in');
+
+    await this.page.getByRole('textbox', { name: 'email' }).click();
+    await this.page.getByRole('textbox', { name: 'email' }).fill(microsoftEmail);
+    await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(microsoftEmail);
+
+    await this.page.getByRole('button', { name: 'Next' }).click();
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter password');
+
+    await this.page.getByPlaceholder('Password').click();
+    await this.page.getByPlaceholder('Password').fill(microsoftPassword);
+    await expect(this.page.getByPlaceholder('Password')).toHaveValue(microsoftPassword);
+
+    await this.page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Stay signed in?');
+
+    await this.page.getByRole('button', { name: 'No' }).click();
+    // await expect(page.getByRole('heading', { level: 1 })).toHaveText('Let this app access your info? (1 of 1 apps)');
+
+    // await page.getByRole('button', { name: 'Accept' }).click();
+    await this.checkLandedOnScreen(ScreenNames.End);
+    await this.checkNoPasskeyRegistered();
+    await this.page.getByRole('button', { name: 'Logout' }).click();
+    
+    await loadAuth(this.page, this.projectId);
+    await this.checkLandedOnScreen(ScreenNames.InitSignup);
   }
 
   async checkPasskeyRegistered(count = 1) {

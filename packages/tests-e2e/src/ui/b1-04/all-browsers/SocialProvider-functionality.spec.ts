@@ -1,7 +1,7 @@
 import { expect, test } from '../../../fixtures/UISignupTest';
 import { microsoftEmail, microsoftPassword, ScreenNames } from '../../../utils/constants';
 
-test.describe('Signup with email OTP and phone OTP proper user behavior', () => {
+test.describe('Signup with Microsoft proper user behavior', () => {
   test('with no passkey support', async ({ signupFlow, page, browserName }) => {
     if (browserName === 'chromium') {
       await signupFlow.initializeCDPSession();

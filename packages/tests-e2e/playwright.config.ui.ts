@@ -41,7 +41,7 @@ export default defineConfig({
   },
   projects: [
     //////////////////////////////////////////////////////
-    // B1.1 configs (Email OTP): SignUp with Identifier (unverified)
+    // B1.1 configs (Email OTP): Signup with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | false
@@ -64,7 +64,7 @@ export default defineConfig({
       testMatch: ['ui/b1-01-emailotp/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.1 configs (Phone OTP): SignUp with Identifier (unverified)
+    // B1.1 configs (Phone OTP): Signup with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | false   | false
@@ -87,7 +87,7 @@ export default defineConfig({
       testMatch: ['ui/b1-01-phoneotp/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.1 configs (Email Link): SignUp with Identifier (unverified)
+    // B1.1 configs (Email Link): Signup with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | false
@@ -110,7 +110,7 @@ export default defineConfig({
       testMatch: ['ui/b1-01-emaillink/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.2 configs: SignUp with Identifier (verified)
+    // B1.2 configs: Signup with Identifier (verified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | true
@@ -133,7 +133,7 @@ export default defineConfig({
       testMatch: ['ui/b1-02/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.3 configs: SignUp with Identifiers (verified)
+    // B1.3 configs: Signup with Identifiers (verified)
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | true
@@ -186,7 +186,7 @@ export default defineConfig({
       testMatch: ['ui/b1-03/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.4 configs: SignUp with Identifier (unverified)
+    // B1.4 configs: Signup with Identifier (unverified) and Social
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | true    | false
@@ -209,7 +209,7 @@ export default defineConfig({
       testMatch: ['ui/b1-04/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.11 configs: SignUp with Username
+    // B1.11 configs: Signup with Username
     //           | enabled | enforced
     //  ---------|---------|----------
     //  Email    | false   | false
@@ -352,6 +352,29 @@ export default defineConfig({
     {
       name: 'b2-03-teardown',
       testMatch: ['ui/b2-03/teardown.ts'],
+    },
+    //////////////////////////////////////////////////////
+    // B1.4 configs: Login with Identifier (unverified) and Social
+    //           | enabled | enforced
+    //  ---------|---------|----------
+    //  Email    | true    | false
+    //  Phone    | false   | false
+    //  Social   | true    |
+    //  Username | false   |
+    {
+      name: 'b2-12-setup',
+      testMatch: ['ui/b2-12/setup.ts'],
+      teardown: 'b2-12-teardown',
+    },
+    {
+      name: 'b2-12-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-12/all-browsers/*.*', 'ui/b2-12/chromium/*.*'],
+      dependencies: ['b2-12-setup'],
+    },
+    {
+      name: 'b2-12-teardown',
+      testMatch: ['ui/b2-12/teardown.ts'],
     },
   ],
 });

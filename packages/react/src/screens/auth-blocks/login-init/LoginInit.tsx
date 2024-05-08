@@ -16,6 +16,8 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
   const [showLastIdentifier, setShowLastIdentifier] = useState<boolean>(!!block.data.lastIdentifier);
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const [onComponentClick, setOnComponentClick] = useState<() => void>(() => {});
 
   useEffect(() => {
     setLoading(false);
@@ -36,10 +38,30 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
       setShowLastIdentifier(false);
     }
 
-    void block.continueWithConditionalUI();
-
     return void 0;
   }, [block]);
+
+  // we have to be very careful with conditionalUI as WebKit based browser historically had a number of "restrictions" on how we can start it
+  useEffect(() => {
+    block.startConditionalUIOnPageLoad().then(result => {
+      if (result) {
+        console.log('CUI: page load');
+        void block.continueWithConditionalUI();
+      }
+    });
+
+    block.startConditionalUIOnFirstUserInteraction().then(result => {
+      if (result) {
+        console.log('CUI: first click');
+        setOnComponentClick(() => {
+          return () => {
+            console.log('calling continueWithConditionalUI');
+            void block.continueWithConditionalUI();
+          };
+        });
+      }
+    });
+  }, []);
 
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);
@@ -59,7 +81,10 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   };
 
   return (
-    <>
+    <div
+      onClick={onComponentClick}
+      className='cb-login-init'
+    >
       <Header size='lg'>{headerText}</Header>
       <SubHeader>
         {subheaderText}
@@ -105,6 +130,6 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
           </SecondaryButton>
         </Text>
       )}
-    </>
+    </div>
   );
 };

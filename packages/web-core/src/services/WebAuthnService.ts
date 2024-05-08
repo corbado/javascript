@@ -80,7 +80,7 @@ export class WebAuthnService {
 
       return false;
     } catch (e) {
-      log.error('Error checking bluetooth availability', e);
+      log.debug('Error checking bluetooth availability', e);
       return false;
     }
   }

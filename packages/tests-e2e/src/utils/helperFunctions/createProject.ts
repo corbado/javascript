@@ -17,7 +17,6 @@ function generateProjectName(prefix: string) {
 }
 
 export async function createProject(namePrefix: string, playwrightProjectName: string) {
-  try {
   const name = generateProjectName(namePrefix);
 
   const createRes = await fetch(`${process.env.CORE_API_URL}/v1/projects`, {
@@ -61,8 +60,4 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
   expect(activateRes.ok).toBeTruthy();
 
   return projectId;
-} catch (e) {
-  console.log(e);
-  throw e;
-}
 }

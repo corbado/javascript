@@ -1,12 +1,16 @@
 ## 2.6.0
+
 ### Minor changes
+
 - Added a login state button for quicker re-authentication with a passkey on previously authenticated accounts.
 - Improved state management. The user can reset the authentication process by navigating to the initial URL where it started.
 - Fixed icon alignment issues for smart email shortcut and social login buttons.
 - Improved the user experience of passkey error screens.
 
 ## 2.5.4
+
 ### Major Changes
+
 - Introduced social login capabilities using OAuth services (Google, Microsoft, and GitHub).
 - Added support for authentication with phone numbers using sms otp.
 - Added support for authentication with just the username which uses passkeys for signup and login.
@@ -23,14 +27,17 @@
 - Breaking change: Enhanced layout of the Corbado component and introduced more customizable CSS variables and classes, making it easier to modify the appearance and feel of the application.
 - Breaking change: Removed the separate Login and Signup components, enabling direct navigation to `login-init` and `signup-init` screens for quicker access to authentication.
 - Breaking change: Transitioned the logout method to be asynchronous, improving performance and user experience.
+- Breaking change: `useCobradoSession` is now merged with `useCobrado` for simplifying usage.
 
 ### Minor changes:
+
 - Improved support for icons in dark mode, enhancing visibility and user experience in low-light environments
 - Users can now change typography settings more easily using CSS variables.
 - If an authentication process is interrupted, the initial screens will now be pre-filled with the last entered data, reducing the need for users to re-enter information.
 - We now only see smart email shortcut button on email authentication screens of the mail client we are using (e.g. if we are using someemail@gmail.com then we only see Open in Gmail button).
 
 ## 1.x.x
+
 - Introduced the `CorbadoProvider` component, making it possible to use the Corbado's authentication state state throughout the application.
 - Created components: `Signup`, `Login`, and `CorbadoAuth` to enable user authentication.
 - Added support for signup/login with email OTPs and email magic links.

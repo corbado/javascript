@@ -23,11 +23,10 @@ To begin using the Corbado SDKs in your project, follow these simple steps:
 
 This repository contains all of Corbado's frontend JavaScript packages, each designed to cater to different aspects of your project's authentication needs.
 
-| Package Name | Description                                                                                                                                         | Link to Example                                            | Documentation                                                    |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
-| `react`      | Provides prebuilt customizable UI components for React projects. Ideal if you are building a React frontend and need quick integration.             | [Example](https://react.demo.corbado.io)                   | [Docs](https://docs.corbado.com/frontend-integration/react)      |
-| `react-sdk`  | Offers access to Corbado's functionalities without UI components. Suitable for React projects where custom authentication components are preferred. | [Example](https://react-sdk.demo.corbado.io)               | [Docs](https://docs.corbado.com/frontend-integration/react)      |
-| `web-js`     | Provides prebuilt customizable UI components for Vanilla JavaScript projects. Perfect for projects not using a framework like React.                | [Example](https://web-js-script.demo.corbado.io/auth.html) | [Docs](https://docs.corbado.com/frontend-integration/vanilla-js) |
+| Package Name | Description                                                                                                                             | Link to Example                                            | Documentation                                                    |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| `react`      | Provides prebuilt customizable UI components for React projects. Ideal if you are building a React frontend and need quick integration. | [Example](https://react.demo.corbado.io)                   | [Docs](https://docs.corbado.com/frontend-integration/react)      |
+| `web-js`     | Provides prebuilt customizable UI components for Vanilla JavaScript projects. Perfect for projects not using a framework like React.    | [Example](https://web-js-script.demo.corbado.io/auth.html) | [Docs](https://docs.corbado.com/frontend-integration/vanilla-js) |
 
 ---
 

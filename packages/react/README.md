@@ -137,27 +137,6 @@ const HomePage = () => {
 export default HomePage;
 ```
 
-If you need more information about the user (e.g. name, email, etc.) use the `useCorbadoSession` hook.
-It also gives you access to the user's shortSession which you can use to make authenticated requests to your backend.
-
-```tsx
-import { useCorbadoSession } from '@corbado/react';
-
-const HomePage = () => {
-  const { loading, user } = useCorbadoSession();
-
-  if (loading) {
-    // Render loading state
-  }
-
-  if (user) {
-    // Render authenticated state
-  }
-};
-
-export default HomePage;
-```
-
 **Remember to check `loading` state of the hook before using authentication states.**
 
 ### Logging Out
@@ -170,8 +149,8 @@ import { useCorbado } from '@corbado/react';
 const LogoutButton = () => {
   const { logout } = useCorbado();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = sync () => {
+    await logout();
     // Redirect or perform additional actions after logout
   };
 

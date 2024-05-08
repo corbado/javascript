@@ -330,5 +330,64 @@ export default defineConfig({
       name: 'b2-03-teardown',
       testMatch: ['ui/b2-03/teardown.ts'],
     },
+    //////////////////////////////////////////////////////
+    // commitly test group
+    {
+      name: 'commitly',
+      testMatch: ['ui/commitly/*'],
+      dependencies: [
+        'b1-01-emailotp-chromium',
+        'b1-01-phoneotp-chromium',
+        'b1-01-emaillink-chromium',
+        'b1-02-chromium',
+        'b1-03-commitly',
+        'b1-11-chromium',
+        'b2-01-emailotp-chromium',
+        'b2-01-phoneotp-chromium',
+        'b2-01-emaillink-chromium',
+        'b2-03-commitly',
+      ],
+    },
+    // Skip robustness tests in b1.3 and b2.3 (run only functionality tests)
+    {
+      name: 'b1-03-commitly',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-03/all-browsers/*-functionality.spec.ts', 'ui/b1-03/chromium/*-functionality.spec.ts'],
+      dependencies: ['b1-03-setup'],
+    },
+    {
+      name: 'b2-03-commitly',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b2-03/all-browsers/*-functionality.spec.ts', 'ui/b2-03/chromium/*-functionality.spec.ts'],
+      dependencies: ['b2-03-setup'],
+    },
+    //////////////////////////////////////////////////////
+    // nightly test group
+    {
+      name: 'nightly',
+      testMatch: ['ui/nightly/*'],
+      dependencies: [
+        'b1-01-emailotp-chromium',
+        'b1-01-phoneotp-chromium',
+        'b1-01-emaillink-chromium',
+        'b1-02-chromium',
+        'b1-03-chromium',
+        'b1-03-firefox',
+        'b1-03-webkit',
+        'b1-03-mobilechrome',
+        'b1-03-mobilesafari',
+        'b1-03-msedge',
+        'b1-11-chromium',
+        'b2-01-emailotp-chromium',
+        'b2-01-phoneotp-chromium',
+        'b2-01-emaillink-chromium',
+        'b2-03-chromium',
+        'b2-03-firefox',
+        'b2-03-webkit',
+        'b2-03-mobilechrome',
+        'b2-03-mobilesafari',
+        'b2-03-msedge',
+      ],
+    },
   ],
 });

@@ -187,7 +187,7 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🚢 Release Notes
 
-Find out what we've shipped! Check out the changelog files [here](../../docs/changelogs/web-js.md)
+Find out what we've shipped! Check out the changelog files [here](./changelog.md)
 
 ---
 

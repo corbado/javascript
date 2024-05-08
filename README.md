@@ -36,7 +36,7 @@ For more detailed information and advanced configuration options, please visit o
 
 ## Release Notes
 
-Find out what we've shipped! Check out the changelog files [here](./docs/changelogs/) for each package.
+Find out what we've shipped! Check out the changelog files for `@corbado/react` package [here](./packages/react/changelog.md) and changelogs for `@corbado/web-js` package [here](./packages/web-js/changelog.md)
 
 ---
 

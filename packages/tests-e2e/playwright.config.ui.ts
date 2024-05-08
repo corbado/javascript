@@ -186,58 +186,28 @@ export default defineConfig({
       testMatch: ['ui/b1-03/teardown.ts'],
     },
     //////////////////////////////////////////////////////
-    // B1.9 configs: SignUp with Identifiers (verified)
+    // B1.4 configs: SignUp with Identifier (unverified)
     //           | enabled | enforced
     //  ---------|---------|----------
-    //  Email    | true    | true
-    //  Phone    | true    | true
+    //  Email    | true    | false
+    //  Phone    | false   | false
     //  Social   | true    |
     //  Username | false   |
-    // {
-    //   name: 'b1-09-setup',
-    //   testMatch: ['ui/b1-09/setup.ts'],
-    //   teardown: 'b1-09-teardown',
-    // },
-    // {
-    //   name: 'b1-09-chromium',
-    //   use: { ...devices['Desktop Chrome'] },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*', 'ui/b1-09/chromium/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-mobilechrome',
-    //   use: { ...devices['Pixel 7'] },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*', 'ui/b1-09/chromium/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-mobilesafari',
-    //   use: { ...devices['iPhone 14 Pro Max'] },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-msedge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    //   testMatch: ['ui/b1-09/all-browsers/*.*', 'ui/b1-09/chromium/*.*'],
-    //   dependencies: ['b1-09-setup'],
-    // },
-    // {
-    //   name: 'b1-09-teardown',
-    //   testMatch: ['ui/b1-09/teardown.ts'],
-    // },
+    {
+      name: 'b1-04-setup',
+      testMatch: ['ui/b1-04/setup.ts'],
+      teardown: 'b1-04-teardown',
+    },
+    {
+      name: 'b1-04-chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: ['ui/b1-04/all-browsers/*.*', 'ui/b1-04/chromium/*.*'],
+      dependencies: ['b1-04-setup'],
+    },
+    {
+      name: 'b1-04-teardown',
+      testMatch: ['ui/b1-04/teardown.ts'],
+    },
     //////////////////////////////////////////////////////
     // B1.11 configs: SignUp with Username
     //           | enabled | enforced

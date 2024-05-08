@@ -8,7 +8,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
     await signupFlow.loadAuth();
 
     const [, email] = await signupFlow.navigateToPasskeyErrorScreen();
-    await page.getByText('Email verification').click();
+    await page.getByText('Continue with email').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
   });
 
@@ -19,7 +19,7 @@ test.describe('PasskeyErrorScreen unproductive user behavior', () => {
 
     await signupFlow.navigateToPasskeyErrorScreen();
     await signupFlow.simulateFailedPasskeyInput(
-      () => page.getByRole('button', { name: 'Try again' }).click(),
+      () => page.getByText('Try again').click(),
       async () => {
         await page.waitForTimeout(300);
         await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyError);

@@ -174,8 +174,8 @@ export class UILoginFlow {
   }
 
   async createAccountWithSocial() {
-    const microsoftEmail = process.env.MICROSOFT_ACCOUNT_EMAIL ?? '';
-    const microsoftPassword = process.env.MICROSOFT_ACCOUNT_PASSWORD ?? '';
+    const microsoftEmail = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
+    const microsoftPassword = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
 
     await this.page.getByTitle('Continue with Microsoft').click();
     await expect(this.page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);

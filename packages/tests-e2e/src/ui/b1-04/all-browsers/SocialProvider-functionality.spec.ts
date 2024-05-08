@@ -10,8 +10,8 @@ test.describe('Signup with Microsoft proper user behavior', () => {
     }
     await signupFlow.loadAuth();
 
-    const microsoftEmail = process.env.MICROSOFT_ACCOUNT_EMAIL ?? '';
-    const microsoftPassword = process.env.MICROSOFT_ACCOUNT_PASSWORD ?? '';
+    const microsoftEmail = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
+    const microsoftPassword = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
 
     await page.getByTitle('Continue with Microsoft').click();
     await expect(page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);

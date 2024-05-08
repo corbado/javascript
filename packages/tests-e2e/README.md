@@ -10,7 +10,7 @@ This package is intended to test the local Playground React deployment connected
 
 Copy the contents of .env.example into .env.local.
 For `PLAYWRIGHT_JWT_TOKEN` environment variable, request the JWT token from Martin or Stefan.
-For `MICROSOFT_ACCOUNT_EMAIL` and `MICROSOFT_ACCOUNT_PASSWORD` environment variables, request the credentials from Anders or Martin. You can also create your own Microsoft account for testing.
+For `PLAYWRIGHT_MICROSOFT_EMAIL` and `PLAYWRIGHT_MICROSOFT_PASSWORD` environment variables, request the credentials from Anders or Martin. You can also create your own Microsoft account for testing.
 
 Make sure that the local Playground React deployment is configured to connect to the staging frontend API endpoints in `playground/react/.env`.
 

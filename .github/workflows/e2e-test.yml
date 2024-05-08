@@ -105,8 +105,8 @@ jobs:
           PLAYWRIGHT_NUM_CORES: 2
           PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          MICROSOFT_ACCOUNT_EMAIL: ${{ secrets.MICROSOFT_ACCOUNT_EMAIL }}
-          MICROSOFT_ACCOUNT_PASSWORD: ${{ secrets.MICROSOFT_ACCOUNT_PASSWORD }}
+          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
+          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
       - uses: actions/upload-artifact@v4
         if: always()

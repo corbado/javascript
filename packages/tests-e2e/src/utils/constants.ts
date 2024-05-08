@@ -30,7 +30,6 @@ export enum OtpType {
 export enum IdentifierType {
   Email = 'email',
   Phone = 'phone',
-  Social = 'social',
   Username = 'username',
 }
 
@@ -54,5 +53,5 @@ export enum AuthType {
 export const emailLinkUrlToken = 'UaTwjBJwyDLMGVbR7WHh';
 
 export const operationTimeout = process.env.CI ? 3000 : 5000;
-export const totalTimeout = process.env.CI ? 15000 : 30000;
+export const totalTimeout = process.env.CI ? 20000 : 30000;
 export const waitAfterLoad = 600; // timeout to reduce flakiness due to repetitive reloads

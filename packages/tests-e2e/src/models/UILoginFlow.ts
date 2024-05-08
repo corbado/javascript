@@ -1,12 +1,7 @@
 import type { BrowserContext, CDPSession, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import {
-  AuthType,
-  IdentifierType,
-  IdentifierVerification,
-  operationTimeout,
-} from '../utils/constants';
+import { AuthType, IdentifierType, IdentifierVerification, operationTimeout } from '../utils/constants';
 import { OtpType, ScreenNames } from '../utils/constants';
 import { addWebAuthn, fillOtpCode, initializeCDPSession, removeWebAuthn } from '../utils/helperFunctions';
 import { getEmailLink } from '../utils/helperFunctions/getEmailLink';

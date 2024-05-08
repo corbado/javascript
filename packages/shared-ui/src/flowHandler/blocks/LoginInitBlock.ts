@@ -68,6 +68,26 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     return this.alternatives.filter(b => b.type === BlockTypes.SignupInit).length > 0;
   }
 
+  // only if the browser supports conditional UI and is not affected by user gesture detection we start conditional UI on initial page load
+  async startConditionalUIOnPageLoad(): Promise<boolean> {
+    const supported = await this.app.authProcessService.isConditionalUISupported();
+    if (!supported) {
+      return false;
+    }
+
+    return !this.#isEnvAffectedByUserGestureDetection();
+  }
+
+  // only if the browser supports conditional UI and browser is affected by user gesture detection we start conditional UI on first user interaction
+  async startConditionalUIOnFirstUserInteraction(): Promise<boolean> {
+    const supported = await this.app.authProcessService.isConditionalUISupported();
+    if (!supported) {
+      return false;
+    }
+
+    return this.#isEnvAffectedByUserGestureDetection();
+  }
+
   async continueWithConditionalUI() {
     if (!this.data.conditionalUIChallenge) {
       return;
@@ -79,6 +99,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     }
 
     this.#conditionalUIStarted = true;
+    console.log('starting conditional UI');
     const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
     if (b.err && (b.val instanceof PasskeyChallengeCancelledError || b.val.ignore)) {
       // we ignore this type of error
@@ -104,5 +125,34 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
 
   discardOfferedLastIdentifier() {
     this.app.authProcessService.dropLastIdentifier(undefined);
+  }
+
+  #isEnvAffectedByUserGestureDetection(): boolean {
+    // parse user-agent to check if the browser is WebKit on iOS/iPadOS and version is below 17.4
+    const userAgent = navigator.userAgent;
+    const isWebKit = userAgent.includes('WebKit');
+    const isIOS = userAgent.includes('iPhone') || userAgent.includes('iPad');
+
+    if (!isWebKit || !isIOS) {
+      return false;
+    }
+
+    // we are pessimistic here and assume that by default the version is below 17.4
+    const m = userAgent.match(/iPhone OS ([\d_]+)/);
+    let safariVersionAboveOrEqual174 = false;
+    if (m && m.length > 1) {
+      const version = m[1];
+      const versionParts = version.split('.');
+      if (versionParts.length > 1) {
+        const major = parseInt(versionParts[0], 10);
+        const minor = parseInt(versionParts[1], 10);
+        safariVersionAboveOrEqual174 = major > 17 || (major === 17 && minor >= 4);
+      }
+    }
+
+    console.log(isWebKit, isIOS, safariVersionAboveOrEqual174);
+
+    // all mobile WebKit browsers that have a iOS version < 17.4 are affected by user gesture detection
+    return !safariVersionAboveOrEqual174;
   }
 }

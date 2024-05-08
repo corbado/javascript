@@ -173,6 +173,40 @@ export class UILoginFlow {
     return [username, email, phone];
   }
 
+  async createAccountWithSocial() {
+    const microsoftEmail = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
+    const microsoftPassword = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+
+    await this.page.getByTitle('Continue with Microsoft').click();
+    await expect(this.page).toHaveURL(/^.*login\.microsoftonline\.com.*$/);
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Sign in');
+
+    await this.page.getByRole('textbox', { name: 'email' }).click();
+    await this.page.getByRole('textbox', { name: 'email' }).fill(microsoftEmail);
+    await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(microsoftEmail);
+
+    await this.page.getByRole('button', { name: 'Next' }).click();
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter password');
+
+    await this.page.getByPlaceholder('Password').click();
+    await this.page.getByPlaceholder('Password').fill(microsoftPassword);
+    await expect(this.page.getByPlaceholder('Password')).toHaveValue(microsoftPassword);
+
+    await this.page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Stay signed in?');
+
+    await this.page.getByRole('button', { name: 'No' }).click();
+    // await expect(page.getByRole('heading', { level: 1 })).toHaveText('Let this app access your info? (1 of 1 apps)');
+
+    // await page.getByRole('button', { name: 'Accept' }).click();
+    await this.checkLandedOnScreen(ScreenNames.End);
+    await this.checkNoPasskeyRegistered();
+    await this.page.getByRole('button', { name: 'Logout' }).click();
+
+    await loadAuth(this.page, this.projectId);
+    await this.checkLandedOnScreen(ScreenNames.InitSignup);
+  }
+
   async checkPasskeyRegistered(count = 1) {
     await expect(this.page.locator('.cb-passkey-list-card')).toHaveCount(count);
   }

@@ -523,16 +523,13 @@ export class ProcessService {
     return await this.finishPasskeyLogin(signedChallenge.val);
   }
 
-  async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
-    const conditionalUISupported = await WebAuthnService.doesBrowserSupportConditionalUI();
-    if (!conditionalUISupported) {
-      console.log('conditional UI not supported');
-      return Err(CorbadoError.conditionalUINotSupported());
-    }
+  isConditionalUISupported(): Promise<boolean> {
+    return WebAuthnService.doesBrowserSupportConditionalUI();
+  }
 
+  async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
     if (signedChallenge.err) {
-      // TODO: return block body with client generated error
       return signedChallenge;
     }
 

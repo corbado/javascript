@@ -6,11 +6,11 @@ import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 
-export interface EditIconProp extends IconProps {
+export interface EditIconProps extends IconProps {
   color?: 'primary' | 'secondary';
 }
 
-export const EditIcon: FC<EditIconProp> = ({ color, ...props }) => {
+export const EditIcon: FC<EditIconProps> = ({ color, ...props }) => {
   const svgRef = useRef<HTMLImageElement>(null);
   const { logoSVG } = useIconWithTheme(
     svgRef,

@@ -8,7 +8,7 @@ export const AuthDetails = () => {
 
   return (
     <div className='component'>
-      <div>
+      <div className='sub-container'>
         <User />
         <PasskeyList />
         <button

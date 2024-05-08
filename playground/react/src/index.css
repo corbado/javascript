@@ -9,6 +9,11 @@
   height: 100%;
 }
 
+.sub-container {
+  width: 85%;
+  max-width: 1000px;
+}
+
 .auth-buttons {
   display: flex;
   flex-direction: column;
@@ -142,6 +147,10 @@
 @media (max-width: 768px) {
   .component {
     margin: 0.5rem auto;
+  }
+
+  .sub-container {
+    width: 98%;
   }
 
   .sticky-header {

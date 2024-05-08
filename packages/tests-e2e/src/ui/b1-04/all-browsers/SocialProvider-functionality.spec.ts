@@ -1,6 +1,7 @@
 import { expect, test } from '../../../fixtures/UISignupTest';
 import { microsoftEmail, microsoftPassword, ScreenNames } from '../../../utils/constants';
 
+// Google and Github require 2FA; only Microsoft social login is suitable for automated testing
 test.describe('Signup with Microsoft proper user behavior', () => {
   test('with no passkey support', async ({ signupFlow, page, browserName }) => {
     if (browserName === 'chromium') {

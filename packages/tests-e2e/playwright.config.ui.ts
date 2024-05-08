@@ -56,7 +56,10 @@ export default defineConfig({
     {
       name: 'b1-01-emailotp-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-01-emailotp/all-browsers/*-functionality.spec.ts', 'ui/b1-01-emailotp/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b1-01-emailotp/all-browsers/*-functionality.spec.ts',
+        'ui/b1-01-emailotp/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b1-01-emailotp-setup'],
     },
     {
@@ -79,7 +82,10 @@ export default defineConfig({
     {
       name: 'b1-01-phoneotp-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-01-phoneotp/all-browsers/*-functionality.spec.ts', 'ui/b1-01-phoneotp/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b1-01-phoneotp/all-browsers/*-functionality.spec.ts',
+        'ui/b1-01-phoneotp/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b1-01-phoneotp-setup'],
     },
     {
@@ -102,7 +108,10 @@ export default defineConfig({
     {
       name: 'b1-01-emaillink-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b1-01-emaillink/all-browsers/*-functionality.spec.ts', 'ui/b1-01-emaillink/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b1-01-emaillink/all-browsers/*-functionality.spec.ts',
+        'ui/b1-01-emaillink/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b1-01-emaillink-setup'],
     },
     {
@@ -283,7 +292,10 @@ export default defineConfig({
     {
       name: 'b2-01-emailotp-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b2-01-emailotp/all-browsers/*-functionality.spec.ts', 'ui/b2-01-emailotp/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b2-01-emailotp/all-browsers/*-functionality.spec.ts',
+        'ui/b2-01-emailotp/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b2-01-emailotp-setup'],
     },
     {
@@ -306,7 +318,10 @@ export default defineConfig({
     {
       name: 'b2-01-phoneotp-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b2-01-phoneotp/all-browsers/*-functionality.spec.ts', 'ui/b2-01-phoneotp/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b2-01-phoneotp/all-browsers/*-functionality.spec.ts',
+        'ui/b2-01-phoneotp/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b2-01-phoneotp-setup'],
     },
     {
@@ -329,7 +344,10 @@ export default defineConfig({
     {
       name: 'b2-01-emaillink-functionality-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: ['ui/b2-01-emaillink/all-browsers/*-functionality.spec.ts', 'ui/b2-01-emaillink/chromium/*-functionality.spec.ts'],
+      testMatch: [
+        'ui/b2-01-emaillink/all-browsers/*-functionality.spec.ts',
+        'ui/b2-01-emaillink/chromium/*-functionality.spec.ts',
+      ],
       dependencies: ['b2-01-emaillink-setup'],
     },
     {

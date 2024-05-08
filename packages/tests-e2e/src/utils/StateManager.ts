@@ -13,11 +13,17 @@ class StateManager {
     if (!existsSync(__dirname + '/../../test-states')) {
       mkdirSync(__dirname + '/../../test-states');
     }
-    writeFileSync(__dirname + `/../../test-states/${StateManager.makeKey(playwrightProjectName)}.txt`, projectId, { encoding: 'utf-8', flag: 'w' });
+    writeFileSync(__dirname + `/../../test-states/${StateManager.makeKey(playwrightProjectName)}.txt`, projectId, {
+      encoding: 'utf-8',
+      flag: 'w',
+    });
   }
 
   public static getProjectId(playwrightProjectName: string) {
-    return readFileSync(__dirname + `/../../test-states/${StateManager.makeKey(playwrightProjectName)}.txt`, { encoding: 'utf-8', flag: 'r+' });
+    return readFileSync(__dirname + `/../../test-states/${StateManager.makeKey(playwrightProjectName)}.txt`, {
+      encoding: 'utf-8',
+      flag: 'r+',
+    });
   }
 
   public static deleteProjectId(playwrightProjectName: string) {

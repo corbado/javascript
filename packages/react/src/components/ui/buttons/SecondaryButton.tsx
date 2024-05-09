@@ -29,6 +29,7 @@ export const SecondaryButton: FC<PropsWithChildren<SecondaryButtonProps>> = ({
 
   return (
     <button
+      type='button'
       onClick={handleClick}
       className='cb-link'
     >

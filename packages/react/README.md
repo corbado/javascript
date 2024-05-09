@@ -149,7 +149,7 @@ import { useCorbado } from '@corbado/react';
 const LogoutButton = () => {
   const { logout } = useCorbado();
 
-  const handleLogout = sync () => {
+  const handleLogout = async () => {
     await logout();
     // Redirect or perform additional actions after logout
   };

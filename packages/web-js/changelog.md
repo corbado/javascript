@@ -1,12 +1,16 @@
 ## 2.6.0
+
 ### Minor changes
+
 - Added a login state button for quicker re-authentication with a passkey on previously authenticated accounts.
 - Improved state management. The user can reset the authentication process by navigating to the initial URL where it started.
 - Fixed icon alignment issues for smart email shortcut and social login buttons.
 - Improved the user experience of passkey error screens.
 
 ## 2.5.4
+
 ### Major Changes
+
 - Introduced social login capabilities using OAuth services (Google, Microsoft, and GitHub).
 - Added support for authentication with phone numbers using sms otp.
 - Added support for authentication with just the username which uses passkeys for signup and login.
@@ -25,12 +29,14 @@
 - Breaking change: Transitioned the logout method to be asynchronous, improving performance and user experience.
 
 ### Minor changes:
+
 - Improved support for icons in dark mode, enhancing visibility and user experience in low-light environments
 - Users can now change typography settings more easily using CSS variables.
 - If an authentication process is interrupted, the initial screens will now be pre-filled with the last entered data, reducing the need for users to re-enter information.
 - We now only see smart email shortcut button on email authentication screens of the mail client we are using (e.g. if we are using someemail@gmail.com then we only see Open in Gmail button).
 
 ## 1.x.x
+
 - Introduced the global `Corbado` object to access authentication state and the currently authenticated user's data.
 - Introduced the `Corbado.load` async funtion, making it possible to use the Corbado's authentication state throughout the application.
 - Created components: `Corbado.mountSignUpUI`, `Corbado.mountLoginUI`, and `Corbado.mountAuthUI` to enable user authentication.

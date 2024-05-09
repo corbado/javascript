@@ -103,7 +103,7 @@ Mount the authentication UI to your HTML element:
 
 #### Handling Passkey List UI:
 
-Use the `Corbado.user` object to check if the user is logged in and to mount the passkey list UI:
+Use the `Corbado.isAuthenticated` boolean to check if the user is logged in and to mount the passkey list UI:
 
 ```html
 // In your JavaScript or TypeScript file after initializing Corbado if (Corbado.user) {
@@ -113,7 +113,7 @@ Corbado.mountPasskeyListUI(passkeyListHTMLElement); }
   const passkeyListElement = document.getElementById('passkey-list');
 
   // In your JavaScript or TypeScript file after initializing Corbado
-  if (Corbado.user) {
+  if (Corbado.isAuthenticated) {
     Corbado.mountPasskeyListUI(passkeyListElement);
   }
 </script>
@@ -123,13 +123,13 @@ Corbado.mountPasskeyListUI(passkeyListHTMLElement); }
 
 #### Handling Logout:
 
-Use the `Corbado.user` object to check if the user is logged in and to handle logout:
+Use the `Corbado.isAuthenticated` boolean to check if the user is logged in and to handle logout:
 
 ```typescript
 // In your JavaScript or TypeScript file after initializing Corbado
-if (Corbado.user) {
-  logoutButton.addEventListener('click', () => {
-    Corbado.logout();
+if (Corbado.isAuthenticated) {
+  logoutButton.addEventListener('click', async () => {
+    await Corbado.logout();
   });
 }
 ```
@@ -187,7 +187,7 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🚢 Release Notes
 
-Find out what we've shipped! Check out the changelog files [here](../../docs/changelogs/web-js.md)
+Find out what we've shipped! Check out the changelog files [here](./changelog.md)
 
 ---
 

@@ -55,7 +55,6 @@ export enum ScreenNames {
   EditEmail = 'edit-email',
   EditPhone = 'edit-phone',
   ContinueOnOtherEnv = 'continue-on-other-device',
-  ConfirmProcessAbort = 'confirm-process-abort',
 }
 
 export enum BlockTypes {
@@ -69,7 +68,6 @@ export enum BlockTypes {
   PasskeyAppended = 'passkey-appended',
   Completed = 'completed',
   ContinueOnOtherEnv = 'continue-on-other-env',
-  ConfirmProcessAbort = 'confirm-process-abort',
 }
 
 export enum InitState {

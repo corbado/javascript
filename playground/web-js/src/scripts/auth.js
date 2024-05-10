@@ -3,7 +3,7 @@ import { CORBADO_PROJECT_ID } from './environment';
 
 await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
-  darkMode: "auto"
+  darkMode: 'auto',
 });
 
 const authElement = document.getElementById('corbado-auth');

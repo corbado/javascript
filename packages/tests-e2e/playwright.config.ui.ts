@@ -29,12 +29,18 @@ export default defineConfig({
     : undefined,
   reporter: [
     [
-      './node_modules/playwright-slack-report/dist/src/SlackReporter.js',
+      '../../node_modules/playwright-slack-report/dist/src/SlackReporter.js',
       {
         channels: ['corbado-javascript-tests'],
         sendResults: 'always',
-        maxNumberOfFailuresToShow: 4,
-      }
+        showInThread: true,
+        meta: [
+          {
+            key: 'Test Run Info',
+            value: `https://github.com/corbado/javascript/actions/runs/${process.env.GITHUB_RUN_ID}`,
+          },
+        ],
+      },
     ],
     ['html'],
   ],

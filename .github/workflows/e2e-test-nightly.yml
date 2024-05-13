@@ -91,7 +91,6 @@ jobs:
           npx playwright install --with-deps
 
       - name: Run E2E Test for ${{ matrix.app }}
-        # id: playwright
         run: |
           if [ "${{ matrix.type }}" = "sdk" ]; then
             npm run test:e2e:sdk
@@ -106,16 +105,6 @@ jobs:
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-      # - name: Post to a Slack channel
-      #   if: always() && steps.playwright.outcome == 'failure'
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1.26.0
-      #   with:
-      #     # corbado-frontend, corbado-backend
-      #     channel-id: 'C05TA800TGB,C06T8GL6T46'
-      #     slack-message: "Nightly test failed: ${{ job.status }}"
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -32,7 +32,7 @@ export default defineConfig({
       './node_modules/playwright-slack-report/dist/src/SlackReporter.js',
       {
         channels: ['corbado-javascript-tests'],
-        sendResults: 'on-failure',
+        sendResults: 'always',
         maxNumberOfFailuresToShow: 4,
       }
     ],

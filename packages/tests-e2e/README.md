@@ -31,19 +31,19 @@ Now Playwright is ready to test the local Playground deployment.
 
 ```console
 $ cd packages/tests-e2e
-$ npx playwright test --config=playwright.config.ui.ts --ui
+$ npx playwright test --config=playwright.config.ui.ts --ui --project=nightly
 ```
 
 ### From CLI
 
 ```console
-npx playwright test --config=playwright.config.ui.ts
+npx playwright test --config=playwright.config.ui.ts --project=nightly
 ```
 
 Alternatively, you can do:
 
 ```console
-npm run e2e:ui
+npm run e2e:ui:nightly
 ```
 
 ## Generating JWT Token

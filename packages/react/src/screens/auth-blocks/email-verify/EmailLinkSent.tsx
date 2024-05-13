@@ -34,7 +34,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   }, [block]);
 
   const descriptionTexts = useMemo(() => {
-    if (block.data.isCheckingEmailVerification) {
+    if (block.data.isPostLoginVerification) {
       return {
         header: t('verificationCheck.header'),
         bodyTitle: t('verificationCheck.body_title'),

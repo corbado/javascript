@@ -35,7 +35,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   }, [block]);
 
   const descriptionTexts = useMemo(() => {
-    if (block.data.isCheckingPhoneVerification) {
+    if (block.data.isPostLoginVerification) {
       return {
         header: t('verificationCheck.header'),
         bodyTitle: t('verificationCheck.body_title'),

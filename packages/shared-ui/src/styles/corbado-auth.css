@@ -163,7 +163,7 @@
   margin: 1rem 0 1rem 0;
 }
 
-.cb-pk-error-bloc {
+.cb-pk-error {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -172,9 +172,30 @@
   margin-bottom: 1.5rem;
 }
 
+.cb-pk-error-light-header {
+  width: 220px;
+}
+
+.cb-pk-error-bloc-icons-section {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin: 1.75rem auto 1.25rem;
+}
+
+.cb-pk-error-bloc-icons-section-icon {
+  height: 3.75rem;
+}
+
 .cb-pk-error-bloc-icon {
   width: 6rem;
   margin: 2rem auto 0.5rem auto;
+}
+
+.cb-pk-error-light-description {
+  margin: 1rem auto 0.75rem;
+  width: 280px;
+  text-align: center;
 }
 
 .cb-pk-error-bloc-description {
@@ -183,8 +204,13 @@
   text-align: center;
 }
 
+.cb-pk-error-light-divider {
+  width: 90%;
+  margin: 0.6rem auto 0.3rem;
+}
+
 .cb-pk-error-bloc-divider {
-  width: 100%;
+  width: 90%;
   margin-bottom: 0.3rem;
 }
 

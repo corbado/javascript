@@ -4,16 +4,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Divider, Header, PrimaryButton, SecondaryButton, Text, UserInfo } from '../../../components';
-import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
+import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
+import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
 
 export interface PasskeyErrorProps {
   block: PasskeyVerifyBlock;
 }
 
-export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
+export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `login.passkey-verify.passkey-error`,
+    keyPrefix: `login.passkey-verify.passkey-error-light`,
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
@@ -24,20 +25,13 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
   const dividerText = useMemo(() => t('text_divider'), [t]);
   const tryAgainButtonText = useMemo(() => t('button_tryAgain'), [t]);
-  const fallbackButtonText = useMemo(
-    () => t(block.data.preferredFallbackOnError?.label ?? ''),
-    [t, block.data.preferredFallbackOnError],
-  );
+  const tryAgainSubText = useMemo(() => t('subtext_tryAgain'), [t]);
+  const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
-  const primaryAction = useCallback(async () => {
+  const passkeyLogin = useCallback(async () => {
     setLoading(true);
 
-    if (block.data.preferredFallbackOnError) {
-      setChangingBlock(true);
-      await block.data.preferredFallbackOnError.action();
-    } else {
-      await block.passkeyLogin();
-    }
+    await block.passkeyLogin();
 
     setLoading(false);
   }, [block]);
@@ -55,7 +49,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        void primaryAction();
+        void passkeyLogin();
       }
     }
 
@@ -64,7 +58,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [primaryAction]);
+  }, [passkeyLogin]);
 
   async function userInfoChange() {
     setLoading(true);
@@ -72,17 +66,12 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     setLoading(false);
   }
 
-  async function secondaryAction() {
-    setLoading(true);
-    await block.passkeyLogin();
-    setLoading(false);
-  }
-
   return (
     <div className='cb-pk-error'>
-      <Header>{headerText}</Header>
-      <div className='cb-pk-error-bloc-icon'>
-        <PasskeyErrorIcon />
+      <Header className='cb-pk-error-light-header'>{headerText}</Header>
+      <div className='cb-pk-error-bloc-icons-section'>
+        <FingerPrintIcon className='cb-pk-error-bloc-icons-section-icon' />
+        <FaceIdIcon className='cb-pk-error-bloc-icons-section-icon' />
       </div>
       <div className='cb-pk-error-user-info-edit-section'>
         <Text
@@ -101,31 +90,36 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
       <Text
         level='2'
         fontFamilyVariant='secondary'
-        className='cb-pk-error-bloc-description'
+        className='cb-pk-error-light-description'
       >
         {bodyDescriptionText}
       </Text>
       <PrimaryButton
-        onClick={() => void primaryAction()}
+        onClick={() => void passkeyLogin()}
         isLoading={loading}
         disabled={changingBlock}
       >
-        {block.data.preferredFallbackOnError ? fallbackButtonText : tryAgainButtonText}
+        {tryAgainButtonText}
       </PrimaryButton>
-      {block.data.preferredFallbackOnError && (
-        <>
-          <Divider
-            label={dividerText}
-            className='cb-pk-error-bloc-divider'
-          />
-          <SecondaryButton
-            onClick={() => void secondaryAction()}
-            disabled={changingBlock}
-          >
-            {tryAgainButtonText}
-          </SecondaryButton>
-        </>
+      <Text fontFamilyVariant='secondary'>{tryAgainSubText}</Text>
+      {fallbacksAvailable && (
+        <Divider
+          label={dividerText}
+          className='cb-pk-error-light-divider'
+        />
       )}
+      {block.data.availableFallbacks.map(fallback => (
+        <SecondaryButton
+          key={fallback.label}
+          disabled={changingBlock}
+          onClick={() => {
+            setChangingBlock(true);
+            return void fallback.action();
+          }}
+        >
+          {t(fallback.label)}
+        </SecondaryButton>
+      ))}
     </div>
   );
 };

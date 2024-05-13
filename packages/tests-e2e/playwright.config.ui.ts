@@ -34,7 +34,7 @@ export default defineConfig({
         channels: ['corbado-javascript-tests'],
         sendResults: 'always',
         showInThread: true,
-        disableUnfurl: true,
+        disableUnfurl: false,
         meta: [
           {
             key: 'Test Run Info',

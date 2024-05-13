@@ -34,9 +34,21 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
     return () => clearInterval(timer);
   }, [block]);
 
-  const headerText = useMemo(() => t('header'), [t]);
-  const bodyTitleText = useMemo(() => t('body_title'), [t]);
-  const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
+  const descriptionTexts = useMemo(() => {
+    if (block.data.isCheckingPhoneVerification) {
+      return {
+        header: t('verificationCheck.header'),
+        bodyTitle: t('verificationCheck.body_title'),
+        bodyDescription: t('verificationCheck.body_description'),
+      };
+    }
+
+    return {
+      header: t('login.header'),
+      bodyTitle: t('login.body_title'),
+      bodyDescription: t('login.body_description'),
+    };
+  }, [t]);
   const bodyResendText = useMemo(() => t('body_resend'), [t]);
   const resendButtonText = useMemo(() => {
     if (remainingTime < 1) {
@@ -97,7 +109,7 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
 
   return (
     <div className='cb-phone-otp-block'>
-      <Header className='cb-phone-otp-block-header'>{headerText}</Header>
+      <Header className='cb-phone-otp-block-header'>{descriptionTexts.header}</Header>
       <UserInfo
         className='cb-phone-otp-user-info-section'
         userData={phoneNumberRef.current}
@@ -110,13 +122,13 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
         fontFamilyVariant='secondary'
         className='cb-row'
       >
-        {bodyTitleText}
+        {descriptionTexts.bodyTitle}
       </Text>
       <Text
         level='2'
         fontFamilyVariant='secondary'
       >
-        {bodyDescriptionText}
+        {descriptionTexts.bodyDescription}
       </Text>
       <OtpInputGroup
         className='cb-phone-otp-input-container'

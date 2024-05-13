@@ -54,12 +54,14 @@ export type BlockDataEmailVerify = {
   verificationMethod: 'email-otp' | 'email-link';
   translatedError?: string;
   retryNotBefore?: number;
+  isPostLoginVerification?: boolean;
 };
 
 export type BlockDataPhoneVerify = {
   phone: string;
   translatedError?: string;
   retryNotBefore?: number;
+  isPostLoginVerification?: boolean;
 };
 
 export type BlockDataContinueOnOtherEnv = {

@@ -1,4 +1,5 @@
-import type { AuthType, BlockBody, CorbadoApp, ProcessCommon } from '@corbado/web-core';
+import type { BlockBody, CorbadoApp, ProcessCommon } from '@corbado/web-core';
+import { AuthType } from '@corbado/web-core';
 import type { GeneralBlockVerifyIdentifier } from '@corbado/web-core/dist/api/v2';
 
 import { BlockTypes, ScreenNames } from '../constants';
@@ -29,6 +30,7 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
       phone: data.identifier,
       translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
+      isPostLoginVerification: this.authType === AuthType.Login,
     };
   }
 

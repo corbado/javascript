@@ -27,7 +27,17 @@ export default defineConfig({
       ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
       : undefined
     : undefined,
-  reporter: 'html',
+  reporter: [
+    [
+      './node_modules/playwright-slack-report/dist/src/SlackReporter.js',
+      {
+        channels: ['corbado-javascript-tests'],
+        sendResults: 'on-failure',
+        maxNumberOfFailuresToShow: 4,
+      }
+    ],
+    ['html'],
+  ],
   timeout: totalTimeout, // default: 30000ms
   expect: {
     timeout: operationTimeout, // default: 5000ms

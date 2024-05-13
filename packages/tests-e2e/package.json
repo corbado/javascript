@@ -21,6 +21,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5"
+    "@types/node": "^20.10.5",
+    "playwright-slack-report": "^1.1.72"
   }
 }

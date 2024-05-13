@@ -68,7 +68,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const showDivider = !block.data.canBeSkipped && !!block.data.preferredFallbackOnError;
 
   return (
-    <div className='cb-pk-error-bloc'>
+    <div className='cb-pk-error'>
       <Header>{headerText}</Header>
       <div className='cb-pk-error-bloc-icon'>
         <PasskeyErrorIcon />

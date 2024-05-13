@@ -1,0 +1,62 @@
+.cb-primary-text-color {
+  color: var(--cb-text-primary-color);
+}
+
+.cb-secondary-text-color {
+  color: var(--cb-text-secondary-color);
+}
+
+.cb-header-text-color {
+  color: var(--cb-header-text-color);
+}
+
+.cb-script-text-color {
+  color: var(--cb-script-text-color);
+}
+
+.cb-error-text-color {
+  color: var(--cb-error-text-color);
+}
+
+.cb-bold-text-weight {
+  font-weight: var(--cb-font-weight-bold);
+}
+
+.cb-normal-text-weight {
+  font-weight: var(--cb-font-weight-normal);
+}
+
+.cb-text-1 {
+  font-family: var(--cb-secondary-font);
+  font-size: var(--cb-base-font-size);
+}
+
+.cb-text-2 {
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.25);
+}
+
+.cb-text-3 {
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.5);
+}
+
+.cb-text-4 {
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.9);
+}
+
+.cb-text-5 {
+  font-family: var(--cb-primary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.75);
+}
+
+.cb-text-6 {
+  font-family: var(--cb-primary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.95);
+}
+
+.cb-text-7 {
+  font-family: var(--cb-primary-font);
+  font-size: calc(var(--cb-base-font-size) * 2.3);
+}

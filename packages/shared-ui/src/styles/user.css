@@ -1,0 +1,64 @@
+.cb-user-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--cb-border-color);
+  border-radius: var(--cb-border-radius-lg);
+  padding: 1rem 1.25rem;
+}
+
+.cb-user-details-section-header {
+  margin-bottom: 1rem;
+}
+
+.cb-user-details-section-indentifier {
+  width: 85%;
+  align-self: self-start;
+}
+
+.cb-user-details-section-indentifiers-list {
+  margin-top: 1rem;
+}
+
+.cb-user-details-section-indentifiers-list-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cb-user-details-section-indentifiers-list-item-field {
+  flex: 8;
+}
+
+.cb-user-details-section-indentifiers-list-item-field-input {
+  width: 100%;
+}
+
+.cb-user-details-section-indentifiers-list-item-badge {
+  padding: 0.5rem;
+  flex: 1;
+  margin-top: 0.75rem;
+  border-radius: var(--cb-border-radius-sm);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-primary {
+  background-color: var(--cb-primary-color);
+  color: var(--cb-button-text-primary-color);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-secondary {
+  background-color: var(--cb-text-secondary-color);
+  color: var(--cb-text-primary-color);
+}
+
+.cb-user-details-section-indentifiers-list-item-badge-text {
+  color: var(--cb-button-text-primary-color);
+}
+
+@media screen and (max-width: 481px) {
+  .cb-user-details-section-indentifier {
+    width: 75%;
+  }
+}

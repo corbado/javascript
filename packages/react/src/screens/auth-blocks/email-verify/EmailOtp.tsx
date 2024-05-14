@@ -37,9 +37,9 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
     }
 
     return {
-      header: t('common.header'),
-      bodyTitle: t('common.body_title'),
-      bodyDescription: t('common.body_description'),
+      header: t('header'),
+      bodyTitle: t('body_title'),
+      bodyDescription: t('body_description'),
     };
   }, [t]);
   const bodyResendText = useMemo(() => t('body_resend'), [t]);

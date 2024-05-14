@@ -1,3 +1,15 @@
+## 2.8.0
+
+### Minor changes
+
+- Added support for `autoSubmit` setting: This can be configured from the developer panel, it speeds up the signup flow for the user.
+
+## 2.7.0
+
+### Minor changes
+
+- Updated the `PasskeyList` component: Improvements to the UI and show more details about the passkeys.
+
 ## 2.6.0
 
 ### Minor changes

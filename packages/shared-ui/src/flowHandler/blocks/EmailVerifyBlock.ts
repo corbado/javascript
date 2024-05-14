@@ -1,5 +1,10 @@
-import type { CorbadoApp, CorbadoError, GeneralBlockVerifyIdentifier, ProcessCommon } from '@corbado/web-core';
-import { AuthType } from '@corbado/web-core';
+import type {
+  AuthType,
+  CorbadoApp,
+  CorbadoError,
+  GeneralBlockVerifyIdentifier,
+  ProcessCommon,
+} from '@corbado/web-core';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
@@ -54,7 +59,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       email: data.identifier,
       translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
-      isPostLoginVerification: this.authType === AuthType.Login,
+      isPostLoginVerification: data.isPostLoginVerification,
     };
   }
 

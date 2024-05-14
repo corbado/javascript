@@ -73,9 +73,11 @@
     },
     "email-verify": {
       "email-otp": {
-        "header": "Enter code to create account",
-        "body_title": "One-time passcode",
-        "body_description": "Enter the passcode sent to your email address",
+        "common": {
+          "header": "Enter code to create account",
+          "body_title": "One-time passcode",
+          "body_description": "Enter the passcode sent to your email address"
+        },
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
@@ -85,9 +87,11 @@
         "button_icloud": "Open in iCloud"
       },
       "email-link-sent": {
-        "header": "Check your inbox to create your account",
-        "body_title": "Magic link",
-        "body_description": "We just sent a magic link to your email address ",
+        "common": {
+          "header": "Check your inbox to create your account",
+          "body_title": "Magic link",
+          "body_description": "We just sent a magic link to your email address "
+        },
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend email",
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
@@ -123,9 +127,11 @@
     },
     "phone-verify": {
       "phone-otp": {
-        "header": "Enter code to create account",
-        "body_title": "One-time passcode",
-        "body_description": "Enter the passcode sent to your phone number",
+        "common": {
+          "header": "Enter code to create account",
+          "body_title": "One-time passcode",
+          "body_description": "Enter the passcode sent to your phone number"
+        },
         "body_resend": "Didn't receive an sms?",
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)"
@@ -206,12 +212,12 @@
     },
     "email-verify": {
       "email-otp": {
-        "login": {
+        "common": {
           "header": "Enter code to log in",
           "body_title": "One-time passcode",
           "body_description": "Enter the passcode sent to your email address"
         },
-        "verificationCheck": {
+        "postLoginVerification": {
           "header": "Your email is not verified yet",
           "body_title": "Verify your email address",
           "body_description": "Please verify your email by entering the one-time passcode we just sent to your email."
@@ -225,12 +231,12 @@
         "button_icloud": "Open in iCloud"
       },
       "email-link-sent": {
-        "login": {
+        "common": {
           "header": "Check your inbox to log in",
           "body_title": "Magic link",
           "body_description": "We just sent a magic link to your email address "
         },
-        "verificationCheck": {
+        "postLoginVerification": {
           "header": "Your email is not verified yet",
           "body_title": "Verify your email address",
           "body_description": "Please verify your email by clicking on the email magic link we just sent to you."
@@ -262,12 +268,12 @@
     },
     "phone-verify": {
       "phone-otp": {
-        "login": {
+        "common": {
           "header": "Enter code to log in",
           "body_title": "Verification code",
           "body_description": "We just sent a verification code to your phone number"
         },
-        "verificationCheck": {
+        "postLoginVerification": {
           "header": "Your phone number is not verified yet",
           "body_title": "Verify your phone number",
           "body_description": "Please verify your phone number by entering the one-time passcode we just sent to you."

@@ -133,6 +133,12 @@ export interface BlockBodyData {
     'identifierType': LoginIdentifierType;
     /**
      * 
+     * @type {boolean}
+     * @memberof BlockBodyData
+     */
+    'autoSubmit': boolean;
+    /**
+     * 
      * @type {VerificationMethod}
      * @memberof BlockBodyData
      */
@@ -161,6 +167,12 @@ export interface BlockBodyData {
      * @memberof BlockBodyData
      */
     'alternativeVerificationMethods': Array<object>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BlockBodyData
+     */
+    'isPostLoginVerification': boolean;
     /**
      * Only given when project environment is dev
      * @type {string}
@@ -423,6 +435,12 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'identifierType': LoginIdentifierType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'autoSubmit': boolean;
 }
 
 
@@ -525,6 +543,12 @@ export interface GeneralBlockVerifyIdentifier {
      * @memberof GeneralBlockVerifyIdentifier
      */
     'alternativeVerificationMethods': Array<object>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneralBlockVerifyIdentifier
+     */
+    'isPostLoginVerification': boolean;
 }
 
 

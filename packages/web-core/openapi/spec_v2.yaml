@@ -1112,6 +1112,7 @@ components:
         - challenge
         - identifierValue
         - identifierType
+        - autoSubmit
       properties:
         challenge:
           type: string
@@ -1119,6 +1120,8 @@ components:
           type: string
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
+        autoSubmit:
+          type: boolean
 
     generalBlockPasskeyVerify:
       type: object
@@ -1143,6 +1146,7 @@ components:
         - verificationMethod
         - identifier
         - alternativeVerificationMethods
+        - isPostLoginVerification
       properties:
         verificationMethod:
           $ref: '#/components/schemas/verificationMethod'
@@ -1165,6 +1169,8 @@ components:
               $ref: '#/components/schemas/verificationMethod'
             identifier:
               type: string
+        isPostLoginVerification:
+          type: boolean
 
     generalBlockPostSignupEmailVerify:
       type: object

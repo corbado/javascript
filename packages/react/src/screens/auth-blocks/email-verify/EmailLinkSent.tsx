@@ -36,16 +36,16 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   const descriptionTexts = useMemo(() => {
     if (block.data.isPostLoginVerification) {
       return {
-        header: t('verificationCheck.header'),
-        bodyTitle: t('verificationCheck.body_title'),
-        bodyDescription: t('verificationCheck.body_description'),
+        header: t('postLoginVerification.header'),
+        bodyTitle: t('postLoginVerification.body_title'),
+        bodyDescription: t('postLoginVerification.body_description'),
       };
     }
 
     return {
-      header: t('login.header'),
-      bodyTitle: t('login.body_title'),
-      bodyDescription: t('login.body_description'),
+      header: t('common.header'),
+      bodyTitle: t('common.body_title'),
+      bodyDescription: t('common.body_description'),
     };
   }, [t]);
   const bodyResendText = useMemo(() => t('body_resend'), [t]);

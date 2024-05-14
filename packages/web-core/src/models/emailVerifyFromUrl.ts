@@ -7,6 +7,7 @@ type EmailVerifyFromUrlData = {
     identifier: string;
     retryNotBefore: number;
     verificationMethod: string;
+    isPostLoginVerification: boolean;
   };
   authType: number;
   process: {
@@ -47,6 +48,7 @@ export class EmailVerifyFromUrl {
       identifier: decoded.blockData.identifier,
       retryNotBefore: decoded.blockData.retryNotBefore,
       verificationMethod: decoded.blockData.verificationMethod as VerificationMethod,
+      isPostLoginVerification: decoded.blockData.isPostLoginVerification,
     };
 
     const isNewDevice = existingProcess?.id !== process.id;

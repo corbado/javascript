@@ -84,7 +84,13 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {
-        this.updateScreen(ScreenNames.PasskeyError);
+        //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
+        //If the user tries again and fails, we show the regular error screen
+        if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {
+          this.updateScreen(ScreenNames.PasskeyErrorLight);
+        } else {
+          this.updateScreen(ScreenNames.PasskeyError);
+        }
       }
       return;
     }

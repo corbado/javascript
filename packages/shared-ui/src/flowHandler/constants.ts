@@ -48,6 +48,7 @@ export enum ScreenNames {
   SocialVerify = 'social-verify',
   MissingFields = 'missing-fields',
   PasskeyError = 'passkey-error',
+  PasskeyErrorLight = 'passkey-error-light',
   PasskeyAppend = 'passkey-append',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',

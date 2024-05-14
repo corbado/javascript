@@ -191,6 +191,19 @@
           "phone": "Use phone verification"
         }
       },
+      "passkey-error-light": {
+        "header": "Use your passkey to confirm it's really you",
+        "body_title": "Login for",
+        "body_description": "Your device will ask you for your fingerprint, face or screen lock",
+        "text_divider": "or",
+        "button_switchToAlternate": {
+          "emailOtp": "Continue with email",
+          "emailLink": "Continue with email",
+          "phone": "Continue with phone"
+        },
+        "button_tryAgain": "Login with passkey",
+        "subtext_tryAgain": "Biometric data will never leave your device."
+      },
       "passkey-error": {
         "header": "Something went wrong...",
         "body_title": "Login for",

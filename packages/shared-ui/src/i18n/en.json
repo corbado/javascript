@@ -233,7 +233,7 @@
         "verificationCheck": {
           "header": "Your email is not verified yet",
           "body_title": "Verify your email address",
-          "body_description": "Please verify your email by clicking on the email magic link we jest sent to you."
+          "body_description": "Please verify your email by clicking on the email magic link we just sent to you."
         },
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend email",

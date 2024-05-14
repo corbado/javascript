@@ -33,9 +33,21 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
     };
   }, [block]);
 
-  const headerText = useMemo(() => t('header'), [t]);
-  const bodyTitleText = useMemo(() => t('body_title'), [t]);
-  const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
+  const descriptionTexts = useMemo(() => {
+    if (block.data.isPostLoginVerification) {
+      return {
+        header: t('postLoginVerification.header'),
+        bodyTitle: t('postLoginVerification.body_title'),
+        bodyDescription: t('postLoginVerification.body_description'),
+      };
+    }
+
+    return {
+      header: t('header'),
+      bodyTitle: t('body_title'),
+      bodyDescription: t('body_description'),
+    };
+  }, [t]);
   const bodyResendText = useMemo(() => t('body_resend'), [t]);
   const resendButtonText = useMemo(() => {
     if (remainingTime < 1) {
@@ -139,7 +151,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
 
   return (
     <div className='cb-email-block'>
-      <Header className='cb-email-block-header'>{headerText}</Header>
+      <Header className='cb-email-block-header'>{descriptionTexts.header}</Header>
       <UserInfo
         className='cb-email-user-info-section'
         leftIcon={<EmailIcon className='cb-email-block-user-info-left-icon' />}
@@ -152,13 +164,13 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
         fontFamilyVariant='secondary'
         className='cb-row'
       >
-        {bodyTitleText}
+        {descriptionTexts.bodyTitle}
       </Text>
       <Text
         level='2'
         fontFamilyVariant='secondary'
       >
-        {bodyDescriptionText}
+        {descriptionTexts.bodyDescription}
       </Text>
       <EmailLinks
         className='cb-email-link-buton-group'

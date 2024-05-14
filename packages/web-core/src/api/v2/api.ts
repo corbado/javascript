@@ -168,6 +168,12 @@ export interface BlockBodyData {
      */
     'alternativeVerificationMethods': Array<object>;
     /**
+     * 
+     * @type {boolean}
+     * @memberof BlockBodyData
+     */
+    'isPostLoginVerification': boolean;
+    /**
      * Only given when project environment is dev
      * @type {string}
      * @memberof BlockBodyData
@@ -537,6 +543,12 @@ export interface GeneralBlockVerifyIdentifier {
      * @memberof GeneralBlockVerifyIdentifier
      */
     'alternativeVerificationMethods': Array<object>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneralBlockVerifyIdentifier
+     */
+    'isPostLoginVerification': boolean;
 }
 
 

@@ -222,6 +222,11 @@
         "header": "Enter code to log in",
         "body_title": "One-time passcode",
         "body_description": "Enter the passcode sent to your email address",
+        "postLoginVerification": {
+          "header": "Your email is not verified yet",
+          "body_title": "Verify your email address",
+          "body_description": "Please verify your email by entering the one-time passcode we just sent to your email."
+        },
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)",
@@ -234,6 +239,11 @@
         "header": "Check your inbox to log in",
         "body_title": "Magic link",
         "body_description": "We just sent a magic link to your email address ",
+        "postLoginVerification": {
+          "header": "Your email is not verified yet",
+          "body_title": "Verify your email address",
+          "body_description": "Please verify your email by clicking on the email magic link we just sent to you."
+        },
         "body_resend": "Didn't receive an email?",
         "button_resend": "Resend email",
         "button_resendWaitingText": "Resend email ({{remainingTime}} sec)",
@@ -264,6 +274,11 @@
         "header": "Enter code to log in",
         "body_title": "Verification code",
         "body_description": "We just sent a verification code to your phone number",
+        "postLoginVerification": {
+          "header": "Your phone number is not verified yet",
+          "body_title": "Verify your phone number",
+          "body_description": "Please verify your phone number by entering the one-time passcode we just sent to you."
+        },
         "body_resend": "Didn't receive an sms?",
         "button_resend": "Resend code",
         "button_resendWaitingText": "Resend code ({{remainingTime}} sec)"

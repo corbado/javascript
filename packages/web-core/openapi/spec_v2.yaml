@@ -1146,6 +1146,7 @@ components:
         - verificationMethod
         - identifier
         - alternativeVerificationMethods
+        - isPostLoginVerification
       properties:
         verificationMethod:
           $ref: '#/components/schemas/verificationMethod'
@@ -1168,6 +1169,8 @@ components:
               $ref: '#/components/schemas/verificationMethod'
             identifier:
               type: string
+        isPostLoginVerification:
+          type: boolean
 
     generalBlockPostSignupEmailVerify:
       type: object

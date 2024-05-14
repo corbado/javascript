@@ -29,6 +29,7 @@ export class PhoneVerifyBlock extends Block<BlockDataPhoneVerify> {
       phone: data.identifier,
       translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
+      isPostLoginVerification: data.isPostLoginVerification,
     };
   }
 

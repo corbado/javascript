@@ -59,6 +59,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       email: data.identifier,
       translatedError: errorTranslator.translate(data.error),
       retryNotBefore: data.retryNotBefore,
+      isPostLoginVerification: data.isPostLoginVerification,
     };
   }
 

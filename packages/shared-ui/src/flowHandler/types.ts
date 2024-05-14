@@ -32,6 +32,7 @@ export type BlockDataPasskeyAppend = {
   userHandleType: LoginIdentifierType;
   translatedError?: string;
   preferredFallbackOnError?: PasskeyFallback;
+  autoSubmit: boolean;
 };
 
 export type BlockDataPasskeyVerify = {

@@ -41,6 +41,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
       userHandle: data.identifierValue,
       userHandleType,
       canBeSkipped,
+      autoSubmit: data.autoSubmit,
     };
   }
 

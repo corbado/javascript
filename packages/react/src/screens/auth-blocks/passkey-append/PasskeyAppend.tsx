@@ -26,19 +26,25 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   }, [block]);
 
   useEffect(() => {
-    return () => {
-      block.cancelPasskeyOperation();
-    };
-  }, []);
-
-  useEffect(() => {
     if (block.data.userHandleType !== 'phone') {
       setPasskeyUserHandle(block.data.userHandle);
     } else {
       setPasskeyUserHandle(block.getFormattedPhoneNumber());
     }
+  }, [block]);
 
-    setLoading(false);
+  useEffect(() => {
+    // we run auto submit with a slight delay to avoid issues with double execution (React mounts components twice in development mode)
+    const t = setTimeout(() => {
+      if (block.data.autoSubmit) {
+        appendPasskey();
+      }
+    }, 50);
+
+    return () => {
+      clearTimeout(t);
+      block.cancelPasskeyOperation();
+    };
   }, [block]);
 
   useEffect(() => {

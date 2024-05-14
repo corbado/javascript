@@ -133,6 +133,12 @@ export interface BlockBodyData {
     'identifierType': LoginIdentifierType;
     /**
      * 
+     * @type {boolean}
+     * @memberof BlockBodyData
+     */
+    'autoSubmit': boolean;
+    /**
+     * 
      * @type {VerificationMethod}
      * @memberof BlockBodyData
      */
@@ -423,6 +429,12 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'identifierType': LoginIdentifierType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'autoSubmit': boolean;
 }
 
 

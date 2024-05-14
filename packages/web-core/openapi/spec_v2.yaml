@@ -1112,6 +1112,7 @@ components:
         - challenge
         - identifierValue
         - identifierType
+        - autoSubmit
       properties:
         challenge:
           type: string
@@ -1119,6 +1120,8 @@ components:
           type: string
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
+        autoSubmit:
+          type: boolean
 
     generalBlockPasskeyVerify:
       type: object
@@ -1185,7 +1188,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-            $ref: '#/components/schemas/javaScriptHighEntropy'
+          $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1217,9 +1220,9 @@ components:
     passkeyOperation:
       type: object
       required:
-          - operationType
-          - identifierValue
-          - identifierType
+        - operationType
+        - identifierValue
+        - identifierType
       properties:
         operationType:
           type: string
@@ -1257,21 +1260,21 @@ components:
         socialAccounts:
           type: array
           items:
-              $ref: '#/components/schemas/socialAccount'
+            $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     socialAccount:
       type: object

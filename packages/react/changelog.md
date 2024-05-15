@@ -2,7 +2,7 @@
 
 ### Minor changes
 
-- Added support for `autoSubmit` setting: This can be configured from the developer panel, it speeds up the signup flow for the user. 
+- Added support for `autoSubmit` setting: This can be configured from the developer panel, it speeds up the signup flow for the user.
 
 ## 2.7.0
 

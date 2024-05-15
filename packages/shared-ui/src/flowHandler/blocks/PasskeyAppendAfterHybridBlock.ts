@@ -61,7 +61,7 @@ export class PasskeyAppendAfterHybridBlock extends Block<BlockDataPasskeyAppendA
   async skipPasskeyAppend(): Promise<void> {
     this.cancelPasskeyOperation();
 
-    const newBlock = await this.app.authProcessService.finishAuthProcess();
+    const newBlock = await this.app.authProcessService.skipBlock();
     this.updateProcess(newBlock);
 
     return;

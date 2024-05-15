@@ -8,3 +8,4 @@ export * from './LoginInitBlock';
 export * from './PasskeyVerifyBlock';
 export * from './ContinueOnOtherEnvBlock';
 export * from './MissingFieldsBlock';
+export * from './PasskeyAppendAfterHybridBlock';

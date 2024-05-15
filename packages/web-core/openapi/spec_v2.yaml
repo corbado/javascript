@@ -620,6 +620,8 @@ components:
         passkeyAppendShown:
           type: integer
           format: int64
+        optOutOfPasskeyAppendAfterHybrid:
+          type: boolean
         preferredBlock:
           $ref: '#/components/schemas/blockType'
 
@@ -986,6 +988,7 @@ components:
           type: object
           anyOf:
             - $ref: '#/components/schemas/generalBlockPasskeyAppend'
+            - $ref: '#/components/schemas/generalBlockPasskeyAppendAfterHybrid'
             - $ref: '#/components/schemas/generalBlockPasskeyVerify'
             - $ref: '#/components/schemas/generalBlockVerifyIdentifier'
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
@@ -1044,7 +1047,7 @@ components:
 
     blockType:
       type: string
-      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify ]
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify, passkey-append-after-hybrid ]
 
     authType:
       type: string
@@ -1053,6 +1056,10 @@ components:
     verificationMethod:
       type: string
       enum: [ email-link, email-otp, phone-otp ]
+
+    passkeyIconSet:
+      type: string
+      enum: [ default, apple, android, windows ]
 
     generalBlockSignupInit:
       type: object
@@ -1113,6 +1120,7 @@ components:
         - identifierValue
         - identifierType
         - autoSubmit
+        - passkeyIconSet
       properties:
         challenge:
           type: string
@@ -1122,6 +1130,19 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         autoSubmit:
           type: boolean
+        passkeyIconSet:
+          $ref: '#/components/schemas/passkeyIconSet'
+
+    generalBlockPasskeyAppendAfterHybrid:
+      type: object
+      required:
+        - challenge
+        - passkeyIconSet
+      properties:
+        challenge:
+          type: string
+        passkeyIconSet:
+          $ref: '#/components/schemas/passkeyIconSet'
 
     generalBlockPasskeyVerify:
       type: object
@@ -1226,6 +1247,7 @@ components:
         - operationType
         - identifierValue
         - identifierType
+        - isCDA
       properties:
         operationType:
           type: string
@@ -1234,6 +1256,8 @@ components:
           type: string
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
+        isCDA:
+          type: boolean
 
     continueOnOtherDevice:
       type: object

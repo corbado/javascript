@@ -6,6 +6,7 @@ import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
 import type { Block } from './blocks';
+import { PasskeyAppendAfterHybridBlock } from './blocks';
 import {
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
@@ -308,10 +309,9 @@ export class ProcessHandler {
       case BlockType.PasskeyVerify:
         block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
-      //TODO: Add MissingFieldsBlock
-      // case BlockType.MissingFields:
-      // block = new MissingFieldsBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
-      // break;
+      case BlockType.PasskeyAppendAfterHybrid:
+        block = new PasskeyAppendAfterHybridBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
+        break;
       default:
         throw new Error(`Invalid block type: ${blockBody.block}}`);
     }

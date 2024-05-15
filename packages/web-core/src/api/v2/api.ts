@@ -139,6 +139,12 @@ export interface BlockBodyData {
     'autoSubmit': boolean;
     /**
      * 
+     * @type {PasskeyIconSet}
+     * @memberof BlockBodyData
+     */
+    'passkeyIconSet': PasskeyIconSet;
+    /**
+     * 
      * @type {VerificationMethod}
      * @memberof BlockBodyData
      */
@@ -273,7 +279,8 @@ export const BlockType = {
     LoginInit: 'login-init',
     PasskeyVerify: 'passkey-verify',
     ConditionalUiCompleted: 'conditional-ui-completed',
-    PostSignupEmailVerify: 'post-signup-email-verify'
+    PostSignupEmailVerify: 'post-signup-email-verify',
+    PasskeyAppendAfterHybrid: 'passkey-append-after-hybrid'
 } as const;
 
 export type BlockType = typeof BlockType[keyof typeof BlockType];
@@ -441,6 +448,33 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'autoSubmit': boolean;
+    /**
+     * 
+     * @type {PasskeyIconSet}
+     * @memberof GeneralBlockPasskeyAppend
+     */
+    'passkeyIconSet': PasskeyIconSet;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface GeneralBlockPasskeyAppendAfterHybrid
+ */
+export interface GeneralBlockPasskeyAppendAfterHybrid {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockPasskeyAppendAfterHybrid
+     */
+    'challenge': string;
+    /**
+     * 
+     * @type {PasskeyIconSet}
+     * @memberof GeneralBlockPasskeyAppendAfterHybrid
+     */
+    'passkeyIconSet': PasskeyIconSet;
 }
 
 
@@ -1093,6 +1127,22 @@ export interface PasskeyAppendFinishReq {
     'signedChallenge': string;
 }
 /**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const PasskeyIconSet = {
+    Default: 'default',
+    Apple: 'apple',
+    Android: 'android',
+    Windows: 'windows'
+} as const;
+
+export type PasskeyIconSet = typeof PasskeyIconSet[keyof typeof PasskeyIconSet];
+
+
+/**
  * tbd.
  * @export
  * @interface PasskeyLoginFinishReq
@@ -1142,6 +1192,12 @@ export interface PasskeyOperation {
      * @memberof PasskeyOperation
      */
     'identifierType': LoginIdentifierType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PasskeyOperation
+     */
+    'isCDA': boolean;
 }
 
 export const PasskeyOperationOperationTypeEnum = {
@@ -1201,6 +1257,12 @@ export interface ProcessInitReq {
      * @memberof ProcessInitReq
      */
     'passkeyAppendShown'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProcessInitReq
+     */
+    'optOutOfPasskeyAppendAfterHybrid'?: boolean;
     /**
      * 
      * @type {BlockType}

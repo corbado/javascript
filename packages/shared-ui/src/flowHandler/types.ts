@@ -35,6 +35,11 @@ export type BlockDataPasskeyAppend = {
   autoSubmit: boolean;
 };
 
+export type BlockDataPasskeyAppendAfterHybrid = {
+  translatedError?: string;
+  passkeyIconSet: string;
+};
+
 export type BlockDataPasskeyVerify = {
   availableFallbacks: PasskeyFallback[];
   identifierValue: string;

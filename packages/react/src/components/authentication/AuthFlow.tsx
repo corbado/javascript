@@ -3,6 +3,7 @@ import type {
   EmailVerifyBlock,
   LoginInitBlock,
   MissingFieldsBlock,
+  PasskeyAppendAfterHybridBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
   PasskeyVerifyBlock,
@@ -26,6 +27,7 @@ import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingF
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
+import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append-after-hybrid/PasskeyAppendAfterHybrid';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
@@ -122,6 +124,8 @@ export const AuthFlow: FC = () => {
         return <EmailLinkSuccess block={currentScreen.block as ContinueOnOtherEnvBlock} />;
       case BlockTypes.MissingFields:
         return <MissingFields block={currentScreen.block as MissingFieldsBlock} />;
+      case BlockTypes.PasskeyAppendAfterHybrid:
+        return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendAfterHybridBlock} />;
     }
   }, [currentScreen]);
 

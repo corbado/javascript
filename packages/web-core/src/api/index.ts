@@ -8,6 +8,7 @@ export {
   BlockBody,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
+  GeneralBlockPasskeyAppendAfterHybrid,
   ProcessResponse,
   ProcessCommon,
   ContinueOnOtherDevice,

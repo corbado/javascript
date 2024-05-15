@@ -50,6 +50,7 @@ export enum ScreenNames {
   PasskeyError = 'passkey-error',
   PasskeyErrorLight = 'passkey-error-light',
   PasskeyAppend = 'passkey-append',
+  PasskeyAppendAfterHybrid = 'passkey-append-after-hybrid',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',
   EditUserData = 'edit-user-data',
@@ -67,6 +68,7 @@ export enum BlockTypes {
   PasskeyAppend = 'passkey-append',
   PasskeyVerify = 'passkey-verify',
   PasskeyAppended = 'passkey-appended',
+  PasskeyAppendAfterHybrid = 'passkey-append-after-hybrid',
   Completed = 'completed',
   ContinueOnOtherEnv = 'continue-on-other-env',
 }
@@ -83,3 +85,5 @@ export enum ContinueOnOtherEnvReasons {
 }
 
 export const initScreenBlocks = [BlockTypes.SignupInit, BlockTypes.LoginInit];
+
+export const skipPasskeyAppendAfterHybridKey = 'cbo_skip_passkey_append_after_hybrid';

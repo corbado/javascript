@@ -21,6 +21,7 @@ import googleIcon from './assets/google.svg';
 import logoIcon from './assets/logo.svg';
 import microsoftIcon from './assets/microsoft.svg';
 import outlookIcon from './assets/outlook.svg';
+import passkeyAppendAfterHybridIcon from './assets/passkey-append-after-hybrid.svg';
 import passkeyAppendedIcon from './assets/passkey-appended.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
@@ -61,6 +62,7 @@ export const assets = {
   exclamationIcon,
   passkeyErrorIcon,
   passkeyAppendedIcon,
+  passkeyAppendAfterHybridIcon,
   secureIcon,
   deviceIcon,
   emaiLinkSuccessIcon,

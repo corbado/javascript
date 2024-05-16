@@ -15,10 +15,7 @@ test.describe('Signup with phone OTP proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
 
     await signupFlow.fillOTP(OtpType.Phone);
-    //TODO: uncomment this after fixing the issue
-    // await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    // await page.getByText('Maybe later').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkNoPasskeyRegistered();
   });

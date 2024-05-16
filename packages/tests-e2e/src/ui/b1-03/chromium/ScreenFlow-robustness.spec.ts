@@ -31,10 +31,7 @@ test.describe('Flow-based unproductive user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
     await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create account' }).click());
-    //TODO: uncomment this after fixing the issue
-    // await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
-    // await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
     page.once('dialog', dialog => void dialog.accept());

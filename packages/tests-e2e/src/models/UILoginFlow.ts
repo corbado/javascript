@@ -121,9 +121,6 @@ export class UILoginFlow {
         await this.simulateSuccessfulPasskeyInput(() =>
           this.page.getByRole('button', { name: 'Create account' }).click(),
         );
-        //TODO: uncomment this after fixing the issue
-        // await this.checkLandedOnScreen(ScreenNames.PasskeyAppended);
-        // await this.page.getByRole('button', { name: 'Continue' }).click();
       } else {
         if (
           verifications.includes(IdentifierVerification.EmailOtp) ||
@@ -154,12 +151,6 @@ export class UILoginFlow {
       await this.checkLandedOnScreen(ScreenNames.PhoneOtpSignup, undefined, phone);
       await this.fillOTP(OtpType.Phone);
     }
-
-    //TODO: uncomment this after fixing the issue
-    // if (passkeySupported && !registerPasskey) {
-    //   await this.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
-    //   await this.page.getByText('Maybe later').click();
-    // }
 
     await this.checkLandedOnScreen(ScreenNames.End);
     if (registerPasskey) {

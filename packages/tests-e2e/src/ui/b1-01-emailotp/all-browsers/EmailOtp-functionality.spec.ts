@@ -11,10 +11,7 @@ test.describe('Signup with email OTP proper user behavior', () => {
 
     await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
-    //TODO: uncomment this after fixing the issue
-    // await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
-    // await signupFlow.fillOTP(OtpType.Email);
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
     await signupFlow.checkNoPasskeyRegistered();
   });

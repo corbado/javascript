@@ -9,12 +9,11 @@ test.describe('Login with email OTP proper user behavior', () => {
     }
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount(
-      [IdentifierType.Email],
-      [IdentifierVerification.EmailOtp],
-      false,
-      false,
-    );
+    let [, email] =
+      browserName === 'firefox'
+        ? await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, false)
+        : await loginFlow.createAccount([IdentifierType.Email], [], false, false);
+
     email = email ?? '';
     await page.getByText('Log in').click();
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
@@ -26,6 +25,12 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
 
     await loginFlow.fillOTP(OtpType.Email);
+
+    if (browserName === 'firefox') {
+      await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
+      await page.getByText('Maybe later').click();
+    }
+
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
     await loginFlow.checkNoPasskeyRegistered();
   });

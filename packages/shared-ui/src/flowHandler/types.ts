@@ -44,9 +44,8 @@ export type BlockDataPasskeyVerify = {
 export type BlockDataPasskeyAppended = Record<string, never>;
 
 export type BlockDataPasskeyAppendAfterHybrid = {
-  availableFallbacks: PasskeyFallback[];
-  preferredFallbackOnSkip?: PasskeyFallback;
   translatedError?: string;
+  passkeyIconSet: string;
 };
 
 export type BlockDataMissingFields = {

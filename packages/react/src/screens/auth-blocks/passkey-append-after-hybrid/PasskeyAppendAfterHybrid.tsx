@@ -57,7 +57,7 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterH
       </PrimaryButton>
       <div className='cb-pk-append-skip-button-section'>
         <SecondaryButton
-          onClick={() => void block.data.preferredFallbackOnSkip?.action()}
+          onClick={() => void block.skipPasskeyAppend()}
           disabled={loading}
         >
           {secondaryButtonText}

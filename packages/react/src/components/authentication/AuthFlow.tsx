@@ -97,8 +97,7 @@ export const AuthFlow: FC = () => {
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppend:
-            <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
-            return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendAfterHybridBlock} />;
+            return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
             return <PasskeyAppendPasskeyError block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.EditUserData:

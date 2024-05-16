@@ -24,6 +24,7 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
 
     await loginFlow.fillOTP(OtpType.Email);
+    //TODO: uncomment this after fixing the issue
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
     await page.getByText('Maybe later').click();
@@ -52,6 +53,7 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
 
     await loginFlow.fillOTP(OtpType.Email);
+    // TODO: uncomment this after fixing the issue
     await loginFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
     await loginFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());

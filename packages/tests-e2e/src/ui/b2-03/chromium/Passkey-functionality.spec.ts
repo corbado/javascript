@@ -13,7 +13,7 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.InitLogin);
 
     await loginFlow.simulateSuccessfulPasskeyInput(() => page.locator('.cb-last-identifier').click());
-    await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email);
+    await loginFlow.checkLandedOnScreen(ScreenNames.EmailOtpLogin, email, undefined, true);
 
     await loginFlow.fillOTP(OtpType.Email);
     await loginFlow.checkLandedOnScreen(ScreenNames.End);

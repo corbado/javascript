@@ -67,6 +67,7 @@ export const LastIdentifier: FC<LastIdentifierProps> = ({
           </Text>
           <Text
             level='2'
+            className='cb-last-identifier-value-text'
             fontFamilyVariant='secondary'
             textColorVariant='secondary'
           >

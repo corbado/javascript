@@ -522,6 +522,8 @@ button.cb-phone-otp-resend-button {
   justify-content: left;
   line-height: normal;
   gap: 0.35rem;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .cb-last-identifier-spinner {
@@ -531,6 +533,11 @@ button.cb-phone-otp-resend-button {
   width: 1.5rem;
   height: 1.5rem;
   box-sizing: border-box;
+}
+
+.cb-last-identifier-value-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cb-last-identifier-skip-button {

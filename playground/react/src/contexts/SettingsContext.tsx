@@ -1,23 +1,33 @@
-import React, { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
 const defaultState = {
   darkMode: false,
   toggleDarkMode: () => {},
   projectId: '',
+  updateProjectId: (_: string) => {},
 };
 
 const SettingsContext = createContext(defaultState);
-const getProjectIdFromURL = () => {
-  const maybeProjectId = window.location.pathname.split('/')[1];
-  if (maybeProjectId.startsWith('pro-')) {
-    return maybeProjectId;
+const setProjectIdInLocalStorage = (projectId: string) => {
+  const currentProjectId = localStorage.getItem('projectId');
+  if (currentProjectId && currentProjectId !== projectId) {
+    localStorage.clear();
   }
 
-  return 'pro-1';
+  localStorage.setItem('projectId', projectId);
+};
+
+const getProjectIdFromURL = () => {
+  const projectIdFromURL = window.location.pathname.split('/')[1];
+  const projectId = projectIdFromURL.startsWith('pro-') ? projectIdFromURL : 'pro-1';
+
+  setProjectIdInLocalStorage(projectId);
+
+  return projectId;
 };
 
 export const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
-  const projectIdFromURL = getProjectIdFromURL();
+  const [projectId, setProjectId] = useState(getProjectIdFromURL());
   const [darkMode, setDark] = useState(false);
 
   useEffect(() => {
@@ -30,8 +40,15 @@ export const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
     setDark(!darkMode);
   };
 
+  const updateProjectId = (newProjectId: string) => {
+    if (projectId !== newProjectId) {
+      setProjectIdInLocalStorage(newProjectId);
+      setProjectId(newProjectId);
+    }
+  };
+
   return (
-    <SettingsContext.Provider value={{ darkMode, toggleDarkMode, projectId: projectIdFromURL }}>
+    <SettingsContext.Provider value={{ darkMode, toggleDarkMode, projectId, updateProjectId }}>
       {children}
     </SettingsContext.Provider>
   );

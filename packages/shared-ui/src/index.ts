@@ -11,8 +11,14 @@ import emailIcon from './assets/email.svg';
 import emaiLinkSuccessIcon from './assets/email-link-success.svg';
 import exclamationIcon from './assets/exclamation.svg';
 import expandIcon from './assets/expand.svg';
-import faceId from './assets/face-id.svg';
-import fingerprintIcon from './assets/fingerprint.svg';
+import faceIdAndroid from './assets/face-id-android.svg';
+import faceIdApple from './assets/face-id-apple.svg';
+import faceIdDefault from './assets/face-id-default.svg';
+import faceIdWindows from './assets/face-id-windows.svg';
+import fingerprintAndroid from './assets/fingerprint-android.svg';
+import fingerprintApple from './assets/fingerprint-apple.svg';
+import fingerprintDefault from './assets/fingerprint-default.svg';
+import fingerprintWindows from './assets/fingerprint-windows.svg';
 import firstPageIcon from './assets/first-page.svg';
 import githubIcon from './assets/github.svg';
 import githubDarkIcon from './assets/github_dark.svg';
@@ -53,8 +59,6 @@ export const assets = {
   outlookIcon,
   editIcon,
   emailIcon,
-  faceId,
-  fingerprintIcon,
   cancelIcon,
   logoIcon,
   circleExclamationIcon,
@@ -76,4 +80,12 @@ export const assets = {
   syncIcon,
   visibilityIcon,
   addIcon,
+  faceIdDefault,
+  fingerprintDefault,
+  faceIdApple,
+  fingerprintApple,
+  faceIdAndroid,
+  fingerprintAndroid,
+  faceIdWindows,
+  fingerprintWindows,
 };

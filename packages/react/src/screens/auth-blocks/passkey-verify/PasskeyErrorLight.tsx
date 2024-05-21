@@ -1,4 +1,4 @@
-import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
+import { getPlatformType, type PasskeyVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<string>(block.data.identifierValue);
 
+  const platform = useMemo(() => getPlatformType(), []);
   const headerText = useMemo(() => t('header'), [t]);
   const bodyTitleText = useMemo(() => t('body_title'), [t]);
   const bodyDescriptionText = useMemo(() => t('body_description'), [t]);
@@ -70,8 +71,14 @@ export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
     <div className='cb-pk-error'>
       <Header className='cb-pk-error-light-header'>{headerText}</Header>
       <div className='cb-pk-error-bloc-icons-section'>
-        <FingerPrintIcon className='cb-pk-error-bloc-icons-section-icon' />
-        <FaceIdIcon className='cb-pk-error-bloc-icons-section-icon' />
+        <FingerPrintIcon
+          className='cb-pk-error-bloc-icons-section-icon'
+          platform={platform}
+        />
+        <FaceIdIcon
+          className='cb-pk-error-bloc-icons-section-icon'
+          platform={platform}
+        />
       </div>
       <div className='cb-pk-error-user-info-edit-section'>
         <Text

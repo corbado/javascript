@@ -1,4 +1,5 @@
-import { type PasskeyAppendBlock } from '@corbado/shared-ui';
+import type { PasskeyAppendBlock } from '@corbado/shared-ui';
+import { getPlatformType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +20,27 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
+
+  const platform = useMemo(() => getPlatformType(), []);
+  const headerText = useMemo(() => t(`header.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
+  const bodyPoint1Text = useMemo(() => {
+    if (!platform) {
+      return t('body_point1');
+    }
+
+    return t(`platformBasedText.${platform}.body_point1`);
+  }, [t]);
+  const bodyPoint2Text = useMemo(() => {
+    if (!platform) {
+      return t('body_point2');
+    }
+
+    return t(`platformBasedText.${platform}.body_point2`);
+  }, [t]);
+  const bodySubtext = useMemo(() => t('body_subtext'), [t]);
+  const textDivider = useMemo(() => t('text_divider'), [t]);
+  const primaryButtonText = useMemo(() => t(`button_start.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
+  const skipButtonText = useMemo(() => t('button_skip'), [t]);
 
   const appendPasskey = useCallback(() => {
     setLoading(true);
@@ -61,14 +83,6 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     };
   }, [appendPasskey]);
 
-  const headerText = useMemo(() => t(`header.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
-  const bodyPoint1Text = useMemo(() => t('body_point1'), [t]);
-  const bodyPoint2Text = useMemo(() => t('body_point2'), [t]);
-  const bodySubtext = useMemo(() => t('body_subtext'), [t]);
-  const textDivider = useMemo(() => t('text_divider'), [t]);
-  const primaryButtonText = useMemo(() => t(`button_start.${block.data.canBeSkipped ? 'append' : 'create'}`), [t]);
-  const skipButtonText = useMemo(() => t('button_skip'), [t]);
-
   const fallbacksAvailable = block.data.availableFallbacks.length > 0;
 
   return (
@@ -82,8 +96,14 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
         {headerText}
       </Text>
       <span className='cb-pk-append-icons-section'>
-        <FingerPrintIcon className='cb-pk-append-icons-section-icon' />
-        <FaceIdIcon className='cb-pk-append-icons-section-icon' />
+        <FingerPrintIcon
+          className='cb-pk-append-icons-section-icon'
+          platform={platform}
+        />
+        <FaceIdIcon
+          className='cb-pk-append-icons-section-icon'
+          platform={platform}
+        />
       </span>
       <div className='cb-pk-append-user-info-section'>
         <Text

@@ -16,7 +16,7 @@ module.exports = merge(common, {
     '@corbado/react': '@corbado/react',
     '@corbado/web-core': '@corbado/web-core',
     react: 'react',
-    'react-dom': 'react-dom',
+    'react-dom/client': 'react-dom/client',
     i18next: 'i18next',
     'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
     'react-i18next': 'react-i18next',

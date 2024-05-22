@@ -12,9 +12,7 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
     await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create account' }).click());
-    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
 
-    await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
     await signupFlow.fillOTP(OtpType.Email);
@@ -35,13 +33,8 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
 
     await signupFlow.fillOTP(OtpType.Email);
-    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppend2);
 
-    await signupFlow.simulateSuccessfulPasskeyInput(() => page.getByRole('button', { name: 'Create passkey' }).click());
-    await signupFlow.checkLandedOnScreen(ScreenNames.PasskeyAppended);
-
-    await page.getByRole('button', { name: 'Continue' }).click();
     await signupFlow.checkLandedOnScreen(ScreenNames.End);
-    await signupFlow.checkPasskeyRegistered();
+    await signupFlow.checkNoPasskeyRegistered();
   });
 });

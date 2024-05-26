@@ -6,7 +6,7 @@ import type {
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
 } from '@corbado/web-core';
-import { BlockType, VerificationMethod } from '@corbado/web-core';
+import { BlockType, OnlyHybridPasskeyAvailableError, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -77,16 +77,24 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
 
-  async passkeyLogin() {
+  async passkeyLogin(skipIfOnlyHybrid = false) {
     this.#passkeyAborted = false;
 
-    const res = await this.app.authProcessService.loginWithPasskey();
+    const res = await this.app.authProcessService.loginWithPasskey(skipIfOnlyHybrid);
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {
-        //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
-        //If the user tries again and fails, we show the regular error screen
-        if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {
+        if (res.val instanceof OnlyHybridPasskeyAvailableError) {
+          this.updateScreen(ScreenNames.PasskeyHybrid);
+          return;
+        }
+
+        if (
+          this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground ||
+          this.flowHandler.currentScreenName === ScreenNames.PasskeyHybrid
+        ) {
+          //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
+          //If the user tries again and fails, we show the regular error screen
           this.updateScreen(ScreenNames.PasskeyErrorLight);
         } else {
           this.updateScreen(ScreenNames.PasskeyError);

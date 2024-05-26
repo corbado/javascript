@@ -96,6 +96,10 @@ export class CorbadoError extends Error {
   static noPasskeyAvailable(): CorbadoError {
     return new NoPasskeyAvailableError();
   }
+
+  static onlyHybridPasskeyAvailable(): CorbadoError {
+    return new OnlyHybridPasskeyAvailableError();
+  }
 }
 
 /**
@@ -180,6 +184,13 @@ export class NoPasskeyAvailableError extends RecoverableError {
   constructor() {
     super('No passkey available');
     this.name = 'errors.noPasskeyAvailable';
+  }
+}
+
+export class OnlyHybridPasskeyAvailableError extends RecoverableError {
+  constructor() {
+    super('Only hybrid passkey available');
+    this.name = 'errors.onlyHybridPasskeyAvailable';
   }
 }
 

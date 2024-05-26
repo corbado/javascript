@@ -37,10 +37,26 @@ export class WebAuthnService {
     }
   }
 
-  async login(serializedChallenge: string, conditional: boolean): Promise<Result<string, CorbadoError>> {
+  async login(
+    serializedChallenge: string,
+    conditional: boolean,
+    skipIfOnlyHybrid = false,
+  ): Promise<Result<string, CorbadoError>> {
     try {
       const abortController = this.abortOngoingOperation();
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
+
+      if (skipIfOnlyHybrid) {
+        const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
+          credential =>
+            credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
+        );
+
+        if (!hasOtherTypesOfPasskeys) {
+          return Err(CorbadoError.onlyHybridPasskeyAvailable());
+        }
+      }
+
       challenge.signal = abortController.signal;
       this.#abortController = abortController;
 

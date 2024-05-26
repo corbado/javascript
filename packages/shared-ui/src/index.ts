@@ -21,7 +21,7 @@ import fingerprintDefault from './assets/fingerprint-default.svg';
 import fingerprintWindows from './assets/fingerprint-windows.svg';
 import firstPageIcon from './assets/first-page.svg';
 import githubIcon from './assets/github.svg';
-import githubDarkIcon from './assets/github_dark.svg';
+import githubDarkIcon from './assets/github-dark.svg';
 import gmailIcon from './assets/gmail.svg';
 import googleIcon from './assets/google.svg';
 import logoIcon from './assets/logo.svg';
@@ -30,6 +30,8 @@ import outlookIcon from './assets/outlook.svg';
 import passkeyAppendedIcon from './assets/passkey-appended.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
+import passkeyHybridIcon from './assets/passkey-hybrid.svg';
+import passkeyHybridDarkIcon from './assets/passkey-hybrid-dark.svg';
 import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
 import rightIcon from './assets/right-arrow.svg';
@@ -88,4 +90,6 @@ export const assets = {
   fingerprintAndroid,
   faceIdWindows,
   fingerprintWindows,
+  passkeyHybridIcon,
+  passkeyHybridDarkIcon,
 };

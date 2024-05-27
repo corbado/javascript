@@ -2,6 +2,7 @@ import type {
   AuthType,
   BlockBody,
   CorbadoApp,
+  CredentialRequestOptionsJSON,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
@@ -17,7 +18,7 @@ import { Block } from './Block';
 export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   readonly data: BlockDataPasskeyVerify;
   readonly type = BlockTypes.PasskeyVerify;
-  readonly initialScreen = ScreenNames.PasskeyBackground;
+  readonly initialScreen: ScreenNames = ScreenNames.PasskeyBackground;
   readonly authType: AuthType;
 
   #passkeyAborted = false;
@@ -33,6 +34,17 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     const data = blockBody.data as GeneralBlockPasskeyAppend;
 
     this.authType = blockBody.authType;
+
+    const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
+
+    const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
+      credential => credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
+    );
+
+    if (!hasOtherTypesOfPasskeys) {
+      this.initialScreen = ScreenNames.PasskeyHybrid;
+    }
+
     this.data = {
       availableFallbacks: [],
       identifierValue: data.identifierValue,
@@ -77,10 +89,10 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
 
-  async passkeyLogin(skipIfOnlyHybrid = false) {
+  async passkeyLogin() {
     this.#passkeyAborted = false;
 
-    const res = await this.app.authProcessService.loginWithPasskey(skipIfOnlyHybrid);
+    const res = await this.app.authProcessService.loginWithPasskey();
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {

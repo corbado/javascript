@@ -501,7 +501,7 @@ export class ProcessService {
 
   // perform a passkey login
   // if the procedure fails, clear the last identifier
-  async loginWithPasskey(skipIfOnlyHybrid = false): Promise<Result<ProcessResponse, CorbadoError>> {
+  async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       return respStart;
@@ -513,11 +513,7 @@ export class ProcessService {
       return respStart;
     }
 
-    const signedChallenge = await this.#webAuthnService.login(
-      respStart.val.blockBody.data.challenge,
-      false,
-      skipIfOnlyHybrid,
-    );
+    const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
     if (signedChallenge.err) {
       this.dropLastIdentifier(undefined);
 

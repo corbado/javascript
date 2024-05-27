@@ -210,7 +210,7 @@
         "body_prompt": "A passkey was found on your mobile device.",
         "body_passkeyVerificationMethod1": "Use your mobile device to log in.",
         "body_passkeyVerificationMethod2": "If your device is not paired, you will be prompted to scan the QR code.",
-        "button_login": "Use Mobile Device",
+        "button_login": "Use mobile device",
         "text_divider": "or",
         "button_switchToAlternate": {
           "emailOtp": "Continue with email",

@@ -7,7 +7,12 @@ import type {
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
 } from '@corbado/web-core';
-import { BlockType, OnlyHybridPasskeyAvailableError, VerificationMethod } from '@corbado/web-core';
+import {
+  BlockType,
+  checkIfOnlyHybridPasskeysAvailable,
+  OnlyHybridPasskeyAvailableError,
+  VerificationMethod,
+} from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -40,13 +45,10 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
         const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
 
         // If the challenge is a valid JSON, we check if the only available passkey is a hybrid passkey
-        const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
-          credential =>
-            credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
-        );
+        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
 
-        // If the only available passkey is a hybrid passkey, we skip the passkey background screen
-        if (!hasOtherTypesOfPasskeys) {
+        // If the only available passkey is a hybrid passkey, we skip the passkey backgorund screen
+        if (hasOnlyHybridPasskeys) {
           this.initialScreen = ScreenNames.PasskeyHybrid;
         }
       } catch (e) {

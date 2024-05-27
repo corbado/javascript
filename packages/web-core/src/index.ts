@@ -1,5 +1,4 @@
-export * from './utils/constants';
-export * from './utils/errors';
+export * from './utils';
 export * from './services';
 
 export * from './api';

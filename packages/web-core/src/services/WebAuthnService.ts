@@ -7,7 +7,7 @@ import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import type { JavaScriptHighEntropy } from '../api/v2';
-import { CorbadoError } from '../utils';
+import { checkIfOnlyHybridPasskeysAvailable, CorbadoError } from '../utils';
 const clientHandleKey = 'cbo_client_handle';
 
 /**
@@ -47,12 +47,9 @@ export class WebAuthnService {
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
 
       if (skipIfOnlyHybrid) {
-        const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
-          credential =>
-            credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
-        );
+        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
 
-        if (!hasOtherTypesOfPasskeys) {
+        if (hasOnlyHybridPasskeys) {
           return Err(CorbadoError.onlyHybridPasskeyAvailable());
         }
       }

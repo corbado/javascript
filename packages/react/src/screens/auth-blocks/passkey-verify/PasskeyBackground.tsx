@@ -30,7 +30,7 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
 
     passkeyLoginStarted.current = true;
 
-    void block.passkeyLogin();
+    void block.passkeyLogin(true);
   }, []);
 
   return (

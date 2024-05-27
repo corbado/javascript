@@ -35,14 +35,24 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
     this.authType = blockBody.authType;
 
-    const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
+    if (data.challenge) {
+      try {
+        const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
 
-    const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
-      credential => credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
-    );
+        // If the challenge is a valid JSON, we check if the only available passkey is a hybrid passkey
+        const hasOtherTypesOfPasskeys = challenge.publicKey?.allowCredentials?.some(
+          credential =>
+            credential.transports && credential.transports.some(transportType => transportType !== 'hybrid'),
+        );
 
-    if (!hasOtherTypesOfPasskeys) {
-      this.initialScreen = ScreenNames.PasskeyHybrid;
+        // If the only available passkey is a hybrid passkey, we skip the passkey background screen
+        if (!hasOtherTypesOfPasskeys) {
+          this.initialScreen = ScreenNames.PasskeyHybrid;
+        }
+      } catch (e) {
+        // If the challenge is not a valid JSON, we assume that the passkey is not a hybrid passkey
+        this.initialScreen = ScreenNames.PasskeyBackground;
+      }
     }
 
     this.data = {
@@ -89,10 +99,10 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
 
-  async passkeyLogin() {
+  async passkeyLogin(skipIfOnlyHybrid = false) {
     this.#passkeyAborted = false;
 
-    const res = await this.app.authProcessService.loginWithPasskey();
+    const res = await this.app.authProcessService.loginWithPasskey(skipIfOnlyHybrid);
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {

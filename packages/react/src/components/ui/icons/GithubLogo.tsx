@@ -1,5 +1,5 @@
 import githubSrc from '@corbado/shared-ui/assets/github.svg';
-import githubDarkSrc from '@corbado/shared-ui/assets/github_dark.svg';
+import githubDarkSrc from '@corbado/shared-ui/assets/github-dark.svg';
 import type { FC } from 'react';
 import React from 'react';
 

@@ -247,6 +247,38 @@
   text-align: center;
 }
 
+.cb-pk-hybrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.cb-pk-hybrid-prompt {
+  margin: 1.1rem auto;
+}
+
+.cb-pk-hybrid-icon {
+  width: 10rem;
+}
+
+.cb-pk-hybrid-verification-methods-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  text-align: center;
+  margin-bottom: 0.8rem;
+  margin-top: 0.8rem;
+  width: 80%;
+}
+
+.cb-pk-hybrid-divider {
+  width: 90%;
+  margin: 1rem auto;
+}
+
 .cb-email-block {
   width: 90%;
   margin-bottom: 1.5rem;

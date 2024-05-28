@@ -7,7 +7,7 @@ import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import type { JavaScriptHighEntropy } from '../api/v2';
-import { CorbadoError } from '../utils';
+import { checkIfOnlyHybridPasskeysAvailable, CorbadoError } from '../utils';
 const clientHandleKey = 'cbo_client_handle';
 
 /**
@@ -37,10 +37,23 @@ export class WebAuthnService {
     }
   }
 
-  async login(serializedChallenge: string, conditional: boolean): Promise<Result<string, CorbadoError>> {
+  async login(
+    serializedChallenge: string,
+    conditional: boolean,
+    skipIfOnlyHybrid = false,
+  ): Promise<Result<string, CorbadoError>> {
     try {
       const abortController = this.abortOngoingOperation();
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
+
+      if (skipIfOnlyHybrid) {
+        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
+
+        if (hasOnlyHybridPasskeys) {
+          return Err(CorbadoError.onlyHybridPasskeyAvailable());
+        }
+      }
+
       challenge.signal = abortController.signal;
       this.#abortController = abortController;
 

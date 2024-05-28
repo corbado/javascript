@@ -28,6 +28,20 @@
         },
         "body_point1": "Quick and secure login using face, fingerprint or PIN instead of passwords.",
         "body_point2": "Passkeys are stored on the device or in the cloud, accessible from connected devices.",
+        "platformBasedText": {
+          "windows": {
+            "body_point1": "Quick and secure login using Windows Hello instead of passwords.",
+            "body_point2": "Passkeys are stored on the device or in your password manager, accessible from connected devices."
+          },
+          "apple": {
+            "body_point1": "Quick and secure login using Apple Touch ID or Face ID instead of passwords.",
+            "body_point2": "Passkeys are stored on the device and in the iCloud Keychain, accessible from connected devices."
+          },
+          "android": {
+            "body_point1": "Quick and secure login using face unlock or touch unlock instead of passwords.",
+            "body_point2": "Passkeys are stored on the device and in your Google account, accessible from connected devices."
+          }
+        },
         "body_subtext": "Biometric data will never leave your device.",
         "button_start": {
           "create": "Create account",
@@ -191,6 +205,19 @@
           "phone": "Use phone verification"
         }
       },
+      "passkey-hybrid": {
+        "header": "Log in with a mobile passkey",
+        "body_prompt": "A passkey was found on your mobile device.",
+        "body_passkeyVerificationMethod1": "Use your mobile device to log in.",
+        "body_passkeyVerificationMethod2": "If your device is not paired, you will be prompted to scan the QR code.",
+        "button_login": "Use mobile device",
+        "text_divider": "or",
+        "button_switchToAlternate": {
+          "emailOtp": "Continue with email",
+          "emailLink": "Continue with email",
+          "phone": "Continue with phone"
+        }
+      },
       "passkey-error-light": {
         "header": "Use your passkey to confirm it's really you",
         "body_title": "Login for",
@@ -322,6 +349,7 @@
     "passkeyAlreadyExists": "Passkey for this device already exists",
     "unknownUser": "User does not exist",
     "noPasskeyAvailable": "No passkey available",
+    "onlyHybridPasskeyAvailable": "Only hybrid passkey available",
     "invalidPasskey": "The provided passkey is no longer valid. Log in using your email address instead.",
     "invalid_challenge_solution_email-otp": "The code is invalid or expired",
     "invalid_challenge_solution_email-link": "This link has expired",

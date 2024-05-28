@@ -30,6 +30,7 @@ import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/Pass
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
 import { PasskeyErrorLight } from '../../screens/auth-blocks/passkey-verify/PasskeyErrorLight';
+import { PasskeyHybrid } from '../../screens/auth-blocks/passkey-verify/PasskeyHybrid';
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
@@ -107,6 +108,8 @@ export const AuthFlow: FC = () => {
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyBackground:
             return <PasskeyBackground block={currentScreen.block as PasskeyVerifyBlock} />;
+          case ScreenNames.PasskeyHybrid:
+            return <PasskeyHybrid block={currentScreen.block as PasskeyVerifyBlock} />;
           case ScreenNames.PasskeyErrorLight:
             return <PasskeyErrorLight block={currentScreen.block as PasskeyVerifyBlock} />;
           case ScreenNames.PasskeyError:

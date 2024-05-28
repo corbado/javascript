@@ -11,11 +11,17 @@ import emailIcon from './assets/email.svg';
 import emaiLinkSuccessIcon from './assets/email-link-success.svg';
 import exclamationIcon from './assets/exclamation.svg';
 import expandIcon from './assets/expand.svg';
-import faceId from './assets/face-id.svg';
-import fingerprintIcon from './assets/fingerprint.svg';
+import faceIdAndroid from './assets/face-id-android.svg';
+import faceIdApple from './assets/face-id-apple.svg';
+import faceIdDefault from './assets/face-id-default.svg';
+import faceIdWindows from './assets/face-id-windows.svg';
+import fingerprintAndroid from './assets/fingerprint-android.svg';
+import fingerprintApple from './assets/fingerprint-apple.svg';
+import fingerprintDefault from './assets/fingerprint-default.svg';
+import fingerprintWindows from './assets/fingerprint-windows.svg';
 import firstPageIcon from './assets/first-page.svg';
 import githubIcon from './assets/github.svg';
-import githubDarkIcon from './assets/github_dark.svg';
+import githubDarkIcon from './assets/github-dark.svg';
 import gmailIcon from './assets/gmail.svg';
 import googleIcon from './assets/google.svg';
 import logoIcon from './assets/logo.svg';
@@ -24,6 +30,8 @@ import outlookIcon from './assets/outlook.svg';
 import passkeyAppendedIcon from './assets/passkey-appended.svg';
 import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
+import passkeyHybridIcon from './assets/passkey-hybrid.svg';
+import passkeyHybridDarkIcon from './assets/passkey-hybrid-dark.svg';
 import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
 import rightIcon from './assets/right-arrow.svg';
@@ -53,8 +61,6 @@ export const assets = {
   outlookIcon,
   editIcon,
   emailIcon,
-  faceId,
-  fingerprintIcon,
   cancelIcon,
   logoIcon,
   circleExclamationIcon,
@@ -76,4 +82,14 @@ export const assets = {
   syncIcon,
   visibilityIcon,
   addIcon,
+  faceIdDefault,
+  fingerprintDefault,
+  faceIdApple,
+  fingerprintApple,
+  faceIdAndroid,
+  fingerprintAndroid,
+  faceIdWindows,
+  fingerprintWindows,
+  passkeyHybridIcon,
+  passkeyHybridDarkIcon,
 };

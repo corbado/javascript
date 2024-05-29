@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 90%;
+  width: var(--cb-container-wide-width);
   align-self: center;
   margin-bottom: 0.75rem;
 }
@@ -12,7 +12,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: var(--cb-container-full-width);
 }
 
 .cb-input-label-text {
@@ -95,7 +95,7 @@
   align-items: center;
   border: 0px;
   padding-left: 0.8rem;
-  height: 100%;
+  height: var(--cb-container-full-width);
   border-top-left-radius: var(--cb-border-radius-sm);
   border-bottom-left-radius: var(--cb-border-radius-sm);
 }
@@ -115,7 +115,7 @@
 
 .cb-phone-input-field-selection {
   position: absolute;
-  width: 100%;
+  width: var(--cb-container-full-width);
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   background-color: var(--cb-box-color);
@@ -151,7 +151,7 @@
   flex: 4;
   border: 0px;
   height: calc(var(--cb-input-field-height) - 0.2rem);
-  width: 100%;
+  width: var(--cb-container-full-width);
   padding: 0 0.4rem;
   color: var(--cb-input-text-color);
   background-color: var(--cb-white);

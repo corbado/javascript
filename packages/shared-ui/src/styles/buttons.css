@@ -30,7 +30,7 @@ button.cb-primary-button {
   background-color: var(--cb-primary-color);
   border-radius: var(--cb-border-radius-sm);
   border: none;
-  width: 90%;
+  width: var(--cb-container-wide-width);
   font-family: var(--cb-primary-font);
   font-weight: var(--cb-font-weight-bold);
   cursor: pointer;

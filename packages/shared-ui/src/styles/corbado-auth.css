@@ -173,7 +173,7 @@
 }
 
 .cb-pk-error-light-header {
-  width: 220px;
+  width: var(--cb-container-medium-width);
 }
 
 .cb-pk-error-bloc-icons-section {
@@ -194,7 +194,7 @@
 
 .cb-pk-error-light-description {
   margin: 1rem auto 0.75rem;
-  width: 280px;
+  width: var(--cb-container-standard-width);
   text-align: center;
 }
 
@@ -543,4 +543,20 @@ button.cb-phone-otp-resend-button {
 .cb-last-identifier-skip-button {
   margin: 0.5rem auto 0.75rem auto;
   width: var(--cb-container-wide-width);
+}
+
+@media screen and (max-width: 399px) {
+  .cb-pk-error-light-header {
+    width: var(--cb-container-standard-width);
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .cb-otp-input-container {
+    gap: 0.5rem;
+  }
+
+  .cb-otp-input {
+    height: 2.8rem;
+  }
 }

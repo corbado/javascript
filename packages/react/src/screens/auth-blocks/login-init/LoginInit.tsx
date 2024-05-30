@@ -43,14 +43,14 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
 
   // we have to be very careful with conditionalUI as WebKit based browser historically had a number of "restrictions" on how we can start it
   useEffect(() => {
-    block.startConditionalUIOnPageLoad().then(result => {
+    void block.startConditionalUIOnPageLoad().then(result => {
       if (result) {
         console.log('CUI: page load');
         void block.continueWithConditionalUI();
       }
     });
 
-    block.startConditionalUIOnFirstUserInteraction().then(result => {
+    void block.startConditionalUIOnFirstUserInteraction().then(result => {
       if (result) {
         console.log('CUI: first click');
         setOnComponentClick(() => {

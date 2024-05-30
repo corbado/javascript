@@ -86,5 +86,3 @@ export enum ContinueOnOtherEnvReasons {
 }
 
 export const initScreenBlocks = [BlockTypes.SignupInit, BlockTypes.LoginInit];
-
-export const skipPasskeyAppendAfterHybridKey = 'cbo_skip_passkey_append_after_hybrid';

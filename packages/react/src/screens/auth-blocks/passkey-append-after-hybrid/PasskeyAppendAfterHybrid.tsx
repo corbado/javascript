@@ -2,18 +2,20 @@ import type { PasskeyAppendAfterHybridBlock } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
+import { Checkbox, Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
+import { LockIcon } from '../../../components/ui/icons/LockIcon';
 import { PasskeyAppendAfterHybridIcon } from '../../../components/ui/icons/PasskeyAppendAfterHybridIcon';
 
 export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterHybridBlock }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: `signup.passkey-append-after-hybrid.passkey-append-after-hybrid`,
+    keyPrefix: `${block.authType}.passkey-append-after-hybrid.passkey-append-after-hybrid`,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [dontShowAgainChecked, setDontShowAgainChecked] = useState<boolean>(false);
 
   const headerText = useMemo(() => t('header'), [t]);
   const bodyText = useMemo(() => t('body'), [t]);
-  //   const dontShowAgainText = useMemo(() => t('text_dontShowAgain'), [t]);
+  const dontShowAgainText = useMemo(() => t('text_dontShowAgain'), [t]);
   const primaryButtonText = useMemo(() => t('button_appendPasskey'), [t]);
   const secondaryButtonText = useMemo(() => t('button_continue'), [t]);
 
@@ -36,26 +38,38 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterH
     };
   }, [handleContinue]);
 
+  const handleDontShowAgainChange = useCallback(() => {
+    setDontShowAgainChecked(!dontShowAgainChecked);
+    block.skipBlockInFuture(!dontShowAgainChecked);
+  }, [dontShowAgainChecked]);
+
   return (
-    <div className='cb-pk-appended-bloc'>
+    <div className='cb-pk-append-after-hybrid'>
       <Header>{headerText}</Header>
-      <div className='cb-pk-appended-bloc-icon'>
+      <div className='cb-pk-append-after-hybrid-icon'>
         <PasskeyAppendAfterHybridIcon />
       </div>
-      <Text
-        level='2'
-        fontFamilyVariant='secondary'
-        className='cb-pk-appended-bloc-description'
-      >
-        {bodyText}
-      </Text>
+      <div className='cb-pk-append-after-hybrid-description'>
+        <LockIcon className='cb-pk-append-after-hybrid-description-icon' />
+        <Text
+          level='2'
+          fontFamilyVariant='secondary'
+        >
+          {bodyText}
+        </Text>
+      </div>
+      <Checkbox
+        label={dontShowAgainText}
+        checked={dontShowAgainChecked}
+        onChange={handleDontShowAgainChange}
+      />
       <PrimaryButton
         onClick={handleContinue}
         isLoading={loading}
       >
         {primaryButtonText}
       </PrimaryButton>
-      <div className='cb-pk-append-skip-button-section'>
+      <div className='cb-pk-append-after-hybrid-button'>
         <SecondaryButton
           onClick={() => void block.skipPasskeyAppend()}
           disabled={loading}

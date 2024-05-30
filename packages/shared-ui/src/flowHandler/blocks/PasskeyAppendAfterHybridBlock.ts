@@ -1,7 +1,7 @@
 import type { AuthType, GeneralBlockPasskeyAppendAfterHybrid } from '@corbado/web-core';
 import type { BlockBody, CorbadoApp, ProcessCommon } from '@corbado/web-core';
 
-import { BlockTypes, ScreenNames, skipPasskeyAppendAfterHybridKey } from '../constants';
+import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 import type { BlockDataPasskeyAppendAfterHybrid } from '../types';
@@ -44,8 +44,11 @@ export class PasskeyAppendAfterHybridBlock extends Block<BlockDataPasskeyAppendA
     this.#passkeyAborted = false;
 
     const res = await this.app.authProcessService.appendPasskey();
-
-    if (this.#passkeyAborted) {
+    if (res.err) {
+      // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
+      if (!this.#passkeyAborted) {
+        await this.app.authProcessService.skipBlock();
+      }
       return;
     }
 
@@ -61,7 +64,7 @@ export class PasskeyAppendAfterHybridBlock extends Block<BlockDataPasskeyAppendA
     return;
   }
 
-  skipBlockInFuture() {
-    localStorage.setItem(skipPasskeyAppendAfterHybridKey, 'true');
+  skipBlockInFuture(skip: boolean) {
+    this.app.authProcessService.skipPasskeyAppendAfterHybrid(skip);
   }
 }

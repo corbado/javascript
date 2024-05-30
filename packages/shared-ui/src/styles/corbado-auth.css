@@ -475,6 +475,39 @@ button.cb-phone-otp-resend-button {
   margin: 1.25rem auto 1rem;
 }
 
+.cb-pk-append-after-hybrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cb-pk-append-after-hybrid-icon {
+  width: 6rem;
+  margin: 1.2rem auto;
+}
+
+.cb-pk-append-after-hybrid-description {
+  display: flex;
+  flex-direction: row;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+  width: 90%;
+  align-self: center;
+}
+
+.cb-pk-append-after-hybrid-description-icon {
+  height: 1.5rem;
+  margin: auto;
+  flex: 0 0 10%;
+  max-width: 10%;
+}
+
+.cb-pk-append-after-hybrid-button {
+  display: flex;
+  flex-direction: column;
+  margin: 0.8rem auto;
+}
+
 .cb-login-init {
   display: flex;
   flex-direction: column;

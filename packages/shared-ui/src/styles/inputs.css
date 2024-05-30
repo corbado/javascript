@@ -219,3 +219,16 @@
   flex: 11;
   line-height: 1.2;
 }
+
+.cb-checkbox-input-field {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem auto 0.75rem;
+  align-items: center;
+}
+
+.cb-checkbox-input {
+  border: 1px solid var(--cb-border-color);
+  transform: scale(1.5);
+}

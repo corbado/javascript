@@ -737,46 +737,6 @@ export interface LoginIdentifier {
 /**
  * 
  * @export
- * @interface LoginIdentifierConfig
- */
-export interface LoginIdentifierConfig {
-    /**
-     * 
-     * @type {LoginIdentifierType1}
-     * @memberof LoginIdentifierConfig
-     */
-    'type': LoginIdentifierType1;
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginIdentifierConfig
-     */
-    'enforceVerification': LoginIdentifierConfigEnforceVerificationEnum;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof LoginIdentifierConfig
-     */
-    'useAsLoginIdentifier': boolean;
-    /**
-     * 
-     * @type {object}
-     * @memberof LoginIdentifierConfig
-     */
-    'metadata'?: object;
-}
-
-export const LoginIdentifierConfigEnforceVerificationEnum = {
-    None: 'none',
-    Signup: 'signup',
-    AtFirstLogin: 'at_first_login'
-} as const;
-
-export type LoginIdentifierConfigEnforceVerificationEnum = typeof LoginIdentifierConfigEnforceVerificationEnum[keyof typeof LoginIdentifierConfigEnforceVerificationEnum];
-
-/**
- * 
- * @export
  * @enum {string}
  */
 
@@ -787,21 +747,6 @@ export const LoginIdentifierType = {
 } as const;
 
 export type LoginIdentifierType = typeof LoginIdentifierType[keyof typeof LoginIdentifierType];
-
-
-/**
- * Login Identifier type
- * @export
- * @enum {string}
- */
-
-export const LoginIdentifierType1 = {
-    Email: 'email',
-    PhoneNumber: 'phone_number',
-    Custom: 'custom'
-} as const;
-
-export type LoginIdentifierType1 = typeof LoginIdentifierType1[keyof typeof LoginIdentifierType1];
 
 
 /**
@@ -1532,57 +1477,6 @@ export type SocialDataStatusEnum = typeof SocialDataStatusEnum[keyof typeof Soci
 /**
  * 
  * @export
- * @interface SocialProvider
- */
-export interface SocialProvider {
-    /**
-     * 
-     * @type {SocialProviderType}
-     * @memberof SocialProvider
-     */
-    'providerType': SocialProviderType;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SocialProvider
-     */
-    'enabled': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SocialProvider
-     */
-    'useOwnAccount': boolean;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof SocialProvider
-     */
-    'scopes': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialProvider
-     */
-    'clientID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialProvider
-     */
-    'clientSecret'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialProvider
-     */
-    'redirectURI'?: string;
-}
-
-
-/**
- * 
- * @export
  * @enum {string}
  */
 
@@ -1622,76 +1516,6 @@ export interface SocialVerifyStartReq {
 }
 
 
-/**
- * tbd.
- * @export
- * @interface UpdateComponentConfigReq
- */
-export interface UpdateComponentConfigReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateComponentConfigReq
-     */
-    'appName': string;
-    /**
-     * 
-     * @type {Array<LoginIdentifierConfig>}
-     * @memberof UpdateComponentConfigReq
-     */
-    'identifiers': Array<LoginIdentifierConfig>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateComponentConfigReq
-     */
-    'publicSignupEnabled': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateComponentConfigReq
-     */
-    'fullNameRequired': boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateComponentConfigReq
-     */
-    'passkeyAppendInterval': UpdateComponentConfigReqPasskeyAppendIntervalEnum;
-    /**
-     * 
-     * @type {Array<SocialProvider>}
-     * @memberof UpdateComponentConfigReq
-     */
-    'socialProviders'?: Array<SocialProvider>;
-}
-
-export const UpdateComponentConfigReqPasskeyAppendIntervalEnum = {
-    NotSpecified: 'not_specified',
-    _0d: '0d',
-    _1d: '1d',
-    _3d: '3d',
-    _1w: '1w',
-    _3w: '3w',
-    _1m: '1m',
-    _3m: '3m'
-} as const;
-
-export type UpdateComponentConfigReqPasskeyAppendIntervalEnum = typeof UpdateComponentConfigReqPasskeyAppendIntervalEnum[keyof typeof UpdateComponentConfigReqPasskeyAppendIntervalEnum];
-
-/**
- * 
- * @export
- * @interface UpdateComponentConfigRsp
- */
-export interface UpdateComponentConfigRsp {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateComponentConfigRsp
-     */
-    'success'?: boolean;
-}
 /**
  * 
  * @export
@@ -3268,48 +3092,6 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * tbd
-         * @param {UpdateComponentConfigReq} updateComponentConfigReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateComponentConfig: async (updateComponentConfigReq: UpdateComponentConfigReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'updateComponentConfigReq' is not null or undefined
-            assertParamExists('updateComponentConfig', 'updateComponentConfigReq', updateComponentConfigReq)
-            const localVarPath = `/v2/component-config`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateComponentConfigReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -3327,16 +3109,6 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
          */
         async getSessionConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionConfigRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionConfig(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * tbd
-         * @param {UpdateComponentConfigReq} updateComponentConfigReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateComponentConfig(updateComponentConfigReq: UpdateComponentConfigReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateComponentConfigRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateComponentConfig(updateComponentConfigReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3357,15 +3129,6 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
         getSessionConfig(options?: any): AxiosPromise<SessionConfigRsp> {
             return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
         },
-        /**
-         * tbd
-         * @param {UpdateComponentConfigReq} updateComponentConfigReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateComponentConfig(updateComponentConfigReq: UpdateComponentConfigReq, options?: any): AxiosPromise<UpdateComponentConfigRsp> {
-            return localVarFp.updateComponentConfig(updateComponentConfigReq, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -3384,17 +3147,6 @@ export class ConfigsApi extends BaseAPI {
      */
     public getSessionConfig(options?: AxiosRequestConfig) {
         return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * tbd
-     * @param {UpdateComponentConfigReq} updateComponentConfigReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConfigsApi
-     */
-    public updateComponentConfig(updateComponentConfigReq: UpdateComponentConfigReq, options?: AxiosRequestConfig) {
-        return ConfigsApiFp(this.configuration).updateComponentConfig(updateComponentConfigReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

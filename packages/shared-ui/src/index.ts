@@ -24,6 +24,7 @@ import githubIcon from './assets/github.svg';
 import githubDarkIcon from './assets/github-dark.svg';
 import gmailIcon from './assets/gmail.svg';
 import googleIcon from './assets/google.svg';
+import lockIcon from './assets/lock.svg';
 import logoIcon from './assets/logo.svg';
 import microsoftIcon from './assets/microsoft.svg';
 import outlookIcon from './assets/outlook.svg';
@@ -94,4 +95,5 @@ export const assets = {
   fingerprintWindows,
   passkeyHybridIcon,
   passkeyHybridDarkIcon,
+  lockIcon,
 };

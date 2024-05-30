@@ -53,6 +53,7 @@ export enum ScreenNames {
   PasskeyAppendAfterHybrid = 'passkey-append-after-hybrid',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',
+  PasskeyHybrid = 'passkey-hybrid',
   EditUserData = 'edit-user-data',
   EditEmail = 'edit-email',
   EditPhone = 'edit-phone',

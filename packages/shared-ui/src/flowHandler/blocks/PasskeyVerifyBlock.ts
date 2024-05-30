@@ -2,11 +2,17 @@ import type {
   AuthType,
   BlockBody,
   CorbadoApp,
+  CredentialRequestOptionsJSON,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
 } from '@corbado/web-core';
-import { BlockType, VerificationMethod } from '@corbado/web-core';
+import {
+  BlockType,
+  checkIfOnlyHybridPasskeysAvailable,
+  OnlyHybridPasskeyAvailableError,
+  VerificationMethod,
+} from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -17,7 +23,7 @@ import { Block } from './Block';
 export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   readonly data: BlockDataPasskeyVerify;
   readonly type = BlockTypes.PasskeyVerify;
-  readonly initialScreen = ScreenNames.PasskeyBackground;
+  readonly initialScreen: ScreenNames = ScreenNames.PasskeyBackground;
   readonly authType: AuthType;
 
   #passkeyAborted = false;
@@ -33,6 +39,24 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     const data = blockBody.data as GeneralBlockPasskeyAppend;
 
     this.authType = blockBody.authType;
+
+    if (data.challenge) {
+      try {
+        const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
+
+        // If the challenge is a valid JSON, we check if the only available passkey is a hybrid passkey
+        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
+
+        // If the only available passkey is a hybrid passkey, we skip the passkey backgorund screen
+        if (hasOnlyHybridPasskeys) {
+          this.initialScreen = ScreenNames.PasskeyHybrid;
+        }
+      } catch (e) {
+        // If the challenge is not a valid JSON, we assume that the passkey is not a hybrid passkey
+        this.initialScreen = ScreenNames.PasskeyBackground;
+      }
+    }
+
     this.data = {
       availableFallbacks: [],
       identifierValue: data.identifierValue,
@@ -77,16 +101,24 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
 
-  async passkeyLogin() {
+  async passkeyLogin(skipIfOnlyHybrid = false) {
     this.#passkeyAborted = false;
 
-    const res = await this.app.authProcessService.loginWithPasskey();
+    const res = await this.app.authProcessService.loginWithPasskey(skipIfOnlyHybrid);
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {
-        //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
-        //If the user tries again and fails, we show the regular error screen
-        if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {
+        if (res.val instanceof OnlyHybridPasskeyAvailableError) {
+          this.updateScreen(ScreenNames.PasskeyHybrid);
+          return;
+        }
+
+        if (
+          this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground ||
+          this.flowHandler.currentScreenName === ScreenNames.PasskeyHybrid
+        ) {
+          //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
+          //If the user tries again and fails, we show the regular error screen
           this.updateScreen(ScreenNames.PasskeyErrorLight);
         } else {
           this.updateScreen(ScreenNames.PasskeyError);

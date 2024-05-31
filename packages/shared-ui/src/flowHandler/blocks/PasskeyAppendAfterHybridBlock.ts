@@ -47,7 +47,8 @@ export class PasskeyAppendAfterHybridBlock extends Block<BlockDataPasskeyAppendA
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
       if (!this.#passkeyAborted) {
-        await this.app.authProcessService.skipBlock();
+        const newBlock = await this.app.authProcessService.skipBlock();
+        this.updateProcess(newBlock);
       }
       return;
     }

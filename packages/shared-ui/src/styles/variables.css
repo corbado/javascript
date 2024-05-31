@@ -34,6 +34,10 @@
   --cb-border-radius-sm: 0.5rem;
   --cb-error-font-size: 0.8rem;
   --cb-input-field-height: 2.2rem;
+  --cb-container-full-width: 100%;
+  --cb-container-wide-width: 90%;
+  --cb-container-standard-width: 83%;
+  --cb-container-medium-width: 75%;
 }
 
 .cb-dark {
@@ -60,4 +64,12 @@
   --cb-passkey-list-description-text-color: #d9d9d9;
   --cb-passkey-list-border-color: rgb(132 140 166 / 65%);
   --cb-passkey-list-border-hover-color: #ffffff;
+}
+
+@media screen and (max-width: 481px) {
+  :root {
+    --cb-container-wide-width: 97%;
+    --cb-container-standard-width: 94%;
+    --cb-container-medium-width: 85%;
+  }
 }

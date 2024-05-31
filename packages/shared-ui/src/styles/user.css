@@ -33,7 +33,7 @@
 }
 
 .cb-user-details-section-indentifiers-list-item-field-input {
-  width: 100%;
+  width: var(--cb-container-full-width);
 }
 
 .cb-user-details-section-indentifiers-list-item-badge {

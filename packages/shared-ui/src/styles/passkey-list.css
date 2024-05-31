@@ -1,6 +1,13 @@
-.cb-passkey-list-tile {
+.cb-passkey-list-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1.25rem 0rem;
+  text-align: left;
+}
+
+.cb-passkey-list-title {
   font-size: calc(var(--cb-base-font-size) * 1.9);
-  margin: 1rem 0rem 2rem 0rem;
+  margin: 0.5rem 0rem 2rem 0rem;
 }
 
 .cb-passkey-list-card {
@@ -112,7 +119,7 @@
 }
 
 button.cb-passkey-list-primary-button {
-  margin: 1.25rem 0;
+  margin-top: 1.25rem;
   max-width: 225px;
   height: 2.5rem;
   display: flex;

@@ -8,6 +8,7 @@
   border-radius: var(--cb-border-radius-lg);
   box-sizing: content-box;
   padding: 0;
+  text-align: left;
 }
 
 .cb-container-body {
@@ -68,7 +69,7 @@
 
 .cb-auth-change-section {
   margin: 0.6rem auto 1.5rem auto;
-  width: 90%;
+  width: var(--cb-container-wide-width);
 }
 
 .cb-disclaimer {
@@ -80,7 +81,7 @@
 .cb-spinner {
   margin: auto;
   border: 0.25rem solid transparent;
-  border-radius: 100%;
+  border-radius: var(--cb-container-full-width);
   animation: cb-spin-animation 0.75s linear infinite;
 }
 
@@ -113,7 +114,7 @@
   text-align: center;
   margin: 20px 0;
   align-self: center;
-  width: 90%;
+  width: var(--cb-container-wide-width);
 }
 
 .cb-divider-line {
@@ -130,8 +131,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: var(--cb-container-full-width);
+  height: var(--cb-container-full-width);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -191,8 +192,20 @@
   margin: 2rem auto 2.25rem auto;
 }
 
-@media screen and (max-width: 481px) {
+@media screen and (max-width: 481px) and (min-width: 400px) {
+  .cb-container {
+    width: 395px;
+  }
+}
+
+@media screen and (max-width: 399px) and (min-width: 361px) {
   .cb-container {
     width: 360px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .cb-container {
+    width: 300px;
   }
 }

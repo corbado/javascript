@@ -244,6 +244,15 @@
         "button_tryAgain": "Try again"
       }
     },
+    "passkey-append-after-hybrid": {
+      "passkey-append-after-hybrid": {
+        "header": "Add a passkey to this device",
+        "body": "Add a passkey on this device in order to not require any other devices for login.",
+        "text_dontShowAgain": "Don't show this again",
+        "button_appendPasskey": "Add new passkey",
+        "button_continue": "Continue without new passkey"
+      }
+    },
     "email-verify": {
       "email-otp": {
         "header": "Enter code to log in",

@@ -16,4 +16,5 @@ export {
   ContinueOnOtherDeviceReasonEnum,
   SocialProviderType,
   SocialDataStatusEnum,
+  GeneralBlockPasskeyAppendAfterHybrid,
 } from './v2';

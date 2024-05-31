@@ -43,7 +43,10 @@ export type BlockDataPasskeyVerify = {
 
 export type BlockDataPasskeyAppended = Record<string, never>;
 
-export type BlockDataSocialVerify = Record<string, never>;
+export type BlockDataPasskeyAppendAfterHybrid = {
+  translatedError?: string;
+  passkeyIconSet: string;
+};
 
 export type BlockDataMissingFields = {
   phone: TextFieldWithError | null;

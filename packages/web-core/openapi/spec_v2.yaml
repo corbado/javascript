@@ -27,26 +27,6 @@ tags:
     description: All API calls to manage users
 
 paths:
-  /v2/component-config:
-    post:
-      description: tbd
-      operationId: UpdateComponentConfig
-      tags:
-        - Configs
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/updateComponentConfigReq'
-      responses:
-        '200':
-          description: tbd
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/updateComponentConfigRsp'
-
   /v2/session-config:
     get:
       description: tbd
@@ -575,40 +555,6 @@ components:
       type: apiKey
 
   schemas:
-    updateComponentConfigReq:
-      type: object
-      description: tbd.
-      required:
-        - identifiers
-        - appName
-        - publicSignupEnabled
-        - fullNameRequired
-        - passkeyAppendInterval
-      properties:
-        appName:
-          type: string
-        identifiers:
-          type: array
-          items:
-            $ref: 'common.yml#/components/schemas/loginIdentifierConfig'
-        publicSignupEnabled:
-          type: boolean
-        fullNameRequired:
-          type: boolean
-        passkeyAppendInterval:
-          type: string
-          enum: [ 'not_specified', '0d', '1d', '3d', '1w', '3w', '1m', '3m' ]
-        socialProviders:
-          type: array
-          items:
-            $ref: '#/components/schemas/socialProvider'
-
-    updateComponentConfigRsp:
-      type: object
-      properties:
-        success:
-          type: boolean
-
     processInitReq:
       type: object
       description: tbd.
@@ -620,6 +566,8 @@ components:
         passkeyAppendShown:
           type: integer
           format: int64
+        optOutOfPasskeyAppendAfterHybrid:
+          type: boolean
         preferredBlock:
           $ref: '#/components/schemas/blockType'
 
@@ -986,6 +934,7 @@ components:
           type: object
           anyOf:
             - $ref: '#/components/schemas/generalBlockPasskeyAppend'
+            - $ref: '#/components/schemas/generalBlockPasskeyAppendAfterHybrid'
             - $ref: '#/components/schemas/generalBlockPasskeyVerify'
             - $ref: '#/components/schemas/generalBlockVerifyIdentifier'
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
@@ -1044,7 +993,7 @@ components:
 
     blockType:
       type: string
-      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify ]
+      enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify, passkey-append-after-hybrid ]
 
     authType:
       type: string
@@ -1053,6 +1002,10 @@ components:
     verificationMethod:
       type: string
       enum: [ email-link, email-otp, phone-otp ]
+
+    passkeyIconSet:
+      type: string
+      enum: [ default, apple, android, windows ]
 
     generalBlockSignupInit:
       type: object
@@ -1113,6 +1066,7 @@ components:
         - identifierValue
         - identifierType
         - autoSubmit
+        - passkeyIconSet
       properties:
         challenge:
           type: string
@@ -1122,6 +1076,19 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         autoSubmit:
           type: boolean
+        passkeyIconSet:
+          $ref: '#/components/schemas/passkeyIconSet'
+
+    generalBlockPasskeyAppendAfterHybrid:
+      type: object
+      required:
+        - challenge
+        - passkeyIconSet
+      properties:
+        challenge:
+          type: string
+        passkeyIconSet:
+          $ref: '#/components/schemas/passkeyIconSet'
 
     generalBlockPasskeyVerify:
       type: object
@@ -1191,7 +1158,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-          $ref: '#/components/schemas/javaScriptHighEntropy'
+            $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1223,9 +1190,10 @@ components:
     passkeyOperation:
       type: object
       required:
-        - operationType
-        - identifierValue
-        - identifierType
+          - operationType
+          - identifierValue
+          - identifierType
+          - isCDA
       properties:
         operationType:
           type: string
@@ -1234,6 +1202,8 @@ components:
           type: string
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
+        isCDA:
+          type: boolean
 
     continueOnOtherDevice:
       type: object
@@ -1263,21 +1233,21 @@ components:
         socialAccounts:
           type: array
           items:
-            $ref: '#/components/schemas/socialAccount'
+              $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-        - value
-        - type
-        - status
+          - value
+          - type
+          - status
       properties:
-        value:
-          type: string
-        type:
-          $ref: '#/components/schemas/loginIdentifierType'
-        status:
-          type: string
+          value:
+            type: string
+          type:
+            $ref: '#/components/schemas/loginIdentifierType'
+          status:
+            type: string
 
     socialAccount:
       type: object
@@ -1313,31 +1283,6 @@ components:
           type: string
         error:
           $ref: '#/components/schemas/requestError'
-
-    socialProvider:
-      type: object
-      required:
-        - providerType
-        - enabled
-        - useOwnAccount
-        - scopes
-      properties:
-        providerType:
-          $ref: 'common.yml#/components/schemas/socialProviderType'
-        enabled:
-          type: boolean
-        useOwnAccount:
-          type: boolean
-        scopes:
-          type: array
-          items:
-            type: string
-        clientID:
-          type: string
-        clientSecret:
-          type: string
-        redirectURI:
-          type: string
 
     requestError:
       type: object

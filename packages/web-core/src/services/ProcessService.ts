@@ -26,7 +26,7 @@ import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
-import { CorbadoError } from '../utils';
+import { CorbadoError, skipPasskeyAppendAfterHybridKey } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -262,6 +262,7 @@ export class ProcessService {
       },
       passkeyAppendShown: passkeyAppendShown ?? undefined,
       preferredBlock: frontendPreferredBlockType,
+      optOutOfPasskeyAppendAfterHybrid: localStorage.getItem(skipPasskeyAppendAfterHybridKey) === 'true',
     };
 
     return this.wrapWithErr(() => this.#authApi.processInit(req, { signal: abortController.signal }));
@@ -586,6 +587,11 @@ export class ProcessService {
 
     return flags.join(',');
   };
+
+  skipPasskeyAppendAfterHybrid(skip: boolean) {
+    const skipAppend = skip ? 'true' : 'false';
+    localStorage.setItem(skipPasskeyAppendAfterHybridKey, skipAppend);
+  }
 }
 
 // returns true if the current process does not contain any meaningful data any can thus be reset to a new process

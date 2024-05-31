@@ -4,3 +4,4 @@ export * from './OtpInput';
 export * from './OtpInputGroup';
 export * from './PhoneInput';
 export * from './PhoneInputField';
+export * from './Checkbox';

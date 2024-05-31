@@ -13,7 +13,13 @@ interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ id, label, checked, onChange, disabled, className }, ref) => {
     return (
-      <div className={`cb-checkbox-input-field${className ? ` ${className}` : ''}`}>
+      <label className={`cb-checkbox-input-field${className ? ` ${className}` : ''}`}>
+        <Text
+          level='2'
+          textColorVariant='secondary'
+        >
+          {label}
+        </Text>
         <input
           type='checkbox'
           id={id}
@@ -21,17 +27,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           onChange={onChange}
           disabled={disabled}
           ref={ref}
-          className='cb-checkbox-input'
         />
-        <label htmlFor={id}>
-          <Text
-            level='2'
-            textColorVariant='secondary'
-          >
-            {label}
-          </Text>
-        </label>
-      </div>
+        <span className='cb-checkbox-input'></span>
+      </label>
     );
   },
 );

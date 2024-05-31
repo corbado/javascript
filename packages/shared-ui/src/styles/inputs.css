@@ -221,14 +221,61 @@
 }
 
 .cb-checkbox-input-field {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+  display: block;
+  position: relative;
+  padding-left: 1.5rem;
   margin: 1.25rem auto 0.75rem;
-  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.cb-checkbox-input-field input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
 .cb-checkbox-input {
-  border: 1px solid var(--cb-border-color);
-  transform: scale(1.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: var(--cb-white);
+  border: 1px solid var(--cb-dark);
+  border-radius: 0.2rem;
+}
+
+.cb-checkbox-input-field:hover input~.cb-checkbox-input {
+  background-color: var(--cb-box-color-hover);
+}
+
+.cb-checkbox-input-field input:checked~.cb-checkbox-input {
+  background-color: var(--cb-primary-color);
+}
+
+/* Move the :after pseudo-element to .cb-checkbox-input */
+.cb-checkbox-input::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.cb-checkbox-input-field input:checked~.cb-checkbox-input::after {
+  display: block;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--cb-button-text-primary-color);
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

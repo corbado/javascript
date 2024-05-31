@@ -252,22 +252,22 @@
   border-radius: 0.2rem;
 }
 
-.cb-checkbox-input-field:hover input~.cb-checkbox-input {
+.cb-checkbox-input-field:hover input ~ .cb-checkbox-input {
   background-color: var(--cb-box-color-hover);
 }
 
-.cb-checkbox-input-field input:checked~.cb-checkbox-input {
+.cb-checkbox-input-field input:checked ~ .cb-checkbox-input {
   background-color: var(--cb-primary-color);
 }
 
 /* Move the :after pseudo-element to .cb-checkbox-input */
 .cb-checkbox-input::after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
 
-.cb-checkbox-input-field input:checked~.cb-checkbox-input::after {
+.cb-checkbox-input-field input:checked ~ .cb-checkbox-input::after {
   display: block;
   left: 5px;
   top: 2px;

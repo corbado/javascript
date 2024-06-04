@@ -24,6 +24,7 @@ const Dropdown = () => {
   }, [dropdownRef]);
 
   const handleItemClick = (id: string) => {
+    localStorage.clear();
     window.location.pathname = `/${id}/auth`;
   };
 

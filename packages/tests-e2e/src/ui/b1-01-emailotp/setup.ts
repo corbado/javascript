@@ -4,7 +4,7 @@ import { createProject } from '../../utils/helperFunctions/createProject';
 import { makeIdentifier, setBackendConfigs } from '../../utils/helperFunctions/setBackendConfigs';
 
 // eslint-disable-next-line no-empty-pattern
-setup('create b1.1 project', async ({}, testInfo) => {
+setup('set b1.1 configs', async ({}, testInfo) => {
   const projectId = await createProject('b1-01-emailotp', testInfo.project.name);
 
   await setBackendConfigs(projectId, [

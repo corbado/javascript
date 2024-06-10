@@ -9,7 +9,12 @@ test.describe('Login with email OTP proper user behavior', () => {
     }
     await loginFlow.loadAuth();
 
-    let [, email] = await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], false, false);
+    let [, email] = await loginFlow.createAccount(
+      [IdentifierType.Email],
+      [IdentifierVerification.EmailOtp],
+      false,
+      false,
+    );
 
     email = email ?? '';
     await page.getByText('Log in').click();

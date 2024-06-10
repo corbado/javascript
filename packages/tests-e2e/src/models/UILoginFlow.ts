@@ -114,7 +114,9 @@ export class UILoginFlow {
     }
     await this.page.getByRole('button', { name: 'Continue' }).click();
 
+    console.log('passkeySupported: ', passkeySupported);
     if (passkeySupported) {
+      console.log('passkey supported');
       await this.checkLandedOnScreen(ScreenNames.PasskeyAppend1);
 
       if (registerPasskey) {

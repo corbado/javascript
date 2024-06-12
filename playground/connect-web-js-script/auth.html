@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <title>SignIn - My Corbado App</title>
+  <script src="./bundle/index.js"></script>
+  <link
+    rel="stylesheet"
+    href="./bundle/index.css"
+  />
+</head>
+
+<body>
+<div id="conventional-login">
+  <h1>Sign In</h1>
+  <input
+    id="conventional-login-email"
+    type="email"
+    placeholder="Email"
+  />
+  <input
+    id="conventional-login-password"
+    type="password"
+    placeholder="Password"
+  />
+  <button
+    id="conventional-login-submit"
+    style="margin: 2rem 0.2rem"
+    type="button"
+    onclick="window.location.replace('/index.html')"
+  >
+    Sign In
+  </button>
+</div>
+<div id="corbado-auth"></div>
+
+<script type="module">
+  const projectID = 'pro-2';
+  const authElement = document.getElementById('corbado-auth');
+  <script type="module">
+    const projectID = 'pro-2';
+    const authElement = document.getElementById('corbado-auth');
+
+    Corbado.mountCorbadoConnectLogin(authElement, {
+    projectId: projectID,
+    fallbackUIContainerId: 'conventional-login',
+    fallbackUITextFieldId: 'conventional-login-email',
+    onLoaded: (msg) => console.log('component has loaded: ' + msg),
+    onComplete: (method) => window.location.replace('/index.html'),
+    frontendApiUrlSuffix: 'frontendapi.corbado-dev.io',
+  })
+  ;
+</script>
+
+Corbado.mountCorbadoConnectLogin(authElement, {
+projectId: projectID,
+fallbackUIContainerId: 'conventional-login',
+fallbackUITextFieldId: 'conventional-login-email',
+onLoaded: (msg) => console.log('component has loaded: ' + msg),
+onComplete: (method) => window.location.replace('/index.html'),
+frontendApiUrlSuffix: 'frontendapi.corbado-dev.io',
+});
+</script>
+</body>
+</html>

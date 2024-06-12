@@ -4,3 +4,5 @@ export * from './session';
 export * from './common';
 export * from './component';
 export * from './theme';
+
+export * from './connect';

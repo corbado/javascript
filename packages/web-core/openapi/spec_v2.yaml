@@ -537,6 +537,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/connect/login/init:
+    post:
+      description: tbd
+      operationId: ConnectLoginInit
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginInitReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginInitRsp'
+
+  /v2/connect/login/start:
+    post:
+      description: tbd
+      operationId: ConnectLoginStart
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginStartRsp'
+
+  /v2/connect/login/finish:
+    post:
+      description: tbd
+      operationId: ConnectLoginFinish
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginFinishRsp'
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -814,6 +874,69 @@ components:
       properties:
         id:
           type: string
+
+    connectLoginInitReq:
+      type: object
+      required:
+        - clientInformation
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+
+    connectLoginInitRsp:
+      type: object
+      required:
+        - token
+        - expiresAt
+        - frontendApiUrl
+        - loginAllowed
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: integer
+        frontendApiUrl:
+          type: string
+        loginAllowed:
+          type: boolean
+        conditionalUIChallenge:
+          type: string
+
+    connectLoginStartReq:
+      type: object
+      required:
+        - identifier
+      properties:
+        identifier:
+          type: string
+
+    connectLoginStartRsp:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+
+    connectLoginFinishReq:
+      type: object
+      required:
+        - signedChallenge
+        - isConditionalUI
+      properties:
+        isConditionalUI:
+          type: boolean
+        signedChallenge:
+          type: string
+
+    connectLoginFinishRsp:
+      type: object
+      required:
+        - passkeyOperation
+      properties:
+        passkeyOperation:
+          $ref: '#/components/schemas/passkeyOperation'
+
 
     passkey:
       type: object
@@ -1158,7 +1281,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-            $ref: '#/components/schemas/javaScriptHighEntropy'
+          $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1190,10 +1313,10 @@ components:
     passkeyOperation:
       type: object
       required:
-          - operationType
-          - identifierValue
-          - identifierType
-          - isCDA
+        - operationType
+        - identifierValue
+        - identifierType
+        - isCDA
       properties:
         operationType:
           type: string
@@ -1233,21 +1356,21 @@ components:
         socialAccounts:
           type: array
           items:
-              $ref: '#/components/schemas/socialAccount'
+            $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     socialAccount:
       type: object

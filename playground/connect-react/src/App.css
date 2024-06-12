@@ -1,0 +1,14 @@
+.conventional-login {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-width: 400px;
+  background-color: var(--cb-white);
+  box-sizing: content-box;
+  padding: 0;
+  text-align: left;
+}
+
+.input-field {
+  margin: .5rem 1rem;
+}

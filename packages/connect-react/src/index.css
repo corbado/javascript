@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+@import "css/light.css";
+@import "css/dark.css";
+
+:root {
+  --cb-font-family-primary: 'Space Grotesk', sans-serif;
+  --cb-font-family-secondary: 'Inter', sans-serif;
+  --cb-border-radius: 0.5rem;
+}
+
+.cb-connect-container {
+  font-family: var(--cb-font-family-primary);
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  background-color: var(--cb-color-surface);
+  box-sizing: content-box;
+  padding: 0;
+  text-align: left;
+}
+
+button.cb-primary-button {
+  padding: 0.6rem;
+  color: var(--cb-color-on-primary);
+  background-color: var(--cb-color-primary);
+  border-radius: var(--cb-border-radius);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
+}
+
+.cb-primary-button:hover,
+.cb-primary-button:focus,
+.cb-primary-button:active {
+  border: none;
+  opacity: 92%;
+}
+
+.cb-primary-button:disabled {
+  opacity: 84%;
+}
+
+.cb-input {
+  flex-grow: 1;
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-tertiary);
+  padding: .5rem .5rem;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-secondary);
+}
+
+.cb-input:focus {
+  outline: none;
+  border: 1px solid var(--cb-color-primary);
+}
+
+.cb-input:disabled {
+  background-color: var(--cb-input-disabled-color);
+}
+
+.cb-input-error {
+  border: 1px solid var(--cb-color-error);
+}
+
+.cb-input-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.cb-input-label {
+  margin: .25rem .5rem;
+}
+
+.cb-input-label-text {
+}
+
+/* loading spinners */
+.loader {
+  width: .75rem;
+  height: .75rem;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: content-box;
+  animation: rotation 1s linear infinite;
+  vertical-align: middle;
+}
+
+.loader-primary {
+  border-top-color: var(--cb-color-primary);
+  border-bottom-color: transparent;
+}
+
+.loader-on-primary {
+  border-color: var(--cb-color-on-primary);
+  border-bottom-color: transparent;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

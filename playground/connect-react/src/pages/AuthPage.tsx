@@ -1,4 +1,4 @@
-import { CorbadoConnectLogin } from '@corbado/react';
+import { CorbadoConnectLogin } from '@corbado/connect-react';
 
 const AuthPage = () => {
   return (

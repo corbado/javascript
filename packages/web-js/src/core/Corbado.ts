@@ -1,17 +1,11 @@
-import { CorbadoAuth, CorbadoConnectLogin, Login, PasskeyList, SignUp, User } from '@corbado/react';
-import type {
-  CorbadoAuthConfig,
-  CorbadoConnectLoginConfig,
-  CorbadoLoginConfig,
-  CorbadoSignUpConfig,
-} from '@corbado/types';
+import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
+import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
 import { CorbadoAppState } from '../models/CorbadoAppState';
 import type { CorbadoConfig } from '../types/core';
 import { mountComponent, unmountComponent } from '../ui/mountComponent';
-import { mountConnectComponent, unmountConnectComponent } from '../ui/mountConnectComponent';
 
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
@@ -88,14 +82,6 @@ export class Corbado {
     this.#unmountComponent(element);
   }
 
-  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
-    this.#mountConnectComponent(element, CorbadoConnectLogin, options);
-  }
-
-  unmountCorbadoConnectLogin(element: HTMLElement) {
-    this.#unmountConnectComponent(element);
-  }
-
   logout() {
     if (!this.#corbadoAppState) {
       throw new Error('Please call load() before logging out');
@@ -141,25 +127,6 @@ export class Corbado {
     const existingRoot = this.#componentInstances.get(element);
     if (existingRoot) {
       unmountComponent(existingRoot);
-    }
-  };
-
-  #mountConnectComponent = <T extends Record<string, any>>(
-    element: HTMLElement,
-    Component: FC<T>,
-    componentOptions: T,
-  ) => {
-    this.#unmountConnectComponent(element);
-
-    const root = mountConnectComponent(element, Component, componentOptions);
-
-    this.#componentInstances.set(element, root);
-  };
-
-  #unmountConnectComponent = (element: HTMLElement) => {
-    const existingRoot = this.#componentInstances.get(element);
-    if (existingRoot) {
-      unmountConnectComponent(existingRoot);
     }
   };
 

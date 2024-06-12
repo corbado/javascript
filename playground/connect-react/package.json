@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@corbado/react": "*",
-    "libphonenumber-js": "^1.10.59",
+    "@corbado/connect-react": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-phone-number-input": "^3.3.9",

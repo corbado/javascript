@@ -5,14 +5,14 @@ import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import React from 'react';
 
-import { LoadingSpinner } from '../../components';
+import withTheme from './hoc/withTheme';
 import LoginAllowedScreen from './LoginAllowedScreen';
+import { LoadingSpinner } from './shared/LoadingSpinner';
 
 enum LoginState {
   Loading,
   LoginDisallowed,
   LoginAllowed,
-  LoginAllowedFallback,
 }
 
 const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = ({
@@ -87,7 +87,7 @@ const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = ({
 
     fallbackTextField.setAttribute('value', identifier);
 
-    setLoginState(LoginState.LoginAllowedFallback);
+    setLoginState(LoginState.LoginDisallowed);
   }, []);
 
   switch (loginState) {
@@ -104,9 +104,7 @@ const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = ({
           onFallback={onFallback}
         />
       );
-    case LoginState.LoginAllowedFallback:
-      return <div></div>;
   }
 };
 
-export default CorbadoConnectLogin;
+export default withTheme(CorbadoConnectLogin);

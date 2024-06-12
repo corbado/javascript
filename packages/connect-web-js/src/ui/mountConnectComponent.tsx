@@ -4,7 +4,7 @@ import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mountConnectComponent<T extends Record<string, any>>(
+export function mountComponent<T extends Record<string, any>>(
   element: HTMLElement,
   Component: FC<T>,
   componentOptions: T,
@@ -19,6 +19,6 @@ export function mountConnectComponent<T extends Record<string, any>>(
   return root;
 }
 
-export function unmountConnectComponent(root: Root) {
+export function unmountComponent(root: Root) {
   root.unmount();
 }

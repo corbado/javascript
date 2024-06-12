@@ -2,8 +2,8 @@ import { PasskeyChallengeCancelledError } from '@corbado/web-core';
 import type { ConnectService } from '@corbado/web-core/dist/services/ConnectService';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { PrimaryButton } from '../../components';
-import InputField from '../../components/ui/input/InputField';
+import InputField from './shared/InputField';
+import { PrimaryButton } from './shared/PrimaryButton';
 
 type Props = {
   connectService: ConnectService;
@@ -54,17 +54,16 @@ const LoginAllowedScreen = ({ connectService, onComplete, onFallback, conditiona
   return (
     <div className='cb-connect-container'>
       <InputField
-        label='Email address'
         id='email'
         name='email'
         type='email'
         autoComplete='username webauthn'
         autoFocus={true}
+        placeholder='Email address'
         ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
       />
       <PrimaryButton
         type='submit'
-        className='cb-signup-form-submit-button'
         isLoading={loading}
         onClick={() => void handleSubmit()}
       >

@@ -1,4 +1,4 @@
-import type { ConnectLoginInitData } from './login';
+import type { ConnectAppendInitData, ConnectLoginInitData } from './login';
 
 const storageKey = 'cbo_connect_process';
 
@@ -7,12 +7,20 @@ export class ConnectProcess {
   readonly frontendApiUrl: string;
   readonly expiresAt: number;
   readonly loginData: ConnectLoginInitData | null;
+  readonly appendData: ConnectAppendInitData | null;
 
-  constructor(id: string, expiresAt: number, frontendApiUrl: string, loginData: ConnectLoginInitData | null) {
+  constructor(
+    id: string,
+    expiresAt: number,
+    frontendApiUrl: string,
+    loginData: ConnectLoginInitData | null,
+    appendData: ConnectAppendInitData | null,
+  ) {
     this.id = id;
     this.expiresAt = expiresAt;
     this.frontendApiUrl = frontendApiUrl;
     this.loginData = loginData;
+    this.appendData = appendData;
   }
 
   isValid(): boolean {
@@ -20,7 +28,11 @@ export class ConnectProcess {
   }
 
   copyWithLoginData(loginData: ConnectLoginInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.expiresAt, this.frontendApiUrl, loginData);
+    return new ConnectProcess(this.id, this.expiresAt, this.frontendApiUrl, loginData, this.appendData);
+  }
+
+  copyWithAppendData(appendData: ConnectAppendInitData): ConnectProcess {
+    return new ConnectProcess(this.id, this.expiresAt, this.frontendApiUrl, this.loginData, appendData);
   }
 
   static loadFromStorage(): ConnectProcess | undefined {
@@ -29,8 +41,8 @@ export class ConnectProcess {
       return undefined;
     }
 
-    const { id, expiresAt, frontendApiUrl, loginData } = JSON.parse(serialized);
-    const process = new ConnectProcess(id, expiresAt, frontendApiUrl, loginData);
+    const { id, expiresAt, frontendApiUrl, loginData, appendData } = JSON.parse(serialized);
+    const process = new ConnectProcess(id, expiresAt, frontendApiUrl, loginData, appendData);
     if (!process.isValid()) {
       return undefined;
     }
@@ -46,6 +58,7 @@ export class ConnectProcess {
         expiresAt: this.expiresAt,
         frontendApiUrl: this.frontendApiUrl,
         loginData: this.loginData,
+        appendData: this.appendData,
       }),
     );
   }

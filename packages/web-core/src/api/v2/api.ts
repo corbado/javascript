@@ -320,6 +320,114 @@ export interface ClientInformation {
 /**
  * 
  * @export
+ * @interface ConnectAppendFinishReq
+ */
+export interface ConnectAppendFinishReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendFinishReq
+     */
+    'signedChallenge': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendFinishRsp
+ */
+export interface ConnectAppendFinishRsp {
+    /**
+     * 
+     * @type {PasskeyOperation}
+     * @memberof ConnectAppendFinishRsp
+     */
+    'passkeyOperation': PasskeyOperation;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendInitReq
+ */
+export interface ConnectAppendInitReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof ConnectAppendInitReq
+     */
+    'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendInitReq
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendInitRsp
+ */
+export interface ConnectAppendInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'processID': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectAppendInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectAppendInitRsp
+     */
+    'appendAllowed': boolean;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendInitRsp
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendStartReq
+ */
+export interface ConnectAppendStartReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartReq
+     */
+    'appendTokenValue': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendStartRsp
+ */
+export interface ConnectAppendStartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartRsp
+     */
+    'challenge': string;
+}
+/**
+ * 
+ * @export
  * @interface ConnectLoginFinishReq
  */
 export interface ConnectLoginFinishReq {
@@ -361,6 +469,12 @@ export interface ConnectLoginInitReq {
      * @memberof ConnectLoginInitReq
      */
     'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectLoginInitReq
+     */
+    'flags': { [key: string]: string; };
 }
 /**
  * 
@@ -398,6 +512,12 @@ export interface ConnectLoginInitRsp {
      * @memberof ConnectLoginInitRsp
      */
     'conditionalUIChallenge'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectLoginInitRsp
+     */
+    'flags': { [key: string]: string; };
 }
 /**
  * 
@@ -3268,6 +3388,132 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * tbd
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendFinish: async (connectAppendFinishReq: ConnectAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendFinishReq' is not null or undefined
+            assertParamExists('connectAppendFinish', 'connectAppendFinishReq', connectAppendFinishReq)
+            const localVarPath = `/v2/connect/append/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendInit: async (connectAppendInitReq: ConnectAppendInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendInitReq' is not null or undefined
+            assertParamExists('connectAppendInit', 'connectAppendInitReq', connectAppendInitReq)
+            const localVarPath = `/v2/connect/append/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendStart: async (connectAppendStartReq: ConnectAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendStartReq' is not null or undefined
+            assertParamExists('connectAppendStart', 'connectAppendStartReq', connectAppendStartReq)
+            const localVarPath = `/v2/connect/append/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * tbd
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3404,6 +3650,36 @@ export const ConnectApiFp = function(configuration?: Configuration) {
     return {
         /**
          * tbd
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendFinishRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendFinish(connectAppendFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendInit(connectAppendInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendStart(connectAppendStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * tbd
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3444,6 +3720,33 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * tbd
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: any): AxiosPromise<ConnectAppendFinishRsp> {
+            return localVarFp.connectAppendFinish(connectAppendFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: any): AxiosPromise<ConnectAppendInitRsp> {
+            return localVarFp.connectAppendInit(connectAppendInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: any): AxiosPromise<ConnectAppendStartRsp> {
+            return localVarFp.connectAppendStart(connectAppendStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * tbd
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3479,6 +3782,39 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class ConnectApi extends BaseAPI {
+    /**
+     * tbd
+     * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConnectApi
+     */
+    public connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: AxiosRequestConfig) {
+        return ConnectApiFp(this.configuration).connectAppendFinish(connectAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {ConnectAppendInitReq} connectAppendInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConnectApi
+     */
+    public connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: AxiosRequestConfig) {
+        return ConnectApiFp(this.configuration).connectAppendInit(connectAppendInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * tbd
+     * @param {ConnectAppendStartReq} connectAppendStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConnectApi
+     */
+    public connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig) {
+        return ConnectApiFp(this.configuration).connectAppendStart(connectAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * tbd
      * @param {ConnectLoginFinishReq} connectLoginFinishReq 

@@ -5,12 +5,18 @@ import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { ConnectLoginFinishRsp } from '../api/v2';
-import { ConnectApi, type ProcessInitReq } from '../api/v2';
+import type {
+  ConnectAppendFinishRsp,
+  ConnectAppendInitReq,
+  ConnectLoginFinishRsp,
+  ConnectLoginInitReq,
+} from '../api/v2';
+import { ConnectApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
+import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectProcess } from '../models/connect/connectProcess';
-import type { ConnectLoginInitData } from '../models/connect/login';
-import { CorbadoError, skipPasskeyAppendAfterHybridKey } from '../utils';
+import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
+import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -119,15 +125,16 @@ export class ConnectService {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const maybeClientHandle = WebAuthnService.getClientHandle();
+    const flags = ConnectFlags.loadFromStorage();
 
-    const req: ProcessInitReq = {
+    const req: ConnectLoginInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
-      optOutOfPasskeyAppendAfterHybrid: localStorage.getItem(skipPasskeyAppendAfterHybridKey) === 'true',
+      flags: flags.getItemsObject(),
     };
 
     const res = await this.wrapWithErr(() =>
@@ -147,10 +154,14 @@ export class ConnectService {
       const p = existingProcess.copyWithLoginData(loginData);
       p.persistToStorage();
     } else {
-      const newProcess = new ConnectProcess(res.val.token, res.val.expiresAt, res.val.frontendApiUrl, loginData);
+      const newProcess = new ConnectProcess(res.val.token, res.val.expiresAt, res.val.frontendApiUrl, loginData, null);
       this.#setApisV2(newProcess);
       newProcess.persistToStorage();
     }
+
+    // persist flags
+    flags.addItemsObject(res.val.flags);
+    flags.persistToStorage();
 
     return Ok(loginData);
   }
@@ -191,6 +202,89 @@ export class ConnectService {
     }
 
     return this.#loginFinish(res.val, true);
+  }
+
+  async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage();
+    if (existingProcess?.isValid()) {
+      log.debug('process exists, preparing api clients');
+      this.#setApisV2(existingProcess);
+    }
+
+    // process has already been initialized
+    if (existingProcess?.appendData) {
+      return Ok(existingProcess.appendData);
+    }
+
+    const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const maybeClientHandle = WebAuthnService.getClientHandle();
+    const flags = ConnectFlags.loadFromStorage();
+
+    const req: ConnectAppendInitReq = {
+      clientInformation: {
+        bluetoothAvailable: bluetoothAvailable,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: maybeClientHandle ?? undefined,
+        javaScriptHighEntropy: javaScriptHighEntropy,
+      },
+      flags: flags.getItemsObject(),
+    };
+
+    const res = await this.wrapWithErr(() =>
+      this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
+    );
+    if (res.err) {
+      return res;
+    }
+
+    const appendData: ConnectAppendInitData = {
+      appendAllowed: res.val.appendAllowed,
+    };
+
+    // update local state with process
+    if (existingProcess) {
+      const p = existingProcess.copyWithAppendData(appendData);
+      p.persistToStorage();
+    } else {
+      const newProcess = new ConnectProcess(
+        res.val.processID,
+        res.val.expiresAt,
+        res.val.frontendApiUrl,
+        null,
+        appendData,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
+
+    // persist flags
+    flags.addItemsObject(res.val.flags);
+    flags.persistToStorage();
+
+    return Ok(appendData);
+  }
+
+  async append(appendTokenValue: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage();
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const resStart = await this.wrapWithErr(() =>
+      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue }),
+    );
+    if (resStart.err) {
+      return resStart;
+    }
+
+    const platformRes = await this.#webAuthnService.createPasskey(resStart.val.challenge);
+    if (platformRes.err) {
+      return platformRes;
+    }
+
+    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ signedChallenge: platformRes.val }));
   }
 
   async #loginFinish(

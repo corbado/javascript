@@ -597,6 +597,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/connectLoginFinishRsp'
 
+  /v2/connect/append/init:
+    post:
+      description: tbd
+      operationId: ConnectAppendInit
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendInitReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendInitRsp'
+
+  /v2/connect/append/start:
+    post:
+      description: tbd
+      operationId: ConnectAppendStart
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendStartReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendStartRsp'
+
+  /v2/connect/append/finish:
+    post:
+      description: tbd
+      operationId: ConnectAppendFinish
+      tags:
+        - Connect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendFinishReq'
+      responses:
+        '200':
+          description: tbd
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendFinishRsp'
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -879,9 +939,14 @@ components:
       type: object
       required:
         - clientInformation
+        - flags
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformation'
+        flags:
+          type: object
+          additionalProperties:
+            type: string
 
     connectLoginInitRsp:
       type: object
@@ -890,6 +955,7 @@ components:
         - expiresAt
         - frontendApiUrl
         - loginAllowed
+        - flags
       properties:
         token:
           type: string
@@ -901,6 +967,10 @@ components:
           type: boolean
         conditionalUIChallenge:
           type: string
+        flags:
+          type: object
+          additionalProperties:
+            type: string
 
     connectLoginStartReq:
       type: object
@@ -937,6 +1007,72 @@ components:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
 
+    connectAppendInitReq:
+      type: object
+      required:
+        - clientInformation
+        - flags
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectAppendInitRsp:
+      type: object
+      required:
+        - processID
+        - expiresAt
+        - frontendApiUrl
+        - appendAllowed
+        - flags
+      properties:
+        processID:
+          type: string
+        expiresAt:
+          type: integer
+        frontendApiUrl:
+          type: string
+        appendAllowed:
+          type: boolean
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectAppendStartReq:
+      type: object
+      required:
+        - appendTokenValue
+      properties:
+        appendTokenValue:
+          type: string
+
+    connectAppendStartRsp:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+
+    connectAppendFinishReq:
+      type: object
+      required:
+        - signedChallenge
+      properties:
+        signedChallenge:
+          type: string
+
+    connectAppendFinishRsp:
+      type: object
+      required:
+        - passkeyOperation
+      properties:
+        passkeyOperation:
+          $ref: '#/components/schemas/passkeyOperation'
 
     passkey:
       type: object

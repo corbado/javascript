@@ -3,6 +3,6 @@ export interface ConnectLoginInitData {
   conditionalUIChallenge: string | null;
 }
 
-export interface ConnectLoginStartData {
-  challenge: string;
+export interface ConnectAppendInitData {
+  appendAllowed: boolean;
 }

@@ -9,7 +9,7 @@ export const AuthDetails = () => {
       <div className='sub-container'>
         <button
           onClick={async () => {
-            navigate(`/auth`);
+            navigate(`/login`);
           }}
         >
           Logout

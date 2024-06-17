@@ -1,6 +1,9 @@
 import { CorbadoConnectLogin } from '@corbado/connect-react';
+import { useNavigate } from 'react-router-dom';
 
-const AuthPage = () => {
+const LoginPage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div id='conventional-login'>
@@ -18,7 +21,7 @@ const AuthPage = () => {
           />
           <button
             type='button'
-            onClick={() => window.location.replace('/home')}
+            onClick={() => navigate('/home')}
           >
             Login
           </button>
@@ -30,12 +33,16 @@ const AuthPage = () => {
           fallbackUIContainerId='conventional-login'
           fallbackUITextFieldId='conventional-login-email'
           onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-          onComplete={(method: string) => window.location.replace('/home')}
+          onComplete={(method: string) => navigate('/home')}
           frontendApiUrlSuffix='frontendapi.corbado-dev.io'
         />
+      </div>
+      <div>
+        <p>Create an account.</p>
+        <button onClick={() => navigate(`/signup`)}>Signup</button>
       </div>
     </>
   );
 };
 
-export default AuthPage;
+export default LoginPage;

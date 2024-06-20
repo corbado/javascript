@@ -374,7 +374,7 @@ components:
         requestID:
           $ref: '#/components/schemas/requestID'
         link:
-          description: Link to dashboard with details about request
+          description: Link to home with details about request
           type: string
           example: 'https://my.corbado.com/requests/req-xxxxxxxxxxxxxxxxxxx'
 

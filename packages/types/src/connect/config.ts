@@ -4,7 +4,7 @@ export type CorbadoConnectLoginConfig = {
   fallbackUITextFieldId: string;
 
   onLoaded(message: string): void;
-  onComplete(method: string): void;
+  onComplete(session: string): void;
 
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;

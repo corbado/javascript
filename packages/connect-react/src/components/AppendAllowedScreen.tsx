@@ -29,21 +29,25 @@ const AppendAllowedScreen = ({ connectService, onComplete, onSkip, appendToken }
 
   return (
     <div className='cb-connect-container'>
-      Do you want to append a passkey?
-      <PrimaryButton
-        type='submit'
-        isLoading={loading}
-        onClick={() => void handleSubmit()}
-      >
-        Yes
-      </PrimaryButton>
-      <PrimaryButton
-        type='submit'
-        isLoading={loading}
-        onClick={() => void onSkip()}
-      >
-        No
-      </PrimaryButton>
+      <p>Do you want to append a passkey?</p>
+      <p>
+        <PrimaryButton
+          type='submit'
+          isLoading={loading}
+          onClick={() => void handleSubmit()}
+        >
+          Activate your passkey
+        </PrimaryButton>
+      </p>
+      <p>
+        <PrimaryButton
+          type='submit'
+          isLoading={loading}
+          onClick={() => void onSkip()}
+        >
+          Skip for now
+        </PrimaryButton>
+      </p>
     </div>
   );
 };

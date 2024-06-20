@@ -8,7 +8,7 @@ import { PrimaryButton } from './shared/PrimaryButton';
 type Props = {
   connectService: ConnectService;
   conditionalUIChallenge: string | null;
-  onComplete: (method: string) => void;
+  onComplete: (session: string) => void;
   onFallback: (identifier: string) => void;
 };
 
@@ -26,13 +26,18 @@ const LoginAllowedScreen = ({ connectService, onComplete, onFallback, conditiona
 
         if (res.err) {
           onFallback('');
+          return;
         }
 
-        onComplete('');
+        onComplete(res.val.session);
       }
     };
 
     void init();
+
+    return () => {
+      connectService.dispose();
+    };
   }, [conditionalUIChallenge]);
 
   const handleSubmit = useCallback(async () => {
@@ -48,7 +53,8 @@ const LoginAllowedScreen = ({ connectService, onComplete, onFallback, conditiona
     }
 
     setLoading(false);
-    onComplete('');
+    console.log('on complete', res.val.session);
+    onComplete(res.val.session);
   }, []);
 
   return (

@@ -1003,9 +1003,12 @@ components:
       type: object
       required:
         - passkeyOperation
+        - session
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
+        session:
+          type: string
 
     connectAppendInitReq:
       type: object

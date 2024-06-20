@@ -287,6 +287,10 @@ export class ConnectService {
     return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ signedChallenge: platformRes.val }));
   }
 
+  dispose() {
+    this.#webAuthnService.abortOngoingOperation();
+  }
+
   async #loginFinish(
     signedChallenge: string,
     isConditionalUI: boolean,

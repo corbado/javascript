@@ -456,6 +456,12 @@ export interface ConnectLoginFinishRsp {
      * @memberof ConnectLoginFinishRsp
      */
     'passkeyOperation': PasskeyOperation;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'session': string;
 }
 /**
  * 

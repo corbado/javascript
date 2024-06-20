@@ -19,6 +19,7 @@ export class ConnectFlags {
     }
 
     const { items } = JSON.parse(serialized);
+    console.log('connectFlags:', items);
 
     return new ConnectFlags(items);
   }
@@ -43,8 +44,14 @@ export class ConnectFlags {
   }
 
   addItemsObject(items: Record<string, string>) {
-    const newItems = Object.entries(items).map(([name, value]) => ({ name, value }));
-    this.items.push(...newItems);
+    for (const [name, value] of Object.entries(items)) {
+      const existing = this.items.find(item => item.name === name);
+      if (existing) {
+        existing.value = value;
+      } else {
+        this.items.push({ name, value });
+      }
+    }
   }
 
   static clearStorage() {

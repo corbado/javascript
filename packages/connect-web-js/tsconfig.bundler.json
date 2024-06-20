@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@corbado/web-core": ["../web-core/src"],
-      "@corbado/connect-react": ["../react/connect-src"]
+      "@corbado/connect-react": ["../connect-react/src"]
     }
   }
 }

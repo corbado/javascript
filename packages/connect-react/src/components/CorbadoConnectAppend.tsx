@@ -52,7 +52,7 @@ const CorbadoConnectAppend: FC<CorbadoConnectAppendConfig> = ({
 
     const abortController = new AbortController();
     init(abortController).catch(e => {
-      console.error(e);
+      console.error(`init error: ${e}`);
     });
 
     return () => {

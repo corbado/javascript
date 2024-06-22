@@ -2,50 +2,38 @@
 
 import { useRouter } from 'next/navigation';
 import { CorbadoConnectLogin } from '@corbado/connect-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import ConventionalLogin from '@/app/login/ConventionalLogin';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [conventionalLoginVisible, setConventionalLoginVisible] = useState(false);
+  const [email, setEmail] = useState('');
+
+  console.log('conventionalLoginVisible', conventionalLoginVisible);
 
   return (
-    <>
-      <div
-        id='conventional-login'
-        style={{ display: 'none' }}
-      >
-        <div className='conventional-login'>
-          <input
-            type='text'
-            className='input-field'
-            id='conventional-login-email'
-            placeholder='Username'
-          />
-          <input
-            type='password'
-            className='input-field'
-            placeholder='Password'
-          />
-          <button
-            type='button'
-            onClick={() => router.push('/home')}
-          >
-            Login
-          </button>
+    <div className='w-full flex justify-center'>
+      <div className='w-96 my-4 mx-4'>
+        <div className='login-area'>
+          {conventionalLoginVisible ? <ConventionalLogin initialEmail={email} /> : null}
+          <div className='component'>
+            <CorbadoConnectLogin
+              projectId='pro-2'
+              onFallback={(email: string) => {
+                setEmail(email);
+                setConventionalLoginVisible(true);
+                console.log('onFallback', email);
+              }}
+              onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
+              onComplete={(method: string) => router.push('/home')}
+              frontendApiUrlSuffix='frontendapi.corbado-dev.io'
+              onSignupClick={() => router.push('/signup')}
+            />
+          </div>
         </div>
       </div>
-      <div className='component'>
-        <CorbadoConnectLogin
-          projectId='pro-2'
-          fallbackUIContainerId='conventional-login'
-          fallbackUITextFieldId='conventional-login-email'
-          onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-          onComplete={(method: string) => router.push('/home')}
-          frontendApiUrlSuffix='frontendapi.corbado-dev.io'
-        />
-      </div>
-      <div>
-        <p>Create an account.</p>
-        <button onClick={() => router.push(`/signup`)}>Signup</button>
-      </div>
-    </>
+    </div>
   );
 }

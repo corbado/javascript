@@ -59,7 +59,7 @@ export class CorbadoError extends Error {
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;
-    console.log('errorRespRaw', errorRespRaw.error.type);
+    log.debug('errorRespRaw', errorRespRaw.error.type);
     const errorResp = errorRespRaw.error;
     switch (errorResp.type) {
       case 'process_not_available':
@@ -70,7 +70,7 @@ export class CorbadoError extends Error {
   }
 
   static fromDOMException(e: DOMException): CorbadoError {
-    console.log('e', e.name, e.message);
+    log.debug('e', e.name, e.message);
     switch (e.name) {
       case 'NotAllowedError':
       case 'AbortError':

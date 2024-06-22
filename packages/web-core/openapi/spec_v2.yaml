@@ -25,6 +25,8 @@ tags:
     description: All API calls to manage configurations
   - name: Users
     description: All API calls to manage users
+  - name: CorbadoConnect
+    description: All API calls that are related to a connect process
 
 paths:
   /v2/session-config:
@@ -539,10 +541,10 @@ paths:
 
   /v2/connect/login/init:
     post:
-      description: tbd
+      description: Initializes a connect process for login.
       operationId: ConnectLoginInit
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -551,7 +553,7 @@ paths:
               $ref: '#/components/schemas/connectLoginInitReq'
       responses:
         '200':
-          description: tbd
+          description: Contains information about if and how a passkey login can be started.
           content:
             application/json:
               schema:
@@ -559,10 +561,10 @@ paths:
 
   /v2/connect/login/start:
     post:
-      description: tbd
+      description: Starts an initialized connect login process.
       operationId: ConnectLoginStart
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -571,7 +573,7 @@ paths:
               $ref: '#/components/schemas/connectLoginStartReq'
       responses:
         '200':
-          description: tbd
+          description: Contains the challenge for the passkey login.
           content:
             application/json:
               schema:
@@ -579,10 +581,10 @@ paths:
 
   /v2/connect/login/finish:
     post:
-      description: tbd
+      description: Finishes an initialized connect login process.
       operationId: ConnectLoginFinish
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -591,7 +593,7 @@ paths:
               $ref: '#/components/schemas/connectLoginFinishReq'
       responses:
         '200':
-          description: tbd
+          description: Data about the passkey login and the session.
           content:
             application/json:
               schema:
@@ -599,10 +601,10 @@ paths:
 
   /v2/connect/append/init:
     post:
-      description: tbd
+      description: Initializes a connect process for passkey append.
       operationId: ConnectAppendInit
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -611,7 +613,7 @@ paths:
               $ref: '#/components/schemas/connectAppendInitReq'
       responses:
         '200':
-          description: tbd
+          description: Contains information about if and how a passkey append can be started.
           content:
             application/json:
               schema:
@@ -619,10 +621,10 @@ paths:
 
   /v2/connect/append/start:
     post:
-      description: tbd
+      description: Starts an initialized connect passkey append process.
       operationId: ConnectAppendStart
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -631,7 +633,7 @@ paths:
               $ref: '#/components/schemas/connectAppendStartReq'
       responses:
         '200':
-          description: tbd
+          description: Contains the challenge for the passkey append.
           content:
             application/json:
               schema:
@@ -639,10 +641,10 @@ paths:
 
   /v2/connect/append/finish:
     post:
-      description: tbd
+      description: Finishes an initialized connect passkey append process.
       operationId: ConnectAppendFinish
       tags:
-        - Connect
+        - CorbadoConnect
       requestBody:
         required: true
         content:
@@ -651,7 +653,7 @@ paths:
               $ref: '#/components/schemas/connectAppendFinishReq'
       responses:
         '200':
-          description: tbd
+          description: Data about the new passkey.
           content:
             application/json:
               schema:
@@ -983,20 +985,20 @@ components:
     connectLoginStartRsp:
       type: object
       required:
-        - challenge
+        - assertionOptions
       properties:
-        challenge:
+        assertionOptions:
           type: string
 
     connectLoginFinishReq:
       type: object
       required:
-        - signedChallenge
+        - assertionResponse
         - isConditionalUI
       properties:
         isConditionalUI:
           type: boolean
-        signedChallenge:
+        assertionResponse:
           type: string
 
     connectLoginFinishRsp:
@@ -1056,17 +1058,17 @@ components:
     connectAppendStartRsp:
       type: object
       required:
-        - challenge
+        - attestationOptions
       properties:
-        challenge:
+        attestationOptions:
           type: string
 
     connectAppendFinishReq:
       type: object
       required:
-        - signedChallenge
+        - attestationResponse
       properties:
-        signedChallenge:
+        attestationResponse:
           type: string
 
     connectAppendFinishRsp:

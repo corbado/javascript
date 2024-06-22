@@ -1,0 +1,69 @@
+import React, { useCallback, useState } from 'react';
+import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
+import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
+import { PrimaryButton } from '../shared/PrimaryButton';
+import { LinkButton } from '../shared/LinkButton';
+import useLoginProcess from '../../hooks/useLoginProcess';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { LoginScreenType } from '../../types/ScreenType';
+import log from 'loglevel';
+
+const LoginErrorScreenSoft = () => {
+  const { config, getConnectService, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = useCallback(async () => {
+    setLoading(true);
+
+    const res = await getConnectService().login(currentIdentifier);
+    if (res.err) {
+      setLoading(false);
+      if (res.val.ignore) {
+        return;
+      }
+
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        navigateToScreen(LoginScreenType.ErrorHard);
+        return;
+      }
+
+      log.debug('login not allowed');
+      handleFallback();
+
+      return;
+    }
+
+    setLoading(false);
+    config.onComplete(res.val.session);
+  }, [getConnectService, config]);
+
+  const handleFallback = useCallback(() => {
+    navigateToScreen(LoginScreenType.Invisible);
+    config.onFallback(currentIdentifier);
+  }, [navigateToScreen, config, currentIdentifier]);
+
+  return (
+    <>
+      <div className='cb-h2'>Use your passkey to confirm it’s really you!</div>
+      <div className='cb-login-error-soft-icons'>
+        <FingerprintIcon platform='default' />
+        <FaceIdIcon platform='default' />
+      </div>
+      <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock</div>
+      <PrimaryButton
+        onClick={handleSubmit}
+        isLoading={loading}
+      >
+        Login with passkey
+      </PrimaryButton>
+      <LinkButton
+        onClick={handleFallback}
+        className='cb-login-error-soft-fallback'
+      >
+        Use password instead
+      </LinkButton>
+    </>
+  );
+};
+
+export default LoginErrorScreenSoft;

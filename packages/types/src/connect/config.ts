@@ -1,10 +1,12 @@
 export type CorbadoConnectLoginConfig = {
   projectId: string;
-  fallbackUIContainerId: string;
-  fallbackUITextFieldId: string;
+  // fallbackUIContainerId: string;
+  // fallbackUITextFieldId: string;
 
+  onFallback(email: string): void;
   onLoaded(message: string): void;
   onComplete(session: string): void;
+  onSignupClick?(): void;
 
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;

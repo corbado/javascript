@@ -38,7 +38,7 @@ const LoginPage = () => {
         />
       </div>
       <div>
-        <p>Create an account.</p>
+        <p>Signup for an account.</p>
         <button onClick={() => navigate(`/signup`)}>Signup</button>
       </div>
     </>

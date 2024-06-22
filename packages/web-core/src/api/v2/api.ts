@@ -328,7 +328,7 @@ export interface ConnectAppendFinishReq {
      * @type {string}
      * @memberof ConnectAppendFinishReq
      */
-    'signedChallenge': string;
+    'attestationResponse': string;
 }
 /**
  * 
@@ -423,7 +423,7 @@ export interface ConnectAppendStartRsp {
      * @type {string}
      * @memberof ConnectAppendStartRsp
      */
-    'challenge': string;
+    'attestationOptions': string;
 }
 /**
  * 
@@ -442,7 +442,7 @@ export interface ConnectLoginFinishReq {
      * @type {string}
      * @memberof ConnectLoginFinishReq
      */
-    'signedChallenge': string;
+    'assertionResponse': string;
 }
 /**
  * 
@@ -549,7 +549,7 @@ export interface ConnectLoginStartRsp {
      * @type {string}
      * @memberof ConnectLoginStartRsp
      */
-    'challenge': string;
+    'assertionOptions': string;
 }
 /**
  * 
@@ -3387,13 +3387,13 @@ export class ConfigsApi extends BaseAPI {
 
 
 /**
- * ConnectApi - axios parameter creator
+ * CorbadoConnectApi - axios parameter creator
  * @export
  */
-export const ConnectApiAxiosParamCreator = function (configuration?: Configuration) {
+export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * tbd
+         * Finishes an initialized connect passkey append process.
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3435,7 +3435,7 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Initializes a connect process for passkey append.
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3477,7 +3477,7 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Starts an initialized connect passkey append process.
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3519,7 +3519,7 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3561,7 +3561,7 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Initializes a connect process for login.
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3603,7 +3603,7 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Starts an initialized connect login process.
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3648,14 +3648,14 @@ export const ConnectApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * ConnectApi - functional programming interface
+ * CorbadoConnectApi - functional programming interface
  * @export
  */
-export const ConnectApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ConnectApiAxiosParamCreator(configuration)
+export const CorbadoConnectApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CorbadoConnectApiAxiosParamCreator(configuration)
     return {
         /**
-         * tbd
+         * Finishes an initialized connect passkey append process.
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3665,7 +3665,7 @@ export const ConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initializes a connect process for passkey append.
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3675,7 +3675,7 @@ export const ConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Starts an initialized connect passkey append process.
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3685,7 +3685,7 @@ export const ConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3695,7 +3695,7 @@ export const ConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initializes a connect process for login.
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3705,7 +3705,7 @@ export const ConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Starts an initialized connect login process.
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3718,14 +3718,14 @@ export const ConnectApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * ConnectApi - factory interface
+ * CorbadoConnectApi - factory interface
  * @export
  */
-export const ConnectApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ConnectApiFp(configuration)
+export const CorbadoConnectApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CorbadoConnectApiFp(configuration)
     return {
         /**
-         * tbd
+         * Finishes an initialized connect passkey append process.
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3734,7 +3734,7 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.connectAppendFinish(connectAppendFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initializes a connect process for passkey append.
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3743,7 +3743,7 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.connectAppendInit(connectAppendInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Starts an initialized connect passkey append process.
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3752,7 +3752,7 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.connectAppendStart(connectAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3761,7 +3761,7 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.connectLoginFinish(connectLoginFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initializes a connect process for login.
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3770,7 +3770,7 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.connectLoginInit(connectLoginInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Starts an initialized connect login process.
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3782,76 +3782,76 @@ export const ConnectApiFactory = function (configuration?: Configuration, basePa
 };
 
 /**
- * ConnectApi - object-oriented interface
+ * CorbadoConnectApi - object-oriented interface
  * @export
- * @class ConnectApi
+ * @class CorbadoConnectApi
  * @extends {BaseAPI}
  */
-export class ConnectApi extends BaseAPI {
+export class CorbadoConnectApi extends BaseAPI {
     /**
-     * tbd
+     * Finishes an initialized connect passkey append process.
      * @param {ConnectAppendFinishReq} connectAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectAppendFinish(connectAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectAppendFinish(connectAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * tbd
+     * Initializes a connect process for passkey append.
      * @param {ConnectAppendInitReq} connectAppendInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectAppendInit(connectAppendInitReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectAppendInit(connectAppendInitReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * tbd
+     * Starts an initialized connect passkey append process.
      * @param {ConnectAppendStartReq} connectAppendStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectAppendStart(connectAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectAppendStart(connectAppendStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * tbd
+     * Finishes an initialized connect login process.
      * @param {ConnectLoginFinishReq} connectLoginFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectLoginFinish(connectLoginFinishReq: ConnectLoginFinishReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectLoginFinish(connectLoginFinishReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectLoginFinish(connectLoginFinishReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * tbd
+     * Initializes a connect process for login.
      * @param {ConnectLoginInitReq} connectLoginInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectLoginInit(connectLoginInitReq: ConnectLoginInitReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectLoginInit(connectLoginInitReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectLoginInit(connectLoginInitReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * tbd
+     * Starts an initialized connect login process.
      * @param {ConnectLoginStartReq} connectLoginStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ConnectApi
+     * @memberof CorbadoConnectApi
      */
     public connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: AxiosRequestConfig) {
-        return ConnectApiFp(this.configuration).connectLoginStart(connectLoginStartReq, options).then((request) => request(this.axios, this.basePath));
+        return CorbadoConnectApiFp(this.configuration).connectLoginStart(connectLoginStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

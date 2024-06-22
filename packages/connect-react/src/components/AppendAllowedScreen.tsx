@@ -18,6 +18,7 @@ const AppendAllowedScreen = ({ connectService, onComplete, onSkip, appendToken }
 
     const res = await connectService.append(appendToken);
     if (res.err) {
+      console.log('error:', res.val);
       setLoading(false);
       onSkip();
       return;

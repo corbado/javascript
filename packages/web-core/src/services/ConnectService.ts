@@ -11,7 +11,7 @@ import type {
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
 } from '../api/v2';
-import { ConnectApi } from '../api/v2';
+import { CorbadoConnectApi } from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectProcess } from '../models/connect/connectProcess';
@@ -22,7 +22,7 @@ import { WebAuthnService } from './WebAuthnService';
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
 export class ConnectService {
-  #connectApi: ConnectApi = new ConnectApi();
+  #connectApi: CorbadoConnectApi = new CorbadoConnectApi();
   #webAuthnService: WebAuthnService;
 
   // Private fields for project ID and default timeout for API calls.
@@ -93,7 +93,7 @@ export class ConnectService {
     });
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
-    this.#connectApi = new ConnectApi(config, frontendApiUrl, axiosInstance);
+    this.#connectApi = new CorbadoConnectApi(config, frontendApiUrl, axiosInstance);
   }
 
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
@@ -177,7 +177,11 @@ export class ConnectService {
       return resStart;
     }
 
-    const res = await this.#webAuthnService.login(resStart.val.challenge, false, false);
+    if (!resStart.val.assertionOptions) {
+      return Err(CorbadoError.noPasskeyAvailable());
+    }
+
+    const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
     if (res.err) {
       return res;
     }
@@ -279,12 +283,12 @@ export class ConnectService {
       return resStart;
     }
 
-    const platformRes = await this.#webAuthnService.createPasskey(resStart.val.challenge);
+    const platformRes = await this.#webAuthnService.createPasskey(resStart.val.attestationOptions);
     if (platformRes.err) {
       return platformRes;
     }
 
-    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ signedChallenge: platformRes.val }));
+    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
   }
 
   dispose() {
@@ -292,7 +296,7 @@ export class ConnectService {
   }
 
   async #loginFinish(
-    signedChallenge: string,
+    assertionResponse: string,
     isConditionalUI: boolean,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage();
@@ -300,7 +304,7 @@ export class ConnectService {
       throw CorbadoError.missingInit();
     }
 
-    return this.wrapWithErr(() => this.#connectApi.connectLoginFinish({ signedChallenge, isConditionalUI }));
+    return this.wrapWithErr(() => this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }));
   }
 
   #getDefaultFrontendApiUrl() {

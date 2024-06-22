@@ -7,7 +7,39 @@
 :root {
   --cb-font-family-primary: 'Space Grotesk', sans-serif;
   --cb-font-family-secondary: 'Inter', sans-serif;
-  --cb-border-radius: 0.5rem;
+  --cb-border-radius: 0rem;
+}
+
+.cb-h2 {
+  font-size: 1.5rem;
+  /*font-weight: bold;*/
+  margin-bottom: .5rem;
+}
+
+.cb-h3 {
+  font-size: 1.25rem;
+  /*font-weight: bold;*/
+  margin-bottom: .3rem;
+}
+
+.cb-p {
+  font-size: 1rem;
+  margin-bottom: .5rem;
+}
+
+.cb-span {
+  font-size: 1rem;
+}
+
+.cb-bold {
+  font-weight: bold;
+}
+
+.cb-link-button {
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  text-decoration: underline;
 }
 
 .cb-connect-container {
@@ -17,12 +49,12 @@
   max-width: 400px;
   background-color: var(--cb-color-surface);
   box-sizing: content-box;
-  padding: 0;
+  padding: 0.25rem;
   text-align: left;
 }
 
 button.cb-primary-button {
-  padding: 0.6rem;
+  padding: .75rem 1rem;
   color: var(--cb-color-on-primary);
   background-color: var(--cb-color-primary);
   border-radius: var(--cb-border-radius);
@@ -30,6 +62,7 @@ button.cb-primary-button {
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
+  width: 100%;
 }
 
 .cb-primary-button:hover,
@@ -43,11 +76,30 @@ button.cb-primary-button {
   opacity: 84%;
 }
 
+button.cb-secondary-button {
+  padding: .75rem 1rem;
+  color: var(--cb-color-on-secondary);
+  background-color: var(--cb-color-secondary);
+  border-radius: var(--cb-border-radius);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
+  width: 100%;
+}
+
+.cb-secondary-button:hover,
+.cb-secondary-button:focus,
+.cb-secondary-button:active {
+  border: none;
+  opacity: 92%;
+}
+
 .cb-input {
   flex-grow: 1;
   border-radius: var(--cb-border-radius);
   border: 1px solid var(--cb-color-tertiary);
-  padding: .5rem .5rem;
+  padding: .75rem .5rem;
   justify-content: center;
   box-sizing: border-box;
   font-family: var(--cb-font-family-secondary);
@@ -71,6 +123,14 @@ button.cb-primary-button {
   flex-direction: column;
   justify-content: center;
   margin-bottom: 0.75rem;
+}
+
+.cb-checkbox-input-field {
+  margin-bottom: 0.75rem;
+}
+
+.cb-checkbox-input-field input {
+  margin-right: .5rem;
 }
 
 .cb-input-label {
@@ -110,3 +170,68 @@ button.cb-primary-button {
     transform: rotate(360deg);
   }
 }
+
+.cb-login-init-signup {
+  margin: .5rem 0;
+}
+
+.cb-login-error-hard-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-login-error-hard-icons > * {
+  width: 60px;
+}
+
+.cb-login-error-hard-fallback {
+  margin: .5rem 0;
+}
+
+.cb-login-error-soft-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-login-error-soft-icons > * {
+  width: 60px;
+  margin: .5rem;
+}
+
+.cb-login-error-soft-fallback {
+  margin: .5rem 0;
+}
+
+.cb-append-info-list {
+  margin: 1rem 0;
+}
+
+.cb-append-benefits-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem 0;
+}
+
+.cb-connect-append-button {
+  padding: .5rem 0;
+}
+
+.cb-passkey-info-list-item {
+  display: flex;
+  margin: .5rem 0;
+  width: 100%;
+}
+
+.cb-passkey-info-list-item__icon {
+  width: 75px;
+  margin-right: .25rem;
+  flex: 0 0 60px;
+  padding: .5rem;
+}
+
+.cb-passkey-info-list-item__text {
+  flex: 1;
+}
+

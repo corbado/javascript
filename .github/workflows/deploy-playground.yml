@@ -41,7 +41,7 @@ jobs:
         run: |
           npm ci
           npm install lerna
-          npm install vercel
+          npm install vercel@33.2.0
 
       - name: Check ESLint Errors
         run: npm run lint
@@ -62,10 +62,10 @@ jobs:
       - name: Deploy connect next playground to Vercel
         run: |
           cd playground/connect-next
-          npm install
-          npm run build
-          url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-react.playground.corbado.io
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-next.playground.corbado.io
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
 

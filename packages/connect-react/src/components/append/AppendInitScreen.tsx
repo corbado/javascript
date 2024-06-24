@@ -13,15 +13,21 @@ import { AppendScreenType } from '../../types/ScreenType';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen, getConnectService } = useAppendProcess();
-  const [loading, setLoading] = useState(false);
-  const [appendAllowed, setAppendAllowed] = useState(true);
-  const [appendToken, setAppendToken] = useState('');
+  const [primaryButtonLoading, setPrimaryButtonLoading] = useState(false);
+  const [appendAllowed, setAppendAllowed] = useState(false);
+  const [attestationOptions, setAttestationOptions] = useState('');
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
-        log.error(res.val);
+        if (res.val.ignore) {
+          return;
+        }
+
+        setAppendAllowed(false);
+        config.onSkip();
+
         return;
       }
 
@@ -34,7 +40,27 @@ const AppendInitScreen = () => {
       }
 
       const appendToken = await config.appendTokenProvider();
-      setAppendToken(appendToken);
+
+      const startAppendRes = await getConnectService().startAppend(appendToken, ac);
+      if (startAppendRes.err) {
+        if (startAppendRes.val.ignore) {
+          return;
+        }
+
+        setAppendAllowed(false);
+        config.onSkip();
+
+        return;
+      }
+
+      if (startAppendRes.val.attestationOptions === '') {
+        setAppendAllowed(false);
+        config.onSkip();
+
+        return;
+      }
+
+      setAttestationOptions(startAppendRes.val.attestationOptions);
       setAppendAllowed(true);
     };
 
@@ -51,20 +77,20 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    setLoading(true);
+    setPrimaryButtonLoading(true);
 
-    const res = await getConnectService().append(appendToken);
+    const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       log.error('error:', res.val);
-      setLoading(false);
+      setPrimaryButtonLoading(false);
       config.onSkip();
 
       return;
     }
 
-    setLoading(false);
+    setPrimaryButtonLoading(false);
     navigateToScreen(AppendScreenType.Success);
-  }, [appendToken, config, getConnectService]);
+  }, [attestationOptions, config, getConnectService]);
 
   // when passkey based login is not allowed, our component just returns an empty div
   if (!appendAllowed) {
@@ -95,7 +121,7 @@ const AppendInitScreen = () => {
       <div className='cb-connect-append-button'>
         <PrimaryButton
           type='submit'
-          isLoading={loading}
+          isLoading={primaryButtonLoading}
           onClick={() => void handleSubmit()}
         >
           Activate your passkey

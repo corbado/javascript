@@ -13,7 +13,7 @@ export default function PostLoginPage() {
       <div className='w-96 my-4 mx-4'>
         <div className='mb-2 flex justify-between'>
           <CorbadoConnectAppend
-            projectId='pro-2'
+            projectId={process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!}
             onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
             onSkip={() => router.push('/home')}
             appendTokenProvider={async () => {
@@ -24,7 +24,7 @@ export default function PostLoginPage() {
             }}
             isDebug={true}
             onComplete={(method: string) => router.push('/home')}
-            frontendApiUrlSuffix='frontendapi.corbado-dev.io'
+            frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}
           />
         </div>
       </div>

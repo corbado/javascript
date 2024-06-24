@@ -70,11 +70,11 @@ export async function getAppendToken() {
 
   const body = JSON.stringify(payload);
 
-  const url = 'https://api.corbado-dev.com/v2/appendTokens';
+  const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/appendTokens`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      Authorization: `Basic cHJvLTI6Y29yYmFkbzFfVWVka0JmcmpZQTRvOVltazN4amlSZnpFVU1zaWdG`,
+      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
       'Content-Type': 'application/json',
     },
     cache: 'no-cache',

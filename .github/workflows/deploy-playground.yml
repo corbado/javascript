@@ -59,6 +59,16 @@ jobs:
           echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
         shell: bash
 
+      - name: Deploy connect next playground to Vercel
+        run: |
+          cd playground/connect-next
+          npm install
+          npm run build
+          url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-react.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
+
       - name: Deploy react playground to Vercel
         run: |
           cd playground/react

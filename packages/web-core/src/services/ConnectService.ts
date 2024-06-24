@@ -8,6 +8,7 @@ import { Configuration } from '../api/v1';
 import type {
   ConnectAppendFinishRsp,
   ConnectAppendInitReq,
+  ConnectAppendStartRsp,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
 } from '../api/v2';
@@ -289,6 +290,34 @@ export class ConnectService {
     }
 
     return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
+  }
+
+  async startAppend(
+    appendTokenValue: string,
+    abortController: AbortController,
+  ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage();
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    return this.wrapWithErr(() =>
+      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue }, { signal: abortController.signal }),
+    );
+  }
+
+  async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage();
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const res = await this.#webAuthnService.createPasskey(attestationOptions);
+    if (res.err) {
+      return res;
+    }
+
+    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: res.val }));
   }
 
   dispose() {

@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from 'react';
-import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
-import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { LinkButton } from '../shared/LinkButton';
-import useLoginProcess from '../../hooks/useLoginProcess';
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { LoginScreenType } from '../../types/ScreenType';
 import log from 'loglevel';
+import React, { useCallback, useState } from 'react';
+
+import useLoginProcess from '../../hooks/useLoginProcess';
+import { LoginScreenType } from '../../types/ScreenType';
+import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
+import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
+import { LinkButton } from '../shared/LinkButton';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginErrorScreenSoft = () => {
   const { config, getConnectService, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -51,7 +52,7 @@ const LoginErrorScreenSoft = () => {
       </div>
       <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock</div>
       <PrimaryButton
-        onClick={handleSubmit}
+        onClick={() => void handleSubmit()}
         isLoading={loading}
       >
         Login with passkey

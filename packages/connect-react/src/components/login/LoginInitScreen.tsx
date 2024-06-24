@@ -1,13 +1,13 @@
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
-import InputField from '../shared/InputField';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import Checkbox from '../shared/Checkbox';
-import log from 'loglevel';
 import { LoginScreenType } from '../../types/ScreenType';
+import Checkbox from '../shared/Checkbox';
+import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginInitScreen = () => {
   const { config, getConnectService, navigateToScreen, setCurrentIdentifier } = useLoginProcess();
@@ -121,7 +121,7 @@ const LoginInitScreen = () => {
       </PrimaryButton>
       {config.onSignupClick && (
         <LinkButton
-          onClick={config.onSignupClick}
+          onClick={() => config.onSignupClick!()}
           className='cb-login-init-signup'
         >
           Signup for an account

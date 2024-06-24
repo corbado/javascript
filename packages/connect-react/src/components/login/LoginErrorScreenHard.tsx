@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { LinkButton } from '../shared/LinkButton';
-import useLoginProcess from '../../hooks/useLoginProcess';
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { LoginScreenType } from '../../types/ScreenType';
 import log from 'loglevel';
+import React, { useCallback } from 'react';
+
+import useLoginProcess from '../../hooks/useLoginProcess';
+import { LoginScreenType } from '../../types/ScreenType';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
+import { LinkButton } from '../shared/LinkButton';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginErrorScreenHard = () => {
   const { config, getConnectService, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -45,7 +46,7 @@ const LoginErrorScreenHard = () => {
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
       <PrimaryButton onClick={handleFallback}>Skip passkey login</PrimaryButton>
       <LinkButton
-        onClick={handleSubmit}
+        onClick={() => void handleSubmit()}
         className='cb-login-error-hard-fallback'
       >
         Try again

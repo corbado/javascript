@@ -2,14 +2,14 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { SecondaryButton } from '../shared/SecondaryButton';
-import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
-import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
+import { AppendScreenType } from '../../types/ScreenType';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
+import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { ShieldIcon } from '../shared/icons/ShieldIcon';
 import { LinkButton } from '../shared/LinkButton';
-import { AppendScreenType } from '../../types/ScreenType';
+import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
+import { PrimaryButton } from '../shared/PrimaryButton';
+import { SecondaryButton } from '../shared/SecondaryButton';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen, getConnectService } = useAppendProcess();

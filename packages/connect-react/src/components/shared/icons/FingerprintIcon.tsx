@@ -1,4 +1,5 @@
-import React, { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes } from 'react';
+import React from 'react';
 
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   platform: string;

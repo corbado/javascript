@@ -1,7 +1,8 @@
 import React from 'react';
-import { PrimaryButton } from '../shared/PrimaryButton';
+
 import useAppendProcess from '../../hooks/useAppendProcess';
 import { AppendScreenType } from '../../types/ScreenType';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendBenefitsScreen = () => {
   const { navigateToScreen } = useAppendProcess();

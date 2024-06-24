@@ -1,4 +1,3 @@
-import type { CorbadoConnectAppendConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 
@@ -6,10 +5,9 @@ import useAppendProcess from '../hooks/useAppendProcess';
 import { AppendScreenType } from '../types/ScreenType';
 import AppendBenefitsScreen from './append/AppendBenetifsScreen';
 import AppendInitScreen from './append/AppendInitScreen';
-import withTheme from './hoc/withTheme';
 import AppendSuccessScreen from './append/AppendSuccessScreen';
 
-const CorbadoConnectAppendContainer: FC<CorbadoConnectAppendConfig> = () => {
+const CorbadoConnectAppendContainer: FC = () => {
   const { currentScreenType } = useAppendProcess();
 
   const currentScreenComponent = useMemo(() => {
@@ -28,4 +26,4 @@ const CorbadoConnectAppendContainer: FC<CorbadoConnectAppendConfig> = () => {
   return <div className='cb-connect-container'>{currentScreenComponent}</div>;
 };
 
-export default withTheme(CorbadoConnectAppendContainer);
+export default CorbadoConnectAppendContainer;

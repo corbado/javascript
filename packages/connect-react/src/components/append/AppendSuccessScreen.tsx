@@ -1,6 +1,7 @@
 import React from 'react';
-import { PrimaryButton } from '../shared/PrimaryButton';
+
 import useAppendProcess from '../../hooks/useAppendProcess';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendSuccessScreen = () => {
   const { config } = useAppendProcess();

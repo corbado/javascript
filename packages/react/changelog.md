@@ -5,7 +5,6 @@
 - Added support for `appendLocalPasskeyAfterCDA` setting: This can be configured from the developer panel, it asks users to create a local passkey after they performed a cross-device-authentication.
 - Added device specific icons for passkey append screens.
 
-
 ## 2.8.0
 
 ### Minor changes

@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import { LoginScreenType } from '../../types/ScreenType';
-import Checkbox from '../shared/Checkbox';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
@@ -12,7 +11,7 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 const LoginInitScreen = () => {
   const { config, getConnectService, navigateToScreen, setCurrentIdentifier } = useLoginProcess();
   const [loading, setLoading] = useState(false);
-  const [rememberEmail, setRememberEmail] = useState(false);
+  // const [rememberEmail, setRememberEmail] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -93,6 +92,17 @@ const LoginInitScreen = () => {
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
+  /*
+  <div>
+    <Checkbox
+      id='remember-me'
+      label='Remember my email address'
+      checked={rememberEmail}
+      onChange={() => setRememberEmail(!rememberEmail)}
+    />
+  </div>
+  */
+
   return (
     <div>
       <InputField
@@ -104,14 +114,6 @@ const LoginInitScreen = () => {
         placeholder='Email address'
         ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
       />
-      <div>
-        <Checkbox
-          id='remember-me'
-          label='Remember my email address'
-          checked={rememberEmail}
-          onChange={() => setRememberEmail(!rememberEmail)}
-        />
-      </div>
       <PrimaryButton
         type='submit'
         isLoading={loading}

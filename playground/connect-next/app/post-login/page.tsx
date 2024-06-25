@@ -1,9 +1,8 @@
 'use client';
 
 import { CorbadoConnectAppend } from '@corbado/connect-react';
-import { getAppendToken } from '@/app/signup/actions';
-import { router } from 'next/client';
 import { useRouter } from 'next/navigation';
+import { getAppendToken } from './actions';
 
 export default function PostLoginPage() {
   const router = useRouter();

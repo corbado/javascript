@@ -1,3 +1,6 @@
+'use client';
+export const runtime = 'edge'; // 'nodejs' (default) | 'edge'
+
 import Link from 'next/link';
 
 export default function Home() {

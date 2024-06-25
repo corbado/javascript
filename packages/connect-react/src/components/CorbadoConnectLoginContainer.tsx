@@ -28,7 +28,7 @@ const CorbadoConnectLoginContainer = () => {
     }
   }, [currentScreenType]);
 
-  return <div className='cb-connect-container'>{currentScreenComponent}</div>;
+  return <>{currentScreenComponent}</>;
 };
 
 export default CorbadoConnectLoginContainer;

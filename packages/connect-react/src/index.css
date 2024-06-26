@@ -19,7 +19,7 @@
 .cb-h3 {
   font-size: 1.25rem;
   /*font-weight: bold;*/
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .cb-p {
@@ -204,6 +204,15 @@ button.cb-secondary-button {
   margin: 0.5rem 0;
 }
 
+.cb-append-benefits-icons {
+  display: flex;
+  justify-content: center;
+}
+
+.cb-append-benefits-icons > * {
+  width: 100px;
+}
+
 .cb-append-info-list {
   margin: 1rem 0;
 }
@@ -233,4 +242,25 @@ button.cb-secondary-button {
 
 .cb-passkey-info-list-item__text {
   flex: 1;
+}
+
+.cb-notification-container {
+  display: flex;
+  padding: .5rem 1rem;
+  background: var(--cb-color-secondary-container);
+  color: var(--cb-color-on-secondary-container);
+  border-radius: .7rem;
+  border: 1px solid var(--cb-color-outline);
+}
+
+.cb-notification-icon {
+  width: 25px;
+  margin-right: .25rem;
+  fill: var(--cb-color-on-secondary-container);
+}
+
+.cb-notification-text {
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
 }

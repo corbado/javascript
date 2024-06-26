@@ -1,9 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import crypto from 'crypto';
-import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { generateRandomString } from '@/utils/random';
 
 export async function getAppendToken() {
   const displayName = cookies().get('displayName');

@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';
 
 import { CorbadoConnectAppend } from '@corbado/connect-react';
 import { useRouter } from 'next/navigation';

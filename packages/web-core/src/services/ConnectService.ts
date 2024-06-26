@@ -49,7 +49,7 @@ export class ConnectService {
   }
 
   clearProcess() {
-    return AuthProcess.clearStorage();
+    return ConnectProcess.clearStorage();
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -289,7 +289,15 @@ export class ConnectService {
       return platformRes;
     }
 
-    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
+    const finishRes = await this.wrapWithErr(() =>
+      this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }),
+    );
+    if (finishRes.ok) {
+      // we no longer need process state after the append process has finished
+      this.clearProcess();
+    }
+
+    return finishRes;
   }
 
   async startAppend(
@@ -317,7 +325,15 @@ export class ConnectService {
       return res;
     }
 
-    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: res.val }));
+    const finishRes = await this.wrapWithErr(() =>
+      this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
+    );
+    if (finishRes.ok) {
+      // we no longer need process state after the append process has finished
+      this.clearProcess();
+    }
+
+    return finishRes;
   }
 
   dispose() {
@@ -333,7 +349,15 @@ export class ConnectService {
       throw CorbadoError.missingInit();
     }
 
-    return this.wrapWithErr(() => this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }));
+    const res = await this.wrapWithErr(() =>
+      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }),
+    );
+    if (res.ok) {
+      // we no longer need process state after login
+      this.clearProcess();
+    }
+
+    return res;
   }
 
   #getDefaultFrontendApiUrl() {

@@ -23,10 +23,12 @@ const LoginInitScreen = () => {
         return;
       }
 
+      console.log(res.val.loginAllowed, res.val.conditionalUIChallenge);
       if (!res.val.loginAllowed) {
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback('');
       } else {
+        console.log('starting conditional ui 1');
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
     };
@@ -40,28 +42,25 @@ const LoginInitScreen = () => {
     };
   }, [getConnectService]);
 
-  const startConditionalUI = useCallback(
-    async (challenge: string | null) => {
-      if (!challenge) {
-        return;
-      }
+  const startConditionalUI = async (challenge: string | null) => {
+    if (!challenge) {
+      return;
+    }
 
-      const res = await getConnectService().conditionalUILogin();
-      if (res.err && (res.val instanceof PasskeyChallengeCancelledError || res.val.ignore)) {
-        return;
-      }
+    const res = await getConnectService().conditionalUILogin();
+    if (res.err && (res.val instanceof PasskeyChallengeCancelledError || res.val.ignore)) {
+      return;
+    }
 
-      if (res.err) {
-        navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback('');
+    if (res.err) {
+      navigateToScreen(LoginScreenType.Invisible);
+      config.onFallback('');
 
-        return;
-      }
+      return;
+    }
 
-      config.onComplete(res.val.session);
-    },
-    [getConnectService, config],
-  );
+    config.onComplete(res.val.session);
+  };
 
   const handleSubmit = useCallback(async () => {
     setLoading(true);

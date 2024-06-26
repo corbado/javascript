@@ -10,12 +10,14 @@ import { LinkButton } from '../shared/LinkButton';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
+import { Notification } from '../shared/Notification';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen, getConnectService } = useAppendProcess();
   const [primaryButtonLoading, setPrimaryButtonLoading] = useState(false);
   const [appendAllowed, setAppendAllowed] = useState(false);
   const [attestationOptions, setAttestationOptions] = useState('');
+  const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
@@ -78,12 +80,13 @@ const AppendInitScreen = () => {
 
   const handleSubmit = useCallback(async () => {
     setPrimaryButtonLoading(true);
+    setError(undefined);
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       log.error('error:', res.val);
       setPrimaryButtonLoading(false);
-      config.onSkip();
+      setError('Passkey operation was cancelled or timed out.');
 
       return;
     }
@@ -101,6 +104,7 @@ const AppendInitScreen = () => {
     <>
       <div className='cb-h2'>Activate a passkey</div>
       <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
+      {error ? <Notification message={error} /> : null}
       <div className='cb-append-info-list'>
         <PasskeyInfoListItem
           title='No more forgotten passwords'

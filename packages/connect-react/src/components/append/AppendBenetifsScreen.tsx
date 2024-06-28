@@ -2,7 +2,7 @@ import React from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import { AppendScreenType } from '../../types/ScreenType';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import { SecondaryButton } from '../shared/SecondaryButton';
 
 const AppendBenefitsScreen = () => {
   const { navigateToScreen } = useAppendProcess();
@@ -34,7 +34,7 @@ const AppendBenefitsScreen = () => {
         To activate your passkey, you will have to log in again with email address and password and activate your
         passkey
       </div>
-      <PrimaryButton onClick={() => void navigateToScreen(AppendScreenType.Init)}>Back</PrimaryButton>
+      <SecondaryButton onClick={() => void navigateToScreen(AppendScreenType.Init)}>Back</SecondaryButton>
     </div>
   );
 };

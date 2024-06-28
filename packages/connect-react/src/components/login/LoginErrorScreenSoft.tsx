@@ -50,7 +50,7 @@ const LoginErrorScreenSoft = () => {
         <FingerprintIcon platform='default' />
         <FaceIdIcon platform='default' />
       </div>
-      <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock</div>
+      <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock.</div>
       <PrimaryButton
         onClick={() => void handleSubmit()}
         isLoading={loading}

@@ -9,7 +9,7 @@ import CorbadoConnectLoginContainer from './CorbadoConnectLoginContainer';
 const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = (config: CorbadoConnectLoginConfig) => {
   return (
     <div className='light'>
-      <div className='cb-connect-container'>
+      <div className='cb-connect-container cb-connect-login'>
         <LoginProcessProvider
           config={config}
           initialScreenType={LoginScreenType.Init}

@@ -175,6 +175,10 @@ button.cb-secondary-button {
   margin: 0.5rem 0;
 }
 
+.cb-login-init-forgot-password {
+  margin: 0.5rem 0;
+}
+
 .cb-login-error-hard-icons {
   margin: 1rem 0;
   display: flex;

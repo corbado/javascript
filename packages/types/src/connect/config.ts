@@ -1,13 +1,12 @@
 export type CorbadoConnectLoginConfig = {
   projectId: string;
-  // fallbackUIContainerId: string;
-  // fallbackUITextFieldId: string;
 
   onFallback(email: string): void;
   onLoaded(message: string): void;
   onComplete(session: string): void;
   onSignupClick?(): void;
 
+  flags?: Record<string, string>;
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;
 };
@@ -20,6 +19,7 @@ export type CorbadoConnectAppendConfig = {
   onSkip(): void;
   onComplete(method: string): void;
 
+  flags?: Record<string, string>;
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;
 };

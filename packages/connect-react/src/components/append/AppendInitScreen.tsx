@@ -128,7 +128,7 @@ const AppendInitScreen = () => {
           isLoading={primaryButtonLoading}
           onClick={() => void handleSubmit()}
         >
-          Activate your passkey
+          Activate
         </PrimaryButton>
       </div>
       <div className='cb-connect-append-button'>

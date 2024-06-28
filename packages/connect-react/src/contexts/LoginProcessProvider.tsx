@@ -3,9 +3,10 @@ import { ConnectService } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { LoginScreenType } from '../types/ScreenType';
+import type { LoginScreenType } from '../types/screenTypes';
 import type { LoginProcessContextProps } from './LoginProcessContext';
 import LoginProcessContext from './LoginProcessContext';
+import { Flags } from '../types/flags';
 
 type Props = {
   config: CorbadoConnectLoginConfig;
@@ -15,6 +16,7 @@ type Props = {
 export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, initialScreenType, config }) => {
   const [currentScreenType, setCurrentScreenType] = useState<LoginScreenType>(initialScreenType);
   const [currentIdentifier, setCurrentIdentifier] = useState<string>('');
+  const [flags, setFlags] = useState<Flags | undefined>(undefined);
   const [connectService] = useState(() => {
     return new ConnectService(
       config.projectId,
@@ -45,6 +47,8 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
       config,
       setCurrentIdentifier,
       currentIdentifier,
+      flags,
+      setFlags,
     }),
     [currentScreenType, navigateToScreen, connectService, config],
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
-import { AppendScreenType } from '../../types/ScreenType';
+import { AppendScreenType } from '../../types/screenTypes';
 import { SecondaryButton } from '../shared/SecondaryButton';
 
 const AppendBenefitsScreen = () => {

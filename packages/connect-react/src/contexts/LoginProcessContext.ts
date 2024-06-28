@@ -1,8 +1,9 @@
 import type { CorbadoConnectLoginConfig } from '@corbado/types';
-import type { ConnectService } from '@corbado/web-core';
+import { ConnectService } from '@corbado/web-core';
 import { createContext } from 'react';
 
-import { LoginScreenType } from '../types/ScreenType';
+import { LoginScreenType } from '../types/screenTypes';
+import { Flags } from '../types/flags';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <ProcessContext/>');
@@ -15,6 +16,8 @@ export interface LoginProcessContextProps {
   navigateToScreen: (s: LoginScreenType) => void;
   setCurrentIdentifier: (s: string) => void;
   currentIdentifier: string;
+  flags: Flags | undefined;
+  setFlags: (f: Flags) => void;
 }
 
 export const initialContext: LoginProcessContextProps = {
@@ -24,6 +27,8 @@ export const initialContext: LoginProcessContextProps = {
   navigateToScreen: missingImplementation,
   setCurrentIdentifier: missingImplementation,
   currentIdentifier: '',
+  flags: undefined,
+  setFlags: missingImplementation,
 };
 
 const LoginProcessContext = createContext<LoginProcessContextProps>(initialContext);

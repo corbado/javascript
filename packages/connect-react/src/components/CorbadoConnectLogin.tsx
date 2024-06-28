@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import React from 'react';
 
 import LoginProcessProvider from '../contexts/LoginProcessProvider';
-import { LoginScreenType } from '../types/ScreenType';
+import { LoginScreenType } from '../types/screenTypes';
 import CorbadoConnectLoginContainer from './CorbadoConnectLoginContainer';
 
 const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = (config: CorbadoConnectLoginConfig) => {

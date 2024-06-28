@@ -49,7 +49,7 @@ export class ConnectService {
   }
 
   clearProcess() {
-    return ConnectProcess.clearStorage();
+    return ConnectProcess.clearStorage(this.#projectId);
   }
 
   #createAxiosInstanceV2(processId: string): AxiosInstance {
@@ -111,7 +111,7 @@ export class ConnectService {
   }
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess?.isValid()) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
@@ -126,7 +126,7 @@ export class ConnectService {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const maybeClientHandle = WebAuthnService.getClientHandle();
-    const flags = ConnectFlags.loadFromStorage();
+    const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectLoginInitReq = {
       clientInformation: {
@@ -145,9 +145,12 @@ export class ConnectService {
       return res;
     }
 
+    flags.addItemsObject(res.val.flags);
+
     const loginData: ConnectLoginInitData = {
       loginAllowed: res.val.loginAllowed,
       conditionalUIChallenge: res.val.conditionalUIChallenge ?? null,
+      flags: flags.getItemsObject(),
     };
 
     // update local state
@@ -155,20 +158,26 @@ export class ConnectService {
       const p = existingProcess.copyWithLoginData(loginData);
       p.persistToStorage();
     } else {
-      const newProcess = new ConnectProcess(res.val.token, res.val.expiresAt, res.val.frontendApiUrl, loginData, null);
+      const newProcess = new ConnectProcess(
+        res.val.token,
+        this.#projectId,
+        res.val.expiresAt,
+        res.val.frontendApiUrl,
+        loginData,
+        null,
+      );
       this.#setApisV2(newProcess);
       newProcess.persistToStorage();
     }
 
     // persist flags
-    flags.addItemsObject(res.val.flags);
-    flags.persistToStorage();
+    flags.persistToStorage(this.#projectId);
 
     return Ok(loginData);
   }
 
   async login(identifier: string): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -191,7 +200,7 @@ export class ConnectService {
   }
 
   async conditionalUILogin(): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -210,7 +219,7 @@ export class ConnectService {
   }
 
   async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess?.isValid()) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
@@ -225,7 +234,7 @@ export class ConnectService {
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const maybeClientHandle = WebAuthnService.getClientHandle();
-    const flags = ConnectFlags.loadFromStorage();
+    const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectAppendInitReq = {
       clientInformation: {
@@ -244,8 +253,11 @@ export class ConnectService {
       return res;
     }
 
+    flags.addItemsObject(res.val.flags);
+
     const appendData: ConnectAppendInitData = {
       appendAllowed: res.val.appendAllowed,
+      flags: flags.getItemsObject(),
     };
 
     // update local state with process
@@ -255,6 +267,7 @@ export class ConnectService {
     } else {
       const newProcess = new ConnectProcess(
         res.val.processID,
+        this.#projectId,
         res.val.expiresAt,
         res.val.frontendApiUrl,
         null,
@@ -265,14 +278,13 @@ export class ConnectService {
     }
 
     // persist flags
-    flags.addItemsObject(res.val.flags);
-    flags.persistToStorage();
+    flags.persistToStorage(this.#projectId);
 
     return Ok(appendData);
   }
 
   async append(appendTokenValue: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -304,7 +316,7 @@ export class ConnectService {
     appendTokenValue: string,
     abortController: AbortController,
   ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -315,7 +327,7 @@ export class ConnectService {
   }
 
   async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -344,7 +356,7 @@ export class ConnectService {
     assertionResponse: string,
     isConditionalUI: boolean,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage();
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       throw CorbadoError.missingInit();
     }

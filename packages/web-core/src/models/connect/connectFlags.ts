@@ -1,10 +1,15 @@
-const storageKey = 'cbo_connect_flags';
+const getStorageKey = (projectId: string) => `cbo_connect_flags-${projectId}`;
 
 export type ConnectFlag = {
   name: string;
   value: string;
 };
 
+/**
+ * ConnectFlags holds a set of feature flags that are used to control the behavior of the Connect login and append process.
+ * The flags are stored in local storage and can be persisted across sessions.
+ * For each Corbado project there is a separate set of flags => the project ID is used as part of the key to store the flags.
+ */
 export class ConnectFlags {
   readonly items: ConnectFlag[];
 
@@ -12,8 +17,8 @@ export class ConnectFlags {
     this.items = items;
   }
 
-  static loadFromStorage(): ConnectFlags {
-    const serialized = localStorage.getItem(storageKey);
+  static loadFromStorage(projectId: string): ConnectFlags {
+    const serialized = localStorage.getItem(getStorageKey(projectId));
     if (!serialized) {
       return new ConnectFlags([]);
     }
@@ -24,9 +29,9 @@ export class ConnectFlags {
     return new ConnectFlags(items);
   }
 
-  persistToStorage() {
+  persistToStorage(projectId: string) {
     localStorage.setItem(
-      storageKey,
+      getStorageKey(projectId),
       JSON.stringify({
         items: this.items,
       }),
@@ -54,7 +59,7 @@ export class ConnectFlags {
     }
   }
 
-  static clearStorage() {
-    localStorage.removeItem(storageKey);
+  static clearStorage(projectId: string) {
+    localStorage.removeItem(getStorageKey(projectId));
   }
 }

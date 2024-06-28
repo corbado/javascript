@@ -3,15 +3,15 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
-import { LoginScreenType } from '../../types/ScreenType';
+import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { Flags } from '../../types/flags';
 
 const LoginInitScreen = () => {
-  const { config, getConnectService, navigateToScreen, setCurrentIdentifier } = useLoginProcess();
+  const { config, getConnectService, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const [loading, setLoading] = useState(false);
-  // const [rememberEmail, setRememberEmail] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -23,12 +23,22 @@ const LoginInitScreen = () => {
         return;
       }
 
-      console.log(res.val.loginAllowed, res.val.conditionalUIChallenge);
+      // we load flags from backend first, then we override them with the ones that are specified in the component's config
+      const flags = new Flags(res.val.flags);
+      if (config.flags) {
+        flags.addFlags(config.flags);
+      }
+      setFlags(flags);
+
       if (!res.val.loginAllowed) {
+        log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback('');
-      } else {
-        console.log('starting conditional ui 1');
+        return;
+      }
+
+      if (flags.hasSupportForConditionalUI()) {
+        log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
     };
@@ -53,6 +63,7 @@ const LoginInitScreen = () => {
     }
 
     if (res.err) {
+      log.debug('fallback: error during conditional UI');
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback('');
 
@@ -80,7 +91,7 @@ const LoginInitScreen = () => {
         return;
       }
 
-      log.debug('login not allowed');
+      log.debug('fallback: error during password login start');
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 

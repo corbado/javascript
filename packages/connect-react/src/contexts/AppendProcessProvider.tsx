@@ -3,7 +3,7 @@ import { ConnectService } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { AppendScreenType } from '../types/ScreenType';
+import type { AppendScreenType } from '../types/screenTypes';
 import type { AppendProcessContextProps } from './AppendProcessContext';
 import AppendProcessContext from './AppendProcessContext';
 

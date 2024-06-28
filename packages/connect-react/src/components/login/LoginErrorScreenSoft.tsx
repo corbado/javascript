@@ -3,7 +3,7 @@ import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
-import { LoginScreenType } from '../../types/ScreenType';
+import { LoginScreenType } from '../../types/screenTypes';
 import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { LinkButton } from '../shared/LinkButton';

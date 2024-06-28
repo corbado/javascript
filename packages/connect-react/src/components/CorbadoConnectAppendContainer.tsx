@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import useAppendProcess from '../hooks/useAppendProcess';
-import { AppendScreenType } from '../types/ScreenType';
+import { AppendScreenType } from '../types/screenTypes';
 import AppendBenefitsScreen from './append/AppendBenetifsScreen';
 import AppendInitScreen from './append/AppendInitScreen';
 import AppendSuccessScreen from './append/AppendSuccessScreen';

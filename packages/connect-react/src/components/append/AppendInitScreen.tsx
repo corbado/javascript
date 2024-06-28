@@ -2,7 +2,7 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
-import { AppendScreenType } from '../../types/ScreenType';
+import { AppendScreenType } from '../../types/screenTypes';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { ShieldIcon } from '../shared/icons/ShieldIcon';

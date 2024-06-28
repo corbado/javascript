@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import useLoginProcess from '../hooks/useLoginProcess';
-import { LoginScreenType } from '../types/ScreenType';
+import { LoginScreenType } from '../types/screenTypes';
 import LoginBenefitsScreen from './login/LoginBenetifsScreen';
 import LoginErrorScreenHard from './login/LoginErrorScreenHard';
 import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';

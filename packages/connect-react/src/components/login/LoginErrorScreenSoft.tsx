@@ -8,9 +8,11 @@ import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import useShared from '../../hooks/useShared';
 
 const LoginErrorScreenSoft = () => {
-  const { config, getConnectService, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(async () => {

@@ -11,9 +11,11 @@ import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import { Notification } from '../shared/Notification';
+import useShared from '../../hooks/useShared';
 
 const AppendInitScreen = () => {
-  const { config, navigateToScreen, getConnectService } = useAppendProcess();
+  const { config, navigateToScreen } = useAppendProcess();
+  const { getConnectService } = useShared();
   const [primaryButtonLoading, setPrimaryButtonLoading] = useState(false);
   const [appendAllowed, setAppendAllowed] = useState(false);
   const [attestationOptions, setAttestationOptions] = useState('');

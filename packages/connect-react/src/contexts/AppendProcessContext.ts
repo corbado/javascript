@@ -1,5 +1,4 @@
 import type { CorbadoConnectAppendConfig } from '@corbado/types';
-import type { ConnectService } from '@corbado/web-core';
 import { createContext } from 'react';
 
 import { AppendScreenType } from '../types/screenTypes';
@@ -10,7 +9,6 @@ const missingImplementation = (): never => {
 
 export interface AppendProcessContextProps {
   currentScreenType: AppendScreenType;
-  getConnectService: () => ConnectService;
   config: CorbadoConnectAppendConfig;
   navigateToScreen: (s: AppendScreenType) => void;
 }
@@ -18,7 +16,6 @@ export interface AppendProcessContextProps {
 export const initialContext: AppendProcessContextProps = {
   currentScreenType: AppendScreenType.Init,
   config: {} as CorbadoConnectAppendConfig,
-  getConnectService: missingImplementation,
   navigateToScreen: missingImplementation,
 };
 

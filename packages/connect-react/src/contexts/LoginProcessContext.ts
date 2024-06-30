@@ -1,5 +1,4 @@
 import type { CorbadoConnectLoginConfig } from '@corbado/types';
-import { ConnectService } from '@corbado/web-core';
 import { createContext } from 'react';
 
 import { LoginScreenType } from '../types/screenTypes';
@@ -11,7 +10,6 @@ const missingImplementation = (): never => {
 
 export interface LoginProcessContextProps {
   currentScreenType: LoginScreenType;
-  getConnectService: () => ConnectService;
   config: CorbadoConnectLoginConfig;
   navigateToScreen: (s: LoginScreenType) => void;
   setCurrentIdentifier: (s: string) => void;
@@ -23,7 +21,6 @@ export interface LoginProcessContextProps {
 export const initialContext: LoginProcessContextProps = {
   currentScreenType: LoginScreenType.Loading,
   config: {} as CorbadoConnectLoginConfig,
-  getConnectService: missingImplementation,
   navigateToScreen: missingImplementation,
   setCurrentIdentifier: missingImplementation,
   currentIdentifier: '',

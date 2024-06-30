@@ -7,9 +7,11 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import useShared from '../../hooks/useShared';
 
 const LoginErrorScreenHard = () => {
-  const { config, getConnectService, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
     const res = await getConnectService().login(currentIdentifier);

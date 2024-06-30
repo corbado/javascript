@@ -20,7 +20,6 @@ export default function LoginPage() {
           {conventionalLoginVisible ? <ConventionalLogin initialEmail={email} /> : null}
           <div className='component'>
             <CorbadoConnectLogin
-              projectId={process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!}
               onFallback={(email: string) => {
                 setEmail(email);
                 setConventionalLoginVisible(true);
@@ -28,7 +27,6 @@ export default function LoginPage() {
               }}
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
               onComplete={(method: string) => router.push('/home')}
-              frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}
               onSignupClick={() => router.push('/signup')}
             />
           </div>

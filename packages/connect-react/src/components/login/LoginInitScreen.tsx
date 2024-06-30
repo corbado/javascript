@@ -8,25 +8,27 @@ import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { Flags } from '../../types/flags';
+import useShared from '../../hooks/useShared';
 
 const LoginInitScreen = () => {
-  const { config, getConnectService, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
+  const { sharedConfig, getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      console.log('running init');
+      log.debug('running init');
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
-        console.error(res.val);
+        log.error(res.val);
         return;
       }
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
       const flags = new Flags(res.val.flags);
-      if (config.flags) {
-        flags.addFlags(config.flags);
+      if (sharedConfig.flags) {
+        flags.addFlags(sharedConfig.flags);
       }
       setFlags(flags);
 
@@ -101,17 +103,6 @@ const LoginInitScreen = () => {
     setLoading(false);
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
-
-  /*
-  <div>
-    <Checkbox
-      id='remember-me'
-      label='Remember my email address'
-      checked={rememberEmail}
-      onChange={() => setRememberEmail(!rememberEmail)}
-    />
-  </div>
-  */
 
   return (
     <div>

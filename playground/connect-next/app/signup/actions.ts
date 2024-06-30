@@ -12,10 +12,9 @@ export async function createAccount(email: string, password: string) {
   // of course this is not secure, but it's just a demo ;)
 
   const randomUsername = generateRandomString(10);
-  const randomForeignID = generateRandomString(10);
 
   cookies().set('displayName', email);
-  cookies().set('identifier', randomForeignID);
+  cookies().set('identifier', randomUsername);
 
   // create client that loads profile from ~/.aws/credentials or environment variables
   const client = new CognitoIdentityProviderClient({
@@ -39,10 +38,6 @@ export async function createAccount(email: string, password: string) {
       {
         Name: 'email_verified',
         Value: 'true',
-      },
-      {
-        Name: 'custom:foreignID',
-        Value: randomForeignID,
       },
     ],
   });

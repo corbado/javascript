@@ -2,5 +2,6 @@ import './index.css';
 
 import CorbadoConnectAppend from './components/CorbadoConnectAppend';
 import CorbadoConnectLogin from './components/CorbadoConnectLogin';
+import CorbadoConnectProvider from './components/CorbadoConnectProvider';
 
-export { CorbadoConnectLogin, CorbadoConnectAppend };
+export { CorbadoConnectLogin, CorbadoConnectAppend, CorbadoConnectProvider };

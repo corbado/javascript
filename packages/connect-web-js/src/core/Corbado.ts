@@ -1,12 +1,18 @@
 import { CorbadoConnectAppend, CorbadoConnectLogin } from '@corbado/connect-react';
-import type { CorbadoConnectAppendConfig, CorbadoConnectLoginConfig } from '@corbado/types';
+import type { CorbadoConnectAppendConfig, CorbadoConnectConfig, CorbadoConnectLoginConfig } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
 import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
+import { CorbadoState } from '../models/CorbadoState';
 
 export class Corbado {
+  #corbadoState?: CorbadoState;
   #componentInstances: Map<HTMLElement, Root> = new Map();
+
+  load(options: CorbadoConnectConfig) {
+    this.#corbadoState = new CorbadoState(options);
+  }
 
   mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
     this.#mountConnectComponent(element, CorbadoConnectLogin, options);
@@ -30,8 +36,13 @@ export class Corbado {
     componentOptions: T,
   ) => {
     this.#unmountConnectComponent(element);
+    if (!this.#corbadoState) {
+      throw new Error('Please call load() before mounting components');
+    }
 
-    const root = mountComponent(element, Component, componentOptions);
+    this.#unmountConnectComponent(element);
+
+    const root = mountComponent(this.#corbadoState, element, Component, componentOptions);
 
     this.#componentInstances.set(element, root);
   };

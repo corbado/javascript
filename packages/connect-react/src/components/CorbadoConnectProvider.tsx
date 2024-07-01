@@ -3,14 +3,14 @@ import { ConnectService } from '@corbado/web-core';
 import React, { FC, PropsWithChildren } from 'react';
 import SharedProvider from '../contexts/SharedProvider';
 
-export interface Props extends CorbadoConnectConfig {
+export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;
 
   customTranslations?: Record<string, object> | null;
   theme?: string | CustomThemes;
 }
 
-const CorbadoConnectProvider: FC<PropsWithChildren<Props>> = ({
+const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>> = ({
   children,
   customTranslations,
   theme,

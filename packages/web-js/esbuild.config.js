@@ -5,7 +5,7 @@ esbuild
   .build({
     entryPoints: ['src/index.script.ts'],
     bundle: true,
-    minify: true,
+    minify: false,
     outfile: 'dist/bundle/index.js',
     format: 'esm',
     platform: 'browser',

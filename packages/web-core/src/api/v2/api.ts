@@ -320,6 +320,240 @@ export interface ClientInformation {
 /**
  * 
  * @export
+ * @interface ConnectAppendFinishReq
+ */
+export interface ConnectAppendFinishReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendFinishReq
+     */
+    'attestationResponse': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendFinishRsp
+ */
+export interface ConnectAppendFinishRsp {
+    /**
+     * 
+     * @type {PasskeyOperation}
+     * @memberof ConnectAppendFinishRsp
+     */
+    'passkeyOperation': PasskeyOperation;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendInitReq
+ */
+export interface ConnectAppendInitReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof ConnectAppendInitReq
+     */
+    'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendInitReq
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendInitRsp
+ */
+export interface ConnectAppendInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'processID': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectAppendInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectAppendInitRsp
+     */
+    'appendAllowed': boolean;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendInitRsp
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendStartReq
+ */
+export interface ConnectAppendStartReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartReq
+     */
+    'appendTokenValue': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectAppendStartRsp
+ */
+export interface ConnectAppendStartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartRsp
+     */
+    'attestationOptions': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginFinishReq
+ */
+export interface ConnectLoginFinishReq {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectLoginFinishReq
+     */
+    'isConditionalUI': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginFinishReq
+     */
+    'assertionResponse': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginFinishRsp
+ */
+export interface ConnectLoginFinishRsp {
+    /**
+     * 
+     * @type {PasskeyOperation}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'passkeyOperation': PasskeyOperation;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'session': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginInitReq
+ */
+export interface ConnectLoginInitReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof ConnectLoginInitReq
+     */
+    'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectLoginInitReq
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginInitRsp
+ */
+export interface ConnectLoginInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'token': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectLoginInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectLoginInitRsp
+     */
+    'loginAllowed': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'conditionalUIChallenge'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectLoginInitRsp
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginStartReq
+ */
+export interface ConnectLoginStartReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginStartReq
+     */
+    'identifier': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectLoginStartRsp
+ */
+export interface ConnectLoginStartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginStartRsp
+     */
+    'assertionOptions': string;
+}
+/**
+ * 
+ * @export
  * @interface ContinueOnOtherDevice
  */
 export interface ContinueOnOtherDevice {
@@ -3147,6 +3381,477 @@ export class ConfigsApi extends BaseAPI {
      */
     public getSessionConfig(options?: AxiosRequestConfig) {
         return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * CorbadoConnectApi - axios parameter creator
+ * @export
+ */
+export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Finishes an initialized connect passkey append process.
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendFinish: async (connectAppendFinishReq: ConnectAppendFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendFinishReq' is not null or undefined
+            assertParamExists('connectAppendFinish', 'connectAppendFinishReq', connectAppendFinishReq)
+            const localVarPath = `/v2/connect/append/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Initializes a connect process for passkey append.
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendInit: async (connectAppendInitReq: ConnectAppendInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendInitReq' is not null or undefined
+            assertParamExists('connectAppendInit', 'connectAppendInitReq', connectAppendInitReq)
+            const localVarPath = `/v2/connect/append/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Starts an initialized connect passkey append process.
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendStart: async (connectAppendStartReq: ConnectAppendStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectAppendStartReq' is not null or undefined
+            assertParamExists('connectAppendStart', 'connectAppendStartReq', connectAppendStartReq)
+            const localVarPath = `/v2/connect/append/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectAppendStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Finishes an initialized connect login process.
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginFinish: async (connectLoginFinishReq: ConnectLoginFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectLoginFinishReq' is not null or undefined
+            assertParamExists('connectLoginFinish', 'connectLoginFinishReq', connectLoginFinishReq)
+            const localVarPath = `/v2/connect/login/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectLoginFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Initializes a connect process for login.
+         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginInit: async (connectLoginInitReq: ConnectLoginInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectLoginInitReq' is not null or undefined
+            assertParamExists('connectLoginInit', 'connectLoginInitReq', connectLoginInitReq)
+            const localVarPath = `/v2/connect/login/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectLoginInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Starts an initialized connect login process.
+         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginStart: async (connectLoginStartReq: ConnectLoginStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectLoginStartReq' is not null or undefined
+            assertParamExists('connectLoginStart', 'connectLoginStartReq', connectLoginStartReq)
+            const localVarPath = `/v2/connect/login/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectLoginStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CorbadoConnectApi - functional programming interface
+ * @export
+ */
+export const CorbadoConnectApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CorbadoConnectApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Finishes an initialized connect passkey append process.
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendFinishRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendFinish(connectAppendFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Initializes a connect process for passkey append.
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendInit(connectAppendInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Starts an initialized connect passkey append process.
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectAppendStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectAppendStart(connectAppendStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Finishes an initialized connect login process.
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectLoginFinish(connectLoginFinishReq: ConnectLoginFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectLoginFinishRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectLoginFinish(connectLoginFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Initializes a connect process for login.
+         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectLoginInit(connectLoginInitReq: ConnectLoginInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectLoginInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectLoginInit(connectLoginInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Starts an initialized connect login process.
+         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectLoginStartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectLoginStart(connectLoginStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * CorbadoConnectApi - factory interface
+ * @export
+ */
+export const CorbadoConnectApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CorbadoConnectApiFp(configuration)
+    return {
+        /**
+         * Finishes an initialized connect passkey append process.
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: any): AxiosPromise<ConnectAppendFinishRsp> {
+            return localVarFp.connectAppendFinish(connectAppendFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Initializes a connect process for passkey append.
+         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: any): AxiosPromise<ConnectAppendInitRsp> {
+            return localVarFp.connectAppendInit(connectAppendInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Starts an initialized connect passkey append process.
+         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: any): AxiosPromise<ConnectAppendStartRsp> {
+            return localVarFp.connectAppendStart(connectAppendStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Finishes an initialized connect login process.
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginFinish(connectLoginFinishReq: ConnectLoginFinishReq, options?: any): AxiosPromise<ConnectLoginFinishRsp> {
+            return localVarFp.connectLoginFinish(connectLoginFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Initializes a connect process for login.
+         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginInit(connectLoginInitReq: ConnectLoginInitReq, options?: any): AxiosPromise<ConnectLoginInitRsp> {
+            return localVarFp.connectLoginInit(connectLoginInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Starts an initialized connect login process.
+         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: any): AxiosPromise<ConnectLoginStartRsp> {
+            return localVarFp.connectLoginStart(connectLoginStartReq, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * CorbadoConnectApi - object-oriented interface
+ * @export
+ * @class CorbadoConnectApi
+ * @extends {BaseAPI}
+ */
+export class CorbadoConnectApi extends BaseAPI {
+    /**
+     * Finishes an initialized connect passkey append process.
+     * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectAppendFinish(connectAppendFinishReq: ConnectAppendFinishReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectAppendFinish(connectAppendFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Initializes a connect process for passkey append.
+     * @param {ConnectAppendInitReq} connectAppendInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectAppendInit(connectAppendInitReq: ConnectAppendInitReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectAppendInit(connectAppendInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Starts an initialized connect passkey append process.
+     * @param {ConnectAppendStartReq} connectAppendStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectAppendStart(connectAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Finishes an initialized connect login process.
+     * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectLoginFinish(connectLoginFinishReq: ConnectLoginFinishReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectLoginFinish(connectLoginFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Initializes a connect process for login.
+     * @param {ConnectLoginInitReq} connectLoginInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectLoginInit(connectLoginInitReq: ConnectLoginInitReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectLoginInit(connectLoginInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Starts an initialized connect login process.
+     * @param {ConnectLoginStartReq} connectLoginStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectLoginStart(connectLoginStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

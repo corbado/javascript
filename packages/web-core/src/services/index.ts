@@ -8,6 +8,7 @@ import { ProcessService } from './ProcessService';
 import { SessionService } from './SessionService';
 
 export type { SessionService } from './SessionService';
+export { ConnectService } from './ConnectService';
 
 /**
  * CorbadoApp is a class that represents the main application.

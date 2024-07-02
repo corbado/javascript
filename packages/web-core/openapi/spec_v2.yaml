@@ -25,6 +25,8 @@ tags:
     description: All API calls to manage configurations
   - name: Users
     description: All API calls to manage users
+  - name: CorbadoConnect
+    description: All API calls that are related to a connect process
 
 paths:
   /v2/session-config:
@@ -537,6 +539,126 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/connect/login/init:
+    post:
+      description: Initializes a connect process for login.
+      operationId: ConnectLoginInit
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginInitReq'
+      responses:
+        '200':
+          description: Contains information about if and how a passkey login can be started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginInitRsp'
+
+  /v2/connect/login/start:
+    post:
+      description: Starts an initialized connect login process.
+      operationId: ConnectLoginStart
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginStartReq'
+      responses:
+        '200':
+          description: Contains the challenge for the passkey login.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginStartRsp'
+
+  /v2/connect/login/finish:
+    post:
+      description: Finishes an initialized connect login process.
+      operationId: ConnectLoginFinish
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectLoginFinishReq'
+      responses:
+        '200':
+          description: Data about the passkey login and the session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectLoginFinishRsp'
+
+  /v2/connect/append/init:
+    post:
+      description: Initializes a connect process for passkey append.
+      operationId: ConnectAppendInit
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendInitReq'
+      responses:
+        '200':
+          description: Contains information about if and how a passkey append can be started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendInitRsp'
+
+  /v2/connect/append/start:
+    post:
+      description: Starts an initialized connect passkey append process.
+      operationId: ConnectAppendStart
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendStartReq'
+      responses:
+        '200':
+          description: Contains the challenge for the passkey append.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendStartRsp'
+
+  /v2/connect/append/finish:
+    post:
+      description: Finishes an initialized connect passkey append process.
+      operationId: ConnectAppendFinish
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectAppendFinishReq'
+      responses:
+        '200':
+          description: Data about the new passkey.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectAppendFinishRsp'
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -814,6 +936,148 @@ components:
       properties:
         id:
           type: string
+
+    connectLoginInitReq:
+      type: object
+      required:
+        - clientInformation
+        - flags
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectLoginInitRsp:
+      type: object
+      required:
+        - token
+        - expiresAt
+        - frontendApiUrl
+        - loginAllowed
+        - flags
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: integer
+        frontendApiUrl:
+          type: string
+        loginAllowed:
+          type: boolean
+        conditionalUIChallenge:
+          type: string
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectLoginStartReq:
+      type: object
+      required:
+        - identifier
+      properties:
+        identifier:
+          type: string
+
+    connectLoginStartRsp:
+      type: object
+      required:
+        - assertionOptions
+      properties:
+        assertionOptions:
+          type: string
+
+    connectLoginFinishReq:
+      type: object
+      required:
+        - assertionResponse
+        - isConditionalUI
+      properties:
+        isConditionalUI:
+          type: boolean
+        assertionResponse:
+          type: string
+
+    connectLoginFinishRsp:
+      type: object
+      required:
+        - passkeyOperation
+        - session
+      properties:
+        passkeyOperation:
+          $ref: '#/components/schemas/passkeyOperation'
+        session:
+          type: string
+
+    connectAppendInitReq:
+      type: object
+      required:
+        - clientInformation
+        - flags
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectAppendInitRsp:
+      type: object
+      required:
+        - processID
+        - expiresAt
+        - frontendApiUrl
+        - appendAllowed
+        - flags
+      properties:
+        processID:
+          type: string
+        expiresAt:
+          type: integer
+        frontendApiUrl:
+          type: string
+        appendAllowed:
+          type: boolean
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectAppendStartReq:
+      type: object
+      required:
+        - appendTokenValue
+      properties:
+        appendTokenValue:
+          type: string
+
+    connectAppendStartRsp:
+      type: object
+      required:
+        - attestationOptions
+      properties:
+        attestationOptions:
+          type: string
+
+    connectAppendFinishReq:
+      type: object
+      required:
+        - attestationResponse
+      properties:
+        attestationResponse:
+          type: string
+
+    connectAppendFinishRsp:
+      type: object
+      required:
+        - passkeyOperation
+      properties:
+        passkeyOperation:
+          $ref: '#/components/schemas/passkeyOperation'
 
     passkey:
       type: object
@@ -1158,7 +1422,7 @@ components:
         canUsePasskeys:
           type: boolean
         javaScriptHighEntropy:
-            $ref: '#/components/schemas/javaScriptHighEntropy'
+          $ref: '#/components/schemas/javaScriptHighEntropy'
 
     javaScriptHighEntropy:
       type: object
@@ -1190,10 +1454,10 @@ components:
     passkeyOperation:
       type: object
       required:
-          - operationType
-          - identifierValue
-          - identifierType
-          - isCDA
+        - operationType
+        - identifierValue
+        - identifierType
+        - isCDA
       properties:
         operationType:
           type: string
@@ -1233,21 +1497,21 @@ components:
         socialAccounts:
           type: array
           items:
-              $ref: '#/components/schemas/socialAccount'
+            $ref: '#/components/schemas/socialAccount'
 
     identifier:
       type: object
       required:
-          - value
-          - type
-          - status
+        - value
+        - type
+        - status
       properties:
-          value:
-            type: string
-          type:
-            $ref: '#/components/schemas/loginIdentifierType'
-          status:
-            type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
+        status:
+          type: string
 
     socialAccount:
       type: object

@@ -1,0 +1,51 @@
+{
+  "name": "@corbado/connect-react",
+  "version": "0.1.0",
+  "description": "This package provides a set of React components to integrate passkeys into an existing authentication system.",
+  "author": "Martin Kellner <martin.kellner@corbado.com>",
+  "homepage": "https://github.com/corbado/javascript#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corbado/javascript.git"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "npm run clean && tsc -b",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "bugs": {
+    "url": "https://github.com/corbado/javascript/issues"
+  },
+  "dependencies": {
+    "@corbado/web-core": "^2.8.0",
+    "i18next": "23.5.1",
+    "i18next-browser-languagedetector": "7.1.0",
+    "react-i18next": "13.2.2"
+  },
+  "devDependencies": {
+    "@corbado/types": "^2.6.0",
+    "@svgr/webpack": "^8.1.0",
+    "@types/react": "^18.2.0",
+    "ts-results": "^3.3.0",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "gitHead": "bdc9da96c3a34574545c5d9b522464ca9d3eca57"
+}

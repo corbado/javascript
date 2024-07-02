@@ -250,21 +250,21 @@ button.cb-secondary-button {
 
 .cb-notification-container {
   display: flex;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   background: var(--cb-color-secondary-container);
   color: var(--cb-color-on-secondary-container);
-  border-radius: .7rem;
+  border-radius: 0.7rem;
   border: 1px solid var(--cb-color-outline);
 }
 
 .cb-notification-icon {
   width: 25px;
-  margin-right: .25rem;
+  margin-right: 0.25rem;
   fill: var(--cb-color-on-secondary-container);
 }
 
 .cb-notification-text {
-  font-size: .8rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
 }

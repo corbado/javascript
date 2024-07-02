@@ -1,6 +1,8 @@
-import { CorbadoConnectConfig, CustomThemes } from '@corbado/types';
-import { ConnectService } from '@corbado/web-core';
-import React, { FC, PropsWithChildren } from 'react';
+import type { CorbadoConnectConfig, CustomThemes } from '@corbado/types';
+import type { ConnectService } from '@corbado/web-core';
+import type { FC, PropsWithChildren } from 'react';
+import React from 'react';
+
 import SharedProvider from '../contexts/SharedProvider';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {

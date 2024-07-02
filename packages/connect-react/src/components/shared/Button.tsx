@@ -1,5 +1,4 @@
-import React from 'react';
-import { type ButtonHTMLAttributes, forwardRef } from 'react';
+import React, { type ButtonHTMLAttributes, forwardRef } from 'react';
 
 import { LoadingSpinner } from './LoadingSpinner';
 

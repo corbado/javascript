@@ -1,5 +1,4 @@
-import { forwardRef } from 'react';
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import type { ButtonProps } from './Button';
 import { Button } from './Button';

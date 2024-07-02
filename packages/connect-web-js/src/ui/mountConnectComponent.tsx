@@ -1,8 +1,11 @@
-import React, { FC } from 'react';
+import type { CorbadoConnectProviderProps } from '@corbado/connect-react';
+import { CorbadoConnectProvider } from '@corbado/connect-react';
+import type { FC } from 'react';
+import React from 'react';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
-import { CorbadoState } from '../models/CorbadoState';
-import { CorbadoConnectProvider, CorbadoConnectProviderProps } from '@corbado/connect-react';
+
+import type { CorbadoState } from '../models/CorbadoState';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mountComponent<T extends Record<string, any>>(

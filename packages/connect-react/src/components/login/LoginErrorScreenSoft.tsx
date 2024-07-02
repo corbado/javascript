@@ -3,12 +3,12 @@ import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
+import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import useShared from '../../hooks/useShared';
 
 const LoginErrorScreenSoft = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();

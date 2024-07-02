@@ -3,12 +3,12 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
+import useShared from '../../hooks/useShared';
+import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { Flags } from '../../types/flags';
-import useShared from '../../hooks/useShared';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
@@ -124,7 +124,7 @@ const LoginInitScreen = () => {
       </PrimaryButton>
       {config.onSignupClick && (
         <LinkButton
-          onClick={() => config.onSignupClick!()}
+          onClick={() => config.onSignupClick?.()}
           className='cb-login-init-signup'
         >
           Signup for an account

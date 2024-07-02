@@ -1,4 +1,4 @@
-import { CorbadoConnectConfig } from '@corbado/types';
+import type { CorbadoConnectConfig } from '@corbado/types';
 import { ConnectService } from '@corbado/web-core';
 
 export class CorbadoState {

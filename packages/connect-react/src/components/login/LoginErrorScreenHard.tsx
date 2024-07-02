@@ -3,11 +3,11 @@ import log from 'loglevel';
 import React, { useCallback } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
+import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import useShared from '../../hooks/useShared';
 
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();

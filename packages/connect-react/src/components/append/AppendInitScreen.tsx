@@ -2,16 +2,16 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
+import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { ShieldIcon } from '../shared/icons/ShieldIcon';
 import { LinkButton } from '../shared/LinkButton';
+import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
-import { Notification } from '../shared/Notification';
-import useShared from '../../hooks/useShared';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();

@@ -2,10 +2,10 @@ import type { CorbadoConnectLoginConfig } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
+import type { Flags } from '../types/flags';
 import type { LoginScreenType } from '../types/screenTypes';
 import type { LoginProcessContextProps } from './LoginProcessContext';
 import LoginProcessContext from './LoginProcessContext';
-import { Flags } from '../types/flags';
 
 type Props = {
   config: CorbadoConnectLoginConfig;

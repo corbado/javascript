@@ -1,8 +1,8 @@
 import type { CorbadoConnectLoginConfig } from '@corbado/types';
 import { createContext } from 'react';
 
+import type { Flags } from '../types/flags';
 import { LoginScreenType } from '../types/screenTypes';
-import { Flags } from '../types/flags';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <ProcessContext/>');

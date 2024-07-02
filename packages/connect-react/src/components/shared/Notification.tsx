@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CircleExclamationIcon } from './icons/CircleExclamationIcon';
 
 type Props = {

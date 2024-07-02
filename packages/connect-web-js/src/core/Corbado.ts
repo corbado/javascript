@@ -3,8 +3,8 @@ import type { CorbadoConnectAppendConfig, CorbadoConnectConfig, CorbadoConnectLo
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
-import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
 import { CorbadoState } from '../models/CorbadoState';
+import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
 
 export class Corbado {
   #corbadoState?: CorbadoState;

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
-import SharedContext, { SharedContextProps } from '../contexts/SharedContext';
+import type { SharedContextProps } from '../contexts/SharedContext';
+import SharedContext from '../contexts/SharedContext';
 
 const useShared = (context = SharedContext): SharedContextProps => {
   const ctx = useContext(context);

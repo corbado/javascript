@@ -1,8 +1,8 @@
 import React from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
-import { PrimaryButton } from '../shared/PrimaryButton';
 import { PasskeyAppendedIcon } from '../shared/icons/PasskeyAppendedIcon';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendSuccessScreen = () => {
   const { config } = useAppendProcess();

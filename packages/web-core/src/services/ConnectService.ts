@@ -13,7 +13,7 @@ import type {
   ConnectLoginInitReq,
 } from '../api/v2';
 import { CorbadoConnectApi } from '../api/v2';
-import { AuthProcess } from '../models/authProcess';
+import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';

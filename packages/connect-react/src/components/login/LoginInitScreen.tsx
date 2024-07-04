@@ -134,7 +134,23 @@ const LoginInitScreen = () => {
         </LinkButton>
       )}
 
-      <PasskeyButton email='email@test.com' />
+      <div className='cb-login-init-passkey-button'>
+        <PasskeyButton
+          email='email@test.com'
+          onClick={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+        />
+
+        <LinkButton
+          onClick={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+          className='cb-switch'
+        >
+          Switch Account
+        </LinkButton>
+      </div>
     </div>
   );
 };

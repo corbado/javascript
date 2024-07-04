@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { Button } from './Button';
-import { PasskeyLoginIcon } from './icons/PasskeyLoginIcon';
 import { ArrowRight } from './icons/ArrowRight';
+import { PasskeyLoginIcon } from './icons/PasskeyLoginIcon';
+import { LoadingSpinner } from './LoadingSpinner';
 
 export type Props = {
   email: string;
+  onClick: () => void;
+  isLoading?: boolean;
 };
 
-export const PasskeyButton = ({ email }: Props) => {
+export const PasskeyButton = ({ email, isLoading }: Props) => {
   return (
     <Button className='cb-passkey-button'>
       <PasskeyLoginIcon className='cb-passkey-button-icon' />
@@ -16,7 +19,8 @@ export const PasskeyButton = ({ email }: Props) => {
         <div className='cb-passkey-button-title'>Login with passkey</div>
         <div className='cb-passkey-button-subtitle'>{email}</div>
       </div>
-      <ArrowRight className='cb-passkey-button-arrow' />
+
+      {isLoading ? <LoadingSpinner /> : <ArrowRight className='cb-passkey-button-arrow' />}
     </Button>
   );
 };

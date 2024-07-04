@@ -273,17 +273,14 @@ button.cb-secondary-button {
   padding: 1rem;
   background-color: white;
   color: var(--cb-color-on-primary);
-  border-radius: 3px;
+  border-radius: var(--cb-border-radius);
   border: 1px solid var(--cb-color-outline);
-  cursor: pointer;
-  box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
   width: 100%;
   display: flex;
   justify-items: between;
   align-items: center;
-  flex-direction: row;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .cb-passkey-button-icon {
@@ -301,15 +298,31 @@ button.cb-secondary-button {
   font-weight: bold;
   font-size: 0.8rem;
   color: black;
+  font-family: var(--cb-font-family-primary);
 }
 
 .cb-passkey-button-subtitle {
   color: var(--cb-color-secondary);
   font-size: 0.8rem;
   color: black;
+  font-family: var(--cb-font-family-primary);
 }
 
 .cb-passkey-button-arrow {
   width: 9px;
   color: black;
+}
+
+.cb-switch {
+  font-family: var(--cb-font-family-primary);
+  font-size: 1rem;
+  color: var(--cb-color-primary);
+}
+
+.cb-login-init-passkey-button {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
+  margin: 1rem 0rem;
 }

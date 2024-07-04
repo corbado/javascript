@@ -185,15 +185,18 @@ export class ConnectService {
 
     const resStart = await this.wrapWithErr(() => this.#connectApi.connectLoginStart({ identifier }));
     if (resStart.err) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return resStart;
     }
 
     if (!resStart.val.assertionOptions) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return Err(CorbadoError.noPasskeyAvailable());
     }
 
     const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
     if (res.err) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return res;
     }
 
@@ -388,5 +391,9 @@ export class ConnectService {
     }
 
     return lastLogin;
+  }
+
+  clearLastLogin() {
+    ConnectLastLogin.clearStorage(this.#projectId);
   }
 }

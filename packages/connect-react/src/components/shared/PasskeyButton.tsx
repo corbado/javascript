@@ -11,9 +11,12 @@ export type Props = {
   isLoading?: boolean;
 };
 
-export const PasskeyButton = ({ email, isLoading }: Props) => {
+export const PasskeyButton = ({ email, isLoading, onClick }: Props) => {
   return (
-    <Button className='cb-passkey-button'>
+    <Button
+      className='cb-passkey-button'
+      onClick={onClick}
+    >
       <PasskeyLoginIcon className='cb-passkey-button-icon' />
       <div className='cb-passkey-button-content'>
         <div className='cb-passkey-button-title'>Login with passkey</div>

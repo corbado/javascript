@@ -9,7 +9,6 @@ import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { PasskeyButton } from '../shared/PasskeyButton';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
@@ -25,7 +24,6 @@ const LoginInitScreen = () => {
         log.error(res.val);
         return;
       }
-      console.log(getConnectService().getLastLogin());
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
       const flags = new Flags(res.val.flags);
@@ -42,9 +40,17 @@ const LoginInitScreen = () => {
         return;
       }
 
-      if (flags.hasSupportForConditionalUI()) {
+      const lastLogin = getConnectService().getLastLogin();
+
+      if (lastLogin) {
+        navigateToScreen(LoginScreenType.Passkey);
+
+        config.onLoaded('loaded successfully', false);
+        return;
+      } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
+
         config.onLoaded('loaded successfully', false);
       }
     };
@@ -134,24 +140,6 @@ const LoginInitScreen = () => {
           Signup for an account
         </LinkButton>
       )}
-
-      <div className='cb-login-init-passkey-button'>
-        <PasskeyButton
-          email='email@test.com'
-          onClick={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
-
-        <LinkButton
-          onClick={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-          className='cb-switch'
-        >
-          Switch Account
-        </LinkButton>
-      </div>
     </div>
   );
 };

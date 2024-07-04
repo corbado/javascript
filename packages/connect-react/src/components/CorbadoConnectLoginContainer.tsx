@@ -7,6 +7,7 @@ import LoginErrorScreenHard from './login/LoginErrorScreenHard';
 import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';
 import LoginInitScreen from './login/LoginInitScreen';
 import { LoadingSpinner } from './shared/LoadingSpinner';
+import { LoginPasskeyScreen } from './login/LoginPasskeyScreen';
 
 const CorbadoConnectLoginContainer = () => {
   const { currentScreenType } = useLoginProcess();
@@ -23,6 +24,8 @@ const CorbadoConnectLoginContainer = () => {
         return <LoginErrorScreenSoft />;
       case LoginScreenType.ErrorHard:
         return <LoginErrorScreenHard />;
+      case LoginScreenType.Passkey:
+        return <LoginPasskeyScreen />;
       case LoginScreenType.Invisible:
         return <></>;
     }

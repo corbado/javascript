@@ -15,8 +15,8 @@ import type {
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
-import { ConnectProcess } from '../models/connect/connectProcess';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
+import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';

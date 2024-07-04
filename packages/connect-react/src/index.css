@@ -268,3 +268,48 @@ button.cb-secondary-button {
   display: flex;
   align-items: center;
 }
+
+.cb-passkey-button {
+  padding: 1rem;
+  background-color: white;
+  color: var(--cb-color-on-primary);
+  border-radius: 3px;
+  border: 1px solid var(--cb-color-outline);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
+  width: 100%;
+  display: flex;
+  justify-items: between;
+  align-items: center;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.cb-passkey-button-icon {
+  width: 25px;
+  height: 25px;
+  color: black;
+}
+
+.cb-passkey-button-content {
+  flex: 1;
+  text-align: left;
+}
+
+.cb-passkey-button-title {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: black;
+}
+
+.cb-passkey-button-subtitle {
+  color: var(--cb-color-secondary);
+  font-size: 0.8rem;
+  color: black;
+}
+
+.cb-passkey-button-arrow {
+  width: 9px;
+  color: black;
+}

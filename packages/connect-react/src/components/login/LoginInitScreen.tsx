@@ -9,6 +9,7 @@ import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { PasskeyButton } from '../shared/PasskeyButton';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
@@ -132,6 +133,8 @@ const LoginInitScreen = () => {
           Signup for an account
         </LinkButton>
       )}
+
+      <PasskeyButton email='email@test.com' />
     </div>
   );
 };

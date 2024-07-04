@@ -3,24 +3,35 @@
   <head>
     <title>SignIn - My Corbado App</title>
     <script src="./bundle/index.js"></script>
+    <link
+      rel="stylesheet"
+      href="./bundle/index.css"
+    />
     <script type="module">
-      const projectID = 'pro-2';
+      const projectID = 'pro-7777686509710145734';
       const authElement = document.getElementById('corbado-auth');
 
-      Corbado.mountCorbadoConnectLogin(authElement, {
+      Corbado.load({
         projectId: projectID,
+        frontendApiUrlSuffix: 'frontendapi.corbado.io',
+      });
+
+      Corbado.mountCorbadoConnectLogin(authElement, {
         fallbackUIContainerId: 'conventional-login',
         fallbackUITextFieldId: 'conventional-login-email',
         onLoaded: msg => console.log('component has loaded: ' + msg),
         onComplete: method => window.location.replace('/index.html'),
-        frontendApiUrlSuffix: 'frontendapi.corbado-dev.io',
+        onFallback: () => $('#conventional-login input').removeAttr('style'),
       });
     </script>
   </head>
 
   <body>
-    <div id="conventional-login">
-      <h1>Sign In</h1>
+    <h1>Sign In</h1>
+    <div
+      id="conventional-login"
+      style="display: none"
+    >
       <input
         id="conventional-login-email"
         type="email"

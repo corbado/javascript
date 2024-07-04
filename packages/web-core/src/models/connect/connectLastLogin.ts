@@ -1,4 +1,4 @@
-import { LoginIdentifierType } from '@corbado/types';
+import type { LoginIdentifierType } from '@corbado/types';
 
 const getStorageKey = (projectId: string) => `cbo_connect_last_login-${projectId}`;
 

@@ -1,5 +1,3 @@
-import type { ConnectAppendInitData, ConnectLoginInitData } from './login';
-
 const getStorageKey = (projectId: string) => `cbo_connect_last_login-${projectId}`;
 
 export class ConnectLastLogin {
@@ -8,7 +6,17 @@ export class ConnectLastLogin {
   readonly isCDA: boolean;
   readonly operationType: string;
 
-  constructor(identifierType: string, identifierValue: string, isCDA: boolean, operationType: string) {
+  constructor({
+    identifierType,
+    identifierValue,
+    isCDA,
+    operationType,
+  }: {
+    identifierType: string;
+    identifierValue: string;
+    isCDA: boolean;
+    operationType: string;
+  }) {
     this.identifierType = identifierType;
     this.identifierValue = identifierValue;
     this.isCDA = isCDA;
@@ -21,8 +29,7 @@ export class ConnectLastLogin {
       return undefined;
     }
 
-    const { identifierType, identifierValue, isCDA, operationType } = JSON.parse(serialized);
-    const process = new ConnectLastLogin(identifierType, identifierValue, isCDA, operationType);
+    const process = new ConnectLastLogin(JSON.parse(serialized));
 
     return process;
   }

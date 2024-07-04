@@ -16,6 +16,7 @@ import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectProcess } from '../models/connect/connectProcess';
+import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
@@ -365,6 +366,9 @@ export class ConnectService {
       this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }),
     );
     if (res.ok) {
+      const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
+      latestLogin.persistToStorage(this.#projectId);
+
       // we no longer need process state after login
       this.clearProcess();
     }
@@ -374,5 +378,15 @@ export class ConnectService {
 
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+  }
+
+  getLastLogin() {
+    const lastLogin = ConnectLastLogin.loadFromStorage(this.#projectId);
+
+    if (!lastLogin) {
+      return undefined;
+    }
+
+    return lastLogin;
   }
 }

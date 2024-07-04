@@ -1,4 +1,4 @@
-import type { LoginIdentifierType } from '@corbado/types';
+import { LoginIdentifierType } from '@corbado/types';
 
 const getStorageKey = (projectId: string) => `cbo_connect_last_login-${projectId}`;
 
@@ -19,7 +19,7 @@ export class ConnectLastLogin {
     isCDA: boolean;
     operationType: string;
   }) {
-    this.identifierType = identifierType;
+    this.identifierType = LoginIdentifierType[identifierType];
     this.identifierValue = identifierValue;
     this.isCDA = isCDA;
     this.operationType = operationType;

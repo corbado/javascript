@@ -61,6 +61,7 @@ const LoginInitScreen = () => {
     if (!challenge) {
       return;
     }
+    const projectId = getConnectService().projectId;
 
     const res = await getConnectService().conditionalUILogin();
     if (res.err && (res.val instanceof PasskeyChallengeCancelledError || res.val.ignore)) {
@@ -75,6 +76,7 @@ const LoginInitScreen = () => {
       return;
     }
 
+    localStorage.setItem(`cbo_connect_last_login-${projectId}`, JSON.stringify(res.val));
     config.onComplete(res.val.session);
   };
 
@@ -83,6 +85,8 @@ const LoginInitScreen = () => {
 
     const identifier = emailFieldRef.current?.value ?? '';
     setCurrentIdentifier(identifier);
+
+    const projectId = getConnectService().projectId;
 
     const res = await getConnectService().login(identifier);
     if (res.err) {
@@ -104,6 +108,7 @@ const LoginInitScreen = () => {
     }
 
     setLoading(false);
+    localStorage.setItem(`cbo_connect_last_login-${projectId}`, JSON.stringify(res.val));
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 

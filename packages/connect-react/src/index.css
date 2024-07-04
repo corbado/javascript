@@ -314,15 +314,9 @@ button.cb-secondary-button {
 }
 
 .cb-switch {
-  font-family: var(--cb-font-family-primary);
-  font-size: 1rem;
-  color: var(--cb-color-primary);
 }
 
 .cb-login-init-passkey-button {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  gap: 2rem;
   margin: 1rem 0rem;
 }

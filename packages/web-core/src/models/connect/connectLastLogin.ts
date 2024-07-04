@@ -14,12 +14,12 @@ export class ConnectLastLogin {
     isCDA,
     operationType,
   }: {
-    identifierType: string;
+    identifierType: LoginIdentifierType;
     identifierValue: string;
     isCDA: boolean;
     operationType: string;
   }) {
-    this.identifierType = LoginIdentifierType[identifierType];
+    this.identifierType = identifierType;
     this.identifierValue = identifierValue;
     this.isCDA = isCDA;
     this.operationType = operationType;

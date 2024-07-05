@@ -345,6 +345,9 @@ export class ConnectService {
       this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
     );
     if (finishRes.ok) {
+      const latestLogin = new ConnectLastLogin(finishRes.val.passkeyOperation);
+      latestLogin.persistToStorage(this.#projectId);
+
       // we no longer need process state after the append process has finished
       this.clearProcess();
     }

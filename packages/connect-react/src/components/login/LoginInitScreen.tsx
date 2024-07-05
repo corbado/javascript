@@ -36,13 +36,20 @@ const LoginInitScreen = () => {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback('');
+        config.onLoaded('loaded successfully', true);
         return;
       }
 
-      if (flags.hasSupportForConditionalUI()) {
+      const lastLogin = getConnectService().getLastLogin();
+
+      if (lastLogin) {
+        log.debug('starting relogin UI');
+        navigateToScreen(LoginScreenType.PasskeyReLogin);
+      } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
+      config.onLoaded('loaded successfully', false);
     };
 
     const ac = new AbortController();

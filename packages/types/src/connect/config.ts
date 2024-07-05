@@ -1,6 +1,6 @@
 export type CorbadoConnectLoginConfig = {
   onFallback(email: string): void;
-  onLoaded(message: string): void;
+  onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
   onSignupClick?(): void;
 };

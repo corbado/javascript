@@ -31,7 +31,7 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
       flags,
       setFlags,
     }),
-    [currentScreenType, navigateToScreen, config],
+    [currentScreenType, navigateToScreen, config, currentIdentifier],
   );
 
   return <LoginProcessContext.Provider value={contextValue}>{children}</LoginProcessContext.Provider>;

@@ -15,6 +15,7 @@ import type {
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
+import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
@@ -184,15 +185,18 @@ export class ConnectService {
 
     const resStart = await this.wrapWithErr(() => this.#connectApi.connectLoginStart({ identifier }));
     if (resStart.err) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return resStart;
     }
 
     if (!resStart.val.assertionOptions) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return Err(CorbadoError.noPasskeyAvailable());
     }
 
     const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
     if (res.err) {
+      ConnectLastLogin.clearStorage(this.#projectId);
       return res;
     }
 
@@ -341,6 +345,9 @@ export class ConnectService {
       this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
     );
     if (finishRes.ok) {
+      const latestLogin = new ConnectLastLogin(finishRes.val.passkeyOperation);
+      latestLogin.persistToStorage(this.#projectId);
+
       // we no longer need process state after the append process has finished
       this.clearProcess();
     }
@@ -365,6 +372,9 @@ export class ConnectService {
       this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }),
     );
     if (res.ok) {
+      const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
+      latestLogin.persistToStorage(this.#projectId);
+
       // we no longer need process state after login
       this.clearProcess();
     }
@@ -374,5 +384,13 @@ export class ConnectService {
 
   #getDefaultFrontendApiUrl() {
     return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+  }
+
+  getLastLogin() {
+    return ConnectLastLogin.loadFromStorage(this.#projectId);
+  }
+
+  clearLastLogin() {
+    ConnectLastLogin.clearStorage(this.#projectId);
   }
 }

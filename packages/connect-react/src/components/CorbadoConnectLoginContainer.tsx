@@ -6,6 +6,7 @@ import LoginBenefitsScreen from './login/LoginBenetifsScreen';
 import LoginErrorScreenHard from './login/LoginErrorScreenHard';
 import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';
 import LoginInitScreen from './login/LoginInitScreen';
+import { LoginPasskeyReLoginScreen } from './login/LoginPasskeyReLoginScreen';
 import { LoadingSpinner } from './shared/LoadingSpinner';
 
 const CorbadoConnectLoginContainer = () => {
@@ -23,6 +24,8 @@ const CorbadoConnectLoginContainer = () => {
         return <LoginErrorScreenSoft />;
       case LoginScreenType.ErrorHard:
         return <LoginErrorScreenHard />;
+      case LoginScreenType.PasskeyReLogin:
+        return <LoginPasskeyReLoginScreen />;
       case LoginScreenType.Invisible:
         return <></>;
     }

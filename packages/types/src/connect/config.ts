@@ -12,6 +12,10 @@ export type CorbadoConnectAppendConfig = {
   onComplete(method: string): void;
 };
 
+export type CorbadoConnectPasskeyListConfig = {
+  appendTokenProvider(): Promise<string>;
+};
+
 export type CorbadoConnectConfig = {
   projectId: string;
   flags?: Record<string, string>;

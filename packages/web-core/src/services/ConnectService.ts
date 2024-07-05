@@ -384,13 +384,7 @@ export class ConnectService {
   }
 
   getLastLogin() {
-    const lastLogin = ConnectLastLogin.loadFromStorage(this.#projectId);
-
-    if (!lastLogin) {
-      return undefined;
-    }
-
-    return lastLogin;
+    return ConnectLastLogin.loadFromStorage(this.#projectId);
   }
 
   clearLastLogin() {

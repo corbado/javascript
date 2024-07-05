@@ -43,16 +43,13 @@ const LoginInitScreen = () => {
       const lastLogin = getConnectService().getLastLogin();
 
       if (lastLogin) {
-        navigateToScreen(LoginScreenType.Passkey);
-
-        config.onLoaded('loaded successfully', false);
-        return;
+        log.debug('starting relogin UI');
+        navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
-
-        config.onLoaded('loaded successfully', false);
       }
+      config.onLoaded('loaded successfully', false);
     };
 
     const ac = new AbortController();

@@ -8,7 +8,7 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
 
-export const LoginPasskeyScreen = () => {
+export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export const LoginPasskeyScreen = () => {
     const lastLogin = getConnectService().getLastLogin();
 
     if (!lastLogin?.identifierValue) {
-      handleFallback();
+      beginNewLogin();
       return;
     }
 
@@ -40,7 +40,7 @@ export const LoginPasskeyScreen = () => {
       }
 
       log.debug('login not allowed');
-      handleFallback();
+      beginNewLogin();
 
       return;
     }
@@ -49,9 +49,9 @@ export const LoginPasskeyScreen = () => {
     config.onComplete(res.val.session);
   }, [getConnectService, config, currentIdentifier]);
 
-  const handleFallback = useCallback(() => {
-    navigateToScreen(LoginScreenType.Init);
+  const beginNewLogin = useCallback(() => {
     getConnectService().clearLastLogin();
+    navigateToScreen(LoginScreenType.Init);
   }, [navigateToScreen, getConnectService]);
 
   return (
@@ -63,7 +63,7 @@ export const LoginPasskeyScreen = () => {
       />
 
       <LinkButton
-        onClick={() => handleFallback()}
+        onClick={() => beginNewLogin()}
         className='cb-switch'
       >
         Switch Account

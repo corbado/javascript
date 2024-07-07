@@ -17,13 +17,16 @@ export async function getAppendToken() {
 
   // call backend API to get token
   const payload = {
-    displayName: displayName.value,
-    identifier: identifier.value,
+    type: 'passkey-append',
+    data: {
+      displayName: displayName.value,
+      identifier: identifier.value,
+    },
   };
 
   const body = JSON.stringify(payload);
 
-  const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/appendTokens`;
+  const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/connectTokens`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {

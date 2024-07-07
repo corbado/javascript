@@ -5,6 +5,7 @@
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
   "license": "ISC",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {

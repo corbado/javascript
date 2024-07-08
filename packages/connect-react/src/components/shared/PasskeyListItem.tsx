@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 export type Props = {
   name: string;
@@ -11,14 +11,9 @@ export type Props = {
   isHybrid?: boolean;
 };
 
-export const PasskeyListItem: FC<Props> = ({ name, createdAt, browser, os, isThisDevice, isSynced, isHybrid }) => {
+export const PasskeyListItem: FC<Props> = ({  }) => {
   return (
     <div className='cb-passkey-info-list-item'>
-      <div className='cb-passkey-info-list-item__icon'>{icon}</div>
-      <div className='cb-passkey-info-list-item__text'>
-        <div className='cb-span cb-bold'>{title}</div>
-        <div className='cb-span'>{description}</div>
-      </div>
     </div>
   );
 };

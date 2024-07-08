@@ -1,24 +1,15 @@
-import type { CorbadoConnectLoginConfig } from '@corbado/types';
+import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
 
-import LoginProcessProvider from '../contexts/LoginProcessProvider';
-import { LoginScreenType } from '../types/screenTypes';
-import CorbadoConnectLoginContainer from './CorbadoConnectLoginContainer';
+import CorbadoConnectPasskeyListContainer from './CorbadoConnectPasskeyListContainer';
 
-const CorbadoConnectLogin: FC<CorbadoConnectLoginConfig> = (config: CorbadoConnectLoginConfig) => {
+const CorbadoConnectPasskeyList: FC<CorbadoConnectPasskeyListConfig> = () => {
   return (
     <div className='light'>
-      <div className='cb-connect-container cb-connect-login'>
-        <LoginProcessProvider
-          config={config}
-          initialScreenType={LoginScreenType.Init}
-        >
-          <CorbadoConnectLoginContainer />
-        </LoginProcessProvider>
-      </div>
+          <CorbadoConnectPasskeyListContainer />
     </div>
   );
 };
 
-export default CorbadoConnectLogin;
+export default CorbadoConnectPasskeyList;

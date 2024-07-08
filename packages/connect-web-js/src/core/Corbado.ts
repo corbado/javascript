@@ -1,4 +1,4 @@
-import { CorbadoConnectAppend, CorbadoConnectLogin } from '@corbado/connect-react';
+import { CorbadoConnectAppend, CorbadoConnectLogin, CorbadoConnectPasskeyList } from '@corbado/connect-react';
 import type {
   CorbadoConnectAppendConfig,
   CorbadoConnectConfig,
@@ -36,7 +36,7 @@ export class Corbado {
   }
 
   mountCorbadoConnectPasskeyList(element: HTMLElement, options: CorbadoConnectPasskeyListConfig) {
-    this.#mountConnectComponent(element, CorbadoConnectPasskeyListConfig, options);
+    this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options);
   }
 
   unmountCorbadoConnectPasskeyList(element: HTMLElement) {

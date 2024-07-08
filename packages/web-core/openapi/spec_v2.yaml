@@ -659,6 +659,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/connectAppendFinishRsp'
 
+  /v2/connect/manage/init:
+    post:
+      description: Initialiases a connect process for managing passkeys.
+      operationId: ConnectManageInit
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectManageInitReq'
+      responses:
+        '200':
+          description: Contains information about if and how a passkey list can be started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectManageInitRsp'
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -1078,6 +1098,41 @@ components:
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
+
+    connectManageInitReq:
+      type: object
+      required:
+        - clientInformation
+        - flags
+      properties:
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+
+    connectManageInitRsp:
+      type: object
+      required:
+        - processID
+        - expiresAt
+        - frontendApiUrl
+        - manageAllowed
+        - flags
+      properties:
+        processID:
+          type: string
+        expiresAt:
+          type: integer
+        frontendApiUrl:
+          type: string
+        manageAllowed:
+          type: boolean
+        flags:
+          type: object
+          additionalProperties:
+            type: string
 
     passkey:
       type: object

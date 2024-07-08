@@ -13,3 +13,7 @@ export enum LoginScreenType {
   ErrorHard = 'ErrorHard',
   Invisible = 'Invisible',
 }
+
+export enum ManageScreenType {
+  Init = 'ManageInit',
+}

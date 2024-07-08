@@ -11,6 +11,8 @@ const CorbadoConnectPasskeyListContainer = () => {
     switch (currentScreenType) {
       case ManageScreenType.Init:
         return <PasskeyListScreen />;
+      case ManageScreenType.Invisible:
+        return <></>;
     }
   }, [currentScreenType]);
 

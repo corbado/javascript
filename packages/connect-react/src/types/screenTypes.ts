@@ -16,4 +16,5 @@ export enum LoginScreenType {
 
 export enum ManageScreenType {
   Init = 'ManageInit',
+  Invisible = "Invisible",
 }

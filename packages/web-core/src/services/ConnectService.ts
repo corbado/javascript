@@ -384,7 +384,7 @@ export class ConnectService {
     return res;
   }
 
-  async initManage(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
+  async manageInit(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess?.isValid()) {
       log.debug('process exists, preparing api clients');

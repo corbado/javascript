@@ -407,6 +407,7 @@ button.cb-secondary-button {
   background-color: var(--cb-color-primary);
   color: var(--cb-color-on-primary);
   border-radius: var(--cb-border-radius);
+  padding: 6px 10px;
 }
 
 .cb-passkey-list__append-icon {

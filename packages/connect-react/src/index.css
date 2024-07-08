@@ -10,6 +10,10 @@
   --cb-border-radius: 0rem;
 }
 
+.cb-width-full {
+  width: 100%;
+}
+
 .cb-h2 {
   font-size: 1.5rem;
   /*font-weight: bold;*/
@@ -319,4 +323,109 @@ button.cb-secondary-button {
 .cb-login-init-passkey-button {
   width: 100%;
   margin: 1rem 0rem;
+}
+
+.cb-passkey-list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cb-passkey-list-item {
+  width: 100%;
+  display: flex;
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-outline);
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.cb-passkey-list-item__icon {
+  width: 20px;
+  color: black;
+}
+
+.cb-passkey-list-item__delete-icon {
+  width: 15px;
+  color: var(--cb-color-secondary);
+}
+
+.cb-passkey-list-item__content {
+  flex: 1;
+}
+
+.cb-passkey-list-item__title {
+  color: black;
+  font-size: 1rem;
+}
+
+.cb-passkey-list-item__details {
+  color: var(--cb-color-secondary);
+  font-size: 0.875rem;
+}
+
+.cb-tag {
+  background-color: var(--cb-color-secondary-container);
+  padding: 2px 4px;
+  color: var(--cb-color-on-secondary-container);
+  display: flex;
+  gap: 4px;
+  border-radius: var(--cb-border-radius);
+  width: fit-content;
+  height: fit-content;
+  font-size: 8px;
+}
+
+.cb-passkey-list-item__tag-icon {
+  width: 10px;
+}
+
+.cb-passkey-list-item__tags {
+  display: flex;
+  width: 100%;
+  gap: 2px;
+}
+
+.cb-passkey-list-item__header {
+  display: flex;
+  text-align: left;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cb-passkey-list__append-button {
+  display: flex;
+  gap: 1rem;
+  width: fit-content;
+  align-items: center;
+  background-color: var(--cb-color-primary);
+  color: var(--cb-color-on-primary);
+  border-radius: var(--cb-border-radius);
+}
+
+.cb-passkey-list__append-icon {
+  width: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .cb-passkey-list-item__delete-icon {
+    width: 12px;
+  }
+
+  .cb-passkey-list-item {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .cb-passkey-list-item__header {
+    flex-direction: column;
+    align-items: start;
+    gap: 2px;
+  }
 }

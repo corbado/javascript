@@ -13,7 +13,6 @@ export type CorbadoConnectAppendConfig = {
 };
 
 export type CorbadoConnectPasskeyListConfig = {
-  appendTokenProvider(): Promise<string>;
 };
 
 export type CorbadoConnectConfig = {

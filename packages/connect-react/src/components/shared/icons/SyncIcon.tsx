@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 import React from 'react';
 
-export const KeyIcon = ({ className }: InputHTMLAttributes<HTMLInputElement>) => {
+export const SyncIcon = ({ className }: InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <svg
       viewBox='0 0 8 8'

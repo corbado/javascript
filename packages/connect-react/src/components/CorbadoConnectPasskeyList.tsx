@@ -6,7 +6,7 @@ import CorbadoConnectPasskeyListContainer from './CorbadoConnectPasskeyListConta
 
 const CorbadoConnectPasskeyList: FC<CorbadoConnectPasskeyListConfig> = () => {
   return (
-    <div className='light'>
+    <div className='light cb-width-full'>
           <CorbadoConnectPasskeyListContainer />
     </div>
   );

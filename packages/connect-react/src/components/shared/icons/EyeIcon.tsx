@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 import React from 'react';
 
-export const AppleIcon = ({ className }: InputHTMLAttributes<HTMLInputElement>) => {
+export const EyeIcon = ({ className }: InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <svg
       viewBox='0 0 9 6'

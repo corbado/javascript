@@ -554,6 +554,62 @@ export interface ConnectLoginStartRsp {
 /**
  * 
  * @export
+ * @interface ConnectManageInitReq
+ */
+export interface ConnectManageInitReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof ConnectManageInitReq
+     */
+    'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectManageInitReq
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageInitRsp
+ */
+export interface ConnectManageInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'processID': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectManageInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectManageInitRsp
+     */
+    'manageAllowed': boolean;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectManageInitRsp
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
  * @interface ContinueOnOtherDevice
  */
 export interface ContinueOnOtherDevice {
@@ -3644,6 +3700,48 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Initialiases a connect process for managing passkeys.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageInit: async (connectManageInitReq: ConnectManageInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectManageInitReq' is not null or undefined
+            assertParamExists('connectManageInit', 'connectManageInitReq', connectManageInitReq)
+            const localVarPath = `/v2/connect/manage/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectManageInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3714,6 +3812,16 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.connectLoginStart(connectLoginStartReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Initialiases a connect process for managing passkeys.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectManageInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectManageInit(connectManageInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -3777,6 +3885,15 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
          */
         connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: any): AxiosPromise<ConnectLoginStartRsp> {
             return localVarFp.connectLoginStart(connectLoginStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Initialiases a connect process for managing passkeys.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: any): AxiosPromise<ConnectManageInitRsp> {
+            return localVarFp.connectManageInit(connectManageInitReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3852,6 +3969,17 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectLoginStart(connectLoginStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Initialiases a connect process for managing passkeys.
+     * @param {ConnectManageInitReq} connectManageInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectManageInit(connectManageInitReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -1,4 +1,4 @@
-import type { ConnectAppendInitData, ConnectLoginInitData } from './login';
+import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from './login';
 
 const getStorageKey = (projectId: string) => `cbo_connect_process-${projectId}`;
 
@@ -9,6 +9,7 @@ export class ConnectProcess {
   readonly expiresAt: number;
   readonly loginData: ConnectLoginInitData | null;
   readonly appendData: ConnectAppendInitData | null;
+  readonly manageData: ConnectManageInitData | null;
 
   constructor(
     id: string,
@@ -17,6 +18,7 @@ export class ConnectProcess {
     frontendApiUrl: string,
     loginData: ConnectLoginInitData | null,
     appendData: ConnectAppendInitData | null,
+    manageData: ConnectManageInitData | null,
   ) {
     this.id = id;
     this.projectId = projectId;
@@ -24,6 +26,7 @@ export class ConnectProcess {
     this.frontendApiUrl = frontendApiUrl;
     this.loginData = loginData;
     this.appendData = appendData;
+    this.manageData = manageData;
   }
 
   isValid(): boolean {
@@ -31,11 +34,15 @@ export class ConnectProcess {
   }
 
   copyWithLoginData(loginData: ConnectLoginInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, loginData, this.appendData);
+    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, loginData, this.appendData, this.manageData);
   }
 
   copyWithAppendData(appendData: ConnectAppendInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, this.loginData, appendData);
+    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, this.loginData, appendData, this.manageData);
+  }
+
+  copyWithManageData(manageData: ConnectManageInitData): ConnectProcess {
+    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, this.loginData, this.appendData, manageData);
   }
 
   static loadFromStorage(projectId: string): ConnectProcess | undefined {
@@ -44,8 +51,8 @@ export class ConnectProcess {
       return undefined;
     }
 
-    const { id, expiresAt, frontendApiUrl, loginData, appendData } = JSON.parse(serialized);
-    const process = new ConnectProcess(id, projectId, expiresAt, frontendApiUrl, loginData, appendData);
+    const { id, expiresAt, frontendApiUrl, loginData, appendData, manageData } = JSON.parse(serialized);
+    const process = new ConnectProcess(id, projectId, expiresAt, frontendApiUrl, loginData, appendData, manageData);
     if (!process.isValid()) {
       return undefined;
     }
@@ -62,6 +69,7 @@ export class ConnectProcess {
         frontendApiUrl: this.frontendApiUrl,
         loginData: this.loginData,
         appendData: this.appendData,
+        manageData: this.manageData,
       }),
     );
   }

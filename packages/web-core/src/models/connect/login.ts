@@ -8,3 +8,8 @@ export interface ConnectAppendInitData {
   appendAllowed: boolean;
   flags: Record<string, string>;
 }
+
+export interface ConnectManageInitData {
+  manageAllowed: boolean;
+  flags: Record<string, string>;
+}

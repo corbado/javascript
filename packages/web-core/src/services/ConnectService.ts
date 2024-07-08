@@ -17,7 +17,7 @@ import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
-import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
+import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
@@ -166,6 +166,7 @@ export class ConnectService {
         res.val.frontendApiUrl,
         loginData,
         null,
+        null,
       );
       this.#setApisV2(newProcess);
       newProcess.persistToStorage();
@@ -276,6 +277,7 @@ export class ConnectService {
         res.val.frontendApiUrl,
         null,
         appendData,
+        null,
       );
       this.#setApisV2(newProcess);
       newProcess.persistToStorage();
@@ -380,6 +382,73 @@ export class ConnectService {
     }
 
     return res;
+  }
+
+  async initManage(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcess?.isValid()) {
+      log.debug('process exists, preparing api clients');
+      this.#setApisV2(existingProcess);
+    }
+
+    // process has already been initialized
+    if (existingProcess?.manageData) {
+      return Ok(existingProcess.manageData);
+    }
+
+    const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const maybeClientHandle = WebAuthnService.getClientHandle();
+    const flags = ConnectFlags.loadFromStorage(this.#projectId);
+
+    const req: ConnectAppendInitReq = {
+      clientInformation: {
+        bluetoothAvailable: bluetoothAvailable,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: maybeClientHandle ?? undefined,
+        javaScriptHighEntropy: javaScriptHighEntropy,
+      },
+      flags: flags.getItemsObject(),
+    };
+
+    const res = await this.wrapWithErr(() =>
+      this.#connectApi.connectManageInit(req, { signal: abortController.signal }),
+    );
+    
+    if (res.err) {
+      return res;
+    }
+
+    flags.addItemsObject(res.val.flags);
+
+    const manageData: ConnectManageInitData = {
+      manageAllowed: res.val.manageAllowed,
+      flags: flags.getItemsObject(),
+    };
+
+    // update local state with process
+    if (existingProcess) {
+      const p = existingProcess.copyWithManageData(manageData);
+      p.persistToStorage();
+    } else {
+      const newProcess = new ConnectProcess(
+        res.val.processID,
+        this.#projectId,
+        res.val.expiresAt,
+        res.val.frontendApiUrl,
+        null,
+        null,
+        manageData,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
+
+    // persist flags
+    flags.persistToStorage(this.#projectId);
+
+    return Ok(manageData);
   }
 
   #getDefaultFrontendApiUrl() {

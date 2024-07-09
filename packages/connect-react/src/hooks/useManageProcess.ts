@@ -6,7 +6,7 @@ const useManageProcess = (context = ManageProcessContext): ManageProcessContextP
   const manageProcess = useContext(context);
 
   if (!manageProcess) {
-    throw new Error('Please make sure that your components are wrapped inside <LoginProcessProvider />');
+    throw new Error('Please make sure that your components are wrapped inside <ManageProcessProvider />');
   }
 
   return manageProcess;

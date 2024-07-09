@@ -15,7 +15,7 @@ export type Props = {
   createdAt: string | Date;
   lastUsed: string | Date;
   browser: string;
-  os: 'Windows' | 'macOs' | 'Android' | 'iOS';
+  os: 'Windows' | 'macOS' | 'Android' | 'iOS' | string;
   isThisDevice?: boolean;
   isSynced?: boolean;
   isHybrid?: boolean;
@@ -37,7 +37,7 @@ export const PasskeyListItem: FC<Props> = ({
     switch (os) {
       case 'Windows':
         return <WindowsIcon className='cb-passkey-list-item__icon' />;
-      case 'macOs':
+      case 'macOS':
         return <AppleIcon className='cb-passkey-list-item__icon' />;
       case 'iOS':
         return <AppleIcon className='cb-passkey-list-item__icon' />;
@@ -82,10 +82,10 @@ export const PasskeyListItem: FC<Props> = ({
         </div>
 
         <p className='cb-passkey-list-item__details'>
-          Created: {format(createdAt, 'P HH:mm:ss')} with {browser} on {os}
+          Created: {format(createdAt, 'dd/MM/yyyy HH:mm:ss')} with {browser} on {os}
         </p>
 
-        <p className='cb-passkey-list-item__details'>Last used: {format(lastUsed, 'P HH:mm:ss')}</p>
+        <p className='cb-passkey-list-item__details'>Last used: {format(lastUsed, 'dd/MM/yyyy HH:mm:ss')}</p>
       </div>
       <div className='cb-passkey-list-item__delete-icon'>
         <LinkButton onClick={onDeleteClick}>

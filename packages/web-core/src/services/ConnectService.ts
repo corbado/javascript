@@ -11,6 +11,10 @@ import type {
   ConnectAppendStartRsp,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
+  ConnectManageDeleteReq,
+  ConnectManageDeleteRsp,
+  ConnectManageListReq,
+  ConnectManageListRsp,
 } from '../api/v2';
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
@@ -101,6 +105,7 @@ export class ConnectService {
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
     try {
       const r = await callback();
+
       return Ok(r.data);
     } catch (e) {
       if (e instanceof CorbadoError) {
@@ -415,7 +420,7 @@ export class ConnectService {
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectManageInit(req, { signal: abortController.signal }),
     );
-    
+
     if (res.err) {
       return res;
     }
@@ -449,6 +454,46 @@ export class ConnectService {
     flags.persistToStorage(this.#projectId);
 
     return Ok(manageData);
+  }
+
+  async manageList(
+    abortController: AbortController,
+    passkeyListToken: string,
+  ): Promise<Result<ConnectManageListRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const req: ConnectManageListReq = {
+      connectToken: passkeyListToken,
+    };
+
+    log.debug(req);
+
+    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req, { signal: abortController.signal }));
+  }
+
+  async manageDelete(
+    abortController: AbortController,
+    passkeyDeleteToken: string,
+    credentialID: string,
+  ): Promise<Result<ConnectManageDeleteRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const req: ConnectManageDeleteReq = {
+      connectToken: passkeyDeleteToken,
+      credentialID,
+    };
+
+    log.debug(req);
+
+    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req, { signal: abortController.signal }));
   }
 
   #getDefaultFrontendApiUrl() {

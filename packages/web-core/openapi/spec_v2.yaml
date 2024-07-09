@@ -661,7 +661,7 @@ paths:
 
   /v2/connect/manage/init:
     post:
-      description: Initialiases a connect process for managing passkeys.
+      description: Initializes a connect process for passkey management.
       operationId: ConnectManageInit
       tags:
         - CorbadoConnect
@@ -673,11 +673,51 @@ paths:
               $ref: '#/components/schemas/connectManageInitReq'
       responses:
         '200':
-          description: Contains information about if and how a passkey list can be started.
+          description: Contains information about if and how passkey management can be started.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectManageInitRsp'
+
+  /v2/connect/manage/delete:
+    post:
+      description: Deletes a passkey for a user identified by a connect token
+      operationId: ConnectManageDelete
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectManageDeleteReq'
+      responses:
+        '200':
+          description: Contains the ID of the deleted passkey.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectManageDeleteRsp'
+
+  /v2/connect/manage/list:
+    post:
+      description: Lists all passkeys for a user identifier by a connect token.
+      operationId: ConnectManageList
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectManageListReq'
+      responses:
+        '200':
+          description: Contains all passkeys for a user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectManageListRsp'
 
 components:
   ###################################################################
@@ -1098,7 +1138,7 @@ components:
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
-
+    
     connectManageInitReq:
       type: object
       required:
@@ -1133,6 +1173,43 @@ components:
           type: object
           additionalProperties:
             type: string
+
+    connectManageDeleteReq:
+      type: object
+      required:
+        - connectToken
+        - credentialID
+      properties:
+        connectToken:
+          type: string
+        credentialID:
+          type: string
+
+    connectManageDeleteRsp:
+      type: object
+      required:
+        - credentialID
+      properties:
+        credentialID:
+          type: string
+
+    connectManageListReq:
+      type: object
+      required:
+        - connectToken
+      properties:
+        connectToken:
+          type: string
+
+    connectManageListRsp:
+      type: object
+      required:
+        - passkeys
+      properties:
+        passkeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/passkey'
 
     passkey:
       type: object

@@ -356,7 +356,7 @@ export class ConnectService {
       latestLogin.persistToStorage(this.#projectId);
 
       // we no longer need process state after the append process has finished
-      this.clearProcess();
+      // this.clearProcess();
     }
 
     return finishRes;

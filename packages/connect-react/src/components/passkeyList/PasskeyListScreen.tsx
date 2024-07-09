@@ -1,24 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
+import type { Passkey } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { PasskeyListItem } from '../shared/PasskeyListItem';
-import { startOfDay } from 'date-fns';
-import { Button } from '../shared/Button';
-import { PlusIcon } from '../shared/icons/PlusIcon';
 import useManageProcess from '../../hooks/useManageProcess';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
 import { CorbadoTokens } from '../../types/tokens';
-import { Passkey } from '@corbado/web-core/dist/api/v2';
-import { CorbadoConnectPasskeyListConfig } from '@corbado/types';
+import { Button } from '../shared/Button';
+import { PlusIcon } from '../shared/icons/PlusIcon';
+import { PasskeyListItem } from '../shared/PasskeyListItem';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
   const { getConnectService } = useShared();
 
   const [passkeyList, setPasskeyList] = useState<Array<Passkey>>([]);
-  const [appendAllowed, setAppendAllowed] = useState(false);
-  const [attestationOptions, setAttestationOptions] = useState('');
   const [ac, _] = useState(new AbortController());
 
   useEffect(() => {
@@ -40,7 +37,6 @@ const PasskeyListScreen = () => {
       }
 
       await getPasskeyList(ac, config);
-      await startAppend(ac, config);
     };
 
     void init(ac);
@@ -61,25 +57,32 @@ const PasskeyListScreen = () => {
         return;
       }
 
-      getPasskeyList(ac, config);
+      await getPasskeyList(ac, config);
     },
     [config, ac],
   );
 
   const onAppendClick = useCallback(async () => {
-    console.log('clicked');
-    if (appendAllowed) {
-      console.log(attestationOptions);
-      const res = await getConnectService().completeAppend(attestationOptions);
-      if (res.err) {
-        log.error('error:', res.val);
-
-        return;
-      }
-
-      getPasskeyList(ac, config);
+    const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);
+    const startAppendRes = await getConnectService().startAppend(appendToken, ac);
+    if (startAppendRes.err) {
+      return;
     }
-  }, [config, ac, appendAllowed, attestationOptions]);
+
+    if (startAppendRes.val.attestationOptions === '') {
+      return;
+    }
+
+    const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
+    if (res.err) {
+      log.error('error:', res.val);
+
+      return;
+    }
+
+    console.log('get passkey list');
+    await getPasskeyList(ac, config);
+  }, [config, ac]);
 
   const getPasskeyList = async (ac: AbortController, config: CorbadoConnectPasskeyListConfig) => {
     const listTokenRes = await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);
@@ -91,7 +94,7 @@ const PasskeyListScreen = () => {
     }
 
     const passkeyList = await getConnectService().manageList(ac, listTokenRes);
-
+    console.log(passkeyList);
     if (passkeyList.err) {
       return;
     }
@@ -99,54 +102,32 @@ const PasskeyListScreen = () => {
     setPasskeyList(passkeyList.val.passkeys);
   };
 
-  const startAppend = async (ac: AbortController, config: CorbadoConnectPasskeyListConfig) => {
-    const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);
-
-    const startAppendRes = await getConnectService().startAppend(appendToken, ac);
-    if (startAppendRes.err) {
-      setAppendAllowed(false);
-
-      return;
-    }
-
-    if (startAppendRes.val.attestationOptions === '') {
-      setAppendAllowed(false);
-
-      return;
-    }
-
-    setAppendAllowed(true);
-    setAttestationOptions(startAppendRes.val.attestationOptions);
-  };
-
   return (
     <div className='cb-passkey-list-container'>
       {passkeyList.map(passkey => (
         <PasskeyListItem
-          onDeleteClick={() => onDeleteClick(passkey.credentialID)}
-          name={'name'}
+          onDeleteClick={() => void onDeleteClick(passkey.id)}
+          name={'Passkey'}
           createdAt={passkey.created}
           lastUsed={passkey.lastUsed}
           browser={passkey.sourceBrowser}
           os={passkey.sourceOS}
-          isThisDevice
+          isThisDevice={false}
           isSynced
           isHybrid
           key={passkey.id}
         />
       ))}
 
-      {appendAllowed && (
-        <div className='cb-passkey-list__append-cta'>
-          <Button
-            className='cb-passkey-list__append-button'
-            onClick={() => void onAppendClick()}
-          >
-            <p>Add a passkey</p>
-            <PlusIcon className='cb-passkey-list__append-icon' />
-          </Button>
-        </div>
-      )}
+      <div className='cb-passkey-list__append-cta'>
+        <Button
+          className='cb-passkey-list__append-button'
+          onClick={() => void onAppendClick()}
+        >
+          <p>Add a passkey</p>
+          <PlusIcon className='cb-passkey-list__append-icon' />
+        </Button>
+      </div>
     </div>
   );
 };

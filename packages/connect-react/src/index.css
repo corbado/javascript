@@ -410,8 +410,122 @@ button.cb-secondary-button {
   padding: 6px 10px;
 }
 
+.cb-passkey-list__append-button .loader {
+  height: 15px;
+  width: 15px;
+}
+
 .cb-passkey-list__append-icon {
   width: 10px;
+}
+
+.cb-modal {
+  z-index: 99999;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.cb-modal__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--cb-color-surface);
+  opacity: 0.2;
+}
+
+.cb-modal__content {
+  position: relative;
+  background-color: var(--cb-color-secondary);
+  border-radius: var(--cb-border-radius);
+  padding: 2rem;
+  border: 1px sold var(--cb-color-outline);
+}
+
+.cb-passkey-list__modal {
+  text-align: center;
+  font-family: var(--cb-font-family-primary);
+  gap: 1rem;
+}
+
+.cb-passkey-list__modal-title {
+  font-size: 24px;
+  color: var(--cb-color-primary);
+}
+
+.cb-passkey-list__modal-description {
+  font-size: 0.8rem;
+  color: var(--cb-color-primary);
+}
+
+.cb-passkey-list__modal-button-cancel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cb-color-primary);
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-primary);
+  background-color: var(--cb-color-on-primary);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  flex: 1;
+}
+
+.cb-passkey-list__modal-button-submit {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cb-color-on-primary);
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-primary);
+  background-color: var(--cb-color-primary);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  flex: 1;
+}
+
+.cb-passkey-list__modal-cta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.cb-passkey-list__modal-cta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.cb-passkey-list__loader-container {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cb-passkey-list__loader {
+  width: 150px;
+  height: 150px;
+}
+
+.cb-passkey-list__empty {
+  width: 100%;
+  text-align: center;
+  color: var(--cb-color-secondary);
+  font-size: 0.8rem;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
 }
 
 @media screen and (max-width: 600px) {

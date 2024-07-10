@@ -4,6 +4,7 @@ import type { FC, PropsWithChildren } from 'react';
 import React from 'react';
 
 import SharedProvider from '../contexts/SharedProvider';
+import ModalProvider from '../contexts/ModalProvider';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;
@@ -20,12 +21,14 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   ...configProperties
 }) => {
   return (
-    <SharedProvider
-      connectService={connectService}
-      config={configProperties}
-    >
-      {children}
-    </SharedProvider>
+    <ModalProvider>
+      <SharedProvider
+        connectService={connectService}
+        config={configProperties}
+      >
+        {children}
+      </SharedProvider>
+    </ModalProvider>
   );
 };
 export default CorbadoConnectProvider;

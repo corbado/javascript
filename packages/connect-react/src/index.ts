@@ -5,4 +5,10 @@ import CorbadoConnectLogin from './components/CorbadoConnectLogin';
 import CorbadoConnectPasskeyList from './components/CorbadoConnectPasskeyList';
 import CorbadoConnectProvider, { CorbadoConnectProviderProps } from './components/CorbadoConnectProvider';
 
-export { CorbadoConnectLogin, CorbadoConnectAppend, CorbadoConnectProvider, CorbadoConnectProviderProps, CorbadoConnectPasskeyList };
+export {
+  CorbadoConnectLogin,
+  CorbadoConnectAppend,
+  CorbadoConnectProvider,
+  CorbadoConnectProviderProps,
+  CorbadoConnectPasskeyList,
+};

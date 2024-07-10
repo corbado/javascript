@@ -9,14 +9,18 @@ const missingImplementation = (): never => {
 
 export interface ManageProcessContextProps {
   currentScreenType: ManageScreenType;
+  passkeyListToken: string;
   config: CorbadoConnectPasskeyListConfig;
   navigateToScreen: (s: ManageScreenType) => void;
+  setPasskeyListToken: (t: string) => void;
 }
 
 export const initialContext: ManageProcessContextProps = {
   currentScreenType: ManageScreenType.Init,
+  passkeyListToken: '',
   config: {} as CorbadoConnectPasskeyListConfig,
   navigateToScreen: missingImplementation,
+  setPasskeyListToken: missingImplementation,
 };
 
 const ManageProcessContext = createContext<ManageProcessContextProps>(initialContext);

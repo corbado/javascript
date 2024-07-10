@@ -11,6 +11,7 @@ type Props = {
 
 export const ManageProcessProvider: FC<PropsWithChildren<Props>> = ({ children, initialScreenType, config }) => {
   const [currentScreenType, setCurrentScreenType] = useState<ManageScreenType>(initialScreenType);
+  const [passkeyListToken, setPasskeyListToken] = useState<string>('');
 
   const navigateToScreen = useCallback((screenType: ManageScreenType) => {
     setCurrentScreenType(screenType);
@@ -20,9 +21,11 @@ export const ManageProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
     () => ({
       currentScreenType,
       navigateToScreen,
+      passkeyListToken,
+      setPasskeyListToken,
       config,
     }),
-    [currentScreenType, navigateToScreen, config],
+    [currentScreenType, navigateToScreen, config, setPasskeyListToken, passkeyListToken],
   );
 
   return <ManageProcessContext.Provider value={contextValue}>{children}</ManageProcessContext.Provider>;

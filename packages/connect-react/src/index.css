@@ -208,6 +208,19 @@ button.cb-secondary-button {
   margin: 0.5rem 0;
 }
 
+.cb-login__loader-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cb-login__loader {
+  width: 50px;
+  height: 50px;
+}
+
 .cb-append-benefits-icons {
   display: flex;
   justify-content: center;

@@ -1,9 +1,11 @@
-import { Passkey } from '@corbado/web-core/dist/api/v2';
-import React, { FC } from 'react';
-import { PasskeyListItem } from '../shared/PasskeyListItem';
+import type { Passkey } from '@corbado/web-core/dist/api/v2';
+import type { FC } from 'react';
+import React from 'react';
+
 import { Button } from '../shared/Button';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PlusIcon } from '../shared/icons/PlusIcon';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
+import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyEmptyList from './PasskeyEmptyList';
 
 interface PasskeyListProps {
@@ -15,11 +17,11 @@ interface PasskeyListProps {
 
 const PasskeyList: FC<PasskeyListProps> = ({ passkeys, isLoading, onDeleteClick, onAppendClick }) => {
   if (isLoading)
-    return (
+    {return (
       <div className='cb-passkey-list__loader-container'>
         <LoadingSpinner className='cb-passkey-list__loader' />
       </div>
-    );
+    );}
 
   return (
     <div className='cb-passkey-list-container'>

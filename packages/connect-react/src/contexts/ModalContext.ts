@@ -6,12 +6,14 @@ const missingImplementation = (): never => {
 
 export interface ModalContextProps {
   isModalVisible: boolean;
+  children: ReactNode | null;
   show: (children: ReactNode) => void;
   hide: () => void;
 }
 
 export const initialContext: ModalContextProps = {
   isModalVisible: false,
+  children: null,
   show: missingImplementation,
   hide: missingImplementation,
 };

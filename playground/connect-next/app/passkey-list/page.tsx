@@ -1,8 +1,10 @@
 'use client';
 export const runtime = 'edge';
 
-import { CorbadoConnectAppend, CorbadoConnectPasskeyList } from '@corbado/connect-react';
+import { CorbadoConnectPasskeyList } from '@corbado/connect-react';
 import { useRouter } from 'next/navigation';
+import { getCorbadoToken } from './actions';
+import { getAppendToken } from '../actions';
 
 export default function PasskeyListPage() {
   const router = useRouter();
@@ -12,8 +14,11 @@ export default function PasskeyListPage() {
       <div className='w-full my-4 mx-4'>
         <div className='mb-2 flex justify-between w-full'>
           <CorbadoConnectPasskeyList
-            corbadoTokenProvider={function (): Promise<string> {
-              throw new Error('Function not implemented.');
+            corbadoTokenProvider={async token => {
+              const t = token === 'passkey-append' ? await getAppendToken() : await getCorbadoToken(token);
+              console.log(t);
+
+              return t;
             }}
           />
         </div>

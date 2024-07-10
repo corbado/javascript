@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
-import ManageProcessContext, { ManageProcessContextProps } from '../contexts/ManageProcessContext';
+import type { ManageProcessContextProps } from '../contexts/ManageProcessContext';
+import ManageProcessContext from '../contexts/ManageProcessContext';
 
 const useManageProcess = (context = ManageProcessContext): ManageProcessContextProps => {
   const manageProcess = useContext(context);

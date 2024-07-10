@@ -4,11 +4,11 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useManageProcess from '../../hooks/useManageProcess';
+import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
 import { CorbadoTokens } from '../../types/tokens';
 import { Button } from '../shared/Button';
-import useModal from '../../hooks/useModal';
 import PasskeyList from './PasskeyList';
 
 const PasskeyListScreen = () => {
@@ -58,7 +58,9 @@ const PasskeyListScreen = () => {
     async (credentialsId?: string) => {
       setLoading(true);
       hide();
-      if (!credentialsId) return;
+      if (!credentialsId) {
+        return;
+      }
 
       const deleteToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyDelete);
 
@@ -107,17 +109,23 @@ const PasskeyListScreen = () => {
 
     if (!listTokenRes) {
       listTokenRes = await fetchListToken(config);
-      if (!listTokenRes) return;
+      if (!listTokenRes) {
+        return;
+      }
     }
 
     let passkeyList = await getConnectService().manageList(ac, listTokenRes);
 
     if (passkeyList.err) {
       listTokenRes = await fetchListToken(config);
-      if (!listTokenRes) return;
+      if (!listTokenRes) {
+        return;
+      }
 
       passkeyList = await getConnectService().manageList(ac, listTokenRes);
-      if (passkeyList.err) return;
+      if (passkeyList.err) {
+        return;
+      }
     }
 
     setPasskeyListToken(listTokenRes);
@@ -139,7 +147,7 @@ const PasskeyListScreen = () => {
         </Button>
 
         <Button
-          onClick={() => onDeleteClick(selectedPasskeyId)}
+          onClick={() => void onDeleteClick(selectedPasskeyId)}
           className='cb-passkey-list__modal-button-submit'
           isLoading={loading}
         >
@@ -172,7 +180,7 @@ const PasskeyListScreen = () => {
         show(DeleteModalContent(id));
       }}
       isLoading={loading}
-      onAppendClick={onAppendClick}
+      onAppendClick={() => void onAppendClick()}
     />
   );
 };

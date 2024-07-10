@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
-import PasskeyListScreen from './passkeyList/PasskeyListScreen';
 import useManageProcess from '../hooks/useManageProcess';
 import { ManageScreenType } from '../types/screenTypes';
+import PasskeyListScreen from './passkeyList/PasskeyListScreen';
 
 const CorbadoConnectPasskeyListContainer = () => {
   const { currentScreenType } = useManageProcess();

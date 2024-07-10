@@ -1,8 +1,10 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
+
 import type { ManageScreenType } from '../types/screenTypes';
-import ManageProcessContext, { ManageProcessContextProps } from './ManageProcessContext';
+import type { ManageProcessContextProps } from './ManageProcessContext';
+import ManageProcessContext from './ManageProcessContext';
 
 type Props = {
   config: CorbadoConnectPasskeyListConfig;

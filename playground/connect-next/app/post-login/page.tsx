@@ -3,7 +3,7 @@ export const runtime = 'edge';
 
 import { CorbadoConnectAppend } from '@corbado/connect-react';
 import { useRouter } from 'next/navigation';
-import { getAppendToken } from './actions';
+import { getAppendToken } from '../actions';
 
 export default function PostLoginPage() {
   const router = useRouter();

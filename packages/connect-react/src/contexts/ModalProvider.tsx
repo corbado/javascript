@@ -1,11 +1,10 @@
 import type { FC, PropsWithChildren, ReactNode } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import ModalContext, { ModalContextProps } from './ModalContext';
-import { Modal } from '../components/shared/Modal';
 
 export const ModalProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [modalChildren, setChildren] = useState<ReactNode>();
+  const [modalChildren, setChildren] = useState<ReactNode | null>(null);
 
   const show = useCallback(
     (children: ReactNode) => {
@@ -16,25 +15,21 @@ export const ModalProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   const hide = useCallback(() => {
-    setChildren(undefined);
+    setChildren(null);
     setIsModalVisible(false);
   }, [setIsModalVisible, setChildren]);
 
   const contextValue = useMemo<ModalContextProps>(
     () => ({
       isModalVisible,
+      children: modalChildren,
       show,
       hide,
     }),
     [isModalVisible, show, hide],
   );
 
-  return (
-    <ModalContext.Provider value={contextValue}>
-      <Modal isVisible={isModalVisible}>{modalChildren}</Modal>
-      {children}
-    </ModalContext.Provider>
-  );
+  return <ModalContext.Provider value={contextValue}>{children}</ModalContext.Provider>;
 };
 
 export default ModalProvider;

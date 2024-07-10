@@ -12,7 +12,7 @@ export type CorbadoConnectAppendConfig = {
   onComplete(method: string): void;
 };
 
-enum CorbadoTokens {
+export enum CorbadoTokens {
   PasskeyList = 'passkey-list',
   PasskeyAppend = 'passkey-append',
   PasskeyDelete = 'passkey-delete',

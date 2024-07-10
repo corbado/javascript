@@ -1,14 +1,16 @@
-import React, { FC } from 'react';
-import { WindowsIcon } from './icons/WindowsIcon';
-import { AppleIcon } from './icons/AppleIcon';
-import { KeyIcon } from './icons/KeyIcon';
 import { format } from 'date-fns';
-import { LinkButton } from './LinkButton';
+import type { FC } from 'react';
+import React from 'react';
+
+import { AppleIcon } from './icons/AppleIcon';
 import { CrossIcon } from './icons/CrossIcon';
-import { Tag } from './Tag';
-import { SyncIcon } from './icons/SyncIcon';
-import { ShieldTickIcon } from './icons/ShieldTickIcon';
 import { EyeIcon } from './icons/EyeIcon';
+import { KeyIcon } from './icons/KeyIcon';
+import { ShieldTickIcon } from './icons/ShieldTickIcon';
+import { SyncIcon } from './icons/SyncIcon';
+import { WindowsIcon } from './icons/WindowsIcon';
+import { LinkButton } from './LinkButton';
+import { Tag } from './Tag';
 
 export type Props = {
   name: string;

@@ -8,7 +8,6 @@ import ModalProvider from '../contexts/ModalProvider';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;
-
   customTranslations?: Record<string, object> | null;
   theme?: string | CustomThemes;
 }
@@ -21,14 +20,12 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   ...configProperties
 }) => {
   return (
-    <ModalProvider>
-      <SharedProvider
-        connectService={connectService}
-        config={configProperties}
-      >
-        {children}
-      </SharedProvider>
-    </ModalProvider>
+    <SharedProvider
+      connectService={connectService}
+      config={configProperties}
+    >
+      <ModalProvider>{children}</ModalProvider>
+    </SharedProvider>
   );
 };
 export default CorbadoConnectProvider;

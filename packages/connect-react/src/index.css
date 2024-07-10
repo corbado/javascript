@@ -10,10 +10,6 @@
   --cb-border-radius: 0rem;
 }
 
-.cb-width-full {
-  width: 100%;
-}
-
 .cb-h2 {
   font-size: 1.5rem;
   /*font-weight: bold;*/
@@ -526,6 +522,11 @@ button.cb-secondary-button {
   min-height: 300px;
   display: flex;
   align-items: center;
+}
+
+.cb-width-full {
+  width: 100%;
+  max-width: none;
 }
 
 @media screen and (max-width: 600px) {

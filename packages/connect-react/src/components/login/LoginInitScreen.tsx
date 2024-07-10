@@ -8,8 +8,8 @@ import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();

@@ -13,6 +13,7 @@ import PasskeyList from './PasskeyList';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
+  const { setPasskeyListToken, passkeyListToken } = useManageProcess();
   const { show, hide } = useModal();
   const { getConnectService } = useShared();
 
@@ -98,21 +99,28 @@ const PasskeyListScreen = () => {
     setLoading(false);
   }, [config, ac, loading]);
 
-  const getPasskeyList = async (ac: AbortController, config: CorbadoConnectPasskeyListConfig) => {
-    const listTokenRes = await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);
+  const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
+    await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);
 
-    log.debug(listTokenRes);
+  const getPasskeyList = async (ac: AbortController, config: CorbadoConnectPasskeyListConfig) => {
+    let listTokenRes = passkeyListToken;
 
     if (!listTokenRes) {
-      return;
+      listTokenRes = await fetchListToken(config);
+      if (!listTokenRes) return;
     }
 
-    const passkeyList = await getConnectService().manageList(ac, listTokenRes);
-    console.log(passkeyList);
+    let passkeyList = await getConnectService().manageList(ac, listTokenRes);
+
     if (passkeyList.err) {
-      return;
+      listTokenRes = await fetchListToken(config);
+      if (!listTokenRes) return;
+
+      passkeyList = await getConnectService().manageList(ac, listTokenRes);
+      if (passkeyList.err) return;
     }
 
+    setPasskeyListToken(listTokenRes);
     setPasskeyList(passkeyList.val.passkeys);
   };
 

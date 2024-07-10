@@ -49,7 +49,7 @@ const LoginInitScreen = () => {
 
       if (lastLogin) {
         log.debug('starting relogin UI');
-        // navigateToScreen(LoginScreenType.PasskeyReLogin);
+        navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);

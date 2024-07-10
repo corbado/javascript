@@ -1,6 +1,8 @@
 import type { FC, PropsWithChildren, ReactNode } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
-import ModalContext, { ModalContextProps } from './ModalContext';
+
+import type { ModalContextProps } from './ModalContext';
+import ModalContext from './ModalContext';
 
 export const ModalProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);

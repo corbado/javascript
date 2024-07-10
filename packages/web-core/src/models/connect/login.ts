@@ -1,4 +1,4 @@
-import { Passkey } from '../../api/v2';
+import type { Passkey } from '../../api/v2';
 
 export type ConnectLoginInitData = {
   loginAllowed: boolean;

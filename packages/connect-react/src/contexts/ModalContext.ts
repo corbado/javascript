@@ -1,4 +1,5 @@
-import { createContext, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <ModalContext/>');

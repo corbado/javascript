@@ -3,8 +3,8 @@ import type { ConnectService } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React from 'react';
 
-import SharedProvider from '../contexts/SharedProvider';
 import ModalProvider from '../contexts/ModalProvider';
+import SharedProvider from '../contexts/SharedProvider';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;

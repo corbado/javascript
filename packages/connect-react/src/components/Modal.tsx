@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
+import React from 'react';
+
 import useModal from '../hooks/useModal';
 
 const Modal: FC = () => {
   const { isModalVisible, children } = useModal();
 
-  if (!isModalVisible) return <></>;
+  if (!isModalVisible) {return <></>;}
 
   return (
     <div className='cb-modal'>

@@ -34,15 +34,39 @@ export class ConnectProcess {
   }
 
   copyWithLoginData(loginData: ConnectLoginInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, loginData, this.appendData, this.manageData);
+    return new ConnectProcess(
+      this.id,
+      this.projectId,
+      this.expiresAt,
+      this.frontendApiUrl,
+      loginData,
+      this.appendData,
+      this.manageData,
+    );
   }
 
   copyWithAppendData(appendData: ConnectAppendInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, this.loginData, appendData, this.manageData);
+    return new ConnectProcess(
+      this.id,
+      this.projectId,
+      this.expiresAt,
+      this.frontendApiUrl,
+      this.loginData,
+      appendData,
+      this.manageData,
+    );
   }
 
   copyWithManageData(manageData: ConnectManageInitData): ConnectProcess {
-    return new ConnectProcess(this.id, this.projectId, this.expiresAt, this.frontendApiUrl, this.loginData, this.appendData, manageData);
+    return new ConnectProcess(
+      this.id,
+      this.projectId,
+      this.expiresAt,
+      this.frontendApiUrl,
+      this.loginData,
+      this.appendData,
+      manageData,
+    );
   }
 
   static loadFromStorage(projectId: string): ConnectProcess | undefined {

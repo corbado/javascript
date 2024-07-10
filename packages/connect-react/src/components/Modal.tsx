@@ -6,7 +6,9 @@ import useModal from '../hooks/useModal';
 const Modal: FC = () => {
   const { isModalVisible, children } = useModal();
 
-  if (!isModalVisible) {return <></>;}
+  if (!isModalVisible) {
+    return <></>;
+  }
 
   return (
     <div className='cb-modal'>

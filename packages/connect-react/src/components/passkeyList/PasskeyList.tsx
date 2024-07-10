@@ -16,12 +16,13 @@ interface PasskeyListProps {
 }
 
 const PasskeyList: FC<PasskeyListProps> = ({ passkeys, isLoading, onDeleteClick, onAppendClick }) => {
-  if (isLoading)
-    {return (
+  if (isLoading) {
+    return (
       <div className='cb-passkey-list__loader-container'>
         <LoadingSpinner className='cb-passkey-list__loader' />
       </div>
-    );}
+    );
+  }
 
   return (
     <div className='cb-passkey-list-container'>

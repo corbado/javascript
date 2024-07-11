@@ -1,5 +1,10 @@
-import { CorbadoConnectAppend, CorbadoConnectLogin } from '@corbado/connect-react';
-import type { CorbadoConnectAppendConfig, CorbadoConnectConfig, CorbadoConnectLoginConfig } from '@corbado/types';
+import { CorbadoConnectAppend, CorbadoConnectLogin, CorbadoConnectPasskeyList } from '@corbado/connect-react';
+import type {
+  CorbadoConnectAppendConfig,
+  CorbadoConnectConfig,
+  CorbadoConnectLoginConfig,
+  CorbadoConnectPasskeyListConfig,
+} from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
@@ -27,6 +32,14 @@ export class Corbado {
   }
 
   unmountCorbadoConnectAppend(element: HTMLElement) {
+    this.#unmountConnectComponent(element);
+  }
+
+  mountCorbadoConnectPasskeyList(element: HTMLElement, options: CorbadoConnectPasskeyListConfig) {
+    this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options);
+  }
+
+  unmountCorbadoConnectPasskeyList(element: HTMLElement) {
     this.#unmountConnectComponent(element);
   }
 

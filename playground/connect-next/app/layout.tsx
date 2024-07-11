@@ -2,7 +2,8 @@
 
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { CorbadoConnectProvider } from '@corbado/connect-react';
+import { CorbadoConnectProvider, CorbadoConnectModal } from '@corbado/connect-react';
+import ReactDOM from 'react-dom';
 
 const inter = Inter({ subsets: ['latin'] });
 

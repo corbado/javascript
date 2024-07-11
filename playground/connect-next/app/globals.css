@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  width: 100%;
+  padding: 0;
+}
+
+.cb-modal {
+  --cb-color-surface: black;
+  --cb-color-secondary: white;
+  --cb-border-radius: 10px;
+  --cb-color-primary: black;
+  --cb-color-on-primary: white;
+}

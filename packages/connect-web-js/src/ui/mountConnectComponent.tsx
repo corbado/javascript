@@ -1,7 +1,8 @@
 import type { CorbadoConnectProviderProps } from '@corbado/connect-react';
-import { CorbadoConnectProvider } from '@corbado/connect-react';
+import { CorbadoConnectModal, CorbadoConnectProvider } from '@corbado/connect-react';
 import type { FC } from 'react';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
 
@@ -19,7 +20,11 @@ export function mountComponent<T extends Record<string, any>>(
     componentProps,
   }) => {
     return (
-      <CorbadoConnectProvider {...providerProps}>
+      <CorbadoConnectProvider
+        {...providerProps}
+        isWebJs
+      >
+        {ReactDOM.createPortal(<CorbadoConnectModal />, document.body)}
         <Component {...componentProps} />
       </CorbadoConnectProvider>
     );

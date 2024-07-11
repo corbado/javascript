@@ -554,6 +554,120 @@ export interface ConnectLoginStartRsp {
 /**
  * 
  * @export
+ * @interface ConnectManageDeleteReq
+ */
+export interface ConnectManageDeleteReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageDeleteReq
+     */
+    'connectToken': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageDeleteReq
+     */
+    'credentialID': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageDeleteRsp
+ */
+export interface ConnectManageDeleteRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageDeleteRsp
+     */
+    'credentialID': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageInitReq
+ */
+export interface ConnectManageInitReq {
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof ConnectManageInitReq
+     */
+    'clientInformation': ClientInformation;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectManageInitReq
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageInitRsp
+ */
+export interface ConnectManageInitRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'processID': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectManageInitRsp
+     */
+    'expiresAt': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectManageInitRsp
+     */
+    'manageAllowed': boolean;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectManageInitRsp
+     */
+    'flags': { [key: string]: string; };
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageListReq
+ */
+export interface ConnectManageListReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageListReq
+     */
+    'connectToken': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectManageListRsp
+ */
+export interface ConnectManageListRsp {
+    /**
+     * 
+     * @type {Array<Passkey>}
+     * @memberof ConnectManageListRsp
+     */
+    'passkeys': Array<Passkey>;
+}
+/**
+ * 
+ * @export
  * @interface ContinueOnOtherDevice
  */
 export interface ContinueOnOtherDevice {
@@ -3644,6 +3758,132 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Deletes a passkey for a user identified by a connect token
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageDelete: async (connectManageDeleteReq: ConnectManageDeleteReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectManageDeleteReq' is not null or undefined
+            assertParamExists('connectManageDelete', 'connectManageDeleteReq', connectManageDeleteReq)
+            const localVarPath = `/v2/connect/manage/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectManageDeleteReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Initializes a connect process for passkey management.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageInit: async (connectManageInitReq: ConnectManageInitReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectManageInitReq' is not null or undefined
+            assertParamExists('connectManageInit', 'connectManageInitReq', connectManageInitReq)
+            const localVarPath = `/v2/connect/manage/init`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectManageInitReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Lists all passkeys for a user identifier by a connect token.
+         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageList: async (connectManageListReq: ConnectManageListReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectManageListReq' is not null or undefined
+            assertParamExists('connectManageList', 'connectManageListReq', connectManageListReq)
+            const localVarPath = `/v2/connect/manage/list`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectManageListReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3714,6 +3954,36 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.connectLoginStart(connectLoginStartReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Deletes a passkey for a user identified by a connect token
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectManageDelete(connectManageDeleteReq: ConnectManageDeleteReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectManageDeleteRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectManageDelete(connectManageDeleteReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Initializes a connect process for passkey management.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectManageInitRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectManageInit(connectManageInitReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Lists all passkeys for a user identifier by a connect token.
+         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectManageList(connectManageListReq: ConnectManageListReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectManageListRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectManageList(connectManageListReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -3777,6 +4047,33 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
          */
         connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: any): AxiosPromise<ConnectLoginStartRsp> {
             return localVarFp.connectLoginStart(connectLoginStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes a passkey for a user identified by a connect token
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageDelete(connectManageDeleteReq: ConnectManageDeleteReq, options?: any): AxiosPromise<ConnectManageDeleteRsp> {
+            return localVarFp.connectManageDelete(connectManageDeleteReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Initializes a connect process for passkey management.
+         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: any): AxiosPromise<ConnectManageInitRsp> {
+            return localVarFp.connectManageInit(connectManageInitReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Lists all passkeys for a user identifier by a connect token.
+         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectManageList(connectManageListReq: ConnectManageListReq, options?: any): AxiosPromise<ConnectManageListRsp> {
+            return localVarFp.connectManageList(connectManageListReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3852,6 +4149,39 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectLoginStart(connectLoginStartReq: ConnectLoginStartReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectLoginStart(connectLoginStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deletes a passkey for a user identified by a connect token
+     * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectManageDelete(connectManageDeleteReq: ConnectManageDeleteReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectManageDelete(connectManageDeleteReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Initializes a connect process for passkey management.
+     * @param {ConnectManageInitReq} connectManageInitReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectManageInit(connectManageInitReq: ConnectManageInitReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectManageInit(connectManageInitReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Lists all passkeys for a user identifier by a connect token.
+     * @param {ConnectManageListReq} connectManageListReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectManageList(connectManageListReq: ConnectManageListReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectManageList(connectManageListReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

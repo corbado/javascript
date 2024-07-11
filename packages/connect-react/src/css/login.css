@@ -1,0 +1,54 @@
+.cb-login-init-signup {
+  margin: 0.5rem 0;
+}
+
+.cb-login-init-forgot-password {
+  margin: 0.5rem 0;
+}
+
+.cb-login-error-hard-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-login-error-hard-icons > * {
+  width: 60px;
+}
+
+.cb-login-error-hard-fallback {
+  margin: 0.5rem 0;
+}
+
+.cb-login-error-soft-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-login-error-soft-icons > * {
+  width: 60px;
+  margin: 0.5rem;
+}
+
+.cb-login-error-soft-fallback {
+  margin: 0.5rem 0;
+}
+
+.cb-login__loader-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cb-login__loader {
+  width: 50px;
+  height: 50px;
+}
+
+.cb-login-init-passkey-button {
+  width: 100%;
+  margin: 1rem 0rem;
+}

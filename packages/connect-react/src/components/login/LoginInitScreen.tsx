@@ -8,19 +8,23 @@ import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
-  const [loading, setLoading] = useState(false);
+  const [loginPending, setLoginPending] = useState(false);
+  const [loading, setLoading] = useState(true);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
+      setLoading(true);
       log.debug('running init');
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
+        setLoading(false);
         log.error(res.val);
         return;
       }
@@ -37,6 +41,7 @@ const LoginInitScreen = () => {
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback('');
         config.onLoaded('loaded successfully', true);
+        setLoading(false);
         return;
       }
 
@@ -50,6 +55,7 @@ const LoginInitScreen = () => {
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
       config.onLoaded('loaded successfully', false);
+      setLoading(false);
     };
 
     const ac = new AbortController();
@@ -83,14 +89,14 @@ const LoginInitScreen = () => {
   };
 
   const handleSubmit = useCallback(async () => {
-    setLoading(true);
+    setLoginPending(true);
 
     const identifier = emailFieldRef.current?.value ?? '';
     setCurrentIdentifier(identifier);
 
     const res = await getConnectService().login(identifier);
     if (res.err) {
-      setLoading(false);
+      setLoginPending(false);
       if (res.val.ignore) {
         return;
       }
@@ -107,28 +113,37 @@ const LoginInitScreen = () => {
       return;
     }
 
-    setLoading(false);
+    setLoginPending(false);
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
   return (
     <div>
-      <InputField
-        id='email'
-        name='email'
-        type='email'
-        autoComplete='username webauthn'
-        autoFocus={true}
-        placeholder='Email address'
-        ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
-      />
-      <PrimaryButton
-        type='submit'
-        isLoading={loading}
-        onClick={() => void handleSubmit()}
-      >
-        Login
-      </PrimaryButton>
+      {loading ? (
+        <div className='cb-login__loader-container'>
+          <LoadingSpinner className='cb-login__loader' />
+        </div>
+      ) : (
+        <>
+          <InputField
+            id='email'
+            name='email'
+            type='email'
+            autoComplete='username webauthn'
+            autoFocus={true}
+            placeholder='Email address'
+            ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
+          />
+          <PrimaryButton
+            type='submit'
+            isLoading={loginPending}
+            onClick={() => void handleSubmit()}
+          >
+            Login
+          </PrimaryButton>
+        </>
+      )}
+
       {config.onSignupClick && (
         <LinkButton
           onClick={() => config.onSignupClick?.()}

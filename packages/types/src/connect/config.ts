@@ -12,6 +12,16 @@ export type CorbadoConnectAppendConfig = {
   onComplete(method: string): void;
 };
 
+export enum CorbadoTokens {
+  PasskeyList = 'passkey-list',
+  PasskeyAppend = 'passkey-append',
+  PasskeyDelete = 'passkey-delete',
+}
+
+export type CorbadoConnectPasskeyListConfig = {
+  corbadoTokenProvider: (type: CorbadoTokens) => Promise<string>;
+};
+
 export type CorbadoConnectConfig = {
   projectId: string;
   flags?: Record<string, string>;

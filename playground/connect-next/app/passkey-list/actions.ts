@@ -1,25 +1,18 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { CorbadoTokens } from '@corbado/types';
 
-export async function getAppendToken() {
-  const displayName = cookies().get('displayName');
-  if (!displayName) {
-    return null;
-  }
-
+export async function getCorbadoToken(tokenType: CorbadoTokens) {
   const identifier = cookies().get('identifier');
   if (!identifier) {
     return null;
   }
 
-  console.log(displayName, identifier);
-
   // call backend API to get token
   const payload = {
-    type: 'passkey-append',
+    type: tokenType,
     data: {
-      displayName: displayName.value,
       identifier: identifier.value,
     },
   };

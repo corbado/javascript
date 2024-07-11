@@ -11,13 +11,17 @@ import type {
   ConnectAppendStartRsp,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
+  ConnectManageDeleteReq,
+  ConnectManageDeleteRsp,
+  ConnectManageListReq,
+  ConnectManageListRsp,
 } from '../api/v2';
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
-import type { ConnectAppendInitData, ConnectLoginInitData } from '../models/connect/login';
+import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
@@ -101,6 +105,7 @@ export class ConnectService {
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
     try {
       const r = await callback();
+
       return Ok(r.data);
     } catch (e) {
       if (e instanceof CorbadoError) {
@@ -165,6 +170,7 @@ export class ConnectService {
         res.val.expiresAt,
         res.val.frontendApiUrl,
         loginData,
+        null,
         null,
       );
       this.#setApisV2(newProcess);
@@ -276,6 +282,7 @@ export class ConnectService {
         res.val.frontendApiUrl,
         null,
         appendData,
+        null,
       );
       this.#setApisV2(newProcess);
       newProcess.persistToStorage();
@@ -349,7 +356,7 @@ export class ConnectService {
       latestLogin.persistToStorage(this.#projectId);
 
       // we no longer need process state after the append process has finished
-      this.clearProcess();
+      // this.clearProcess();
     }
 
     return finishRes;
@@ -380,6 +387,109 @@ export class ConnectService {
     }
 
     return res;
+  }
+
+  async manageInit(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcess?.isValid()) {
+      log.debug('process exists, preparing api clients');
+      this.#setApisV2(existingProcess);
+    }
+
+    // process has already been initialized
+    if (existingProcess?.manageData) {
+      return Ok(existingProcess.manageData);
+    }
+
+    const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const maybeClientHandle = WebAuthnService.getClientHandle();
+    const flags = ConnectFlags.loadFromStorage(this.#projectId);
+
+    const req: ConnectAppendInitReq = {
+      clientInformation: {
+        bluetoothAvailable: bluetoothAvailable,
+        canUsePasskeys: canUsePasskeys,
+        clientEnvHandle: maybeClientHandle ?? undefined,
+        javaScriptHighEntropy: javaScriptHighEntropy,
+      },
+      flags: flags.getItemsObject(),
+    };
+
+    const res = await this.wrapWithErr(() =>
+      this.#connectApi.connectManageInit(req, { signal: abortController.signal }),
+    );
+
+    if (res.err) {
+      return res;
+    }
+
+    flags.addItemsObject(res.val.flags);
+
+    const manageData: ConnectManageInitData = {
+      manageAllowed: res.val.manageAllowed,
+      flags: flags.getItemsObject(),
+    };
+
+    // update local state with process
+    if (existingProcess) {
+      const p = existingProcess.copyWithManageData(manageData);
+      p.persistToStorage();
+    } else {
+      const newProcess = new ConnectProcess(
+        res.val.processID,
+        this.#projectId,
+        res.val.expiresAt,
+        res.val.frontendApiUrl,
+        null,
+        null,
+        manageData,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
+
+    // persist flags
+    flags.persistToStorage(this.#projectId);
+
+    return Ok(manageData);
+  }
+
+  async manageList(passkeyListToken: string): Promise<Result<ConnectManageListRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const req: ConnectManageListReq = {
+      connectToken: passkeyListToken,
+    };
+
+    log.debug(req);
+
+    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+  }
+
+  async manageDelete(
+    passkeyDeleteToken: string,
+    credentialID: string,
+  ): Promise<Result<ConnectManageDeleteRsp, CorbadoError>> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      return Err(CorbadoError.missingInit());
+    }
+
+    const req: ConnectManageDeleteReq = {
+      connectToken: passkeyDeleteToken,
+      credentialID,
+    };
+
+    log.debug(req);
+
+    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
   }
 
   #getDefaultFrontendApiUrl() {

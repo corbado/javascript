@@ -1,0 +1,42 @@
+.cb-append-benefits-icons {
+  display: flex;
+  justify-content: center;
+}
+
+.cb-append-benefits-icons > * {
+  width: 100px;
+}
+
+.cb-append-info-list {
+  margin: 1rem 0;
+}
+
+.cb-append-benefits-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem 0;
+}
+
+.cb-connect-append-button {
+  padding: 0.5rem 0;
+}
+
+.cb-append-button {
+  display: flex;
+  gap: 1rem;
+  width: fit-content;
+  align-items: center;
+  background-color: var(--cb-color-primary);
+  color: var(--cb-color-on-primary);
+  border-radius: var(--cb-border-radius);
+  padding: 6px 10px;
+}
+
+.cb-append-button .loader {
+  height: 15px;
+  width: 15px;
+}
+
+.cb-append-icon {
+  width: 10px;
+}

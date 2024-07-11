@@ -456,10 +456,7 @@ export class ConnectService {
     return Ok(manageData);
   }
 
-  async manageList(
-    abortController: AbortController,
-    passkeyListToken: string,
-  ): Promise<Result<ConnectManageListRsp, CorbadoError>> {
+  async manageList(passkeyListToken: string): Promise<Result<ConnectManageListRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
 
     if (!existingProcess) {
@@ -472,11 +469,10 @@ export class ConnectService {
 
     log.debug(req);
 
-    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req, { signal: abortController.signal }));
+    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
   }
 
   async manageDelete(
-    abortController: AbortController,
     passkeyDeleteToken: string,
     credentialID: string,
   ): Promise<Result<ConnectManageDeleteRsp, CorbadoError>> {
@@ -493,7 +489,7 @@ export class ConnectService {
 
     log.debug(req);
 
-    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req, { signal: abortController.signal }));
+    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
   }
 
   #getDefaultFrontendApiUrl() {

@@ -1126,6 +1126,8 @@ components:
       properties:
         token:
           type: string
+        newClientEnvHandle:
+          type: string
         expiresAt:
           type: integer
         frontendApiUrl:
@@ -1201,6 +1203,8 @@ components:
       properties:
         processID:
           type: string
+        newClientEnvHandle:
+          type: string
         expiresAt:
           type: integer
         frontendApiUrl:
@@ -1267,6 +1271,8 @@ components:
         - flags
       properties:
         processID:
+          type: string
+        newClientEnvHandle:
           type: string
         expiresAt:
           type: integer

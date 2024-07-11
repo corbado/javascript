@@ -413,6 +413,12 @@ export interface ConnectAppendInitRsp {
     'processID': string;
     /**
      * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'newClientEnvHandle'?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ConnectAppendInitRsp
      */
@@ -533,6 +539,12 @@ export interface ConnectLoginInitRsp {
     'token': string;
     /**
      * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'newClientEnvHandle'?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ConnectLoginInitRsp
      */
@@ -651,6 +663,12 @@ export interface ConnectManageInitRsp {
      * @memberof ConnectManageInitRsp
      */
     'processID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'newClientEnvHandle'?: string;
     /**
      * 
      * @type {number}

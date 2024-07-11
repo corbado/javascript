@@ -152,8 +152,14 @@ export class ConnectService {
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
     );
+
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -268,8 +274,14 @@ export class ConnectService {
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
     );
+
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -439,6 +451,11 @@ export class ConnectService {
 
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);

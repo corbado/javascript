@@ -4,7 +4,7 @@ import CorbadoConnectAppend from './components/CorbadoConnectAppend';
 import CorbadoConnectLogin from './components/CorbadoConnectLogin';
 import CorbadoConnectPasskeyList from './components/CorbadoConnectPasskeyList';
 import CorbadoConnectProvider, { CorbadoConnectProviderProps } from './components/CorbadoConnectProvider';
-import Modal from './components/Modal';
+import CorbadoConnectModal from './components/CorbadoConnectModal';
 
 export {
   CorbadoConnectLogin,
@@ -12,5 +12,5 @@ export {
   CorbadoConnectProvider,
   CorbadoConnectProviderProps,
   CorbadoConnectPasskeyList,
-  Modal,
+  CorbadoConnectModal,
 };

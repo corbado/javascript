@@ -5,11 +5,13 @@ import React from 'react';
 
 import ModalProvider from '../contexts/ModalProvider';
 import SharedProvider from '../contexts/SharedProvider';
+import CorbadoConnectModal from './CorbadoConnectModal';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;
   customTranslations?: Record<string, object> | null;
   theme?: string | CustomThemes;
+  isWebJs?: boolean;
 }
 
 const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>> = ({
@@ -17,6 +19,7 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   customTranslations,
   theme,
   connectService,
+  isWebJs = false,
   ...configProperties
 }) => {
   return (
@@ -24,7 +27,10 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
       connectService={connectService}
       config={configProperties}
     >
-      <ModalProvider>{children}</ModalProvider>
+      <ModalProvider>
+        {!isWebJs && <CorbadoConnectModal />}
+        {children}
+      </ModalProvider>
     </SharedProvider>
   );
 };

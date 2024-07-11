@@ -3,7 +3,7 @@ import React from 'react';
 
 import useModal from '../hooks/useModal';
 
-const Modal: FC = () => {
+const CorbadoConnectModal: FC = () => {
   const { isModalVisible, children } = useModal();
 
   if (!isModalVisible) {
@@ -18,4 +18,4 @@ const Modal: FC = () => {
   );
 };
 
-export default Modal;
+export default CorbadoConnectModal;

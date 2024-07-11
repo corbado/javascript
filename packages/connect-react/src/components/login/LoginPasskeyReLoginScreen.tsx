@@ -35,7 +35,7 @@ export const LoginPasskeyReLoginScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        navigateToScreen(LoginScreenType.ErrorHard);
+        navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 

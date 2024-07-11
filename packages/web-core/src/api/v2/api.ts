@@ -992,37 +992,6 @@ export interface GeneralBlockVerifyIdentifier {
 /**
  * 
  * @export
- * @interface GenericRsp
- */
-export interface GenericRsp {
-    /**
-     * HTTP status code of operation
-     * @type {number}
-     * @memberof GenericRsp
-     */
-    'httpStatusCode': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof GenericRsp
-     */
-    'message': string;
-    /**
-     * 
-     * @type {RequestData}
-     * @memberof GenericRsp
-     */
-    'requestData': RequestData;
-    /**
-     * Runtime in seconds for this request
-     * @type {number}
-     * @memberof GenericRsp
-     */
-    'runtime': number;
-}
-/**
- * 
- * @export
  * @interface Identifier
  */
 export interface Identifier {
@@ -1174,21 +1143,6 @@ export interface LoginIdentifier {
  * @enum {string}
  */
 
-export const LoginIdentifierStatus = {
-    Pending: 'pending',
-    Primary: 'primary',
-    Verified: 'verified'
-} as const;
-
-export type LoginIdentifierStatus = typeof LoginIdentifierStatus[keyof typeof LoginIdentifierStatus];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
 export const LoginIdentifierType = {
     Email: 'email',
     Phone: 'phone',
@@ -1244,79 +1198,6 @@ export interface LoginInitReq {
      */
     'isPhone': boolean;
 }
-/**
- * 
- * @export
- * @interface MeIdentifierCreateReq
- */
-export interface MeIdentifierCreateReq {
-    /**
-     * 
-     * @type {LoginIdentifierType}
-     * @memberof MeIdentifierCreateReq
-     */
-    'identifierType': LoginIdentifierType;
-    /**
-     * 
-     * @type {string}
-     * @memberof MeIdentifierCreateReq
-     */
-    'value': string;
-    /**
-     * 
-     * @type {LoginIdentifierStatus}
-     * @memberof MeIdentifierCreateReq
-     */
-    'status': LoginIdentifierStatus;
-}
-
-
-/**
- * 
- * @export
- * @interface MeIdentifierDeleteReq
- */
-export interface MeIdentifierDeleteReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof MeIdentifierDeleteReq
-     */
-    'identifierID': string;
-}
-/**
- * 
- * @export
- * @interface MeIdentifierUpdateReq
- */
-export interface MeIdentifierUpdateReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof MeIdentifierUpdateReq
-     */
-    'identifierID': string;
-    /**
-     * 
-     * @type {LoginIdentifierType}
-     * @memberof MeIdentifierUpdateReq
-     */
-    'identifierType': LoginIdentifierType;
-    /**
-     * 
-     * @type {string}
-     * @memberof MeIdentifierUpdateReq
-     */
-    'value': string;
-    /**
-     * 
-     * @type {LoginIdentifierStatus}
-     * @memberof MeIdentifierUpdateReq
-     */
-    'status': LoginIdentifierStatus;
-}
-
-
 /**
  * 
  * @export
@@ -1457,19 +1338,6 @@ export interface MeRsp {
      * @memberof MeRsp
      */
     'socialAccounts': Array<SocialAccount>;
-}
-/**
- * 
- * @export
- * @interface MeUpdateReq
- */
-export interface MeUpdateReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof MeUpdateReq
-     */
-    'fullName': string;
 }
 /**
  * 
@@ -1826,25 +1694,6 @@ export interface ProcessStaticInfo {
      * @memberof ProcessStaticInfo
      */
     'expiresAt': number;
-}
-/**
- * Data about the request itself, can be used for debugging
- * @export
- * @interface RequestData
- */
-export interface RequestData {
-    /**
-     * Unique ID of request, you can provide your own while making the request, if not the ID will be randomly generated on server side
-     * @type {string}
-     * @memberof RequestData
-     */
-    'requestID': string;
-    /**
-     * Link to home with details about request
-     * @type {string}
-     * @memberof RequestData
-     */
-    'link': string;
 }
 /**
  * 
@@ -4400,42 +4249,6 @@ export class CorbadoConnectApi extends BaseAPI {
 export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Deletes current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserDelete: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/me`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4465,132 +4278,6 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierCreate: async (meIdentifierCreateReq: MeIdentifierCreateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'meIdentifierCreateReq' is not null or undefined
-            assertParamExists('currentUserIdentifierCreate', 'meIdentifierCreateReq', meIdentifierCreateReq)
-            const localVarPath = `/v2/me/identifier`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(meIdentifierCreateReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierDelete: async (meIdentifierDeleteReq: MeIdentifierDeleteReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'meIdentifierDeleteReq' is not null or undefined
-            assertParamExists('currentUserIdentifierDelete', 'meIdentifierDeleteReq', meIdentifierDeleteReq)
-            const localVarPath = `/v2/me/identifier`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(meIdentifierDeleteReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierUpdate: async (meIdentifierUpdateReq: MeIdentifierUpdateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'meIdentifierUpdateReq' is not null or undefined
-            assertParamExists('currentUserIdentifierUpdate', 'meIdentifierUpdateReq', meIdentifierUpdateReq)
-            const localVarPath = `/v2/me/identifier`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(meIdentifierUpdateReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4829,48 +4516,6 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserUpdate: async (meUpdateReq: MeUpdateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'meUpdateReq' is not null or undefined
-            assertParamExists('currentUserUpdate', 'meUpdateReq', meUpdateReq)
-            const localVarPath = `/v2/me`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            // authentication projectID required
-            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(meUpdateReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -4882,51 +4527,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
     return {
         /**
-         * Deletes current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async currentUserDelete(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserDelete(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
          * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async currentUserGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async currentUserIdentifierCreate(meIdentifierCreateReq: MeIdentifierCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserIdentifierCreate(meIdentifierCreateReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async currentUserIdentifierDelete(meIdentifierDeleteReq: MeIdentifierDeleteReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserIdentifierDelete(meIdentifierDeleteReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async currentUserIdentifierUpdate(meIdentifierUpdateReq: MeIdentifierUpdateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserIdentifierUpdate(meIdentifierUpdateReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4986,16 +4592,6 @@ export const UsersApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserSessionRefresh(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
-        /**
-         * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async currentUserUpdate(meUpdateReq: MeUpdateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserUpdate(meUpdateReq, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
     }
 };
 
@@ -5007,47 +4603,12 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = UsersApiFp(configuration)
     return {
         /**
-         * Deletes current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserDelete(options?: any): AxiosPromise<GenericRsp> {
-            return localVarFp.currentUserDelete(options).then((request) => request(axios, basePath));
-        },
-        /**
          * Gets current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         currentUserGet(options?: any): AxiosPromise<MeRsp> {
             return localVarFp.currentUserGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierCreate(meIdentifierCreateReq: MeIdentifierCreateReq, options?: any): AxiosPromise<GenericRsp> {
-            return localVarFp.currentUserIdentifierCreate(meIdentifierCreateReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierDelete(meIdentifierDeleteReq: MeIdentifierDeleteReq, options?: any): AxiosPromise<GenericRsp> {
-            return localVarFp.currentUserIdentifierDelete(meIdentifierDeleteReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserIdentifierUpdate(meIdentifierUpdateReq: MeIdentifierUpdateReq, options?: any): AxiosPromise<GenericRsp> {
-            return localVarFp.currentUserIdentifierUpdate(meIdentifierUpdateReq, options).then((request) => request(axios, basePath));
         },
         /**
          * Finishes passkey append for current user
@@ -5100,15 +4661,6 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         currentUserSessionRefresh(options?: any): AxiosPromise<MeRefreshRsp> {
             return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
         },
-        /**
-         * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        currentUserUpdate(meUpdateReq: MeUpdateReq, options?: any): AxiosPromise<GenericRsp> {
-            return localVarFp.currentUserUpdate(meUpdateReq, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -5120,16 +4672,6 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  */
 export class UsersApi extends BaseAPI {
     /**
-     * Deletes current user
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public currentUserDelete(options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserDelete(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Gets current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5137,39 +4679,6 @@ export class UsersApi extends BaseAPI {
      */
     public currentUserGet(options?: AxiosRequestConfig) {
         return UsersApiFp(this.configuration).currentUserGet(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Creates an identifier
-     * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public currentUserIdentifierCreate(meIdentifierCreateReq: MeIdentifierCreateReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserIdentifierCreate(meIdentifierCreateReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Deletes an identifier
-     * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public currentUserIdentifierDelete(meIdentifierDeleteReq: MeIdentifierDeleteReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserIdentifierDelete(meIdentifierDeleteReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Modifies an identifier (only permitted for username; identifierID will change)
-     * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public currentUserIdentifierUpdate(meIdentifierUpdateReq: MeIdentifierUpdateReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserIdentifierUpdate(meIdentifierUpdateReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5233,17 +4742,6 @@ export class UsersApi extends BaseAPI {
      */
     public currentUserSessionRefresh(options?: AxiosRequestConfig) {
         return UsersApiFp(this.configuration).currentUserSessionRefresh(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Updates current user
-     * @param {MeUpdateReq} meUpdateReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public currentUserUpdate(meUpdateReq: MeUpdateReq, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).currentUserUpdate(meUpdateReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

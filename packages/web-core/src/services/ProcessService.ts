@@ -255,7 +255,7 @@ export class ProcessService {
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const req: ProcessInitReq = {
       clientInformation: {
-        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
+        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
         javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),

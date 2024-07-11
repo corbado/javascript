@@ -56,6 +56,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/meRsp'
+    patch:
+      description: Updates current user
+      operationId: CurrentUserUpdate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meUpdateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    delete:
+      description: Deletes current user
+      operationId: CurrentUserDelete
+      tags:
+        - Users
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
 
   /v2/me/passkeys:
     get:
@@ -152,6 +174,50 @@ paths:
       responses:
         '204':
           description: tbd
+
+  /v2/me/identifier:
+    post:
+      description: Creates an identifier
+      operationId: CurrentUserIdentifierCreate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierCreateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    delete:
+      description: Deletes an identifier
+      operationId: CurrentUserIdentifierDelete
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierDeleteReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    patch:
+      description: Modifies an identifier (only permitted for username; identifierID will change)
+      operationId: CurrentUserIdentifierUpdate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierUpdateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
 
   /v2/auth/process/init:
     post:
@@ -852,6 +918,45 @@ components:
         clientInformation:
           $ref: '#/components/schemas/clientInformation'
 
+    meIdentifierCreateReq:
+      type: object
+      required:
+        - identifierType
+        - value
+        - status
+      properties:
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
+        value:
+          type: string
+        status:
+          $ref: '#/components/schemas/loginIdentifierStatus'
+
+    meIdentifierDeleteReq:
+      type: object
+      required:
+        - identifierID
+      properties:
+        identifierID:
+          type: string
+
+    meIdentifierUpdateReq:
+      type: object
+      required:
+        - identifierID
+        - identifierType
+        - value
+        - status
+      properties:
+        identifierID:
+          type: string
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
+        value:
+          type: string
+        status:
+          $ref: '#/components/schemas/loginIdentifierStatus'
+
     #    passkeyAppendFinishRsp:
     #      $ref: '#/components/schemas/blockBody'
 
@@ -1004,7 +1109,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1079,7 +1184,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1138,7 +1243,7 @@ components:
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
-    
+
     connectManageInitReq:
       type: object
       required:
@@ -1146,7 +1251,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1185,14 +1290,6 @@ components:
         credentialID:
           type: string
 
-    connectManageDeleteRsp:
-      type: object
-      required:
-        - credentialID
-      properties:
-        credentialID:
-          type: string
-
     connectManageListReq:
       type: object
       required:
@@ -1210,6 +1307,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/passkey'
+
+    connectManageDeleteRsp:
+      type: object
+      required:
+        - credentialID
+      properties:
+        credentialID:
+          type: string
 
     passkey:
       type: object
@@ -1387,6 +1492,10 @@ components:
       type: string
       enum: [ email, phone, username ]
 
+    loginIdentifierStatus:
+      type: string
+      enum: [ pending, primary, verified ]
+
     blockType:
       type: string
       enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify, passkey-append-after-hybrid ]
@@ -1556,6 +1665,20 @@ components:
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'
 
+    clientInformationV2:
+      type: object
+      properties:
+        bluetoothAvailable:
+          type: boolean
+        clientEnvHandle:
+          type: string
+        isUserVerifyingPlatformAuthenticatorAvailable:
+          type: boolean
+        isConditionalMediationAvailable:
+          type: boolean
+        javaScriptHighEntropy:
+          $ref: '#/components/schemas/javaScriptHighEntropy'
+
     javaScriptHighEntropy:
       type: object
       required:
@@ -1631,6 +1754,14 @@ components:
           items:
             $ref: '#/components/schemas/socialAccount'
 
+    meUpdateReq:
+      type: object
+      required:
+        - fullName
+      properties:
+        fullName:
+          type: string
+
     identifier:
       type: object
       required:
@@ -1690,6 +1821,14 @@ components:
           type: string
         message:
           type: string
+
+  responses:
+    '200':
+      description: Operation succeeded
+      content:
+        application/json:
+          schema:
+            $ref: 'common.yml#/components/schemas/genericRsp'
 
 security:
   - bearerAuth: [ ]

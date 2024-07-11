@@ -163,7 +163,7 @@ export class SessionService {
     const clientHandle = WebAuthnService.getClientHandle();
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
       clientInformation: {
-        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
+        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
         javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
@@ -193,7 +193,7 @@ export class SessionService {
     await this.#usersApi.currentUserPasskeyAppendFinish({
       attestationResponse: signedChallenge.val,
       clientInformation: {
-        bluetoothAvailable: await WebAuthnService.canUseBluetooth(),
+        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
         canUsePasskeys: canUsePasskeys,
         clientEnvHandle: clientHandle ?? undefined,
         javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),

@@ -13,6 +13,7 @@ import type {
   ConnectLoginInitReq,
   ConnectManageDeleteReq,
   ConnectManageDeleteRsp,
+  ConnectManageInitReq,
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
@@ -131,18 +132,22 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectLoginInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
+
+    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
@@ -243,18 +248,22 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectAppendInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
+
+    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
@@ -407,18 +416,22 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
-    const req: ConnectAppendInitReq = {
+    const req: ConnectManageInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
+
+    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectManageInit(req, { signal: abortController.signal }),

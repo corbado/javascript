@@ -132,7 +132,7 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
-    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
@@ -140,7 +140,7 @@ export class ConnectService {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
         isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
-        isConditionalMediationAvailable: canUseConditionUI,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
@@ -254,7 +254,7 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
-    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
@@ -262,7 +262,7 @@ export class ConnectService {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
         isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
-        isConditionalMediationAvailable: canUseConditionUI,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
@@ -428,7 +428,7 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
-    const canUseConditionUI = await WebAuthnService.doesBrowserSupportConditionalUI();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
@@ -436,7 +436,7 @@ export class ConnectService {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
         isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
-        isConditionalMediationAvailable: canUseConditionUI,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },

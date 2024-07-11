@@ -1,5 +1,5 @@
 import type { CorbadoConnectProviderProps } from '@corbado/connect-react';
-import { CorbadoConnectProvider, CorbadoConnectModal } from '@corbado/connect-react';
+import { CorbadoConnectModal, CorbadoConnectProvider } from '@corbado/connect-react';
 import type { FC } from 'react';
 import React from 'react';
 import ReactDOM from 'react-dom';

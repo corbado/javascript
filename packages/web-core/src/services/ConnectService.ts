@@ -325,7 +325,7 @@ export class ConnectService {
 
   async startAppend(
     appendTokenValue: string,
-    abortController: AbortController,
+    abortController?: AbortController,
   ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
@@ -333,7 +333,10 @@ export class ConnectService {
     }
 
     return this.wrapWithErr(() =>
-      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue }, { signal: abortController.signal }),
+      this.#connectApi.connectAppendStart(
+        { appendTokenValue: appendTokenValue },
+        abortController && { signal: abortController.signal },
+      ),
     );
   }
 

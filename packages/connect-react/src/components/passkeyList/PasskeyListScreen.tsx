@@ -46,14 +46,13 @@ const PasskeyListScreen = () => {
     };
 
     const ac = new AbortController();
-
     void init(ac);
 
     return () => {
       ac.abort();
       getConnectService().dispose();
     };
-  }, [getConnectService]);
+  }, [getConnectService, setLoading]);
 
   const onDeleteClick = useCallback(
     async (credentialsId?: string) => {
@@ -75,14 +74,24 @@ const PasskeyListScreen = () => {
       await getPasskeyList(config);
       setLoading(false);
     },
-    [config, loading],
+    [config, loading, passkeyListToken],
   );
 
   const onAppendClick = useCallback(async () => {
     setLoading(true);
     const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);
 
-    const res = await getConnectService().append(appendToken);
+    const startAppendRes = await getConnectService().startAppend(appendToken);
+
+    if (startAppendRes.err || !startAppendRes.val.attestationOptions) {
+      setLoading(false);
+      log.error('error:', startAppendRes.val);
+      show(AlreadyExistingModal());
+
+      return;
+    }
+
+    const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
 
     if (res.err) {
       setLoading(false);
@@ -95,7 +104,7 @@ const PasskeyListScreen = () => {
     console.log('get passkey list');
     await getPasskeyList(config);
     setLoading(false);
-  }, [config, setLoading]);
+  }, [config, setLoading, passkeyListToken]);
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
     await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);

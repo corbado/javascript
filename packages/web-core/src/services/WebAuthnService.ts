@@ -85,6 +85,7 @@ export class WebAuthnService {
   }
 
   static async canUseBluetooth(): Promise<boolean | undefined> {
+    log.debug('capabilities', await this.#getClientCapabilities());
     try {
       const availability = await navigator.bluetooth.getAvailability();
 
@@ -139,5 +140,21 @@ export class WebAuthnService {
     }
 
     return new AbortController();
+  }
+
+  static async #getClientCapabilities() {
+    if (!PublicKeyCredential) {
+      log.debug('PublicKeyCredential is not supported on this browser');
+      return;
+    }
+
+    try {
+      // We will ignore the type check as getClientCapabilities does not exist in the stable authn version and types
+      // @ts-ignore
+      return await PublicKeyCredential.getClientCapabilities();
+    } catch (e) {
+      log.debug('Error using getClientCapabilities: ', e);
+      return;
+    }
   }
 }

@@ -1,5 +1,6 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
+import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
 import log from 'loglevel';
@@ -8,7 +9,6 @@ import { Err, Ok } from 'ts-results';
 
 import type { JavaScriptHighEntropy } from '../api/v2';
 import { checkIfOnlyHybridPasskeysAvailable, CorbadoError } from '../utils';
-import { ClientCapabilities } from '@corbado/types';
 const clientHandleKey = 'cbo_client_handle';
 
 /**

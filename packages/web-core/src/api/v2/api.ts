@@ -349,6 +349,18 @@ export interface ClientInformationV2 {
     'isConditionalMediationAvailable'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'isConditionalCreationAvailable'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'isPasskeyPlatformAuthenticatorAvailable'?: boolean;
+    /**
+     * 
      * @type {JavaScriptHighEntropy}
      * @memberof ClientInformationV2
      */

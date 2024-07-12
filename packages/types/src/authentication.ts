@@ -70,3 +70,20 @@ export interface PassKeyList {
   passkeys: Array<PassKeyItem>;
   paging?: Paging;
 }
+
+/**
+ * Represents the capabilities of a WebAuthn Client.
+ * @interface ClientCapabilities
+ * @property {boolean} conditionalCreate - Indicates if the WebAuthn Client is capable of conditional mediation for registration ceremonies.
+ * @property {boolean} conditionalMediation - Indicates if the WebAuthn Client is capable of conditional mediation for authentication ceremonies.
+ * @property {boolean} hybridTransport - Indicates if the WebAuthn Client supports usage of the hybrid transport.
+ * @property {boolean} passkeyPlatformAuthenticator - Indicates if the WebAuthn Client supports usage of a passkey platform authenticator, locally and/or via hybrid transport.
+ * @property {boolean} userVerifyingPlatformAuthenticator - Indicates if the WebAuthn Client supports usage of a user-verifying platform authenticator.
+ */
+export interface ClientCapabilities {
+  conditionalCreate: boolean;
+  conditionalMediation: boolean;
+  hybridTransport: boolean;
+  passkeyPlatformAuthenticator: boolean;
+  userVerifyingPlatformAuthenticator: boolean;
+}

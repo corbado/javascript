@@ -8,6 +8,7 @@ import { Err, Ok } from 'ts-results';
 
 import type { JavaScriptHighEntropy } from '../api/v2';
 import { checkIfOnlyHybridPasskeysAvailable, CorbadoError } from '../utils';
+import { ClientCapabilities } from '@corbado/types';
 const clientHandleKey = 'cbo_client_handle';
 
 /**
@@ -75,19 +76,39 @@ export class WebAuthnService {
   }
 
   static async doesBrowserSupportPasskeys(): Promise<boolean> {
+    const capabilities = await this.#getClientCapabilities();
+
+    if (capabilities) {
+      return capabilities.userVerifyingPlatformAuthenticator;
+    }
+
     return (
       window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())
     );
   }
 
+  static async doesBrowserSupportPasskeyPlatformAuthenticator(): Promise<boolean | undefined> {
+    return (await this.#getClientCapabilities())?.passkeyPlatformAuthenticator;
+  }
+
   static async doesBrowserSupportConditionalUI(): Promise<boolean> {
+    const capabilities = await this.#getClientCapabilities();
+
+    if (capabilities) {
+      return capabilities.conditionalMediation;
+    }
+
     return window.PublicKeyCredential && (await window.PublicKeyCredential.isConditionalMediationAvailable());
   }
 
+  static async doesBrowserSupportConditionalCreation(): Promise<boolean | undefined> {
+    return (await this.#getClientCapabilities())?.conditionalCreate;
+  }
+
   static async canUseBluetooth(): Promise<boolean | undefined> {
-    log.debug('capabilities', await this.#getClientCapabilities());
     try {
-      const availability = await navigator.bluetooth.getAvailability();
+      const availability =
+        (await this.#getClientCapabilities())?.hybridTransport ?? (await navigator.bluetooth.getAvailability());
 
       if (availability) {
         return true;
@@ -142,7 +163,7 @@ export class WebAuthnService {
     return new AbortController();
   }
 
-  static async #getClientCapabilities() {
+  static async #getClientCapabilities(): Promise<ClientCapabilities | undefined> {
     if (!PublicKeyCredential) {
       log.debug('PublicKeyCredential is not supported on this browser');
       return;

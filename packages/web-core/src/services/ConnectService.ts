@@ -495,25 +495,16 @@ export class ConnectService {
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     // iOS & macOS Only so far
-    const hybridTransportAvailable = await WebAuthnService.isHybridTransportAvailable();
-    const canUseConditionalMeditation = await WebAuthnService.doesBrowserSupportConditionalMediation();
-    const canUseConditionalCreation = await WebAuthnService.doesBrowserSupportConditionalCreation();
-    const canUsePasskeyPlatformAuthenticator = await WebAuthnService.doesBrowserSupportPasskeyPlatformAuthenticator();
-    const isUserVerifyingPlatformAuthenticatorAvailable =
-      await WebAuthnService.isUserVerifyingPlatformAuthenticatorAvailable();
+    const clientCapabilities = await WebAuthnService.getClientCapabilities();
 
     const req = {
       clientInformation: {
-        hybridTransportAvailable,
-        bluetoothAvailable,
-        canUsePasskeys,
-        isUserVerifyingPlatformAuthenticatorAvailable,
-        isConditionalMediationAvailable: canUseConditionalMeditation,
+        bluetoothAvailable: bluetoothAvailable,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
-        isPasskeyPlatformAuthenticatorAvailable: canUsePasskeyPlatformAuthenticator,
-        isConditionalCreationAvailable: canUseConditionalCreation,
-        isConditionalUIAvailable: canUseConditionalUI,
+        clientCapabilities,
       },
       flags: flags.getItemsObject(),
     } as T;

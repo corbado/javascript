@@ -289,6 +289,43 @@ export type BlockType = typeof BlockType[keyof typeof BlockType];
 /**
  * 
  * @export
+ * @interface ClientCapabilities
+ */
+export interface ClientCapabilities {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'conditionalCreate'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'conditionalMediation'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'hybridTransport'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'passkeyPlatformAuthenticator'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'userVerifyingPlatformAuthenticator'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface ClientInformation
  */
 export interface ClientInformation {
@@ -324,12 +361,6 @@ export interface ClientInformation {
  */
 export interface ClientInformationV2 {
     /**
-     * For now used only for iOS and macOs
-     * @type {boolean}
-     * @memberof ClientInformationV2
-     */
-    'hybridTransportAvailable'?: boolean;
-    /**
      * 
      * @type {boolean}
      * @memberof ClientInformationV2
@@ -346,37 +377,19 @@ export interface ClientInformationV2 {
      * @type {boolean}
      * @memberof ClientInformationV2
      */
-    'canUsePasskeys'?: boolean;
-    /**
-     * For now used only for iOS and macOs
-     * @type {boolean}
-     * @memberof ClientInformationV2
-     */
     'isUserVerifyingPlatformAuthenticatorAvailable'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof ClientInformationV2
      */
-    'isConditionalUIAvailable'?: boolean;
-    /**
-     * For now used only for iOS and macOs
-     * @type {boolean}
-     * @memberof ClientInformationV2
-     */
     'isConditionalMediationAvailable'?: boolean;
     /**
-     * For now used only for iOS and macOs
-     * @type {boolean}
+     * 
+     * @type {ClientCapabilities}
      * @memberof ClientInformationV2
      */
-    'isConditionalCreationAvailable'?: boolean;
-    /**
-     * For now used only for iOS and macOs
-     * @type {boolean}
-     * @memberof ClientInformationV2
-     */
-    'isPasskeyPlatformAuthenticatorAvailable'?: boolean;
+    'clientCapabilities'?: ClientCapabilities;
     /**
      * 
      * @type {JavaScriptHighEntropy}

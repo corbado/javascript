@@ -81,24 +81,8 @@ export class WebAuthnService {
     );
   }
 
-  static async isUserVerifyingPlatformAuthenticatorAvailable(): Promise<boolean | undefined> {
-    return (await this.#getClientCapabilities())?.userVerifyingPlatformAuthenticator;
-  }
-
-  static async doesBrowserSupportPasskeyPlatformAuthenticator(): Promise<boolean | undefined> {
-    return (await this.#getClientCapabilities())?.passkeyPlatformAuthenticator;
-  }
-
   static async doesBrowserSupportConditionalUI(): Promise<boolean> {
     return window.PublicKeyCredential && (await window.PublicKeyCredential.isConditionalMediationAvailable());
-  }
-
-  static async doesBrowserSupportConditionalMediation(): Promise<boolean | undefined> {
-    return (await this.#getClientCapabilities())?.conditionalMediation;
-  }
-
-  static async doesBrowserSupportConditionalCreation(): Promise<boolean | undefined> {
-    return (await this.#getClientCapabilities())?.conditionalCreate;
   }
 
   static async canUseBluetooth(): Promise<boolean | undefined> {
@@ -115,10 +99,6 @@ export class WebAuthnService {
       log.debug('Error checking bluetooth availability', e);
       return;
     }
-  }
-
-  static async isHybridTransportAvailable(): Promise<boolean | undefined> {
-    return (await this.#getClientCapabilities())?.hybridTransport;
   }
 
   static getClientHandle(): string | null {
@@ -162,7 +142,7 @@ export class WebAuthnService {
     return new AbortController();
   }
 
-  static async #getClientCapabilities(): Promise<ClientCapabilities | undefined> {
+  static async getClientCapabilities(): Promise<ClientCapabilities | undefined> {
     if (!PublicKeyCredential) {
       log.debug('PublicKeyCredential is not supported on this browser');
       return;

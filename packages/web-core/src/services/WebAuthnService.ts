@@ -84,17 +84,19 @@ export class WebAuthnService {
     return window.PublicKeyCredential && (await window.PublicKeyCredential.isConditionalMediationAvailable());
   }
 
-  static async canUseBluetooth(): Promise<boolean> {
+  static async canUseBluetooth(): Promise<boolean | undefined> {
     try {
       const availability = await navigator.bluetooth.getAvailability();
+
       if (availability) {
         return true;
       }
 
       return false;
     } catch (e) {
+      // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
       log.debug('Error checking bluetooth availability', e);
-      return false;
+      return undefined;
     }
   }
 

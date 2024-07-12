@@ -13,6 +13,7 @@ import type {
   ConnectLoginInitReq,
   ConnectManageDeleteReq,
   ConnectManageDeleteRsp,
+  ConnectManageInitReq,
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
@@ -131,24 +132,34 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectLoginInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
 
+    log.debug('client data', req);
+
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
     );
+
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -243,24 +254,34 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
     const req: ConnectAppendInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
 
+    log.debug('client data', req);
+
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
     );
+
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -407,18 +428,22 @@ export class ConnectService {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
-    const req: ConnectAppendInitReq = {
+    const req: ConnectManageInitReq = {
       clientInformation: {
         bluetoothAvailable: bluetoothAvailable,
-        canUsePasskeys: canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+        isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
       },
       flags: flags.getItemsObject(),
     };
+
+    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectManageInit(req, { signal: abortController.signal }),
@@ -426,6 +451,11 @@ export class ConnectService {
 
     if (res.err) {
       return res;
+    }
+
+    // if the backend decides that a new client handle is needed, we store it in local storage
+    if (res.val.newClientEnvHandle) {
+      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);

@@ -320,6 +320,43 @@ export interface ClientInformation {
 /**
  * 
  * @export
+ * @interface ClientInformationV2
+ */
+export interface ClientInformationV2 {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'bluetoothAvailable'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientInformationV2
+     */
+    'clientEnvHandle'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'isUserVerifyingPlatformAuthenticatorAvailable'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'isConditionalMediationAvailable'?: boolean;
+    /**
+     * 
+     * @type {JavaScriptHighEntropy}
+     * @memberof ClientInformationV2
+     */
+    'javaScriptHighEntropy'?: JavaScriptHighEntropy;
+}
+/**
+ * 
+ * @export
  * @interface ConnectAppendFinishReq
  */
 export interface ConnectAppendFinishReq {
@@ -351,10 +388,10 @@ export interface ConnectAppendFinishRsp {
 export interface ConnectAppendInitReq {
     /**
      * 
-     * @type {ClientInformation}
+     * @type {ClientInformationV2}
      * @memberof ConnectAppendInitReq
      */
-    'clientInformation': ClientInformation;
+    'clientInformation': ClientInformationV2;
     /**
      * 
      * @type {{ [key: string]: string; }}
@@ -374,6 +411,12 @@ export interface ConnectAppendInitRsp {
      * @memberof ConnectAppendInitRsp
      */
     'processID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'newClientEnvHandle'?: string;
     /**
      * 
      * @type {number}
@@ -471,10 +514,10 @@ export interface ConnectLoginFinishRsp {
 export interface ConnectLoginInitReq {
     /**
      * 
-     * @type {ClientInformation}
+     * @type {ClientInformationV2}
      * @memberof ConnectLoginInitReq
      */
-    'clientInformation': ClientInformation;
+    'clientInformation': ClientInformationV2;
     /**
      * 
      * @type {{ [key: string]: string; }}
@@ -494,6 +537,12 @@ export interface ConnectLoginInitRsp {
      * @memberof ConnectLoginInitRsp
      */
     'token': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'newClientEnvHandle'?: string;
     /**
      * 
      * @type {number}
@@ -591,10 +640,10 @@ export interface ConnectManageDeleteRsp {
 export interface ConnectManageInitReq {
     /**
      * 
-     * @type {ClientInformation}
+     * @type {ClientInformationV2}
      * @memberof ConnectManageInitReq
      */
-    'clientInformation': ClientInformation;
+    'clientInformation': ClientInformationV2;
     /**
      * 
      * @type {{ [key: string]: string; }}
@@ -614,6 +663,12 @@ export interface ConnectManageInitRsp {
      * @memberof ConnectManageInitRsp
      */
     'processID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitRsp
+     */
+    'newClientEnvHandle'?: string;
     /**
      * 
      * @type {number}

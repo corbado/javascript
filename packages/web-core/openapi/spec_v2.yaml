@@ -56,7 +56,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/meRsp'
-
+    
   /v2/me/passkeys:
     get:
       description: Gets current user's passkeys
@@ -1004,7 +1004,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1020,6 +1020,8 @@ components:
         - flags
       properties:
         token:
+          type: string
+        newClientEnvHandle:
           type: string
         expiresAt:
           type: integer
@@ -1079,7 +1081,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1095,6 +1097,8 @@ components:
         - flags
       properties:
         processID:
+          type: string
+        newClientEnvHandle:
           type: string
         expiresAt:
           type: integer
@@ -1138,7 +1142,7 @@ components:
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
-    
+
     connectManageInitReq:
       type: object
       required:
@@ -1146,7 +1150,7 @@ components:
         - flags
       properties:
         clientInformation:
-          $ref: '#/components/schemas/clientInformation'
+          $ref: '#/components/schemas/clientInformationV2'
         flags:
           type: object
           additionalProperties:
@@ -1162,6 +1166,8 @@ components:
         - flags
       properties:
         processID:
+          type: string
+        newClientEnvHandle:
           type: string
         expiresAt:
           type: integer
@@ -1185,14 +1191,6 @@ components:
         credentialID:
           type: string
 
-    connectManageDeleteRsp:
-      type: object
-      required:
-        - credentialID
-      properties:
-        credentialID:
-          type: string
-
     connectManageListReq:
       type: object
       required:
@@ -1210,6 +1208,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/passkey'
+
+    connectManageDeleteRsp:
+      type: object
+      required:
+        - credentialID
+      properties:
+        credentialID:
+          type: string
 
     passkey:
       type: object
@@ -1552,6 +1558,20 @@ components:
         clientEnvHandle:
           type: string
         canUsePasskeys:
+          type: boolean
+        javaScriptHighEntropy:
+          $ref: '#/components/schemas/javaScriptHighEntropy'
+
+    clientInformationV2:
+      type: object
+      properties:
+        bluetoothAvailable:
+          type: boolean
+        clientEnvHandle:
+          type: string
+        isUserVerifyingPlatformAuthenticatorAvailable:
+          type: boolean
+        isConditionalMediationAvailable:
           type: boolean
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'

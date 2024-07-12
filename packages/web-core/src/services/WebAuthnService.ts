@@ -86,14 +86,7 @@ export class WebAuthnService {
 
   static async canUseBluetooth(): Promise<boolean | undefined> {
     try {
-      const bluetooth = navigator.bluetooth;
-
-      // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
-      if (!bluetooth) {
-        return;
-      }
-
-      const availability = await bluetooth.getAvailability();
+      const availability = await navigator.bluetooth.getAvailability();
 
       if (availability) {
         return true;
@@ -101,8 +94,9 @@ export class WebAuthnService {
 
       return false;
     } catch (e) {
+      // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
       log.debug('Error checking bluetooth availability', e);
-      return false;
+      return undefined;
     }
   }
 

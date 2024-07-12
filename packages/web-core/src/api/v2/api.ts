@@ -289,6 +289,43 @@ export type BlockType = typeof BlockType[keyof typeof BlockType];
 /**
  * 
  * @export
+ * @interface ClientCapabilities
+ */
+export interface ClientCapabilities {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'conditionalCreate'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'conditionalMediation'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'hybridTransport'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'passkeyPlatformAuthenticator'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'userVerifyingPlatformAuthenticator'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface ClientInformation
  */
 export interface ClientInformation {
@@ -347,6 +384,12 @@ export interface ClientInformationV2 {
      * @memberof ClientInformationV2
      */
     'isConditionalMediationAvailable'?: boolean;
+    /**
+     * 
+     * @type {ClientCapabilities}
+     * @memberof ClientInformationV2
+     */
+    'clientCapabilities'?: ClientCapabilities;
     /**
      * 
      * @type {JavaScriptHighEntropy}

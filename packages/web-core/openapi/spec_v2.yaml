@@ -1573,8 +1573,24 @@ components:
           type: boolean
         isConditionalMediationAvailable:
           type: boolean
+        clientCapabilities:
+          $ref: '#/components/schemas/clientCapabilities'
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'
+
+    clientCapabilities:
+      type: object
+      properties:
+        conditionalCreate:
+          type: boolean
+        conditionalMediation:
+          type: boolean
+        hybridTransport:
+          type: boolean
+        passkeyPlatformAuthenticator:
+          type: boolean
+        userVerifyingPlatformAuthenticator:
+          type: boolean
 
     javaScriptHighEntropy:
       type: object

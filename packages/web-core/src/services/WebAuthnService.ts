@@ -1,5 +1,6 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
+import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
 import log from 'loglevel';
@@ -96,7 +97,7 @@ export class WebAuthnService {
     } catch (e) {
       // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
       log.debug('Error checking bluetooth availability', e);
-      return undefined;
+      return;
     }
   }
 
@@ -139,5 +140,21 @@ export class WebAuthnService {
     }
 
     return new AbortController();
+  }
+
+  static async getClientCapabilities(): Promise<ClientCapabilities | undefined> {
+    if (!PublicKeyCredential) {
+      log.debug('PublicKeyCredential is not supported on this browser');
+      return;
+    }
+
+    try {
+      // We will ignore the type check as getClientCapabilities does not exist in the stable authn version and types
+      // @ts-ignore
+      return await PublicKeyCredential.getClientCapabilities();
+    } catch (e) {
+      log.debug('Error using getClientCapabilities: ', e);
+      return;
+    }
   }
 }

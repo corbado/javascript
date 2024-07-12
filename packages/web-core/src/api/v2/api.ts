@@ -324,6 +324,12 @@ export interface ClientInformation {
  */
 export interface ClientInformationV2 {
     /**
+     * For now used only for iOS and macOs
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
+    'hybridTransportAvailable'?: boolean;
+    /**
      * 
      * @type {boolean}
      * @memberof ClientInformationV2
@@ -340,21 +346,33 @@ export interface ClientInformationV2 {
      * @type {boolean}
      * @memberof ClientInformationV2
      */
+    'canUsePasskeys'?: boolean;
+    /**
+     * For now used only for iOS and macOs
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
     'isUserVerifyingPlatformAuthenticatorAvailable'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof ClientInformationV2
      */
+    'isConditionalUIAvailable'?: boolean;
+    /**
+     * For now used only for iOS and macOs
+     * @type {boolean}
+     * @memberof ClientInformationV2
+     */
     'isConditionalMediationAvailable'?: boolean;
     /**
-     * 
+     * For now used only for iOS and macOs
      * @type {boolean}
      * @memberof ClientInformationV2
      */
     'isConditionalCreationAvailable'?: boolean;
     /**
-     * 
+     * For now used only for iOS and macOs
      * @type {boolean}
      * @memberof ClientInformationV2
      */

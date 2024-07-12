@@ -489,22 +489,31 @@ export class ConnectService {
   }> {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
-    const canUsePasskeyPlatformAuthenticator = await WebAuthnService.doesBrowserSupportPasskeyPlatformAuthenticator();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
-    const canUseConditionalCreation = await WebAuthnService.doesBrowserSupportConditionalCreation();
     const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
 
+    // iOS & macOS Only so far
+    const hybridTransportAvailable = await WebAuthnService.isHybridTransportAvailable();
+    const canUseConditionalMeditation = await WebAuthnService.doesBrowserSupportConditionalMediation();
+    const canUseConditionalCreation = await WebAuthnService.doesBrowserSupportConditionalCreation();
+    const canUsePasskeyPlatformAuthenticator = await WebAuthnService.doesBrowserSupportPasskeyPlatformAuthenticator();
+    const isUserVerifyingPlatformAuthenticatorAvailable =
+      await WebAuthnService.isUserVerifyingPlatformAuthenticatorAvailable();
+
     const req = {
       clientInformation: {
-        bluetoothAvailable: bluetoothAvailable,
-        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
-        isConditionalMediationAvailable: canUseConditionalUI,
+        hybridTransportAvailable,
+        bluetoothAvailable,
+        canUsePasskeys,
+        isUserVerifyingPlatformAuthenticatorAvailable,
+        isConditionalMediationAvailable: canUseConditionalMeditation,
         clientEnvHandle: maybeClientHandle ?? undefined,
         javaScriptHighEntropy: javaScriptHighEntropy,
         isPasskeyPlatformAuthenticatorAvailable: canUsePasskeyPlatformAuthenticator,
         isConditionalCreationAvailable: canUseConditionalCreation,
+        isConditionalUIAvailable: canUseConditionalUI,
       },
       flags: flags.getItemsObject(),
     } as T;

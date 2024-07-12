@@ -1565,17 +1565,28 @@ components:
     clientInformationV2:
       type: object
       properties:
+        hybridTransportAvailable:
+          description: For now used only for iOS and macOs
+          type: boolean
         bluetoothAvailable:
           type: boolean
         clientEnvHandle:
           type: string
+        canUsePasskeys:
+          type: boolean
         isUserVerifyingPlatformAuthenticatorAvailable:
+          description: For now used only for iOS and macOs
+          type: boolean
+        isConditionalUIAvailable:
           type: boolean
         isConditionalMediationAvailable:
+          description: For now used only for iOS and macOs
           type: boolean
         isConditionalCreationAvailable:
+          description: For now used only for iOS and macOs
           type: boolean
         isPasskeyPlatformAuthenticatorAvailable:
+          description: For now used only for iOS and macOs
           type: boolean
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'

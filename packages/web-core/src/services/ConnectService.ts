@@ -131,8 +131,6 @@ export class ConnectService {
 
     const { req, flags } = await this.#getInitReq();
 
-    log.debug('client data', req);
-
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
     );
@@ -236,8 +234,6 @@ export class ConnectService {
     }
 
     const { req, flags } = await this.#getInitReq();
-
-    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
@@ -394,8 +390,6 @@ export class ConnectService {
     }
 
     const { req, flags } = await this.#getInitReq();
-
-    log.debug('client data', req);
 
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectManageInit(req, { signal: abortController.signal }),

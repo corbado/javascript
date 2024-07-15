@@ -35,11 +35,13 @@ export const LoginPasskeyReLoginScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasswordChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('login not allowed');
+      config.onError?.('PasskeyLoginFailure');
       beginNewLogin();
 
       return;

@@ -12,6 +12,7 @@ import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -32,6 +33,8 @@ const AppendInitScreen = () => {
         setAppendAllowed(false);
         config.onSkip();
 
+        config.onError?.('PasskeyNotSupported');
+
         return;
       }
 
@@ -39,6 +42,8 @@ const AppendInitScreen = () => {
       if (!res.val.appendAllowed) {
         setAppendAllowed(false);
         config.onSkip();
+
+        config.onError?.('PasskeyNotSupported');
 
         return;
       }
@@ -51,6 +56,10 @@ const AppendInitScreen = () => {
           return;
         }
 
+        if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
+          config.onError?.('PasswordChallengeAborted');
+        }
+
         setAppendAllowed(false);
         config.onSkip();
 
@@ -58,6 +67,7 @@ const AppendInitScreen = () => {
       }
 
       if (startAppendRes.val.attestationOptions === '') {
+        config.onError?.('PasskeyAlreadyExistsOnDevice');
         setAppendAllowed(false);
         config.onSkip();
 

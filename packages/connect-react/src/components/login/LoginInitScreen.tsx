@@ -1,4 +1,5 @@
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { ConnectLoginError } from '@corbado/types';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -73,11 +74,17 @@ const LoginInitScreen = () => {
     }
 
     const res = await getConnectService().conditionalUILogin();
-    if (res.err && (res.val instanceof PasskeyChallengeCancelledError || res.val.ignore)) {
-      return;
-    }
 
     if (res.err) {
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasswordChallengeAborted');
+        return;
+      }
+
+      if (res.val.ignore) {
+        return;
+      }
+
       log.debug('fallback: error during conditional UI');
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback('');
@@ -102,11 +109,13 @@ const LoginInitScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasswordChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('fallback: error during password login start');
+      config.onError?.('PasskeyLoginFailure');
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 

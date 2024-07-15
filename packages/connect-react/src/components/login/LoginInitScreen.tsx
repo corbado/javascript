@@ -1,5 +1,4 @@
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { ConnectLoginError } from '@corbado/types';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 

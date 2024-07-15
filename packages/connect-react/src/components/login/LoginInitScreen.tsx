@@ -16,13 +16,16 @@ const LoginInitScreen = () => {
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
       setLoading(true);
       log.debug('running init');
+
       const res = await getConnectService().loginInit(ac);
+
       if (res.err) {
         setLoading(false);
         log.error(res.val);
@@ -39,8 +42,10 @@ const LoginInitScreen = () => {
       if (!res.val.loginAllowed) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
+
         config.onFallback('');
-        config.onLoaded('loaded successfully', true);
+        setIsFallbackInitiallyTriggered(true);
+
         setLoading(false);
         return;
       }
@@ -54,7 +59,7 @@ const LoginInitScreen = () => {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
-      config.onLoaded('loaded successfully', false);
+
       setLoading(false);
     };
 
@@ -69,6 +74,7 @@ const LoginInitScreen = () => {
 
   const startConditionalUI = async (challenge: string | null) => {
     if (!challenge) {
+      config.onError?.('PasswordChallengeAborted');
       return;
     }
 
@@ -80,9 +86,7 @@ const LoginInitScreen = () => {
         return;
       }
 
-      if (res.val.ignore) {
-        return;
-      }
+      if (res.val.ignore) return;
 
       log.debug('fallback: error during conditional UI');
       navigateToScreen(LoginScreenType.Invisible);
@@ -124,6 +128,13 @@ const LoginInitScreen = () => {
     setLoginPending(false);
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
+
+  useEffect(() => {
+    if (!loading) {
+      // config.onLoaded should trigger when the form renders else it will cause issues with input detection.
+      config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
+    }
+  }, [loading, config, isFallbackInitiallyTriggered]);
 
   return (
     <div>

@@ -83,9 +83,10 @@ const LoginInitScreen = () => {
     }
 
     const res = await getConnectService().conditionalUILogin();
-
     if (res.err) {
-      if (res.val.ignore) return;
+      if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
+        return;
+      }
       log.debug('fallback: error during conditional UI');
 
       config.onError?.('PasskeyLoginFailure');
@@ -176,7 +177,7 @@ const LoginInitScreen = () => {
             type='email'
             autoComplete='username webauthn'
             autoFocus={true}
-            placeholder='Email address'
+            placeholder=''
             ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
           />
           <PrimaryButton

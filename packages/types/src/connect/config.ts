@@ -8,6 +8,8 @@ export type CorbadoConnectLoginConfig = {
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
   onSignupClick?(): void;
+  showLabel?: boolean;
+  successTimeout?: number;
 };
 
 export type CorbadoConnectAppendConfig = {

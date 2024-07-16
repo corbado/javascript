@@ -84,12 +84,17 @@ const LoginInitScreen = () => {
 
     if (res.err) {
       if (res.val.ignore) return;
-
       log.debug('fallback: error during conditional UI');
 
-      emailFieldRef.current?.setAttribute('value', '');
-
       config.onError?.('PasskeyLoginFailure');
+      return;
+    }
+
+    if (config.successTimeout) {
+      navigateToScreen(LoginScreenType.Success);
+      config.onStateChange?.(ConnectLoginStates.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+
       return;
     }
 
@@ -100,6 +105,7 @@ const LoginInitScreen = () => {
     setLoginPending(true);
 
     const identifier = emailFieldRef.current?.value ?? '';
+
     setCurrentIdentifier(identifier);
 
     const res = await getConnectService().login(identifier);
@@ -126,6 +132,15 @@ const LoginInitScreen = () => {
     }
 
     setLoginPending(false);
+
+    if (config.successTimeout) {
+      config.onStateChange?.(ConnectLoginStates.Success);
+      navigateToScreen(LoginScreenType.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+
+      return;
+    }
+
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
@@ -147,6 +162,7 @@ const LoginInitScreen = () => {
           <InputField
             id='email'
             name='email'
+            label={config.showLabel ? 'Email address' : undefined}
             type='email'
             autoComplete='username webauthn'
             autoFocus={true}

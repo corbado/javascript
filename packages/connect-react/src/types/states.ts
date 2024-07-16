@@ -4,4 +4,5 @@ export enum ConnectLoginStates {
   ConditionalUI = 'ConditionalUI',
   Fallback = 'Fallback',
   Relogin = 'Relogin',
+  Success = 'Success',
 }

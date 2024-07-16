@@ -67,6 +67,23 @@
   gap: 1rem;
 }
 
+.cb-login-success-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.cb-login-success-icons>* {
+  width: 60px;
+}
+
+.cb-login-success-icons-success {
+  width: 32px;
+  height: 32px;
+  color: var(--cb-color-success);
+}
+
 @media screen and (max-width: 724px) {
   .cb-login-error-hard-cta {
     flex-direction: column-reverse;

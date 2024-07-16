@@ -15,27 +15,6 @@
   flex: 1;
 }
 
-.cb-notification-container {
-  display: flex;
-  padding: 0.5rem 1rem;
-  background: var(--cb-color-secondary-container);
-  color: var(--cb-color-on-secondary-container);
-  border-radius: 0.7rem;
-  border: 1px solid var(--cb-color-outline);
-}
-
-.cb-notification-icon {
-  width: 25px;
-  margin-right: 0.25rem;
-  fill: var(--cb-color-on-secondary-container);
-}
-
-.cb-notification-text {
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-}
-
 .cb-passkey-button {
   padding: 1rem;
   background-color: white;
@@ -80,8 +59,7 @@
   color: black;
 }
 
-.cb-switch {
-}
+.cb-switch {}
 
 .cb-passkey-list-container {
   width: 100%;

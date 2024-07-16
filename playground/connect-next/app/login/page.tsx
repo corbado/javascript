@@ -25,6 +25,7 @@ export default function LoginPage() {
                 setConventionalLoginVisible(true);
                 console.log('onFallback', email);
               }}
+              onError={error => console.log('error', error)}
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
               onComplete={(method: string) => router.push('/home')}
               onSignupClick={() => router.push('/signup')}

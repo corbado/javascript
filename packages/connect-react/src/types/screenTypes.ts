@@ -6,6 +6,7 @@ export enum AppendScreenType {
 
 export enum LoginScreenType {
   Init = 'Init',
+  Success = 'Success',
   PasskeyReLogin = 'PasskeyReLogin',
   Loading = 'Loading',
   Benefits = 'Benefits',

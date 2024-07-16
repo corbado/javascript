@@ -7,6 +7,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
+import { ConnectLoginStates } from '../../types/states';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();
@@ -35,17 +36,28 @@ export const LoginPasskeyReLoginScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('login not allowed');
+      config.onError?.('PasskeyLoginFailure');
       beginNewLogin();
 
       return;
     }
 
     setLoading(false);
+
+    if (config.successTimeout) {
+      navigateToScreen(LoginScreenType.Success);
+      config.onStateChange?.(ConnectLoginStates.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+
+      return;
+    }
+
     config.onComplete(res.val.session);
   }, [getConnectService, config, currentIdentifier]);
 
@@ -55,19 +67,23 @@ export const LoginPasskeyReLoginScreen = () => {
   }, [navigateToScreen, getConnectService]);
 
   return (
-    <div className='cb-login-init-passkey-button'>
-      <PasskeyButton
-        email={currentIdentifier}
-        onClick={() => void handleSubmit()}
-        isLoading={loading}
-      />
+    <>
+      <div className='cb-h2'>Welcome back</div>
 
-      <LinkButton
-        onClick={() => beginNewLogin()}
-        className='cb-switch'
-      >
-        Switch Account
-      </LinkButton>
-    </div>
+      <div className='cb-login-init-passkey-button'>
+        <PasskeyButton
+          email={currentIdentifier}
+          onClick={() => void handleSubmit()}
+          isLoading={loading}
+        />
+
+        <LinkButton
+          onClick={() => beginNewLogin()}
+          className='cb-switch'
+        >
+          Switch Account
+        </LinkButton>
+      </div>
+    </>
   );
 };

@@ -10,19 +10,25 @@ import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ConnectLoginStates } from '../../types/states';
+import { Notification } from '../shared/Notification';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
       setLoading(true);
       log.debug('running init');
+
       const res = await getConnectService().loginInit(ac);
+
       if (res.err) {
         setLoading(false);
         log.error(res.val);
@@ -39,8 +45,10 @@ const LoginInitScreen = () => {
       if (!res.val.loginAllowed) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
+        config.onStateChange?.(ConnectLoginStates.Fallback);
         config.onFallback('');
-        config.onLoaded('loaded successfully', true);
+        setIsFallbackInitiallyTriggered(true);
+
         setLoading(false);
         return;
       }
@@ -49,12 +57,14 @@ const LoginInitScreen = () => {
 
       if (lastLogin) {
         log.debug('starting relogin UI');
+        config.onStateChange?.(ConnectLoginStates.Relogin);
         navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
+        config.onStateChange?.(ConnectLoginStates.ConditionalUI);
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
-      config.onLoaded('loaded successfully', false);
+
       setLoading(false);
     };
 
@@ -73,14 +83,21 @@ const LoginInitScreen = () => {
     }
 
     const res = await getConnectService().conditionalUILogin();
-    if (res.err && (res.val instanceof PasskeyChallengeCancelledError || res.val.ignore)) {
+    if (res.err) {
+      if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
+        return;
+      }
+      log.debug('fallback: error during conditional UI');
+
+      config.onError?.('PasskeyLoginFailure');
+      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
       return;
     }
 
-    if (res.err) {
-      log.debug('fallback: error during conditional UI');
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback('');
+    if (config.successTimeout) {
+      navigateToScreen(LoginScreenType.Success);
+      config.onStateChange?.(ConnectLoginStates.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;
     }
@@ -92,6 +109,7 @@ const LoginInitScreen = () => {
     setLoginPending(true);
 
     const identifier = emailFieldRef.current?.value ?? '';
+
     setCurrentIdentifier(identifier);
 
     const res = await getConnectService().login(identifier);
@@ -102,11 +120,16 @@ const LoginInitScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasskeyChallengeAborted');
+        config.onStateChange?.(ConnectLoginStates.SoftError);
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('fallback: error during password login start');
+      config.onError?.('PasskeyLoginFailure');
+      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
+      config.onStateChange?.(ConnectLoginStates.Fallback);
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 
@@ -114,8 +137,24 @@ const LoginInitScreen = () => {
     }
 
     setLoginPending(false);
+
+    if (config.successTimeout) {
+      config.onStateChange?.(ConnectLoginStates.Success);
+      navigateToScreen(LoginScreenType.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+
+      return;
+    }
+
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
+
+  useEffect(() => {
+    if (!loading) {
+      // config.onLoaded should trigger when the form renders else it will cause issues with input detection.
+      config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
+    }
+  }, [loading, config, isFallbackInitiallyTriggered]);
 
   return (
     <div>
@@ -125,13 +164,20 @@ const LoginInitScreen = () => {
         </div>
       ) : (
         <>
+          {error ? (
+            <Notification
+              message={error}
+              className='cb-error-notification'
+            />
+          ) : null}
           <InputField
             id='email'
             name='email'
+            label={config.showLabel ? 'Email address' : undefined}
             type='email'
             autoComplete='username webauthn'
             autoFocus={true}
-            placeholder='Email address'
+            placeholder=''
             ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
           />
           <PrimaryButton

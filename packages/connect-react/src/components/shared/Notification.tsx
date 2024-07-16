@@ -4,10 +4,12 @@ import { CircleExclamationIcon } from './icons/CircleExclamationIcon';
 
 type Props = {
   message: string;
+  className?: string;
 };
-export const Notification: React.FC<Props> = ({ message }: Props) => {
+
+export const Notification: React.FC<Props> = ({ message, className }: Props) => {
   return (
-    <div className='cb-notification-container'>
+    <div className={`cb-notification-container ${className}`}>
       <div className='cb-notification-icon'>
         <CircleExclamationIcon />
       </div>

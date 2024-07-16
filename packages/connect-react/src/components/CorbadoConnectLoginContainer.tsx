@@ -8,6 +8,7 @@ import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';
 import LoginInitScreen from './login/LoginInitScreen';
 import { LoginPasskeyReLoginScreen } from './login/LoginPasskeyReLoginScreen';
 import { LoadingSpinner } from './shared/LoadingSpinner';
+import LoginSuccess from './login/LoginSuccess';
 
 const CorbadoConnectLoginContainer = () => {
   const { currentScreenType } = useLoginProcess();
@@ -18,6 +19,8 @@ const CorbadoConnectLoginContainer = () => {
         return <LoadingSpinner />;
       case LoginScreenType.Init:
         return <LoginInitScreen />;
+      case LoginScreenType.Success:
+        return <LoginSuccess />;
       case LoginScreenType.Benefits:
         return <LoginBenefitsScreen />;
       case LoginScreenType.ErrorSoft:

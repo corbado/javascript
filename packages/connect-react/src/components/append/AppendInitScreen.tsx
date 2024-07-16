@@ -6,12 +6,13 @@ import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
-import { ShieldIcon } from '../shared/icons/ShieldIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { SecondaryButton } from '../shared/SecondaryButton';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { Button } from '../shared/Button';
+import { SuccessIcon } from '../shared/icons/SuccessIcon';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -32,6 +33,8 @@ const AppendInitScreen = () => {
         setAppendAllowed(false);
         config.onSkip();
 
+        config.onError?.('PasskeyNotSupported');
+
         return;
       }
 
@@ -39,6 +42,8 @@ const AppendInitScreen = () => {
       if (!res.val.appendAllowed) {
         setAppendAllowed(false);
         config.onSkip();
+
+        config.onError?.('PasskeyNotSupported');
 
         return;
       }
@@ -51,6 +56,10 @@ const AppendInitScreen = () => {
           return;
         }
 
+        if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
+          config.onError?.('PasskeyChallengeAborted');
+        }
+
         setAppendAllowed(false);
         config.onSkip();
 
@@ -58,6 +67,7 @@ const AppendInitScreen = () => {
       }
 
       if (startAppendRes.val.attestationOptions === '') {
+        config.onError?.('PasskeyAlreadyExistsOnDevice');
         setAppendAllowed(false);
         config.onSkip();
 
@@ -104,9 +114,22 @@ const AppendInitScreen = () => {
 
   return (
     <>
+      <div className='cb-append-skip-container'>
+        <LinkButton
+          className='cb-append-skip'
+          onClick={() => config.onSkip()}
+        >
+          Skip
+        </LinkButton>
+      </div>
       <div className='cb-h2'>Activate a passkey</div>
       <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
-      {error ? <Notification message={error} /> : null}
+      {error ? (
+        <Notification
+          className='cb-error-notification'
+          message={error}
+        />
+      ) : null}
       <div className='cb-append-info-list'>
         <PasskeyInfoListItem
           title='No more forgotten passwords'
@@ -116,7 +139,7 @@ const AppendInitScreen = () => {
         <PasskeyInfoListItem
           title='Next-generation security'
           description='Forget the fear of stolen passwords'
-          icon={<ShieldIcon />}
+          icon={<SuccessIcon />}
         />
         <PasskeyInfoListItem
           title='Syncs across your devices'
@@ -124,25 +147,20 @@ const AppendInitScreen = () => {
           icon={<PasskeyIcon />}
         />
       </div>
-      <div className='cb-connect-append-button'>
-        <PrimaryButton
-          type='submit'
-          isLoading={primaryButtonLoading}
-          onClick={() => void handleSubmit()}
-        >
-          Activate
-        </PrimaryButton>
-      </div>
-      <div className='cb-connect-append-button'>
-        <SecondaryButton
-          type='submit'
+      <div className='cb-connect-append-cta'>
+        <Button
           onClick={() => void navigateToScreen(AppendScreenType.Benefits)}
+          className='cb-outline-button'
         >
           Learn more
-        </SecondaryButton>
-      </div>
-      <div className='cb-connect-append-button'>
-        <LinkButton onClick={() => void config.onSkip()}>Skip for now</LinkButton>
+        </Button>
+        <PrimaryButton
+          isLoading={primaryButtonLoading}
+          type='submit'
+          onClick={() => void handleSubmit()}
+        >
+          Activate passkey
+        </PrimaryButton>
       </div>
     </>
   );

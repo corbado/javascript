@@ -9,6 +9,8 @@ import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { PasskeyLoginIcon } from '../shared/icons/PasskeyLoginIcon';
+import { ConnectLoginStates } from '../../types/states';
 
 const LoginErrorScreenSoft = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -26,6 +28,7 @@ const LoginErrorScreenSoft = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onStateChange?.(ConnectLoginStates.HardError);
         navigateToScreen(LoginScreenType.ErrorHard);
         return;
       }
@@ -37,11 +40,21 @@ const LoginErrorScreenSoft = () => {
     }
 
     setLoading(false);
+
+    if (config.successTimeout) {
+      navigateToScreen(LoginScreenType.Success);
+      config.onStateChange?.(ConnectLoginStates.Success);
+      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+
+      return;
+    }
+
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
   const handleFallback = useCallback(() => {
     navigateToScreen(LoginScreenType.Invisible);
+    config.onStateChange?.(ConnectLoginStates.Fallback);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
 
@@ -51,11 +64,13 @@ const LoginErrorScreenSoft = () => {
       <div className='cb-login-error-soft-icons'>
         <FingerprintIcon platform='default' />
         <FaceIdIcon platform='default' />
+        <PasskeyLoginIcon />
       </div>
       <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock.</div>
       <PrimaryButton
         onClick={() => void handleSubmit()}
         isLoading={loading}
+        className='cb-login-error-soft-button'
       >
         Login with passkey
       </PrimaryButton>

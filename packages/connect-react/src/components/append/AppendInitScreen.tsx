@@ -57,7 +57,7 @@ const AppendInitScreen = () => {
         }
 
         if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
-          config.onError?.('PasswordChallengeAborted');
+          config.onError?.('PasskeyChallengeAborted');
         }
 
         setAppendAllowed(false);

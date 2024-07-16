@@ -87,6 +87,18 @@ button.cb-secondary-button {
   opacity: 92%;
 }
 
+button.cb-outline-button {
+  padding: 0.75rem 1rem;
+  color: var(--cb-color-primary);
+  background-color: transparent;
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-primary);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
+  width: 100%;
+}
+
 .cb-input {
   flex-grow: 1;
   border-radius: var(--cb-border-radius);
@@ -129,8 +141,7 @@ button.cb-secondary-button {
   margin: 0.25rem 0.5rem;
 }
 
-.cb-input-label-text {
-}
+.cb-input-label-text {}
 
 .loader {
   width: 0.75rem;
@@ -157,6 +168,7 @@ button.cb-secondary-button {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

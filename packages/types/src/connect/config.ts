@@ -1,8 +1,10 @@
 import { ConnectAppendError, ConnectLoginError } from './errors';
+import { ConnectLoginStates } from './states';
 
 export type CorbadoConnectLoginConfig = {
   onFallback(email: string): void;
   onError?(error: ConnectLoginError): void;
+  onStateChange?(state: ConnectLoginStates): void;
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
   onSignupClick?(): void;

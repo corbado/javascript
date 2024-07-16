@@ -8,6 +8,9 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ErrorIcon } from '../shared/icons/ErrorIcon';
+import { Button } from '../shared/Button';
+import { ConnectLoginStates } from '../../types/states';
 
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -22,6 +25,7 @@ const LoginErrorScreenHard = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         navigateToScreen(LoginScreenType.ErrorHard);
+        config.onStateChange?.(ConnectLoginStates.HardError);
         return;
       }
 
@@ -36,23 +40,30 @@ const LoginErrorScreenHard = () => {
 
   const handleFallback = useCallback(() => {
     navigateToScreen(LoginScreenType.Invisible);
+    config.onStateChange?.(ConnectLoginStates.Fallback);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
 
   return (
     <>
-      <div className='cb-h2'>Use your passkey to confirm it’s really you!</div>
+      <div className='cb-h2'>Something went wrong</div>
       <div className='cb-login-error-hard-icons'>
         <PasskeyIcon />
+        <ErrorIcon className='cb-login-error-hard-icons-error' />
       </div>
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
-      <PrimaryButton onClick={handleFallback}>Skip passkey login</PrimaryButton>
-      <LinkButton
-        onClick={() => void handleSubmit()}
-        className='cb-login-error-hard-fallback'
-      >
-        Try again
-      </LinkButton>
+
+      <LinkButton onClick={() => {}}>Need help ?</LinkButton>
+
+      <div className='cb-login-error-hard-cta'>
+        <Button
+          onClick={handleFallback}
+          className='cb-outline-button'
+        >
+          Skip passkey login
+        </Button>
+        <PrimaryButton onClick={() => void handleSubmit()}>Try again</PrimaryButton>
+      </div>
     </>
   );
 };

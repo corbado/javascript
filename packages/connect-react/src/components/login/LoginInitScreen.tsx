@@ -10,6 +10,7 @@ import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ConnectLoginStates } from '../../types/states';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
@@ -42,7 +43,7 @@ const LoginInitScreen = () => {
       if (!res.val.loginAllowed) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
-
+        config.onStateChange?.(ConnectLoginStates.Fallback);
         config.onFallback('');
         setIsFallbackInitiallyTriggered(true);
 
@@ -54,9 +55,11 @@ const LoginInitScreen = () => {
 
       if (lastLogin) {
         log.debug('starting relogin UI');
+        config.onStateChange?.(ConnectLoginStates.Relogin);
         navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
+        config.onStateChange?.(ConnectLoginStates.ConditionalUI);
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
 
@@ -74,24 +77,19 @@ const LoginInitScreen = () => {
 
   const startConditionalUI = async (challenge: string | null) => {
     if (!challenge) {
-      config.onError?.('PasswordChallengeAborted');
       return;
     }
 
     const res = await getConnectService().conditionalUILogin();
 
     if (res.err) {
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasswordChallengeAborted');
-        return;
-      }
-
       if (res.val.ignore) return;
 
       log.debug('fallback: error during conditional UI');
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback('');
 
+      emailFieldRef.current?.setAttribute('value', '');
+
+      config.onError?.('PasskeyLoginFailure');
       return;
     }
 
@@ -112,13 +110,15 @@ const LoginInitScreen = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasswordChallengeAborted');
+        config.onError?.('PasskeyChallengeAborted');
+        config.onStateChange?.(ConnectLoginStates.SoftError);
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
+      config.onStateChange?.(ConnectLoginStates.Fallback);
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 

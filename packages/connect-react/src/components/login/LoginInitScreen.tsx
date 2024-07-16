@@ -11,11 +11,13 @@ import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { ConnectLoginStates } from '../../types/states';
+import { Notification } from '../shared/Notification';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
@@ -87,6 +89,7 @@ const LoginInitScreen = () => {
       log.debug('fallback: error during conditional UI');
 
       config.onError?.('PasskeyLoginFailure');
+      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
       return;
     }
 
@@ -124,6 +127,7 @@ const LoginInitScreen = () => {
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
+      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
       config.onStateChange?.(ConnectLoginStates.Fallback);
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
@@ -159,6 +163,12 @@ const LoginInitScreen = () => {
         </div>
       ) : (
         <>
+          {error ? (
+            <Notification
+              message={error}
+              className='cb-error-notification'
+            />
+          ) : null}
           <InputField
             id='email'
             name='email'

@@ -143,6 +143,34 @@ button.cb-outline-button {
 
 .cb-input-label-text {}
 
+.cb-notification-container {
+  display: flex;
+  padding: 0.5rem 1rem;
+  background: var(--cb-color-secondary-container);
+  color: var(--cb-color-on-secondary-container);
+  border-radius: 0.7rem;
+  border: 1px solid var(--cb-color-outline);
+}
+
+.cb-notification-icon {
+  width: 25px;
+  margin-right: 0.25rem;
+  fill: var(--cb-color-on-secondary-container);
+}
+
+.cb-notification-text {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.cb-error-notification {
+  background-color: var(--cb-color-error-container);
+  color: var(--cb-color-on-error-container);
+  border: 1px solid var(--cb-color-on-error-container);
+  border-radius: var(--cb-border-radius);
+}
+
 .loader {
   width: 0.75rem;
   height: 0.75rem;

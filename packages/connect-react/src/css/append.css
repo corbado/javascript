@@ -3,7 +3,7 @@
   justify-content: center;
 }
 
-.cb-append-benefits-icons > * {
+.cb-append-benefits-icons>* {
   width: 100px;
 }
 
@@ -17,8 +17,10 @@
   gap: 1rem 0;
 }
 
-.cb-connect-append-button {
-  padding: 0.5rem 0;
+.cb-connect-append-cta {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
 }
 
 .cb-append-button {
@@ -39,4 +41,20 @@
 
 .cb-append-icon {
   width: 10px;
+}
+
+.cb-append-skip {
+  width: fit-content;
+}
+
+.cb-append-skip-container {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+@media screen and (max-width: 724px) {
+  .cb-connect-append-cta {
+    flex-direction: column-reverse;
+  }
 }

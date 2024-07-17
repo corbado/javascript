@@ -141,7 +141,8 @@ button.cb-outline-button {
   margin: 0.25rem 0.5rem;
 }
 
-.cb-input-label-text {}
+.cb-input-label-text {
+}
 
 .cb-notification-container {
   display: flex;

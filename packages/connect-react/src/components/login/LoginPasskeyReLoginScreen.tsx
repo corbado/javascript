@@ -7,7 +7,6 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
-import { ConnectLoginStates } from '../../types/states';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();
@@ -52,7 +51,7 @@ export const LoginPasskeyReLoginScreen = () => {
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
-      config.onStateChange?.(ConnectLoginStates.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;

@@ -59,7 +59,8 @@
   color: black;
 }
 
-.cb-switch {}
+.cb-switch {
+}
 
 .cb-passkey-list-container {
   width: 100%;
@@ -183,10 +184,12 @@
   border-radius: var(--cb-border-radius);
   padding: 2rem;
   border: 1px solid var(--cb-color-outline);
+  width: 100%;
+  max-width: 600px;
 }
 
 .cb-passkey-list__modal {
-  text-align: center;
+  text-align: left;
   font-family: var(--cb-font-family-primary);
   gap: 1rem;
 }
@@ -194,6 +197,8 @@
 .cb-passkey-list__modal-title {
   font-size: 24px;
   color: var(--cb-color-primary);
+  font-family: var(--cb-font-family-primary);
+  text-align: left;
 }
 
 .cb-passkey-list__modal-description {
@@ -235,15 +240,16 @@
 
 .cb-passkey-list__loader-container {
   width: 100%;
-  height: 300px;
+  height: 100%;
+  min-height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .cb-passkey-list__loader {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 
 .cb-passkey-list__empty {
@@ -259,6 +265,19 @@
 .cb-width-full {
   width: 100%;
   max-width: none;
+}
+
+.cb-passkey-list__modal-exit-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--cb-color-primary);
+  cursor: pointer;
+}
+
+.cb-passkey-list__modal-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 @media screen and (max-width: 600px) {

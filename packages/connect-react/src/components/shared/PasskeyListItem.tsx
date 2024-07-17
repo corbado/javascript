@@ -10,6 +10,7 @@ import { ShieldTickIcon } from './icons/ShieldTickIcon';
 import { SyncIcon } from './icons/SyncIcon';
 import { WindowsIcon } from './icons/WindowsIcon';
 import { LinkButton } from './LinkButton';
+import { LoadingSpinner } from './LoadingSpinner';
 import { Tag } from './Tag';
 
 export type Props = {
@@ -21,7 +22,8 @@ export type Props = {
   isThisDevice?: boolean;
   isSynced?: boolean;
   isHybrid?: boolean;
-  onDeleteClick: () => void;
+  onDeleteClick?: () => void;
+  isDeleteLoading?: boolean;
 };
 
 export const PasskeyListItem: FC<Props> = ({
@@ -34,6 +36,7 @@ export const PasskeyListItem: FC<Props> = ({
   isSynced,
   isHybrid,
   isThisDevice,
+  isDeleteLoading,
 }) => {
   const getIcon = () => {
     switch (os) {
@@ -89,11 +92,17 @@ export const PasskeyListItem: FC<Props> = ({
 
         <p className='cb-passkey-list-item__details'>Last used: {format(lastUsed, 'dd/MM/yyyy HH:mm:ss')}</p>
       </div>
-      <div className='cb-passkey-list-item__delete-icon'>
-        <LinkButton onClick={onDeleteClick}>
-          <CrossIcon />
-        </LinkButton>
-      </div>
+      {onDeleteClick && (
+        <div className='cb-passkey-list-item__delete-icon'>
+          {isDeleteLoading ? (
+            <LoadingSpinner variant='primary'></LoadingSpinner>
+          ) : (
+            <LinkButton onClick={onDeleteClick}>
+              <CrossIcon />
+            </LinkButton>
+          )}
+        </div>
+      )}
     </div>
   );
 };

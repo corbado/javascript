@@ -495,10 +495,10 @@ export class ConnectService {
 
     if (!currentVisitorId) {
       const fpJS = await FingerprintJS.load();
-
       const { visitorId } = await fpJS.get();
 
       currentVisitorId = visitorId;
+      this.#visitorId = visitorId;
     }
 
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();

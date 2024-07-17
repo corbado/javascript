@@ -6,12 +6,12 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
+import { ConnectLoginStates } from '../../types/states';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { ConnectLoginStates } from '../../types/states';
 import { Notification } from '../shared/Notification';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();

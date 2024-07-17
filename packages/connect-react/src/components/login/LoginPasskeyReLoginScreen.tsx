@@ -5,9 +5,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { ConnectLoginStates } from '../../types/states';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
-import { ConnectLoginStates } from '../../types/states';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();

@@ -1,18 +1,18 @@
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
+import { Button } from '../shared/Button';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
+import { SuccessIcon } from '../shared/icons/SuccessIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { Button } from '../shared/Button';
-import { SuccessIcon } from '../shared/icons/SuccessIcon';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();

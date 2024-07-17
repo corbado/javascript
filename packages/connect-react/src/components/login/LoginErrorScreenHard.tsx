@@ -5,12 +5,12 @@ import React, { useCallback } from 'react';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { ConnectLoginStates } from '../../types/states';
+import { Button } from '../shared/Button';
+import { ErrorIcon } from '../shared/icons/ErrorIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { ErrorIcon } from '../shared/icons/ErrorIcon';
-import { Button } from '../shared/Button';
-import { ConnectLoginStates } from '../../types/states';
 
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -61,7 +61,7 @@ const LoginErrorScreenHard = () => {
       </div>
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
 
-      <LinkButton onClick={() => {}}>Need help ?</LinkButton>
+      <LinkButton onClick={() => null}>Need help ?</LinkButton>
 
       <div className='cb-login-error-hard-cta'>
         <Button

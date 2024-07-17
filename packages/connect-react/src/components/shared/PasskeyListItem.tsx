@@ -10,8 +10,8 @@ import { ShieldTickIcon } from './icons/ShieldTickIcon';
 import { SyncIcon } from './icons/SyncIcon';
 import { WindowsIcon } from './icons/WindowsIcon';
 import { LinkButton } from './LinkButton';
-import { Tag } from './Tag';
 import { LoadingSpinner } from './LoadingSpinner';
+import { Tag } from './Tag';
 
 export type Props = {
   name: string;

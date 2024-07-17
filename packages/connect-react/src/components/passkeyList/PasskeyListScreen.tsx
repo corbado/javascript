@@ -9,9 +9,9 @@ import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
 import { CorbadoTokens } from '../../types/tokens';
 import { Button } from '../shared/Button';
-import PasskeyList from './PasskeyList';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
+import PasskeyList from './PasskeyList';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
@@ -60,7 +60,7 @@ const PasskeyListScreen = () => {
 
   const onDeleteClick = useCallback(
     async (credentialsId?: string) => {
-      if (deletePending) return;
+      if (deletePending) {return;}
 
       setDeletePending(true);
       hide();
@@ -84,7 +84,7 @@ const PasskeyListScreen = () => {
   );
 
   const onAppendClick = useCallback(async () => {
-    if (appendPending) return;
+    if (appendPending) {return;}
 
     setAppendPending(true);
     const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);

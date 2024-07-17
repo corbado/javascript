@@ -1,5 +1,5 @@
-import { ConnectAppendError, ConnectLoginError } from './errors';
-import { ConnectLoginStates } from './states';
+import type { ConnectAppendError, ConnectLoginError } from './errors';
+import type { ConnectLoginStates } from './states';
 
 export type CorbadoConnectLoginConfig = {
   onFallback(email: string): void;

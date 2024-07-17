@@ -141,8 +141,7 @@ button.cb-outline-button {
   margin: 0.25rem 0.5rem;
 }
 
-.cb-input-label-text {
-}
+.cb-input-label-text {}
 
 .cb-notification-container {
   display: flex;
@@ -191,6 +190,18 @@ button.cb-outline-button {
 .loader-on-primary {
   border-color: var(--cb-color-on-primary);
   border-bottom-color: transparent;
+}
+
+.button-loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: inherit;
 }
 
 @keyframes rotation {

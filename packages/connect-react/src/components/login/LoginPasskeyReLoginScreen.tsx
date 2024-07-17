@@ -52,7 +52,7 @@ export const LoginPasskeyReLoginScreen = () => {
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
-      config.onStateChange?.(ConnectLoginStates.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;

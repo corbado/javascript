@@ -1002,6 +1002,7 @@ components:
       required:
         - clientInformation
         - flags
+        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1009,6 +1010,8 @@ components:
           type: object
           additionalProperties:
             type: string
+        visitorId:
+          type: string
 
     connectLoginInitRsp:
       type: object
@@ -1079,6 +1082,7 @@ components:
       required:
         - clientInformation
         - flags
+        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1086,6 +1090,8 @@ components:
           type: object
           additionalProperties:
             type: string
+        visitorId:
+          type: string
 
     connectAppendInitRsp:
       type: object
@@ -1148,6 +1154,7 @@ components:
       required:
         - clientInformation
         - flags
+        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1155,6 +1162,8 @@ components:
           type: object
           additionalProperties:
             type: string
+        visitorId:
+          type: string
 
     connectManageInitRsp:
       type: object

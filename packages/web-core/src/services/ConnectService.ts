@@ -26,6 +26,8 @@ import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
 export class ConnectService {
@@ -487,6 +489,9 @@ export class ConnectService {
     req: T;
     flags: ConnectFlags;
   }> {
+    const fp = await FingerprintJS.load();
+
+    const { visitorId } = await fp.get();
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
@@ -506,6 +511,7 @@ export class ConnectService {
         javaScriptHighEntropy: javaScriptHighEntropy,
         clientCapabilities,
       },
+      visitorId,
       flags: flags.getItemsObject(),
     } as T;
 

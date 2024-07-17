@@ -441,6 +441,12 @@ export interface ConnectAppendInitReq {
      * @memberof ConnectAppendInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitReq
+     */
+    'visitorId': string;
 }
 /**
  * 
@@ -567,6 +573,12 @@ export interface ConnectLoginInitReq {
      * @memberof ConnectLoginInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitReq
+     */
+    'visitorId': string;
 }
 /**
  * 
@@ -693,6 +705,12 @@ export interface ConnectManageInitReq {
      * @memberof ConnectManageInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitReq
+     */
+    'visitorId': string;
 }
 /**
  * 

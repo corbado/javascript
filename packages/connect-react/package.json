@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@corbado/web-core": "^2.8.0",
-    "@fingerprintjs/fingerprintjs": "^4.4.3",
     "date-fns": "^3.6.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",

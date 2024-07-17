@@ -1,3 +1,4 @@
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import log from 'loglevel';
@@ -25,8 +26,6 @@ import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
-
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 

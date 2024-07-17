@@ -60,7 +60,9 @@ const PasskeyListScreen = () => {
 
   const onDeleteClick = useCallback(
     async (credentialsId?: string) => {
-      if (deletePending) {return;}
+      if (deletePending) {
+        return;
+      }
 
       setDeletePending(true);
       hide();
@@ -84,7 +86,9 @@ const PasskeyListScreen = () => {
   );
 
   const onAppendClick = useCallback(async () => {
-    if (appendPending) {return;}
+    if (appendPending) {
+      return;
+    }
 
     setAppendPending(true);
     const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);

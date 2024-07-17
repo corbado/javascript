@@ -5,7 +5,6 @@ import React, { useCallback } from 'react';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
-import { ConnectLoginStates } from '../../types/states';
 import { Button } from '../shared/Button';
 import { ErrorIcon } from '../shared/icons/ErrorIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';

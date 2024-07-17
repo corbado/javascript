@@ -5,7 +5,6 @@ import React, { useCallback, useState } from 'react';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
-import { ConnectLoginStates } from '../../types/states';
 import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyLoginIcon } from '../shared/icons/PasskeyLoginIcon';

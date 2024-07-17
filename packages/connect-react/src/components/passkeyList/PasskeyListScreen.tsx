@@ -1,7 +1,7 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { Passkey } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';

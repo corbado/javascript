@@ -38,12 +38,14 @@ export class ConnectService {
   #projectId: string;
   #timeout: number;
   readonly #frontendApiUrlSuffix: string;
+  #visitorId: string;
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
     this.#timeout = 30 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
+    this.#visitorId = '';
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -489,9 +491,16 @@ export class ConnectService {
     req: T;
     flags: ConnectFlags;
   }> {
-    const fp = await FingerprintJS.load();
+    let currentVisitorId = this.#visitorId;
 
-    const { visitorId } = await fp.get();
+    if (!currentVisitorId) {
+      const fpJS = await FingerprintJS.load();
+
+      const { visitorId } = await fpJS.get();
+
+      currentVisitorId = visitorId;
+    }
+
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
@@ -511,7 +520,7 @@ export class ConnectService {
         javaScriptHighEntropy: javaScriptHighEntropy,
         clientCapabilities,
       },
-      visitorId,
+      visitorId: currentVisitorId,
       flags: flags.getItemsObject(),
     } as T;
 

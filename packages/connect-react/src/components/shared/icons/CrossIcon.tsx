@@ -1,13 +1,14 @@
-import type { InputHTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 import React from 'react';
 
-export const CrossIcon = ({ className }: InputHTMLAttributes<HTMLInputElement>) => {
+export const CrossIcon = ({ className, ...props }: HTMLAttributes<SVGElement>) => {
   return (
     <svg
       viewBox='0 0 16 16'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       className={className}
+      {...props}
     >
       <path
         d='M9.3125 8L15.2188 2.09375C15.5938 1.71875 15.5938 1.15625 15.2188 0.78125C14.8438 0.40625 14.2812 0.40625 13.9062 0.78125L8 6.6875L2.09375 0.78125C1.71875 0.40625 1.15625 0.40625 0.78125 0.78125C0.40625 1.15625 0.40625 1.71875 0.78125 2.09375L6.6875 8L0.78125 13.9062C0.59375 14.0937 0.5 14.2812 0.5 14.5625C0.5 15.125 0.875 15.5 1.4375 15.5C1.71875 15.5 1.90625 15.4063 2.09375 15.2188L8 9.3125L13.9062 15.2188C14.0937 15.4063 14.2812 15.5 14.5625 15.5C14.8438 15.5 15.0313 15.4063 15.2188 15.2188C15.5938 14.8438 15.5938 14.2812 15.2188 13.9062L9.3125 8Z'

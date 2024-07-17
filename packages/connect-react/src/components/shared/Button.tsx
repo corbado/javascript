@@ -10,11 +10,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ isLoading = false, disabled, children, ...rest }, ref) => {
     return (
       <button
+        style={{ position: 'relative' }}
         disabled={isLoading || disabled}
         ref={ref}
         {...rest}
       >
-        {isLoading ? <LoadingSpinner variant='on-primary' /> : children}
+        {isLoading && (
+          <div className='button-loading-container'>
+            <LoadingSpinner variant='on-primary' />
+          </div>
+        )}
+        {children}
       </button>
     );
   },

@@ -10,54 +10,62 @@ import PasskeyEmptyList from './PasskeyEmptyList';
 
 interface PasskeyListProps {
   passkeys: Passkey[];
-  onDeleteClick: (id: string) => void;
+  onDeleteClick: (passkey: Passkey) => void;
   isLoading: boolean;
   onAppendClick: () => void;
+  appendLoading: boolean;
+  deleteLoading: boolean;
 }
 
-const PasskeyList: FC<PasskeyListProps> = ({ passkeys, isLoading, onDeleteClick, onAppendClick }) => {
-  if (isLoading) {
-    return (
-      <div className='cb-passkey-list__loader-container'>
-        <LoadingSpinner className='cb-passkey-list__loader' />
-      </div>
-    );
-  }
-
+const PasskeyList: FC<PasskeyListProps> = ({
+  passkeys,
+  isLoading,
+  onDeleteClick,
+  onAppendClick,
+  appendLoading,
+  deleteLoading,
+}) => {
   return (
-    <div className='cb-passkey-list-container'>
-      {passkeys.length ? (
-        passkeys.map(passkey => (
-          <PasskeyListItem
-            onDeleteClick={() => {
-              onDeleteClick(passkey.id);
-            }}
-            name={'Passkey'}
-            createdAt={passkey.created}
-            lastUsed={passkey.lastUsed}
-            browser={passkey.sourceBrowser}
-            os={passkey.sourceOS}
-            isThisDevice={false}
-            isSynced
-            isHybrid
-            key={passkey.id}
-          />
-        ))
-      ) : (
-        <PasskeyEmptyList />
-      )}
+    <>
+      <div className='cb-passkey-list-container'>
+        {isLoading ? (
+          <div className='cb-passkey-list__loader-container'>
+            <LoadingSpinner className='cb-passkey-list__loader' />
+          </div>
+        ) : passkeys.length ? (
+          passkeys.map(passkey => (
+            <PasskeyListItem
+              onDeleteClick={() => {
+                onDeleteClick(passkey);
+              }}
+              name={'Passkey'}
+              createdAt={passkey.created}
+              lastUsed={passkey.lastUsed}
+              browser={passkey.sourceBrowser}
+              os={passkey.sourceOS}
+              isThisDevice={false}
+              isSynced
+              isHybrid
+              key={passkey.id}
+              isDeleteLoading={deleteLoading}
+            />
+          ))
+        ) : (
+          <PasskeyEmptyList />
+        )}
+      </div>
 
       <div className='cb-passkey-list__append-cta'>
         <Button
           className='cb-passkey-list__append-button'
           onClick={() => (isLoading ? null : void onAppendClick())}
-          isLoading={isLoading}
+          isLoading={appendLoading}
         >
           <p>Add a passkey</p>
           <PlusIcon className='cb-passkey-list__append-icon' />
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -7,10 +7,9 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
+import { PasskeyLoginIcon } from '../shared/icons/PasskeyLoginIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { PasskeyLoginIcon } from '../shared/icons/PasskeyLoginIcon';
-import { ConnectLoginStates } from '../../types/states';
 
 const LoginErrorScreenSoft = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -28,7 +27,7 @@ const LoginErrorScreenSoft = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onStateChange?.(ConnectLoginStates.HardError);
+        config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorHard);
         return;
       }
@@ -43,7 +42,7 @@ const LoginErrorScreenSoft = () => {
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
-      config.onStateChange?.(ConnectLoginStates.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;
@@ -54,7 +53,6 @@ const LoginErrorScreenSoft = () => {
 
   const handleFallback = useCallback(() => {
     navigateToScreen(LoginScreenType.Invisible);
-    config.onStateChange?.(ConnectLoginStates.Fallback);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
 

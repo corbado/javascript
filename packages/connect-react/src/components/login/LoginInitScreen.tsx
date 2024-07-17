@@ -45,7 +45,7 @@ const LoginInitScreen = () => {
       if (!res.val.loginAllowed) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
-        config.onStateChange?.(ConnectLoginStates.Fallback);
+
         config.onFallback('');
         setIsFallbackInitiallyTriggered(true);
 
@@ -57,11 +57,9 @@ const LoginInitScreen = () => {
 
       if (lastLogin) {
         log.debug('starting relogin UI');
-        config.onStateChange?.(ConnectLoginStates.Relogin);
         navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
-        config.onStateChange?.(ConnectLoginStates.ConditionalUI);
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
 
@@ -96,7 +94,7 @@ const LoginInitScreen = () => {
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
-      config.onStateChange?.(ConnectLoginStates.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;
@@ -121,7 +119,6 @@ const LoginInitScreen = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
-        config.onStateChange?.(ConnectLoginStates.SoftError);
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
@@ -129,7 +126,6 @@ const LoginInitScreen = () => {
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
       setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
-      config.onStateChange?.(ConnectLoginStates.Fallback);
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 
@@ -139,8 +135,8 @@ const LoginInitScreen = () => {
     setLoginPending(false);
 
     if (config.successTimeout) {
-      config.onStateChange?.(ConnectLoginStates.Success);
       navigateToScreen(LoginScreenType.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;

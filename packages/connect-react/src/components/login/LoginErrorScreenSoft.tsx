@@ -28,7 +28,7 @@ const LoginErrorScreenSoft = () => {
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onStateChange?.(ConnectLoginStates.HardError);
+        config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorHard);
         return;
       }
@@ -43,7 +43,7 @@ const LoginErrorScreenSoft = () => {
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
-      config.onStateChange?.(ConnectLoginStates.Success);
+      config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
 
       return;
@@ -54,7 +54,6 @@ const LoginErrorScreenSoft = () => {
 
   const handleFallback = useCallback(() => {
     navigateToScreen(LoginScreenType.Invisible);
-    config.onStateChange?.(ConnectLoginStates.Fallback);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
 

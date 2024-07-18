@@ -1,3 +1,4 @@
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import log from 'loglevel';
@@ -36,12 +37,14 @@ export class ConnectService {
   #projectId: string;
   #timeout: number;
   readonly #frontendApiUrlSuffix: string;
+  #visitorId: string;
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
     this.#timeout = 30 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
+    this.#visitorId = '';
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -487,6 +490,16 @@ export class ConnectService {
     req: T;
     flags: ConnectFlags;
   }> {
+    let currentVisitorId = this.#visitorId;
+
+    if (!currentVisitorId) {
+      const fpJS = await FingerprintJS.load();
+      const { visitorId } = await fpJS.get();
+
+      currentVisitorId = visitorId;
+      this.#visitorId = visitorId;
+    }
+
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
@@ -506,6 +519,7 @@ export class ConnectService {
         javaScriptHighEntropy: javaScriptHighEntropy,
         clientCapabilities,
       },
+      visitorId: currentVisitorId,
       flags: flags.getItemsObject(),
     } as T;
 

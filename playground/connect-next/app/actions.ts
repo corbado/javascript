@@ -3,6 +3,8 @@
 import { cookies } from 'next/headers';
 
 export async function getAppendToken() {
+  console.log('getAppendToken');
+  console.log(cookies().get('displayName'), cookies().get('identifier'));
   const displayName = cookies().get('displayName');
   if (!displayName) {
     return null;

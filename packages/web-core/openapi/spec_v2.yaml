@@ -56,7 +56,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/meRsp'
-    
+    patch:
+      description: Updates current user
+      operationId: CurrentUserUpdate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meUpdateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    delete:
+      description: Deletes current user
+      operationId: CurrentUserDelete
+      tags:
+        - Users
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+
   /v2/me/passkeys:
     get:
       description: Gets current user's passkeys
@@ -152,6 +174,50 @@ paths:
       responses:
         '204':
           description: tbd
+
+  /v2/me/identifier:
+    post:
+      description: Creates an identifier
+      operationId: CurrentUserIdentifierCreate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierCreateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    delete:
+      description: Deletes an identifier
+      operationId: CurrentUserIdentifierDelete
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierDeleteReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+    patch:
+      description: Modifies an identifier (only permitted for username; identifierID will change)
+      operationId: CurrentUserIdentifierUpdate
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierUpdateReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
 
   /v2/auth/process/init:
     post:
@@ -852,6 +918,45 @@ components:
         clientInformation:
           $ref: '#/components/schemas/clientInformation'
 
+    meIdentifierCreateReq:
+      type: object
+      required:
+        - identifierType
+        - value
+        - status
+      properties:
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
+        value:
+          type: string
+        status:
+          $ref: '#/components/schemas/loginIdentifierStatus'
+
+    meIdentifierDeleteReq:
+      type: object
+      required:
+        - identifierID
+      properties:
+        identifierID:
+          type: string
+
+    meIdentifierUpdateReq:
+      type: object
+      required:
+        - identifierID
+        - identifierType
+        - value
+        - status
+      properties:
+        identifierID:
+          type: string
+        identifierType:
+          $ref: '#/components/schemas/loginIdentifierType'
+        value:
+          type: string
+        status:
+          $ref: '#/components/schemas/loginIdentifierStatus'
+
     #    passkeyAppendFinishRsp:
     #      $ref: '#/components/schemas/blockBody'
 
@@ -1002,7 +1107,6 @@ components:
       required:
         - clientInformation
         - flags
-        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1010,8 +1114,6 @@ components:
           type: object
           additionalProperties:
             type: string
-        visitorId:
-          type: string
 
     connectLoginInitRsp:
       type: object
@@ -1082,7 +1184,6 @@ components:
       required:
         - clientInformation
         - flags
-        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1090,8 +1191,6 @@ components:
           type: object
           additionalProperties:
             type: string
-        visitorId:
-          type: string
 
     connectAppendInitRsp:
       type: object
@@ -1124,6 +1223,8 @@ components:
       properties:
         appendTokenValue:
           type: string
+        forcePasskeyAppend:
+          type: boolean
 
     connectAppendStartRsp:
       type: object
@@ -1154,7 +1255,6 @@ components:
       required:
         - clientInformation
         - flags
-        - visitorId
       properties:
         clientInformation:
           $ref: '#/components/schemas/clientInformationV2'
@@ -1162,8 +1262,6 @@ components:
           type: object
           additionalProperties:
             type: string
-        visitorId:
-          type: string
 
     connectManageInitRsp:
       type: object
@@ -1402,6 +1500,10 @@ components:
       type: string
       enum: [ email, phone, username ]
 
+    loginIdentifierStatus:
+      type: string
+      enum: [ pending, primary, verified ]
+
     blockType:
       type: string
       enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify, passkey-append-after-hybrid ]
@@ -1578,6 +1680,8 @@ components:
           type: boolean
         clientEnvHandle:
           type: string
+        visitorId:
+          type: string
         isUserVerifyingPlatformAuthenticatorAvailable:
           type: boolean
         isConditionalMediationAvailable:
@@ -1676,6 +1780,14 @@ components:
           items:
             $ref: '#/components/schemas/socialAccount'
 
+    meUpdateReq:
+      type: object
+      required:
+        - fullName
+      properties:
+        fullName:
+          type: string
+
     identifier:
       type: object
       required:
@@ -1735,6 +1847,14 @@ components:
           type: string
         message:
           type: string
+
+  responses:
+    '200':
+      description: Operation succeeded
+      content:
+        application/json:
+          schema:
+            $ref: 'common.yml#/components/schemas/genericRsp'
 
 security:
   - bearerAuth: [ ]

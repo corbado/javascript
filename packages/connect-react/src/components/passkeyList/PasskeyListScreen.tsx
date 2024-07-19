@@ -93,7 +93,7 @@ const PasskeyListScreen = () => {
     setAppendPending(true);
     const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);
 
-    const startAppendRes = await getConnectService().startAppend(appendToken);
+    const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
 
     if (startAppendRes.err || !startAppendRes.val.attestationOptions) {
       setAppendPending(false);

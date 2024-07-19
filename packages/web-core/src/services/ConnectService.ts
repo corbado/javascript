@@ -121,16 +121,16 @@ export class ConnectService {
   }
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcess?.isValid()) {
-      log.debug('process exists, preparing api clients');
-      this.#setApisV2(existingProcess);
-    }
+    // const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    // if (existingProcess?.isValid()) {
+    //   log.debug('process exists, preparing api clients');
+    //   this.#setApisV2(existingProcess);
+    // }
 
     // process has already been initialized
-    if (existingProcess?.loginData) {
-      return Ok(existingProcess.loginData);
-    }
+    // if (existingProcess?.loginData) {
+    //   return Ok(existingProcess.loginData);
+    // }
 
     const { req, flags } = await this.#getInitReq();
 
@@ -156,22 +156,17 @@ export class ConnectService {
     };
 
     // update local state
-    if (existingProcess) {
-      const p = existingProcess.copyWithLoginData(loginData);
-      p.persistToStorage();
-    } else {
-      const newProcess = new ConnectProcess(
-        res.val.token,
-        this.#projectId,
-        res.val.expiresAt,
-        res.val.frontendApiUrl,
-        loginData,
-        null,
-        null,
-      );
-      this.#setApisV2(newProcess);
-      newProcess.persistToStorage();
-    }
+    const newProcess = new ConnectProcess(
+      res.val.token,
+      this.#projectId,
+      res.val.expiresAt,
+      res.val.frontendApiUrl,
+      loginData,
+      null,
+      null,
+    );
+    this.#setApisV2(newProcess);
+    newProcess.persistToStorage();
 
     // persist flags
     flags.persistToStorage(this.#projectId);
@@ -314,6 +309,7 @@ export class ConnectService {
   async startAppend(
     appendTokenValue: string,
     abortController?: AbortController,
+    initiatedByUser?: boolean,
   ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
@@ -322,7 +318,7 @@ export class ConnectService {
 
     return this.wrapWithErr(() =>
       this.#connectApi.connectAppendStart(
-        { appendTokenValue: appendTokenValue },
+        { appendTokenValue: appendTokenValue, forcePasskeyAppend: initiatedByUser },
         abortController && { signal: abortController.signal },
       ),
     );
@@ -516,10 +512,10 @@ export class ConnectService {
         isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
         isConditionalMediationAvailable: canUseConditionalUI,
         clientEnvHandle: maybeClientHandle ?? undefined,
+        visitorId: currentVisitorId,
         javaScriptHighEntropy: javaScriptHighEntropy,
         clientCapabilities,
       },
-      visitorId: currentVisitorId,
       flags: flags.getItemsObject(),
     } as T;
 

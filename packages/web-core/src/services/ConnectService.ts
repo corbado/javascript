@@ -12,21 +12,22 @@ import type {
   ConnectAppendStartRsp,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
+  ConnectLoginStartReqSourceEnum,
   ConnectManageDeleteReq,
   ConnectManageDeleteRsp,
   ConnectManageInitReq,
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
-import { ConnectLoginStartReqSourceEnum, CorbadoConnectApi } from '../api/v2';
+import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
+import type { PasskeyLoginSource } from '../utils/constants/passkeyLoginSource';
 import { WebAuthnService } from './WebAuthnService';
-import { PasskeyLoginSource } from '../utils/constants/passkeyLoginSource';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 

@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -19,7 +19,7 @@ const LoginErrorScreenSoft = () => {
   const handleSubmit = useCallback(async () => {
     setLoading(true);
 
-    const res = await getConnectService().login(currentIdentifier);
+    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorSoft);
     if (res.err) {
       setLoading(false);
       if (res.val.ignore) {

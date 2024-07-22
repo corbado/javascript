@@ -18,7 +18,7 @@ import type {
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
-import { CorbadoConnectApi } from '../api/v2';
+import { ConnectLoginStartReqSourceEnum, CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
@@ -26,6 +26,7 @@ import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
+import { PasskeyLoginSource } from '../utils/constants/passkeyLoginSource';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
@@ -174,13 +175,18 @@ export class ConnectService {
     return Ok(loginData);
   }
 
-  async login(identifier: string): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+  async login(identifier: string, source: PasskeyLoginSource): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
 
-    const resStart = await this.wrapWithErr(() => this.#connectApi.connectLoginStart({ identifier }));
+    const resStart = await this.wrapWithErr(() =>
+      this.#connectApi.connectLoginStart({
+        identifier,
+        source: source as ConnectLoginStartReqSourceEnum,
+      }),
+    );
     if (resStart.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return resStart;

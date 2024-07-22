@@ -641,7 +641,23 @@ export interface ConnectLoginStartReq {
      * @memberof ConnectLoginStartReq
      */
     'identifier': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginStartReq
+     */
+    'source': ConnectLoginStartReqSourceEnum;
 }
+
+export const ConnectLoginStartReqSourceEnum = {
+    OneTap: 'one-tap',
+    TextField: 'text-field',
+    ErrorSoft: 'error-soft',
+    ErrorHard: 'error-hard'
+} as const;
+
+export type ConnectLoginStartReqSourceEnum = typeof ConnectLoginStartReqSourceEnum[keyof typeof ConnectLoginStartReqSourceEnum];
+
 /**
  * 
  * @export

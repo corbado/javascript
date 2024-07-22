@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -109,7 +109,7 @@ const LoginInitScreen = () => {
 
     setCurrentIdentifier(identifier);
 
-    const res = await getConnectService().login(identifier);
+    const res = await getConnectService().login(identifier, PasskeyLoginSource.TextField);
     if (res.err) {
       setLoginPending(false);
       if (res.val.ignore) {

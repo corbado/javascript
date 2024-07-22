@@ -1145,9 +1145,13 @@ components:
       type: object
       required:
         - identifier
+        - source
       properties:
         identifier:
           type: string
+        source:
+          type: string
+          enum: [ 'one-tap', 'text-field', 'error-soft', 'error-hard' ]
 
     connectLoginStartRsp:
       type: object

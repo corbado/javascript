@@ -59,12 +59,14 @@ const LoginErrorScreenHard = () => {
       </div>
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
 
-      <LinkButton
-        onClick={() => null}
-        className='cb-login-error-hard-help'
-      >
-        Need help ?
-      </LinkButton>
+      {config.onHelpRequest && (
+        <LinkButton
+          onClick={() => config.onHelpRequest!()}
+          className='cb-login-error-hard-help'
+        >
+          Need help ?
+        </LinkButton>
+      )}
 
       <div className='cb-login-error-hard-cta'>
         <Button

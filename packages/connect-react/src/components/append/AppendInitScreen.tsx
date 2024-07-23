@@ -78,11 +78,11 @@ const AppendInitScreen = () => {
       setAppendAllowed(true);
     };
 
-    console.log('init AppendInitScreen');
+    log.debug('init AppendInitScreen');
 
     const abortController = new AbortController();
     init(abortController).catch(e => {
-      console.error(`init error: ${e}`);
+      log.error(`init error: ${e}`);
     });
 
     return () => {
@@ -114,14 +114,6 @@ const AppendInitScreen = () => {
 
   return (
     <>
-      <div className='cb-append-skip-container'>
-        <LinkButton
-          className='cb-append-skip'
-          onClick={() => config.onSkip()}
-        >
-          Skip
-        </LinkButton>
-      </div>
       <div className='cb-h2'>Activate a passkey</div>
       <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
       {error ? (
@@ -154,13 +146,24 @@ const AppendInitScreen = () => {
         >
           Learn more
         </Button>
-        <PrimaryButton
-          isLoading={primaryButtonLoading}
-          type='submit'
-          onClick={() => void handleSubmit()}
-        >
-          Activate passkey
-        </PrimaryButton>
+        <div className='cb-append-activate-button-container'>
+          <div className='cb-append-skip-container'>
+            <LinkButton
+              className='cb-append-skip'
+              onClick={() => config.onSkip()}
+            >
+              Skip
+            </LinkButton>
+          </div>
+          <PrimaryButton
+            isLoading={primaryButtonLoading}
+            type='submit'
+            onClick={() => void handleSubmit()}
+            className='cb-append-activate-button'
+          >
+            Activate passkey
+          </PrimaryButton>
+        </div>
       </div>
     </>
   );

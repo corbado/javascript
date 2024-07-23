@@ -60,14 +60,26 @@
   width: 10px;
 }
 
+.cb-append-activate-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+
 .cb-append-skip {
   width: fit-content;
 }
 
 .cb-append-skip-container {
-  width: 100%;
+  width: fit-content;
+  padding: 1rem 2rem;
   display: flex;
-  justify-content: end;
+  justify-content: center;
+}
+
+.cb-append-activate-button {
+  flex: 1;
 }
 
 @media screen and (max-width: 724px) {

@@ -3,6 +3,7 @@ import type { ConnectAppendError, ConnectLoginError } from './errors';
 export type CorbadoConnectLoginConfig = {
   onFallback(email: string): void;
   onError?(error: ConnectLoginError): void;
+  onHelpRequest?(): void;
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
   onSuccess?(): void;

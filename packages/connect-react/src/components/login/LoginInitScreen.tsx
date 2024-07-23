@@ -2,6 +2,7 @@ import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
@@ -17,19 +18,18 @@ const LoginInitScreen = () => {
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { loading, startLoading, finishLoading } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      setLoading(true);
+      startLoading();
       log.debug('running init');
 
       const res = await getConnectService().loginInit(ac);
 
       if (res.err) {
-        setLoading(false);
         log.error(res.val);
         return;
       }
@@ -48,7 +48,7 @@ const LoginInitScreen = () => {
         config.onFallback('');
         setIsFallbackInitiallyTriggered(true);
 
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -56,16 +56,17 @@ const LoginInitScreen = () => {
 
       if (lastLogin) {
         log.debug('starting relogin UI');
-        navigateToScreen(LoginScreenType.PasskeyReLogin);
+        return navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
 
-      setLoading(false);
+      finishLoading();
     };
 
     const ac = new AbortController();
+
     void init(ac);
 
     return () => {
@@ -154,8 +155,8 @@ const LoginInitScreen = () => {
   return (
     <div>
       {loading ? (
-        <div className='cb-login__loader-container'>
-          <LoadingSpinner className='cb-login__loader' />
+        <div className='cb-login-loader-container'>
+          <LoadingSpinner className='cb-login-loader' />
         </div>
       ) : (
         <>

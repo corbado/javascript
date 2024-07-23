@@ -24,7 +24,6 @@ export class ConnectFlags {
     }
 
     const { items } = JSON.parse(serialized);
-    console.log('connectFlags:', items);
 
     return new ConnectFlags(items);
   }

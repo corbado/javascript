@@ -1,20 +1,3 @@
-.cb-passkey-info-list-item {
-  display: flex;
-  margin: 0.5rem 0;
-  width: 100%;
-}
-
-.cb-passkey-info-list-item__icon {
-  width: 75px;
-  margin-right: 0.25rem;
-  flex: 0 0 60px;
-  padding: 0.5rem;
-}
-
-.cb-passkey-info-list-item__text {
-  flex: 1;
-}
-
 .cb-passkey-button {
   padding: 1rem;
   background-color: white;
@@ -59,13 +42,12 @@
   color: black;
 }
 
-.cb-switch {
-}
-
 .cb-passkey-list-container {
   width: 100%;
   display: flex;
   flex-direction: column;
+  height: 300px;
+  overflow: auto;
   gap: 1rem;
 }
 
@@ -81,26 +63,26 @@
   box-sizing: border-box;
 }
 
-.cb-passkey-list-item__icon {
+.cb-passkey-list-item-icon {
   width: 20px;
   color: black;
 }
 
-.cb-passkey-list-item__delete-icon {
+.cb-passkey-list-item-delete-icon {
   width: 15px;
   color: var(--cb-color-secondary);
 }
 
-.cb-passkey-list-item__content {
+.cb-passkey-list-item-content {
   flex: 1;
 }
 
-.cb-passkey-list-item__title {
+.cb-passkey-list-item-title {
   color: black;
   font-size: 1rem;
 }
 
-.cb-passkey-list-item__details {
+.cb-passkey-list-item-details {
   color: var(--cb-color-secondary);
   font-size: 0.875rem;
 }
@@ -117,17 +99,17 @@
   font-size: 8px;
 }
 
-.cb-passkey-list-item__tag-icon {
+.cb-passkey-list-item-tag-icon {
   width: 10px;
 }
 
-.cb-passkey-list-item__tags {
+.cb-passkey-list-item-tags {
   display: flex;
   width: 100%;
   gap: 2px;
 }
 
-.cb-passkey-list-item__header {
+.cb-passkey-list-item-header {
   display: flex;
   text-align: left;
   flex-direction: row-reverse;
@@ -136,7 +118,7 @@
   margin-bottom: 0.5rem;
 }
 
-.cb-passkey-list__append-button {
+.cb-passkey-list-append-button {
   display: flex;
   gap: 1rem;
   width: fit-content;
@@ -147,12 +129,12 @@
   padding: 6px 10px;
 }
 
-.cb-passkey-list__append-button .loader {
+.cb-passkey-list-append-button .loader {
   height: 15px;
   width: 15px;
 }
 
-.cb-passkey-list__append-icon {
+.cb-passkey-list-append-icon {
   width: 10px;
 }
 
@@ -168,19 +150,19 @@
   width: 100vw;
 }
 
-.cb-modal__background {
+.cb-modal-background {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: var(--cb-color-surface);
+  background-color: black;
   opacity: 0.2;
 }
 
-.cb-modal__content {
+.cb-modal-content {
   position: relative;
-  background-color: var(--cb-color-secondary);
+  background-color: var(--cb-color-surface);
   border-radius: var(--cb-border-radius);
   padding: 2rem;
   border: 1px solid var(--cb-color-outline);
@@ -188,71 +170,43 @@
   max-width: 600px;
 }
 
-.cb-passkey-list__modal {
+.cb-passkey-list-modal {
   text-align: left;
-  font-family: var(--cb-font-family-primary);
   gap: 1rem;
 }
 
-.cb-passkey-list__modal-title {
-  font-size: 24px;
-  color: var(--cb-color-primary);
-  font-family: var(--cb-font-family-primary);
-  text-align: left;
-}
-
-.cb-passkey-list__modal-description {
-  font-size: 0.8rem;
-  color: var(--cb-color-primary);
-}
-
-.cb-passkey-list__modal-button-cancel {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--cb-color-primary);
-  border-radius: var(--cb-border-radius);
-  border: 1px solid var(--cb-color-primary);
-  background-color: var(--cb-color-on-primary);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  flex: 1;
-}
-
-.cb-passkey-list__modal-button-submit {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--cb-color-on-primary);
-  border-radius: var(--cb-border-radius);
-  border: 1px solid var(--cb-color-primary);
-  background-color: var(--cb-color-primary);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  flex: 1;
-}
-
-.cb-passkey-list__modal-cta {
+.cb-passkey-list-modal-cta {
   width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
+
+  .cb-passkey-list-modal-button-cancel,
+  .cb-passkey-list-modal-button-submit {
+    flex: 1;
+  }
 }
 
-.cb-passkey-list__loader-container {
+.cb-passkey-list-modal-button-submit {
+  max-width: fit-content;
+  float: right;
+}
+
+.cb-passkey-list-loader-container {
   width: 100%;
-  height: 100%;
-  min-height: 300px;
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.cb-passkey-list__loader {
+.cb-passkey-list-loader {
   width: 100px;
   height: 100px;
 }
 
-.cb-passkey-list__empty {
+.cb-passkey-list-empty {
   width: 100%;
   text-align: center;
   color: var(--cb-color-secondary);
@@ -267,21 +221,32 @@
   max-width: none;
 }
 
-.cb-passkey-list__modal-exit-icon {
+.cb-passkey-list-modal-exit-icon {
   width: 18px;
   height: 18px;
   color: var(--cb-color-primary);
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
-.cb-passkey-list__modal-header {
+.cb-passkey-list-modal-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
 }
 
+.cb-passkey-list-append-cta {
+  border-top: 1px solid var(--cb-color-outline);
+  padding: 1rem 0rem;
+}
+
+.cb-passkey-list-modal-content {
+  margin: 1rem 0rem;
+}
+
 @media screen and (max-width: 600px) {
-  .cb-passkey-list-item__delete-icon {
+  .cb-passkey-list-item-delete-icon {
     width: 12px;
   }
 
@@ -290,7 +255,7 @@
     gap: 1rem;
   }
 
-  .cb-passkey-list-item__header {
+  .cb-passkey-list-item-header {
     flex-direction: column;
     align-items: start;
     gap: 2px;

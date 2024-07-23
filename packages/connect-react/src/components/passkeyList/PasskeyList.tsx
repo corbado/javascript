@@ -29,8 +29,8 @@ const PasskeyList: FC<PasskeyListProps> = ({
     <>
       <div className='cb-passkey-list-container'>
         {isLoading ? (
-          <div className='cb-passkey-list__loader-container'>
-            <LoadingSpinner className='cb-passkey-list__loader' />
+          <div className='cb-passkey-list-loader-container'>
+            <LoadingSpinner className='cb-passkey-list-loader' />
           </div>
         ) : passkeys.length ? (
           passkeys.map(passkey => (
@@ -55,14 +55,14 @@ const PasskeyList: FC<PasskeyListProps> = ({
         )}
       </div>
 
-      <div className='cb-passkey-list__append-cta'>
+      <div className='cb-passkey-list-append-cta'>
         <Button
-          className='cb-passkey-list__append-button'
+          className='cb-passkey-list-append-button'
           onClick={() => (isLoading ? null : void onAppendClick())}
           isLoading={appendLoading}
         >
           <p>Add a passkey</p>
-          <PlusIcon className='cb-passkey-list__append-icon' />
+          <PlusIcon className='cb-passkey-list-append-icon' />
         </Button>
       </div>
     </>

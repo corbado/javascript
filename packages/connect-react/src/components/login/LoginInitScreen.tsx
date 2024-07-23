@@ -11,25 +11,26 @@ import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import useLoading from '../../hooks/useLoading';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { loading, startLoading, finishLoading } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      setLoading(true);
+      startLoading();
       log.debug('running init');
 
       const res = await getConnectService().loginInit(ac);
 
       if (res.err) {
-        setLoading(false);
+        finishLoading();
         log.error(res.val);
         return;
       }
@@ -48,7 +49,7 @@ const LoginInitScreen = () => {
         config.onFallback('');
         setIsFallbackInitiallyTriggered(true);
 
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -62,7 +63,7 @@ const LoginInitScreen = () => {
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
 
-      setLoading(false);
+      finishLoading();
     };
 
     const ac = new AbortController();

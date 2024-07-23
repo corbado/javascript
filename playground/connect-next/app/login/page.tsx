@@ -27,8 +27,9 @@ export default function LoginPage() {
               }}
               onError={error => console.log('error', error)}
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-              onComplete={(method: string) => router.push('/home')}
+              onComplete={_ => router.push('/home')}
               onSignupClick={() => router.push('/signup')}
+              onHelpRequest={() => console.log('help requested')}
             />
           </div>
         </div>

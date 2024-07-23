@@ -13,6 +13,7 @@ import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyList from './PasskeyList';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
+import useLoading from '../../hooks/useLoading';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
@@ -21,33 +22,33 @@ const PasskeyListScreen = () => {
   const { getConnectService } = useShared();
 
   const [passkeyList, setPasskeyList] = useState<Passkey[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading, startLoading, finishLoading } = useLoading();
   const [deletePending, setDeletePending] = useState<boolean>(false);
   const [appendPending, setAppendPending] = useState<boolean>(false);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      setLoading(true);
+      startLoading();
       log.debug('running init');
       const res = await getConnectService().manageInit(ac);
 
       log.debug(res.val);
 
       if (res.err) {
-        setLoading(false);
+        finishLoading();
         log.error(res.val);
         return;
       }
 
       if (!res.val.manageAllowed) {
-        setLoading(false);
+        finishLoading();
         log.debug('manage passkeys is not allowed');
         navigateToScreen(ManageScreenType.Invisible);
         return;
       }
 
       await getPasskeyList(config);
-      setLoading(false);
+      finishLoading();
     };
 
     const ac = new AbortController();
@@ -57,7 +58,7 @@ const PasskeyListScreen = () => {
       ac.abort();
       getConnectService().dispose();
     };
-  }, [getConnectService, setLoading]);
+  }, [getConnectService, startLoading, finishLoading]);
 
   const onDeleteClick = useCallback(
     async (credentialsId?: string) => {
@@ -76,7 +77,7 @@ const PasskeyListScreen = () => {
       const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
 
       if (deletePasskeyRes.err) {
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -117,7 +118,7 @@ const PasskeyListScreen = () => {
     console.log('get passkey list');
     await getPasskeyList(config);
     setAppendPending(false);
-  }, [config, setLoading, passkeyListToken, appendPending]);
+  }, [config, finishLoading, passkeyListToken, appendPending]);
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
     await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);

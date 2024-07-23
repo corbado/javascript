@@ -41,13 +41,13 @@ export const PasskeyListItem: FC<Props> = ({
   const getIcon = () => {
     switch (os) {
       case 'Windows':
-        return <WindowsIcon className='cb-passkey-list-item__icon' />;
+        return <WindowsIcon className='cb-passkey-list-item-icon' />;
       case 'macOS':
-        return <AppleIcon className='cb-passkey-list-item__icon' />;
+        return <AppleIcon className='cb-passkey-list-item-icon' />;
       case 'iOS':
-        return <AppleIcon className='cb-passkey-list-item__icon' />;
+        return <AppleIcon className='cb-passkey-list-item-icon' />;
       default:
-        return <KeyIcon className='cb-passkey-list-item__icon' />;
+        return <KeyIcon className='cb-passkey-list-item-icon' />;
     }
   };
 
@@ -73,27 +73,27 @@ export const PasskeyListItem: FC<Props> = ({
     <div className='cb-passkey-list-item'>
       {getIcon()}
 
-      <div className='cb-passkey-list-item__content'>
-        <div className='cb-passkey-list-item__header'>
-          <div className='cb-passkey-list-item__tags'>
+      <div className='cb-passkey-list-item-content'>
+        <div className='cb-passkey-list-item-header'>
+          <div className='cb-passkey-list-item-tags'>
             {getTags().map(({ text, icon }) => (
               <Tag key={text}>
-                {icon('cb-passkey-list-item__tag-icon')}
+                {icon('cb-passkey-list-item-tag-icon')}
                 <p>{text}</p>
               </Tag>
             ))}
           </div>
-          <h2 className='cb-passkey-list-item__title cb-bold'>{name}</h2>
+          <h2 className='cb-passkey-list-item-title cb-bold'>{name}</h2>
         </div>
 
-        <p className='cb-passkey-list-item__details'>
+        <p className='cb-passkey-list-item-details'>
           Created: {format(createdAt, 'dd/MM/yyyy HH:mm:ss')} with {browser} on {os}
         </p>
 
-        <p className='cb-passkey-list-item__details'>Last used: {format(lastUsed, 'dd/MM/yyyy HH:mm:ss')}</p>
+        <p className='cb-passkey-list-item-details'>Last used: {format(lastUsed, 'dd/MM/yyyy HH:mm:ss')}</p>
       </div>
       {onDeleteClick && (
-        <div className='cb-passkey-list-item__delete-icon'>
+        <div className='cb-passkey-list-item-delete-icon'>
           {isDeleteLoading ? (
             <LoadingSpinner variant='primary'></LoadingSpinner>
           ) : (

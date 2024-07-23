@@ -4,14 +4,14 @@
   width: 100%;
 }
 
-.cb-passkey-info-list-item__icon {
+.cb-passkey-info-list-item-icon {
   width: 75px;
   margin-right: 0.25rem;
   flex: 0 0 60px;
   padding: 0.5rem;
 }
 
-.cb-passkey-info-list-item__text {
+.cb-passkey-info-list-item-text {
   flex: 1;
 }
 

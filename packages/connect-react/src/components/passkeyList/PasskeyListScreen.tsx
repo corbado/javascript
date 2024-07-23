@@ -58,7 +58,7 @@ const PasskeyListScreen = () => {
       ac.abort();
       getConnectService().dispose();
     };
-  }, [getConnectService, startLoading, finishLoading]);
+  }, [getConnectService]);
 
   const onDeleteClick = useCallback(
     async (credentialsId?: string) => {
@@ -84,7 +84,7 @@ const PasskeyListScreen = () => {
       await getPasskeyList(config);
       setDeletePending(false);
     },
-    [config, loading, passkeyListToken, deletePending],
+    [config, passkeyListToken, deletePending],
   );
 
   const onAppendClick = useCallback(async () => {
@@ -118,7 +118,7 @@ const PasskeyListScreen = () => {
     console.log('get passkey list');
     await getPasskeyList(config);
     setAppendPending(false);
-  }, [config, finishLoading, passkeyListToken, appendPending]);
+  }, [config, passkeyListToken, appendPending]);
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
     await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);
@@ -155,15 +155,15 @@ const PasskeyListScreen = () => {
     (passkey: Passkey) => {
       if (passkeyList) {
         return (
-          <div className='cb-passkey-list__modal'>
-            <div className='cb-passkey-list__modal-header'>
-              <h2 className='cb-passkey-list__modal-title'>Delete passkey</h2>
+          <div className='cb-passkey-list-modal'>
+            <div className='cb-passkey-list-modal-header'>
+              <h2 className='cb-passkey-list-modal-title'>Delete passkey</h2>
               <CrossIcon
-                className='cb-passkey-list__modal-exit-icon'
+                className='cb-passkey-list-modal-exit-icon'
                 onClick={() => hide()}
               />
             </div>
-            <p className='cb-passkey-list__modal-description'>
+            <p className='cb-passkey-list-modal-description'>
               Are you sure you want to delete this passkey? You will have to set it up again by adding a passkey in your
               settings.
             </p>
@@ -180,10 +180,10 @@ const PasskeyListScreen = () => {
               key={passkey.id}
             />
 
-            <div className='cb-passkey-list__modal-cta'>
+            <div className='cb-passkey-list-modal-cta'>
               <SecondaryButton
                 onClick={() => hide()}
-                className='cb-passkey-list__modal-button-cancel'
+                className='cb-passkey-list-modal-button-cancel'
                 isLoading={loading}
               >
                 Cancel
@@ -191,7 +191,7 @@ const PasskeyListScreen = () => {
 
               <PrimaryButton
                 onClick={() => void onDeleteClick(passkey.id)}
-                className='cb-passkey-list__modal-button-submit'
+                className='cb-passkey-list-modal-button-submit'
                 isLoading={loading}
               >
                 Remove
@@ -203,18 +203,18 @@ const PasskeyListScreen = () => {
 
       return <></>;
     },
-    [passkeyList],
+    [passkeyList, loading],
   );
 
   const AlreadyExistingModal = () => (
-    <div className='cb-passkey-list__modal'>
-      <h2 className='cb-passkey-list__modal-title'>You already have a passkey on this device</h2>
-      <p className='cb-passkey-list__modal-description'>You will not be able to use this passkey for login.</p>
+    <div className='cb-passkey-list-modal'>
+      <h2 className='cb-passkey-list-modal-title'>You already have a passkey on this device</h2>
+      <p className='cb-passkey-list-modal-description'>You will not be able to use this passkey for login.</p>
 
-      <div className='cb-passkey-list__modal-cta'>
+      <div className='cb-passkey-list-modal-cta'>
         <PrimaryButton
           onClick={() => hide()}
-          className='cb-passkey-list__modal-button-submit'
+          className='cb-passkey-list-modal-button-submit'
         >
           Okay
         </PrimaryButton>

@@ -8,10 +8,11 @@ import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
 import { CorbadoTokens } from '../../types/tokens';
-import { Button } from '../shared/Button';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyList from './PasskeyList';
+import { PrimaryButton } from '../shared/PrimaryButton';
+import { SecondaryButton } from '../shared/SecondaryButton';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
@@ -179,21 +180,21 @@ const PasskeyListScreen = () => {
             />
 
             <div className='cb-passkey-list__modal-cta'>
-              <Button
+              <SecondaryButton
                 onClick={() => hide()}
                 className='cb-passkey-list__modal-button-cancel'
                 isLoading={loading}
               >
                 Cancel
-              </Button>
+              </SecondaryButton>
 
-              <Button
+              <PrimaryButton
                 onClick={() => void onDeleteClick(passkey.id)}
                 className='cb-passkey-list__modal-button-submit'
                 isLoading={loading}
               >
                 Remove
-              </Button>
+              </PrimaryButton>
             </div>
           </div>
         );
@@ -210,12 +211,12 @@ const PasskeyListScreen = () => {
       <p className='cb-passkey-list__modal-description'>You will not be able to use this passkey for login.</p>
 
       <div className='cb-passkey-list__modal-cta'>
-        <Button
+        <PrimaryButton
           onClick={() => hide()}
           className='cb-passkey-list__modal-button-submit'
         >
           Okay
-        </Button>
+        </PrimaryButton>
       </div>
     </div>
   );

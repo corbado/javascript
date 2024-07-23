@@ -13,7 +13,7 @@
   align-items: start;
 }
 
-.cb-login-error-hard-icons > * {
+.cb-login-error-hard-icons>* {
   width: 60px;
 }
 
@@ -27,7 +27,7 @@
   justify-content: center;
 }
 
-.cb-login-error-soft-icons > * {
+.cb-login-error-soft-icons>* {
   width: 60px;
   margin: 0.5rem;
   color: var(--cb-color-on-primary-container);
@@ -74,7 +74,7 @@
   align-items: start;
 }
 
-.cb-login-success-icons > * {
+.cb-login-success-icons>* {
   width: 60px;
 }
 
@@ -82,6 +82,14 @@
   width: 32px;
   height: 32px;
   color: var(--cb-color-success);
+}
+
+.cb-switch {
+  margin-top: 1rem;
+}
+
+.cb-login-error-hard-help {
+  margin: 1rem 0rem;
 }
 
 @media screen and (max-width: 724px) {

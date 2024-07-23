@@ -28,6 +28,12 @@
   margin: 1rem 0;
 }
 
+.cb-append-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .cb-append-benefits-container {
   display: flex;
   flex-direction: column;
@@ -60,13 +66,6 @@
   width: 10px;
 }
 
-.cb-append-activate-button-container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-}
-
 .cb-append-skip {
   width: fit-content;
 }
@@ -76,10 +75,6 @@
   padding: 1rem 2rem;
   display: flex;
   justify-content: center;
-}
-
-.cb-append-activate-button {
-  flex: 1;
 }
 
 @media screen and (max-width: 724px) {

@@ -114,7 +114,17 @@ const AppendInitScreen = () => {
 
   return (
     <>
-      <div className='cb-h2'>Activate a passkey</div>
+      <div className='cb-append-header'>
+        <h2 className='cb-h2'>Activate a passkey</h2>
+        <div className='cb-append-skip-container'>
+          <LinkButton
+            className='cb-append-skip'
+            onClick={() => config.onSkip()}
+          >
+            Skip
+          </LinkButton>
+        </div>
+      </div>
       <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
       {error ? (
         <Notification
@@ -146,24 +156,14 @@ const AppendInitScreen = () => {
         >
           Learn more
         </Button>
-        <div className='cb-append-activate-button-container'>
-          <div className='cb-append-skip-container'>
-            <LinkButton
-              className='cb-append-skip'
-              onClick={() => config.onSkip()}
-            >
-              Skip
-            </LinkButton>
-          </div>
-          <PrimaryButton
-            isLoading={primaryButtonLoading}
-            type='submit'
-            onClick={() => void handleSubmit()}
-            className='cb-append-activate-button'
-          >
-            Activate passkey
-          </PrimaryButton>
-        </div>
+        <PrimaryButton
+          isLoading={primaryButtonLoading}
+          type='submit'
+          onClick={() => void handleSubmit()}
+          className='cb-append-activate-button'
+        >
+          Activate passkey
+        </PrimaryButton>
       </div>
     </>
   );

@@ -175,19 +175,6 @@
   gap: 1rem;
 }
 
-.cb-passkey-list-modal-title {
-  font-size: 24px;
-  color: var(--cb-color-primary);
-  font-family: var(--cb-font-family-primary);
-  text-align: left;
-}
-
-.cb-passkey-list-modal-description {
-  font-size: 0.8rem;
-  color: var(--cb-color-primary);
-  margin-bottom: 2rem;
-}
-
 .cb-passkey-list-modal-button-cancel {
   flex: 1;
 }

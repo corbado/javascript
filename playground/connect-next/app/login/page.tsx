@@ -29,7 +29,7 @@ export default function LoginPage() {
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
               onComplete={_ => router.push('/home')}
               onSignupClick={() => router.push('/signup')}
-              onHelpRequest={() => console.log('help requested')}
+              onHelpRequest={() => alert('help requested')}
             />
           </div>
         </div>

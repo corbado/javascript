@@ -157,13 +157,13 @@ const PasskeyListScreen = () => {
         return (
           <div className='cb-passkey-list-modal'>
             <div className='cb-passkey-list-modal-header'>
-              <h2 className='cb-passkey-list-modal-title'>Delete passkey</h2>
+              <h2 className='ch-h2'>Delete passkey</h2>
               <CrossIcon
                 className='cb-passkey-list-modal-exit-icon'
                 onClick={() => hide()}
               />
             </div>
-            <p className='cb-passkey-list-modal-description'>
+            <p className='ch-p'>
               Are you sure you want to delete this passkey? You will have to set it up again by adding a passkey in your
               settings.
             </p>
@@ -208,17 +208,21 @@ const PasskeyListScreen = () => {
 
   const AlreadyExistingModal = () => (
     <div className='cb-passkey-list-modal'>
-      <h2 className='cb-passkey-list-modal-title'>You already have a passkey on this device</h2>
-      <p className='cb-passkey-list-modal-description'>You will not be able to use this passkey for login.</p>
-
-      <div className='cb-passkey-list-modal-cta'>
-        <PrimaryButton
+      <div className='cb-passkey-list-modal-header'>
+        <h2 className='ch-h2'>You already have a passkey on this device</h2>
+        <CrossIcon
+          className='cb-passkey-list-modal-exit-icon'
           onClick={() => hide()}
-          className='cb-passkey-list-modal-button-submit'
-        >
-          Okay
-        </PrimaryButton>
+        />
       </div>
+      <p className='cp-p'>You will not be able to use this passkey for login.</p>
+
+      <PrimaryButton
+        onClick={() => hide()}
+        className='cb-passkey-list-modal-button-submit'
+      >
+        Okay
+      </PrimaryButton>
     </div>
   );
 

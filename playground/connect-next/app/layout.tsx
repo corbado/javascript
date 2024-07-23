@@ -2,8 +2,7 @@
 
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { CorbadoConnectProvider, CorbadoConnectModal } from '@corbado/connect-react';
-import ReactDOM from 'react-dom';
+import { CorbadoConnectProvider } from '@corbado/connect-react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,7 +17,7 @@ export default function RootLayout({
         <CorbadoConnectProvider
           projectId={process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!}
           frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}
-          isDebug={true}
+          isDebug={false}
         >
           {children}
         </CorbadoConnectProvider>

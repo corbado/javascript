@@ -13,7 +13,7 @@
   align-items: start;
 }
 
-.cb-login-error-hard-icons>* {
+.cb-login-error-hard-icons > * {
   width: 60px;
 }
 
@@ -27,7 +27,7 @@
   justify-content: center;
 }
 
-.cb-login-error-soft-icons>* {
+.cb-login-error-soft-icons > * {
   width: 60px;
   margin: 0.5rem;
   color: var(--cb-color-on-primary-container);
@@ -74,7 +74,7 @@
   align-items: start;
 }
 
-.cb-login-success-icons>* {
+.cb-login-success-icons > * {
   width: 60px;
 }
 

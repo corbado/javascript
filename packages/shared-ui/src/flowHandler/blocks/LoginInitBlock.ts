@@ -8,6 +8,8 @@ import type { ProcessHandler } from '../processHandler';
 import type { BlockDataLoginInit } from '../types';
 import { Block } from './Block';
 
+import log from 'loglevel';
+
 export class LoginInitBlock extends Block<BlockDataLoginInit> {
   readonly data: BlockDataLoginInit;
   readonly type = BlockTypes.LoginInit;
@@ -94,12 +96,12 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     }
 
     if (this.#conditionalUIStarted) {
-      console.log('Conditional UI already started');
+      log.debug('Conditional UI already started');
       return;
     }
 
     this.#conditionalUIStarted = true;
-    console.log('starting conditional UI');
+    log.debug('starting conditional UI');
     const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
     if (b.err && (b.val instanceof PasskeyChallengeCancelledError || b.val.ignore)) {
       // we ignore this type of error
@@ -150,7 +152,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       }
     }
 
-    console.log(isWebKit, isIOS, safariVersionAboveOrEqual174);
+    log.debug(isWebKit, isIOS, safariVersionAboveOrEqual174);
 
     // all mobile WebKit browsers that have a iOS version < 17.4 are affected by user gesture detection
     return !safariVersionAboveOrEqual174;

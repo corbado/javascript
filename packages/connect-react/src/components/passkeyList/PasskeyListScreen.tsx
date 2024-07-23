@@ -115,7 +115,7 @@ const PasskeyListScreen = () => {
       return;
     }
 
-    console.log('get passkey list');
+    log.debug('get passkey list');
     await getPasskeyList(config);
     setAppendPending(false);
   }, [config, passkeyListToken, appendPending]);
@@ -157,28 +157,30 @@ const PasskeyListScreen = () => {
         return (
           <div className='cb-passkey-list-modal'>
             <div className='cb-passkey-list-modal-header'>
-              <h2 className='ch-h2'>Delete passkey</h2>
+              <h2 className='cb-h2'>Delete passkey</h2>
               <CrossIcon
                 className='cb-passkey-list-modal-exit-icon'
                 onClick={() => hide()}
               />
             </div>
-            <p className='ch-p'>
+            <p className='cb-p'>
               Are you sure you want to delete this passkey? You will have to set it up again by adding a passkey in your
               settings.
             </p>
 
-            <PasskeyListItem
-              name={'Passkey'}
-              createdAt={passkey.created}
-              lastUsed={passkey.lastUsed}
-              browser={passkey.sourceBrowser}
-              os={passkey.sourceOS}
-              isThisDevice={false}
-              isSynced
-              isHybrid
-              key={passkey.id}
-            />
+            <div className='cb-passkey-list-modal-content'>
+              <PasskeyListItem
+                name={'Passkey'}
+                createdAt={passkey.created}
+                lastUsed={passkey.lastUsed}
+                browser={passkey.sourceBrowser}
+                os={passkey.sourceOS}
+                isThisDevice={false}
+                isSynced
+                isHybrid
+                key={passkey.id}
+              />
+            </div>
 
             <div className='cb-passkey-list-modal-cta'>
               <SecondaryButton
@@ -209,13 +211,16 @@ const PasskeyListScreen = () => {
   const AlreadyExistingModal = () => (
     <div className='cb-passkey-list-modal'>
       <div className='cb-passkey-list-modal-header'>
-        <h2 className='ch-h2'>You already have a passkey on this device</h2>
+        <h2 className='cb-h2'>You already have a passkey on this device</h2>
         <CrossIcon
           className='cb-passkey-list-modal-exit-icon'
           onClick={() => hide()}
         />
       </div>
-      <p className='cp-p'>You will not be able to use this passkey for login.</p>
+
+      <p className='cb-p'>You will not be able to use this passkey for login.</p>
+
+      <div className='cb-passkey-list-modal-content'></div>
 
       <PrimaryButton
         onClick={() => hide()}

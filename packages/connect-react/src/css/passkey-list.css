@@ -175,20 +175,22 @@
   gap: 1rem;
 }
 
-.cb-passkey-list-modal-button-cancel {
-  flex: 1;
-}
-
-.cb-passkey-list-modal-button-submit {
-  flex: 1;
-}
-
 .cb-passkey-list-modal-cta {
   width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
   margin-top: 2rem;
+
+  .cb-passkey-list-modal-button-cancel,
+  .cb-passkey-list-modal-button-submit {
+    flex: 1;
+  }
+}
+
+.cb-passkey-list-modal-button-submit {
+  max-width: fit-content;
+  float: right;
 }
 
 .cb-passkey-list-loader-container {
@@ -224,17 +226,23 @@
   height: 18px;
   color: var(--cb-color-primary);
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
 .cb-passkey-list-modal-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
 }
 
 .cb-passkey-list-append-cta {
   border-top: 1px solid var(--cb-color-outline);
   padding: 1rem 0rem;
+}
+
+.cb-passkey-list-modal-content {
+  margin: 1rem 0rem;
 }
 
 @media screen and (max-width: 600px) {

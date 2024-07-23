@@ -2,6 +2,7 @@ import type { LoginInitBlock } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import log from 'loglevel';
 
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
@@ -45,17 +46,17 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   useEffect(() => {
     void block.startConditionalUIOnPageLoad().then(result => {
       if (result) {
-        console.log('CUI: page load');
+        log.debug('CUI: page load');
         void block.continueWithConditionalUI();
       }
     });
 
     void block.startConditionalUIOnFirstUserInteraction().then(result => {
       if (result) {
-        console.log('CUI: first click');
+        log.debug('CUI: first click');
         setOnComponentClick(() => {
           return () => {
-            console.log('calling continueWithConditionalUI');
+            log.debug('calling continueWithConditionalUI');
             void block.continueWithConditionalUI();
           };
         });

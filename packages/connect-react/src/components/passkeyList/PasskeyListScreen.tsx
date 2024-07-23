@@ -3,6 +3,7 @@ import type { Passkey } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import useLoading from '../../hooks/useLoading';
 import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
@@ -10,10 +11,9 @@ import { ManageScreenType } from '../../types/screenTypes';
 import { CorbadoTokens } from '../../types/tokens';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
-import PasskeyList from './PasskeyList';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
-import useLoading from '../../hooks/useLoading';
+import PasskeyList from './PasskeyList';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();

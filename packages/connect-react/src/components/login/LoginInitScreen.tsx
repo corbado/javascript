@@ -2,6 +2,7 @@ import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
@@ -11,7 +12,6 @@ import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import useLoading from '../../hooks/useLoading';
 
 const LoginInitScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();

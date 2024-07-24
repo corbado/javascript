@@ -22,7 +22,7 @@ const PasskeyListScreen = () => {
   const { getConnectService } = useShared();
 
   const [passkeyList, setPasskeyList] = useState<Passkey[]>([]);
-  const { loading, startLoading, finishLoading } = useLoading();
+  const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [deletePending, setDeletePending] = useState<boolean>(false);
   const [appendPending, setAppendPending] = useState<boolean>(false);
 
@@ -230,6 +230,10 @@ const PasskeyListScreen = () => {
       </PrimaryButton>
     </div>
   );
+
+  if (!isInitialLoadingStarted) {
+    return <></>;
+  }
 
   return (
     <PasskeyList

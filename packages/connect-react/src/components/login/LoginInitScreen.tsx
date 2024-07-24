@@ -18,7 +18,7 @@ const LoginInitScreen = () => {
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [error, setError] = useState('');
-  const { loading, startLoading, finishLoading } = useLoading();
+  const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
@@ -151,6 +151,10 @@ const LoginInitScreen = () => {
       config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
     }
   }, [loading, config, isFallbackInitiallyTriggered]);
+
+  if (!isInitialLoadingStarted) {
+    return <></>;
+  }
 
   return (
     <div>

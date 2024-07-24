@@ -150,11 +150,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   }, [getConnectService, config]);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && isInitialLoadingStarted) {
       // config.onLoaded should trigger when the form renders else it will cause issues with input detection.
       config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
     }
-  }, [loading, config, isFallbackInitiallyTriggered]);
+  }, [loading, isFallbackInitiallyTriggered, isInitialLoadingStarted]);
 
   if (!isInitialLoadingStarted) {
     return <></>;

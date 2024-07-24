@@ -207,7 +207,10 @@ export class ConnectService {
     return this.#loginFinish(res.val, false);
   }
 
-  async conditionalUILogin(): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+  async conditionalUILogin(
+    onLoginStart: () => void,
+    onLoginEnd: () => void,
+  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
@@ -218,12 +221,19 @@ export class ConnectService {
     }
 
     const challenge = existingProcess.loginData?.conditionalUIChallenge;
+
     const res = await this.#webAuthnService.login(challenge, true, false);
+    onLoginStart();
+
     if (res.err) {
+      onLoginEnd();
       return res;
     }
 
-    return this.#loginFinish(res.val, true);
+    const loginFinishResp = await this.#loginFinish(res.val, true);
+    onLoginEnd();
+
+    return loginFinishResp;
   }
 
   async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, CorbadoError>> {

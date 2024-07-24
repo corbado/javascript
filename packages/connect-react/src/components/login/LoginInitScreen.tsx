@@ -85,15 +85,22 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       return;
     }
 
-    const res = await getConnectService().conditionalUILogin();
+    const res = await getConnectService().conditionalUILogin(
+      () => setLoginPending(true),
+      () => setLoginPending(false),
+    );
+
     if (res.err) {
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
+        setLoginPending(false);
         return;
       }
       log.debug('fallback: error during conditional UI');
 
       config.onError?.('PasskeyLoginFailure');
       setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
+      setLoginPending(false);
+
       return;
     }
 
@@ -101,10 +108,12 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       navigateToScreen(LoginScreenType.Success);
       config.onSuccess?.();
       setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+      setLoginPending(false);
 
       return;
     }
 
+    setLoginPending(false);
     config.onComplete(res.val.session);
   };
 

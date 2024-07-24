@@ -5,8 +5,10 @@
 }
 
 .cb-highlight {
-  outline: 2px solid red;
-  outline-offset: 5px;
+  .cb-connect-container {
+    outline: 2px solid red;
+    outline-offset: 5px;
+  }
 }
 
 .cb-h2 {

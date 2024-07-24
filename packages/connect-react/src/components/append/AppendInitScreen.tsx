@@ -3,6 +3,7 @@ import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
+import useLoading from '../../hooks/useLoading';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { Button } from '../shared/Button';
@@ -10,11 +11,10 @@ import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { SuccessIcon } from '../shared/icons/SuccessIcon';
 import { LinkButton } from '../shared/LinkButton';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
-import useLoading from '../../hooks/useLoading';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();

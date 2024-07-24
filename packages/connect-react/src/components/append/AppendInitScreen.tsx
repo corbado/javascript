@@ -13,17 +13,21 @@ import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
+import useLoading from '../../hooks/useLoading';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();
   const { getConnectService } = useShared();
-  const [primaryButtonLoading, setPrimaryButtonLoading] = useState(false);
   const [appendAllowed, setAppendAllowed] = useState(false);
   const [attestationOptions, setAttestationOptions] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
+  const { startLoading, loading, finishLoading, isInitialLoadingStarted } = useLoading();
+  const [appendPending, setAppendPending] = useState(false);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
+      startLoading();
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
         if (res.val.ignore) {
@@ -34,7 +38,6 @@ const AppendInitScreen = () => {
         config.onSkip();
 
         config.onError?.('PasskeyNotSupported');
-
         return;
       }
 
@@ -44,7 +47,6 @@ const AppendInitScreen = () => {
         config.onSkip();
 
         config.onError?.('PasskeyNotSupported');
-
         return;
       }
 
@@ -76,6 +78,7 @@ const AppendInitScreen = () => {
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
       setAppendAllowed(true);
+      finishLoading();
     };
 
     log.debug('init AppendInitScreen');
@@ -91,24 +94,24 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    setPrimaryButtonLoading(true);
+    setAppendPending(true);
     setError(undefined);
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       log.error('error:', res.val);
-      setPrimaryButtonLoading(false);
+      setAppendPending(false);
       setError('Passkey operation was cancelled or timed out.');
 
       return;
     }
 
-    setPrimaryButtonLoading(false);
+    setAppendPending(false);
     navigateToScreen(AppendScreenType.Success);
   }, [attestationOptions, config, getConnectService]);
 
   // when passkey based login is not allowed, our component just returns an empty div
-  if (!appendAllowed) {
+  if (!appendAllowed || !isInitialLoadingStarted) {
     return <div></div>;
   }
 
@@ -133,21 +136,29 @@ const AppendInitScreen = () => {
         />
       ) : null}
       <div className='cb-append-info-list'>
-        <PasskeyInfoListItem
-          title='No more forgotten passwords'
-          description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
-          icon={<FingerprintIcon platform='default' />}
-        />
-        <PasskeyInfoListItem
-          title='Next-generation security'
-          description='Forget the fear of stolen passwords'
-          icon={<SuccessIcon />}
-        />
-        <PasskeyInfoListItem
-          title='Syncs across your devices'
-          description='Faster sign-in from your password manager'
-          icon={<PasskeyIcon />}
-        />
+        {appendPending || loading ? (
+          <div className='cb-passkey-list-loader-container'>
+            <LoadingSpinner className='cb-passkey-list-loader' />
+          </div>
+        ) : (
+          <>
+            <PasskeyInfoListItem
+              title='No more forgotten passwords'
+              description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
+              icon={<FingerprintIcon platform='default' />}
+            />
+            <PasskeyInfoListItem
+              title='Next-generation security'
+              description='Forget the fear of stolen passwords'
+              icon={<SuccessIcon />}
+            />
+            <PasskeyInfoListItem
+              title='Syncs across your devices'
+              description='Faster sign-in from your password manager'
+              icon={<PasskeyIcon />}
+            />
+          </>
+        )}
       </div>
       <div className='cb-connect-append-cta'>
         <Button
@@ -157,7 +168,7 @@ const AppendInitScreen = () => {
           Learn more
         </Button>
         <PrimaryButton
-          isLoading={primaryButtonLoading}
+          isLoading={appendPending}
           type='submit'
           onClick={() => void handleSubmit()}
           className='cb-append-activate-button'

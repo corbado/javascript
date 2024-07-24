@@ -379,7 +379,7 @@
     }
   },
   "passkey-list": {
-    "title": "PASSKEYS",
+    "title": "Passkeys",
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",
@@ -408,10 +408,10 @@
     }
   },
   "user": {
-    "header": "Your Account",
+    "title": "User Details",
     "name": "Name",
     "username": "Username",
-    "email": "Email",
+    "email": "Email address",
     "phone": "Phone number",
     "social": "Social accounts",
     "verified": "verified",

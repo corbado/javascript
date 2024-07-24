@@ -3,7 +3,9 @@ import './styles/index.css';
 import addIcon from './assets/add.svg';
 import appleIcon from './assets/apple.svg';
 import cancelIcon from './assets/cancel.svg';
+import changeIcon from './assets/change.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
+import copyIcon from './assets/copy.svg';
 import deleteIcon from './assets/delete.svg';
 import deviceIcon from './assets/device-icon.svg';
 import editIcon from './assets/edit.svg';
@@ -96,4 +98,6 @@ export const assets = {
   passkeyHybridIcon,
   passkeyHybridDarkIcon,
   lockIcon,
+  copyIcon,
+  changeIcon,
 };

@@ -30,7 +30,7 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
     >
       <ModalProvider>
         {!isWebJs && <CorbadoConnectModal />}
-        <div className={enableHighlight ? 'cb-highlight' : undefined}>{children}</div>
+        <div className={`light ${enableHighlight ? 'cb-highlight' : ''}`}>{children}</div>
       </ModalProvider>
     </SharedProvider>
   );

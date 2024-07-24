@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-import useAppendProcess from '../../hooks/useAppendProcess';
-import { AppendScreenType } from '../../types/screenTypes';
 import { SecondaryButton } from '../shared/SecondaryButton';
 
-const AppendBenefitsScreen = () => {
-  const { navigateToScreen } = useAppendProcess();
+interface Props {
+  onClick: () => void;
+}
+
+const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
   return (
     <div className='cb-append-benefits-container'>
       <div className='cb-h2'>What is a Passkey?</div>
@@ -34,7 +35,7 @@ const AppendBenefitsScreen = () => {
         To activate your passkey, you will have to log in again with email address and password and activate your
         passkey
       </div>
-      <SecondaryButton onClick={() => void navigateToScreen(AppendScreenType.Init)}>Back</SecondaryButton>
+      <SecondaryButton onClick={onClick}>Back</SecondaryButton>
     </div>
   );
 };

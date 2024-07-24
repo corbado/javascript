@@ -15,6 +15,7 @@ import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import AppendBenefitsScreen from './AppendBenetifsScreen';
 
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -24,6 +25,7 @@ const AppendInitScreen = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const { startLoading, loading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [appendPending, setAppendPending] = useState(false);
+  const [showBenefits, setShowBenefits] = useState(false);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
@@ -115,6 +117,10 @@ const AppendInitScreen = () => {
     return <div></div>;
   }
 
+  if (showBenefits) {
+    return <AppendBenefitsScreen onClick={() => setShowBenefits(false)} />;
+  }
+
   return (
     <>
       <div className='cb-append-header'>
@@ -162,7 +168,7 @@ const AppendInitScreen = () => {
       </div>
       <div className='cb-connect-append-cta'>
         <Button
-          onClick={() => void navigateToScreen(AppendScreenType.Benefits)}
+          onClick={() => setShowBenefits(true)}
           className='cb-outline-button'
         >
           Learn more

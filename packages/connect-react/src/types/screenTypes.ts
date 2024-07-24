@@ -1,7 +1,6 @@
 export enum AppendScreenType {
   Init = 'AppendInit',
   Success = 'AppendSuccess',
-  Benefits = 'AppendBenefits',
 }
 
 export enum LoginScreenType {

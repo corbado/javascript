@@ -62,7 +62,7 @@ export const LoginPasskeyReLoginScreen = () => {
 
   const beginNewLogin = useCallback(() => {
     getConnectService().clearLastLogin();
-    navigateToScreen(LoginScreenType.Init);
+    navigateToScreen(LoginScreenType.Init, { showFallback: true });
   }, [navigateToScreen, getConnectService]);
 
   return (

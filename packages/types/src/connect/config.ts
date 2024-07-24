@@ -35,4 +35,5 @@ export type CorbadoConnectConfig = {
   flags?: Record<string, string>;
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;
+  enableHighlight?: boolean;
 };

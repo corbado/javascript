@@ -1,8 +1,8 @@
 import type { LoginInitBlock } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
+import log from 'loglevel';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import log from 'loglevel';
 
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';

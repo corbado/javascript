@@ -14,11 +14,13 @@ type Props = {
 
 export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, initialScreenType, config }) => {
   const [currentScreenType, setCurrentScreenType] = useState<LoginScreenType>(initialScreenType);
+  const [currentScreenOptions, setCurrentScreenOptions] = useState<any>();
   const [currentIdentifier, setCurrentIdentifier] = useState<string>('');
   const [flags, setFlags] = useState<Flags | undefined>(undefined);
 
-  const navigateToScreen = useCallback((screenType: LoginScreenType) => {
+  const navigateToScreen = useCallback((screenType: LoginScreenType, options?: any) => {
     setCurrentScreenType(screenType);
+    setCurrentScreenOptions(options);
   }, []);
 
   const contextValue = useMemo<LoginProcessContextProps>(
@@ -30,8 +32,9 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
       currentIdentifier,
       flags,
       setFlags,
+      currentScreenOptions,
     }),
-    [currentScreenType, navigateToScreen, config, currentIdentifier],
+    [currentScreenType, navigateToScreen, config, currentIdentifier, currentScreenOptions],
   );
 
   return <LoginProcessContext.Provider value={contextValue}>{children}</LoginProcessContext.Provider>;

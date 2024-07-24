@@ -1,5 +1,6 @@
 import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoading from '../../hooks/useLoading';
@@ -13,12 +14,16 @@ import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
-const LoginInitScreen = () => {
+interface Props {
+  showFallback?: boolean;
+}
+
+const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [error, setError] = useState('');
-  const { loading, startLoading, finishLoading } = useLoading();
+  const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
 
@@ -41,7 +46,7 @@ const LoginInitScreen = () => {
       }
       setFlags(flags);
 
-      if (!res.val.loginAllowed) {
+      if (!res.val.loginAllowed || showFallback) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
 
@@ -146,11 +151,15 @@ const LoginInitScreen = () => {
   }, [getConnectService, config]);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && isInitialLoadingStarted) {
       // config.onLoaded should trigger when the form renders else it will cause issues with input detection.
       config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
     }
-  }, [loading, config, isFallbackInitiallyTriggered]);
+  }, [loading, isFallbackInitiallyTriggered, isInitialLoadingStarted]);
+
+  if (!isInitialLoadingStarted) {
+    return <></>;
+  }
 
   return (
     <div>

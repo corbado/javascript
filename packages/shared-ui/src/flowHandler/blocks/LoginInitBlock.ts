@@ -1,14 +1,13 @@
 import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
 import { AuthType, PasskeyChallengeCancelledError, SocialDataStatusEnum } from '@corbado/web-core';
 import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
+import log from 'loglevel';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 import type { BlockDataLoginInit } from '../types';
 import { Block } from './Block';
-
-import log from 'loglevel';
 
 export class LoginInitBlock extends Block<BlockDataLoginInit> {
   readonly data: BlockDataLoginInit;

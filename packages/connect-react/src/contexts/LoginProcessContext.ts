@@ -10,8 +10,9 @@ const missingImplementation = (): never => {
 
 export interface LoginProcessContextProps {
   currentScreenType: LoginScreenType;
+  currentScreenOptions: any;
   config: CorbadoConnectLoginConfig;
-  navigateToScreen: (s: LoginScreenType) => void;
+  navigateToScreen: (s: LoginScreenType, options?: any) => void;
   setCurrentIdentifier: (s: string) => void;
   currentIdentifier: string;
   flags: Flags | undefined;
@@ -24,6 +25,7 @@ export const initialContext: LoginProcessContextProps = {
   navigateToScreen: missingImplementation,
   setCurrentIdentifier: missingImplementation,
   currentIdentifier: '',
+  currentScreenOptions: undefined,
   flags: undefined,
   setFlags: missingImplementation,
 };

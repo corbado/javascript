@@ -216,11 +216,6 @@
   align-items: center;
 }
 
-.cb-width-full {
-  width: 100%;
-  max-width: none;
-}
-
 .cb-passkey-list-modal-exit-icon {
   width: 18px;
   height: 18px;

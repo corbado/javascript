@@ -11,14 +11,14 @@ import LoginSuccess from './login/LoginSuccess';
 import { LoadingSpinner } from './shared/LoadingSpinner';
 
 const CorbadoConnectLoginContainer = () => {
-  const { currentScreenType } = useLoginProcess();
+  const { currentScreenType, currentScreenOptions } = useLoginProcess();
 
   const currentScreenComponent = useMemo(() => {
     switch (currentScreenType) {
       case LoginScreenType.Loading:
         return <LoadingSpinner />;
       case LoginScreenType.Init:
-        return <LoginInitScreen />;
+        return <LoginInitScreen {...currentScreenOptions} />;
       case LoginScreenType.Success:
         return <LoginSuccess />;
       case LoginScreenType.Benefits:

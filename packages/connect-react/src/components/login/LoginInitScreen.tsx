@@ -1,6 +1,6 @@
 import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import type { FC} from 'react';
+import type { FC } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useLoading from '../../hooks/useLoading';

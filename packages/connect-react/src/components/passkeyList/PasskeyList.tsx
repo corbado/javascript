@@ -35,7 +35,7 @@ const PasskeyList: FC<PasskeyListProps> = ({
             <LoadingSpinner className='cb-passkey-list-loader' />
           </div>
         ) : passkeys.length ? (
-          [...passkeys, ...passkeys].map(passkey => (
+          passkeys.map(passkey => (
             <PasskeyListItem
               onDeleteClick={() => {
                 setSelectedPasskey(passkey);

@@ -25,6 +25,8 @@ const PasskeyList: FC<PasskeyListProps> = ({
   appendLoading,
   deleteLoading,
 }) => {
+  const [selectedPasskey, setSelectedPasskey] = React.useState<Passkey | null>(null);
+
   return (
     <>
       <div className='cb-passkey-list-container'>
@@ -33,9 +35,10 @@ const PasskeyList: FC<PasskeyListProps> = ({
             <LoadingSpinner className='cb-passkey-list-loader' />
           </div>
         ) : passkeys.length ? (
-          passkeys.map(passkey => (
+          [...passkeys, ...passkeys].map(passkey => (
             <PasskeyListItem
               onDeleteClick={() => {
+                setSelectedPasskey(passkey);
                 onDeleteClick(passkey);
               }}
               name={'Passkey'}
@@ -47,7 +50,7 @@ const PasskeyList: FC<PasskeyListProps> = ({
               isSynced
               isHybrid
               key={passkey.id}
-              isDeleteLoading={deleteLoading}
+              isDeleteLoading={deleteLoading && selectedPasskey === passkey}
             />
           ))
         ) : (

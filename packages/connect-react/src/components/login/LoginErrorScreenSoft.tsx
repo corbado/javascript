@@ -17,6 +17,10 @@ const LoginErrorScreenSoft = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
 
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorSoft);

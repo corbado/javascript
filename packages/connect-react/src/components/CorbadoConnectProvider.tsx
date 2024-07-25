@@ -26,6 +26,8 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   const [connectContainerHeight, setConnectContainerHeight] = useState(0);
 
   useEffect(() => {
+    if (!enableHighlight) return;
+
     const targetElement = document.getElementsByClassName('cb-connect-container')[0];
 
     if (targetElement) {

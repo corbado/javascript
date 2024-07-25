@@ -17,7 +17,7 @@ const LoginErrorScreenHard = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(async () => {
-    if (loading) return;
+    if (loading) {return;}
 
     setLoading(true);
 

@@ -1,7 +1,7 @@
 import type { CorbadoConnectConfig, CustomThemes } from '@corbado/types';
 import type { ConnectService } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ModalProvider from '../contexts/ModalProvider';
 import SharedProvider from '../contexts/SharedProvider';
@@ -26,13 +26,15 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   const [connectContainerHeight, setConnectContainerHeight] = useState(0);
 
   useEffect(() => {
-    if (!enableHighlight) return;
+    if (!enableHighlight) {
+      return;
+    }
 
     const targetElement = document.getElementsByClassName('cb-connect-container')[0];
 
     if (targetElement) {
       const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
+        for (const entry of entries) {
           if (entry.target === targetElement) {
             setConnectContainerHeight(entry.contentRect.height);
           }
@@ -45,7 +47,7 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
       };
     }
 
-    return () => {};
+    return;
   }, []);
 
   return (

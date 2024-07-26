@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -128,6 +128,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     if (res.err) {
       setLoginPending(false);
       if (res.val.ignore) {
+        return;
+      }
+
+      if (res.val instanceof ConnectUserNotFound) {
+        setError('There is no account registered with this email.');
         return;
       }
 

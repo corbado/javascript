@@ -69,6 +69,24 @@ export class CorbadoError extends Error {
     return NonRecoverableError.unhandledBackendError(errorResp.type);
   }
 
+  static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
+    log.debug('axios error', error);
+
+    if (!error.response || !error.response.data) {
+      return NonRecoverableError.unhandledBackendError('no_data_in_response');
+    }
+
+    if (error.response.status === 404) {
+      return new ConnectUserNotFound();
+    }
+
+    const errorRespRaw = error.response.data as ErrorRsp;
+    log.debug('errorRespRaw', errorRespRaw.error.type);
+    const errorResp = errorRespRaw.error;
+
+    return NonRecoverableError.unhandledBackendError(errorResp.type);
+  }
+
   static fromDOMException(e: DOMException): CorbadoError {
     log.debug('e', e.name, e.message);
     switch (e.name) {
@@ -260,5 +278,12 @@ export class UnknownError extends RecoverableError {
 export class ProcessNotFound extends RecoverableError {
   constructor() {
     super('processNotFound');
+  }
+}
+
+// connect only
+export class ConnectUserNotFound extends RecoverableError {
+  constructor() {
+    super('User not found');
   }
 }

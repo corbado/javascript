@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 
 import useLoginProcess from '../hooks/useLoginProcess';
 import { LoginScreenType } from '../types/screenTypes';
-import LoginBenefitsScreen from './login/LoginBenetifsScreen';
 import LoginErrorScreenHard from './login/LoginErrorScreenHard';
 import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';
 import LoginInitScreen from './login/LoginInitScreen';
@@ -21,8 +20,6 @@ const CorbadoConnectLoginContainer = () => {
         return <LoginInitScreen {...currentScreenOptions} />;
       case LoginScreenType.Success:
         return <LoginSuccess />;
-      case LoginScreenType.Benefits:
-        return <LoginBenefitsScreen />;
       case LoginScreenType.ErrorSoft:
         return <LoginErrorScreenSoft />;
       case LoginScreenType.ErrorHard:

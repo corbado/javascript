@@ -13,7 +13,7 @@ const AppendSuccessScreen = () => {
         <PasskeyAppendedIcon />
       </div>
       <div className='cb-p'>You can now use your fingerprint, face or PIN to log in.</div>
-      <PrimaryButton onClick={() => void config.onComplete('')}>Continue</PrimaryButton>
+      <PrimaryButton onClick={() => void config.onComplete()}>Continue</PrimaryButton>
     </div>
   );
 };

@@ -44,14 +44,6 @@ const LoginErrorScreenHard = () => {
 
     setLoading(false);
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-
-      return;
-    }
-
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
@@ -69,9 +61,9 @@ const LoginErrorScreenHard = () => {
       </div>
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
 
-      {config.onHelpRequest && (
+      {config.onSignupClick && (
         <LinkButton
-          onClick={() => config.onHelpRequest!()}
+          onClick={() => config.onSignupClick!()}
           className='cb-login-error-hard-help'
         >
           Need help ?

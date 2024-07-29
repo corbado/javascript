@@ -20,7 +20,6 @@ import AppendBenefitsScreen from './AppendBenetifsScreen';
 const AppendInitScreen = () => {
   const { config, navigateToScreen } = useAppendProcess();
   const { getConnectService } = useShared();
-  const [appendAllowed, setAppendAllowed] = useState(false);
   const [attestationOptions, setAttestationOptions] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
   const { startLoading, loading, finishLoading, isInitialLoadingStarted } = useLoading();
@@ -36,7 +35,6 @@ const AppendInitScreen = () => {
           return;
         }
 
-        setAppendAllowed(false);
         config.onSkip();
 
         config.onError?.('PasskeyNotSupported');
@@ -45,7 +43,6 @@ const AppendInitScreen = () => {
 
       config.onLoaded('loaded successfully');
       if (!res.val.appendAllowed) {
-        setAppendAllowed(false);
         config.onSkip();
 
         config.onError?.('PasskeyNotSupported');
@@ -64,7 +61,6 @@ const AppendInitScreen = () => {
           config.onError?.('PasskeyChallengeAborted');
         }
 
-        setAppendAllowed(false);
         config.onSkip();
 
         return;
@@ -72,14 +68,12 @@ const AppendInitScreen = () => {
 
       if (startAppendRes.val.attestationOptions === '') {
         config.onError?.('PasskeyAlreadyExistsOnDevice');
-        setAppendAllowed(false);
         config.onSkip();
 
         return;
       }
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
-      setAppendAllowed(true);
       finishLoading();
     };
 
@@ -113,12 +107,21 @@ const AppendInitScreen = () => {
   }, [attestationOptions, config, getConnectService]);
 
   // when passkey based login is not allowed, our component just returns an empty div
-  if (!appendAllowed || !isInitialLoadingStarted) {
-    return <div></div>;
-  }
 
   if (showBenefits) {
     return <AppendBenefitsScreen onClick={() => setShowBenefits(false)} />;
+  }
+
+  if (!isInitialLoadingStarted) {
+    return <></>;
+  }
+
+  if (loading) {
+    return (
+      <div className='cb-passkey-list-loader-container'>
+        <LoadingSpinner className='cb-passkey-list-loader' />
+      </div>
+    );
   }
 
   return (
@@ -142,29 +145,21 @@ const AppendInitScreen = () => {
         />
       ) : null}
       <div className='cb-append-info-list'>
-        {appendPending || loading ? (
-          <div className='cb-passkey-list-loader-container'>
-            <LoadingSpinner className='cb-passkey-list-loader' />
-          </div>
-        ) : (
-          <>
-            <PasskeyInfoListItem
-              title='No more forgotten passwords'
-              description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
-              icon={<FingerprintIcon platform='default' />}
-            />
-            <PasskeyInfoListItem
-              title='Next-generation security'
-              description='Forget the fear of stolen passwords'
-              icon={<SuccessIcon />}
-            />
-            <PasskeyInfoListItem
-              title='Syncs across your devices'
-              description='Faster sign-in from your password manager'
-              icon={<PasskeyIcon />}
-            />
-          </>
-        )}
+        <PasskeyInfoListItem
+          title='No more forgotten passwords'
+          description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
+          icon={<FingerprintIcon platform='default' />}
+        />
+        <PasskeyInfoListItem
+          title='Next-generation security'
+          description='Forget the fear of stolen passwords'
+          icon={<SuccessIcon />}
+        />
+        <PasskeyInfoListItem
+          title='Syncs across your devices'
+          description='Faster sign-in from your password manager'
+          icon={<PasskeyIcon />}
+        />
       </div>
       <div className='cb-connect-append-cta'>
         <Button

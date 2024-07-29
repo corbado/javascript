@@ -1,6 +1,6 @@
 import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
@@ -14,10 +14,18 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
   const { getConnectService } = useShared();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorHard);
     if (res.err) {
+      setLoading(false);
       if (res.val.ignore) {
         return;
       }
@@ -33,6 +41,8 @@ const LoginErrorScreenHard = () => {
 
       return;
     }
+
+    setLoading(false);
 
     if (config.successTimeout) {
       navigateToScreen(LoginScreenType.Success);
@@ -75,7 +85,12 @@ const LoginErrorScreenHard = () => {
         >
           Skip passkey login
         </Button>
-        <PrimaryButton onClick={() => void handleSubmit()}>Try again</PrimaryButton>
+        <PrimaryButton
+          onClick={() => void handleSubmit()}
+          isLoading={loading}
+        >
+          Try again
+        </PrimaryButton>
       </div>
     </>
   );

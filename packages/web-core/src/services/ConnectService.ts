@@ -85,7 +85,7 @@ export class ConnectService {
       response => response,
       (error: AxiosError) => {
         log.error('axios error', error);
-        const e = CorbadoError.fromAxiosError(error);
+        const e = CorbadoError.fromConnectAxiosError(error);
         return Promise.reject(e);
       },
     );

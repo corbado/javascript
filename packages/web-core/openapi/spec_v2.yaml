@@ -219,6 +219,38 @@ paths:
         '200':
           $ref: '#/components/responses/200'
 
+  /v2/me/identifier/verify/start:
+    post:
+      description: Creates challenge (only email otp and phone otp supported for now)
+      operationId: CurrentUserIdentifierVerifyStart
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierVerifyStartReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+
+  /v2/me/identifier/verify/finish:
+    post:
+      description: Verifies challenge
+      operationId: CurrentUserIdentifierVerifyFinish
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meIdentifierVerifyFinishReq'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+
   /v2/auth/process/init:
     post:
       description: tbd
@@ -644,6 +676,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectLoginStartRsp'
+        '404':
+          description: No user was found for the identifier
 
   /v2/connect/login/finish:
     post:
@@ -923,14 +957,11 @@ components:
       required:
         - identifierType
         - value
-        - status
       properties:
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
         value:
           type: string
-        status:
-          $ref: '#/components/schemas/loginIdentifierStatus'
 
     meIdentifierDeleteReq:
       type: object
@@ -946,7 +977,6 @@ components:
         - identifierID
         - identifierType
         - value
-        - status
       properties:
         identifierID:
           type: string
@@ -954,8 +984,29 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         value:
           type: string
-        status:
-          $ref: '#/components/schemas/loginIdentifierStatus'
+
+    meIdentifierVerifyStartReq:
+      type: object
+      description: tbd.
+      required:
+        - identifierID
+        - clientInformation
+      properties:
+        identifierID:
+          type: string
+        clientInformation:
+          $ref: '#/components/schemas/clientInformation'
+
+    meIdentifierVerifyFinishReq:
+      type: object
+      required:
+        - identifierID
+        - code
+      properties:
+        identifierID:
+          type: string
+        code:
+          type: string
 
     #    passkeyAppendFinishRsp:
     #      $ref: '#/components/schemas/blockBody'
@@ -1504,10 +1555,6 @@ components:
       type: string
       enum: [ email, phone, username ]
 
-    loginIdentifierStatus:
-      type: string
-      enum: [ pending, primary, verified ]
-
     blockType:
       type: string
       enum: [ signup-init, passkey-append, phone-verify, email-verify, passkey-appended, completed, social-verify, username-collect, phone-collect, login-init, passkey-verify, conditional-ui-completed, post-signup-email-verify, passkey-append-after-hybrid ]
@@ -1795,10 +1842,13 @@ components:
     identifier:
       type: object
       required:
+        - id
         - value
         - type
         - status
       properties:
+        id:
+          type: string
         value:
           type: string
         type:

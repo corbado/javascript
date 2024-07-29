@@ -1102,6 +1102,12 @@ export interface Identifier {
      * @type {string}
      * @memberof Identifier
      */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Identifier
+     */
     'value': string;
     /**
      * 
@@ -1245,21 +1251,6 @@ export interface LoginIdentifier {
  * @enum {string}
  */
 
-export const LoginIdentifierStatus = {
-    Pending: 'pending',
-    Primary: 'primary',
-    Verified: 'verified'
-} as const;
-
-export type LoginIdentifierStatus = typeof LoginIdentifierStatus[keyof typeof LoginIdentifierStatus];
-
-
-/**
- * 
- * @export
- * @enum {string}
- */
-
 export const LoginIdentifierType = {
     Email: 'email',
     Phone: 'phone',
@@ -1333,12 +1324,6 @@ export interface MeIdentifierCreateReq {
      * @memberof MeIdentifierCreateReq
      */
     'value': string;
-    /**
-     * 
-     * @type {LoginIdentifierStatus}
-     * @memberof MeIdentifierCreateReq
-     */
-    'status': LoginIdentifierStatus;
 }
 
 
@@ -1379,15 +1364,47 @@ export interface MeIdentifierUpdateReq {
      * @memberof MeIdentifierUpdateReq
      */
     'value': string;
-    /**
-     * 
-     * @type {LoginIdentifierStatus}
-     * @memberof MeIdentifierUpdateReq
-     */
-    'status': LoginIdentifierStatus;
 }
 
 
+/**
+ * 
+ * @export
+ * @interface MeIdentifierVerifyFinishReq
+ */
+export interface MeIdentifierVerifyFinishReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeIdentifierVerifyFinishReq
+     */
+    'identifierID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeIdentifierVerifyFinishReq
+     */
+    'code': string;
+}
+/**
+ * tbd.
+ * @export
+ * @interface MeIdentifierVerifyStartReq
+ */
+export interface MeIdentifierVerifyStartReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof MeIdentifierVerifyStartReq
+     */
+    'identifierID': string;
+    /**
+     * 
+     * @type {ClientInformation}
+     * @memberof MeIdentifierVerifyStartReq
+     */
+    'clientInformation': ClientInformation;
+}
 /**
  * 
  * @export
@@ -4669,6 +4686,90 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * Verifies challenge
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserIdentifierVerifyFinish: async (meIdentifierVerifyFinishReq: MeIdentifierVerifyFinishReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'meIdentifierVerifyFinishReq' is not null or undefined
+            assertParamExists('currentUserIdentifierVerifyFinish', 'meIdentifierVerifyFinishReq', meIdentifierVerifyFinishReq)
+            const localVarPath = `/v2/me/identifier/verify/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(meIdentifierVerifyFinishReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Creates challenge (only email otp and phone otp supported for now)
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserIdentifierVerifyStart: async (meIdentifierVerifyStartReq: MeIdentifierVerifyStartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'meIdentifierVerifyStartReq' is not null or undefined
+            assertParamExists('currentUserIdentifierVerifyStart', 'meIdentifierVerifyStartReq', meIdentifierVerifyStartReq)
+            const localVarPath = `/v2/me/identifier/verify/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(meIdentifierVerifyStartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Finishes passkey append for current user
          * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
@@ -5001,6 +5102,26 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Verifies challenge
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq: MeIdentifierVerifyFinishReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Creates challenge (only email otp and phone otp supported for now)
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq: MeIdentifierVerifyStartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Finishes passkey append for current user
          * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
@@ -5119,6 +5240,24 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          */
         currentUserIdentifierUpdate(meIdentifierUpdateReq: MeIdentifierUpdateReq, options?: any): AxiosPromise<GenericRsp> {
             return localVarFp.currentUserIdentifierUpdate(meIdentifierUpdateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Verifies challenge
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq: MeIdentifierVerifyFinishReq, options?: any): AxiosPromise<GenericRsp> {
+            return localVarFp.currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Creates challenge (only email otp and phone otp supported for now)
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq: MeIdentifierVerifyStartReq, options?: any): AxiosPromise<GenericRsp> {
+            return localVarFp.currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq, options).then((request) => request(axios, basePath));
         },
         /**
          * Finishes passkey append for current user
@@ -5241,6 +5380,28 @@ export class UsersApi extends BaseAPI {
      */
     public currentUserIdentifierUpdate(meIdentifierUpdateReq: MeIdentifierUpdateReq, options?: AxiosRequestConfig) {
         return UsersApiFp(this.configuration).currentUserIdentifierUpdate(meIdentifierUpdateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Verifies challenge
+     * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq: MeIdentifierVerifyFinishReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates challenge (only email otp and phone otp supported for now)
+     * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq: MeIdentifierVerifyStartReq, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

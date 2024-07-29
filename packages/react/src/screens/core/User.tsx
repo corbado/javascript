@@ -1,4 +1,4 @@
-import type { CorbadoUser, Identifier, SocialAccount } from '@corbado/types';
+import { LoginIdentifierType, type CorbadoUser, type Identifier, type SocialAccount } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,10 +17,16 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, updateUsername } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [editingName, setEditingName] = useState<boolean>(false);
+  const [editingUsername, setEditingUsername] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  
+  let usernameIdentifierID = "";
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -62,7 +68,7 @@ export const User: FC = () => {
   }, [currentUser]);
 
   const getCurrentUser = useCallback(
-    async (abortController: AbortController) => {
+    async (abortController?: AbortController) => {
       setLoading(true);
       const result = await getFullUser(abortController);
       if (result.err && result.val.ignore) {
@@ -74,25 +80,21 @@ export const User: FC = () => {
       }
 
       setCurrentUser(result.val);
+      setName(result.val.fullName || "");
+      let usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
+      setUsername(usernameIdentifier?.value || "");
+      usernameIdentifierID = usernameIdentifier?.id || "";
       setLoading(false);
     },
     [corbadoApp],
   );
 
   const copyName = async () => {
-    await navigator.clipboard.writeText(processUser.name);
-  };
-
-  const changeName = () => {
-    return;
+    await navigator.clipboard.writeText(name);
   };
 
   const copyUsername = async () => {
     await navigator.clipboard.writeText(processUser.username || '');
-  };
-
-  const changeUsername = () => {
-    return;
   };
 
   if (!isAuthenticated) {
@@ -105,17 +107,18 @@ export const User: FC = () => {
 
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
-      <div className='cb-passkey-list-container'>
+      <div className='cb-user-details-container'>
         <Text className='cb-user-details-title'>{t('title')}</Text>
-        {processUser.name && (
+        {name !== "" && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{nameFieldLabel}</Text>
             <div className='cb-user-details-body'>
               <div className='cb-user-details-body-row'>
                 <InputField
-                  key={`user-entry-${processUser.name}`}
-                  value={processUser.name}
-                  disabled
+                  // key={`user-entry-${processUser.name}`}
+                  value={name}
+                  disabled={!editingName}
+                  onChange={e => setName(e.target.value)}
                 />
                 <CopyIcon
                   className='cb-user-details-body-row-icon'
@@ -123,24 +126,40 @@ export const User: FC = () => {
                   onClick={() => void copyName()}
                 />
               </div>
-              <Button
-                  className='cb-user-details-body-button'
-                  onClick={() => void changeName()}>
-                <ChangeIcon className='cb-user-details-body-button-icon' />
-                <Text className='cb-user-details-subheader'>Change</Text>
-              </Button>
+              {editingName ? (
+                <div>
+                  <Button
+                      className='cb-user-details-body-button-primary'
+                      onClick={async () => {console.log(await updateName(name)); setEditingName(false); void getCurrentUser()}}>
+                    <Text className='cb-user-details-subheader'>Save</Text>
+                  </Button>
+                  <Button
+                      className='cb-user-details-body-button-secondary'
+                      onClick={() => {setName(processUser.name); setEditingName(false)}}>
+                    <Text className='cb-user-details-subheader'>Cancel</Text>
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                    className='cb-user-details-body-button'
+                    onClick={() => setEditingName(true)}>
+                  <ChangeIcon className='cb-user-details-body-button-icon' />
+                  <Text className='cb-user-details-subheader'>Change</Text>
+                </Button>
+              )}
             </div>
           </div>
         )}
-        {processUser.username && (
+        {username !== "" && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
             <div className='cb-user-details-body'>
               <div className='cb-user-details-body-row'>
                 <InputField
-                  key={`user-entry-${processUser.username}`}
+                  // key={`user-entry-${processUser.username}`}
                   value={processUser.username}
-                  disabled
+                  disabled={!editingUsername}
+                  onChange={e => setName(e.target.value)}
                 />
                 <CopyIcon
                   className='cb-user-details-body-row-icon'
@@ -148,12 +167,27 @@ export const User: FC = () => {
                   onClick={() => void copyUsername()}
                 />
               </div>
-              <Button
-                  className='cb-user-details-body-button'
-                  onClick={changeUsername}>
-                <ChangeIcon className='cb-user-details-body-button-icon' />
-                <Text className='cb-user-details-subheader'>Change</Text>
-              </Button>
+              {editingUsername ? (
+                <div>
+                  <Button
+                      className='cb-user-details-body-button-primary'
+                      onClick={async () => {console.log(await updateUsername(usernameIdentifierID, username)); setEditingUsername(false); void getCurrentUser()}}>
+                    <Text className='cb-user-details-subheader'>Save</Text>
+                  </Button>
+                  <Button
+                      className='cb-user-details-body-button-secondary'
+                      onClick={() => {setName(processUser.name); setEditingUsername(false)}}>
+                    <Text className='cb-user-details-subheader'>Cancel</Text>
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                    className='cb-user-details-body-button'
+                    onClick={() => setEditingUsername(true)}>
+                  <ChangeIcon className='cb-user-details-body-button-icon' />
+                  <Text className='cb-user-details-subheader'>Change</Text>
+                </Button>
+              )}
             </div>
           </div>
         )}

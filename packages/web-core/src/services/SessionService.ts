@@ -15,7 +15,7 @@ import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
-import { ConfigsApi, UsersApi } from '../api/v2';
+import { ConfigsApi, LoginIdentifierType, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import {
   AuthState,
@@ -155,6 +155,24 @@ export class SessionService {
 
   public async getFullUser(abortController: AbortController): Promise<Result<CorbadoUser, CorbadoError>> {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
+  }
+
+  async updateName(fullName: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserUpdate({ fullName });
+      return void 0;
+    });
+  }
+
+  async updateUsername(identifierID: string, username: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierUpdate({
+        identifierID,
+        identifierType: LoginIdentifierType.Email,
+        value: username,
+      });
+      return void 0;
+    })
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {

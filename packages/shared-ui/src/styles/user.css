@@ -1,3 +1,10 @@
+.cb-user-details-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1.25rem 0rem;
+  text-align: left;
+}
+
 .cb-user-details-section {
   display: flex;
   flex-direction: column;
@@ -46,7 +53,7 @@
 }
 
 .cb-user-details-subheader {
-  font-size: calc(var(--cb-base-font-size) * 1.4);
+  font-size: calc(var(--cb-base-font-size) * 1.5);
   font-family: var(--cb-primary-font);
   font-weight: bold;
 }
@@ -72,6 +79,8 @@
 }
 
 .cb-user-details-body-button {
+  display: flex;
+  align-items: center;
   padding: 0.4rem 2rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
@@ -82,7 +91,31 @@
 }
 
 .cb-user-details-body-button-icon {
-  height: 1rem;
+  height: 1em;
+  width: auto;
+  margin-right: 8px;
+}
+
+.cb-user-details-body-button-primary {
+  padding: 0.4rem 2rem;
+  color: var(--cb-color-on-primary);
+  background-color: var(--cb-color-primary);
+  border: 1px solid transparent;
+  border-radius: var(--cb-border-radius);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
+}
+
+.cb-user-details-body-button-secondary {
+  padding: 0.4rem 2rem;
+  color: var(--cb-color-on-secondary);
+  background-color: var(--cb-color-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--cb-border-radius);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-font-family-primary);
 }
 
 .cb-user-details-section-indentifier {

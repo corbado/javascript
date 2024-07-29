@@ -86,6 +86,20 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const updateName = useCallback(
+    (fullName: string) => {
+      return corbadoApp.sessionService.updateName(fullName);
+    },
+    [corbadoApp],
+  );
+
+  const updateUsername = useCallback(
+    (identifierID: string, username: string) => {
+      return corbadoApp.sessionService.updateUsername(identifierID, username);
+    },
+    [corbadoApp],
+  );
+
   return (
     <CorbadoSessionContext.Provider
       value={{
@@ -96,6 +110,8 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         isAuthenticated,
         appendPasskey,
         getFullUser,
+        updateName,
+        updateUsername,
         getPasskeys,
         deletePasskey,
         logout,

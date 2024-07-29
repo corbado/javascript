@@ -106,6 +106,14 @@ export class Corbado {
     return this.#getCorbadoAppState().corbadoApp.sessionService.getFullUser(abortController ?? new AbortController());
   }
 
+  updateName(fullName: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateName(fullName);
+  }
+
+  updateUsername(identifierID: string, username: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateUsername(identifierID, username);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   #mountComponent = <T extends Record<string, any>>(element: HTMLElement, Component: FC<T>, componentOptions: T) => {
     if (!this.#corbadoAppState) {

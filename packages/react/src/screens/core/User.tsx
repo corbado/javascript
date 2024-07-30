@@ -1,4 +1,4 @@
-import { LoginIdentifierType, type CorbadoUser, type Identifier, type SocialAccount } from '@corbado/types';
+import { type CorbadoUser, type Identifier, LoginIdentifierType, type SocialAccount } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -81,9 +81,9 @@ export const User: FC = () => {
 
       setCurrentUser(result.val);
       setName(result.val.fullName || "");
-      let usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
+      const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
       setUsername(usernameIdentifier?.value || "");
-      usernameIdentifierID = usernameIdentifier?.id || "";
+      usernameIdentifierID = /*usernameIdentifier?.id ||*/ "";
       setLoading(false);
     },
     [corbadoApp],
@@ -93,9 +93,21 @@ export const User: FC = () => {
     await navigator.clipboard.writeText(name);
   };
 
+  const changeName = async () => {
+    await updateName(name);
+    setEditingName(false);
+    void getCurrentUser();
+  };
+
   const copyUsername = async () => {
     await navigator.clipboard.writeText(processUser.username || '');
   };
+
+  const changeUsername = async () => {
+    await updateUsername(usernameIdentifierID, username);
+    setEditingUsername(false);
+    void getCurrentUser();
+  }
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
@@ -130,7 +142,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={async () => {console.log(await updateName(name)); setEditingName(false); void getCurrentUser()}}>
+                      onClick={void changeName()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -171,7 +183,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={async () => {console.log(await updateUsername(usernameIdentifierID, username)); setEditingUsername(false); void getCurrentUser()}}>
+                      onClick={void changeUsername()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button

@@ -168,7 +168,7 @@ export class SessionService {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserIdentifierUpdate({
         identifierID,
-        identifierType: LoginIdentifierType.Email,
+        identifierType: LoginIdentifierType.Username,
         value: username,
       });
       return void 0;

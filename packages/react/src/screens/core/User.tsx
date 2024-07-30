@@ -7,26 +7,26 @@ import { Button, InputField, LoadingSpinner, PasskeyListErrorBoundary, PhoneInpu
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
 import { useCorbado } from '../../hooks/useCorbado';
+import { LoginIdentifierType } from '@corbado/shared-ui';
 
 interface ProcessedUser {
   name: string;
-  username?: string;
+  username: string;
   emails: Identifier[];
   phoneNumbers: Identifier[];
   socialAccounts: SocialAccount[];
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, /*updateUsername*/ } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, updateUsername } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const [editingName, setEditingName] = useState<boolean>(false);
-  // const [editingUsername, setEditingUsername] = useState<boolean>(false);
+  const [editingUsername, setEditingUsername] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  // const [username, setUsername] = useState<string>("");
-  
-  // let usernameIdentifierID = "";
+  const [username, setUsername] = useState<string>("");
+  const [usernameIdentifierID, setUsernameIdentifierID] = useState<string>("");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,7 +42,7 @@ export const User: FC = () => {
   }, [isAuthenticated]);
 
   const nameFieldLabel = useMemo(() => t('name'), [t]);
-  // const usernameFieldLabel = useMemo(() => t('username'), [t]);
+  const usernameFieldLabel = useMemo(() => t('username'), [t]);
   const emailFieldLabel = useMemo(() => t('email'), [t]);
   const phoneFieldLabel = useMemo(() => t('phone'), [t]);
   const socialFieldLabel = useMemo(() => t('social'), [t]);
@@ -52,6 +52,7 @@ export const User: FC = () => {
     if (!currentUser) {
       return {
         name: '',
+        username: '',
         emails: [],
         phoneNumbers: [],
         socialAccounts: [],
@@ -60,7 +61,7 @@ export const User: FC = () => {
 
     return {
       name: currentUser.fullName,
-      username: currentUser.identifiers.find(id => id.type === 'username')?.value,
+      username: currentUser.identifiers.find(id => id.type === 'username')?.value || '',
       emails: currentUser.identifiers.filter(id => id.type === 'email'),
       phoneNumbers: currentUser.identifiers.filter(id => id.type === 'phone'),
       socialAccounts: currentUser.socialAccounts,
@@ -81,9 +82,9 @@ export const User: FC = () => {
 
       setCurrentUser(result.val);
       setName(result.val.fullName || "");
-      // const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
-      // setUsername(usernameIdentifier?.value || "");
-      // usernameIdentifierID = /*usernameIdentifier?.id ||*/ "";
+      const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
+      setUsername(usernameIdentifier?.value || "");
+      setUsernameIdentifierID(usernameIdentifier?.id || "");
       setLoading(false);
     },
     [corbadoApp],
@@ -99,15 +100,15 @@ export const User: FC = () => {
     void getCurrentUser();
   };
 
-  // const copyUsername = async () => {
-  //   await navigator.clipboard.writeText(processUser.username || '');
-  // };
+  const copyUsername = async () => {
+    await navigator.clipboard.writeText(username);
+  };
 
-  // const changeUsername = async () => {
-  //   await updateUsername(usernameIdentifierID, username);
-  //   setEditingUsername(false);
-  //   void getCurrentUser();
-  // }
+  const changeUsername = async () => {
+    await updateUsername(usernameIdentifierID, username);
+    setEditingUsername(false);
+    void getCurrentUser();
+  }
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
@@ -162,16 +163,16 @@ export const User: FC = () => {
             </div>
           </div>
         )}
-        {/* {username !== "" && (
+        {username !== "" && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
             <div className='cb-user-details-body'>
               <div className='cb-user-details-body-row'>
                 <InputField
                   // key={`user-entry-${processUser.username}`}
-                  value={processUser.username}
+                  value={username}
                   disabled={!editingUsername}
-                  onChange={e => setName(e.target.value)}
+                  onChange={e => setUsername(e.target.value)}
                 />
                 <CopyIcon
                   className='cb-user-details-body-row-icon'
@@ -188,7 +189,7 @@ export const User: FC = () => {
                   </Button>
                   <Button
                       className='cb-user-details-body-button-secondary'
-                      onClick={() => {setName(processUser.name); setEditingUsername(false)}}>
+                      onClick={() => {setUsername(processUser.username); setEditingUsername(false)}}>
                     <Text className='cb-user-details-subheader'>Cancel</Text>
                   </Button>
                 </div>
@@ -202,7 +203,7 @@ export const User: FC = () => {
               )}
             </div>
           </div>
-        )} */}
+        )}
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.emails.map((email, i) => (
             <div className='cb-user-details-card'>

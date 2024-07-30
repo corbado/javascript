@@ -43,13 +43,11 @@ export interface CorbadoUser {
 /**
  * Interface for Identifier.
  * @interface
- * @property {string} id - The ID of the identifier.
  * @property {string} value - The value of the identifier.
  * @property {LoginIdentifierType} type - The type of the identifier.
  * @property {string} status - The status of the identifier.
  */
 export interface Identifier {
-  id: string;
   value: string;
   type: LoginIdentifierType;
   status: string;

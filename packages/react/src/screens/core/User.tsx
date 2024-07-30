@@ -1,4 +1,4 @@
-import { type CorbadoUser, type Identifier, LoginIdentifierType, type SocialAccount } from '@corbado/types';
+import { type CorbadoUser, type Identifier, type SocialAccount } from '@corbado/types';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,16 +17,16 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, updateUsername } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, /*updateUsername*/ } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const [editingName, setEditingName] = useState<boolean>(false);
-  const [editingUsername, setEditingUsername] = useState<boolean>(false);
+  // const [editingUsername, setEditingUsername] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
+  // const [username, setUsername] = useState<string>("");
   
-  let usernameIdentifierID = "";
+  // let usernameIdentifierID = "";
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,7 +42,7 @@ export const User: FC = () => {
   }, [isAuthenticated]);
 
   const nameFieldLabel = useMemo(() => t('name'), [t]);
-  const usernameFieldLabel = useMemo(() => t('username'), [t]);
+  // const usernameFieldLabel = useMemo(() => t('username'), [t]);
   const emailFieldLabel = useMemo(() => t('email'), [t]);
   const phoneFieldLabel = useMemo(() => t('phone'), [t]);
   const socialFieldLabel = useMemo(() => t('social'), [t]);
@@ -81,9 +81,9 @@ export const User: FC = () => {
 
       setCurrentUser(result.val);
       setName(result.val.fullName || "");
-      const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
-      setUsername(usernameIdentifier?.value || "");
-      usernameIdentifierID = /*usernameIdentifier?.id ||*/ "";
+      // const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
+      // setUsername(usernameIdentifier?.value || "");
+      // usernameIdentifierID = /*usernameIdentifier?.id ||*/ "";
       setLoading(false);
     },
     [corbadoApp],
@@ -99,15 +99,15 @@ export const User: FC = () => {
     void getCurrentUser();
   };
 
-  const copyUsername = async () => {
-    await navigator.clipboard.writeText(processUser.username || '');
-  };
+  // const copyUsername = async () => {
+  //   await navigator.clipboard.writeText(processUser.username || '');
+  // };
 
-  const changeUsername = async () => {
-    await updateUsername(usernameIdentifierID, username);
-    setEditingUsername(false);
-    void getCurrentUser();
-  }
+  // const changeUsername = async () => {
+  //   await updateUsername(usernameIdentifierID, username);
+  //   setEditingUsername(false);
+  //   void getCurrentUser();
+  // }
 
   if (!isAuthenticated) {
     return <div>{t('warning_notLoggedIn')}</div>;
@@ -142,7 +142,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={void changeName()}>
+                      onClick={async () => await changeName()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -162,7 +162,7 @@ export const User: FC = () => {
             </div>
           </div>
         )}
-        {username !== "" && (
+        {/* {username !== "" && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
             <div className='cb-user-details-body'>
@@ -183,7 +183,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={void changeUsername()}>
+                      onClick={async () => await changeUsername()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -202,7 +202,7 @@ export const User: FC = () => {
               )}
             </div>
           </div>
-        )}
+        )} */}
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.emails.map((email, i) => (
             <div className='cb-user-details-card'>

@@ -14,7 +14,7 @@ export default function PasskeyListPage() {
       <div className='w-full my-4 mx-4'>
         <div className='mb-2 flex justify-between w-full'>
           <CorbadoConnectPasskeyList
-            corbadoTokenProvider={async tokenType =>
+            connectTokenProvider={async tokenType =>
               tokenType === 'passkey-append' ? await getAppendToken() : await getCorbadoToken(tokenType)
             }
           />

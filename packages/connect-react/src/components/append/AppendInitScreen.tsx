@@ -41,7 +41,6 @@ const AppendInitScreen = () => {
         return;
       }
 
-      config.onLoaded('loaded successfully');
       if (!res.val.appendAllowed) {
         config.onSkip();
 

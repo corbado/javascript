@@ -1,4 +1,4 @@
-import type { Passkey } from '@corbado/web-core/dist/api/v2';
+import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 

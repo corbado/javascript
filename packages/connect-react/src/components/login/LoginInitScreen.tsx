@@ -104,15 +104,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       return;
     }
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-      setLoginPending(false);
-
-      return;
-    }
-
     setLoginPending(false);
     config.onComplete(res.val.session);
   };
@@ -153,14 +144,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     setLoginPending(false);
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-
-      return;
-    }
-
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 
@@ -192,7 +175,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
           <InputField
             id='email'
             name='email'
-            label={config.showLabel ? 'Email address' : undefined}
+            label='Email address'
             type='email'
             autoComplete='username webauthn'
             autoFocus={true}

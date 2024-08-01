@@ -2,12 +2,12 @@ import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
+import { aaguidMappings } from '../../utils/aaguidMappings';
 import { Button } from '../shared/Button';
 import { PlusIcon } from '../shared/icons/PlusIcon';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyEmptyList from './PasskeyEmptyList';
-import { aaguidMappings } from '../../utils/aaguidMappings';
 
 interface PasskeyListProps {
   passkeys: Passkey[];

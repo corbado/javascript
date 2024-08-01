@@ -8,12 +8,12 @@ import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
+import { ConnectTokenType } from '../../types/tokens';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import PasskeyList from './PasskeyList';
-import { ConnectTokenType } from '../../types/tokens';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();

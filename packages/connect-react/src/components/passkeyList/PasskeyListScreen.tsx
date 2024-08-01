@@ -1,5 +1,5 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import type { Passkey } from '@corbado/web-core/dist/api/v2';
+import type { Passkey } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -8,7 +8,7 @@ import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
-import { CorbadoTokens } from '../../types/tokens';
+import { ConnectTokenType } from '../../types/tokens';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
@@ -72,7 +72,7 @@ const PasskeyListScreen = () => {
         return;
       }
 
-      const deleteToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyDelete);
+      const deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
 
       const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
 
@@ -93,7 +93,7 @@ const PasskeyListScreen = () => {
     }
 
     setAppendPending(true);
-    const appendToken = await config.corbadoTokenProvider(CorbadoTokens.PasskeyAppend);
+    const appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
 
     const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
 
@@ -121,7 +121,7 @@ const PasskeyListScreen = () => {
   }, [config, passkeyListToken, appendPending]);
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
-    await config.corbadoTokenProvider(CorbadoTokens.PasskeyList);
+    await config.connectTokenProvider(ConnectTokenType.PasskeyList);
 
   const getPasskeyList = async (config: CorbadoConnectPasskeyListConfig) => {
     let listTokenRes = passkeyListToken;

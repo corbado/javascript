@@ -1,7 +1,8 @@
-import type { Passkey } from '@corbado/web-core/dist/api/v2';
+import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
+import { aaguidMappings } from '../../utils/aaguidMappings';
 import { Button } from '../shared/Button';
 import { PlusIcon } from '../shared/icons/PlusIcon';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
@@ -41,14 +42,14 @@ const PasskeyList: FC<PasskeyListProps> = ({
                 setSelectedPasskey(passkey);
                 onDeleteClick(passkey);
               }}
-              name={'Passkey'}
+              name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
               createdAt={passkey.created}
               lastUsed={passkey.lastUsed}
               browser={passkey.sourceBrowser}
               os={passkey.sourceOS}
               isThisDevice={false}
-              isSynced
-              isHybrid
+              isSynced={passkey.backupState}
+              isHybrid={passkey.transport.includes('hybrid')}
               key={passkey.id}
               isDeleteLoading={deleteLoading && selectedPasskey === passkey}
             />

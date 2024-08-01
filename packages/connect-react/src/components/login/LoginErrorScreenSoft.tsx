@@ -44,14 +44,6 @@ const LoginErrorScreenSoft = () => {
 
     setLoading(false);
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-
-      return;
-    }
-
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
 

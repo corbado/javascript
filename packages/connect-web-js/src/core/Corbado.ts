@@ -19,6 +19,10 @@ export class Corbado {
     this.#corbadoState = new CorbadoState(options);
   }
 
+  clone() {
+    return new Corbado();
+  }
+
   mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
     this.#mountConnectComponent(element, CorbadoConnectLogin, options);
   }

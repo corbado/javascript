@@ -1,5 +1,4 @@
 import type { Passkey } from '@corbado/web-core/dist/api/v2';
-import { aaguidMappings } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React from 'react';
 
@@ -8,6 +7,7 @@ import { PlusIcon } from '../shared/icons/PlusIcon';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyEmptyList from './PasskeyEmptyList';
+import { aaguidMappings } from '../../utils/aaguidMappings';
 
 interface PasskeyListProps {
   passkeys: Passkey[];

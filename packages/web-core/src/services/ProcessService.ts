@@ -534,7 +534,7 @@ export class ProcessService {
 
   async loginWithPasskeyChallenge(
     challenge: string,
-    onLoginStart?: () => void,
+    onAuthenticatorCompleted?: () => void,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
 
@@ -542,7 +542,7 @@ export class ProcessService {
       return signedChallenge;
     }
 
-    onLoginStart?.();
+    onAuthenticatorCompleted?.();
 
     return await this.finishPasskeyMediation(signedChallenge.val);
   }

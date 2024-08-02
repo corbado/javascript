@@ -89,7 +89,7 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     return this.#isEnvAffectedByUserGestureDetection();
   }
 
-  async continueWithConditionalUI() {
+  async continueWithConditionalUI({ onAuthenticatorCompleted }: { onAuthenticatorCompleted?: () => void }) {
     if (!this.data.conditionalUIChallenge) {
       return;
     }
@@ -101,7 +101,11 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
 
     this.#conditionalUIStarted = true;
     log.debug('starting conditional UI');
-    const b = await this.app.authProcessService.loginWithPasskeyChallenge(this.data.conditionalUIChallenge);
+    const b = await this.app.authProcessService.loginWithPasskeyChallenge(
+      this.data.conditionalUIChallenge,
+      onAuthenticatorCompleted,
+    );
+
     if (b.err && (b.val instanceof PasskeyChallengeCancelledError || b.val.ignore)) {
       // we ignore this type of error
       return;

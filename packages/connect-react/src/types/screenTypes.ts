@@ -8,7 +8,6 @@ export enum LoginScreenType {
   Success = 'Success',
   PasskeyReLogin = 'PasskeyReLogin',
   Loading = 'Loading',
-  Benefits = 'Benefits',
   ErrorSoft = 'ErrorSoft',
   ErrorHard = 'ErrorHard',
   Invisible = 'Invisible',

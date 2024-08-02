@@ -107,6 +107,7 @@
   display: flex;
   width: 100%;
   gap: 2px;
+  flex-wrap: wrap;
 }
 
 .cb-passkey-list-item-header {

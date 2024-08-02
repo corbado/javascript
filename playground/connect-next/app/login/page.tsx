@@ -20,16 +20,16 @@ export default function LoginPage() {
           {conventionalLoginVisible ? <ConventionalLogin initialEmail={email} /> : null}
           <div className='component'>
             <CorbadoConnectLogin
-              onFallback={(email: string) => {
-                setEmail(email);
+              onFallback={(identifier: string) => {
+                setEmail(identifier);
                 setConventionalLoginVisible(true);
-                console.log('onFallback', email);
+                console.log('onFallback', identifier);
               }}
               onError={error => console.log('error', error)}
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
               onComplete={_ => router.push('/home')}
               onSignupClick={() => router.push('/signup')}
-              onHelpRequest={() => alert('help requested')}
+              onHelpClick={() => alert('help requested')}
             />
           </div>
         </div>

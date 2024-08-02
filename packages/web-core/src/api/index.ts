@@ -17,4 +17,5 @@ export {
   SocialProviderType,
   SocialDataStatusEnum,
   GeneralBlockPasskeyAppendAfterHybrid,
+  Passkey,
 } from './v2';

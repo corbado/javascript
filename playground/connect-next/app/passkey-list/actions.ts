@@ -1,9 +1,9 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { CorbadoTokens } from '@corbado/types';
+import { ConnectTokenType } from '@corbado/types';
 
-export async function getCorbadoToken(tokenType: CorbadoTokens) {
+export async function getCorbadoToken(tokenType: ConnectTokenType) {
   const identifier = cookies().get('identifier');
   if (!identifier) {
     return null;

@@ -1,3 +1,9 @@
+## 2.10.0
+
+### Minor changes
+
+- Added loading spinner for conditional ui login.
+
 ## 2.9.0
 
 ### Minor changes

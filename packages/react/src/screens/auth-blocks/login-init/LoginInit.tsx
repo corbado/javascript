@@ -47,7 +47,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
     void block.startConditionalUIOnPageLoad().then(result => {
       if (result) {
         log.debug('CUI: page load');
-        void block.continueWithConditionalUI();
+        void block.continueWithConditionalUI({ onLoadingStateChange: setLoading });
       }
     });
 
@@ -57,7 +57,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         setOnComponentClick(() => {
           return () => {
             log.debug('calling continueWithConditionalUI');
-            void block.continueWithConditionalUI();
+            void block.continueWithConditionalUI({ onLoadingStateChange: setLoading });
           };
         });
       }

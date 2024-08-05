@@ -64,7 +64,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         return navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
-        void startConditionalUI(res.val.conditionalUIChallenge);
+        void startConditionalUI(res.val.conditionalUIChallenge, ac);
       }
 
       finishLoading();
@@ -80,14 +80,17 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     };
   }, [getConnectService]);
 
-  const startConditionalUI = async (challenge: string | null) => {
+  const startConditionalUI = async (challenge: string | null, ac: AbortController) => {
     if (!challenge) {
       return;
     }
 
+    config.onConditionLoginStart(ac);
+
     const res = await getConnectService().conditionalUILogin(
       () => setLoginPending(true),
       () => setLoginPending(false),
+      ac,
     );
 
     if (res.err) {

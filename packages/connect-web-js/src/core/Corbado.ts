@@ -12,16 +12,7 @@ import { CorbadoState } from '../models/CorbadoState';
 import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
 
 export class Corbado {
-  #corbadoState?: CorbadoState;
   #componentInstances: Map<HTMLElement, Root> = new Map();
-
-  load(options: CorbadoConnectConfig) {
-    this.#corbadoState = new CorbadoState(options);
-  }
-
-  clone() {
-    return new Corbado();
-  }
 
   mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
     this.#mountConnectComponent(element, CorbadoConnectLogin, options);
@@ -47,19 +38,16 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  #mountConnectComponent = <T extends Record<string, any>>(
+  #mountConnectComponent = <T extends Record<string, any> & CorbadoConnectConfig>(
     element: HTMLElement,
     Component: FC<T>,
     componentOptions: T,
   ) => {
-    this.#unmountConnectComponent(element);
-    if (!this.#corbadoState) {
-      throw new Error('Please call load() before mounting components');
-    }
+    const corbadoState = new CorbadoState(componentOptions);
 
     this.#unmountConnectComponent(element);
 
-    const root = mountComponent(this.#corbadoState, element, Component, componentOptions);
+    const root = mountComponent(corbadoState, element, Component, componentOptions);
 
     this.#componentInstances.set(element, root);
   };

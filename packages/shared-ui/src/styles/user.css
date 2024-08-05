@@ -118,6 +118,16 @@
   font-family: var(--cb-font-family-primary);
 }
 
+.cb-user-details-identifier-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  border-radius: var(--cb-border-radius-sm);
+  border: var(--cb-border-color) 1px solid;
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.5rem 0.6rem 1rem;
+}
+
 .cb-user-details-section-indentifier {
   width: 85%;
   align-self: self-start;

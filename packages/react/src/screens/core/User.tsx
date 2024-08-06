@@ -1,14 +1,18 @@
+import { LoginIdentifierType } from '@corbado/shared-ui';
 import { type CorbadoUser, type Identifier, type SocialAccount } from '@corbado/types';
+import { LoginIdentifierType1 } from '@corbado/web-core/dist/api/v2';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, InputField, LoadingSpinner, PasskeyListErrorBoundary, PhoneInputField, Text } from '../../components';
+import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
+import { PendingIcon } from '../../components/ui/icons/PendingIcon';
+import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
+import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
 import { useCorbado } from '../../hooks/useCorbado';
-import { LoginIdentifierType } from '@corbado/shared-ui';
-import { AddIcon } from '../../components/ui/icons/AddIcon';
 
 interface ProcessedUser {
   name: string;
@@ -19,12 +23,17 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, updateName, updateUsername } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [name, setName] = useState<string>("");
+  const [fullNameRequired, setFullNameRequired] = useState<boolean>(false);
+  const [usernameEnabled, setUsernameEnabled] = useState<boolean>(false);
+  const [emailEnabled, setEmailEnabled] = useState<boolean>(false);
+  // const [phoneEnabled, setPhoneEnabled] = useState<boolean>(false);
+
+  const [name, setName] = useState<string | undefined>();
   const [editingName, setEditingName] = useState<boolean>(false);
 
   const [username, setUsername] = useState<Identifier | undefined>();
@@ -42,6 +51,7 @@ export const User: FC = () => {
 
     const abortController = new AbortController();
     void getCurrentUser(abortController);
+    void getConfig(abortController);
 
     return () => {
       abortController.abort();
@@ -97,13 +107,44 @@ export const User: FC = () => {
     [corbadoApp],
   );
 
+  const getConfig = useCallback(
+    async (abortController?: AbortController) => {
+      setLoading(true);
+      const result = await getIdentifierListConfig(abortController);
+      if (result.err && result.val.ignore) {
+        return;
+      }
+
+      if (!result || result?.err) {
+        throw new Error(result?.val.name);
+      }
+
+      setFullNameRequired(result.val.fullNameRequired);
+      for (const identifierConfig of result.val.identifiers) {
+        if (identifierConfig.type === LoginIdentifierType1.Custom) {
+          setUsernameEnabled(true);
+        } else if (identifierConfig.type === LoginIdentifierType1.Email) {
+          setEmailEnabled(true);
+        } else if (identifierConfig.type === LoginIdentifierType1.PhoneNumber) {
+          // setPhoneEnabled(true);
+        }
+      }
+      setLoading(false);
+    },
+    [corbadoApp],
+  );
+
   const copyName = async () => {
-    await navigator.clipboard.writeText(name);
+    if (name) {
+      await navigator.clipboard.writeText(name);
+    }
   };
 
   const changeName = async () => {
     // TODO: input checking?
-    await updateName(name);
+    if (name) {
+      await updateName(name);
+    }
     setEditingName(false);
     void getCurrentUser();
   };
@@ -122,7 +163,10 @@ export const User: FC = () => {
   };
 
   const addEmail = async () => {
-    return; 
+    await createIdentifier(LoginIdentifierType.Email, newEmail);
+    setNewEmail("");
+    setAddingEmail(false);
+    void getCurrentUser();
   };
 
   if (!isAuthenticated) {
@@ -137,12 +181,13 @@ export const User: FC = () => {
     <PasskeyListErrorBoundary globalError={globalError}>
       <div className='cb-user-details-container'>
         <Text className='cb-user-details-title'>{t('title')}</Text>
-        {name !== "" && (
+        {fullNameRequired && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{nameFieldLabel}</Text>
             <div className='cb-user-details-body'>
               <div className='cb-user-details-body-row'>
                 <InputField
+                  className='cb-user-details-text'
                   // key={`user-entry-${processUser.name}`}
                   value={name}
                   disabled={!editingName}
@@ -158,7 +203,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={async () => await changeName()}>
+                      onClick={() => void changeName()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -178,12 +223,13 @@ export const User: FC = () => {
             </div>
           </div>
         )}
-        {username && (
+        {usernameEnabled && username && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
             <div className='cb-user-details-body'>
               <div className='cb-user-details-body-row'>
                 <InputField
+                  className='cb-user-details-text'
                   // key={`user-entry-${processUser.username}`}
                   value={username.value}
                   disabled={!editingUsername}
@@ -199,7 +245,7 @@ export const User: FC = () => {
                 <div>
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={async () => await changeUsername()}>
+                      onClick={() => void changeUsername()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -219,25 +265,47 @@ export const User: FC = () => {
             </div>
           </div>
         )}
-        {emails.length > 0 && (
+        {emailEnabled && emails.length > 0 && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{emailFieldLabel}</Text>
             <div className='cb-user-details-body'>
-              {processUser.emails.map((email, _) => (
+              {processUser.emails.map((email) => (
                 <div className='cb-user-details-identifier-container'>
-                  {email.value}
+                  <div className='cb-user-details-body-row'>
+                    <Text className='cb-user-details-text'>{email.value}</Text>
+                    <div className='cb-user-details-header-badge-section'>
+                      {email.status === 'primary' ? (
+                        <div className='cb-user-details-header-badge'>
+                          <PrimaryIcon className='cb-user-details-header-badge-icon' />
+                          <Text className='cb-user-details-text-primary'>Primary</Text>
+                        </div>
+                      ) : email.status === 'verified' ? (
+                        <div className='cb-user-details-header-badge'>
+                          <VerifiedIcon className='cb-user-details-header-badge-icon' />
+                          <Text className='cb-user-details-text-primary'>Verified</Text>
+                        </div>
+                      ) : (
+                        <div className='cb-user-details-header-badge'>
+                          <PendingIcon className='cb-user-details-header-badge-icon' />
+                          <Text className='cb-user-details-text-primary'>Pending</Text>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
               {addingEmail ? (
-                <div>
+                <div className='cb-user-details-identifier-container'>
                   <InputField
+                    className='cb-user-details-text'
+                    style={{width: '100%'}}
                     // key={`user-entry-${processUser.username}`}
                     value={newEmail}
                     onChange={e => setNewEmail(e.target.value)}
                   />
                   <Button
                       className='cb-user-details-body-button-primary'
-                      onClick={async () => await addEmail()}>
+                      onClick={() => void addEmail()}>
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
@@ -249,48 +317,14 @@ export const User: FC = () => {
               ) : (
                 <Button
                     className='cb-user-details-body-button'
-                    onClick={() => setEditingUsername(true)}>
-                  <AddIcon className='cb-user-details-body-button-icon' />
+                    onClick={() => setAddingEmail(true)}>
+                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
                   <Text className='cb-user-details-subheader'>Add Another</Text>
                 </Button>
               )}
             </div>
           </div>
         )}
-        {/* <div className='cb-user-details-section-indentifiers-list'>
-          {processUser.emails.map((email, i) => (
-            <div className='cb-user-details-card'>
-              <div
-                className='cb-user-details-section-indentifiers-list-item'
-                key={`user-details-email-${email.value}`}
-              >
-                <div className='cb-user-details-section-indentifiers-list-item-field'>
-                  <InputField
-                    className='cb-user-details-section-indentifiers-list-item-field-input'
-                    key={email.value}
-                    label={i === 0 ? emailFieldLabel : undefined}
-                    value={email.value}
-                    disabled
-                  />
-                </div>
-                <div
-                  className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
-                    email.status === 'verified' ? 'primary' : 'secondary'
-                  }`}
-                >
-                  <Text
-                    level='2'
-                    fontFamilyVariant='secondary'
-                    fontWeight='bold'
-                    className='cb-user-details-section-indentifiers-list-item-badge-text'
-                  >
-                    {email.status === 'verified' ? verifiedText : unverifiedText}
-                  </Text>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div> */}
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.phoneNumbers.map((phone, i) => (
             <div className='cb-user-details-card'>

@@ -1,4 +1,4 @@
-import type { CorbadoAppParams, SessionUser } from '@corbado/types';
+import type { CorbadoAppParams, LoginIdentifierType, SessionUser } from '@corbado/types';
 import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
@@ -86,6 +86,13 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const getIdentifierListConfig = useCallback(
+    (abortController?: AbortController) => {
+      return corbadoApp?.sessionService.getIdentifierListConfig(abortController ?? new AbortController());
+    },
+    [corbadoApp],
+  );
+
   const updateName = useCallback(
     (fullName: string) => {
       return corbadoApp.sessionService.updateName(fullName);
@@ -100,6 +107,38 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const createIdentifier = useCallback(
+    (identifierType: LoginIdentifierType, value: string) => {
+      return corbadoApp.sessionService.createIdentifier(identifierType, value);
+    },
+    [corbadoApp],
+  );
+
+  const deleteIdentifier = useCallback(
+    (identifierID: string) => {
+      return corbadoApp.sessionService.deleteIdentifier(identifierID);
+    },
+    [corbadoApp],
+  );
+
+  const verifyIdentifierStart = useCallback(
+    (identifierID: string) => {
+      return corbadoApp.sessionService.verifyIdentifierStart(identifierID);
+    },
+    [corbadoApp],
+  );
+
+  const verifyIdentifierFinish = useCallback(
+    (identifierID: string, code: string) => {
+      return corbadoApp.sessionService.verifyIdentifierFinish(identifierID, code);
+    },
+    [corbadoApp],
+  );
+
+  const deleteUser = useCallback(() => {
+    return corbadoApp.sessionService.deleteUser();
+  }, [corbadoApp]);
+
   return (
     <CorbadoSessionContext.Provider
       value={{
@@ -110,8 +149,14 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         isAuthenticated,
         appendPasskey,
         getFullUser,
+        getIdentifierListConfig,
         updateName,
         updateUsername,
+        createIdentifier,
+        deleteIdentifier,
+        verifyIdentifierStart,
+        verifyIdentifierFinish,
+        deleteUser,
         getPasskeys,
         deletePasskey,
         logout,

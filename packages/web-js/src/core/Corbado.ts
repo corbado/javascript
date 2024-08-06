@@ -1,5 +1,5 @@
 import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
-import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
+import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig, LoginIdentifierType } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
@@ -106,12 +106,36 @@ export class Corbado {
     return this.#getCorbadoAppState().corbadoApp.sessionService.getFullUser(abortController ?? new AbortController());
   }
 
+  getIdentifierListConfig(abortController?: AbortController) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.getIdentifierListConfig(abortController ?? new AbortController());
+  }
+
   updateName(fullName: string) {
     return this.#getCorbadoAppState().corbadoApp.sessionService.updateName(fullName);
   }
 
   updateUsername(identifierID: string, username: string) {
     return this.#getCorbadoAppState().corbadoApp.sessionService.updateUsername(identifierID, username);
+  }
+
+  createIdentifier(identifierType: LoginIdentifierType, value: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.createIdentifier(identifierType, value);
+  }
+
+  deleteIdentifier(identifierID: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteIdentifier(identifierID);
+  }
+
+  verifyIdentifierStart(identifierID: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierStart(identifierID);
+  }
+
+  verifyIdentifierFinish(identifierID: string, code: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierFinish(identifierID, code);
+  }
+
+  deleteUser() {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteUser();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

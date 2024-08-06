@@ -1127,6 +1127,25 @@ export interface Identifier {
 /**
  * 
  * @export
+ * @interface IdentifierListConfigRsp
+ */
+export interface IdentifierListConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IdentifierListConfigRsp
+     */
+    'fullNameRequired': boolean;
+    /**
+     * 
+     * @type {Array<LoginIdentifierConfig>}
+     * @memberof IdentifierListConfigRsp
+     */
+    'identifiers': Array<LoginIdentifierConfig>;
+}
+/**
+ * 
+ * @export
  * @interface IdentifierUpdateReq
  */
 export interface IdentifierUpdateReq {
@@ -1248,6 +1267,46 @@ export interface LoginIdentifier {
 /**
  * 
  * @export
+ * @interface LoginIdentifierConfig
+ */
+export interface LoginIdentifierConfig {
+    /**
+     * 
+     * @type {LoginIdentifierType1}
+     * @memberof LoginIdentifierConfig
+     */
+    'type': LoginIdentifierType1;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginIdentifierConfig
+     */
+    'enforceVerification': LoginIdentifierConfigEnforceVerificationEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LoginIdentifierConfig
+     */
+    'useAsLoginIdentifier': boolean;
+    /**
+     * 
+     * @type {object}
+     * @memberof LoginIdentifierConfig
+     */
+    'metadata'?: object;
+}
+
+export const LoginIdentifierConfigEnforceVerificationEnum = {
+    None: 'none',
+    Signup: 'signup',
+    AtFirstLogin: 'at_first_login'
+} as const;
+
+export type LoginIdentifierConfigEnforceVerificationEnum = typeof LoginIdentifierConfigEnforceVerificationEnum[keyof typeof LoginIdentifierConfigEnforceVerificationEnum];
+
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -1258,6 +1317,21 @@ export const LoginIdentifierType = {
 } as const;
 
 export type LoginIdentifierType = typeof LoginIdentifierType[keyof typeof LoginIdentifierType];
+
+
+/**
+ * Login Identifier type
+ * @export
+ * @enum {string}
+ */
+
+export const LoginIdentifierType1 = {
+    Email: 'email',
+    PhoneNumber: 'phone_number',
+    Custom: 'custom'
+} as const;
+
+export type LoginIdentifierType1 = typeof LoginIdentifierType1[keyof typeof LoginIdentifierType1];
 
 
 /**
@@ -3699,6 +3773,42 @@ export class AuthApi extends BaseAPI {
 export const ConfigsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Gets configs needed by the identifier-list component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getIdentifierListConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/identifier-list-config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3745,6 +3855,15 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ConfigsApiAxiosParamCreator(configuration)
     return {
         /**
+         * Gets configs needed by the identifier-list component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getIdentifierListConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IdentifierListConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdentifierListConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3764,6 +3883,14 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = ConfigsApiFp(configuration)
     return {
         /**
+         * Gets configs needed by the identifier-list component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getIdentifierListConfig(options?: any): AxiosPromise<IdentifierListConfigRsp> {
+            return localVarFp.getIdentifierListConfig(options).then((request) => request(axios, basePath));
+        },
+        /**
          * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3781,6 +3908,16 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class ConfigsApi extends BaseAPI {
+    /**
+     * Gets configs needed by the identifier-list component
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getIdentifierListConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getIdentifierListConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * tbd
      * @param {*} [options] Override http request option.

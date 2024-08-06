@@ -58,6 +58,11 @@
   font-weight: bold;
 }
 
+.cb-user-details-text {
+  font-size: calc(var(--cb-base-font-size) * 1.3);
+  font-family: var(--cb-primary-font);
+}
+
 .cb-user-details-body {
   width: 100%;
   max-width: 500px;
@@ -87,7 +92,7 @@
   background-color: white;
   cursor: pointer;
   box-sizing: border-box;
-  font-family: var(--cb-font-family-primary);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-user-details-body-button-icon {
@@ -104,7 +109,7 @@
   border-radius: var(--cb-border-radius);
   cursor: pointer;
   box-sizing: border-box;
-  font-family: var(--cb-font-family-primary);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-user-details-body-button-secondary {
@@ -115,17 +120,51 @@
   border-radius: var(--cb-border-radius);
   cursor: pointer;
   box-sizing: border-box;
-  font-family: var(--cb-font-family-primary);
+  font-family: var(--cb-primary-font);
 }
 
 .cb-user-details-identifier-container {
-  display: flex;
-  flex-direction: row;
   gap: 1rem;
   border-radius: var(--cb-border-radius-sm);
   border: var(--cb-border-color) 1px solid;
   margin: 0.75rem 0;
   padding: 0.6rem 0.5rem 0.6rem 1rem;
+}
+
+.cb-user-details-header-badge-section {
+  margin: auto 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cb-user-details-header-badge {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
+  border-radius: var(--cb-border-radius-lg);
+  border: none;
+  color: var(--cb-passkey-list-badge-color);
+  background-color: var(--cb-passkey-list-badge-background-color);
+  padding: 0.35rem 0.7rem;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.cb-user-details-header-badge-icon {
+  flex: 2;
+  height: 1rem;
+}
+
+.cb-user-details-header-badge-text {
+  flex: 10;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: visible;
+  color: var(--cb-passkey-list-badge-color);
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.25);
 }
 
 .cb-user-details-section-indentifier {

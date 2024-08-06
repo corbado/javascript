@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
+import type { IdentifierListConfigRsp, SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
 import { ConfigsApi, LoginIdentifierType, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import {
@@ -45,6 +45,7 @@ const packageVersion = '0.0.0';
  */
 export class SessionService {
   #usersApi: UsersApi = new UsersApi();
+  #configsApi: ConfigsApi;
   #webAuthnService: WebAuthnService;
 
   readonly #setShortSessionCookie: boolean;
@@ -68,6 +69,13 @@ export class SessionService {
     this.#longSession = undefined;
     this.#setShortSessionCookie = setShortSessionCookie;
     this.#isPreviewMode = isPreviewMode;
+
+    const config = new Configuration({
+      apiKey: this.#projectId,
+    });
+
+    const axiosInstance = this.#createAxiosInstanceV2();
+    this.#configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
   }
 
   /**
@@ -157,6 +165,10 @@ export class SessionService {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
+  public async getIdentifierListConfig(abortController: AbortController): Promise<Result<IdentifierListConfigRsp, CorbadoError>> {
+    return this.wrapWithErr(async () => this.#configsApi.getIdentifierListConfig({ signal: abortController.signal }));
+  }
+
   async updateName(fullName: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserUpdate({ fullName });
@@ -173,6 +185,49 @@ export class SessionService {
       });
       return void 0;
     })
+  }
+
+  async createIdentifier(identifierType: LoginIdentifierType, value: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierCreate({ identifierType, value });
+      return void 0;
+    });
+  }
+
+  async deleteIdentifier(identifierID: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierDelete({ identifierID });
+      return void 0;
+    });
+  }
+
+  async verifyIdentifierStart(identifierID: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierVerifyStart({
+        identifierID,
+        clientInformation: {
+          bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
+          canUsePasskeys: await WebAuthnService.doesBrowserSupportPasskeys(),
+          clientEnvHandle: WebAuthnService.getClientHandle() ?? undefined,
+          javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
+        },
+      });
+      return void 0;
+    });
+  }
+
+  async verifyIdentifierFinish(identifierID: string, code: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierVerifyFinish({ identifierID, code });
+      return void 0;
+    });
+  }
+
+  async deleteUser(): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserDelete({});
+      return void 0;
+    });
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
@@ -546,15 +601,8 @@ export class SessionService {
   };
 
   #loadSessionConfig = async (): Promise<Result<SessionConfigRsp, CorbadoError>> => {
-    const config = new Configuration({
-      apiKey: this.#projectId,
-    });
-
-    const axiosInstance = this.#createAxiosInstanceV2();
-    const configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
-
     return Result.wrapAsync(async () => {
-      const r = await configsApi.getSessionConfig();
+      const r = await this.#configsApi.getSessionConfig();
       return r.data;
     });
   };

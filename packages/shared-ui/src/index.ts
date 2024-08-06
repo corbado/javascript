@@ -36,12 +36,15 @@ import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
 import passkeyHybridIcon from './assets/passkey-hybrid.svg';
 import passkeyHybridDarkIcon from './assets/passkey-hybrid-dark.svg';
+import pendingIcon from './assets/pending.svg';
 import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
+import primaryIcon from './assets/primary.svg';
 import rightIcon from './assets/right-arrow.svg';
 import secureIcon from './assets/secure-icon.svg';
 import shieldIcon from './assets/shield.svg';
 import syncIcon from './assets/sync.svg';
+import verifiedIcon from './assets/verified.svg';
 import visibilityIcon from './assets/visibility.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
@@ -100,4 +103,7 @@ export const assets = {
   lockIcon,
   copyIcon,
   changeIcon,
+  primaryIcon,
+  verifiedIcon,
+  pendingIcon,
 };

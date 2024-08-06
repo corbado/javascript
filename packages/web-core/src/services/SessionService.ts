@@ -1,5 +1,5 @@
 /// <reference types="user-agent-data-types" /> <- add this line
-import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, IdentifierListConfig, PassKeyList, SessionUser } from '@corbado/types';
 import type {
   AxiosHeaders,
   AxiosInstance,
@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { IdentifierListConfigRsp, SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
+import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
 import { ConfigsApi, LoginIdentifierType, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import {
@@ -165,7 +165,7 @@ export class SessionService {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
-  public async getIdentifierListConfig(abortController: AbortController): Promise<Result<IdentifierListConfigRsp, CorbadoError>> {
+  public async getIdentifierListConfig(abortController: AbortController): Promise<Result<IdentifierListConfig, CorbadoError>> {
     return this.wrapWithErr(async () => this.#configsApi.getIdentifierListConfig({ signal: abortController.signal }));
   }
 

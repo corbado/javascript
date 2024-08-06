@@ -1,6 +1,5 @@
-import { LoginIdentifierType } from '@corbado/shared-ui';
+import { LoginIdentifierConfigType, LoginIdentifierType } from '@corbado/shared-ui';
 import { type CorbadoUser, type Identifier, type SocialAccount } from '@corbado/types';
-import { LoginIdentifierType1 } from '@corbado/web-core/dist/api/v2';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -121,11 +120,11 @@ export const User: FC = () => {
 
       setFullNameRequired(result.val.fullNameRequired);
       for (const identifierConfig of result.val.identifiers) {
-        if (identifierConfig.type === LoginIdentifierType1.Custom) {
+        if (identifierConfig.type === LoginIdentifierConfigType.Username) {
           setUsernameEnabled(true);
-        } else if (identifierConfig.type === LoginIdentifierType1.Email) {
+        } else if (identifierConfig.type === LoginIdentifierConfigType.Email) {
           setEmailEnabled(true);
-        } else if (identifierConfig.type === LoginIdentifierType1.PhoneNumber) {
+        } else if (identifierConfig.type === LoginIdentifierConfigType.Phone) {
           // setPhoneEnabled(true);
         }
       }

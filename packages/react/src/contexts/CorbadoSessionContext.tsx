@@ -1,6 +1,5 @@
-import type { CorbadoUser, LoginIdentifierType, PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, IdentifierListConfig, LoginIdentifierType, PassKeyList, SessionUser } from '@corbado/types';
 import type { CorbadoApp, CorbadoError, NonRecoverableError, PasskeyDeleteError } from '@corbado/web-core';
-import type { IdentifierListConfigRsp } from '@corbado/web-core/dist/api/v2';
 import { createContext } from 'react';
 import type { Result } from 'ts-results';
 
@@ -19,7 +18,7 @@ export interface CorbadoSessionContextProps {
   getPasskeys: (abortController?: AbortController) => Promise<Result<PassKeyList, CorbadoError>>;
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getFullUser: (abortController?: AbortController) => Promise<Result<CorbadoUser, CorbadoError>>;
-  getIdentifierListConfig: (abortController?: AbortController) => Promise<Result<IdentifierListConfigRsp, CorbadoError>>;
+  getIdentifierListConfig: (abortController?: AbortController) => Promise<Result<IdentifierListConfig, CorbadoError>>;
   updateName: (fullName: string) => Promise<Result<void, CorbadoError>>;
   updateUsername: (identifierID: string, username: string) => Promise<Result<void, CorbadoError>>;
   createIdentifier: (identifierType: LoginIdentifierType, value: string) => Promise<Result<void, CorbadoError>>;

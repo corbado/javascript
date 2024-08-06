@@ -180,7 +180,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
             name='email'
             label='Email address'
             type='email'
-            autoComplete='username webauthn'
+            autoComplete={sharedConfig.flags?.['conditional-ui-allowed'] !== 'false' ? 'username webauthn' : ''}
             autoFocus={true}
             placeholder=''
             ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}

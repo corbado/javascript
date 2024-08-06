@@ -12,14 +12,9 @@ import { CorbadoState } from '../models/CorbadoState';
 import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
 
 export class Corbado {
-  #corbadoState?: CorbadoState;
   #componentInstances: Map<HTMLElement, Root> = new Map();
 
-  load(options: CorbadoConnectConfig) {
-    this.#corbadoState = new CorbadoState(options);
-  }
-
-  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
+  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig & CorbadoConnectConfig) {
     this.#mountConnectComponent(element, CorbadoConnectLogin, options);
   }
 
@@ -27,7 +22,7 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  mountCorbadoConnectAppend(element: HTMLElement, options: CorbadoConnectAppendConfig) {
+  mountCorbadoConnectAppend(element: HTMLElement, options: CorbadoConnectAppendConfig & CorbadoConnectConfig) {
     this.#mountConnectComponent(element, CorbadoConnectAppend, options);
   }
 
@@ -35,7 +30,10 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  mountCorbadoConnectPasskeyList(element: HTMLElement, options: CorbadoConnectPasskeyListConfig) {
+  mountCorbadoConnectPasskeyList(
+    element: HTMLElement,
+    options: CorbadoConnectPasskeyListConfig & CorbadoConnectConfig,
+  ) {
     this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options);
   }
 
@@ -45,17 +43,14 @@ export class Corbado {
 
   #mountConnectComponent = <T extends Record<string, any>>(
     element: HTMLElement,
-    Component: FC<T>,
-    componentOptions: T,
+    Component: FC<T & CorbadoConnectConfig>,
+    componentOptions: T & CorbadoConnectConfig,
   ) => {
-    this.#unmountConnectComponent(element);
-    if (!this.#corbadoState) {
-      throw new Error('Please call load() before mounting components');
-    }
+    const corbadoState = new CorbadoState(componentOptions);
 
     this.#unmountConnectComponent(element);
 
-    const root = mountComponent(this.#corbadoState, element, Component, componentOptions);
+    const root = mountComponent(corbadoState, element, Component, componentOptions);
 
     this.#componentInstances.set(element, root);
   };

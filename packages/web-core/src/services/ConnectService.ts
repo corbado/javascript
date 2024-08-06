@@ -208,7 +208,7 @@ export class ConnectService {
   }
 
   async conditionalUILogin(
-    onLoginStart: () => void,
+    onLoginStart: (ac: AbortController) => void,
     onLoginEnd: () => void,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
@@ -222,8 +222,7 @@ export class ConnectService {
 
     const challenge = existingProcess.loginData?.conditionalUIChallenge;
 
-    const res = await this.#webAuthnService.login(challenge, true, false);
-    onLoginStart();
+    const res = await this.#webAuthnService.login(challenge, true, false, onLoginStart);
 
     if (res.err) {
       onLoginEnd();

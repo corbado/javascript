@@ -42,9 +42,11 @@ export class WebAuthnService {
     serializedChallenge: string,
     conditional: boolean,
     skipIfOnlyHybrid = false,
+    onConditionalLoginStart?: (ac: AbortController) => void,
   ): Promise<Result<string, CorbadoError>> {
     try {
       const abortController = this.abortOngoingOperation();
+
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
 
       if (skipIfOnlyHybrid) {
@@ -57,6 +59,7 @@ export class WebAuthnService {
 
       challenge.signal = abortController.signal;
       this.#abortController = abortController;
+      onConditionalLoginStart?.(abortController);
 
       if (conditional) {
         challenge.mediation = 'conditional';

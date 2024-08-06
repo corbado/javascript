@@ -1,7 +1,7 @@
 import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [loginPending, setLoginPending] = useState(false);
   const [error, setError] = useState('');
@@ -41,9 +41,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
       const flags = new Flags(res.val.flags);
+
       if (sharedConfig.flags) {
         flags.addFlags(sharedConfig.flags);
       }
+
       setFlags(flags);
 
       if (!res.val.loginAllowed || showFallback) {
@@ -86,7 +88,10 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     const res = await getConnectService().conditionalUILogin(
-      () => setLoginPending(true),
+      ac => {
+        setLoginPending(true);
+        config.onConditionalLoginStart?.(ac);
+      },
       () => setLoginPending(false),
     );
 
@@ -114,6 +119,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     const identifier = emailFieldRef.current?.value ?? '';
 
     setCurrentIdentifier(identifier);
+
+    config.onLoginStart?.();
 
     const res = await getConnectService().login(identifier, PasskeyLoginSource.TextField);
     if (res.err) {
@@ -154,6 +161,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
   }, [loading, isFallbackInitiallyTriggered, isInitialLoadingStarted]);
 
+  // Enable auto complete for username and webauthn if conditional UI is supported
+  // This is needed to enable multiple login instances on the same page however only one should have the autocomplete
+  // Else the conditionalUI won't work
+  const enableAutoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
+
   if (!isInitialLoadingStarted) {
     return <></>;
   }
@@ -177,7 +189,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
             name='email'
             label='Email address'
             type='email'
-            autoComplete='username webauthn'
+            autoComplete={enableAutoComplete}
             autoFocus={true}
             placeholder=''
             ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}

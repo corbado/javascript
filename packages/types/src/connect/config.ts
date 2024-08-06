@@ -5,6 +5,8 @@ export type CorbadoConnectLoginConfig = {
   onError?(error: ConnectLoginError): void;
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
+  onConditionalLoginStart?(ac: AbortController): void;
+  onLoginStart?(): void;
   onHelpClick?(): void;
   onSignupClick?(): void;
 };

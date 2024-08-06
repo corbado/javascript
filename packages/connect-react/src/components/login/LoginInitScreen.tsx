@@ -86,6 +86,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     const res = await getConnectService().conditionalUILogin(
+      ac => onCUIStarted(),
       () => setLoginPending(true),
       () => setLoginPending(false),
     );

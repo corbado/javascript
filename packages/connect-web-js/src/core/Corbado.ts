@@ -14,7 +14,7 @@ import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
 export class Corbado {
   #componentInstances: Map<HTMLElement, Root> = new Map();
 
-  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig) {
+  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig & CorbadoConnectConfig) {
     this.#mountConnectComponent(element, CorbadoConnectLogin, options);
   }
 
@@ -22,7 +22,7 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  mountCorbadoConnectAppend(element: HTMLElement, options: CorbadoConnectAppendConfig) {
+  mountCorbadoConnectAppend(element: HTMLElement, options: CorbadoConnectAppendConfig & CorbadoConnectConfig) {
     this.#mountConnectComponent(element, CorbadoConnectAppend, options);
   }
 
@@ -30,7 +30,10 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  mountCorbadoConnectPasskeyList(element: HTMLElement, options: CorbadoConnectPasskeyListConfig) {
+  mountCorbadoConnectPasskeyList(
+    element: HTMLElement,
+    options: CorbadoConnectPasskeyListConfig & CorbadoConnectConfig,
+  ) {
     this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options);
   }
 
@@ -38,10 +41,10 @@ export class Corbado {
     this.#unmountConnectComponent(element);
   }
 
-  #mountConnectComponent = <T extends Record<string, any> & CorbadoConnectConfig>(
+  #mountConnectComponent = <T extends Record<string, any>>(
     element: HTMLElement,
-    Component: FC<T>,
-    componentOptions: T,
+    Component: FC<T & CorbadoConnectConfig>,
+    componentOptions: T & CorbadoConnectConfig,
   ) => {
     const corbadoState = new CorbadoState(componentOptions);
 

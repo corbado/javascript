@@ -6,16 +6,17 @@ export type CorbadoConnectLoginConfig = {
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): void;
   onConditionalLoginStart?(ac: AbortController): void;
+  onLoginStart?(): void;
   onHelpClick?(): void;
   onSignupClick?(): void;
-} & CorbadoConnectConfig;
+};
 
 export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
   onError?(error: ConnectAppendError): void;
   onSkip(): void;
   onComplete(): void;
-} & CorbadoConnectConfig;
+};
 
 export enum ConnectTokenType {
   PasskeyList = 'passkey-list',
@@ -25,7 +26,7 @@ export enum ConnectTokenType {
 
 export type CorbadoConnectPasskeyListConfig = {
   connectTokenProvider: (type: ConnectTokenType) => Promise<string>;
-} & CorbadoConnectConfig;
+};
 
 export type CorbadoConnectConfig = {
   projectId: string;

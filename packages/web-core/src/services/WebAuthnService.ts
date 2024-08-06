@@ -42,27 +42,10 @@ export class WebAuthnService {
     serializedChallenge: string,
     conditional: boolean,
     skipIfOnlyHybrid = false,
-    ac?: AbortController,
+    onConditionalLoginStart?: (ac: AbortController) => void,
   ): Promise<Result<string, CorbadoError>> {
     try {
-      const internalAbortController = this.abortOngoingOperation();
-      const signals: AbortSignal[] = [internalAbortController.signal];
-
-      if (ac) {
-        signals.push(ac.signal);
-      }
-
-      const combinedAbortController = new AbortController();
-      const combinedSignal = combinedAbortController.signal;
-
-      // Abort the combined controller if any of the signals abort
-      signals.forEach(signal => {
-        if (signal.aborted) {
-          combinedAbortController.abort();
-        } else {
-          signal.addEventListener('abort', () => combinedAbortController.abort(), { once: true });
-        }
-      });
+      const abortController = this.abortOngoingOperation();
 
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
 
@@ -74,8 +57,9 @@ export class WebAuthnService {
         }
       }
 
-      challenge.signal = combinedSignal;
-      this.#abortController = internalAbortController;
+      challenge.signal = abortController.signal;
+      this.#abortController = abortController;
+      onConditionalLoginStart?.(abortController);
 
       if (conditional) {
         challenge.mediation = 'conditional';

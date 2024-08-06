@@ -26,6 +26,7 @@ export const LoginPasskeyReLoginScreen = () => {
 
   const handleSubmit = useCallback(async () => {
     setLoading(true);
+    config.onLoginStart?.();
 
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap);
     if (res.err) {

@@ -9,6 +9,7 @@ import { generateRandomString } from '@/utils/random';
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
   return (
@@ -22,7 +23,8 @@ export default function SignupPage() {
               const random = generateRandomString(6);
               const email = `integration-test+${random}@corbado.com`;
               setEmail(email);
-              setPassword('asdfasdf1!A');
+              setPassword('asdfasdf');
+              setPhone('+4915121609839');
             }}
           >
             auto
@@ -38,6 +40,14 @@ export default function SignupPage() {
             onChange={e => setEmail(e.target.value)}
           />
           <input
+            type='text'
+            className='input-field  w-full'
+            id='conventional-signup-phone'
+            placeholder='Phone'
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+          />
+          <input
             type='password'
             className='input-field w-full'
             id='conventional-signup-email'
@@ -49,7 +59,7 @@ export default function SignupPage() {
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
               onClick={async () => {
-                await createAccount(email, password);
+                await createAccount(email, phone, password);
                 router.push('/post-login');
               }}
             >

@@ -8,7 +8,7 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 
-export async function createAccount(email: string, password: string) {
+export async function createAccount(email: string, phone: string, password: string) {
   // of course this is not secure, but it's just a demo ;)
 
   const randomUsername = generateRandomString(10);
@@ -38,6 +38,10 @@ export async function createAccount(email: string, password: string) {
       {
         Name: 'email_verified',
         Value: 'true',
+      },
+      {
+        Name: 'phone_number',
+        Value: phone,
       },
     ],
   });

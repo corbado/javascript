@@ -15,9 +15,8 @@ export const LoginPasskeyReLoginScreen = () => {
 
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
-
     if (!lastLogin?.identifierValue) {
-      beginNewLogin();
+      beginNewLogin('');
       return;
     }
 
@@ -43,20 +42,21 @@ export const LoginPasskeyReLoginScreen = () => {
 
       log.debug('login not allowed');
       config.onError?.('PasskeyLoginFailure');
-      beginNewLogin();
+      beginNewLogin(currentIdentifier);
 
       return;
     }
 
-    setLoading(false);
-
     config.onComplete(res.val.session);
   }, [getConnectService, config, currentIdentifier]);
 
-  const beginNewLogin = useCallback(() => {
-    getConnectService().clearLastLogin();
-    navigateToScreen(LoginScreenType.Init, { showFallback: true });
-  }, [navigateToScreen, getConnectService]);
+  const beginNewLogin = useCallback(
+    (identifier: string) => {
+      getConnectService().clearLastLogin();
+      navigateToScreen(LoginScreenType.Init, { prefilledIdentifier: identifier });
+    },
+    [navigateToScreen, getConnectService],
+  );
 
   return (
     <>
@@ -70,7 +70,7 @@ export const LoginPasskeyReLoginScreen = () => {
         />
 
         <LinkButton
-          onClick={() => beginNewLogin()}
+          onClick={() => beginNewLogin(currentIdentifier)}
           className='cb-switch'
         >
           Switch Account

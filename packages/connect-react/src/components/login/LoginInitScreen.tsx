@@ -33,8 +33,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       log.debug('running init');
 
       const res = await getConnectService().loginInit(ac);
-
       if (res.err) {
+        if (res.val.ignore) {
+          return;
+        }
+
         log.error(res.val);
         return;
       }
@@ -88,10 +91,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     const res = await getConnectService().conditionalUILogin(
-      ac => {
-        setLoginPending(true);
-        config.onConditionalLoginStart?.(ac);
-      },
+      ac => config.onConditionalLoginStart?.(ac),
+      () => setLoginPending(true),
       () => setLoginPending(false),
     );
 

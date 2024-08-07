@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { CorbadoConnectLogin } from '@corbado/connect-react';
-import Link from 'next/link';
 import { useState } from 'react';
 import ConventionalLogin from '@/app/login/ConventionalLogin';
 import { postPasskeyLogin } from '@/app/login/actions';

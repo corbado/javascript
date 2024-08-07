@@ -61,7 +61,7 @@ jobs:
 
       - name: Deploy connect next playground to Vercel
         run: |
-          cd playground/connect-next
+          npx vercel link --yes --project connect-next-playground --scope corbado -t $VERCEL_TOKEN
           npx vercel pull --environment=preview -t $VERCEL_TOKEN
           npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
@@ -71,9 +71,9 @@ jobs:
 
       - name: Deploy react playground to Vercel
         run: |
-          cd playground/react
-          npm install
-          npm run build
+          npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy -t ${{ secrets.VERCEL_TOKEN }})"
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io
         env:
@@ -81,7 +81,7 @@ jobs:
 
       - name: Deploy web-js playground to Vercel
         run: |
-          cd playground/web-js
+          npx vercel link --yes --project web-js-playground --scope corbado -t $VERCEL_TOKEN
           npx vercel pull -t $VERCEL_TOKEN
           npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
@@ -92,6 +92,7 @@ jobs:
       - name: Deploy web-js-script playground to Vercel
         run: |
           cd playground/web-js-script
+          npx vercel link --yes --project web-js-script-playground --scope corbado -t $VERCEL_TOKEN
           npx vercel pull -t $VERCEL_TOKEN
           npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"

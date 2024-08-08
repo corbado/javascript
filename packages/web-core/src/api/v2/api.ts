@@ -522,7 +522,22 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'attestationOptions': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartRsp
+     */
+    'variant': ConnectAppendStartRspVariantEnum;
 }
+
+export const ConnectAppendStartRspVariantEnum = {
+    Default: 'default',
+    AfterHybrid: 'after-hybrid',
+    AfterError: 'after-error'
+} as const;
+
+export type ConnectAppendStartRspVariantEnum = typeof ConnectAppendStartRspVariantEnum[keyof typeof ConnectAppendStartRspVariantEnum];
+
 /**
  * 
  * @export
@@ -538,9 +553,11 @@ export interface ConnectEventCreateReq {
 }
 
 export const ConnectEventCreateReqEventTypeEnum = {
-    ExplicitAbort: 'login-explicit-abort',
-    Error: 'login-error',
-    OneTapSwitch: 'login-one-tap-switch'
+    LoginExplicitAbort: 'login-explicit-abort',
+    LoginError: 'login-error',
+    LoginOneTapSwitch: 'login-one-tap-switch',
+    UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
+    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted'
 } as const;
 
 export type ConnectEventCreateReqEventTypeEnum = typeof ConnectEventCreateReqEventTypeEnum[keyof typeof ConnectEventCreateReqEventTypeEnum];
@@ -1790,10 +1807,10 @@ export interface PasskeyOperation {
     'identifierType': LoginIdentifierType;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof PasskeyOperation
      */
-    'isCDA': boolean;
+    'ceremonyType': PasskeyOperationCeremonyTypeEnum;
 }
 
 export const PasskeyOperationOperationTypeEnum = {
@@ -1802,6 +1819,13 @@ export const PasskeyOperationOperationTypeEnum = {
 } as const;
 
 export type PasskeyOperationOperationTypeEnum = typeof PasskeyOperationOperationTypeEnum[keyof typeof PasskeyOperationOperationTypeEnum];
+export const PasskeyOperationCeremonyTypeEnum = {
+    Local: 'local',
+    Cda: 'cda',
+    SecurityKey: 'security-key'
+} as const;
+
+export type PasskeyOperationCeremonyTypeEnum = typeof PasskeyOperationCeremonyTypeEnum[keyof typeof PasskeyOperationCeremonyTypeEnum];
 
 /**
  * 
@@ -4294,7 +4318,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.connectEventCreate(connectEventCreateReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -4401,7 +4425,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: any): AxiosPromise<object> {
+        connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: any): AxiosPromise<void> {
             return localVarFp.connectEventCreate(connectEventCreateReq, options).then((request) => request(axios, basePath));
         },
         /**

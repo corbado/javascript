@@ -485,15 +485,15 @@ export class ConnectService {
   }
 
   recordEventLoginError() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.Error);
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginError);
   }
 
   recordEventLoginExplicitAbort() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.ExplicitAbort);
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginExplicitAbort);
   }
 
   recordEventLoginOneTapSwitch() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.OneTapSwitch);
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginOneTapSwitch);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)

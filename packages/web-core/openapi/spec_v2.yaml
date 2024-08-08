@@ -1304,9 +1304,16 @@ components:
       type: object
       required:
         - attestationOptions
+        - variant
       properties:
         attestationOptions:
           type: string
+        variant:
+          type: string
+          enum:
+            - default
+            - after-hybrid
+            - after-error
 
     connectAppendFinishReq:
       type: object
@@ -1409,6 +1416,8 @@ components:
             - login-explicit-abort
             - login-error
             - login-one-tap-switch
+            - user-append-after-cross-platform-blacklisted
+            - user-append-after-login-error-blacklisted
 
     passkey:
       type: object

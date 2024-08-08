@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import { LoginScreenType } from '../../types/screenTypes';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
 import LoginErrorScreenHard from './LoginErrorScreenHard';
 import LoginErrorScreenSoft from './LoginErrorScreenSoft';
 import LoginInitScreen from './LoginInitScreen';
 import { LoginPasskeyReLoginScreen } from './LoginPasskeyReLoginScreen';
 import LoginSuccess from './LoginSuccess';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
 
 const CorbadoConnectLoginContainer = () => {
   const { currentScreenType, currentScreenOptions } = useLoginProcess();

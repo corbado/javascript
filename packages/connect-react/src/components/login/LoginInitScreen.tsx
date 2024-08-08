@@ -1,7 +1,8 @@
 import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
@@ -16,12 +17,14 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 
 interface Props {
   showFallback?: boolean;
+  prefilledIdentifier?: string;
 }
 
-const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
+const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier }) => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
-  const [loginPending, setLoginPending] = useState(false);
+  const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
+  const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
   const [error, setError] = useState('');
   const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
@@ -55,7 +58,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
 
-        config.onFallback('');
+        config.onFallback(prefilledIdentifier ?? '');
         setIsFallbackInitiallyTriggered(true);
 
         finishLoading();
@@ -63,7 +66,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       }
 
       const lastLogin = getConnectService().getLastLogin();
-
       if (lastLogin) {
         log.debug('starting relogin UI');
         return navigateToScreen(LoginScreenType.PasskeyReLogin);
@@ -76,7 +78,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     };
 
     const ac = new AbortController();
-
     void init(ac);
 
     return () => {
@@ -92,30 +93,32 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     const res = await getConnectService().conditionalUILogin(
       ac => config.onConditionalLoginStart?.(ac),
-      () => setLoginPending(true),
-      () => setLoginPending(false),
+      () => setCuiBasedLoading(true),
+      () => {
+        return;
+      },
     );
 
     if (res.err) {
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
-        setLoginPending(false);
+        setCuiBasedLoading(false);
         return;
       }
+
       log.debug('fallback: error during conditional UI');
 
       config.onError?.('PasskeyLoginFailure');
       setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
-      setLoginPending(false);
+      setCuiBasedLoading(false);
 
       return;
     }
 
-    setLoginPending(false);
     config.onComplete(res.val.session);
   };
 
   const handleSubmit = useCallback(async () => {
-    setLoginPending(true);
+    setIdentifierBasedLoading(true);
 
     const identifier = emailFieldRef.current?.value ?? '';
 
@@ -125,7 +128,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     const res = await getConnectService().login(identifier, PasskeyLoginSource.TextField);
     if (res.err) {
-      setLoginPending(false);
+      setIdentifierBasedLoading(false);
       if (res.val.ignore) {
         return;
       }
@@ -138,19 +141,18 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
+        getConnectService().recordEventLoginError();
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
+      getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 
       return;
     }
-
-    setLoginPending(false);
 
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
@@ -193,11 +195,16 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
             autoComplete={enableAutoComplete}
             autoFocus={true}
             placeholder=''
-            ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
+            ref={(el: HTMLInputElement | null) => {
+              el && (emailFieldRef.current = el);
+              if (prefilledIdentifier && el) {
+                el.value = prefilledIdentifier;
+              }
+            }}
           />
           <PrimaryButton
             type='submit'
-            isLoading={loginPending}
+            isLoading={cuiBasedLoading || identifierBasedLoading}
             onClick={() => void handleSubmit()}
           >
             Login

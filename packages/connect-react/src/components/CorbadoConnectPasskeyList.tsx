@@ -4,7 +4,7 @@ import React from 'react';
 
 import ManageProcessProvider from '../contexts/ManageProcessProvider';
 import { ManageScreenType } from '../types/screenTypes';
-import CorbadoConnectPasskeyListContainer from './CorbadoConnectPasskeyListContainer';
+import CorbadoConnectPasskeyListContainer from './passkeyList/CorbadoConnectPasskeyListContainer';
 
 const CorbadoConnectPasskeyList: FC<CorbadoConnectPasskeyListConfig> = config => {
   return (

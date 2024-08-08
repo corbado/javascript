@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 
-import useAppendProcess from '../hooks/useAppendProcess';
-import { AppendScreenType } from '../types/screenTypes';
-import AppendInitScreen from './append/AppendInitScreen';
-import AppendSuccessScreen from './append/AppendSuccessScreen';
+import useAppendProcess from '../../hooks/useAppendProcess';
+import { AppendScreenType } from '../../types/screenTypes';
+import AppendInitScreen from './AppendInitScreen';
+import AppendSuccessScreen from './AppendSuccessScreen';
 
 const CorbadoConnectAppendContainer = () => {
   const { currentScreenType } = useAppendProcess();

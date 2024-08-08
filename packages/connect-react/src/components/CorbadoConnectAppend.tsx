@@ -4,7 +4,7 @@ import React from 'react';
 
 import AppendProcessProvider from '../contexts/AppendProcessProvider';
 import { AppendScreenType } from '../types/screenTypes';
-import CorbadoConnectAppendContainer from './CorbadoConnectAppendContainer';
+import CorbadoConnectAppendContainer from './append/CorbadoConnectAppendContainer';
 
 const CorbadoConnectAppend: FC<CorbadoConnectAppendConfig> = (config: CorbadoConnectAppendConfig) => {
   return (

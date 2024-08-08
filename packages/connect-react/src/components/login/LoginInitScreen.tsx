@@ -78,7 +78,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     };
 
     const ac = new AbortController();
-
     void init(ac);
 
     return () => {
@@ -142,12 +141,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
+        getConnectService().recordEventLoginError();
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
+      getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 

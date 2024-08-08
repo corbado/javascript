@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import ModalProvider from '../contexts/ModalProvider';
 import SharedProvider from '../contexts/SharedProvider';
-import CorbadoConnectModal from './CorbadoConnectModal';
+import CorbadoConnectModal from './shared/CorbadoConnectModal';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;

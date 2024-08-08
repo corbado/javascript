@@ -36,12 +36,14 @@ export const LoginPasskeyReLoginScreen = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
+        getConnectService().recordEventLoginError();
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('login not allowed');
       config.onError?.('PasskeyLoginFailure');
+      getConnectService().recordEventLoginError();
       beginNewLogin(currentIdentifier);
 
       return;
@@ -70,7 +72,10 @@ export const LoginPasskeyReLoginScreen = () => {
         />
 
         <LinkButton
-          onClick={() => beginNewLogin(currentIdentifier)}
+          onClick={() => {
+            getConnectService().recordEventLoginOneTapSwitch();
+            beginNewLogin(currentIdentifier);
+          }}
           className='cb-switch'
         >
           Switch Account

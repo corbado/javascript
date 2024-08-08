@@ -32,11 +32,13 @@ const LoginErrorScreenHard = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         navigateToScreen(LoginScreenType.ErrorHard);
+        getConnectService().recordEventLoginError();
         config.onError?.('PasskeyChallengeAborted');
         return;
       }
 
       log.debug('login not allowed');
+      getConnectService().recordEventLoginError();
       handleFallback();
 
       return;
@@ -51,6 +53,11 @@ const LoginErrorScreenHard = () => {
     navigateToScreen(LoginScreenType.Invisible);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
+
+  const handleExplicitFallback = useCallback(() => {
+    getConnectService().recordEventLoginExplicitAbort();
+    handleFallback();
+  }, [getConnectService, handleFallback]);
 
   return (
     <>
@@ -72,7 +79,7 @@ const LoginErrorScreenHard = () => {
 
       <div className='cb-login-error-hard-cta'>
         <Button
-          onClick={handleFallback}
+          onClick={handleExplicitFallback}
           className='cb-outline-button'
         >
           Skip passkey login

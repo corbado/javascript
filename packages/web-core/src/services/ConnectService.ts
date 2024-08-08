@@ -10,6 +10,7 @@ import type {
   ConnectAppendFinishRsp,
   ConnectAppendInitReq,
   ConnectAppendStartRsp,
+  ConnectEventCreateReq,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
   ConnectLoginStartReqSourceEnum,
@@ -19,14 +20,15 @@ import type {
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
+import { ConnectEventCreateReqEventTypeEnum } from '../api/v2';
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
+import type { PasskeyLoginSource } from '../utils';
 import { CorbadoError } from '../utils';
-import type { PasskeyLoginSource } from '../utils/constants/passkeyLoginSource';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -461,9 +463,7 @@ export class ConnectService {
       connectToken: passkeyListToken,
     };
 
-    log.debug(req);
-
-    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+    return this.wrapWithErr(() => this.#connectApi.connectManageList(req));
   }
 
   async manageDelete(
@@ -481,9 +481,36 @@ export class ConnectService {
       credentialID,
     };
 
-    log.debug(req);
+    return this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
+  }
 
-    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
+  recordEventLoginError() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.Error);
+  }
+
+  recordEventLoginExplicitAbort() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.ExplicitAbort);
+  }
+
+  recordEventLoginOneTapSwitch() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.OneTapSwitch);
+  }
+
+  // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
+  #recordEvent(eventType: ConnectEventCreateReqEventTypeEnum) {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      log.warn('No process found to record event.');
+
+      return;
+    }
+
+    const req: ConnectEventCreateReq = {
+      eventType,
+    };
+
+    return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));
   }
 
   #getDefaultFrontendApiUrl() {

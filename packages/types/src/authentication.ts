@@ -87,3 +87,11 @@ export interface ClientCapabilities {
   passkeyPlatformAuthenticator: boolean;
   userVerifyingPlatformAuthenticator: boolean;
 }
+
+export const PasskeyCeremonyType = {
+  Local: 'local',
+  Cda: 'cda',
+  SecurityKey: 'security-key',
+} as const;
+
+export type PasskeyCeremonyType = (typeof PasskeyCeremonyType)[keyof typeof PasskeyCeremonyType];

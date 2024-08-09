@@ -73,7 +73,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
       <div className='cb-login-hybrid-cta'>
         <PrimaryButton
           isLoading={loading}
-          onClick={void handleSubmit}
+          onClick={() => void handleSubmit}
           className='cb-login-hybrid-button'
         >
           Use mobile device

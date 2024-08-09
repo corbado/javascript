@@ -1,13 +1,13 @@
+import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
-import log from 'loglevel';
+import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
-import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { Notification } from '../shared/Notification';
-import useAppendProcess from '../../hooks/useAppendProcess';
 import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
+import { LinkButton } from '../shared/LinkButton';
+import { Notification } from '../shared/Notification';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendAfterErrorScreen = (attestationOptions: string) => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -16,7 +16,7 @@ const AppendAfterErrorScreen = (attestationOptions: string) => {
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
-    if (loading) return;
+    if (loading) {return;}
 
     setLoading(true);
     setError(undefined);

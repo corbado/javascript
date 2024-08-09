@@ -1,15 +1,15 @@
+import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
-import log from 'loglevel';
+import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
-import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
 import Checkbox from '../shared/Checkbox';
-import { PasskeyAddIcon } from '../shared/icons/PasskeyAddIcon';
-import { Notification } from '../shared/Notification';
 import { LockIcon } from '../shared/icons/LockIcon';
-import useAppendProcess from '../../hooks/useAppendProcess';
+import { PasskeyAddIcon } from '../shared/icons/PasskeyAddIcon';
+import { LinkButton } from '../shared/LinkButton';
+import { Notification } from '../shared/Notification';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -19,7 +19,7 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
-    if (loading) return;
+    if (loading) {return;}
 
     setLoading(true);
     setError(undefined);

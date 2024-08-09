@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import { AppendScreenType } from '../../types/screenTypes';
+import AppendAfterErrorScreen from './AppendAfterErrorScreen';
+import AppendAfterHybridLoginScreen from './AppendAfterHybridLoginScreen';
 import AppendInitScreen from './AppendInitScreen';
 import AppendSuccessScreen from './AppendSuccessScreen';
-import AppendAfterHybridLoginScreen from './AppendAfterHybridLoginScreen';
-import AppendAfterErrorScreen from './AppendAfterErrorScreen';
 
 const CorbadoConnectAppendContainer = () => {
   const { currentScreenType, currentScreenOptions } = useAppendProcess();

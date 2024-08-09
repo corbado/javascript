@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 interface Props {
   className?: string;
 }
 
-export const HybridIcon: FC<Props> = ({ className }) => {
+export const HybridIcon = ({ className }: Props) => {
   return (
     <svg
       viewBox='0 0 210 144'

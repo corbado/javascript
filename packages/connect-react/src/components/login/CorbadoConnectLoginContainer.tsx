@@ -5,10 +5,10 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import LoginErrorScreenHard from './LoginErrorScreenHard';
 import LoginErrorScreenSoft from './LoginErrorScreenSoft';
+import LoginHybridScreen from './LoginHybridScreen';
 import LoginInitScreen from './LoginInitScreen';
 import { LoginPasskeyReLoginScreen } from './LoginPasskeyReLoginScreen';
 import LoginSuccess from './LoginSuccess';
-import LoginHybridScreen from './LoginHybridScreen';
 
 const CorbadoConnectLoginContainer = () => {
   const { currentScreenType, currentScreenOptions } = useLoginProcess();

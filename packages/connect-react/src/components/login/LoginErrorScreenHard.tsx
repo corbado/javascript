@@ -32,13 +32,13 @@ const LoginErrorScreenHard = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         navigateToScreen(LoginScreenType.ErrorHard);
-        getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError();
         config.onError?.('PasskeyChallengeAborted');
         return;
       }
 
       log.debug('login not allowed');
-      getConnectService().recordEventLoginError();
+      void getConnectService().recordEventLoginError();
       handleFallback();
 
       return;
@@ -55,7 +55,7 @@ const LoginErrorScreenHard = () => {
   }, [navigateToScreen, config, currentIdentifier]);
 
   const handleExplicitFallback = useCallback(() => {
-    getConnectService().recordEventLoginExplicitAbort();
+    void getConnectService().recordEventLoginExplicitAbort();
     handleFallback();
   }, [getConnectService, handleFallback]);
 

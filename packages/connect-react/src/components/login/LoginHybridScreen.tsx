@@ -1,14 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import type { CorbadoError } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
+import React, { useCallback, useState } from 'react';
+import type { Result } from 'ts-results';
+
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { HybridIcon } from '../shared/icons/HybridIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { HybridIcon } from '../shared/icons/HybridIcon';
-import { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
-import { CorbadoError, PasskeyChallengeCancelledError } from '@corbado/web-core';
-import { Result } from 'ts-results';
 
 const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>) => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -21,12 +23,14 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
   }, [navigateToScreen, config, currentIdentifier]);
 
   const handleExplicitFallback = useCallback(() => {
-    getConnectService().recordEventLoginExplicitAbort();
+    void getConnectService().recordEventLoginExplicitAbort();
     handleFallback();
   }, [getConnectService, handleFallback]);
 
   const handleSubmit = useCallback(async () => {
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     setLoading(true);
 
@@ -41,13 +45,13 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
-        getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError();
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      getConnectService().recordEventLoginError();
+      void getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(currentIdentifier);
 
@@ -69,7 +73,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
       <div className='cb-login-hybrid-cta'>
         <PrimaryButton
           isLoading={loading}
-          onClick={handleSubmit}
+          onClick={void handleSubmit}
           className='cb-login-hybrid-button'
         >
           Use mobile device

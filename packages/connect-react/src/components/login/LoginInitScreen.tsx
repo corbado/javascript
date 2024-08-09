@@ -141,7 +141,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      getConnectService().recordEventLoginError();
+      void getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 
@@ -164,13 +164,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
         navigateToScreen(LoginScreenType.ErrorSoft);
-        getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError();
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      getConnectService().recordEventLoginError();
+      void getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 

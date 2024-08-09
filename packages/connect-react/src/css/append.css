@@ -95,7 +95,8 @@
 }
 
 .cb-append-after-hybrid-login-lock-icon {
-  width: 25px;
+  width: 24px;
+  flex-shrink: 0;
 }
 
 .cb-append-after-hybrid-login-cta {

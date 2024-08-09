@@ -13,14 +13,17 @@ type Props = {
 
 export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, initialScreenType, config }) => {
   const [currentScreenType, setCurrentScreenType] = useState<AppendScreenType>(initialScreenType);
+  const [currentScreenOptions, setCurrentScreenOptions] = useState<any>();
 
-  const navigateToScreen = useCallback((screenType: AppendScreenType) => {
+  const navigateToScreen = useCallback((screenType: AppendScreenType, options?: any) => {
     setCurrentScreenType(screenType);
+    setCurrentScreenOptions(options);
   }, []);
 
   const contextValue = useMemo<AppendProcessContextProps>(
     () => ({
       currentScreenType,
+      currentScreenOptions,
       navigateToScreen,
       config,
     }),

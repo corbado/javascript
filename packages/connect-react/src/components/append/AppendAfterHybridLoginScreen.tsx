@@ -1,43 +1,53 @@
 import React, { useCallback, useState } from 'react';
 
-import useLoginProcess from '../../hooks/useLoginProcess';
+import log from 'loglevel';
 import useShared from '../../hooks/useShared';
-import { LoginScreenType } from '../../types/screenTypes';
+import { AppendScreenType } from '../../types/screenTypes';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import Checkbox from '../shared/Checkbox';
 import { PasskeyAddIcon } from '../shared/icons/PasskeyAddIcon';
+import { Notification } from '../shared/Notification';
 import { LockIcon } from '../shared/icons/LockIcon';
+import useAppendProcess from '../../hooks/useAppendProcess';
 
-const AppendAfterHybridLoginScreen = () => {
-  const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
+const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
+  const { config, navigateToScreen } = useAppendProcess();
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [loading, _] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
   const { getConnectService } = useShared();
 
-  const handleFallback = useCallback(() => {
-    navigateToScreen(LoginScreenType.Invisible);
-    config.onFallback(currentIdentifier);
-  }, [navigateToScreen, config, currentIdentifier]);
+  const handleSubmit = useCallback(async () => {
+    if (loading) return;
 
-  const handleExplicitFallback = useCallback(() => {
-    void getConnectService().recordEventLoginExplicitAbort();
-    handleFallback();
-  }, [getConnectService, handleFallback]);
+    setLoading(true);
+    setError(undefined);
 
-  const handleSubmit = useCallback(async () => {}, [
-    getConnectService,
-    config,
-    navigateToScreen,
-    currentIdentifier,
-    loading,
-  ]);
+    const res = await getConnectService().completeAppend(attestationOptions);
+    if (res.err) {
+      log.error('error:', res.val);
+      setLoading(false);
+      setError('Passkey operation was cancelled or timed out.');
+
+      return;
+    }
+
+    setLoading(false);
+    navigateToScreen(AppendScreenType.Success);
+  }, [getConnectService, config, navigateToScreen, loading]);
 
   const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
 
   return (
     <div className='cb-append-after-hybrid-login-container'>
       <div className='cb-h1'>Add a passkey to this device</div>
+      {error ? (
+        <Notification
+          className='cb-error-notification'
+          message={error}
+        />
+      ) : null}
       <div className='cb-append-after-hybrid-login-icons'>
         <PasskeyAddIcon className='cb-append-after-hybrid-login-icon' />
       </div>
@@ -59,7 +69,7 @@ const AppendAfterHybridLoginScreen = () => {
           Add new passkey
         </PrimaryButton>
         <LinkButton
-          onClick={handleExplicitFallback}
+          onClick={() => config.onSkip()}
           className='cb-append-after-hybrid-login-fallback'
         >
           Continue without new passkey

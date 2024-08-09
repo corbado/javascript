@@ -30,7 +30,7 @@ export default function LoginPage() {
               onComplete={async session => {
                 console.log(session);
                 await postPasskeyLogin(session);
-                router.push('/home');
+                router.push('/post-login');
               }}
               onSignupClick={() => router.push('/signup')}
               onHelpClick={() => alert('help requested')}

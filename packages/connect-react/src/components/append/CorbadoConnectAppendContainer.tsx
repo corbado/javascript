@@ -4,14 +4,17 @@ import useAppendProcess from '../../hooks/useAppendProcess';
 import { AppendScreenType } from '../../types/screenTypes';
 import AppendInitScreen from './AppendInitScreen';
 import AppendSuccessScreen from './AppendSuccessScreen';
+import AppendAfterHybridLoginScreen from './AppendAfterHybridLoginScreen';
 
 const CorbadoConnectAppendContainer = () => {
-  const { currentScreenType } = useAppendProcess();
+  const { currentScreenType, currentScreenOptions } = useAppendProcess();
 
   const currentScreenComponent = useMemo(() => {
     switch (currentScreenType) {
       case AppendScreenType.Init:
         return <AppendInitScreen />;
+      case AppendScreenType.AfterHybridLogin:
+        return <AppendAfterHybridLoginScreen {...currentScreenOptions} />;
       case AppendScreenType.Success:
         return <AppendSuccessScreen />;
     }

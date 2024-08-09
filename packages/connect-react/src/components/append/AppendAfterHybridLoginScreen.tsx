@@ -19,7 +19,9 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
-    if (loading) {return;}
+    if (loading) {
+      return;
+    }
 
     setLoading(true);
     setError(undefined);

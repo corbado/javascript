@@ -126,15 +126,38 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     config.onLoginStart?.();
 
-    const res = await getConnectService().login(identifier, PasskeyLoginSource.TextField);
-    if (res.err) {
+    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField);
+
+    if (resStart.err) {
       setIdentifierBasedLoading(false);
-      if (res.val.ignore) {
+      if (resStart.val.ignore) {
         return;
       }
 
-      if (res.val instanceof ConnectUserNotFound) {
+      if (resStart.val instanceof ConnectUserNotFound) {
         setError('There is no account registered with this email.');
+        return;
+      }
+
+      log.debug('fallback: error during password login start');
+      config.onError?.('PasskeyLoginFailure');
+      getConnectService().recordEventLoginError();
+      navigateToScreen(LoginScreenType.Invisible);
+      config.onFallback(identifier);
+
+      return;
+    }
+
+    if (resStart.val.isCDA) {
+      navigateToScreen(LoginScreenType.LoginHybridScreen, resStart);
+      return;
+    }
+
+    const res = await getConnectService().continueLogin(resStart);
+
+    if (res.err) {
+      setIdentifierBasedLoading(false);
+      if (res.val.ignore) {
         return;
       }
 

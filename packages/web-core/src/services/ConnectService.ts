@@ -14,6 +14,7 @@ import type {
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
   ConnectLoginStartReqSourceEnum,
+  ConnectLoginStartRsp,
   ConnectManageDeleteReq,
   ConnectManageDeleteRsp,
   ConnectManageInitReq,
@@ -179,28 +180,48 @@ export class ConnectService {
   }
 
   async login(identifier: string, source: PasskeyLoginSource): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    const resStart = await this.loginStart(identifier, source);
+
+    return this.continueLogin(resStart);
+  }
+
+  async loginStart(
+    identifier: string,
+    source: PasskeyLoginSource,
+  ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
 
-    const resStart = await this.wrapWithErr(() =>
+    const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginStart({
         identifier,
         source: source as ConnectLoginStartReqSourceEnum,
       }),
     );
-    if (resStart.err) {
+    if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
-      return resStart;
+      return res;
     }
 
-    if (!resStart.val.assertionOptions) {
+    if (!res.val.assertionOptions) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return Err(CorbadoError.noPasskeyAvailable());
     }
 
+    return res;
+  }
+
+  async continueLogin(
+    resStart: Result<ConnectLoginStartRsp, CorbadoError>,
+  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    if (resStart.err) {
+      return resStart;
+    }
+
     const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
+
     if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return res;

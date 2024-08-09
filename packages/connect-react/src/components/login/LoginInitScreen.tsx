@@ -153,7 +153,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       return;
     }
 
-    const res = await getConnectService().continueLogin(resStart);
+    const res = await getConnectService().loginContinue(resStart);
 
     if (res.err) {
       setIdentifierBasedLoading(false);

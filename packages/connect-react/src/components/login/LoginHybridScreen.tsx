@@ -34,7 +34,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
 
     setLoading(true);
 
-    const res = await getConnectService().continueLogin(resStart);
+    const res = await getConnectService().loginContinue(resStart);
 
     if (res.err) {
       setLoading(false);

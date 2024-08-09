@@ -182,7 +182,7 @@ export class ConnectService {
   async login(identifier: string, source: PasskeyLoginSource): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const resStart = await this.loginStart(identifier, source);
 
-    return this.continueLogin(resStart);
+    return this.loginContinue(resStart);
   }
 
   async loginStart(
@@ -213,7 +213,7 @@ export class ConnectService {
     return res;
   }
 
-  async continueLogin(
+  async loginContinue(
     resStart: Result<ConnectLoginStartRsp, CorbadoError>,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     if (resStart.err) {

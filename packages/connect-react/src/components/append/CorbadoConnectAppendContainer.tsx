@@ -5,6 +5,7 @@ import { AppendScreenType } from '../../types/screenTypes';
 import AppendInitScreen from './AppendInitScreen';
 import AppendSuccessScreen from './AppendSuccessScreen';
 import AppendAfterHybridLoginScreen from './AppendAfterHybridLoginScreen';
+import AppendAfterErrorScreen from './AppendAfterErrorScreen';
 
 const CorbadoConnectAppendContainer = () => {
   const { currentScreenType, currentScreenOptions } = useAppendProcess();
@@ -15,6 +16,8 @@ const CorbadoConnectAppendContainer = () => {
         return <AppendInitScreen />;
       case AppendScreenType.AfterHybridLogin:
         return <AppendAfterHybridLoginScreen {...currentScreenOptions} />;
+      case AppendScreenType.AfterError:
+        return <AppendAfterErrorScreen {...currentScreenOptions} />;
       case AppendScreenType.Success:
         return <AppendSuccessScreen />;
     }

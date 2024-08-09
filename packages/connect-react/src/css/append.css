@@ -77,13 +77,15 @@
   justify-content: center;
 }
 
-.cb-append-after-hybrid-login-icons {
+.cb-append-after-hybrid-login-icons,
+.cb-append-after-error-icons {
   margin: 1rem 0;
   display: flex;
   justify-content: center;
 }
 
-.cb-append-after-hybrid-login-icons > * {
+.cb-append-after-hybrid-login-icons > *,
+.cb-append-after-error-icons > * {
   width: 230px;
 }
 
@@ -99,7 +101,8 @@
   flex-shrink: 0;
 }
 
-.cb-append-after-hybrid-login-cta {
+.cb-append-after-hybrid-login-cta,
+.cb-append-after-error-cta {
   margin: 1rem 0rem;
   display: flex;
   flex-direction: column;

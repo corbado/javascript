@@ -77,6 +77,11 @@ const AppendInitScreen = () => {
         return;
       }
 
+      if (startAppendRes.val.variant === 'after-error') {
+        navigateToScreen(AppendScreenType.AfterError, startAppendRes.val.attestationOptions);
+        return;
+      }
+
       setAttestationOptions(startAppendRes.val.attestationOptions);
       finishLoading();
     };

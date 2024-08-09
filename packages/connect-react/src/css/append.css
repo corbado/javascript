@@ -77,6 +77,34 @@
   justify-content: center;
 }
 
+.cb-append-after-hybrid-login-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-append-after-hybrid-login-icons > * {
+  width: 230px;
+}
+
+.cb-append-after-hybrid-login-content {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cb-append-after-hybrid-login-lock-icon {
+  width: 25px;
+}
+
+.cb-append-after-hybrid-login-cta {
+  margin: 1rem 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 @media screen and (max-width: 724px) {
   .cb-connect-append-cta {
     flex-direction: column-reverse;

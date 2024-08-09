@@ -5,6 +5,7 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import LoginErrorScreenHard from './LoginErrorScreenHard';
 import LoginErrorScreenSoft from './LoginErrorScreenSoft';
+import LoginHybridScreen from './LoginHybridScreen';
 import LoginInitScreen from './LoginInitScreen';
 import { LoginPasskeyReLoginScreen } from './LoginPasskeyReLoginScreen';
 import LoginSuccess from './LoginSuccess';
@@ -26,6 +27,8 @@ const CorbadoConnectLoginContainer = () => {
         return <LoginErrorScreenHard />;
       case LoginScreenType.PasskeyReLogin:
         return <LoginPasskeyReLoginScreen />;
+      case LoginScreenType.LoginHybridScreen:
+        return <LoginHybridScreen {...currentScreenOptions} />;
       case LoginScreenType.Invisible:
         return <></>;
     }

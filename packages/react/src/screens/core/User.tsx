@@ -22,8 +22,8 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier, deleteIdentifier } = useCorbado();
-  const { t } = useTranslation('translation', { keyPrefix: 'user' });
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier, deleteIdentifier, verifyIdentifierStart, verifyIdentifierFinish } = useCorbado();
+  const { t } = useTranslation('translation');
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,6 +40,8 @@ export const User: FC = () => {
   const [editingUsername, setEditingUsername] = useState<boolean>(false);
 
   const [emails, setEmails] = useState<Identifier[]>([]);
+  const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
+  const [challengeCodes, setChallengeCodes] = useState<string[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
   const [newEmail, setNewEmail] = useState<string>("");
 
@@ -58,13 +60,13 @@ export const User: FC = () => {
     };
   }, [isAuthenticated]);
 
-  const nameFieldLabel = useMemo(() => t('name'), [t]);
-  const usernameFieldLabel = useMemo(() => t('username'), [t]);
-  const emailFieldLabel = useMemo(() => t('email'), [t]);
-  const phoneFieldLabel = useMemo(() => t('phone'), [t]);
-  const socialFieldLabel = useMemo(() => t('social'), [t]);
-  const verifiedText = useMemo(() => t('verified'), [t]);
-  const unverifiedText = useMemo(() => t('unverified'), [t]);
+  const nameFieldLabel = useMemo(() => t('user.name'), [t]);
+  const usernameFieldLabel = useMemo(() => t('user.username'), [t]);
+  const emailFieldLabel = useMemo(() => t('user.email'), [t]);
+  const phoneFieldLabel = useMemo(() => t('user.phone'), [t]);
+  const socialFieldLabel = useMemo(() => t('user.social'), [t]);
+  const verifiedText = useMemo(() => t('user.verified'), [t]);
+  const unverifiedText = useMemo(() => t('user.unverified'), [t]);
   const processUser = useMemo((): ProcessedUser => {
     if (!currentUser) {
       return {
@@ -101,7 +103,10 @@ export const User: FC = () => {
       setName(result.val.fullName || "");
       const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
       setUsername(usernameIdentifier);
-      setEmails(result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Email));
+      const emails = result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Email);
+      setEmails(emails);
+      setVerifyingEmails(emails.map(() => false));
+      setChallengeCodes(emails.map(() => ""));
       setLoading(false);
     },
     [corbadoApp],
@@ -141,9 +146,15 @@ export const User: FC = () => {
   };
 
   const changeName = async () => {
-    // TODO: input checking?
-    if (name) {
-      await updateName(name);
+    if (!name) {
+      console.error("name is empty");
+      return;
+    }
+    const res = await updateName(name);
+    if (res.err) {
+      // no possible error code
+      console.error(res.val.message);
+      return;
     }
     setEditingName(false);
     void getCurrentUser();
@@ -154,40 +165,104 @@ export const User: FC = () => {
   };
 
   const addUsername = async () => {
-    if (username) {
-      await createIdentifier(LoginIdentifierType.Username, username?.value || "");
+    if (!username || !username.value) {
+      console.error("username is empty");
+      return;
+    }
+    const res = await createIdentifier(LoginIdentifierType.Username, username?.value || "");
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
+        console.error(t(`errors.${code}`));
+      }
+      return;
     }
     setAddingUsername(false);
     void getCurrentUser();
   };
 
   const changeUsername = async () => {
-    // TODO: input checking?
-    if (username) {
-      await updateUsername(username.id, username.value);
+    if (!username || !username.value) {
+      console.error("username is empty");
+      return;
+    }
+    const res = await updateUsername(username.id, username.value);
+    if (res.err) {
+      // no possible error code
+      console.error(res.val.message);
+      return;
     }
     setEditingUsername(false);
     void getCurrentUser();
   };
 
   const addEmail = async () => {
-    await createIdentifier(LoginIdentifierType.Email, newEmail);
+    if (!newEmail) {
+      console.error("email is empty");
+      return;
+    }
+    const res = await createIdentifier(LoginIdentifierType.Email, newEmail);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
     setNewEmail("");
     setAddingEmail(false);
     void getCurrentUser();
   };
 
-  const removeEmail = async (email: Identifier) => {
-    await deleteIdentifier(email.id);
+  const removeEmail = async (index: number) => {
+    const res = await deleteIdentifier(emails[index].id);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible codes: no_remaining_identifier, no_remaining_verified_identifier
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
     void getCurrentUser();
   };
 
-  const startEmailVerification = (email: Identifier) => {
-    return email;
+  const startEmailVerification = async (index: number) => {
+    const res = await verifyIdentifierStart(emails[index].id);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: wait_before_retry
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
+    setVerifyingEmails(verifyingEmails.map((v, i) => (i === index) ? true : v));
+  };
+
+  const finishEmailVerification = async (index: number) => {
+    const res = await verifyIdentifierFinish(emails[index].id, challengeCodes[index]);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: invalid_challenge_solution_{verification_type}
+        console.error(t(`errors.${code}`));
+      }
+    } else {
+      void getCurrentUser();
+    }
+  };
+
+  const getErrorCode = (message: string) => {
+    const regex = /\(([^)]+)\)/;
+    const matches = regex.exec(message);
+    return matches ? matches[1] : undefined;
   };
 
   if (!isAuthenticated) {
-    return <div>{t('warning_notLoggedIn')}</div>;
+    return <div>{t('user.warning_notLoggedIn')}</div>;
   }
 
   if (loading) {
@@ -197,7 +272,7 @@ export const User: FC = () => {
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
       <div className='cb-user-details-container'>
-        <Text className='cb-user-details-title'>{t('title')}</Text>
+        <Text className='cb-user-details-title'>{t('user.title')}</Text>
         {fullNameRequired && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{nameFieldLabel}</Text>
@@ -342,39 +417,61 @@ export const User: FC = () => {
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{emailFieldLabel}</Text>
             <div className='cb-user-details-body'>
-              {emails.map((email) => (
+              {emails.map((email, index) => (
                 <div className='cb-user-details-identifier-container'>
-                  <div className='cb-user-details-body-row'>
-                    <Text className='cb-user-details-text'>{email.value}</Text>
-                    <div className='cb-user-details-header-badge-section'>
-                      {email.status === 'primary' ? (
-                        <div className='cb-user-details-header-badge'>
-                          <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                          <Text className='cb-user-details-text-primary'>Primary</Text>
-                        </div>
-                      ) : email.status === 'verified' ? (
-                        <div className='cb-user-details-header-badge'>
-                          <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                          <Text className='cb-user-details-text-primary'>Verified</Text>
-                        </div>
-                      ) : (
-                        <div className='cb-user-details-header-badge'>
-                          <PendingIcon className='cb-user-details-header-badge-icon' />
-                          <Text className='cb-user-details-text-primary'>Pending</Text>
-                        </div>
-                      )}
+                  {verifyingEmails[index] ? (
+                    <div>
+                      <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
+                      <InputField
+                        className='cb-user-details-text'
+                        onChange={e => setChallengeCodes(challengeCodes.map((c, i) => i === index ? e.target.value : c))}
+                      />
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void finishEmailVerification(index)}>
+                        <Text className='cb-user-details-subheader'>Enter</Text>
+                      </Button>
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index) ? false : v))}>
+                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                      </Button>
                     </div>
-                    <Button
-                        className='cb-user-details-body-button-primary'
-                        onClick={() => void startEmailVerification(email)}>
-                      <Text className='cb-user-details-subheader'>Verify</Text>
-                    </Button>
-                    <Button
-                        className='cb-user-details-body-button-secondary'
-                        onClick={() => void removeEmail(email)}>
-                      <Text className='cb-user-details-subheader'>Delete</Text>
-                    </Button>
-                  </div>
+                  ) : (
+                    <div className='cb-user-details-body-row'>
+                      <Text className='cb-user-details-text'>{email.value}</Text>
+                      <div className='cb-user-details-header-badge-section'>
+                        {email.status === 'primary' ? (
+                          <div className='cb-user-details-header-badge'>
+                            <PrimaryIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Primary</Text>
+                          </div>
+                        ) : email.status === 'verified' ? (
+                          <div className='cb-user-details-header-badge'>
+                            <VerifiedIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Verified</Text>
+                          </div>
+                        ) : (
+                          <div className='cb-user-details-header-badge'>
+                            <PendingIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Pending</Text>
+                          </div>
+                        )}
+                      </div>
+                      {email.status === 'pending' && (
+                        <Button
+                            className='cb-user-details-body-button-primary'
+                            onClick={() => void startEmailVerification(index)}>
+                          <Text className='cb-user-details-subheader'>Verify</Text>
+                        </Button>
+                      )}
+                      <Button
+                          className='cb-user-details-body-button-secondary'
+                          onClick={() => void removeEmail(index)}>
+                        <Text className='cb-user-details-subheader'>Delete</Text>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
               {addingEmail ? (

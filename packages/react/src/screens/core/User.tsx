@@ -4,7 +4,7 @@ import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, InputField, LoadingSpinner, PasskeyListErrorBoundary, PhoneInputField, Text } from '../../components';
+import { Button, InputField, LoadingSpinner, PasskeyListErrorBoundary, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
@@ -30,7 +30,7 @@ export const User: FC = () => {
   const [fullNameRequired, setFullNameRequired] = useState<boolean>(false);
   const [usernameEnabled, setUsernameEnabled] = useState<boolean>(false);
   const [emailEnabled, setEmailEnabled] = useState<boolean>(false);
-  // const [phoneEnabled, setPhoneEnabled] = useState<boolean>(false);
+  const [phoneEnabled, setPhoneEnabled] = useState<boolean>(false);
 
   const [name, setName] = useState<string | undefined>();
   const [editingName, setEditingName] = useState<boolean>(false);
@@ -41,10 +41,15 @@ export const User: FC = () => {
 
   const [emails, setEmails] = useState<Identifier[]>([]);
   const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
-  const [challengeCodes, setChallengeCodes] = useState<string[]>([]);
+  const [emailChallengeCodes, setEmailChallengeCodes] = useState<string[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
   const [newEmail, setNewEmail] = useState<string>("");
 
+  const [phones, setPhones] = useState<Identifier[]>([]);
+  const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
+  const [phoneChallengeCodes, setPhoneChallengeCodes] = useState<string[]>([]);
+  const [addingPhone, setAddingPhone] = useState<boolean>(false);
+  const [newPhone, setNewPhone] = useState<string>("");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -65,8 +70,6 @@ export const User: FC = () => {
   const emailFieldLabel = useMemo(() => t('user.email'), [t]);
   const phoneFieldLabel = useMemo(() => t('user.phone'), [t]);
   const socialFieldLabel = useMemo(() => t('user.social'), [t]);
-  const verifiedText = useMemo(() => t('user.verified'), [t]);
-  const unverifiedText = useMemo(() => t('user.unverified'), [t]);
   const processUser = useMemo((): ProcessedUser => {
     if (!currentUser) {
       return {
@@ -106,7 +109,11 @@ export const User: FC = () => {
       const emails = result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Email);
       setEmails(emails);
       setVerifyingEmails(emails.map(() => false));
-      setChallengeCodes(emails.map(() => ""));
+      setEmailChallengeCodes(emails.map(() => ""));
+      const phones = result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Phone);
+      setPhones(phones);
+      setVerifyingPhones(phones.map(() => false));
+      setPhoneChallengeCodes(phones.map(() => ""));
       setLoading(false);
     },
     [corbadoApp],
@@ -131,7 +138,7 @@ export const User: FC = () => {
         } else if (identifierConfig.type === LoginIdentifierConfigType.Email) {
           setEmailEnabled(true);
         } else if (identifierConfig.type === LoginIdentifierConfigType.Phone) {
-          // setPhoneEnabled(true);
+          setPhoneEnabled(true);
         }
       }
       setLoading(false);
@@ -243,16 +250,74 @@ export const User: FC = () => {
   };
 
   const finishEmailVerification = async (index: number) => {
-    const res = await verifyIdentifierFinish(emails[index].id, challengeCodes[index]);
+    const res = await verifyIdentifierFinish(emails[index].id, emailChallengeCodes[index]);
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: invalid_challenge_solution_{verification_type}
+        // possible code: invalid_challenge_solution_email-otp
         console.error(t(`errors.${code}`));
       }
-    } else {
-      void getCurrentUser();
+      return;
     }
+    void getCurrentUser();
+  };
+
+  const addPhone = async () => {
+    if (!newPhone) {
+      console.error("phone is empty");
+      return;
+    }
+    const res = await createIdentifier(LoginIdentifierType.Phone, newPhone);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
+    setNewPhone("");
+    setAddingPhone(false);
+    void getCurrentUser();
+  };
+
+  const removePhone = async (index: number) => {
+    const res = await deleteIdentifier(phones[index].id);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible codes: no_remaining_identifier, no_remaining_verified_identifier
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
+    void getCurrentUser();
+  };
+
+  const startPhoneVerification = async (index: number) => {
+    const res = await verifyIdentifierStart(phones[index].id);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: wait_before_retry
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
+    setVerifyingPhones(verifyingPhones.map((v, i) => (i === index) ? true : v));
+  };
+
+  const finishPhoneVerification = async (index: number) => {
+    const res = await verifyIdentifierFinish(phones[index].id, phoneChallengeCodes[index]);
+    if (res.err) {
+      const code = getErrorCode(res.val.message);
+      if (code) {
+        // possible code: invalid_challenge_solution_phone-otp
+        console.error(t(`errors.${code}`));
+      }
+      return;
+    }
+    void getCurrentUser();
   };
 
   const getErrorCode = (message: string) => {
@@ -424,7 +489,7 @@ export const User: FC = () => {
                       <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
                       <InputField
                         className='cb-user-details-text'
-                        onChange={e => setChallengeCodes(challengeCodes.map((c, i) => i === index ? e.target.value : c))}
+                        onChange={e => setEmailChallengeCodes(emailChallengeCodes.map((c, i) => i === index ? e.target.value : c))}
                       />
                       <Button
                           className='cb-user-details-body-button-primary'
@@ -505,40 +570,99 @@ export const User: FC = () => {
             </div>
           </div>
         )}
-        <div className='cb-user-details-section-indentifiers-list'>
-          {processUser.phoneNumbers.map((phone, i) => (
-            <div className='cb-user-details-card'>
-              <div
-                className='cb-user-details-section-indentifiers-list-item'
-                key={`user-details-phone-${phone.value}`}
-              >
-                <div className='cb-user-details-section-indentifiers-list-item-field'>
-                  <PhoneInputField
-                    className='cb-user-details-section-indentifiers-list-item-field-input'
-                    key={phone.value}
-                    label={i === 0 ? phoneFieldLabel : undefined}
-                    initialPhoneNumber={phone.value}
-                    disabled
+        {phoneEnabled && (
+          <div className='cb-user-details-card'>
+            <Text className='cb-user-details-header'>{phoneFieldLabel}</Text>
+            <div className='cb-user-details-body'>
+              {phones.map((phone, index) => (
+                <div className='cb-user-details-identifier-container'>
+                  {verifyingPhones[index] ? (
+                    <div>
+                      <Text className='cb-user-details-text'>Enter OTP code for: {phone.value}</Text>
+                      <InputField
+                        className='cb-user-details-text'
+                        onChange={e => setPhoneChallengeCodes(phoneChallengeCodes.map((c, i) => i === index ? e.target.value : c))}
+                      />
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void finishPhoneVerification(index)}>
+                        <Text className='cb-user-details-subheader'>Enter</Text>
+                      </Button>
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index) ? false : v))}>
+                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className='cb-user-details-body-row'>
+                      <Text className='cb-user-details-text'>{phone.value}</Text>
+                      <div className='cb-user-details-header-badge-section'>
+                        {phone.status === 'primary' ? (
+                          <div className='cb-user-details-header-badge'>
+                            <PrimaryIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Primary</Text>
+                          </div>
+                        ) : phone.status === 'verified' ? (
+                          <div className='cb-user-details-header-badge'>
+                            <VerifiedIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Verified</Text>
+                          </div>
+                        ) : (
+                          <div className='cb-user-details-header-badge'>
+                            <PendingIcon className='cb-user-details-header-badge-icon' />
+                            <Text className='cb-user-details-text-primary'>Pending</Text>
+                          </div>
+                        )}
+                      </div>
+                      {phone.status === 'pending' && (
+                        <Button
+                            className='cb-user-details-body-button-primary'
+                            onClick={() => void startPhoneVerification(index)}>
+                          <Text className='cb-user-details-subheader'>Verify</Text>
+                        </Button>
+                      )}
+                      <Button
+                          className='cb-user-details-body-button-secondary'
+                          onClick={() => void removePhone(index)}>
+                        <Text className='cb-user-details-subheader'>Delete</Text>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {addingPhone ? (
+                <div className='cb-user-details-identifier-container'>
+                  <InputField
+                    className='cb-user-details-text'
+                    style={{width: '100%'}}
+                    // key={`user-entry-${processUser.username}`}
+                    value={newPhone}
+                    onChange={e => setNewPhone(e.target.value)}
                   />
+                  <Button
+                      className='cb-user-details-body-button-primary'
+                      onClick={() => void addPhone()}>
+                    <Text className='cb-user-details-subheader'>Save</Text>
+                  </Button>
+                  <Button
+                      className='cb-user-details-body-button-secondary'
+                      onClick={() => {setAddingPhone(false)}}>
+                    <Text className='cb-user-details-subheader'>Cancel</Text>
+                  </Button>
                 </div>
-                <div
-                  className={`cb-user-details-section-indentifiers-list-item-badge cb-user-details-section-indentifiers-list-item-badge-${
-                    phone.status === 'verified' ? 'primary' : 'secondary'
-                  }`}
-                >
-                  <Text
-                    level='2'
-                    fontFamilyVariant='secondary'
-                    fontWeight='bold'
-                    className='cb-user-details-section-indentifiers-list-item-badge-text'
-                  >
-                    {phone.status === 'verified' ? verifiedText : unverifiedText}
-                  </Text>
-                </div>
-              </div>
+              ) : (
+                <Button
+                    className='cb-user-details-body-button'
+                    onClick={() => setAddingPhone(true)}>
+                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                  <Text className='cb-user-details-subheader'>Add Phone</Text>
+                </Button>
+              )}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
         <div className='cb-user-details-section-indentifiers-list'>
           {processUser.socialAccounts.map((social, i) => (
             <div className='cb-user-details-card'>

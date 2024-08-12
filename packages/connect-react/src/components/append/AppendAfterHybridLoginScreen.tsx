@@ -11,7 +11,7 @@ import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
-const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
+const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);

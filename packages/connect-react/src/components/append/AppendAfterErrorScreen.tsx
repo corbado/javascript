@@ -10,7 +10,7 @@ import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
-const AppendAfterErrorScreen = (attestationOptions: string) => {
+const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);

@@ -73,12 +73,14 @@ const AppendInitScreen = () => {
       }
 
       if (startAppendRes.val.variant === 'after-hybrid') {
-        navigateToScreen(AppendScreenType.AfterHybridLogin, startAppendRes.val.attestationOptions);
+        navigateToScreen(AppendScreenType.AfterHybridLogin, {
+          attestationOptions: startAppendRes.val.attestationOptions,
+        });
         return;
       }
 
       if (startAppendRes.val.variant === 'after-error') {
-        navigateToScreen(AppendScreenType.AfterError, startAppendRes.val.attestationOptions);
+        navigateToScreen(AppendScreenType.AfterError, { attestationOptions: startAppendRes.val.attestationOptions });
         return;
       }
 

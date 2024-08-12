@@ -4,11 +4,11 @@ import React, { useCallback, useState } from 'react';
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
+import Checkbox from '../shared/Checkbox';
 import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import Checkbox from '../shared/Checkbox';
 
 const AppendAfterErrorScreen = (attestationOptions: string) => {
   const { config, navigateToScreen } = useAppendProcess();

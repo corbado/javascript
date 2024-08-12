@@ -30,7 +30,6 @@ export class WebAuthnService {
 
       return Ok(serializedResponse);
     } catch (e) {
-      log.error('Error creating passkey', e);
       if (e instanceof DOMException) {
         return Err(CorbadoError.fromDOMException(e));
       } else {

@@ -19,7 +19,6 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
-    console.log('attestationOptions', attestationOptions);
     if (loading) {
       return;
     }
@@ -52,7 +51,7 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
   const handleSkip = async () => {
     if (dontShowAgain) {
-      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
+      const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
 
       if (createEventRes?.err) {
         log.error('error:', createEventRes.val);

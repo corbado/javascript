@@ -1858,6 +1858,12 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProcessCommon
+     */
+    'hideBadge': boolean;
 }
 /**
  * tbd.

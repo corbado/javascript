@@ -1,3 +1,9 @@
+## 2.11.0
+
+### Minor changes
+
+- Consume hideBadge property.
+
 ## 2.10.0
 
 ### Minor changes

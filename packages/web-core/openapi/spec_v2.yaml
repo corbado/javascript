@@ -1496,11 +1496,14 @@ components:
       required:
         - appName
         - frontendApiUrl
+        - hideBadge
       properties:
         appName:
           type: string
         frontendApiUrl:
           type: string
+        hideBadge:
+          type: boolean
 
     shortSessionCookieConfig:
       type: object

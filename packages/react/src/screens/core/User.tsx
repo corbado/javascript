@@ -22,7 +22,7 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier } = useCorbado();
+  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier, deleteIdentifier } = useCorbado();
   const { t } = useTranslation('translation', { keyPrefix: 'user' });
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,6 +36,7 @@ export const User: FC = () => {
   const [editingName, setEditingName] = useState<boolean>(false);
 
   const [username, setUsername] = useState<Identifier | undefined>();
+  const [addingUsername, setAddingUsername] = useState<boolean>(false);
   const [editingUsername, setEditingUsername] = useState<boolean>(false);
 
   const [emails, setEmails] = useState<Identifier[]>([]);
@@ -152,6 +153,14 @@ export const User: FC = () => {
     await navigator.clipboard.writeText(username?.value || "");
   };
 
+  const addUsername = async () => {
+    if (username) {
+      await createIdentifier(LoginIdentifierType.Username, username?.value || "");
+    }
+    setAddingUsername(false);
+    void getCurrentUser();
+  };
+
   const changeUsername = async () => {
     // TODO: input checking?
     if (username) {
@@ -166,6 +175,15 @@ export const User: FC = () => {
     setNewEmail("");
     setAddingEmail(false);
     void getCurrentUser();
+  };
+
+  const removeEmail = async (email: Identifier) => {
+    await deleteIdentifier(email.id);
+    void getCurrentUser();
+  };
+
+  const startEmailVerification = (email: Identifier) => {
+    return email;
   };
 
   if (!isAuthenticated) {
@@ -184,91 +202,147 @@ export const User: FC = () => {
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{nameFieldLabel}</Text>
             <div className='cb-user-details-body'>
-              <div className='cb-user-details-body-row'>
-                <InputField
-                  className='cb-user-details-text'
-                  // key={`user-entry-${processUser.name}`}
-                  value={name}
-                  disabled={!editingName}
-                  onChange={e => setName(e.target.value)}
-                />
-                <CopyIcon
-                  className='cb-user-details-body-row-icon'
-                  color='secondary'
-                  onClick={() => void copyName()}
-                />
-              </div>
-              {editingName ? (
-                <div>
-                  <Button
-                      className='cb-user-details-body-button-primary'
-                      onClick={() => void changeName()}>
-                    <Text className='cb-user-details-subheader'>Save</Text>
-                  </Button>
-                  <Button
-                      className='cb-user-details-body-button-secondary'
-                      onClick={() => {setName(processUser.name); setEditingName(false)}}>
-                    <Text className='cb-user-details-subheader'>Cancel</Text>
-                  </Button>
-                </div>
-              ) : (
+              {!processUser.name && !editingName ? (
                 <Button
                     className='cb-user-details-body-button'
                     onClick={() => setEditingName(true)}>
-                  <ChangeIcon className='cb-user-details-body-button-icon' />
-                  <Text className='cb-user-details-subheader'>Change</Text>
+                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                  <Text className='cb-user-details-subheader'>Add Name</Text>
                 </Button>
+              ) : (
+                <div>
+                  <div className='cb-user-details-body-row'>
+                    <InputField
+                      className='cb-user-details-text'
+                      // key={`user-entry-${processUser.name}`}
+                      value={name}
+                      disabled={!editingName}
+                      onChange={e => setName(e.target.value)}
+                    />
+                    <CopyIcon
+                      className='cb-user-details-body-row-icon'
+                      color='secondary'
+                      onClick={() => void copyName()}
+                    />
+                  </div>
+                  {editingName ? (
+                    <div>
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void changeName()}>
+                        <Text className='cb-user-details-subheader'>Save</Text>
+                      </Button>
+                      <Button
+                          className='cb-user-details-body-button-secondary'
+                          onClick={() => {setName(processUser.name); setEditingName(false)}}>
+                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                        className='cb-user-details-body-button'
+                        onClick={() => setEditingName(true)}>
+                      <ChangeIcon className='cb-user-details-body-button-icon' />
+                      <Text className='cb-user-details-subheader'>Change</Text>
+                    </Button>
+                  )}
+                </div>
               )}
             </div>
           </div>
         )}
-        {usernameEnabled && username && (
+        {usernameEnabled && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
             <div className='cb-user-details-body'>
-              <div className='cb-user-details-body-row'>
-                <InputField
-                  className='cb-user-details-text'
-                  // key={`user-entry-${processUser.username}`}
-                  value={username.value}
-                  disabled={!editingUsername}
-                  onChange={e => setUsername({ ...username, value: e.target.value })}
-                />
-                <CopyIcon
-                  className='cb-user-details-body-row-icon'
-                  color='secondary'
-                  onClick={() => void copyUsername()}
-                />
-              </div>
-              {editingUsername ? (
+              {!processUser.username ? (
                 <div>
-                  <Button
-                      className='cb-user-details-body-button-primary'
-                      onClick={() => void changeUsername()}>
-                    <Text className='cb-user-details-subheader'>Save</Text>
-                  </Button>
-                  <Button
-                      className='cb-user-details-body-button-secondary'
-                      onClick={() => {setUsername({ ...username, value: processUser.username }); setEditingUsername(false)}}>
-                    <Text className='cb-user-details-subheader'>Cancel</Text>
-                  </Button>
+                  {addingUsername ? (
+                    <div>
+                      <div className='cb-user-details-body-row'>
+                        <InputField
+                          className='cb-user-details-text'
+                          // key={`user-entry-${processUser.username}`}
+                          value={username?.value}
+                          onChange={e => setUsername({ id: "", type: "username", status: "verified", value: e.target.value })}
+                        />
+                        <CopyIcon
+                          className='cb-user-details-body-row-icon'
+                          color='secondary'
+                          onClick={() => void copyUsername()}
+                        />
+                      </div>
+                      <Button
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void addUsername()}>
+                        <Text className='cb-user-details-subheader'>Save</Text>
+                      </Button>
+                      <Button
+                          className='cb-user-details-body-button-secondary'
+                          onClick={() => {setUsername(undefined); setAddingUsername(false)}}>
+                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                        className='cb-user-details-body-button'
+                        onClick={() => setAddingUsername(true)}>
+                      <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                      <Text className='cb-user-details-subheader'>Add Username</Text>
+                    </Button>
+                  )}
                 </div>
               ) : (
-                <Button
-                    className='cb-user-details-body-button'
-                    onClick={() => setEditingUsername(true)}>
-                  <ChangeIcon className='cb-user-details-body-button-icon' />
-                  <Text className='cb-user-details-subheader'>Change</Text>
-                </Button>
+                <div>
+                  {username && (
+                    <div>
+                      <div className='cb-user-details-body-row'>
+                        <InputField
+                          className='cb-user-details-text'
+                          // key={`user-entry-${processUser.username}`}
+                          value={username?.value}
+                          disabled={!editingUsername}
+                          onChange={e => setUsername({ ...username, value: e.target.value })}
+                        />
+                        <CopyIcon
+                          className='cb-user-details-body-row-icon'
+                          color='secondary'
+                          onClick={() => void copyUsername()}
+                        />
+                      </div>
+                      {editingUsername ? (
+                        <div>
+                          <Button
+                              className='cb-user-details-body-button-primary'
+                              onClick={() => void changeUsername()}>
+                            <Text className='cb-user-details-subheader'>Save</Text>
+                          </Button>
+                          <Button
+                              className='cb-user-details-body-button-secondary'
+                              onClick={() => {setUsername({ ...username, value: processUser.username }); setEditingUsername(false)}}>
+                            <Text className='cb-user-details-subheader'>Cancel</Text>
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                            className='cb-user-details-body-button'
+                            onClick={() => setEditingUsername(true)}>
+                          <ChangeIcon className='cb-user-details-body-button-icon' />
+                          <Text className='cb-user-details-subheader'>Change</Text>
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
         )}
-        {emailEnabled && emails.length > 0 && (
+        {emailEnabled && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{emailFieldLabel}</Text>
             <div className='cb-user-details-body'>
-              {processUser.emails.map((email) => (
+              {emails.map((email) => (
                 <div className='cb-user-details-identifier-container'>
                   <div className='cb-user-details-body-row'>
                     <Text className='cb-user-details-text'>{email.value}</Text>
@@ -290,6 +364,16 @@ export const User: FC = () => {
                         </div>
                       )}
                     </div>
+                    <Button
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => void startEmailVerification(email)}>
+                      <Text className='cb-user-details-subheader'>Verify</Text>
+                    </Button>
+                    <Button
+                        className='cb-user-details-body-button-secondary'
+                        onClick={() => void removeEmail(email)}>
+                      <Text className='cb-user-details-subheader'>Delete</Text>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -318,7 +402,7 @@ export const User: FC = () => {
                     className='cb-user-details-body-button'
                     onClick={() => setAddingEmail(true)}>
                   <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
-                  <Text className='cb-user-details-subheader'>Add Another</Text>
+                  <Text className='cb-user-details-subheader'>Add Email</Text>
                 </Button>
               )}
             </div>

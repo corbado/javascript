@@ -1,5 +1,5 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import type { Passkey } from '@corbado/web-core';
+import { CorbadoError, ExcludeCredentialsMatchError, Passkey, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -26,6 +26,7 @@ const PasskeyListScreen = () => {
   const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [deletePending, setDeletePending] = useState<boolean>(false);
   const [appendPending, setAppendPending] = useState<boolean>(false);
+  const [hardErrorMessage, setHardErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
@@ -94,25 +95,18 @@ const PasskeyListScreen = () => {
     }
 
     setAppendPending(true);
+    setHardErrorMessage(null);
     const appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
 
     const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
-
-    if (startAppendRes.err || !startAppendRes.val.attestationOptions) {
-      setAppendPending(false);
-      log.error('error:', startAppendRes.val);
-      show(AlreadyExistingModal());
-
+    if (startAppendRes.err || !startAppendRes.val) {
+      handlePreWebauthnError();
       return;
     }
 
     const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
-
     if (res.err) {
-      setAppendPending(false);
-      log.error('error:', res.val);
-
-      show(AlreadyExistingModal());
+      handlePostWebauthnError(res.val);
       return;
     }
 
@@ -120,6 +114,31 @@ const PasskeyListScreen = () => {
     await getPasskeyList(config);
     setAppendPending(false);
   }, [config, passkeyListToken, appendPending]);
+
+  const handlePreWebauthnError = () => {
+    setAppendPending(false);
+    setHardErrorMessage(
+      'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
+    );
+  };
+
+  const handlePostWebauthnError = (error: CorbadoError) => {
+    setAppendPending(false);
+
+    if (error instanceof PasskeyChallengeCancelledError) {
+      setHardErrorMessage('Passkey creation was interrupted. You can try again by clicking the "Add passkey" button.');
+      return;
+    }
+
+    if (error instanceof ExcludeCredentialsMatchError) {
+      show(AlreadyExistingModal());
+      return;
+    }
+
+    setHardErrorMessage(
+      'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
+    );
+  };
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
     await config.connectTokenProvider(ConnectTokenType.PasskeyList);
@@ -213,14 +232,15 @@ const PasskeyListScreen = () => {
   const AlreadyExistingModal = () => (
     <div className='cb-passkey-list-modal'>
       <div className='cb-passkey-list-modal-header'>
-        <h2 className='cb-h2'>You already have a passkey on this device</h2>
+        <h2 className='cb-h2'>No passkey created</h2>
         <CrossIcon
           className='cb-passkey-list-modal-exit-icon'
           onClick={() => hide()}
         />
       </div>
 
-      <p className='cb-p'>You will not be able to use this passkey for login.</p>
+      <p className='cb-p'>You already have a passkey that can be used on this device. </p>
+      <p className='cb-p'>There is no need to create a new one.</p>
 
       <div className='cb-passkey-list-modal-content'></div>
 
@@ -247,6 +267,7 @@ const PasskeyListScreen = () => {
       onAppendClick={() => void onAppendClick()}
       appendLoading={appendPending}
       deleteLoading={deletePending}
+      hardErrorMessage={hardErrorMessage}
     />
   );
 };

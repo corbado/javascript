@@ -95,6 +95,8 @@ export class CorbadoError extends Error {
         return new PasskeyChallengeCancelledError();
       case 'SecurityError':
         return new NonRecoverableError('SecurityError');
+      case 'InvalidStateError':
+        return new ExcludeCredentialsMatchError();
       default:
         log.warn('unhandled DOM exception', e.name, e.message);
         return new NonRecoverableError(e.message);
@@ -285,5 +287,12 @@ export class ProcessNotFound extends RecoverableError {
 export class ConnectUserNotFound extends RecoverableError {
   constructor() {
     super('User not found');
+  }
+}
+
+export class ExcludeCredentialsMatchError extends RecoverableError {
+  constructor() {
+    super('Exclude credentials match => passkey was not created');
+    this.name = 'errors.excludeCredentialsMatch';
   }
 }

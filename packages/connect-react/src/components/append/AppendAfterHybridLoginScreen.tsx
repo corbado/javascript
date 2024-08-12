@@ -19,6 +19,7 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
+    log.debug(attestationOptions);
     if (loading) {
       return;
     }
@@ -35,11 +36,31 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
       return;
     }
 
+    if (dontShowAgain) {
+      const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
+
+      if (createEventRes?.err) {
+        log.error('error:', createEventRes.val);
+      }
+    }
+
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
   }, [getConnectService, config, navigateToScreen, loading]);
 
   const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
+
+  const handleSkip = async () => {
+    if (dontShowAgain) {
+      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
+
+      if (createEventRes?.err) {
+        log.error('error:', createEventRes.val);
+      }
+    }
+
+    config.onSkip();
+  };
 
   return (
     <div className='cb-append-after-hybrid-login-container'>
@@ -71,7 +92,7 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
           Add new passkey
         </PrimaryButton>
         <LinkButton
-          onClick={() => config.onSkip()}
+          onClick={() => void handleSkip()}
           className='cb-append-after-hybrid-login-fallback'
         >
           Continue without new passkey

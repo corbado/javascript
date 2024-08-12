@@ -8,11 +8,13 @@ import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import Checkbox from '../shared/Checkbox';
 
 const AppendAfterErrorScreen = (attestationOptions: string) => {
   const { config, navigateToScreen } = useAppendProcess();
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
@@ -32,9 +34,31 @@ const AppendAfterErrorScreen = (attestationOptions: string) => {
       return;
     }
 
+    if (dontShowAgain) {
+      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
+
+      if (createEventRes?.err) {
+        log.error('error:', createEventRes.val);
+      }
+    }
+
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
   }, [getConnectService, config, navigateToScreen, loading]);
+
+  const handleSkip = async () => {
+    if (dontShowAgain) {
+      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
+
+      if (createEventRes?.err) {
+        log.error('error:', createEventRes.val);
+      }
+    }
+
+    config.onSkip();
+  };
+
+  const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
 
   return (
     <div className='cb-append-after-error-container'>
@@ -50,6 +74,11 @@ const AppendAfterErrorScreen = (attestationOptions: string) => {
       </div>
       <div className='cb-p'>We detected you had an issue using your passkey.</div>
       <div className='cb-p'>Try adding another passkey to resolve the problem.</div>
+      <Checkbox
+        label={"Don't show this again"}
+        checked={dontShowAgain}
+        onChange={toggleDontShowAgain}
+      />
       <div className='cb-append-after-error-cta'>
         <PrimaryButton
           isLoading={loading}
@@ -59,7 +88,7 @@ const AppendAfterErrorScreen = (attestationOptions: string) => {
           Add passkey
         </PrimaryButton>
         <LinkButton
-          onClick={() => config.onSkip()}
+          onClick={() => void handleSkip()}
           className='cb-append-after-error-fallback'
         >
           Skip

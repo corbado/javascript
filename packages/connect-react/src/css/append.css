@@ -86,7 +86,8 @@
 
 .cb-append-after-hybrid-login-icons > *,
 .cb-append-after-error-icons > * {
-  width: 230px;
+  width: 160px;
+  margin: 1rem 0rem;
 }
 
 .cb-append-after-hybrid-login-content {

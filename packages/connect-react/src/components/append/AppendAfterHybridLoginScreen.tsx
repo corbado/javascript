@@ -19,7 +19,7 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
   const { getConnectService } = useShared();
 
   const handleSubmit = useCallback(async () => {
-    log.debug(attestationOptions);
+    console.log('attestationOptions', attestationOptions);
     if (loading) {
       return;
     }
@@ -46,7 +46,7 @@ const AppendAfterHybridLoginScreen = (attestationOptions: string) => {
 
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
-  }, [getConnectService, config, navigateToScreen, loading]);
+  }, [getConnectService, config, navigateToScreen, loading, attestationOptions]);
 
   const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
 

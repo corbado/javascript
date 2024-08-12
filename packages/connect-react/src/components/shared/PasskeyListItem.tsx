@@ -2,19 +2,18 @@ import { format } from 'date-fns';
 import type { FC } from 'react';
 import React from 'react';
 
-import { AppleIcon } from './icons/AppleIcon';
 import { CrossIcon } from './icons/CrossIcon';
 import { EyeIcon } from './icons/EyeIcon';
-import { KeyIcon } from './icons/KeyIcon';
+import { PasskeyIcon } from './icons/PasskeyIcon';
 import { ShieldTickIcon } from './icons/ShieldTickIcon';
 import { SyncIcon } from './icons/SyncIcon';
-import { WindowsIcon } from './icons/WindowsIcon';
 import { LinkButton } from './LinkButton';
 import { LoadingSpinner } from './LoadingSpinner';
 import { Tag } from './Tag';
 
 export type Props = {
   name: string;
+  icon?: string;
   createdAt: string | Date;
   lastUsed: string | Date;
   browser: string;
@@ -28,6 +27,7 @@ export type Props = {
 
 export const PasskeyListItem: FC<Props> = ({
   name,
+  icon,
   os,
   createdAt,
   browser,
@@ -38,19 +38,6 @@ export const PasskeyListItem: FC<Props> = ({
   isThisDevice,
   isDeleteLoading,
 }) => {
-  const getIcon = () => {
-    switch (os) {
-      case 'Windows':
-        return <WindowsIcon className='cb-passkey-list-item-icon' />;
-      case 'macOS':
-        return <AppleIcon className='cb-passkey-list-item-icon' />;
-      case 'iOS':
-        return <AppleIcon className='cb-passkey-list-item-icon' />;
-      default:
-        return <KeyIcon className='cb-passkey-list-item-icon' />;
-    }
-  };
-
   const getTags = () => {
     const tags = [];
 
@@ -71,7 +58,15 @@ export const PasskeyListItem: FC<Props> = ({
 
   return (
     <div className='cb-passkey-list-item'>
-      {getIcon()}
+      {icon ? (
+        <img
+          className='cb-passkey-list-item-icon'
+          src={icon}
+          alt={name}
+        />
+      ) : (
+        <PasskeyIcon className='cb-passkey-list-item-icon' />
+      )}
 
       <div className='cb-passkey-list-item-content'>
         <div className='cb-passkey-list-item-header'>

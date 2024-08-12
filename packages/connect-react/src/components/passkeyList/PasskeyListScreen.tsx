@@ -14,6 +14,7 @@ import { PasskeyListItem } from '../shared/PasskeyListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import PasskeyList from './PasskeyList';
+import aaguidMappings from '../../utils/aaguidMappings';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
@@ -170,7 +171,8 @@ const PasskeyListScreen = () => {
 
             <div className='cb-passkey-list-modal-content'>
               <PasskeyListItem
-                name={'Passkey'}
+                name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
+                icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
                 createdAt={passkey.created}
                 lastUsed={passkey.lastUsed}
                 browser={passkey.sourceBrowser}

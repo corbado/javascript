@@ -43,6 +43,7 @@ const PasskeyList: FC<PasskeyListProps> = ({
                 onDeleteClick(passkey);
               }}
               name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
+              icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
               createdAt={passkey.created}
               lastUsed={passkey.lastUsed}
               browser={passkey.sourceBrowser}

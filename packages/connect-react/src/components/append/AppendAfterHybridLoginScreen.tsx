@@ -63,7 +63,7 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
   return (
     <div className='cb-append-after-hybrid-login-container'>
-      <div className='cb-h1'>Add a passkey to this device</div>
+      <div className='cb-h2'>Add a passkey to this device</div>
       {error ? (
         <Notification
           className='cb-error-notification'

@@ -86,8 +86,15 @@
 
 .cb-append-after-hybrid-login-icons > *,
 .cb-append-after-error-icons > * {
-  width: 160px;
+  width: 120px;
   margin: 1rem 0rem;
+}
+
+.cb-append-after-hybrid-login-button,
+.cb-append-after-error-button,
+.cb-append-after-hybrid-login-fallback,
+.cb-append-after-error-fallback {
+  text-align: left;
 }
 
 .cb-append-after-hybrid-login-content {
@@ -95,6 +102,21 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.cb-append-after-hybrid-login-content,
+.cb-checkbox-input-field {
+  .cb-p {
+    margin-bottom: 0rem;
+  }
+}
+
+.cb-checkbox-input-field {
+  margin-top: 0.5rem;
+  label {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .cb-append-after-hybrid-login-lock-icon {

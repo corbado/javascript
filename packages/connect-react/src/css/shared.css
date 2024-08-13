@@ -56,7 +56,8 @@
   text-align: left;
 }
 
-.cb-connect-login, .cb-connect-append {
+.cb-connect-login,
+.cb-connect-append {
   max-width: 400px;
 }
 

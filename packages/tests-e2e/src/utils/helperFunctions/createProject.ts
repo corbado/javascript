@@ -29,6 +29,7 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
       name,
     }),
   });
+  console.log(process.env.PLAYWRIGHT_JWT_TOKEN);
   console.log(createRes);
   expect(createRes.ok).toBeTruthy();
 

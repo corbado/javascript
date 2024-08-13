@@ -152,16 +152,11 @@ export async function startConventionalLogin(email: string, password: string) {
     return;
   } catch (err) {
     if (err instanceof Error) {
-      switch (err.name) {
-        case 'NotAuthorizedException':
-          throw new Error('Incorrect username or password.');
-        case 'UserNotConfirmedException':
-          throw new Error('User is not confirmed. Please check your email for a confirmation link.');
-        case 'PasswordResetRequiredException':
-          throw new Error('Password reset required. Please reset your password to continue.');
-        default:
-          throw err;
+      if (err.name === 'NotAuthorizedException') {
+        throw new Error('Incorrect username or password.');
       }
+
+      throw err;
     } else {
       throw new Error('An unknown error occurred during login.');
     }

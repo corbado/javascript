@@ -97,33 +97,42 @@ export async function startConventionalLogin(email: string, password: string) {
       },
     });
 
-    const commandParams = {
+    const command = new InitiateAuthCommand({
+      AuthFlow: 'USER_PASSWORD_AUTH',
       ClientId: process.env.AWS_COGNITO_CLIENT_ID!,
-      ChallengeResponses: {
+      AuthParameters: {
         USERNAME: email,
-        NEW_PASSWORD: password,
+        PASSWORD: password,
         SECRET_HASH: createSecretHash(
           email,
           process.env.AWS_COGNITO_CLIENT_ID!,
           process.env.AWS_COGNITO_CLIENT_SECRET!,
         ),
       },
-    };
-
-    const command = new InitiateAuthCommand({
-      AuthFlow: 'USER_PASSWORD_AUTH',
-      ...commandParams,
     });
 
     const response = await client.send(command);
 
-    const respondToAuthChallengeCommand = new RespondToAuthChallengeCommand({
-      ChallengeName: response.ChallengeName!,
-      Session: response.Session,
-      ...commandParams,
-    });
+    let challengeResponse = response;
 
-    const challengeResponse = await client.send(respondToAuthChallengeCommand);
+    if (response.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
+      const respondToAuthChallengeCommand = new RespondToAuthChallengeCommand({
+        ChallengeName: response.ChallengeName,
+        ClientId: process.env.AWS_COGNITO_CLIENT_ID!,
+        ChallengeResponses: {
+          USERNAME: email,
+          NEW_PASSWORD: password,
+          SECRET_HASH: createSecretHash(
+            email,
+            process.env.AWS_COGNITO_CLIENT_ID!,
+            process.env.AWS_COGNITO_CLIENT_SECRET!,
+          ),
+        },
+        Session: response.Session,
+      });
+
+      challengeResponse = await client.send(respondToAuthChallengeCommand);
+    }
 
     if (!challengeResponse.AuthenticationResult?.AccessToken) {
       throw new Error('Login Failed please try again later');
@@ -139,7 +148,6 @@ export async function startConventionalLogin(email: string, password: string) {
 
     return;
   } catch (err) {
-    console.error('Login failed:', err);
-    return;
+    throw new Error('Login Failed: ' + (err as Error).message);
   }
 }

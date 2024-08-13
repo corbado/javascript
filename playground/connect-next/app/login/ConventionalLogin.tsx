@@ -14,9 +14,14 @@ export default function ConventionalLogin({ initialEmail }: Props) {
   const router = useRouter();
 
   const onSubmit = async () => {
-    const res = await startConventionalLogin(email, password);
+    try {
+      setError('');
+      await startConventionalLogin(email, password);
 
-    console.log(res);
+      router.push('/post-login');
+    } catch (err) {
+      setError((err as Error).message);
+    }
   };
 
   return (
@@ -25,6 +30,7 @@ export default function ConventionalLogin({ initialEmail }: Props) {
       className='flex flex-col space-y-2'
     >
       <div className='mb-2 font-bold text-xl'>Login</div>
+      {error && <div className='w-full bg-red-200 border border-red-600 text-red-600 p-2'>{error}</div>}
       <input
         type='text'
         className='input-field  w-full'

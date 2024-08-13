@@ -63,7 +63,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
 
   return (
     <div className='cb-login-hybrid-container'>
-      <div className='cb-h1'>Login with a mobile passkey</div>
+      <div className='cb-h2'>Login with a mobile passkey</div>
       <div className='cb-p'>A passkey was found on your mobile device.</div>
       <div className='cb-login-hybrid-icons'>
         <HybridIcon className='cb-login-hybrid-icon' />

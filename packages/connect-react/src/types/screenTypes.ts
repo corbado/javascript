@@ -1,5 +1,7 @@
 export enum AppendScreenType {
   Init = 'AppendInit',
+  AfterHybridLogin = 'AfterHybridLogin',
+  AfterError = 'AfterError',
   Success = 'AppendSuccess',
 }
 

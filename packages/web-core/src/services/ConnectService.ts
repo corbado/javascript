@@ -517,6 +517,14 @@ export class ConnectService {
     return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginOneTapSwitch);
   }
 
+  recordEventUserAppendAfterCrossPlatformBlacklisted() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterCrossPlatformBlacklisted);
+  }
+
+  recordEventUserAppendAfterLoginErrorBlacklisted() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterLoginErrorBlacklisted);
+  }
+
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
   #recordEvent(eventType: ConnectEventCreateReqEventTypeEnum) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);

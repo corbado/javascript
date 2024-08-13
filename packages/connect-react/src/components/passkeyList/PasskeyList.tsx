@@ -6,6 +6,7 @@ import { aaguidMappings } from '../../utils/aaguidMappings';
 import { Button } from '../shared/Button';
 import { PlusIcon } from '../shared/icons/PlusIcon';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
+import { Notification } from '../shared/Notification';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyEmptyList from './PasskeyEmptyList';
 
@@ -16,6 +17,7 @@ interface PasskeyListProps {
   onAppendClick: () => void;
   appendLoading: boolean;
   deleteLoading: boolean;
+  hardErrorMessage: string | null;
 }
 
 const PasskeyList: FC<PasskeyListProps> = ({
@@ -25,11 +27,18 @@ const PasskeyList: FC<PasskeyListProps> = ({
   onAppendClick,
   appendLoading,
   deleteLoading,
+  hardErrorMessage,
 }) => {
   const [selectedPasskey, setSelectedPasskey] = React.useState<Passkey | null>(null);
 
   return (
     <>
+      {hardErrorMessage ? (
+        <Notification
+          message={hardErrorMessage}
+          className='cb-p cb-error-notification'
+        />
+      ) : null}
       <div className='cb-passkey-list-container'>
         {isLoading ? (
           <div className='cb-passkey-list-loader-container'>
@@ -43,6 +52,7 @@ const PasskeyList: FC<PasskeyListProps> = ({
                 onDeleteClick(passkey);
               }}
               name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
+              icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
               createdAt={passkey.created}
               lastUsed={passkey.lastUsed}
               browser={passkey.sourceBrowser}

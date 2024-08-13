@@ -17,7 +17,7 @@ export default function RootLayout({
         <CorbadoConnectProvider
           projectId={process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!}
           frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}
-          isDebug={false}
+          isDebug={true}
         >
           {children}
         </CorbadoConnectProvider>

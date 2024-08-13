@@ -45,11 +45,19 @@
   font-family: var(--cb-font-family-primary);
   display: flex;
   flex-direction: column;
-  max-width: 400px;
   background-color: var(--cb-color-surface);
   box-sizing: content-box;
   padding: 1rem;
   text-align: left;
+}
+
+.cb-connect-login,
+.cb-connect-append {
+  max-width: 400px;
+}
+
+.cb-connect-passkey-list {
+  max-width: 600px;
 }
 
 button.cb-primary-button {

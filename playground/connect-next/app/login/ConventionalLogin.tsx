@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { startConventionalLogin } from './actions';
 
 export type Props = {
   initialEmail: string;
@@ -10,6 +11,12 @@ export default function ConventionalLogin({ initialEmail }: Props) {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
   const router = useRouter();
+
+  const onSubmit = async () => {
+    const res = await startConventionalLogin(email, password);
+
+    console.log(res);
+  };
 
   return (
     <div
@@ -36,9 +43,7 @@ export default function ConventionalLogin({ initialEmail }: Props) {
       <div>
         <button
           className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-          onClick={async () => {
-            router.push('/post-login');
-          }}
+          onClick={onSubmit}
         >
           Login
         </button>

@@ -407,7 +407,7 @@
       "button_confirm": "Ok"
     }
   },
-  "user": {
+  "user-details": {
     "title": "User Details",
     "name": "Name",
     "username": "Username",

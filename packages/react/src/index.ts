@@ -7,14 +7,14 @@ import CorbadoAuth from './screens/core/CorbadoAuth';
 import Login from './screens/core/Login';
 import PasskeyList from './screens/core/PasskeyList';
 import SignUp from './screens/core/SignUp';
-import { User } from './screens/core/User';
+import UserDetails from './screens/core/UserDetails';
 
 export {
   CorbadoProvider,
   useCorbado,
   CorbadoAuth,
+  UserDetails,
   PasskeyList,
-  User,
   SignUp,
   Login,
   CorbadoThemes,

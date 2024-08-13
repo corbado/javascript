@@ -21,7 +21,7 @@ interface ProcessedUser {
   socialAccounts: SocialAccount[];
 }
 
-export const User: FC = () => {
+export const UserDetails: FC = () => {
   const {
     corbadoApp,
     isAuthenticated,
@@ -78,31 +78,31 @@ export const User: FC = () => {
     };
   }, [isAuthenticated]);
 
-  const title = useMemo(() => t('user.title'), [t]);
+  const title = useMemo(() => t('user-details.title'), [t]);
 
-  const headerName = useMemo(() => t('user.name'), [t]);
-  const headerUsername = useMemo(() => t('user.username'), [t]);
-  const headerEmail = useMemo(() => t('user.email'), [t]);
-  const headerPhone = useMemo(() => t('user.phone'), [t]);
-  // const headerSocial = useMemo(() => t('user.social'), [t]);
-  const headerDelete = useMemo(() => t('user.delete_account'), [t]);
+  const headerName = useMemo(() => t('user-details.name'), [t]);
+  const headerUsername = useMemo(() => t('user-details.username'), [t]);
+  const headerEmail = useMemo(() => t('user-details.email'), [t]);
+  const headerPhone = useMemo(() => t('user-details.phone'), [t]);
+  // const headerSocial = useMemo(() => t('user-details.social'), [t]);
+  const headerDelete = useMemo(() => t('user-details.delete_account'), [t]);
 
-  const textDelete = useMemo(() => t('user.delete_account_text'), [t]);
+  const textDelete = useMemo(() => t('user-details.delete_account_text'), [t]);
 
-  const badgePrimary = useMemo(() => t('user.primary'), [t]);
-  const badgeVerified = useMemo(() => t('user.verified'), [t]);
-  const badgePending = useMemo(() => t('user.pending'), [t]);
+  const badgePrimary = useMemo(() => t('user-details.primary'), [t]);
+  const badgeVerified = useMemo(() => t('user-details.verified'), [t]);
+  const badgePending = useMemo(() => t('user-details.pending'), [t]);
 
-  const buttonVerify = useMemo(() => t('user.verify'), [t]);
-  const buttonRemove = useMemo(() => t('user.remove'), [t]);
-  const buttonDelete = useMemo(() => t('user.delete'), [t]);
-  const buttonSave = useMemo(() => t('user.save'), [t]);
-  const buttonCancel = useMemo(() => t('user.cancel'), [t]);
-  const buttonChange = useMemo(() => t('user.change'), [t]);
-  const buttonAddName = useMemo(() => t('user.add_name'), [t]);
-  const buttonAddUsername = useMemo(() => t('user.add_username'), [t]);
-  const buttonAddEmail = useMemo(() => t('user.add_email'), [t]);
-  const buttonAddPhone = useMemo(() => t('user.add_phone'), [t]);
+  const buttonVerify = useMemo(() => t('user-details.verify'), [t]);
+  const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
+  const buttonDelete = useMemo(() => t('user-details.delete'), [t]);
+  const buttonSave = useMemo(() => t('user-details.save'), [t]);
+  const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
+  const buttonChange = useMemo(() => t('user-details.change'), [t]);
+  const buttonAddName = useMemo(() => t('user-details.add_name'), [t]);
+  const buttonAddUsername = useMemo(() => t('user-details.add_username'), [t]);
+  const buttonAddEmail = useMemo(() => t('user-details.add_email'), [t]);
+  const buttonAddPhone = useMemo(() => t('user-details.add_phone'), [t]);
 
   const processUser = useMemo((): ProcessedUser => {
     if (!currentUser) {
@@ -373,7 +373,7 @@ export const User: FC = () => {
   };
 
   if (!isAuthenticated) {
-    return <div>{t('user.warning_notLoggedIn')}</div>;
+    return <div>{t('user-details.warning_notLoggedIn')}</div>;
   }
 
   if (loading) {
@@ -813,3 +813,5 @@ export const User: FC = () => {
     </PasskeyListErrorBoundary>
   );
 };
+
+export default UserDetails;

@@ -8,7 +8,7 @@ import CorbadoConnectAppendContainer from './append/CorbadoConnectAppendContaine
 
 const CorbadoConnectAppend: FC<CorbadoConnectAppendConfig> = (config: CorbadoConnectAppendConfig) => {
   return (
-    <div className='light'>
+    <div className='cb-connect light'>
       <div className='cb-connect-container cb-connect-append'>
         <AppendProcessProvider
           config={config}

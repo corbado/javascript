@@ -8,7 +8,7 @@ import CorbadoConnectPasskeyListContainer from './passkeyList/CorbadoConnectPass
 
 const CorbadoConnectPasskeyList: FC<CorbadoConnectPasskeyListConfig> = config => {
   return (
-    <div className='light'>
+    <div className='cb-connect light'>
       <div className='cb-connect-container cb-connect-passkey-list'>
         <ManageProcessProvider
           config={config}

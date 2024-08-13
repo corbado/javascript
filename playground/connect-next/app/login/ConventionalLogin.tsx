@@ -20,7 +20,11 @@ export default function ConventionalLogin({ initialEmail }: Props) {
 
       router.push('/post-login');
     } catch (err) {
-      setError((err as Error).message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred. Please try again later.');
+      }
     }
   };
 

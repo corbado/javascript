@@ -86,9 +86,12 @@ function createSecretHash(username: string, clientId: string, clientSecret: stri
     .digest('base64');
 }
 
-// Try to log in the user to Cognito (not implemented yet)
 export async function startConventionalLogin(email: string, password: string) {
   try {
+    if (!email || !password) {
+      throw new Error('Email and password are required.');
+    }
+
     const client = new CognitoIdentityProviderClient({
       region: process.env.AWS_REGION!,
       credentials: {
@@ -135,7 +138,7 @@ export async function startConventionalLogin(email: string, password: string) {
     }
 
     if (!challengeResponse.AuthenticationResult?.AccessToken) {
-      throw new Error('Login Failed please try again later');
+      throw new Error('Authentication failed. Please check your credentials and try again.');
     }
 
     const decoded = await verifyToken(challengeResponse.AuthenticationResult.AccessToken);
@@ -148,6 +151,19 @@ export async function startConventionalLogin(email: string, password: string) {
 
     return;
   } catch (err) {
-    throw new Error('Login Failed: ' + (err as Error).message);
+    if (err instanceof Error) {
+      switch (err.name) {
+        case 'NotAuthorizedException':
+          throw new Error('Incorrect username or password.');
+        case 'UserNotConfirmedException':
+          throw new Error('User is not confirmed. Please check your email for a confirmation link.');
+        case 'PasswordResetRequiredException':
+          throw new Error('Password reset required. Please reset your password to continue.');
+        default:
+          throw err;
+      }
+    } else {
+      throw new Error('An unknown error occurred during login.');
+    }
   }
 }

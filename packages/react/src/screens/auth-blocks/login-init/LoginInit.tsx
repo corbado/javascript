@@ -49,7 +49,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
         log.debug('CUI: page load');
         void block
           .continueWithConditionalUI({ onAuthenticatorCompleted: () => setLoading(true) })
-          .finally(() => setLoading(false));
+          .catch(() => setLoading(false));
       }
     });
 
@@ -61,7 +61,7 @@ export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
             log.debug('calling continueWithConditionalUI');
             void block
               .continueWithConditionalUI({ onAuthenticatorCompleted: () => setLoading(true) })
-              .finally(() => setLoading(false));
+              .catch(() => setLoading(false));
           };
         });
       }

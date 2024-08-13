@@ -3,9 +3,9 @@
 import { cookies } from 'next/headers';
 import {
   AdminGetUserCommand,
-  AdminInitiateAuthCommand,
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
+  RespondToAuthChallengeCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
@@ -97,28 +97,39 @@ export async function startConventionalLogin(email: string, password: string) {
       },
     });
 
-    const command = new InitiateAuthCommand({
-      AuthFlow: 'USER_PASSWORD_AUTH',
+    const commandParams = {
       ClientId: process.env.AWS_COGNITO_CLIENT_ID!,
-
-      AuthParameters: {
+      ChallengeResponses: {
         USERNAME: email,
-        PASSWORD: password,
+        NEW_PASSWORD: password,
         SECRET_HASH: createSecretHash(
           email,
           process.env.AWS_COGNITO_CLIENT_ID!,
           process.env.AWS_COGNITO_CLIENT_SECRET!,
         ),
       },
+    };
+
+    const command = new InitiateAuthCommand({
+      AuthFlow: 'USER_PASSWORD_AUTH',
+      ...commandParams,
     });
 
     const response = await client.send(command);
 
-    if (!response.Session) {
-      throw new Error('Username or password is incorrect');
+    const respondToAuthChallengeCommand = new RespondToAuthChallengeCommand({
+      ChallengeName: response.ChallengeName!,
+      Session: response.Session,
+      ...commandParams,
+    });
+
+    const challengeResponse = await client.send(respondToAuthChallengeCommand);
+
+    if (!challengeResponse.AuthenticationResult?.AccessToken) {
+      throw new Error('Login Failed please try again later');
     }
 
-    const decoded = await verifyToken(response.Session);
+    const decoded = await verifyToken(challengeResponse.AuthenticationResult.AccessToken);
     const username = decoded.username;
 
     if (email) {

@@ -22,7 +22,19 @@ interface ProcessedUser {
 }
 
 export const User: FC = () => {
-  const { corbadoApp, isAuthenticated, globalError, getFullUser, getIdentifierListConfig, updateName, updateUsername, createIdentifier, deleteIdentifier, verifyIdentifierStart, verifyIdentifierFinish } = useCorbado();
+  const {
+    corbadoApp,
+    isAuthenticated,
+    globalError,
+    getFullUser,
+    getIdentifierListConfig,
+    updateName,
+    updateUsername,
+    createIdentifier,
+    deleteIdentifier,
+    verifyIdentifierStart,
+    verifyIdentifierFinish,
+  } = useCorbado();
   const { t } = useTranslation('translation');
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,13 +55,13 @@ export const User: FC = () => {
   const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
   const [emailChallengeCodes, setEmailChallengeCodes] = useState<string[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
-  const [newEmail, setNewEmail] = useState<string>("");
+  const [newEmail, setNewEmail] = useState<string>('');
 
   const [phones, setPhones] = useState<Identifier[]>([]);
   const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
   const [phoneChallengeCodes, setPhoneChallengeCodes] = useState<string[]>([]);
   const [addingPhone, setAddingPhone] = useState<boolean>(false);
-  const [newPhone, setNewPhone] = useState<string>("");
+  const [newPhone, setNewPhone] = useState<string>('');
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -103,17 +115,19 @@ export const User: FC = () => {
       }
 
       setCurrentUser(result.val);
-      setName(result.val.fullName || "");
-      const usernameIdentifier = result.val.identifiers.find(identifier => identifier.type == LoginIdentifierType.Username);
+      setName(result.val.fullName || '');
+      const usernameIdentifier = result.val.identifiers.find(
+        identifier => identifier.type == LoginIdentifierType.Username,
+      );
       setUsername(usernameIdentifier);
       const emails = result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Email);
       setEmails(emails);
       setVerifyingEmails(emails.map(() => false));
-      setEmailChallengeCodes(emails.map(() => ""));
+      setEmailChallengeCodes(emails.map(() => ''));
       const phones = result.val.identifiers.filter(identifier => identifier.type == LoginIdentifierType.Phone);
       setPhones(phones);
       setVerifyingPhones(phones.map(() => false));
-      setPhoneChallengeCodes(phones.map(() => ""));
+      setPhoneChallengeCodes(phones.map(() => ''));
       setLoading(false);
     },
     [corbadoApp],
@@ -154,7 +168,7 @@ export const User: FC = () => {
 
   const changeName = async () => {
     if (!name) {
-      console.error("name is empty");
+      console.error('name is empty');
       return;
     }
     const res = await updateName(name);
@@ -168,15 +182,15 @@ export const User: FC = () => {
   };
 
   const copyUsername = async () => {
-    await navigator.clipboard.writeText(username?.value || "");
+    await navigator.clipboard.writeText(username?.value || '');
   };
 
   const addUsername = async () => {
     if (!username || !username.value) {
-      console.error("username is empty");
+      console.error('username is empty');
       return;
     }
-    const res = await createIdentifier(LoginIdentifierType.Username, username?.value || "");
+    const res = await createIdentifier(LoginIdentifierType.Username, username?.value || '');
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
@@ -191,7 +205,7 @@ export const User: FC = () => {
 
   const changeUsername = async () => {
     if (!username || !username.value) {
-      console.error("username is empty");
+      console.error('username is empty');
       return;
     }
     const res = await updateUsername(username.id, username.value);
@@ -206,7 +220,7 @@ export const User: FC = () => {
 
   const addEmail = async () => {
     if (!newEmail) {
-      console.error("email is empty");
+      console.error('email is empty');
       return;
     }
     const res = await createIdentifier(LoginIdentifierType.Email, newEmail);
@@ -218,7 +232,7 @@ export const User: FC = () => {
       }
       return;
     }
-    setNewEmail("");
+    setNewEmail('');
     setAddingEmail(false);
     void getCurrentUser();
   };
@@ -246,7 +260,7 @@ export const User: FC = () => {
       }
       return;
     }
-    setVerifyingEmails(verifyingEmails.map((v, i) => (i === index) ? true : v));
+    setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? true : v)));
   };
 
   const finishEmailVerification = async (index: number) => {
@@ -264,7 +278,7 @@ export const User: FC = () => {
 
   const addPhone = async () => {
     if (!newPhone) {
-      console.error("phone is empty");
+      console.error('phone is empty');
       return;
     }
     const res = await createIdentifier(LoginIdentifierType.Phone, newPhone);
@@ -276,7 +290,7 @@ export const User: FC = () => {
       }
       return;
     }
-    setNewPhone("");
+    setNewPhone('');
     setAddingPhone(false);
     void getCurrentUser();
   };
@@ -304,7 +318,7 @@ export const User: FC = () => {
       }
       return;
     }
-    setVerifyingPhones(verifyingPhones.map((v, i) => (i === index) ? true : v));
+    setVerifyingPhones(verifyingPhones.map((v, i) => (i === index ? true : v)));
   };
 
   const finishPhoneVerification = async (index: number) => {
@@ -344,9 +358,13 @@ export const User: FC = () => {
             <div className='cb-user-details-body'>
               {!processUser.name && !editingName ? (
                 <Button
-                    className='cb-user-details-body-button'
-                    onClick={() => setEditingName(true)}>
-                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                  className='cb-user-details-body-button'
+                  onClick={() => setEditingName(true)}
+                >
+                  <AddIcon
+                    color='secondary'
+                    className='cb-user-details-body-button-icon'
+                  />
                   <Text className='cb-user-details-subheader'>Add Name</Text>
                 </Button>
               ) : (
@@ -368,20 +386,26 @@ export const User: FC = () => {
                   {editingName ? (
                     <div>
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => void changeName()}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => void changeName()}
+                      >
                         <Text className='cb-user-details-subheader'>Save</Text>
                       </Button>
                       <Button
-                          className='cb-user-details-body-button-secondary'
-                          onClick={() => {setName(processUser.name); setEditingName(false)}}>
+                        className='cb-user-details-body-button-secondary'
+                        onClick={() => {
+                          setName(processUser.name);
+                          setEditingName(false);
+                        }}
+                      >
                         <Text className='cb-user-details-subheader'>Cancel</Text>
                       </Button>
                     </div>
                   ) : (
                     <Button
-                        className='cb-user-details-body-button'
-                        onClick={() => setEditingName(true)}>
+                      className='cb-user-details-body-button'
+                      onClick={() => setEditingName(true)}
+                    >
                       <ChangeIcon className='cb-user-details-body-button-icon' />
                       <Text className='cb-user-details-subheader'>Change</Text>
                     </Button>
@@ -404,7 +428,9 @@ export const User: FC = () => {
                           className='cb-user-details-text'
                           // key={`user-entry-${processUser.username}`}
                           value={username?.value}
-                          onChange={e => setUsername({ id: "", type: "username", status: "verified", value: e.target.value })}
+                          onChange={e =>
+                            setUsername({ id: '', type: 'username', status: 'verified', value: e.target.value })
+                          }
                         />
                         <CopyIcon
                           className='cb-user-details-body-row-icon'
@@ -413,21 +439,30 @@ export const User: FC = () => {
                         />
                       </div>
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => void addUsername()}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => void addUsername()}
+                      >
                         <Text className='cb-user-details-subheader'>Save</Text>
                       </Button>
                       <Button
-                          className='cb-user-details-body-button-secondary'
-                          onClick={() => {setUsername(undefined); setAddingUsername(false)}}>
+                        className='cb-user-details-body-button-secondary'
+                        onClick={() => {
+                          setUsername(undefined);
+                          setAddingUsername(false);
+                        }}
+                      >
                         <Text className='cb-user-details-subheader'>Cancel</Text>
                       </Button>
                     </div>
                   ) : (
                     <Button
-                        className='cb-user-details-body-button'
-                        onClick={() => setAddingUsername(true)}>
-                      <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                      className='cb-user-details-body-button'
+                      onClick={() => setAddingUsername(true)}
+                    >
+                      <AddIcon
+                        color='secondary'
+                        className='cb-user-details-body-button-icon'
+                      />
                       <Text className='cb-user-details-subheader'>Add Username</Text>
                     </Button>
                   )}
@@ -453,20 +488,26 @@ export const User: FC = () => {
                       {editingUsername ? (
                         <div>
                           <Button
-                              className='cb-user-details-body-button-primary'
-                              onClick={() => void changeUsername()}>
+                            className='cb-user-details-body-button-primary'
+                            onClick={() => void changeUsername()}
+                          >
                             <Text className='cb-user-details-subheader'>Save</Text>
                           </Button>
                           <Button
-                              className='cb-user-details-body-button-secondary'
-                              onClick={() => {setUsername({ ...username, value: processUser.username }); setEditingUsername(false)}}>
+                            className='cb-user-details-body-button-secondary'
+                            onClick={() => {
+                              setUsername({ ...username, value: processUser.username });
+                              setEditingUsername(false);
+                            }}
+                          >
                             <Text className='cb-user-details-subheader'>Cancel</Text>
                           </Button>
                         </div>
                       ) : (
                         <Button
-                            className='cb-user-details-body-button'
-                            onClick={() => setEditingUsername(true)}>
+                          className='cb-user-details-body-button'
+                          onClick={() => setEditingUsername(true)}
+                        >
                           <ChangeIcon className='cb-user-details-body-button-icon' />
                           <Text className='cb-user-details-subheader'>Change</Text>
                         </Button>
@@ -489,16 +530,20 @@ export const User: FC = () => {
                       <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
                       <InputField
                         className='cb-user-details-text'
-                        onChange={e => setEmailChallengeCodes(emailChallengeCodes.map((c, i) => i === index ? e.target.value : c))}
+                        onChange={e =>
+                          setEmailChallengeCodes(emailChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
+                        }
                       />
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => void finishEmailVerification(index)}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => void finishEmailVerification(index)}
+                      >
                         <Text className='cb-user-details-subheader'>Enter</Text>
                       </Button>
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index) ? false : v))}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? false : v)))}
+                      >
                         <Text className='cb-user-details-subheader'>Cancel</Text>
                       </Button>
                     </div>
@@ -525,14 +570,16 @@ export const User: FC = () => {
                       </div>
                       {email.status === 'pending' && (
                         <Button
-                            className='cb-user-details-body-button-primary'
-                            onClick={() => void startEmailVerification(index)}>
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void startEmailVerification(index)}
+                        >
                           <Text className='cb-user-details-subheader'>Verify</Text>
                         </Button>
                       )}
                       <Button
-                          className='cb-user-details-body-button-secondary'
-                          onClick={() => void removeEmail(index)}>
+                        className='cb-user-details-body-button-secondary'
+                        onClick={() => void removeEmail(index)}
+                      >
                         <Text className='cb-user-details-subheader'>Delete</Text>
                       </Button>
                     </div>
@@ -543,27 +590,35 @@ export const User: FC = () => {
                 <div className='cb-user-details-identifier-container'>
                   <InputField
                     className='cb-user-details-text'
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                     // key={`user-entry-${processUser.username}`}
                     value={newEmail}
                     onChange={e => setNewEmail(e.target.value)}
                   />
                   <Button
-                      className='cb-user-details-body-button-primary'
-                      onClick={() => void addEmail()}>
+                    className='cb-user-details-body-button-primary'
+                    onClick={() => void addEmail()}
+                  >
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
-                      className='cb-user-details-body-button-secondary'
-                      onClick={() => {setAddingEmail(false)}}>
+                    className='cb-user-details-body-button-secondary'
+                    onClick={() => {
+                      setAddingEmail(false);
+                    }}
+                  >
                     <Text className='cb-user-details-subheader'>Cancel</Text>
                   </Button>
                 </div>
               ) : (
                 <Button
-                    className='cb-user-details-body-button'
-                    onClick={() => setAddingEmail(true)}>
-                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                  className='cb-user-details-body-button'
+                  onClick={() => setAddingEmail(true)}
+                >
+                  <AddIcon
+                    color='secondary'
+                    className='cb-user-details-body-button-icon'
+                  />
                   <Text className='cb-user-details-subheader'>Add Email</Text>
                 </Button>
               )}
@@ -581,16 +636,20 @@ export const User: FC = () => {
                       <Text className='cb-user-details-text'>Enter OTP code for: {phone.value}</Text>
                       <InputField
                         className='cb-user-details-text'
-                        onChange={e => setPhoneChallengeCodes(phoneChallengeCodes.map((c, i) => i === index ? e.target.value : c))}
+                        onChange={e =>
+                          setPhoneChallengeCodes(phoneChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
+                        }
                       />
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => void finishPhoneVerification(index)}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => void finishPhoneVerification(index)}
+                      >
                         <Text className='cb-user-details-subheader'>Enter</Text>
                       </Button>
                       <Button
-                          className='cb-user-details-body-button-primary'
-                          onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index) ? false : v))}>
+                        className='cb-user-details-body-button-primary'
+                        onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index ? false : v)))}
+                      >
                         <Text className='cb-user-details-subheader'>Cancel</Text>
                       </Button>
                     </div>
@@ -617,14 +676,16 @@ export const User: FC = () => {
                       </div>
                       {phone.status === 'pending' && (
                         <Button
-                            className='cb-user-details-body-button-primary'
-                            onClick={() => void startPhoneVerification(index)}>
+                          className='cb-user-details-body-button-primary'
+                          onClick={() => void startPhoneVerification(index)}
+                        >
                           <Text className='cb-user-details-subheader'>Verify</Text>
                         </Button>
                       )}
                       <Button
-                          className='cb-user-details-body-button-secondary'
-                          onClick={() => void removePhone(index)}>
+                        className='cb-user-details-body-button-secondary'
+                        onClick={() => void removePhone(index)}
+                      >
                         <Text className='cb-user-details-subheader'>Delete</Text>
                       </Button>
                     </div>
@@ -635,27 +696,35 @@ export const User: FC = () => {
                 <div className='cb-user-details-identifier-container'>
                   <InputField
                     className='cb-user-details-text'
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                     // key={`user-entry-${processUser.username}`}
                     value={newPhone}
                     onChange={e => setNewPhone(e.target.value)}
                   />
                   <Button
-                      className='cb-user-details-body-button-primary'
-                      onClick={() => void addPhone()}>
+                    className='cb-user-details-body-button-primary'
+                    onClick={() => void addPhone()}
+                  >
                     <Text className='cb-user-details-subheader'>Save</Text>
                   </Button>
                   <Button
-                      className='cb-user-details-body-button-secondary'
-                      onClick={() => {setAddingPhone(false)}}>
+                    className='cb-user-details-body-button-secondary'
+                    onClick={() => {
+                      setAddingPhone(false);
+                    }}
+                  >
                     <Text className='cb-user-details-subheader'>Cancel</Text>
                   </Button>
                 </div>
               ) : (
                 <Button
-                    className='cb-user-details-body-button'
-                    onClick={() => setAddingPhone(true)}>
-                  <AddIcon color='secondary' className='cb-user-details-body-button-icon' />
+                  className='cb-user-details-body-button'
+                  onClick={() => setAddingPhone(true)}
+                >
+                  <AddIcon
+                    color='secondary'
+                    className='cb-user-details-body-button-icon'
+                  />
                   <Text className='cb-user-details-subheader'>Add Phone</Text>
                 </Button>
               )}

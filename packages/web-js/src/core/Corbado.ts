@@ -107,7 +107,9 @@ export class Corbado {
   }
 
   getIdentifierListConfig(abortController?: AbortController) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.getIdentifierListConfig(abortController ?? new AbortController());
+    return this.#getCorbadoAppState().corbadoApp.sessionService.getIdentifierListConfig(
+      abortController ?? new AbortController(),
+    );
   }
 
   updateName(fullName: string) {

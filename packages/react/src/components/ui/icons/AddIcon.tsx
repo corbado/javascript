@@ -13,7 +13,11 @@ export interface AddIconProps extends IconProps {
 
 export const AddIcon: FC<AddIconProps> = ({ color, ...props }) => {
   const svgRef = useRef<HTMLImageElement>(null);
-  const { logoSVG } = useIconWithTheme(svgRef, addSrc, color === 'secondary' ? '--cb-text-primary-color' : '--cb-button-text-primary-color');
+  const { logoSVG } = useIconWithTheme(
+    svgRef,
+    addSrc,
+    color === 'secondary' ? '--cb-text-primary-color' : '--cb-button-text-primary-color',
+  );
 
   return (
     <Icon

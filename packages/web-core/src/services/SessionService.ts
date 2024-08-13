@@ -165,7 +165,9 @@ export class SessionService {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
-  public async getIdentifierListConfig(abortController: AbortController): Promise<Result<IdentifierListConfig, CorbadoError>> {
+  public async getIdentifierListConfig(
+    abortController: AbortController,
+  ): Promise<Result<IdentifierListConfig, CorbadoError>> {
     return this.wrapWithErr(async () => this.#configsApi.getIdentifierListConfig({ signal: abortController.signal }));
   }
 
@@ -184,7 +186,7 @@ export class SessionService {
         value: username,
       });
       return void 0;
-    })
+    });
   }
 
   async createIdentifier(identifierType: LoginIdentifierType, value: string): Promise<Result<void, CorbadoError>> {

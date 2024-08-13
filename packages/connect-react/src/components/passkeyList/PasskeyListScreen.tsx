@@ -1,5 +1,6 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import { CorbadoError, ExcludeCredentialsMatchError, Passkey, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { CorbadoError, Passkey } from '@corbado/web-core';
+import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -9,12 +10,12 @@ import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { ManageScreenType } from '../../types/screenTypes';
 import { ConnectTokenType } from '../../types/tokens';
+import aaguidMappings from '../../utils/aaguidMappings';
 import { CrossIcon } from '../shared/icons/CrossIcon';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import PasskeyList from './PasskeyList';
-import aaguidMappings from '../../utils/aaguidMappings';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();

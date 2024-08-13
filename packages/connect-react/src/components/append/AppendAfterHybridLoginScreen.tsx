@@ -45,7 +45,7 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
-  }, [getConnectService, config, navigateToScreen, loading, attestationOptions]);
+  }, [getConnectService, config, navigateToScreen, loading, attestationOptions, dontShowAgain]);
 
   const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
 

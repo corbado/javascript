@@ -44,7 +44,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
 
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
-  }, [getConnectService, config, navigateToScreen, loading]);
+  }, [getConnectService, config, navigateToScreen, loading, dontShowAgain]);
 
   const handleSkip = async () => {
     if (dontShowAgain) {

@@ -9,6 +9,7 @@ export type Props = {
 
 export default function ConventionalLogin({ initialEmail }: Props) {
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [email, setEmail] = useState(initialEmail);
   const router = useRouter();
 

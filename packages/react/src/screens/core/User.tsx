@@ -34,6 +34,7 @@ export const User: FC = () => {
     deleteIdentifier,
     verifyIdentifierStart,
     verifyIdentifierFinish,
+    deleteUser,
   } = useCorbado();
   const { t } = useTranslation('translation');
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
@@ -77,11 +78,32 @@ export const User: FC = () => {
     };
   }, [isAuthenticated]);
 
-  const nameFieldLabel = useMemo(() => t('user.name'), [t]);
-  const usernameFieldLabel = useMemo(() => t('user.username'), [t]);
-  const emailFieldLabel = useMemo(() => t('user.email'), [t]);
-  const phoneFieldLabel = useMemo(() => t('user.phone'), [t]);
-  const socialFieldLabel = useMemo(() => t('user.social'), [t]);
+  const title = useMemo(() => t('user.title'), [t]);
+
+  const headerName = useMemo(() => t('user.name'), [t]);
+  const headerUsername = useMemo(() => t('user.username'), [t]);
+  const headerEmail = useMemo(() => t('user.email'), [t]);
+  const headerPhone = useMemo(() => t('user.phone'), [t]);
+  // const headerSocial = useMemo(() => t('user.social'), [t]);
+  const headerDelete = useMemo(() => t('user.delete_account'), [t]);
+
+  const textDelete = useMemo(() => t('user.delete_account_text'), [t]);
+
+  const badgePrimary = useMemo(() => t('user.primary'), [t]);
+  const badgeVerified = useMemo(() => t('user.verified'), [t]);
+  const badgePending = useMemo(() => t('user.pending'), [t]);
+  
+  const buttonVerify = useMemo(() => t('user.verify'), [t]);
+  const buttonRemove = useMemo(() => t('user.remove'), [t]);
+  const buttonDelete = useMemo(() => t('user.delete'), [t]);
+  const buttonSave = useMemo(() => t('user.save'), [t]);
+  const buttonCancel = useMemo(() => t('user.cancel'), [t]);
+  const buttonChange = useMemo(() => t('user.change'), [t]);
+  const buttonAddName = useMemo(() => t('user.add_name'), [t]);
+  const buttonAddUsername = useMemo(() => t('user.add_username'), [t]);
+  const buttonAddEmail = useMemo(() => t('user.add_email'), [t]);
+  const buttonAddPhone = useMemo(() => t('user.add_phone'), [t]);
+
   const processUser = useMemo((): ProcessedUser => {
     if (!currentUser) {
       return {
@@ -334,6 +356,16 @@ export const User: FC = () => {
     void getCurrentUser();
   };
 
+  const deleteAccount = async () => {
+    const res = await deleteUser();
+    if (res.err) {
+      // no possible error code
+      console.error(res.val.message);
+      return;
+    }
+    // TODO: go back to login page?
+  };
+
   const getErrorCode = (message: string) => {
     const regex = /\(([^)]+)\)/;
     const matches = regex.exec(message);
@@ -351,10 +383,10 @@ export const User: FC = () => {
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
       <div className='cb-user-details-container'>
-        <Text className='cb-user-details-title'>{t('user.title')}</Text>
+        <Text className='cb-user-details-title'>{title}</Text>
         {fullNameRequired && (
           <div className='cb-user-details-card'>
-            <Text className='cb-user-details-header'>{nameFieldLabel}</Text>
+            <Text className='cb-user-details-header'>{headerName}</Text>
             <div className='cb-user-details-body'>
               {!processUser.name && !editingName ? (
                 <Button
@@ -365,7 +397,7 @@ export const User: FC = () => {
                     color='secondary'
                     className='cb-user-details-body-button-icon'
                   />
-                  <Text className='cb-user-details-subheader'>Add Name</Text>
+                  <Text className='cb-user-details-subheader'>{buttonAddName}</Text>
                 </Button>
               ) : (
                 <div>
@@ -389,7 +421,7 @@ export const User: FC = () => {
                         className='cb-user-details-body-button-primary'
                         onClick={() => void changeName()}
                       >
-                        <Text className='cb-user-details-subheader'>Save</Text>
+                        <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                       </Button>
                       <Button
                         className='cb-user-details-body-button-secondary'
@@ -398,7 +430,7 @@ export const User: FC = () => {
                           setEditingName(false);
                         }}
                       >
-                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                        <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                       </Button>
                     </div>
                   ) : (
@@ -407,7 +439,7 @@ export const User: FC = () => {
                       onClick={() => setEditingName(true)}
                     >
                       <ChangeIcon className='cb-user-details-body-button-icon' />
-                      <Text className='cb-user-details-subheader'>Change</Text>
+                      <Text className='cb-user-details-subheader'>{buttonChange}</Text>
                     </Button>
                   )}
                 </div>
@@ -417,7 +449,7 @@ export const User: FC = () => {
         )}
         {usernameEnabled && (
           <div className='cb-user-details-card'>
-            <Text className='cb-user-details-header'>{usernameFieldLabel}</Text>
+            <Text className='cb-user-details-header'>{headerUsername}</Text>
             <div className='cb-user-details-body'>
               {!processUser.username ? (
                 <div>
@@ -442,7 +474,7 @@ export const User: FC = () => {
                         className='cb-user-details-body-button-primary'
                         onClick={() => void addUsername()}
                       >
-                        <Text className='cb-user-details-subheader'>Save</Text>
+                        <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                       </Button>
                       <Button
                         className='cb-user-details-body-button-secondary'
@@ -451,7 +483,7 @@ export const User: FC = () => {
                           setAddingUsername(false);
                         }}
                       >
-                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                        <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                       </Button>
                     </div>
                   ) : (
@@ -463,7 +495,7 @@ export const User: FC = () => {
                         color='secondary'
                         className='cb-user-details-body-button-icon'
                       />
-                      <Text className='cb-user-details-subheader'>Add Username</Text>
+                      <Text className='cb-user-details-subheader'>{buttonAddUsername}</Text>
                     </Button>
                   )}
                 </div>
@@ -491,7 +523,7 @@ export const User: FC = () => {
                             className='cb-user-details-body-button-primary'
                             onClick={() => void changeUsername()}
                           >
-                            <Text className='cb-user-details-subheader'>Save</Text>
+                            <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                           </Button>
                           <Button
                             className='cb-user-details-body-button-secondary'
@@ -500,7 +532,7 @@ export const User: FC = () => {
                               setEditingUsername(false);
                             }}
                           >
-                            <Text className='cb-user-details-subheader'>Cancel</Text>
+                            <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                           </Button>
                         </div>
                       ) : (
@@ -509,7 +541,7 @@ export const User: FC = () => {
                           onClick={() => setEditingUsername(true)}
                         >
                           <ChangeIcon className='cb-user-details-body-button-icon' />
-                          <Text className='cb-user-details-subheader'>Change</Text>
+                          <Text className='cb-user-details-subheader'>{buttonChange}</Text>
                         </Button>
                       )}
                     </div>
@@ -521,7 +553,7 @@ export const User: FC = () => {
         )}
         {emailEnabled && (
           <div className='cb-user-details-card'>
-            <Text className='cb-user-details-header'>{emailFieldLabel}</Text>
+            <Text className='cb-user-details-header'>{headerEmail}</Text>
             <div className='cb-user-details-body'>
               {emails.map((email, index) => (
                 <div className='cb-user-details-identifier-container'>
@@ -544,7 +576,7 @@ export const User: FC = () => {
                         className='cb-user-details-body-button-primary'
                         onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? false : v)))}
                       >
-                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                        <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                       </Button>
                     </div>
                   ) : (
@@ -554,17 +586,17 @@ export const User: FC = () => {
                         {email.status === 'primary' ? (
                           <div className='cb-user-details-header-badge'>
                             <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Primary</Text>
+                            <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
                           </div>
                         ) : email.status === 'verified' ? (
                           <div className='cb-user-details-header-badge'>
                             <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Verified</Text>
+                            <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
                           </div>
                         ) : (
                           <div className='cb-user-details-header-badge'>
                             <PendingIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Pending</Text>
+                            <Text className='cb-user-details-text-primary'>{badgePending}</Text>
                           </div>
                         )}
                       </div>
@@ -573,14 +605,14 @@ export const User: FC = () => {
                           className='cb-user-details-body-button-primary'
                           onClick={() => void startEmailVerification(index)}
                         >
-                          <Text className='cb-user-details-subheader'>Verify</Text>
+                          <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
                         </Button>
                       )}
                       <Button
                         className='cb-user-details-body-button-secondary'
                         onClick={() => void removeEmail(index)}
                       >
-                        <Text className='cb-user-details-subheader'>Delete</Text>
+                        <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
                       </Button>
                     </div>
                   )}
@@ -599,7 +631,7 @@ export const User: FC = () => {
                     className='cb-user-details-body-button-primary'
                     onClick={() => void addEmail()}
                   >
-                    <Text className='cb-user-details-subheader'>Save</Text>
+                    <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                   </Button>
                   <Button
                     className='cb-user-details-body-button-secondary'
@@ -607,7 +639,7 @@ export const User: FC = () => {
                       setAddingEmail(false);
                     }}
                   >
-                    <Text className='cb-user-details-subheader'>Cancel</Text>
+                    <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                   </Button>
                 </div>
               ) : (
@@ -619,7 +651,7 @@ export const User: FC = () => {
                     color='secondary'
                     className='cb-user-details-body-button-icon'
                   />
-                  <Text className='cb-user-details-subheader'>Add Email</Text>
+                  <Text className='cb-user-details-subheader'>{buttonAddEmail}</Text>
                 </Button>
               )}
             </div>
@@ -627,7 +659,7 @@ export const User: FC = () => {
         )}
         {phoneEnabled && (
           <div className='cb-user-details-card'>
-            <Text className='cb-user-details-header'>{phoneFieldLabel}</Text>
+            <Text className='cb-user-details-header'>{headerPhone}</Text>
             <div className='cb-user-details-body'>
               {phones.map((phone, index) => (
                 <div className='cb-user-details-identifier-container'>
@@ -650,7 +682,7 @@ export const User: FC = () => {
                         className='cb-user-details-body-button-primary'
                         onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index ? false : v)))}
                       >
-                        <Text className='cb-user-details-subheader'>Cancel</Text>
+                        <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                       </Button>
                     </div>
                   ) : (
@@ -660,17 +692,17 @@ export const User: FC = () => {
                         {phone.status === 'primary' ? (
                           <div className='cb-user-details-header-badge'>
                             <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Primary</Text>
+                            <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
                           </div>
                         ) : phone.status === 'verified' ? (
                           <div className='cb-user-details-header-badge'>
                             <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Verified</Text>
+                            <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
                           </div>
                         ) : (
                           <div className='cb-user-details-header-badge'>
                             <PendingIcon className='cb-user-details-header-badge-icon' />
-                            <Text className='cb-user-details-text-primary'>Pending</Text>
+                            <Text className='cb-user-details-text-primary'>{badgePending}</Text>
                           </div>
                         )}
                       </div>
@@ -679,14 +711,14 @@ export const User: FC = () => {
                           className='cb-user-details-body-button-primary'
                           onClick={() => void startPhoneVerification(index)}
                         >
-                          <Text className='cb-user-details-subheader'>Verify</Text>
+                          <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
                         </Button>
                       )}
                       <Button
                         className='cb-user-details-body-button-secondary'
                         onClick={() => void removePhone(index)}
                       >
-                        <Text className='cb-user-details-subheader'>Delete</Text>
+                        <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
                       </Button>
                     </div>
                   )}
@@ -705,7 +737,7 @@ export const User: FC = () => {
                     className='cb-user-details-body-button-primary'
                     onClick={() => void addPhone()}
                   >
-                    <Text className='cb-user-details-subheader'>Save</Text>
+                    <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                   </Button>
                   <Button
                     className='cb-user-details-body-button-secondary'
@@ -713,7 +745,7 @@ export const User: FC = () => {
                       setAddingPhone(false);
                     }}
                   >
-                    <Text className='cb-user-details-subheader'>Cancel</Text>
+                    <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
                   </Button>
                 </div>
               ) : (
@@ -725,14 +757,14 @@ export const User: FC = () => {
                     color='secondary'
                     className='cb-user-details-body-button-icon'
                   />
-                  <Text className='cb-user-details-subheader'>Add Phone</Text>
+                  <Text className='cb-user-details-subheader'>{buttonAddPhone}</Text>
                 </Button>
               )}
             </div>
           </div>
         )}
 
-        <div className='cb-user-details-section-indentifiers-list'>
+        {/* <div className='cb-user-details-section-indentifiers-list'>
           {processUser.socialAccounts.map((social, i) => (
             <div className='cb-user-details-card'>
               <div
@@ -743,7 +775,7 @@ export const User: FC = () => {
                   <InputField
                     className='cb-user-details-section-indentifiers-list-item-field-input'
                     key={social.providerType}
-                    label={i === 0 ? socialFieldLabel : undefined}
+                    label={i === 0 ? headerSocial : undefined}
                     value={`${social.fullName} - ${social.identifierValue}`}
                     disabled
                   />
@@ -761,6 +793,20 @@ export const User: FC = () => {
               </div>
             </div>
           ))}
+        </div> */}
+
+        <div className='cb-user-details-card'>
+          <Text className='cb-user-details-header'>{headerDelete}</Text>
+          <br/>
+          <br/>
+          <Text className='cb-user-details-text'>{textDelete}</Text>
+          <br/>
+          <br/>
+          <Button
+              className='cb-user-details-body-button-primary'
+              onClick={() => void deleteAccount()}>
+            <Text className='cb-user-details-subheader'>{buttonDelete}</Text>
+          </Button>
         </div>
       </div>
     </PasskeyListErrorBoundary>

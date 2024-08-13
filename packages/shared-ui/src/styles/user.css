@@ -39,10 +39,6 @@
   overflow: hidden;
 }
 
-.cb-user-details-card:hover {
-  border: var(--cb-passkey-list-border-hover-color) 1px solid;
-}
-
 .cb-user-details-header {
   margin: auto 0;
   margin-bottom: 0.5rem;

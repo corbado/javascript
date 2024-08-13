@@ -334,15 +334,7 @@ export class ConnectService {
       return platformRes;
     }
 
-    const finishRes = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }),
-    );
-    if (finishRes.ok) {
-      // we no longer need process state after the append process has finished
-      this.clearProcess();
-    }
-
-    return finishRes;
+    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
   }
 
   async startAppend(
@@ -380,9 +372,6 @@ export class ConnectService {
     if (finishRes.ok) {
       const latestLogin = new ConnectLastLogin(finishRes.val.passkeyOperation);
       latestLogin.persistToStorage(this.#projectId);
-
-      // we no longer need process state after the append process has finished
-      // this.clearProcess();
     }
 
     return finishRes;
@@ -407,9 +396,6 @@ export class ConnectService {
     if (res.ok) {
       const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
       latestLogin.persistToStorage(this.#projectId);
-
-      // we no longer need process state after login
-      this.clearProcess();
     }
 
     return res;

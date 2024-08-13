@@ -116,32 +116,11 @@ export async function startConventionalLogin(email: string, password: string) {
 
     const response = await client.send(command);
 
-    let challengeResponse = response;
-
-    if (response.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
-      const respondToAuthChallengeCommand = new RespondToAuthChallengeCommand({
-        ChallengeName: response.ChallengeName,
-        ClientId: process.env.AWS_COGNITO_CLIENT_ID!,
-        ChallengeResponses: {
-          USERNAME: email,
-          NEW_PASSWORD: password,
-          SECRET_HASH: createSecretHash(
-            email,
-            process.env.AWS_COGNITO_CLIENT_ID!,
-            process.env.AWS_COGNITO_CLIENT_SECRET!,
-          ),
-        },
-        Session: response.Session,
-      });
-
-      challengeResponse = await client.send(respondToAuthChallengeCommand);
-    }
-
-    if (!challengeResponse.AuthenticationResult?.AccessToken) {
+    if (!response.AuthenticationResult?.AccessToken) {
       throw new Error('Authentication failed. Please check your credentials and try again.');
     }
 
-    const decoded = await verifyToken(challengeResponse.AuthenticationResult.AccessToken);
+    const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
     const username = decoded.username;
 
     if (email) {

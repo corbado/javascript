@@ -126,16 +126,16 @@ export class ConnectService {
   }
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
-    // const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    // if (existingProcess?.isValid()) {
-    //   log.debug('process exists, preparing api clients');
-    //   this.#setApisV2(existingProcess);
-    // }
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcess?.isValid()) {
+      log.debug('process exists, preparing api clients');
+      this.#setApisV2(existingProcess);
+    }
 
     // process has already been initialized
-    // if (existingProcess?.loginData) {
-    //   return Ok(existingProcess.loginData);
-    // }
+    if (existingProcess?.loginData) {
+      return Ok(existingProcess.loginData);
+    }
 
     const { req, flags } = await this.#getInitReq();
 

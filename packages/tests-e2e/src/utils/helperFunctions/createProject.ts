@@ -29,14 +29,6 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
       name,
     }),
   });
-  const hey = process.env.PLAYWRIGHT_JWT_TOKEN;
-  if (hey) {
-    for (let i = 0; i < hey.length; i++) {
-      console.log(hey.charCodeAt(i));
-    }
-  }
-  console.log(process.env.PLAYWRIGHT_JWT_TOKEN);
-  console.log(createRes);
   expect(createRes.ok).toBeTruthy();
 
   const projectId = (await createRes.json()).data.project.id;

@@ -92,7 +92,7 @@ export const User: FC = () => {
   const badgePrimary = useMemo(() => t('user.primary'), [t]);
   const badgeVerified = useMemo(() => t('user.verified'), [t]);
   const badgePending = useMemo(() => t('user.pending'), [t]);
-  
+
   const buttonVerify = useMemo(() => t('user.verify'), [t]);
   const buttonRemove = useMemo(() => t('user.remove'), [t]);
   const buttonDelete = useMemo(() => t('user.delete'), [t]);
@@ -797,14 +797,15 @@ export const User: FC = () => {
 
         <div className='cb-user-details-card'>
           <Text className='cb-user-details-header'>{headerDelete}</Text>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Text className='cb-user-details-text'>{textDelete}</Text>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Button
-              className='cb-user-details-body-button-primary'
-              onClick={() => void deleteAccount()}>
+            className='cb-user-details-body-button-primary'
+            onClick={() => void deleteAccount()}
+          >
             <Text className='cb-user-details-subheader'>{buttonDelete}</Text>
           </Button>
         </div>

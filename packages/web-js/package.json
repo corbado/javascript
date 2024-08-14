@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@corbado/types": "^2.8.0",
-    "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.0",
     "typescript": "^5.2.2"
   },

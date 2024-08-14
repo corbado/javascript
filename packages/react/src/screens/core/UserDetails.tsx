@@ -384,69 +384,7 @@ export const UserDetails: FC = () => {
     <PasskeyListErrorBoundary globalError={globalError}>
       <div className='cb-user-details-container'>
         <Text className='cb-user-details-title'>{title}</Text>
-        {fullNameRequired && (
-          <div className='cb-user-details-card'>
-            <Text className='cb-user-details-header'>{headerName}</Text>
-            <div className='cb-user-details-body'>
-              {!processUser.name && !editingName ? (
-                <Button
-                  className='cb-user-details-body-button'
-                  onClick={() => setEditingName(true)}
-                >
-                  <AddIcon
-                    color='secondary'
-                    className='cb-user-details-body-button-icon'
-                  />
-                  <Text className='cb-user-details-subheader'>{buttonAddName}</Text>
-                </Button>
-              ) : (
-                <div>
-                  <div className='cb-user-details-body-row'>
-                    <InputField
-                      className='cb-user-details-text'
-                      // key={`user-entry-${processUser.name}`}
-                      value={name}
-                      disabled={!editingName}
-                      onChange={e => setName(e.target.value)}
-                    />
-                    <CopyIcon
-                      className='cb-user-details-body-row-icon'
-                      color='secondary'
-                      onClick={() => void copyName()}
-                    />
-                  </div>
-                  {editingName ? (
-                    <div>
-                      <Button
-                        className='cb-user-details-body-button-primary'
-                        onClick={() => void changeName()}
-                      >
-                        <Text className='cb-user-details-subheader'>{buttonSave}</Text>
-                      </Button>
-                      <Button
-                        className='cb-user-details-body-button-secondary'
-                        onClick={() => {
-                          setName(processUser.name);
-                          setEditingName(false);
-                        }}
-                      >
-                        <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      className='cb-user-details-body-button'
-                      onClick={() => setEditingName(true)}
-                    >
-                      <ChangeIcon className='cb-user-details-body-button-icon' />
-                      <Text className='cb-user-details-subheader'>{buttonChange}</Text>
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+
         {usernameEnabled && (
           <div className='cb-user-details-card'>
             <Text className='cb-user-details-header'>{headerUsername}</Text>

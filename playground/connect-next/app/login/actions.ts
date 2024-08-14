@@ -128,16 +128,14 @@ export async function startConventionalLogin(email: string, password: string) {
       cookies().set('identifier', username);
     }
 
-    return;
+    return { success: true };
   } catch (err) {
     if (err instanceof Error) {
-      if (err.name === 'NotAuthorizedException') {
-        throw new Error('Incorrect username or password.');
-      }
+      if (err.name === 'NotAuthorizedException') return { success: false, message: 'Incorrect username or password.' };
 
-      throw err;
-    } else {
-      throw new Error('An unknown error occurred during login.');
+      return { success: false, message: err.message };
     }
+
+    return { success: false, message: 'An error occurred. Please try again later.' };
   }
 }

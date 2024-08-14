@@ -14,18 +14,16 @@ export default function ConventionalLogin({ initialEmail }: Props) {
   const router = useRouter();
 
   const onSubmit = async () => {
-    try {
-      setError('');
-      await startConventionalLogin(email, password);
+    setError('');
+    const res = await startConventionalLogin(email, password);
 
-      router.push('/post-login');
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred. Please try again later.');
-      }
+    if (!res.success) {
+      setError(res.message ?? 'An unknown error occurred. Please try again later.');
+
+      return;
     }
+
+    router.push('/post-login');
   };
 
   return (

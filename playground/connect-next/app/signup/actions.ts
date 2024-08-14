@@ -52,6 +52,7 @@ export async function createAccount(email: string, phone: string, password: stri
     UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
     Username: randomUsername,
     Password: password,
+    Permanent: true,
   });
 
   await client.send(passwordCommand);

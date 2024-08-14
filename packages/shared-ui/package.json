@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@corbado/types": "^2.8.0",
+    "@types/ua-parser-js": "^0.7.39",
     "css-loader": "^6.8.1",
     "i18next": "23.5.1",
     "style-loader": "^3.3.3",

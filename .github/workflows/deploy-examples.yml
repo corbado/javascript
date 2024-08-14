@@ -6,8 +6,8 @@ env:
 on:
   push:
     branches:
-      - main
-      - styling-fixes-for-ui-frameworks
+      - develop
+      - bugfix/fix-dependencies-issues
 
 jobs:
   deploy:

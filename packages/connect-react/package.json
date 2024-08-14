@@ -1,6 +1,5 @@
 {
   "name": "@corbado/connect-react",
-  "private": true,
   "version": "0.2.0",
   "description": "This package provides a set of React components to integrate passkeys into an existing authentication system.",
   "author": "Martin Kellner <martin.kellner@corbado.com>",

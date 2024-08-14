@@ -18,6 +18,7 @@
     "release:version": "lerna version --no-push --yes --no-private",
     "release:publish": "lerna publish from-package --no-private",
     "release": "npm run release:version && npm run release:build && npm run release:publish",
+    "release:connect-web-js": "./release_connect_web_js.sh",
     "test:e2e:local": "ts-node-esm ./scripts/e2eTests.ts",
     "test:e2e:sdk": "lerna run e2e:sdk",
     "test:e2e:ui:commitly": "lerna run e2e:ui:commitly",

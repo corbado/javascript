@@ -1,3 +1,9 @@
+## 2.12.0
+
+### Minor changes
+
+- Extend duration of loading spinner for conditional ui login.
+
 ## 2.11.0
 
 ### Minor changes

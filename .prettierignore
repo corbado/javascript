@@ -24,3 +24,6 @@ examples/*/package-lock.json
 examples/*/yalc.lock
 examples/*/build/
 examples/*/dist/
+
+/.nx/cache
+/.nx/workspace-data

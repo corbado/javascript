@@ -1,6 +1,7 @@
 import type { FC, PropsWithChildren } from 'react';
-import { Text } from '../ui';
 import React from 'react';
+
+import { Text } from '../ui';
 
 interface Props extends PropsWithChildren {
   header: string;

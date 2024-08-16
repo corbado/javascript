@@ -7,10 +7,10 @@ import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
+import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
-import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 
 const PhonesEdit = () => {
   const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();

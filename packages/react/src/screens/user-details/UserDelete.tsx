@@ -2,9 +2,9 @@ import { t } from 'i18next';
 import React, { useMemo, useState } from 'react';
 
 import { Button, Text } from '../../components';
-import { useCorbado } from '../../hooks/useCorbado';
-import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import Alert from '../../components/user-details/Alert';
+import UserDetailsCard from '../../components/user-details/UserDetailsCard';
+import { useCorbado } from '../../hooks/useCorbado';
 
 const UserDelete = () => {
   const { deleteUser, logout } = useCorbado();

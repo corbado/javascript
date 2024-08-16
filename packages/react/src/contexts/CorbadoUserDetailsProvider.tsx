@@ -1,9 +1,10 @@
-import type { FC, PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CorbadoUserDetailsContext } from './CorbadoUserDetailsContext';
 import { LoginIdentifierConfigType, LoginIdentifierType } from '@corbado/shared-ui';
 import type { CorbadoUser, Identifier } from '@corbado/types';
+import type { FC, PropsWithChildren } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { useCorbado } from '../hooks/useCorbado';
+import { CorbadoUserDetailsContext } from './CorbadoUserDetailsContext';
 
 export const CorbadoUserDetailsProvider: FC<PropsWithChildren> = ({ children }) => {
   const { corbadoApp, isAuthenticated, getFullUser, getIdentifierListConfig } = useCorbado();

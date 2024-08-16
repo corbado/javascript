@@ -1,14 +1,15 @@
-import React, { useMemo, useState } from 'react';
-import { useCorbado } from '../../hooks/useCorbado';
-import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { LoginIdentifierType } from '@corbado/shared-ui';
-import { getErrorCode } from '../../util';
 import { t } from 'i18next';
-import { InputField, Button, Text } from '../../components';
+import React, { useMemo, useState } from 'react';
+
+import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
+import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
-import { PendingIcon } from '../../components/ui/icons/PendingIcon';
+import { useCorbado } from '../../hooks/useCorbado';
+import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+import { getErrorCode } from '../../util';
 
 const EmailsEdit = () => {
   const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
@@ -89,7 +90,7 @@ const EmailsEdit = () => {
     void getCurrentUser();
   };
 
-  if (!emailEnabled) return null;
+  if (!emailEnabled) {return null;}
 
   return (
     <div className='cb-user-details-card'>

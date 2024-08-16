@@ -1,5 +1,5 @@
+import type { Identifier, SocialAccount } from '@corbado/types';
 import { createContext } from 'react';
-import { Identifier, SocialAccount } from '@corbado/types';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <CorbadoProvider/>');

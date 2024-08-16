@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
-import { CorbadoUserDetailsContext, CorbadoUserDetailsContextProps } from '../contexts/CorbadoUserDetailsContext';
+import type { CorbadoUserDetailsContextProps } from '../contexts/CorbadoUserDetailsContext';
+import { CorbadoUserDetailsContext } from '../contexts/CorbadoUserDetailsContext';
 
 export const useCorbadoUserDetails = (): CorbadoUserDetailsContextProps => {
   const corbadoUserDetails = useContext(CorbadoUserDetailsContext);

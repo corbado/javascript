@@ -1,13 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { useCorbado } from '../../hooks/useCorbado';
-import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { LoginIdentifierType } from '@corbado/shared-ui';
-import { getErrorCode } from '../../util';
 import { t } from 'i18next';
-import { InputField, Button, Text } from '../../components';
+import React, { useMemo, useState } from 'react';
+
+import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
+import { useCorbado } from '../../hooks/useCorbado';
+import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+import { getErrorCode } from '../../util';
 
 const UsernameEdit = () => {
   const { createIdentifier, updateUsername } = useCorbado();
@@ -59,7 +60,7 @@ const UsernameEdit = () => {
     void getCurrentUser();
   };
 
-  if (!processUser || !usernameEnabled) return;
+  if (!processUser || !usernameEnabled) {return;}
 
   return (
     <div className='cb-user-details-card'>

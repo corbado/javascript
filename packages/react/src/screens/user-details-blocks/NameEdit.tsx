@@ -1,11 +1,13 @@
-import React, { FC, useMemo, useState } from 'react';
+import type { FC} from 'react';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
-import { useTranslation } from 'react-i18next';
-import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { useCorbado } from '../../hooks/useCorbado';
+import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 
 const NameEdit: FC = () => {
   const { updateName } = useCorbado();
@@ -42,7 +44,7 @@ const NameEdit: FC = () => {
     void getCurrentUser();
   };
 
-  if (!processUser || !fullNameRequired) return;
+  if (!processUser || !fullNameRequired) {return;}
 
   return (
     <div className='cb-user-details-card'>

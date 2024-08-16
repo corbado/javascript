@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
-import { Button, Text } from '../../components';
 import { t } from 'i18next';
+import React, { useMemo } from 'react';
+
+import { Button, Text } from '../../components';
 import { useCorbado } from '../../hooks/useCorbado';
 
 const UserDelete = () => {

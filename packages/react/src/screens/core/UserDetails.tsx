@@ -2,14 +2,14 @@ import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useCorbado } from '../..';
 import { LoadingSpinner, PasskeyListErrorBoundary, Text } from '../../components';
 import { CorbadoUserDetailsProvider } from '../../contexts/CorbadoUserDetailsProvider';
-import { useCorbado } from '../..';
-import NameEdit from '../user-details-blocks/NameEdit';
-import UsernameEdit from '../user-details-blocks/UsernameEdit';
 import EmailsEdit from '../user-details-blocks/EmailsEdit';
+import NameEdit from '../user-details-blocks/NameEdit';
 import PhonesEdit from '../user-details-blocks/PhonesEdit';
 import UserDelete from '../user-details-blocks/UserDelete';
+import UsernameEdit from '../user-details-blocks/UsernameEdit';
 
 export const UserDetails: FC = () => {
   const { globalError, isAuthenticated, loading } = useCorbado();

@@ -9,6 +9,7 @@ import { CopyIcon } from '../../components/ui/icons/CopyIcon';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 
 const UsernameEdit = () => {
   const { createIdentifier, updateUsername } = useCorbado();
@@ -65,106 +66,103 @@ const UsernameEdit = () => {
   }
 
   return (
-    <div className='cb-user-details-card'>
-      <Text className='cb-user-details-header'>{headerUsername}</Text>
-      <div className='cb-user-details-body'>
-        {!processUser.username ? (
-          <div>
-            {addingUsername ? (
-              <div>
-                <div className='cb-user-details-body-row'>
-                  <InputField
-                    className='cb-user-details-text'
-                    // key={`user-entry-${processUser.username}`}
-                    value={username?.value}
-                    onChange={e => setUsername({ id: '', type: 'username', status: 'verified', value: e.target.value })}
-                  />
-                  <CopyIcon
-                    className='cb-user-details-body-row-icon'
-                    color='secondary'
-                    onClick={() => void copyUsername()}
-                  />
-                </div>
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => void addUsername()}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonSave}</Text>
-                </Button>
-                <Button
-                  className='cb-user-details-body-button-secondary'
-                  onClick={() => {
-                    setUsername(undefined);
-                    setAddingUsername(false);
-                  }}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-                </Button>
-              </div>
-            ) : (
-              <Button
-                className='cb-user-details-body-button'
-                onClick={() => setAddingUsername(true)}
-              >
-                <AddIcon
-                  color='secondary'
-                  className='cb-user-details-body-button-icon'
+    <UserDetailsCard header={headerUsername}>
+      {!processUser.username ? (
+        <div>
+          {addingUsername ? (
+            <div>
+              <div className='cb-user-details-body-row'>
+                <InputField
+                  className='cb-user-details-text'
+                  // key={`user-entry-${processUser.username}`}
+                  value={username?.value}
+                  onChange={e => setUsername({ id: '', type: 'username', status: 'verified', value: e.target.value })}
                 />
-                <Text className='cb-user-details-subheader'>{buttonAddUsername}</Text>
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div>
-            {username && (
-              <div>
-                <div className='cb-user-details-body-row'>
-                  <InputField
-                    className='cb-user-details-text'
-                    // key={`user-entry-${processUser.username}`}
-                    value={username?.value}
-                    disabled={!editingUsername}
-                    onChange={e => setUsername({ ...username, value: e.target.value })}
-                  />
-                  <CopyIcon
-                    className='cb-user-details-body-row-icon'
-                    color='secondary'
-                    onClick={() => void copyUsername()}
-                  />
-                </div>
-                {editingUsername ? (
-                  <div>
-                    <Button
-                      className='cb-user-details-body-button-primary'
-                      onClick={() => void changeUsername()}
-                    >
-                      <Text className='cb-user-details-subheader'>{buttonSave}</Text>
-                    </Button>
-                    <Button
-                      className='cb-user-details-body-button-secondary'
-                      onClick={() => {
-                        setUsername({ ...username, value: processUser.username });
-                        setEditingUsername(false);
-                      }}
-                    >
-                      <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    className='cb-user-details-body-button'
-                    onClick={() => setEditingUsername(true)}
-                  >
-                    <ChangeIcon className='cb-user-details-body-button-icon' />
-                    <Text className='cb-user-details-subheader'>{buttonChange}</Text>
-                  </Button>
-                )}
+                <CopyIcon
+                  className='cb-user-details-body-row-icon'
+                  color='secondary'
+                  onClick={() => void copyUsername()}
+                />
               </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+              <Button
+                className='cb-user-details-body-button-primary'
+                onClick={() => void addUsername()}
+              >
+                <Text className='cb-user-details-subheader'>{buttonSave}</Text>
+              </Button>
+              <Button
+                className='cb-user-details-body-button-secondary'
+                onClick={() => {
+                  setUsername(undefined);
+                  setAddingUsername(false);
+                }}
+              >
+                <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+              </Button>
+            </div>
+          ) : (
+            <Button
+              className='cb-user-details-body-button'
+              onClick={() => setAddingUsername(true)}
+            >
+              <AddIcon
+                color='secondary'
+                className='cb-user-details-body-button-icon'
+              />
+              <Text className='cb-user-details-subheader'>{buttonAddUsername}</Text>
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div>
+          {username && (
+            <div>
+              <div className='cb-user-details-body-row'>
+                <InputField
+                  className='cb-user-details-text'
+                  // key={`user-entry-${processUser.username}`}
+                  value={username?.value}
+                  disabled={!editingUsername}
+                  onChange={e => setUsername({ ...username, value: e.target.value })}
+                />
+                <CopyIcon
+                  className='cb-user-details-body-row-icon'
+                  color='secondary'
+                  onClick={() => void copyUsername()}
+                />
+              </div>
+              {editingUsername ? (
+                <div>
+                  <Button
+                    className='cb-user-details-body-button-primary'
+                    onClick={() => void changeUsername()}
+                  >
+                    <Text className='cb-user-details-subheader'>{buttonSave}</Text>
+                  </Button>
+                  <Button
+                    className='cb-user-details-body-button-secondary'
+                    onClick={() => {
+                      setUsername({ ...username, value: processUser.username });
+                      setEditingUsername(false);
+                    }}
+                  >
+                    <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className='cb-user-details-body-button'
+                  onClick={() => setEditingUsername(true)}
+                >
+                  <ChangeIcon className='cb-user-details-body-button-icon' />
+                  <Text className='cb-user-details-subheader'>{buttonChange}</Text>
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </UserDetailsCard>
   );
 };
 

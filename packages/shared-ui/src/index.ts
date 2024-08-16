@@ -1,6 +1,7 @@
 import './styles/index.css';
 
 import addIcon from './assets/add.svg';
+import alertIcon from './assets/alert.svg';
 import appleIcon from './assets/apple.svg';
 import cancelIcon from './assets/cancel.svg';
 import changeIcon from './assets/change.svg';
@@ -59,6 +60,7 @@ export * from './flowHandler';
 export type { BehaviorSubject } from 'rxjs';
 
 export const assets = {
+  alertIcon,
   rightIcon,
   deleteIcon,
   passkeyDefaultIcon,

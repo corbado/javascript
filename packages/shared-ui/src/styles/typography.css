@@ -6,6 +6,10 @@
   color: var(--cb-text-secondary-color);
 }
 
+.cb-error-text-color {
+  color: var(--cb-error-text-color);
+}
+
 .cb-header-text-color {
   color: var(--cb-header-text-color);
 }

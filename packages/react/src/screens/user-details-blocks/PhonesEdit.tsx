@@ -10,6 +10,7 @@ import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 
 const PhonesEdit = () => {
   const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
@@ -95,110 +96,110 @@ const PhonesEdit = () => {
   }
 
   return (
-    <div className='cb-user-details-card'>
-      <Text className='cb-user-details-header'>{headerPhone}</Text>
-      <div className='cb-user-details-body'>
-        {phones.map((phone, index) => (
-          <div className='cb-user-details-identifier-container'>
-            {verifyingPhones[index] ? (
-              <div>
-                <Text className='cb-user-details-text'>Enter OTP code for: {phone.value}</Text>
-                <InputField
-                  className='cb-user-details-text'
-                  onChange={e =>
-                    setPhoneChallengeCodes(phoneChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
-                  }
-                />
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => void finishPhoneVerification(index)}
-                >
-                  <Text className='cb-user-details-subheader'>Enter</Text>
-                </Button>
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index ? false : v)))}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-                </Button>
-              </div>
-            ) : (
-              <div className='cb-user-details-body-row'>
-                <Text className='cb-user-details-text'>{phone.value}</Text>
-                <div className='cb-user-details-header-badge-section'>
-                  {phone.status === 'primary' ? (
-                    <div className='cb-user-details-header-badge'>
-                      <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
-                    </div>
-                  ) : phone.status === 'verified' ? (
-                    <div className='cb-user-details-header-badge'>
-                      <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
-                    </div>
-                  ) : (
-                    <div className='cb-user-details-header-badge'>
-                      <PendingIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgePending}</Text>
-                    </div>
-                  )}
-                </div>
-                {phone.status === 'pending' && (
-                  <Button
-                    className='cb-user-details-body-button-primary'
-                    onClick={() => void startPhoneVerification(index)}
-                  >
-                    <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
-                  </Button>
+    <UserDetailsCard header={headerPhone}>
+      {phones.map((phone, index) => (
+        <div
+          className='cb-user-details-identifier-container'
+          key={index}
+        >
+          {verifyingPhones[index] ? (
+            <div>
+              <Text className='cb-user-details-text'>Enter OTP code for: {phone.value}</Text>
+              <InputField
+                className='cb-user-details-text'
+                onChange={e =>
+                  setPhoneChallengeCodes(phoneChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
+                }
+              />
+              <Button
+                className='cb-user-details-body-button-primary'
+                onClick={() => void finishPhoneVerification(index)}
+              >
+                <Text className='cb-user-details-subheader'>Enter</Text>
+              </Button>
+              <Button
+                className='cb-user-details-body-button-primary'
+                onClick={() => setVerifyingPhones(verifyingPhones.map((v, i) => (i === index ? false : v)))}
+              >
+                <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+              </Button>
+            </div>
+          ) : (
+            <div className='cb-user-details-body-row'>
+              <Text className='cb-user-details-text'>{phone.value}</Text>
+              <div className='cb-user-details-header-badge-section'>
+                {phone.status === 'primary' ? (
+                  <div className='cb-user-details-header-badge'>
+                    <PrimaryIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
+                  </div>
+                ) : phone.status === 'verified' ? (
+                  <div className='cb-user-details-header-badge'>
+                    <VerifiedIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
+                  </div>
+                ) : (
+                  <div className='cb-user-details-header-badge'>
+                    <PendingIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgePending}</Text>
+                  </div>
                 )}
-                <Button
-                  className='cb-user-details-body-button-secondary'
-                  onClick={() => void removePhone(index)}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
-                </Button>
               </div>
-            )}
-          </div>
-        ))}
-        {addingPhone ? (
-          <div className='cb-user-details-identifier-container'>
-            <InputField
-              className='cb-user-details-text'
-              style={{ width: '100%' }}
-              // key={`user-entry-${processUser.username}`}
-              value={newPhone}
-              onChange={e => setNewPhone(e.target.value)}
-            />
-            <Button
-              className='cb-user-details-body-button-primary'
-              onClick={() => void addPhone()}
-            >
-              <Text className='cb-user-details-subheader'>{buttonSave}</Text>
-            </Button>
-            <Button
-              className='cb-user-details-body-button-secondary'
-              onClick={() => {
-                setAddingPhone(false);
-              }}
-            >
-              <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-            </Button>
-          </div>
-        ) : (
+              {phone.status === 'pending' && (
+                <Button
+                  className='cb-user-details-body-button-primary'
+                  onClick={() => void startPhoneVerification(index)}
+                >
+                  <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
+                </Button>
+              )}
+              <Button
+                className='cb-user-details-body-button-secondary'
+                onClick={() => void removePhone(index)}
+              >
+                <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
+              </Button>
+            </div>
+          )}
+        </div>
+      ))}
+      {addingPhone ? (
+        <div className='cb-user-details-identifier-container'>
+          <InputField
+            className='cb-user-details-text'
+            style={{ width: '100%' }}
+            // key={`user-entry-${processUser.username}`}
+            value={newPhone}
+            onChange={e => setNewPhone(e.target.value)}
+          />
           <Button
-            className='cb-user-details-body-button'
-            onClick={() => setAddingPhone(true)}
+            className='cb-user-details-body-button-primary'
+            onClick={() => void addPhone()}
           >
-            <AddIcon
-              color='secondary'
-              className='cb-user-details-body-button-icon'
-            />
-            <Text className='cb-user-details-subheader'>{buttonAddPhone}</Text>
+            <Text className='cb-user-details-subheader'>{buttonSave}</Text>
           </Button>
-        )}
-      </div>
-    </div>
+          <Button
+            className='cb-user-details-body-button-secondary'
+            onClick={() => {
+              setAddingPhone(false);
+            }}
+          >
+            <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className='cb-user-details-body-button'
+          onClick={() => setAddingPhone(true)}
+        >
+          <AddIcon
+            color='secondary'
+            className='cb-user-details-body-button-icon'
+          />
+          <Text className='cb-user-details-subheader'>{buttonAddPhone}</Text>
+        </Button>
+      )}
+    </UserDetailsCard>
   );
 };
 

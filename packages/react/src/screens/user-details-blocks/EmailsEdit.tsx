@@ -10,6 +10,7 @@ import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 
 const EmailsEdit = () => {
   const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
@@ -95,110 +96,110 @@ const EmailsEdit = () => {
   }
 
   return (
-    <div className='cb-user-details-card'>
-      <Text className='cb-user-details-header'>{headerEmail}</Text>
-      <div className='cb-user-details-body'>
-        {emails.map((email, index) => (
-          <div className='cb-user-details-identifier-container'>
-            {verifyingEmails[index] ? (
-              <div>
-                <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
-                <InputField
-                  className='cb-user-details-text'
-                  onChange={e =>
-                    setEmailChallengeCodes(emailChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
-                  }
-                />
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => void finishEmailVerification(index)}
-                >
-                  <Text className='cb-user-details-subheader'>Enter</Text>
-                </Button>
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? false : v)))}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-                </Button>
-              </div>
-            ) : (
-              <div className='cb-user-details-body-row'>
-                <Text className='cb-user-details-text'>{email.value}</Text>
-                <div className='cb-user-details-header-badge-section'>
-                  {email.status === 'primary' ? (
-                    <div className='cb-user-details-header-badge'>
-                      <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
-                    </div>
-                  ) : email.status === 'verified' ? (
-                    <div className='cb-user-details-header-badge'>
-                      <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
-                    </div>
-                  ) : (
-                    <div className='cb-user-details-header-badge'>
-                      <PendingIcon className='cb-user-details-header-badge-icon' />
-                      <Text className='cb-user-details-text-primary'>{badgePending}</Text>
-                    </div>
-                  )}
-                </div>
-                {email.status === 'pending' && (
-                  <Button
-                    className='cb-user-details-body-button-primary'
-                    onClick={() => void startEmailVerification(index)}
-                  >
-                    <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
-                  </Button>
+    <UserDetailsCard header={headerEmail}>
+      {emails.map((email, index) => (
+        <div
+          className='cb-user-details-identifier-container'
+          key={index}
+        >
+          {verifyingEmails[index] ? (
+            <div>
+              <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
+              <InputField
+                className='cb-user-details-text'
+                onChange={e =>
+                  setEmailChallengeCodes(emailChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
+                }
+              />
+              <Button
+                className='cb-user-details-body-button-primary'
+                onClick={() => void finishEmailVerification(index)}
+              >
+                <Text className='cb-user-details-subheader'>Enter</Text>
+              </Button>
+              <Button
+                className='cb-user-details-body-button-primary'
+                onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? false : v)))}
+              >
+                <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+              </Button>
+            </div>
+          ) : (
+            <div className='cb-user-details-body-row'>
+              <Text className='cb-user-details-text'>{email.value}</Text>
+              <div className='cb-user-details-header-badge-section'>
+                {email.status === 'primary' ? (
+                  <div className='cb-user-details-header-badge'>
+                    <PrimaryIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
+                  </div>
+                ) : email.status === 'verified' ? (
+                  <div className='cb-user-details-header-badge'>
+                    <VerifiedIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
+                  </div>
+                ) : (
+                  <div className='cb-user-details-header-badge'>
+                    <PendingIcon className='cb-user-details-header-badge-icon' />
+                    <Text className='cb-user-details-text-primary'>{badgePending}</Text>
+                  </div>
                 )}
-                <Button
-                  className='cb-user-details-body-button-secondary'
-                  onClick={() => void removeEmail(index)}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
-                </Button>
               </div>
-            )}
-          </div>
-        ))}
-        {addingEmail ? (
-          <div className='cb-user-details-identifier-container'>
-            <InputField
-              className='cb-user-details-text'
-              style={{ width: '100%' }}
-              // key={`user-entry-${processUser.username}`}
-              value={newEmail}
-              onChange={e => setNewEmail(e.target.value)}
-            />
-            <Button
-              className='cb-user-details-body-button-primary'
-              onClick={() => void addEmail()}
-            >
-              <Text className='cb-user-details-subheader'>{buttonSave}</Text>
-            </Button>
-            <Button
-              className='cb-user-details-body-button-secondary'
-              onClick={() => {
-                setAddingEmail(false);
-              }}
-            >
-              <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-            </Button>
-          </div>
-        ) : (
+              {email.status === 'pending' && (
+                <Button
+                  className='cb-user-details-body-button-primary'
+                  onClick={() => void startEmailVerification(index)}
+                >
+                  <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
+                </Button>
+              )}
+              <Button
+                className='cb-user-details-body-button-secondary'
+                onClick={() => void removeEmail(index)}
+              >
+                <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
+              </Button>
+            </div>
+          )}
+        </div>
+      ))}
+      {addingEmail ? (
+        <div className='cb-user-details-identifier-container'>
+          <InputField
+            className='cb-user-details-text'
+            style={{ width: '100%' }}
+            // key={`user-entry-${processUser.username}`}
+            value={newEmail}
+            onChange={e => setNewEmail(e.target.value)}
+          />
           <Button
-            className='cb-user-details-body-button'
-            onClick={() => setAddingEmail(true)}
+            className='cb-user-details-body-button-primary'
+            onClick={() => void addEmail()}
           >
-            <AddIcon
-              color='secondary'
-              className='cb-user-details-body-button-icon'
-            />
-            <Text className='cb-user-details-subheader'>{buttonAddEmail}</Text>
+            <Text className='cb-user-details-subheader'>{buttonSave}</Text>
           </Button>
-        )}
-      </div>
-    </div>
+          <Button
+            className='cb-user-details-body-button-secondary'
+            onClick={() => {
+              setAddingEmail(false);
+            }}
+          >
+            <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className='cb-user-details-body-button'
+          onClick={() => setAddingEmail(true)}
+        >
+          <AddIcon
+            color='secondary'
+            className='cb-user-details-body-button-icon'
+          />
+          <Text className='cb-user-details-subheader'>{buttonAddEmail}</Text>
+        </Button>
+      )}
+    </UserDetailsCard>
   );
 };
 

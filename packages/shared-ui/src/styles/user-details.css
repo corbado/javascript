@@ -27,25 +27,26 @@
 }
 
 .cb-user-details-card {
-  /* display: flex;
-  flex-direction: row; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
   gap: 1rem;
   border-radius: var(--cb-border-radius-sm);
   border: var(--cb-passkey-list-border-color) 1px solid;
   margin: 0.5rem 0;
   padding: 1rem 1rem;
   background-color: var(--cb-white);
+  flex-wrap: wrap;
   line-height: 1.4;
-  overflow: hidden;
 }
 
 .cb-user-details-header {
-  margin: auto 0;
   margin-bottom: 0.5rem;
   font-size: calc(var(--cb-base-font-size) * 1.9);
   font-family: var(--cb-primary-font);
+  width: 170px;
   font-weight: bold;
-  float: left;
 }
 
 .cb-user-details-subheader {
@@ -55,6 +56,7 @@
 }
 
 .cb-user-details-text {
+  display: inline-block;
   font-size: calc(var(--cb-base-font-size) * 1.3);
   font-family: var(--cb-primary-font);
 }
@@ -62,8 +64,6 @@
 .cb-user-details-body {
   width: 100%;
   max-width: 500px;
-  float: right;
-  clear: right;
 }
 
 .cb-user-details-body-row {
@@ -119,11 +119,22 @@
   font-family: var(--cb-primary-font);
 }
 
+.cb-user-details-body-button-delete {
+  color: var(--cb-error-text-color);
+  padding: 0.4rem 0;
+  background-color: var(--cb-color-primary);
+  border: 1px solid transparent;
+  border-radius: var(--cb-border-radius);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-primary-font);
+}
+
 .cb-user-details-identifier-container {
   gap: 1rem;
   border-radius: var(--cb-border-radius-sm);
   border: var(--cb-border-color) 1px solid;
-  margin: 0.75rem 0;
+  margin-bottom: 0.75rem;
   padding: 0.6rem 0.5rem 0.6rem 1rem;
 }
 
@@ -208,8 +219,25 @@
   color: var(--cb-button-text-primary-color);
 }
 
+.cb-user-details-alert-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.cb-user-details-alert-icon {
+  width: 13px;
+  height: 13px;
+}
+
 @media screen and (max-width: 481px) {
   .cb-user-details-section-indentifier {
     width: 75%;
+  }
+
+  .cb-user-details-body-subtitle {
+    display: none;
   }
 }

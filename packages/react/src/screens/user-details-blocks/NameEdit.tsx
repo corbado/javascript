@@ -24,6 +24,8 @@ const NameEdit: FC = () => {
   const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
   const buttonChange = useMemo(() => t('user-details.change'), [t]);
 
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+
   const copyName = async () => {
     if (name) {
       await navigator.clipboard.writeText(name);
@@ -32,7 +34,7 @@ const NameEdit: FC = () => {
 
   const changeName = async () => {
     if (!name) {
-      console.error('name is empty');
+      setErrorMessage(t('user-details.name_required'));
       return;
     }
     const res = await updateName(name);
@@ -48,6 +50,12 @@ const NameEdit: FC = () => {
   if (!processUser || !fullNameRequired) {
     return;
   }
+
+  const onCancel = () => {
+    setName(processUser.name);
+    setEditingName(false);
+    setErrorMessage(undefined);
+  };
 
   return (
     <UserDetailsCard header={headerName}>
@@ -66,11 +74,12 @@ const NameEdit: FC = () => {
         <div>
           <div className='cb-user-details-body-row'>
             <InputField
-              className='cb-user-details-text'
+              className='cb-user-details-input'
               // key={`user-entry-${processUser.name}`}
               value={name}
               disabled={!editingName}
               onChange={e => setName(e.target.value)}
+              errorMessage={errorMessage}
             />
             <CopyIcon
               className='cb-user-details-body-row-icon'
@@ -88,10 +97,7 @@ const NameEdit: FC = () => {
               </Button>
               <Button
                 className='cb-user-details-body-button-secondary'
-                onClick={() => {
-                  setName(processUser.name);
-                  setEditingName(false);
-                }}
+                onClick={onCancel}
               >
                 <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
               </Button>

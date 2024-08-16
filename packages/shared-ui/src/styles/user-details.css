@@ -76,7 +76,8 @@
   height: 1.5rem;
   cursor: pointer;
   margin-left: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.45rem;
+  align-self: flex-start;
 }
 
 .cb-user-details-body-button {
@@ -98,9 +99,24 @@
 }
 
 .cb-user-details-body-button-primary {
-  padding: 0.4rem 2rem;
-  color: var(--cb-color-on-primary);
-  background-color: var(--cb-color-primary);
+  padding: 0.4rem 3rem;
+  background-color: var(--cb-primary-color);
+  border: 1px solid transparent;
+  border-radius: var(--cb-border-radius-sm);
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--cb-primary-font);
+
+  span {
+    color: var(--cb-button-text-primary-color);
+    font-size: 13px;
+  }
+}
+
+.cb-user-details-body-button-secondary,
+.cb-user-details-body-button-cancel {
+  padding: 0.4rem 3rem;
+  background-color: var(--cb-secondary-color);
   border: 1px solid transparent;
   border-radius: var(--cb-border-radius);
   cursor: pointer;
@@ -108,15 +124,9 @@
   font-family: var(--cb-primary-font);
 }
 
-.cb-user-details-body-button-secondary {
-  padding: 0.4rem 2rem;
-  color: var(--cb-color-on-secondary);
-  background-color: var(--cb-color-secondary);
-  border: 1px solid transparent;
-  border-radius: var(--cb-border-radius);
-  cursor: pointer;
-  box-sizing: border-box;
-  font-family: var(--cb-primary-font);
+.cb-user-details-body-button-secondary span {
+  color: var(--cb-secondary-link-color);
+  font-size: 10px;
 }
 
 .cb-user-details-body-button-delete {
@@ -230,6 +240,18 @@
 .cb-user-details-alert-icon {
   width: 13px;
   height: 13px;
+}
+
+.cb-user-details-input {
+  width: 100%;
+
+  input {
+    margin-top: 0px;
+  }
+
+  input:disabled {
+    background-color: inherit;
+  }
 }
 
 @media screen and (max-width: 481px) {

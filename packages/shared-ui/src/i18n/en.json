@@ -437,6 +437,7 @@
       "google": "Google",
       "microsoft": "Microsoft",
       "github": "GitHub"
-    }
+    },
+    "name_required": "Please enter a valid name."
   }
 }

@@ -53,7 +53,7 @@ const UserDelete = () => {
             </Button>
 
             <Button
-              className='cb-user-details-body-button-secondary'
+              className='cb-user-details-body-button-cancel'
               onClick={() => setIsDeleting(false)}
             >
               <Text className='cb-user-details-subheader cb-secondary-text-color'>{cancelDelete}</Text>

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
-import { LoginIdentifierType } from '@corbado/types';
+import { LoginIdentifierType } from '@corbado/shared-ui';
 import { getErrorCode } from '../../util';
 import { t } from 'i18next';
 import { InputField, Button, Text } from '../../components';

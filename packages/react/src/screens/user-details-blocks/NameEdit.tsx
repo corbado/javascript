@@ -5,7 +5,7 @@ import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
 import { useTranslation } from 'react-i18next';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
-import { useCorbado } from '../..';
+import { useCorbado } from '../../hooks/useCorbado';
 
 const NameEdit: FC = () => {
   const { updateName } = useCorbado();

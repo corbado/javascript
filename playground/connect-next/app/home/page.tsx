@@ -25,7 +25,7 @@ export default function Page() {
               <button
                 className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-4 rounded w-full'
                 onClick={async () => {
-                  router.push(`/login`);
+                  window.location.replace(`/login`);
                 }}
               >
                 Logout

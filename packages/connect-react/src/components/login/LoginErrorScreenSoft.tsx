@@ -32,25 +32,19 @@ const LoginErrorScreenSoft = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
+        void getConnectService().recordEventLoginError();
         navigateToScreen(LoginScreenType.ErrorHard);
         return;
       }
 
       log.debug('login not allowed');
+      void getConnectService().recordEventLoginError();
       handleFallback();
 
       return;
     }
 
     setLoading(false);
-
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-
-      return;
-    }
 
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
@@ -59,6 +53,11 @@ const LoginErrorScreenSoft = () => {
     navigateToScreen(LoginScreenType.Invisible);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
+
+  const handleExplicitFallback = useCallback(() => {
+    void getConnectService().recordEventLoginExplicitAbort();
+    handleFallback();
+  }, [getConnectService, handleFallback]);
 
   return (
     <>
@@ -77,7 +76,7 @@ const LoginErrorScreenSoft = () => {
         Login with passkey
       </PrimaryButton>
       <LinkButton
-        onClick={handleFallback}
+        onClick={handleExplicitFallback}
         className='cb-login-error-soft-fallback'
       >
         Use password instead

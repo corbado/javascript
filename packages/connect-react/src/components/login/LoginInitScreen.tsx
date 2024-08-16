@@ -1,7 +1,8 @@
 import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
@@ -16,12 +17,14 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 
 interface Props {
   showFallback?: boolean;
+  prefilledIdentifier?: string;
 }
 
-const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags } = useLoginProcess();
+const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier }) => {
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
-  const [loginPending, setLoginPending] = useState(false);
+  const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
+  const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
   const [error, setError] = useState('');
   const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
@@ -33,24 +36,29 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       log.debug('running init');
 
       const res = await getConnectService().loginInit(ac);
-
       if (res.err) {
+        if (res.val.ignore) {
+          return;
+        }
+
         log.error(res.val);
         return;
       }
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
       const flags = new Flags(res.val.flags);
+
       if (sharedConfig.flags) {
         flags.addFlags(sharedConfig.flags);
       }
+
       setFlags(flags);
 
       if (!res.val.loginAllowed || showFallback) {
         log.debug('fallback: login not allowed');
         navigateToScreen(LoginScreenType.Invisible);
 
-        config.onFallback('');
+        config.onFallback(prefilledIdentifier ?? '');
         setIsFallbackInitiallyTriggered(true);
 
         finishLoading();
@@ -58,7 +66,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       }
 
       const lastLogin = getConnectService().getLastLogin();
-
       if (lastLogin) {
         log.debug('starting relogin UI');
         return navigateToScreen(LoginScreenType.PasskeyReLogin);
@@ -71,7 +78,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     };
 
     const ac = new AbortController();
-
     void init(ac);
 
     return () => {
@@ -86,77 +92,87 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     const res = await getConnectService().conditionalUILogin(
-      () => setLoginPending(true),
-      () => setLoginPending(false),
+      ac => config.onConditionalLoginStart?.(ac),
+      () => setCuiBasedLoading(true),
+      () => {
+        return;
+      },
     );
 
     if (res.err) {
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
-        setLoginPending(false);
+        setCuiBasedLoading(false);
         return;
       }
+
       log.debug('fallback: error during conditional UI');
 
       config.onError?.('PasskeyLoginFailure');
       setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
-      setLoginPending(false);
+      setCuiBasedLoading(false);
 
       return;
     }
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-      setLoginPending(false);
-
-      return;
-    }
-
-    setLoginPending(false);
     config.onComplete(res.val.session);
   };
 
   const handleSubmit = useCallback(async () => {
-    setLoginPending(true);
+    setIdentifierBasedLoading(true);
 
     const identifier = emailFieldRef.current?.value ?? '';
 
     setCurrentIdentifier(identifier);
 
-    const res = await getConnectService().login(identifier, PasskeyLoginSource.TextField);
-    if (res.err) {
-      setLoginPending(false);
-      if (res.val.ignore) {
+    config.onLoginStart?.();
+
+    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField);
+
+    if (resStart.err) {
+      setIdentifierBasedLoading(false);
+      if (resStart.val.ignore) {
         return;
       }
 
-      if (res.val instanceof ConnectUserNotFound) {
+      if (resStart.val instanceof ConnectUserNotFound) {
         setError('There is no account registered with this email.');
-        return;
-      }
-
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasskeyChallengeAborted');
-        navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
-      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
+      void getConnectService().recordEventLoginError();
       navigateToScreen(LoginScreenType.Invisible);
       config.onFallback(identifier);
 
       return;
     }
 
-    setLoginPending(false);
+    if (resStart.val.isCDA) {
+      navigateToScreen(LoginScreenType.LoginHybridScreen, resStart);
+      return;
+    }
 
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+    const res = await getConnectService().loginContinue(resStart);
+
+    if (res.err) {
+      setIdentifierBasedLoading(false);
+      if (res.val.ignore) {
+        return;
+      }
+
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        config.onError?.('PasskeyChallengeAborted');
+        navigateToScreen(LoginScreenType.ErrorSoft);
+        void getConnectService().recordEventLoginError();
+        return;
+      }
+
+      log.debug('fallback: error during password login start');
+      config.onError?.('PasskeyLoginFailure');
+      void getConnectService().recordEventLoginError();
+      navigateToScreen(LoginScreenType.Invisible);
+      config.onFallback(identifier);
 
       return;
     }
@@ -170,6 +186,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
     }
   }, [loading, isFallbackInitiallyTriggered, isInitialLoadingStarted]);
+
+  // Enable auto complete for username and webauthn if conditional UI is supported
+  // This is needed to enable multiple login instances on the same page however only one should have the autocomplete
+  // Else the conditionalUI won't work
+  const enableAutoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
 
   if (!isInitialLoadingStarted) {
     return <></>;
@@ -192,16 +213,21 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
           <InputField
             id='email'
             name='email'
-            label={config.showLabel ? 'Email address' : undefined}
+            label='Email address'
             type='email'
-            autoComplete='username webauthn'
+            autoComplete={enableAutoComplete}
             autoFocus={true}
             placeholder=''
-            ref={(el: HTMLInputElement | null) => el && (emailFieldRef.current = el)}
+            ref={(el: HTMLInputElement | null) => {
+              el && (emailFieldRef.current = el);
+              if (prefilledIdentifier && el) {
+                el.value = prefilledIdentifier;
+              }
+            }}
           />
           <PrimaryButton
             type='submit'
-            isLoading={loginPending}
+            isLoading={cuiBasedLoading || identifierBasedLoading}
             onClick={() => void handleSubmit()}
           >
             Login

@@ -77,6 +77,61 @@
   justify-content: center;
 }
 
+.cb-append-after-hybrid-login-icons,
+.cb-append-after-error-icons {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cb-append-after-hybrid-login-icons > *,
+.cb-append-after-error-icons > * {
+  width: 120px;
+  margin: 1rem 0rem;
+}
+
+.cb-append-after-hybrid-login-button,
+.cb-append-after-error-button,
+.cb-append-after-hybrid-login-fallback,
+.cb-append-after-error-fallback {
+  text-align: left;
+}
+
+.cb-append-after-hybrid-login-content {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cb-append-after-hybrid-login-content,
+.cb-checkbox-input-field {
+  .cb-p {
+    margin-bottom: 0rem;
+  }
+}
+
+.cb-checkbox-input-field {
+  margin-top: 0.5rem;
+  label {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.cb-append-after-hybrid-login-lock-icon {
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.cb-append-after-hybrid-login-cta,
+.cb-append-after-error-cta {
+  margin: 1rem 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 @media screen and (max-width: 724px) {
   .cb-connect-append-cta {
     flex-direction: column-reverse;

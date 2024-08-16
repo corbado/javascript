@@ -1,28 +1,28 @@
-import type { LoginIdentifierType } from '@corbado/types';
+import type { LoginIdentifierType, PasskeyCeremonyType } from '@corbado/types';
 
 const getStorageKey = (projectId: string) => `cbo_connect_last_login-${projectId}`;
 
 export class ConnectLastLogin {
   readonly identifierType: LoginIdentifierType;
   readonly identifierValue: string;
-  readonly isCDA: boolean;
+  readonly ceremonyType: PasskeyCeremonyType;
   readonly operationType: string;
 
   constructor({
     identifierType,
     identifierValue,
-    isCDA,
+    ceremonyType,
     operationType,
   }: {
     identifierType: LoginIdentifierType;
     identifierValue: string;
-    isCDA: boolean;
+    ceremonyType: PasskeyCeremonyType;
     operationType: string;
   }) {
     this.identifierType = identifierType;
     this.identifierValue = identifierValue;
-    this.isCDA = isCDA;
     this.operationType = operationType;
+    this.ceremonyType = ceremonyType;
   }
 
   static loadFromStorage(projectId: string): ConnectLastLogin | undefined {
@@ -42,7 +42,7 @@ export class ConnectLastLogin {
       JSON.stringify({
         identifierType: this.identifierType,
         identifierValue: this.identifierValue,
-        isCDA: this.isCDA,
+        ceremonyType: this.ceremonyType,
         operationType: this.operationType,
       }),
     );

@@ -15,9 +15,8 @@ export const LoginPasskeyReLoginScreen = () => {
 
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
-
     if (!lastLogin?.identifierValue) {
-      beginNewLogin();
+      beginNewLogin('');
       return;
     }
 
@@ -26,6 +25,7 @@ export const LoginPasskeyReLoginScreen = () => {
 
   const handleSubmit = useCallback(async () => {
     setLoading(true);
+    config.onLoginStart?.();
 
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap);
     if (res.err) {
@@ -36,23 +36,15 @@ export const LoginPasskeyReLoginScreen = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         config.onError?.('PasskeyChallengeAborted');
+        void getConnectService().recordEventLoginError();
         navigateToScreen(LoginScreenType.ErrorSoft);
         return;
       }
 
       log.debug('login not allowed');
       config.onError?.('PasskeyLoginFailure');
-      beginNewLogin();
-
-      return;
-    }
-
-    setLoading(false);
-
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
+      void getConnectService().recordEventLoginError();
+      beginNewLogin(currentIdentifier);
 
       return;
     }
@@ -60,10 +52,13 @@ export const LoginPasskeyReLoginScreen = () => {
     config.onComplete(res.val.session);
   }, [getConnectService, config, currentIdentifier]);
 
-  const beginNewLogin = useCallback(() => {
-    getConnectService().clearLastLogin();
-    navigateToScreen(LoginScreenType.Init, { showFallback: true });
-  }, [navigateToScreen, getConnectService]);
+  const beginNewLogin = useCallback(
+    (identifier: string) => {
+      getConnectService().clearLastLogin();
+      navigateToScreen(LoginScreenType.Init, { prefilledIdentifier: identifier });
+    },
+    [navigateToScreen, getConnectService],
+  );
 
   return (
     <>
@@ -77,7 +72,10 @@ export const LoginPasskeyReLoginScreen = () => {
         />
 
         <LinkButton
-          onClick={() => beginNewLogin()}
+          onClick={() => {
+            void getConnectService().recordEventLoginOneTapSwitch();
+            beginNewLogin(currentIdentifier);
+          }}
           className='cb-switch'
         >
           Switch Account

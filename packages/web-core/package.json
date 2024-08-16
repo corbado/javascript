@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-core",
-  "version": "2.8.0",
+  "version": "2.11.1-alpha.0",
   "description": "This package contains core functionalities which are exported by all the SDKs and UI packages of our JavaScript library",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -36,13 +36,13 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.4.2",
     "@github/webauthn-json": "^2.1.1",
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "loglevel": "^1.8.1",
     "rxjs": "^7.8.1",
     "ts-results": "^3.3.0"
   },
   "devDependencies": {
-    "@corbado/types": "^2.6.0",
+    "@corbado/types": "^2.8.0",
     "@types/web-bluetooth": "^0.0.20",
     "user-agent-data-types": "^0.4.2"
   },

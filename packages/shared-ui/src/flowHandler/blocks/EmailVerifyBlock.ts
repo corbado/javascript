@@ -86,6 +86,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     const emptyCommon: ProcessCommon = {
       frontendApiUrl: '',
       appName: '',
+      hideBadge: false,
     };
 
     return new EmailVerifyBlock(

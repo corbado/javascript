@@ -41,7 +41,6 @@ const AppendInitScreen = () => {
         return;
       }
 
-      config.onLoaded('loaded successfully');
       if (!res.val.appendAllowed) {
         config.onSkip();
 
@@ -70,6 +69,18 @@ const AppendInitScreen = () => {
         config.onError?.('PasskeyAlreadyExistsOnDevice');
         config.onSkip();
 
+        return;
+      }
+
+      if (startAppendRes.val.variant === 'after-hybrid') {
+        navigateToScreen(AppendScreenType.AfterHybridLogin, {
+          attestationOptions: startAppendRes.val.attestationOptions,
+        });
+        return;
+      }
+
+      if (startAppendRes.val.variant === 'after-error') {
+        navigateToScreen(AppendScreenType.AfterError, { attestationOptions: startAppendRes.val.attestationOptions });
         return;
       }
 

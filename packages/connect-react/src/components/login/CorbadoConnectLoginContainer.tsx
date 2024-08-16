@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 
-import useLoginProcess from '../hooks/useLoginProcess';
-import { LoginScreenType } from '../types/screenTypes';
-import LoginBenefitsScreen from './login/LoginBenetifsScreen';
-import LoginErrorScreenHard from './login/LoginErrorScreenHard';
-import LoginErrorScreenSoft from './login/LoginErrorScreenSoft';
-import LoginInitScreen from './login/LoginInitScreen';
-import { LoginPasskeyReLoginScreen } from './login/LoginPasskeyReLoginScreen';
-import LoginSuccess from './login/LoginSuccess';
-import { LoadingSpinner } from './shared/LoadingSpinner';
+import useLoginProcess from '../../hooks/useLoginProcess';
+import { LoginScreenType } from '../../types/screenTypes';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
+import LoginErrorScreenHard from './LoginErrorScreenHard';
+import LoginErrorScreenSoft from './LoginErrorScreenSoft';
+import LoginHybridScreen from './LoginHybridScreen';
+import LoginInitScreen from './LoginInitScreen';
+import { LoginPasskeyReLoginScreen } from './LoginPasskeyReLoginScreen';
+import LoginSuccess from './LoginSuccess';
 
 const CorbadoConnectLoginContainer = () => {
   const { currentScreenType, currentScreenOptions } = useLoginProcess();
@@ -21,14 +21,14 @@ const CorbadoConnectLoginContainer = () => {
         return <LoginInitScreen {...currentScreenOptions} />;
       case LoginScreenType.Success:
         return <LoginSuccess />;
-      case LoginScreenType.Benefits:
-        return <LoginBenefitsScreen />;
       case LoginScreenType.ErrorSoft:
         return <LoginErrorScreenSoft />;
       case LoginScreenType.ErrorHard:
         return <LoginErrorScreenHard />;
       case LoginScreenType.PasskeyReLogin:
         return <LoginPasskeyReLoginScreen />;
+      case LoginScreenType.LoginHybridScreen:
+        return <LoginHybridScreen {...currentScreenOptions} />;
       case LoginScreenType.Invisible:
         return <></>;
     }

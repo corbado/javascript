@@ -4,11 +4,11 @@ import React from 'react';
 
 import AppendProcessProvider from '../contexts/AppendProcessProvider';
 import { AppendScreenType } from '../types/screenTypes';
-import CorbadoConnectAppendContainer from './CorbadoConnectAppendContainer';
+import CorbadoConnectAppendContainer from './append/CorbadoConnectAppendContainer';
 
 const CorbadoConnectAppend: FC<CorbadoConnectAppendConfig> = (config: CorbadoConnectAppendConfig) => {
   return (
-    <div className='light'>
+    <div className='cb-connect light'>
       <div className='cb-connect-container cb-connect-append'>
         <AppendProcessProvider
           config={config}

@@ -532,11 +532,17 @@ export class ProcessService {
     return WebAuthnService.doesBrowserSupportConditionalUI();
   }
 
-  async loginWithPasskeyChallenge(challenge: string): Promise<Result<ProcessResponse, CorbadoError>> {
+  async loginWithPasskeyChallenge(
+    challenge: string,
+    onAuthenticatorCompleted?: () => void,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
+
     if (signedChallenge.err) {
       return signedChallenge;
     }
+
+    onAuthenticatorCompleted?.();
 
     return await this.finishPasskeyMediation(signedChallenge.val);
   }

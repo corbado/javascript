@@ -7,34 +7,42 @@
 }
 
 .cb-login-error-hard-icons {
-  margin: 1rem 0;
-  display: flex;
-  justify-content: center;
   align-items: start;
 }
 
-.cb-login-error-hard-icons > * {
+.cb-login-error-hard-icons > *,
+.cb-login-error-soft-icons > *,
+.cb-login-success-icons > * {
   width: 60px;
 }
 
-.cb-login-error-hard-fallback {
+.cb-login-error-hard-fallback,
+.cb-login-error-soft-fallback {
   margin: 0.5rem 0;
 }
 
-.cb-login-error-soft-icons {
+.cb-login-error-hard-icons,
+.cb-login-error-soft-icons,
+.cb-login-hybrid-icons {
   margin: 1rem 0;
   display: flex;
   justify-content: center;
 }
 
 .cb-login-error-soft-icons > * {
-  width: 60px;
   margin: 0.5rem;
   color: var(--cb-color-on-primary-container);
 }
 
-.cb-login-error-soft-fallback {
-  margin: 0.5rem 0;
+.cb-login-hybrid-icons > * {
+  width: 230px;
+}
+
+.cb-login-hybrid-cta {
+  margin: 1rem 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .cb-login-loader-container {
@@ -72,10 +80,6 @@
   display: flex;
   justify-content: center;
   align-items: start;
-}
-
-.cb-login-success-icons > * {
-  width: 60px;
 }
 
 .cb-login-success-icons-success {

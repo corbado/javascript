@@ -1,3 +1,21 @@
+## 2.12.1
+
+### Minor changes
+
+- Extend duration of loading spinner for conditional ui login.
+
+## 2.11.0
+
+### Minor changes
+
+- Consume hideBadge property.
+
+## 2.10.0
+
+### Minor changes
+
+- Added loading spinner for conditional ui login.
+
 ## 2.9.0
 
 ### Minor changes

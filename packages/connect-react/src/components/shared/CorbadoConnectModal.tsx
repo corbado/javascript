@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import useModal from '../hooks/useModal';
+import useModal from '../../hooks/useModal';
 
 const CorbadoConnectModal: FC = () => {
   const { isModalVisible, children } = useModal();

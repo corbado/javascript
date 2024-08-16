@@ -522,7 +522,46 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'attestationOptions': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartRsp
+     */
+    'variant': ConnectAppendStartRspVariantEnum;
 }
+
+export const ConnectAppendStartRspVariantEnum = {
+    Default: 'default',
+    AfterHybrid: 'after-hybrid',
+    AfterError: 'after-error'
+} as const;
+
+export type ConnectAppendStartRspVariantEnum = typeof ConnectAppendStartRspVariantEnum[keyof typeof ConnectAppendStartRspVariantEnum];
+
+/**
+ * 
+ * @export
+ * @interface ConnectEventCreateReq
+ */
+export interface ConnectEventCreateReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectEventCreateReq
+     */
+    'eventType': ConnectEventCreateReqEventTypeEnum;
+}
+
+export const ConnectEventCreateReqEventTypeEnum = {
+    LoginExplicitAbort: 'login-explicit-abort',
+    LoginError: 'login-error',
+    LoginOneTapSwitch: 'login-one-tap-switch',
+    UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
+    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted'
+} as const;
+
+export type ConnectEventCreateReqEventTypeEnum = typeof ConnectEventCreateReqEventTypeEnum[keyof typeof ConnectEventCreateReqEventTypeEnum];
+
 /**
  * 
  * @export
@@ -670,6 +709,12 @@ export interface ConnectLoginStartRsp {
      * @memberof ConnectLoginStartRsp
      */
     'assertionOptions': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectLoginStartRsp
+     */
+    'isCDA': boolean;
 }
 /**
  * 
@@ -1836,10 +1881,10 @@ export interface PasskeyOperation {
     'identifierType': LoginIdentifierType;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof PasskeyOperation
      */
-    'isCDA': boolean;
+    'ceremonyType': PasskeyOperationCeremonyTypeEnum;
 }
 
 export const PasskeyOperationOperationTypeEnum = {
@@ -1848,6 +1893,13 @@ export const PasskeyOperationOperationTypeEnum = {
 } as const;
 
 export type PasskeyOperationOperationTypeEnum = typeof PasskeyOperationOperationTypeEnum[keyof typeof PasskeyOperationOperationTypeEnum];
+export const PasskeyOperationCeremonyTypeEnum = {
+    Local: 'local',
+    Cda: 'cda',
+    SecurityKey: 'security-key'
+} as const;
+
+export type PasskeyOperationCeremonyTypeEnum = typeof PasskeyOperationCeremonyTypeEnum[keyof typeof PasskeyOperationCeremonyTypeEnum];
 
 /**
  * 
@@ -1880,6 +1932,12 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'frontendApiUrl': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProcessCommon
+     */
+    'hideBadge': boolean;
 }
 /**
  * tbd.
@@ -4064,6 +4122,48 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
+         * Creates a new user generated connect event.
+         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectEventCreate: async (connectEventCreateReq: ConnectEventCreateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectEventCreateReq' is not null or undefined
+            assertParamExists('connectEventCreate', 'connectEventCreateReq', connectEventCreateReq)
+            const localVarPath = `/v2/connect/events`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectEventCreateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
@@ -4356,6 +4456,16 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Creates a new user generated connect event.
+         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectEventCreate(connectEventCreateReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
@@ -4453,6 +4563,15 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectAppendStart(connectAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
+         * Creates a new user generated connect event.
+         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: any): AxiosPromise<void> {
+            return localVarFp.connectEventCreate(connectEventCreateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Finishes an initialized connect login process.
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
@@ -4547,6 +4666,17 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectAppendStart(connectAppendStartReq: ConnectAppendStartReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectAppendStart(connectAppendStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates a new user generated connect event.
+     * @param {ConnectEventCreateReq} connectEventCreateReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectEventCreate(connectEventCreateReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

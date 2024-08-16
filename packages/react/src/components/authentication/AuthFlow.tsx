@@ -12,8 +12,7 @@ import type {
 } from '@corbado/shared-ui';
 import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
-import { useEffect, useState } from 'react';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
@@ -45,6 +44,7 @@ export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
   const [loading, setLoading] = useState(false);
+  const [hideBadge, setHideBadge] = useState(false);
 
   useEffect(() => {
     // this delays showing a loading screen for a very short period of time
@@ -66,6 +66,10 @@ export const AuthFlow: FC = () => {
   const screenComponent = useMemo(() => {
     if (!currentScreen) {
       return null;
+    }
+
+    if (currentScreen.block.common.hideBadge) {
+      setHideBadge(true);
     }
 
     switch (currentScreen.block.type) {
@@ -164,7 +168,7 @@ export const AuthFlow: FC = () => {
       }}
     >
       <div className='cb-container'>{renderContent()}</div>
-      <FreemiumBadge />
+      {hideBadge ? null : <FreemiumBadge />}
     </div>
   );
 };

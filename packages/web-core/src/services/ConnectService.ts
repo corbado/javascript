@@ -10,23 +10,26 @@ import type {
   ConnectAppendFinishRsp,
   ConnectAppendInitReq,
   ConnectAppendStartRsp,
+  ConnectEventCreateReq,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
   ConnectLoginStartReqSourceEnum,
+  ConnectLoginStartRsp,
   ConnectManageDeleteReq,
   ConnectManageDeleteRsp,
   ConnectManageInitReq,
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
+import { ConnectEventCreateReqEventTypeEnum } from '../api/v2';
 import { CorbadoConnectApi } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
+import type { PasskeyLoginSource } from '../utils';
 import { CorbadoError } from '../utils';
-import type { PasskeyLoginSource } from '../utils/constants/passkeyLoginSource';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -123,16 +126,16 @@ export class ConnectService {
   }
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
-    // const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    // if (existingProcess?.isValid()) {
-    //   log.debug('process exists, preparing api clients');
-    //   this.#setApisV2(existingProcess);
-    // }
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcess?.isValid()) {
+      log.debug('process exists, preparing api clients');
+      this.#setApisV2(existingProcess);
+    }
 
     // process has already been initialized
-    // if (existingProcess?.loginData) {
-    //   return Ok(existingProcess.loginData);
-    // }
+    if (existingProcess?.loginData) {
+      return Ok(existingProcess.loginData);
+    }
 
     const { req, flags } = await this.#getInitReq();
 
@@ -177,28 +180,48 @@ export class ConnectService {
   }
 
   async login(identifier: string, source: PasskeyLoginSource): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    const resStart = await this.loginStart(identifier, source);
+
+    return this.loginContinue(resStart);
+  }
+
+  async loginStart(
+    identifier: string,
+    source: PasskeyLoginSource,
+  ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
 
-    const resStart = await this.wrapWithErr(() =>
+    const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginStart({
         identifier,
         source: source as ConnectLoginStartReqSourceEnum,
       }),
     );
-    if (resStart.err) {
+    if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
-      return resStart;
+      return res;
     }
 
-    if (!resStart.val.assertionOptions) {
+    if (!res.val.assertionOptions) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return Err(CorbadoError.noPasskeyAvailable());
     }
 
+    return res;
+  }
+
+  async loginContinue(
+    resStart: Result<ConnectLoginStartRsp, CorbadoError>,
+  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    if (resStart.err) {
+      return resStart;
+    }
+
     const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
+
     if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return res;
@@ -208,7 +231,8 @@ export class ConnectService {
   }
 
   async conditionalUILogin(
-    onLoginStart: () => void,
+    preWebAuthn: (ac: AbortController) => void,
+    postWebAuthn: () => void,
     onLoginEnd: () => void,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
@@ -222,14 +246,12 @@ export class ConnectService {
 
     const challenge = existingProcess.loginData?.conditionalUIChallenge;
 
-    const res = await this.#webAuthnService.login(challenge, true, false);
-    onLoginStart();
-
+    const res = await this.#webAuthnService.login(challenge, true, false, preWebAuthn);
     if (res.err) {
-      onLoginEnd();
       return res;
     }
 
+    postWebAuthn();
     const loginFinishResp = await this.#loginFinish(res.val, true);
     onLoginEnd();
 
@@ -312,15 +334,7 @@ export class ConnectService {
       return platformRes;
     }
 
-    const finishRes = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }),
-    );
-    if (finishRes.ok) {
-      // we no longer need process state after the append process has finished
-      this.clearProcess();
-    }
-
-    return finishRes;
+    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
   }
 
   async startAppend(
@@ -358,9 +372,6 @@ export class ConnectService {
     if (finishRes.ok) {
       const latestLogin = new ConnectLastLogin(finishRes.val.passkeyOperation);
       latestLogin.persistToStorage(this.#projectId);
-
-      // we no longer need process state after the append process has finished
-      // this.clearProcess();
     }
 
     return finishRes;
@@ -385,9 +396,6 @@ export class ConnectService {
     if (res.ok) {
       const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
       latestLogin.persistToStorage(this.#projectId);
-
-      // we no longer need process state after login
-      this.clearProcess();
     }
 
     return res;
@@ -462,9 +470,7 @@ export class ConnectService {
       connectToken: passkeyListToken,
     };
 
-    log.debug(req);
-
-    return await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+    return this.wrapWithErr(() => this.#connectApi.connectManageList(req));
   }
 
   async manageDelete(
@@ -482,9 +488,44 @@ export class ConnectService {
       credentialID,
     };
 
-    log.debug(req);
+    return this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
+  }
 
-    return await this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
+  recordEventLoginError() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginError);
+  }
+
+  recordEventLoginExplicitAbort() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginExplicitAbort);
+  }
+
+  recordEventLoginOneTapSwitch() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginOneTapSwitch);
+  }
+
+  recordEventUserAppendAfterCrossPlatformBlacklisted() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterCrossPlatformBlacklisted);
+  }
+
+  recordEventUserAppendAfterLoginErrorBlacklisted() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterLoginErrorBlacklisted);
+  }
+
+  // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
+  #recordEvent(eventType: ConnectEventCreateReqEventTypeEnum) {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+
+    if (!existingProcess) {
+      log.warn('No process found to record event.');
+
+      return;
+    }
+
+    const req: ConnectEventCreateReq = {
+      eventType,
+    };
+
+    return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));
   }
 
   #getDefaultFrontendApiUrl() {

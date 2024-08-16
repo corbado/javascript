@@ -833,6 +833,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/connectManageListRsp'
 
+  /v2/connect/events:
+    post:
+      description: Creates a new user generated connect event.
+      operationId: ConnectEventCreate
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectEventCreateReq'
+      responses:
+        '204':
+          description: tbd
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -1235,9 +1251,12 @@ components:
       type: object
       required:
         - assertionOptions
+        - isCDA
       properties:
         assertionOptions:
           type: string
+        isCDA:
+          type: boolean
 
     connectLoginFinishReq:
       type: object
@@ -1312,9 +1331,16 @@ components:
       type: object
       required:
         - attestationOptions
+        - variant
       properties:
         attestationOptions:
           type: string
+        variant:
+          type: string
+          enum:
+            - default
+            - after-hybrid
+            - after-error
 
     connectAppendFinishReq:
       type: object
@@ -1406,6 +1432,20 @@ components:
         credentialID:
           type: string
 
+    connectEventCreateReq:
+      type: object
+      required:
+        - eventType
+      properties:
+        eventType:
+          type: string
+          enum:
+            - login-explicit-abort
+            - login-error
+            - login-one-tap-switch
+            - user-append-after-cross-platform-blacklisted
+            - user-append-after-login-error-blacklisted
+
     passkey:
       type: object
       required:
@@ -1483,11 +1523,14 @@ components:
       required:
         - appName
         - frontendApiUrl
+        - hideBadge
       properties:
         appName:
           type: string
         frontendApiUrl:
           type: string
+        hideBadge:
+          type: boolean
 
     shortSessionCookieConfig:
       type: object
@@ -1816,7 +1859,7 @@ components:
         - operationType
         - identifierValue
         - identifierType
-        - isCDA
+        - ceremonyType
       properties:
         operationType:
           type: string
@@ -1825,8 +1868,9 @@ components:
           type: string
         identifierType:
           $ref: '#/components/schemas/loginIdentifierType'
-        isCDA:
-          type: boolean
+        ceremonyType:
+          type: string
+          enum: [ 'local', 'cda', 'security-key' ]
 
     continueOnOtherDevice:
       type: object

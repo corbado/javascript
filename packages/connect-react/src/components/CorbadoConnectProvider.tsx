@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import ModalProvider from '../contexts/ModalProvider';
 import SharedProvider from '../contexts/SharedProvider';
-import CorbadoConnectModal from './CorbadoConnectModal';
+import CorbadoConnectModal from './shared/CorbadoConnectModal';
 
 export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   connectService?: ConnectService;
@@ -23,32 +23,32 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   enableHighlight,
   ...configProperties
 }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const [connectContainerHeight, setConnectContainerHeight] = useState(0);
 
   useEffect(() => {
-    if (!enableHighlight) {
+    if (!enableHighlight || !containerRef.current) {
       return;
     }
 
-    const targetElement = document.getElementsByClassName('cb-connect-container')[0];
+    const targetElement = containerRef.current.querySelector('.cb-connect-container')!;
 
-    if (targetElement) {
-      const resizeObserver = new ResizeObserver(entries => {
-        for (const entry of entries) {
-          if (entry.target === targetElement) {
-            setConnectContainerHeight(entry.contentRect.height);
-          }
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target === targetElement) {
+          setConnectContainerHeight(entry.contentRect.height);
         }
-      });
-      resizeObserver.observe(targetElement);
+      }
+    });
 
-      return () => {
+    resizeObserver.observe(targetElement);
+
+    return () => {
+      if (targetElement) {
         resizeObserver.unobserve(targetElement);
-      };
-    }
-
-    return;
-  }, []);
+      }
+    };
+  }, [enableHighlight, containerRef]);
 
   return (
     <SharedProvider
@@ -57,7 +57,12 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
     >
       <ModalProvider>
         {!isWebJs && <CorbadoConnectModal />}
-        <div className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}>{children}</div>
+        <div
+          className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}
+          ref={containerRef}
+        >
+          {children}
+        </div>
       </ModalProvider>
     </SharedProvider>
   );

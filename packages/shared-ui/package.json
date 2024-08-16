@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-ui",
-  "version": "2.9.0",
+  "version": "2.12.1-alpha.0",
   "description": "This package contains shared files for all the complete packages of Corbado for VanillaJS, React, Angular, Vue, etc.",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -32,25 +32,19 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
-    "@corbado/types": "^2.6.0",
-    "@svgr/webpack": "^8.1.0",
+    "@corbado/types": "^2.8.0",
     "@types/ua-parser-js": "^0.7.39",
-    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
-    "file-loader": "^6.2.0",
     "i18next": "23.5.1",
-    "image-webpack-loader": "^8.1.0",
     "style-loader": "^3.3.3",
-    "svgo-loader": "^4.0.0",
-    "ts-results": "^3.3.0",
-    "url-loader": "^4.1.1"
+    "ts-results": "^3.3.0"
   },
   "sideEffects": [
     "**/*.css",
     "**/*.json"
   ],
   "dependencies": {
-    "@corbado/web-core": "^2.8.0",
+    "@corbado/web-core": "^2.11.1-alpha.0",
     "rxjs": "^7.8.1",
     "ua-parser-js": "^1.0.37"
   },

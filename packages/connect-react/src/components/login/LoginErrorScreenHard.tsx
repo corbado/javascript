@@ -32,25 +32,19 @@ const LoginErrorScreenHard = () => {
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
         navigateToScreen(LoginScreenType.ErrorHard);
+        void getConnectService().recordEventLoginError();
         config.onError?.('PasskeyChallengeAborted');
         return;
       }
 
       log.debug('login not allowed');
+      void getConnectService().recordEventLoginError();
       handleFallback();
 
       return;
     }
 
     setLoading(false);
-
-    if (config.successTimeout) {
-      navigateToScreen(LoginScreenType.Success);
-      config.onSuccess?.();
-      setTimeout(() => config.onComplete(res.val.session), config.successTimeout);
-
-      return;
-    }
 
     config.onComplete(res.val.session);
   }, [getConnectService, config]);
@@ -59,6 +53,11 @@ const LoginErrorScreenHard = () => {
     navigateToScreen(LoginScreenType.Invisible);
     config.onFallback(currentIdentifier);
   }, [navigateToScreen, config, currentIdentifier]);
+
+  const handleExplicitFallback = useCallback(() => {
+    void getConnectService().recordEventLoginExplicitAbort();
+    handleFallback();
+  }, [getConnectService, handleFallback]);
 
   return (
     <>
@@ -69,9 +68,9 @@ const LoginErrorScreenHard = () => {
       </div>
       <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
 
-      {config.onHelpRequest && (
+      {config.onSignupClick && (
         <LinkButton
-          onClick={() => config.onHelpRequest!()}
+          onClick={() => config.onSignupClick!()}
           className='cb-login-error-hard-help'
         >
           Need help ?
@@ -80,7 +79,7 @@ const LoginErrorScreenHard = () => {
 
       <div className='cb-login-error-hard-cta'>
         <Button
-          onClick={handleFallback}
+          onClick={handleExplicitFallback}
           className='cb-outline-button'
         >
           Skip passkey login

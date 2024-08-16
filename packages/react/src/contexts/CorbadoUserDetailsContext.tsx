@@ -23,7 +23,7 @@ export interface CorbadoUserDetailsContextProps {
   emails: Identifier[] | undefined;
   setEmails: (email: Identifier[] | undefined) => void;
   phones: Identifier[] | undefined;
-  userNameEnabled: boolean;
+  usernameEnabled: boolean;
   emailEnabled: boolean;
   phoneEnabled: boolean;
   fullNameRequired: boolean;
@@ -42,7 +42,7 @@ export const initialContext: CorbadoUserDetailsContextProps = {
   emails: undefined,
   setEmails: missingImplementation,
   phones: undefined,
-  userNameEnabled: false,
+  usernameEnabled: false,
   emailEnabled: false,
   phoneEnabled: false,
   fullNameRequired: false,

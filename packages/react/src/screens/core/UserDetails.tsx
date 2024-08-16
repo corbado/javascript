@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useCorbado } from '../..';
 import { LoadingSpinner, PasskeyListErrorBoundary, Text } from '../../components';
 import { CorbadoUserDetailsProvider } from '../../contexts/CorbadoUserDetailsProvider';
-import EmailsEdit from '../user-details-blocks/EmailsEdit';
-import NameEdit from '../user-details-blocks/NameEdit';
-import PhonesEdit from '../user-details-blocks/PhonesEdit';
-import UserDelete from '../user-details-blocks/UserDelete';
-import UsernameEdit from '../user-details-blocks/UsernameEdit';
+import EmailsEdit from '../user-details/EmailsEdit';
+import NameEdit from '../user-details/NameEdit';
+import PhonesEdit from '../user-details/PhonesEdit';
+import UserDelete from '../user-details/UserDelete';
+import UsernameEdit from '../user-details/UsernameEdit';
 
 export const UserDetails: FC = () => {
   const { globalError, isAuthenticated, loading } = useCorbado();

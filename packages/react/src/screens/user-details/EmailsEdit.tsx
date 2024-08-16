@@ -11,6 +11,7 @@ import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
+import DropdownMenu from '../../components/user-details/DropdownMenu';
 
 const EmailsEdit = () => {
   const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
@@ -145,20 +146,17 @@ const EmailsEdit = () => {
                   </div>
                 )}
               </div>
-              {email.status === 'pending' && (
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => void startEmailVerification(index)}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
-                </Button>
-              )}
-              <Button
-                className='cb-user-details-body-button-secondary'
-                onClick={() => void removeEmail(index)}
-              >
-                <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
-              </Button>
+              <DropdownMenu
+                items={[buttonVerify, buttonRemove]}
+                onItemClick={item => {
+                  if (item === buttonVerify) {
+                    void startEmailVerification(index);
+                  } else if (item === buttonRemove) {
+                    void removeEmail(index);
+                  }
+                }}
+                getItemClass={item => (item === buttonRemove ? 'cb-user-details-text-danger' : undefined)}
+              />
             </div>
           )}
         </div>

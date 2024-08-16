@@ -90,7 +90,9 @@ const EmailsEdit = () => {
     void getCurrentUser();
   };
 
-  if (!emailEnabled) {return null;}
+  if (!emailEnabled) {
+    return null;
+  }
 
   return (
     <div className='cb-user-details-card'>

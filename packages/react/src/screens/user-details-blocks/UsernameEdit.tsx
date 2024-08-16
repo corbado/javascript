@@ -60,7 +60,9 @@ const UsernameEdit = () => {
     void getCurrentUser();
   };
 
-  if (!processUser || !usernameEnabled) {return;}
+  if (!processUser || !usernameEnabled) {
+    return;
+  }
 
   return (
     <div className='cb-user-details-card'>

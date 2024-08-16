@@ -1,4 +1,4 @@
-import type { FC} from 'react';
+import type { FC } from 'react';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -44,7 +44,9 @@ const NameEdit: FC = () => {
     void getCurrentUser();
   };
 
-  if (!processUser || !fullNameRequired) {return;}
+  if (!processUser || !fullNameRequired) {
+    return;
+  }
 
   return (
     <div className='cb-user-details-card'>

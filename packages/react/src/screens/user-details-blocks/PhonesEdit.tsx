@@ -90,7 +90,9 @@ const PhonesEdit = () => {
     void getCurrentUser();
   };
 
-  if (!phoneEnabled) {return null;}
+  if (!phoneEnabled) {
+    return null;
+  }
 
   return (
     <div className='cb-user-details-card'>

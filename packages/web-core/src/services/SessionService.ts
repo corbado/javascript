@@ -1,5 +1,5 @@
 /// <reference types="user-agent-data-types" /> <- add this line
-import type { CorbadoUser, IdentifierListConfig, PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser, UserDetailsConfig } from '@corbado/types';
 import type {
   AxiosHeaders,
   AxiosInstance,
@@ -165,10 +165,10 @@ export class SessionService {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
   }
 
-  public async getIdentifierListConfig(
+  public async getUserDetailsConfig(
     abortController: AbortController,
-  ): Promise<Result<IdentifierListConfig, CorbadoError>> {
-    return this.wrapWithErr(async () => this.#configsApi.getIdentifierListConfig({ signal: abortController.signal }));
+  ): Promise<Result<UserDetailsConfig, CorbadoError>> {
+    return this.wrapWithErr(async () => this.#configsApi.getUserDetailsConfig({ signal: abortController.signal }));
   }
 
   async updateFullName(fullName: string): Promise<Result<void, CorbadoError>> {

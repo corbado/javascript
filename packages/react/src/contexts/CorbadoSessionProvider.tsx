@@ -86,9 +86,9 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
-  const getIdentifierListConfig = useCallback(
+  const getUserDetailsConfig = useCallback(
     (abortController?: AbortController) => {
-      return corbadoApp?.sessionService.getIdentifierListConfig(abortController ?? new AbortController());
+      return corbadoApp?.sessionService.getUserDetailsConfig(abortController ?? new AbortController());
     },
     [corbadoApp],
   );
@@ -149,7 +149,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         isAuthenticated,
         appendPasskey,
         getFullUser,
-        getIdentifierListConfig,
+        getUserDetailsConfig,
         updateFullName,
         updateUsername,
         createIdentifier,

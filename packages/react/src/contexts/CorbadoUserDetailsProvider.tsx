@@ -1,4 +1,4 @@
-import { LoginIdentifierConfigType, LoginIdentifierType } from '@corbado/shared-ui';
+import { LoginIdentifierType } from '@corbado/shared-ui';
 import type { CorbadoUser, Identifier } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -7,7 +7,7 @@ import { useCorbado } from '../hooks/useCorbado';
 import { CorbadoUserDetailsContext } from './CorbadoUserDetailsContext';
 
 export const CorbadoUserDetailsProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { corbadoApp, isAuthenticated, getFullUser, getIdentifierListConfig } = useCorbado();
+  const { corbadoApp, isAuthenticated, getFullUser, getUserDetailsConfig } = useCorbado();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CorbadoUser | undefined>();
@@ -86,7 +86,7 @@ export const CorbadoUserDetailsProvider: FC<PropsWithChildren> = ({ children }) 
   const getConfig = useCallback(
     async (abortController?: AbortController) => {
       setLoading(true);
-      const result = await getIdentifierListConfig(abortController);
+      const result = await getUserDetailsConfig(abortController);
       if (result.err && result.val.ignore) {
         return;
       }
@@ -97,12 +97,16 @@ export const CorbadoUserDetailsProvider: FC<PropsWithChildren> = ({ children }) 
 
       setFullNameRequired(result.val.fullNameRequired);
       for (const identifierConfig of result.val.identifiers) {
-        if (identifierConfig.type === LoginIdentifierConfigType.Username) {
-          setUsernameEnabled(true);
-        } else if (identifierConfig.type === LoginIdentifierConfigType.Email) {
-          setEmailEnabled(true);
-        } else if (identifierConfig.type === LoginIdentifierConfigType.Phone) {
-          setPhoneEnabled(true);
+        switch (identifierConfig.type) {
+          case LoginIdentifierType.Username:
+            setUsernameEnabled(true);
+            break;
+          case LoginIdentifierType.Email:
+            setEmailEnabled(true);
+            break;
+          case LoginIdentifierType.Phone:
+            setPhoneEnabled(true);
+            break
         }
       }
       setLoading(false);

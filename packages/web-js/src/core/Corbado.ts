@@ -106,8 +106,8 @@ export class Corbado {
     return this.#getCorbadoAppState().corbadoApp.sessionService.getFullUser(abortController ?? new AbortController());
   }
 
-  getIdentifierListConfig(abortController?: AbortController) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.getIdentifierListConfig(
+  getUserDetailsConfig(abortController?: AbortController) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.getUserDetailsConfig(
       abortController ?? new AbortController(),
     );
   }

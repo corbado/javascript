@@ -90,25 +90,6 @@ export const LoginIdentifierType = {
 export type LoginIdentifierType = (typeof LoginIdentifierType)[keyof typeof LoginIdentifierType];
 
 /**
- * Object for LoginIdentifierConfigType.
- * @typedef {Object} LoginIdentifierConfigType
- * @property {string} Email - Represents an email identifier.
- * @property {string} Phone - Represents a phone identifier.
- * @property {string} Username - Represents a username identifier.
- */
-export const LoginIdentifierConfigType = {
-  Email: 'email',
-  Phone: 'phone_number',
-  Username: 'custom',
-} as const;
-
-/**
- * Type for LoginIdentifierType.
- * @typedef {string} LoginIdentifierType
- */
-export type LoginIdentifierConfigType = (typeof LoginIdentifierConfigType)[keyof typeof LoginIdentifierConfigType];
-
-/**
  * Interface for IdentifierConfig.
  * @interface
  * @property {LoginIdentifierConfigType} type - The type of the identifier.
@@ -116,18 +97,16 @@ export type LoginIdentifierConfigType = (typeof LoginIdentifierConfigType)[keyof
  * @property {boolean} useAsLoginIdentifier - Indicates used for login.
  */
 export interface IdentifierConfig {
-  type: LoginIdentifierConfigType;
-  enforceVerification: string;
-  useAsLoginIdentifier: boolean;
+  type: LoginIdentifierType;
 }
 
 /**
- * Interface for IdentifierConfig.
+ * Interface for UserDetailsConfig.
  * @interface
  * @property {boolean} fullNameRequired - Indicates if full name is required.
  * @property {Array<IdentifierConfig>} identifiers - Config for each identifier type.
  */
-export interface IdentifierListConfig {
+export interface UserDetailsConfig {
   fullNameRequired: boolean;
   identifiers: Array<IdentifierConfig>;
 }

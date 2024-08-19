@@ -1172,25 +1172,6 @@ export interface Identifier {
 /**
  * 
  * @export
- * @interface IdentifierListConfigRsp
- */
-export interface IdentifierListConfigRsp {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof IdentifierListConfigRsp
-     */
-    'fullNameRequired': boolean;
-    /**
-     * 
-     * @type {Array<LoginIdentifierConfig>}
-     * @memberof IdentifierListConfigRsp
-     */
-    'identifiers': Array<LoginIdentifierConfig>;
-}
-/**
- * 
- * @export
  * @interface IdentifierUpdateReq
  */
 export interface IdentifierUpdateReq {
@@ -1317,37 +1298,12 @@ export interface LoginIdentifier {
 export interface LoginIdentifierConfig {
     /**
      * 
-     * @type {LoginIdentifierType1}
+     * @type {LoginIdentifierType}
      * @memberof LoginIdentifierConfig
      */
-    'type': LoginIdentifierType1;
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginIdentifierConfig
-     */
-    'enforceVerification': LoginIdentifierConfigEnforceVerificationEnum;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof LoginIdentifierConfig
-     */
-    'useAsLoginIdentifier': boolean;
-    /**
-     * 
-     * @type {object}
-     * @memberof LoginIdentifierConfig
-     */
-    'metadata'?: object;
+    'type': LoginIdentifierType;
 }
 
-export const LoginIdentifierConfigEnforceVerificationEnum = {
-    None: 'none',
-    Signup: 'signup',
-    AtFirstLogin: 'at_first_login'
-} as const;
-
-export type LoginIdentifierConfigEnforceVerificationEnum = typeof LoginIdentifierConfigEnforceVerificationEnum[keyof typeof LoginIdentifierConfigEnforceVerificationEnum];
 
 /**
  * 
@@ -1362,21 +1318,6 @@ export const LoginIdentifierType = {
 } as const;
 
 export type LoginIdentifierType = typeof LoginIdentifierType[keyof typeof LoginIdentifierType];
-
-
-/**
- * Login Identifier type
- * @export
- * @enum {string}
- */
-
-export const LoginIdentifierType1 = {
-    Email: 'email',
-    PhoneNumber: 'phone_number',
-    Custom: 'custom'
-} as const;
-
-export type LoginIdentifierType1 = typeof LoginIdentifierType1[keyof typeof LoginIdentifierType1];
 
 
 /**
@@ -2290,6 +2231,25 @@ export interface SocialVerifyStartReq {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface UserDetailsConfigRsp
+ */
+export interface UserDetailsConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserDetailsConfigRsp
+     */
+    'fullNameRequired': boolean;
+    /**
+     * 
+     * @type {Array<LoginIdentifierConfig>}
+     * @memberof UserDetailsConfigRsp
+     */
+    'identifiers': Array<LoginIdentifierConfig>;
+}
 /**
  * 
  * @export
@@ -3831,12 +3791,12 @@ export class AuthApi extends BaseAPI {
 export const ConfigsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Gets configs needed by the identifier-list component
+         * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIdentifierListConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/identifier-list-config`;
+        getSessionConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/session-config`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3867,12 +3827,12 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * tbd
+         * Gets configs needed by the UserDetails component
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSessionConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v2/session-config`;
+        getUserDetailsConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/user-details-config`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3913,21 +3873,21 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ConfigsApiAxiosParamCreator(configuration)
     return {
         /**
-         * Gets configs needed by the identifier-list component
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getIdentifierListConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IdentifierListConfigRsp>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getIdentifierListConfig(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
          * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async getSessionConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionConfigRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Gets configs needed by the UserDetails component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserDetailsConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDetailsConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserDetailsConfig(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3941,20 +3901,20 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = ConfigsApiFp(configuration)
     return {
         /**
-         * Gets configs needed by the identifier-list component
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getIdentifierListConfig(options?: any): AxiosPromise<IdentifierListConfigRsp> {
-            return localVarFp.getIdentifierListConfig(options).then((request) => request(axios, basePath));
-        },
-        /**
          * tbd
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getSessionConfig(options?: any): AxiosPromise<SessionConfigRsp> {
             return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets configs needed by the UserDetails component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserDetailsConfig(options?: any): AxiosPromise<UserDetailsConfigRsp> {
+            return localVarFp.getUserDetailsConfig(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3967,16 +3927,6 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
  */
 export class ConfigsApi extends BaseAPI {
     /**
-     * Gets configs needed by the identifier-list component
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ConfigsApi
-     */
-    public getIdentifierListConfig(options?: AxiosRequestConfig) {
-        return ConfigsApiFp(this.configuration).getIdentifierListConfig(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * tbd
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3984,6 +3934,16 @@ export class ConfigsApi extends BaseAPI {
      */
     public getSessionConfig(options?: AxiosRequestConfig) {
         return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets configs needed by the UserDetails component
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getUserDetailsConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getUserDetailsConfig(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

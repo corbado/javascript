@@ -43,10 +43,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/sessionConfigRsp'
 
-  /v2/identifier-list-config:
+  /v2/user-details-config:
     get:
-      description: Gets configs needed by the identifier-list component
-      operationId: GetIdentifierListConfig
+      description: Gets configs needed by the UserDetails component
+      operationId: GetUserDetailsConfig
       tags:
         - Configs
       responses:
@@ -55,7 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/identifierListConfigRsp'
+                $ref: '#/components/schemas/userDetailsConfigRsp'
 
   /v2/me:
     get:
@@ -1154,7 +1154,7 @@ components:
         frontendApiUrl:
           type: string
 
-    identifierListConfigRsp:
+    userDetailsConfigRsp:
       type: object
       required:
         - fullNameRequired
@@ -1165,7 +1165,7 @@ components:
         identifiers:
           type: array
           items:
-            $ref: 'common.yml#/components/schemas/loginIdentifierConfig'
+            $ref: '#/components/schemas/loginIdentifierConfig'
 
     mePasskeyRsp:
       type: object
@@ -1552,6 +1552,14 @@ components:
           type: string
         lifetimeSeconds:
           type: integer
+
+    loginIdentifierConfig:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#/components/schemas/loginIdentifierType'
 
     blockBody:
       type: object

@@ -2,10 +2,11 @@ import { test } from '../../../fixtures/UISignupTest';
 import { AuthType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with email link proper user behavior', () => {
-  test('with passkey support', async ({ signupFlow, page, context }) => {
+  test('with passkey support', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(context, testInfo);
 
     let [, email] = await signupFlow.fillIdentifiers(false, true, false);
     email = email ?? '';

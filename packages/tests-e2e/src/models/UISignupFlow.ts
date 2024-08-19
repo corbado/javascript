@@ -36,7 +36,7 @@ export class UISignupFlow {
       const cboAuthProcess = JSON.parse(cboAuthProcessRaw);
       processId = cboAuthProcess.id;
     }
-    console.log(testInfo.project.name, this.projectId, processId);
+    console.log(testInfo.project.name, testInfo.title, this.projectId, processId);
   }
 
   async initializeCDPSession() {

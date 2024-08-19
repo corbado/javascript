@@ -2,10 +2,11 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { AuthType, IdentifierType, IdentifierVerification, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with email link proper user behavior', () => {
-  test('fallback without appending passkey', async ({ loginFlow, page, context }) => {
+  test('fallback without appending passkey', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await loginFlow.createAccount(
       [IdentifierType.Email],

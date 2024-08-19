@@ -2,10 +2,11 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with email OTP proper user behavior', () => {
-  test('fallback without appending passkey', async ({ loginFlow, page }) => {
+  test('fallback without appending passkey', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await loginFlow.createAccount(
       [IdentifierType.Email],
@@ -28,10 +29,11 @@ test.describe('Login with email OTP proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 
-  test('fallback then append passkey', async ({ loginFlow, page }) => {
+  test('fallback then append passkey', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await loginFlow.createAccount(
       [IdentifierType.Email],

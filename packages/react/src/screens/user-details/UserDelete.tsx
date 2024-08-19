@@ -44,7 +44,7 @@ const UserDelete = () => {
         <>
           <Alert text={t('user-details.delete_account_alert')} />
 
-          <div className='cb-user-details-body-row'>
+          <div>
             <Button
               className='cb-user-details-body-button-delete'
               onClick={() => void deleteAccount()}

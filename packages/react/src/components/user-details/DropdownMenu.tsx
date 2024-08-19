@@ -1,15 +1,13 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef } from 'react';
-
 import { Text } from '../ui';
-
 interface Props {
   items: string[];
   onItemClick: (item: string) => void;
-  getItemClass: (item: string) => string | undefined;
+  getItemClassName: (item: string) => string | undefined;
 }
 
-const DropdownMenu: FC<Props> = ({ items, onItemClick, getItemClass }) => {
+const DropdownMenu: FC<Props> = ({ items, onItemClick, getItemClassName }) => {
   const [visible, setVisible] = React.useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -36,17 +34,20 @@ const DropdownMenu: FC<Props> = ({ items, onItemClick, getItemClass }) => {
           className='cb-dropdown-menu-trigger'
           onClick={() => setVisible(!visible)}
         >
-          ...
+          ⋯
         </div>
         {visible && (
           <div className='cb-dropdown-menu-container'>
             {items.map((item, index) => (
               <div
                 key={index}
-                className={`cb-dropdown-menu-item ${getItemClass(item)}`}
-                onClick={() => onItemClick(item)}
+                onClick={() => {
+                  onItemClick(item);
+                  setVisible(false);
+                }}
+                className='cb-dropdown-menu-item'
               >
-                <Text>{item}</Text>
+                <Text className={getItemClassName(item)}>{item}</Text>
               </div>
             ))}
           </div>

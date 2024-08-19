@@ -438,6 +438,16 @@
       "microsoft": "Microsoft",
       "github": "GitHub"
     },
-    "name_required": "Please enter a valid name."
+    "name_required": "Please enter a valid name.",
+    "email_delete": {
+      "header": "Remove Email Address",
+      "body": "Are you sure you want to remove this email address ?",
+      "alert": "You will no longer be able to log in with this email address. "
+    },
+    "phone_delete": {
+      "header": "Remove Phone Number",
+      "body": "Are you sure you want to remove this phone number ?",
+      "alert": "You will no longer be able to log in with this phone number. "
+    }
   }
 }

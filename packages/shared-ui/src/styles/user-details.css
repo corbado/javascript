@@ -153,6 +153,8 @@
 .cb-user-details-header-badge-section {
   margin: auto 0;
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -165,10 +167,8 @@
   color: var(--cb-passkey-list-badge-color);
   background-color: var(--cb-passkey-list-badge-background-color);
   padding: 0.35rem 0.7rem;
-  margin: auto;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
 }
 
 .cb-user-details-header-badge-icon {
@@ -273,6 +273,11 @@
 .cb-dropdown-menu-item {
   padding: 0.3rem 0.5rem;
   border-bottom: 1px solid var(--cb-border-color);
+  cursor: pointer;
+}
+
+.cb-dropdown-menu-item:hover {
+  cursor: pointer;
 }
 
 .cb-dropdown-menu-item:last-child {
@@ -287,6 +292,57 @@
   margin-right: 4px;
 }
 
+.cb-user-details-badge-text {
+  flex: 10;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: visible;
+  color: var(--cb-passkey-list-badge-color);
+  font-family: var(--cb-secondary-font);
+  font-size: calc(var(--cb-base-font-size) * 1.25);
+}
+
+.cb-user-details-deletion-dialog {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--cb-user-details-dialog-background-color);
+  padding: 1rem;
+  border-radius: var(--cb-border-radius-sm);
+  border: 1px solid var(--cb-user-details-dialog-border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+button.cb-user-details-deletion-dialog-primary-button {
+  background-color: var(--cb-error-color);
+  color: var(--cb-white);
+  width: fit-content;
+  padding: 0.5rem 1.5rem;
+}
+
+button.cb-user-details-deletion-dialog-secondary-button {
+  background-color: transparent;
+  border: 1px solid var(--cb-user-details-dialog-border-color);
+  color: var(--cb-text-secondary-color);
+  width: fit-content;
+  padding: 0.5rem 1.5rem;
+}
+
+button.cb-user-details-deletion-dialog-primary-button:hover {
+  background-color: var(--cb-error-color);
+}
+
+button.cb-user-details-deletion-dialog-secondary-button:hover {
+  background-color: transparent;
+}
+
+.cb-user-details-deletion-dialog-cta {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 @media screen and (max-width: 481px) {
   .cb-user-details-section-indentifier {
     width: 75%;
@@ -294,5 +350,9 @@
 
   .cb-user-details-body-subtitle {
     display: none;
+  }
+
+  .cb-user-details-badge-text {
+    font-size: 10px;
   }
 }

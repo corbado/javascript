@@ -11,13 +11,17 @@ import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import { Identifier } from '@corbado/types';
+import DropdownMenu from '../../components/user-details/DropdownMenu';
+import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 
 const PhonesEdit = () => {
-  const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
-  const { phones = [], getCurrentUser, phoneEnabled } = useCorbadoUserDetails();
+  const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish } = useCorbado();
+  const { phones = [], getCurrentUser } = useCorbadoUserDetails();
 
   const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
   const [phoneChallengeCodes, setPhoneChallengeCodes] = useState<string[]>([]);
+  const [deletingPhone, setDeletingPhone] = useState<boolean>(false);
   const [addingPhone, setAddingPhone] = useState<boolean>(false);
   const [newPhone, setNewPhone] = useState<string>('');
 
@@ -52,19 +56,6 @@ const PhonesEdit = () => {
     void getCurrentUser();
   };
 
-  const removePhone = async (index: number) => {
-    const res = await deleteIdentifier(phones[index].id);
-    if (res.err) {
-      const code = getErrorCode(res.val.message);
-      if (code) {
-        // possible codes: no_remaining_identifier, no_remaining_verified_identifier
-        console.error(t(`errors.${code}`));
-      }
-      return;
-    }
-    void getCurrentUser();
-  };
-
   const startPhoneVerification = async (index: number) => {
     const res = await verifyIdentifierStart(phones[index].id);
     if (res.err) {
@@ -91,9 +82,22 @@ const PhonesEdit = () => {
     void getCurrentUser();
   };
 
-  if (!phoneEnabled) {
-    return null;
-  }
+  // if (!phoneEnabled) {
+  //   return null;
+  // }
+
+  const getBadge = (phone: Identifier) => {
+    switch (phone.status) {
+      case 'primary':
+        return { text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> };
+
+      case 'verified':
+        return { text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> };
+
+      default:
+        return { text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> };
+    }
+  };
 
   return (
     <UserDetailsCard header={headerPhone}>
@@ -125,41 +129,34 @@ const PhonesEdit = () => {
               </Button>
             </div>
           ) : (
-            <div className='cb-user-details-body-row'>
-              <Text className='cb-user-details-text'>{phone.value}</Text>
-              <div className='cb-user-details-header-badge-section'>
-                {phone.status === 'primary' ? (
+            <>
+              <div className='cb-user-details-body-row'>
+                <div className='cb-user-details-header-badge-section'>
+                  <Text className='cb-user-details-text'>{phone.value}</Text>
                   <div className='cb-user-details-header-badge'>
-                    <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
+                    {getBadge(phone).icon}
+                    <Text className='cb-user-details-badge-text'>{getBadge(phone).text}</Text>
                   </div>
-                ) : phone.status === 'verified' ? (
-                  <div className='cb-user-details-header-badge'>
-                    <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
-                  </div>
-                ) : (
-                  <div className='cb-user-details-header-badge'>
-                    <PendingIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgePending}</Text>
-                  </div>
-                )}
+                </div>
+                <DropdownMenu
+                  items={[buttonVerify, buttonRemove]}
+                  onItemClick={item => {
+                    if (item === buttonVerify) {
+                      void startPhoneVerification(index);
+                    } else if (item === buttonRemove) {
+                      setDeletingPhone(true);
+                    }
+                  }}
+                  getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
+                />
               </div>
-              {phone.status === 'pending' && (
-                <Button
-                  className='cb-user-details-body-button-primary'
-                  onClick={() => void startPhoneVerification(index)}
-                >
-                  <Text className='cb-user-details-subheader'>{buttonVerify}</Text>
-                </Button>
+              {deletingPhone && (
+                <IdentifierDeleteDialog
+                  identifier={phone}
+                  onCancel={() => setDeletingPhone(false)}
+                />
               )}
-              <Button
-                className='cb-user-details-body-button-secondary'
-                onClick={() => void removePhone(index)}
-              >
-                <Text className='cb-user-details-subheader'>{buttonRemove}</Text>
-              </Button>
-            </div>
+            </>
           )}
         </div>
       ))}

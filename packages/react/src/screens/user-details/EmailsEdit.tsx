@@ -12,14 +12,17 @@ import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import { Identifier } from '@corbado/types';
+import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 
 const EmailsEdit = () => {
-  const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish, deleteIdentifier } = useCorbado();
+  const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish } = useCorbado();
   const { emails = [], getCurrentUser, emailEnabled } = useCorbadoUserDetails();
 
   const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
   const [emailChallengeCodes, setEmailChallengeCodes] = useState<string[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
+  const [deletingEmail, setDeletingEmail] = useState<boolean>(false);
   const [newEmail, setNewEmail] = useState<string>('');
 
   const headerEmail = useMemo(() => t('user-details.email'), [t]);
@@ -53,19 +56,6 @@ const EmailsEdit = () => {
     void getCurrentUser();
   };
 
-  const removeEmail = async (index: number) => {
-    const res = await deleteIdentifier(emails[index].id);
-    if (res.err) {
-      const code = getErrorCode(res.val.message);
-      if (code) {
-        // possible codes: no_remaining_identifier, no_remaining_verified_identifier
-        console.error(t(`errors.${code}`));
-      }
-      return;
-    }
-    void getCurrentUser();
-  };
-
   const startEmailVerification = async (index: number) => {
     const res = await verifyIdentifierStart(emails[index].id);
     if (res.err) {
@@ -95,6 +85,19 @@ const EmailsEdit = () => {
   if (!emailEnabled) {
     return null;
   }
+
+  const getBadge = (email: Identifier) => {
+    switch (email.status) {
+      case 'primary':
+        return { text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> };
+
+      case 'verified':
+        return { text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> };
+
+      default:
+        return { text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> };
+    }
+  };
 
   return (
     <UserDetailsCard header={headerEmail}>
@@ -126,38 +129,34 @@ const EmailsEdit = () => {
               </Button>
             </div>
           ) : (
-            <div className='cb-user-details-body-row'>
-              <Text className='cb-user-details-text'>{email.value}</Text>
-              <div className='cb-user-details-header-badge-section'>
-                {email.status === 'primary' ? (
+            <>
+              <div className='cb-user-details-body-row'>
+                <div className='cb-user-details-header-badge-section'>
+                  <Text className='cb-user-details-text'>{email.value}</Text>
                   <div className='cb-user-details-header-badge'>
-                    <PrimaryIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgePrimary}</Text>
+                    {getBadge(email).icon}
+                    <Text className='cb-user-details-badge-text'>{getBadge(email).text}</Text>
                   </div>
-                ) : email.status === 'verified' ? (
-                  <div className='cb-user-details-header-badge'>
-                    <VerifiedIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgeVerified}</Text>
-                  </div>
-                ) : (
-                  <div className='cb-user-details-header-badge'>
-                    <PendingIcon className='cb-user-details-header-badge-icon' />
-                    <Text className='cb-user-details-text-primary'>{badgePending}</Text>
-                  </div>
-                )}
+                </div>
+                <DropdownMenu
+                  items={[buttonVerify, buttonRemove]}
+                  onItemClick={item => {
+                    if (item === buttonVerify) {
+                      void startEmailVerification(index);
+                    } else if (item === buttonRemove) {
+                      setDeletingEmail(true);
+                    }
+                  }}
+                  getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
+                />
               </div>
-              <DropdownMenu
-                items={[buttonVerify, buttonRemove]}
-                onItemClick={item => {
-                  if (item === buttonVerify) {
-                    void startEmailVerification(index);
-                  } else if (item === buttonRemove) {
-                    void removeEmail(index);
-                  }
-                }}
-                getItemClass={item => (item === buttonRemove ? 'cb-user-details-text-danger' : undefined)}
-              />
-            </div>
+              {deletingEmail && (
+                <IdentifierDeleteDialog
+                  identifier={email}
+                  onCancel={() => setDeletingEmail(false)}
+                />
+              )}
+            </>
           )}
         </div>
       ))}

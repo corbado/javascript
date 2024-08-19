@@ -192,6 +192,11 @@
   margin: 2rem auto 2.25rem auto;
 }
 
+.cb-break {
+  flex-basis: 100%;
+  height: 0;
+}
+
 @media screen and (max-width: 481px) and (min-width: 400px) {
   .cb-container {
     width: 395px;

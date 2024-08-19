@@ -1,6 +1,6 @@
 import { LoginIdentifierType } from '@corbado/shared-ui';
 import { t } from 'i18next';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
@@ -11,19 +11,20 @@ import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
-import { getErrorCode } from '../../util';
+import { getErrorCode, validateEmail } from '../../util';
 import { Identifier } from '@corbado/types';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
+import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
 const EmailsEdit = () => {
-  const { createIdentifier, verifyIdentifierStart, verifyIdentifierFinish } = useCorbado();
+  const { createIdentifier, verifyIdentifierStart } = useCorbado();
   const { emails = [], getCurrentUser, emailEnabled } = useCorbadoUserDetails();
 
   const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
-  const [emailChallengeCodes, setEmailChallengeCodes] = useState<string[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
-  const [deletingEmail, setDeletingEmail] = useState<boolean>(false);
+  const [deletingEmail, setDeletingEmail] = useState<Identifier>();
   const [newEmail, setNewEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const headerEmail = useMemo(() => t('user-details.email'), [t]);
 
@@ -31,15 +32,22 @@ const EmailsEdit = () => {
   const badgeVerified = useMemo(() => t('user-details.verified'), [t]);
   const badgePending = useMemo(() => t('user-details.pending'), [t]);
 
+  const warningEmail = useMemo(() => t('user-details.warning_invalid_email'), [t]);
+
   const buttonSave = useMemo(() => t('user-details.save'), [t]);
   const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
+  const buttonCopy = useMemo(() => t('user-details.copy'), [t]);
   const buttonAddEmail = useMemo(() => t('user-details.add_email'), [t]);
   const buttonVerify = useMemo(() => t('user-details.verify'), [t]);
   const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
 
+  useEffect(() => {
+    setVerifyingEmails(new Array(emails.length).fill(false));
+  }, [emails]);
+
   const addEmail = async () => {
-    if (!newEmail) {
-      console.error('email is empty');
+    if (!newEmail || !validateEmail(newEmail)) {
+      setErrorMessage(warningEmail);
       return;
     }
     const res = await createIdentifier(LoginIdentifierType.Email, newEmail);
@@ -58,6 +66,7 @@ const EmailsEdit = () => {
 
   const startEmailVerification = async (index: number) => {
     const res = await verifyIdentifierStart(emails[index].id);
+
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
@@ -66,20 +75,12 @@ const EmailsEdit = () => {
       }
       return;
     }
-    setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? true : v)));
+
+    setVerifyingEmails(prev => prev.map((v, i) => (i === index ? true : v)));
   };
 
-  const finishEmailVerification = async (index: number) => {
-    const res = await verifyIdentifierFinish(emails[index].id, emailChallengeCodes[index]);
-    if (res.err) {
-      const code = getErrorCode(res.val.message);
-      if (code) {
-        // possible code: invalid_challenge_solution_email-otp
-        console.error(t(`errors.${code}`));
-      }
-      return;
-    }
-    void getCurrentUser();
+  const onFinishEmailVerification = (index: number) => {
+    setVerifyingEmails(prev => prev.map((v, i) => (i === index ? false : v)));
   };
 
   if (!emailEnabled) {
@@ -99,6 +100,10 @@ const EmailsEdit = () => {
     }
   };
 
+  const copyEmail = async (email: string) => {
+    await navigator.clipboard.writeText(email);
+  };
+
   return (
     <UserDetailsCard header={headerEmail}>
       {emails.map((email, index) => (
@@ -107,27 +112,10 @@ const EmailsEdit = () => {
           key={index}
         >
           {verifyingEmails[index] ? (
-            <div>
-              <Text className='cb-user-details-text'>Enter OTP code for: {email.value}</Text>
-              <InputField
-                className='cb-user-details-text'
-                onChange={e =>
-                  setEmailChallengeCodes(emailChallengeCodes.map((c, i) => (i === index ? e.target.value : c)))
-                }
-              />
-              <Button
-                className='cb-user-details-body-button-primary'
-                onClick={() => void finishEmailVerification(index)}
-              >
-                <Text className='cb-user-details-subheader'>Enter</Text>
-              </Button>
-              <Button
-                className='cb-user-details-body-button-primary'
-                onClick={() => setVerifyingEmails(verifyingEmails.map((v, i) => (i === index ? false : v)))}
-              >
-                <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
-              </Button>
-            </div>
+            <IdentifierVerifyDialog
+              identifier={email}
+              onCancel={() => onFinishEmailVerification(index)}
+            />
           ) : (
             <>
               <div className='cb-user-details-body-row'>
@@ -139,21 +127,23 @@ const EmailsEdit = () => {
                   </div>
                 </div>
                 <DropdownMenu
-                  items={[buttonVerify, buttonRemove]}
+                  items={[email.status === 'verified' ? buttonCopy : buttonVerify, buttonRemove]}
                   onItemClick={item => {
                     if (item === buttonVerify) {
                       void startEmailVerification(index);
                     } else if (item === buttonRemove) {
-                      setDeletingEmail(true);
+                      setDeletingEmail(email);
+                    } else {
+                      copyEmail(email.value);
                     }
                   }}
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
                 />
               </div>
-              {deletingEmail && (
+              {deletingEmail === email && (
                 <IdentifierDeleteDialog
                   identifier={email}
-                  onCancel={() => setDeletingEmail(false)}
+                  onCancel={() => setDeletingEmail(undefined)}
                 />
               )}
             </>
@@ -163,11 +153,10 @@ const EmailsEdit = () => {
       {addingEmail ? (
         <div className='cb-user-details-identifier-container'>
           <InputField
-            className='cb-user-details-text'
-            style={{ width: '100%' }}
-            // key={`user-entry-${processUser.username}`}
+            className='cb-user-details-input'
             value={newEmail}
             onChange={e => setNewEmail(e.target.value)}
+            errorMessage={errorMessage}
           />
           <Button
             className='cb-user-details-body-button-primary'
@@ -179,6 +168,7 @@ const EmailsEdit = () => {
             className='cb-user-details-body-button-secondary'
             onClick={() => {
               setAddingEmail(false);
+              setErrorMessage(undefined);
             }}
           >
             <Text className='cb-user-details-subheader'>{buttonCancel}</Text>

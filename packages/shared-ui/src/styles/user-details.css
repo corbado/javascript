@@ -116,7 +116,8 @@
 }
 
 .cb-user-details-body-button-secondary,
-.cb-user-details-body-button-cancel {
+.cb-user-details-body-button-cancel,
+.cb-user-details-verify-identifier-button-cancel {
   padding: 0.4rem 3rem;
   background-color: var(--cb-secondary-color);
   border: 1px solid transparent;
@@ -124,6 +125,11 @@
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-primary-font);
+}
+
+.cb-user-details-verify-identifier-button-cancel {
+  align-self: flex-end;
+  width: fit-content;
 }
 
 .cb-user-details-body-button-secondary span {
@@ -261,6 +267,7 @@
 }
 
 .cb-dropdown-menu-container {
+  z-index: 1000;
   position: absolute;
   top: 30px;
   right: 10px;
@@ -341,6 +348,17 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
   display: flex;
   flex-direction: row;
   gap: 1rem;
+}
+
+.cb-otp-inputs-container {
+  width: 260px;
+  margin-bottom: 1rem;
+}
+
+.cb-user-details-verify-identifier-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 @media screen and (max-width: 481px) {

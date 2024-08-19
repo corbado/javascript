@@ -433,6 +433,9 @@
     "add_phone": "Add phone",
     "delete": "Delete",
     "warning_notLoggedIn": "Please log in to see your current user information.",
+    "warning_invalid_email": "Please enter a valid email",
+    "warning_invalid_phone": "Please enter a valid phone number",
+    "warning_invalid_challenge": "Please enter the correct code",
     "providers": {
       "google": "Google",
       "microsoft": "Microsoft",
@@ -444,10 +447,20 @@
       "body": "Are you sure you want to remove this email address ?",
       "alert": "You will no longer be able to log in with this email address. "
     },
+    "email_verify": {
+      "header": "Verify your email address",
+      "body": "Please verify your email by entering the one-time passcode we just sent to your email.",
+      "link": "Didn’t receive an email? Resend ({{counter}}s)"
+    },
     "phone_delete": {
       "header": "Remove Phone Number",
       "body": "Are you sure you want to remove this phone number ?",
       "alert": "You will no longer be able to log in with this phone number. "
+    },
+    "phone_verify": {
+      "header": "Verify your phone number",
+      "body": "Please verify your phone number by entering the one-time passcode we just sent to your phone number.",
+      "link": "Didn’t receive an SMS? Resend ({{counter}}s)"
     }
   }
 }

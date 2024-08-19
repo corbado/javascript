@@ -119,7 +119,7 @@ const UsernameEdit = () => {
             <div>
               <div className='cb-user-details-body-row'>
                 <InputField
-                  className='cb-user-details-text'
+                  className='cb-user-details-input'
                   // key={`user-entry-${processUser.username}`}
                   value={username?.value}
                   disabled={!editingUsername}

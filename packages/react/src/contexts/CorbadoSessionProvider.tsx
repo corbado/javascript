@@ -93,16 +93,16 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
-  const updateName = useCallback(
+  const updateFullName = useCallback(
     (fullName: string) => {
-      return corbadoApp.sessionService.updateName(fullName);
+      return corbadoApp.sessionService.updateFullName(fullName);
     },
     [corbadoApp],
   );
 
   const updateUsername = useCallback(
-    (identifierID: string, username: string) => {
-      return corbadoApp.sessionService.updateUsername(identifierID, username);
+    (identifierId: string, username: string) => {
+      return corbadoApp.sessionService.updateUsername(identifierId, username);
     },
     [corbadoApp],
   );
@@ -115,22 +115,22 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   );
 
   const deleteIdentifier = useCallback(
-    (identifierID: string) => {
-      return corbadoApp.sessionService.deleteIdentifier(identifierID);
+    (identifierId: string) => {
+      return corbadoApp.sessionService.deleteIdentifier(identifierId);
     },
     [corbadoApp],
   );
 
   const verifyIdentifierStart = useCallback(
-    (identifierID: string) => {
-      return corbadoApp.sessionService.verifyIdentifierStart(identifierID);
+    (identifierId: string) => {
+      return corbadoApp.sessionService.verifyIdentifierStart(identifierId);
     },
     [corbadoApp],
   );
 
   const verifyIdentifierFinish = useCallback(
-    (identifierID: string, code: string) => {
-      return corbadoApp.sessionService.verifyIdentifierFinish(identifierID, code);
+    (identifierId: string, code: string) => {
+      return corbadoApp.sessionService.verifyIdentifierFinish(identifierId, code);
     },
     [corbadoApp],
   );
@@ -150,7 +150,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         appendPasskey,
         getFullUser,
         getIdentifierListConfig,
-        updateName,
+        updateFullName,
         updateUsername,
         createIdentifier,
         deleteIdentifier,

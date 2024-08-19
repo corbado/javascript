@@ -19,12 +19,12 @@ export interface CorbadoSessionContextProps {
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getFullUser: (abortController?: AbortController) => Promise<Result<CorbadoUser, CorbadoError>>;
   getIdentifierListConfig: (abortController?: AbortController) => Promise<Result<IdentifierListConfig, CorbadoError>>;
-  updateName: (fullName: string) => Promise<Result<void, CorbadoError>>;
-  updateUsername: (identifierID: string, username: string) => Promise<Result<void, CorbadoError>>;
+  updateFullName: (fullName: string) => Promise<Result<void, CorbadoError>>;
+  updateUsername: (identifierId: string, username: string) => Promise<Result<void, CorbadoError>>;
   createIdentifier: (identifierType: LoginIdentifierType, value: string) => Promise<Result<void, CorbadoError>>;
-  deleteIdentifier: (identifierID: string) => Promise<Result<void, CorbadoError>>;
-  verifyIdentifierStart: (identifierID: string) => Promise<Result<void, CorbadoError>>;
-  verifyIdentifierFinish: (identifierID: string, code: string) => Promise<Result<void, CorbadoError>>;
+  deleteIdentifier: (identifierId: string) => Promise<Result<void, CorbadoError>>;
+  verifyIdentifierStart: (identifierId: string) => Promise<Result<void, CorbadoError>>;
+  verifyIdentifierFinish: (identifierId: string, code: string) => Promise<Result<void, CorbadoError>>;
   deleteUser: () => Promise<Result<void, CorbadoError>>;
   globalError: NonRecoverableError | undefined;
 }
@@ -42,7 +42,7 @@ export const initialContext: CorbadoSessionContextProps = {
   deletePasskey: missingImplementation,
   getFullUser: missingImplementation,
   getIdentifierListConfig: missingImplementation,
-  updateName: missingImplementation,
+  updateFullName: missingImplementation,
   updateUsername: missingImplementation,
   createIdentifier: missingImplementation,
   deleteIdentifier: missingImplementation,

@@ -74,11 +74,11 @@ export class Corbado {
     this.#unmountComponent(element);
   }
 
-  mountUserUI(element: HTMLElement) {
+  mountUserDetailsUI(element: HTMLElement) {
     this.#mountComponent(element, UserDetails, {});
   }
 
-  unmountUserUI(element: HTMLElement) {
+  unmountUserDetailsUI(element: HTMLElement) {
     this.#unmountComponent(element);
   }
 
@@ -112,28 +112,28 @@ export class Corbado {
     );
   }
 
-  updateName(fullName: string) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.updateName(fullName);
+  updateFullName(fullName: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateFullName(fullName);
   }
 
-  updateUsername(identifierID: string, username: string) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.updateUsername(identifierID, username);
+  updateUsername(identifierId: string, username: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateUsername(identifierId, username);
   }
 
   createIdentifier(identifierType: LoginIdentifierType, value: string) {
     return this.#getCorbadoAppState().corbadoApp.sessionService.createIdentifier(identifierType, value);
   }
 
-  deleteIdentifier(identifierID: string) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteIdentifier(identifierID);
+  deleteIdentifier(identifierId: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteIdentifier(identifierId);
   }
 
-  verifyIdentifierStart(identifierID: string) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierStart(identifierID);
+  verifyIdentifierStart(identifierId: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierStart(identifierId);
   }
 
-  verifyIdentifierFinish(identifierID: string, code: string) {
-    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierFinish(identifierID, code);
+  verifyIdentifierFinish(identifierId: string, code: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierFinish(identifierId, code);
   }
 
   deleteUser() {

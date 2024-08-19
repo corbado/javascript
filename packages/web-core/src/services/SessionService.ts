@@ -171,17 +171,17 @@ export class SessionService {
     return this.wrapWithErr(async () => this.#configsApi.getIdentifierListConfig({ signal: abortController.signal }));
   }
 
-  async updateName(fullName: string): Promise<Result<void, CorbadoError>> {
+  async updateFullName(fullName: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserUpdate({ fullName });
       return void 0;
     });
   }
 
-  async updateUsername(identifierID: string, username: string): Promise<Result<void, CorbadoError>> {
+  async updateUsername(identifierId: string, username: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserIdentifierUpdate({
-        identifierID,
+        identifierID: identifierId,
         identifierType: LoginIdentifierType.Username,
         value: username,
       });
@@ -196,17 +196,17 @@ export class SessionService {
     });
   }
 
-  async deleteIdentifier(identifierID: string): Promise<Result<void, CorbadoError>> {
+  async deleteIdentifier(identifierId: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
-      await this.#usersApi.currentUserIdentifierDelete({ identifierID });
+      await this.#usersApi.currentUserIdentifierDelete({ identifierID: identifierId });
       return void 0;
     });
   }
 
-  async verifyIdentifierStart(identifierID: string): Promise<Result<void, CorbadoError>> {
+  async verifyIdentifierStart(identifierId: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserIdentifierVerifyStart({
-        identifierID,
+        identifierID: identifierId,
         clientInformation: {
           bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
           canUsePasskeys: await WebAuthnService.doesBrowserSupportPasskeys(),
@@ -218,9 +218,9 @@ export class SessionService {
     });
   }
 
-  async verifyIdentifierFinish(identifierID: string, code: string): Promise<Result<void, CorbadoError>> {
+  async verifyIdentifierFinish(identifierId: string, code: string): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
-      await this.#usersApi.currentUserIdentifierVerifyFinish({ identifierID, code });
+      await this.#usersApi.currentUserIdentifierVerifyFinish({ identifierID: identifierId, code });
       return void 0;
     });
   }

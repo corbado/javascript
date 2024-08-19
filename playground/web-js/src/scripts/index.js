@@ -23,7 +23,7 @@ if (!Corbado.user) {
 
   const shortSession = document.getElementById('short-session');
   shortSession.style.maxWidth = '550px';
-  Corbado.mountUserUI(shortSession);
+  Corbado.mountUserDetailsUI(shortSession);
 
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', async () => {

@@ -11,7 +11,7 @@ import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 
 const NameEdit: FC = () => {
-  const { updateName } = useCorbado();
+  const { updateFullName } = useCorbado();
   const { name, getCurrentUser, processUser, setName, fullNameRequired } = useCorbadoUserDetails();
   const { t } = useTranslation('translation');
 
@@ -37,7 +37,7 @@ const NameEdit: FC = () => {
       setErrorMessage(t('user-details.name_required'));
       return;
     }
-    const res = await updateName(name);
+    const res = await updateFullName(name);
     if (res.err) {
       // no possible error code
       console.error(res.val.message);

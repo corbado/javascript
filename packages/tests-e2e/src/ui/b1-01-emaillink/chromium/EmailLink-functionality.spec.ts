@@ -6,7 +6,7 @@ test.describe('Signup with email link proper user behavior', () => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
-    await signupFlow.printTestInfo(context, testInfo);
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await signupFlow.fillIdentifiers(false, true, false);
     email = email ?? '';
@@ -17,7 +17,6 @@ test.describe('Signup with email link proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailLinkSentSignup, email);
 
     const emailLink = await signupFlow.getEmailLink(context, email, AuthType.Signup);
-    await signupFlow.printTestInfo(context, testInfo);
 
     const newPage = await context.newPage();
     await newPage.goto(emailLink);

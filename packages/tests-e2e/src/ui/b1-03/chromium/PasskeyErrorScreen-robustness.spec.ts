@@ -2,20 +2,22 @@ import { test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('PasskeyErrorScreen unproductive user behavior', () => {
-  test('skip to identifier verification', async ({ signupFlow, page }) => {
+  test('skip to identifier verification', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.navigateToPasskeyErrorScreen();
     await page.getByText('Continue with email').click();
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailOtpSignup, email);
   });
 
-  test('canceling passkey input redirects to PasskeyErrorScreen', async ({ signupFlow, page }) => {
+  test('canceling passkey input redirects to PasskeyErrorScreen', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     await signupFlow.navigateToPasskeyErrorScreen();
     await signupFlow.simulateFailedPasskeyInput(

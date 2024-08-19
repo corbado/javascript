@@ -2,10 +2,11 @@ import { test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('Flow-based unproductive user behavior', () => {
-  test('navigate back from fallback to passkey append', async ({ signupFlow, page }) => {
+  test('navigate back from fallback to passkey append', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.fillIdentifiers(true, true, true);
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -21,10 +22,12 @@ test.describe('Flow-based unproductive user behavior', () => {
   test('abort signup from enforced identifier verification after passkey registration', async ({
     signupFlow,
     page,
-  }) => {
+    context,
+  }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.fillIdentifiers(true, true, true);
     await page.getByRole('button', { name: 'Continue' }).click();

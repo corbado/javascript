@@ -4,12 +4,13 @@ import UserManager from '../../../utils/UserManager';
 
 test.describe('InitSignupScreen unproductive user behavior', () => {
   // TODO: unskip when new error message is implemented
-  test.skip('without passkey support', async ({ signupFlow, page, browserName }) => {
+  test.skip('without passkey support', async ({ signupFlow, page, browserName, context }, testInfo) => {
     if (browserName === 'chromium') {
       await signupFlow.initializeCDPSession();
       await signupFlow.addWebAuthn(false);
     }
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
     await signupFlow.checkLandedOnScreen(ScreenNames.InitSignup);
 
     const id = UserManager.getUserForSignup();

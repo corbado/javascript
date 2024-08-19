@@ -1,4 +1,5 @@
 import { LoginIdentifierType } from '@corbado/shared-ui';
+import type { Identifier } from '@corbado/types';
 import { t } from 'i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -7,12 +8,11 @@ import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
+import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
-import { Identifier } from '@corbado/types';
-import DropdownMenu from '../../components/user-details/DropdownMenu';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 

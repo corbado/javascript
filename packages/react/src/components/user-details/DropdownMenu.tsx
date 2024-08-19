@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef } from 'react';
+
 import { Text } from '../ui';
 interface Props {
   items: string[];

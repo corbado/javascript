@@ -1,11 +1,13 @@
-import { Identifier } from '@corbado/types';
-import React, { FC } from 'react';
+import type { Identifier } from '@corbado/types';
+import type { FC } from 'react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { Button, Text } from '../../components';
 import Alert from '../../components/user-details/Alert';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
-import { useTranslation } from 'react-i18next';
 
 interface Props {
   identifier: Identifier;

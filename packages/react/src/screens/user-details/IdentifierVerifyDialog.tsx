@@ -1,10 +1,12 @@
-import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Link, LoadingSpinner, OtpInputGroup, Text } from '../../components';
-import { Identifier } from '@corbado/types';
+import type { Identifier } from '@corbado/types';
+import type { FC, MouseEvent } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getErrorCode } from '../../util';
-import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+
+import { Button, Link, LoadingSpinner, OtpInputGroup, Text } from '../../components';
 import { useCorbado } from '../../hooks/useCorbado';
+import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+import { getErrorCode } from '../../util';
 
 interface Props {
   identifier: Identifier;
@@ -83,7 +85,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
   };
 
   function startTimer() {
-    let newRemainingTime = 30;
+    const newRemainingTime = 30;
 
     if (newRemainingTime < 1) {
       return;
@@ -158,7 +160,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
       <Link
         href={'#'}
         className='cb-text-1 cb-normal-text-weight'
-        onClick={resendEmailVerification}
+        onClick={e => void resendEmailVerification(e)}
       >
         {getResend()}
       </Link>

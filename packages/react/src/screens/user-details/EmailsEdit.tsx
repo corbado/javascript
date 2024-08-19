@@ -1,4 +1,5 @@
 import { LoginIdentifierType } from '@corbado/shared-ui';
+import type { Identifier } from '@corbado/types';
 import { t } from 'i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -12,7 +13,6 @@ import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode, validateEmail } from '../../util';
-import { Identifier } from '@corbado/types';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
@@ -134,7 +134,7 @@ const EmailsEdit = () => {
                     } else if (item === buttonRemove) {
                       setDeletingEmail(email);
                     } else {
-                      copyEmail(email.value);
+                      void copyEmail(email.value);
                     }
                   }}
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}

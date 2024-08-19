@@ -17,6 +17,7 @@ test.describe('Signup with email link proper user behavior', () => {
     await signupFlow.checkLandedOnScreen(ScreenNames.EmailLinkSentSignup, email);
 
     const emailLink = await signupFlow.getEmailLink(context, email, AuthType.Signup);
+    await signupFlow.printTestInfo(context, testInfo);
 
     const newPage = await context.newPage();
     await newPage.goto(emailLink);

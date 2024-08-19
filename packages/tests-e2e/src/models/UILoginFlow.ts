@@ -28,7 +28,7 @@ export class UILoginFlow {
   }
 
   async printTestInfo(page: Page, context: BrowserContext, testInfo: TestInfo) {
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
     const cboAuthProcessRaw = (await context.storageState()).origins
       .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
       ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;

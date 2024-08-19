@@ -1,5 +1,5 @@
 import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Link, OtpInputGroup, Text } from '../../components';
+import { Button, Link, LoadingSpinner, OtpInputGroup, Text } from '../../components';
 import { Identifier } from '@corbado/types';
 import { useTranslation } from 'react-i18next';
 import { getErrorCode } from '../../util';
@@ -123,7 +123,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
       return;
     }
 
-    startTimer();
+    setRemainingTime(30);
   };
 
   return (
@@ -153,6 +153,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
           error={errorMessage}
           showErrorMessage={Boolean(errorMessage)}
         />
+        {loading ? <LoadingSpinner className='cb-otp-inputs-loader' /> : <div className='cb-otp-inputs-loader' />}
       </div>
       <Link
         href={'#'}

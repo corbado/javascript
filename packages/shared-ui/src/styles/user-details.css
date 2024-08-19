@@ -3,6 +3,7 @@
   flex-direction: column;
   margin: 1.25rem 0rem;
   text-align: left;
+  text-overflow: ellipsis;
 }
 
 .cb-user-details-section {
@@ -351,8 +352,26 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
 }
 
 .cb-otp-inputs-container {
-  width: 260px;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
   margin-bottom: 1rem;
+  width: 100%;
+  align-items: center;
+  max-width: 340px;
+  margin-top: 0.5rem;
+
+  .cb-otp-input-container {
+    margin-top: 0px;
+  }
+}
+
+.cb-otp-inputs-loader {
+  width: 20px;
+  height: 20px;
+  border-color: var(--cb-primary-color) var(--cb-primary-color) var(--cb-primary-color) transparent;
+  display: block;
+  flex-shrink: 0;
 }
 
 .cb-user-details-verify-identifier-container {

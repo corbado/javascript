@@ -2,7 +2,7 @@ import { LoginIdentifierType } from '@corbado/shared-ui';
 import { t } from 'i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { Button, InputField, Text } from '../../components';
+import { Button, PhoneInputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
@@ -21,6 +21,7 @@ const PhonesEdit = () => {
   const { phones = [], getCurrentUser, phoneEnabled } = useCorbadoUserDetails();
 
   const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [deletingPhone, setDeletingPhone] = useState<Identifier>();
   const [addingPhone, setAddingPhone] = useState<boolean>(false);
   const [newPhone, setNewPhone] = useState<string>('');
@@ -44,18 +45,20 @@ const PhonesEdit = () => {
 
   const addPhone = async () => {
     if (!newPhone) {
-      console.error('phone is empty');
+      setErrorMessage(t('user-details.warning_invalid_phone'));
       return;
     }
+
     const res = await createIdentifier(LoginIdentifierType.Phone, newPhone);
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
         console.error(t(`errors.${code}`));
       }
+      setErrorMessage(res.val.message);
       return;
     }
+
     setNewPhone('');
     setAddingPhone(false);
     void getCurrentUser();
@@ -143,12 +146,9 @@ const PhonesEdit = () => {
       ))}
       {addingPhone ? (
         <div className='cb-user-details-identifier-container'>
-          <InputField
-            className='cb-user-details-text'
-            style={{ width: '100%' }}
-            // key={`user-entry-${processUser.username}`}
-            value={newPhone}
-            onChange={e => setNewPhone(e.target.value)}
+          <PhoneInputField
+            errorMessage={errorMessage}
+            onChange={setNewPhone}
           />
           <Button
             className='cb-user-details-body-button-primary'
@@ -160,6 +160,7 @@ const PhonesEdit = () => {
             className='cb-user-details-body-button-secondary'
             onClick={() => {
               setAddingPhone(false);
+              setErrorMessage(undefined);
             }}
           >
             <Text className='cb-user-details-subheader'>{buttonCancel}</Text>

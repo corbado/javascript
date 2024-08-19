@@ -104,6 +104,18 @@ const EmailsEdit = () => {
     await navigator.clipboard.writeText(email);
   };
 
+  const getMenuItems = (email: Identifier) => {
+    const items = [buttonCopy];
+
+    if (email.status !== 'verified') {
+      items.push(buttonVerify);
+    }
+
+    items.push(buttonRemove);
+
+    return items;
+  };
+
   return (
     <UserDetailsCard header={headerEmail}>
       {emails.map((email, index) => (
@@ -127,7 +139,7 @@ const EmailsEdit = () => {
                   </div>
                 </div>
                 <DropdownMenu
-                  items={[email.status === 'verified' ? buttonCopy : buttonVerify, buttonRemove]}
+                  items={getMenuItems(email)}
                   onItemClick={item => {
                     if (item === buttonVerify) {
                       void startEmailVerification(index);

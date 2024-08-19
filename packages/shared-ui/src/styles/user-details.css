@@ -89,7 +89,7 @@
   padding: 0.4rem 2rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  background-color: white;
+  background-color: transparent;
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-primary-font);
@@ -366,12 +366,16 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
   }
 }
 
+.cb-otp-inputs-placeholder,
 .cb-otp-inputs-loader {
+  border: 0.25rem solid transparent;
   width: 20px;
   height: 20px;
-  border-color: var(--cb-primary-color) var(--cb-primary-color) var(--cb-primary-color) transparent;
   display: block;
   flex-shrink: 0;
+}
+.cb-otp-inputs-loader {
+  border-color: var(--cb-primary-color) var(--cb-primary-color) var(--cb-primary-color) transparent;
 }
 
 .cb-user-details-verify-identifier-container {

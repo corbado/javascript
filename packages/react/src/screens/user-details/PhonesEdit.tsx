@@ -100,6 +100,18 @@ const PhonesEdit = () => {
     }
   };
 
+  const getMenuItems = (phone: Identifier) => {
+    const items = [buttonCopy];
+
+    if (phone.status !== 'verified') {
+      items.push(buttonVerify);
+    }
+
+    items.push(buttonRemove);
+
+    return items;
+  };
+
   return (
     <UserDetailsCard header={headerPhone}>
       {phones.map((phone, index) => (
@@ -123,7 +135,7 @@ const PhonesEdit = () => {
                   </div>
                 </div>
                 <DropdownMenu
-                  items={[phone.status === 'verified' ? buttonCopy : buttonVerify, buttonRemove]}
+                  items={getMenuItems(phone)}
                   onItemClick={item => {
                     if (item === buttonVerify) {
                       void startPhoneVerification(index);

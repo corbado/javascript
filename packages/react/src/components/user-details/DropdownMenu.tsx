@@ -32,7 +32,7 @@ const DropdownMenu: FC<Props> = ({ items, onItemClick, getItemClassName }) => {
         ref={menuRef}
       >
         <div
-          className='cb-dropdown-menu-trigger'
+          className='cb-dropdown-menu-trigger cb-primary-text-color'
           onClick={() => setVisible(!visible)}
         >
           ⋯

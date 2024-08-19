@@ -27,7 +27,7 @@ export class UISignupFlow {
   }
 
   async printTestInfo(page: Page, context: BrowserContext, testInfo: TestInfo) {
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(200); // additional wait necessary for cookies to load
     const cboAuthProcessRaw = (await context.storageState()).origins
       .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
       ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;

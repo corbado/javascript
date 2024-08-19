@@ -92,7 +92,7 @@ export type LoginIdentifierType = (typeof LoginIdentifierType)[keyof typeof Logi
 /**
  * Interface for IdentifierConfig.
  * @interface
- * @property {LoginIdentifierConfigType} type - The type of the identifier.
+ * @property {LoginIdentifierType} type - The type of the identifier.
  * @property {string} enforceVerification - Indicates verification policy.
  * @property {boolean} useAsLoginIdentifier - Indicates used for login.
  */

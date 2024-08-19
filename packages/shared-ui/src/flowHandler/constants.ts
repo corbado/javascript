@@ -25,12 +25,6 @@ export const createLoginIdentifierType = (v: ApiLoginIdentifierType): LoginIdent
   }
 };
 
-export enum LoginIdentifierConfigType {
-  Email = 'email',
-  Phone = 'phone_number',
-  Username = 'custom',
-}
-
 // Enum representing the names of different sign up flows
 export enum SignUpFlowNames {
   PasskeySignupWithFallback = 'PasskeySignupWithFallback',

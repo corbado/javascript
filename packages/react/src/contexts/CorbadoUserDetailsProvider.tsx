@@ -106,7 +106,7 @@ export const CorbadoUserDetailsProvider: FC<PropsWithChildren> = ({ children }) 
             break;
           case LoginIdentifierType.Phone:
             setPhoneEnabled(true);
-            break
+            break;
         }
       }
       setLoading(false);

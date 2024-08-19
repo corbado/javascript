@@ -443,6 +443,7 @@
       "github": "GitHub"
     },
     "name_required": "Please enter a valid name.",
+    "username_required": "Please enter a valid username.",
     "email_delete": {
       "header": "Remove Email Address",
       "body": "Are you sure you want to remove this email address ?",

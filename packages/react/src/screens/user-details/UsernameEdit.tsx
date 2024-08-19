@@ -18,6 +18,8 @@ const UsernameEdit = () => {
   const [addingUsername, setAddingUsername] = useState<boolean>(false);
   const [editingUsername, setEditingUsername] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   const headerUsername = useMemo(() => t('user-details.username'), [t]);
   const buttonSave = useMemo(() => t('user-details.save'), [t]);
   const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
@@ -30,7 +32,7 @@ const UsernameEdit = () => {
 
   const addUsername = async () => {
     if (!username || !username.value) {
-      console.error('username is empty');
+      setErrorMessage(t('user-details.username_required'));
       return;
     }
     const res = await createIdentifier(LoginIdentifierType.Username, username?.value || '');
@@ -48,7 +50,7 @@ const UsernameEdit = () => {
 
   const changeUsername = async () => {
     if (!username || !username.value) {
-      console.error('username is empty');
+      setErrorMessage(t('user-details.username_required'));
       return;
     }
     const res = await updateUsername(username.id, username.value);
@@ -76,6 +78,7 @@ const UsernameEdit = () => {
                   className='cb-user-details-text'
                   // key={`user-entry-${processUser.username}`}
                   value={username?.value}
+                  errorMessage={errorMessage}
                   onChange={e => setUsername({ id: '', type: 'username', status: 'verified', value: e.target.value })}
                 />
                 <CopyIcon
@@ -95,6 +98,7 @@ const UsernameEdit = () => {
                 onClick={() => {
                   setUsername(undefined);
                   setAddingUsername(false);
+                  setErrorMessage(undefined);
                 }}
               >
                 <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
@@ -144,6 +148,7 @@ const UsernameEdit = () => {
                     onClick={() => {
                       setUsername({ ...username, value: processUser.username });
                       setEditingUsername(false);
+                      setErrorMessage(undefined);
                     }}
                   >
                     <Text className='cb-user-details-subheader'>{buttonCancel}</Text>

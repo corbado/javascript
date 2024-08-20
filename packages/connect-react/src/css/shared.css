@@ -218,6 +218,8 @@ button.cb-outline-button {
   justify-content: center;
   align-items: center;
   background-color: inherit;
+  border-radius: inherit;
+  border: inherit;
 }
 
 @keyframes rotation {

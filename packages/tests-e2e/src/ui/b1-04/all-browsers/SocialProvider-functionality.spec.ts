@@ -3,12 +3,13 @@ import { ScreenNames } from '../../../utils/constants';
 
 // Google and Github require 2FA; only Microsoft social login is suitable for automated testing
 test.describe('Signup with Microsoft proper user behavior', () => {
-  test('with no passkey support', async ({ signupFlow, page, browserName }) => {
+  test('with no passkey support', async ({ signupFlow, page, browserName, context }, testInfo) => {
     if (browserName === 'chromium') {
       await signupFlow.initializeCDPSession();
       await signupFlow.addWebAuthn(false);
     }
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const microsoftEmail = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
     const microsoftPassword = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';

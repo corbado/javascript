@@ -15,7 +15,7 @@ For `PLAYWRIGHT_MICROSOFT_EMAIL` and `PLAYWRIGHT_MICROSOFT_PASSWORD` environment
 Make sure that the local Playground React deployment is configured to connect to the staging frontend API endpoints in `playground/react/.env`.
 
 ```
-REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX=frontendapi.staging1.cbhosts.com
+REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX=frontendapi.cloud.corbado-staging.io
 ```
 
 Run the Playground React project locally.

@@ -2,10 +2,11 @@ import { expect, test } from '../../../fixtures/UISignupTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('PasskeyAppendScreen unproductive user behavior', () => {
-  test('modify email identifier', async ({ signupFlow, page }) => {
+  test('modify email identifier', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await signupFlow.fillIdentifiers(true, true, true);
     email = email ?? '';

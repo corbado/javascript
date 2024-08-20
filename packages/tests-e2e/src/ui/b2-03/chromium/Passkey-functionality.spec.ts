@@ -2,10 +2,11 @@ import { test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with passkey proper user behavior', () => {
-  test('before verifying identifier', async ({ loginFlow, page }) => {
+  test('before verifying identifier', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     let [, email] = await loginFlow.createAccount([IdentifierType.Email], [], true, true);
     email = email ?? '';

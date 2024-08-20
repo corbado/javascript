@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -30,6 +30,11 @@ export const LoginPasskeyReLoginScreen = () => {
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap);
     if (res.err) {
       setLoading(false);
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onFallback(currentIdentifier);
+      }
+
       if (res.val.ignore) {
         return;
       }

@@ -9,6 +9,7 @@ import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 
 const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -27,6 +28,9 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+      }
       log.error('error:', res.val);
       setLoading(false);
       setError('Passkey operation was cancelled or timed out.');
@@ -38,6 +42,9 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+        }
         log.error('error:', createEventRes.val);
       }
     }
@@ -51,6 +58,9 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+        }
         log.error('error:', createEventRes.val);
       }
     }

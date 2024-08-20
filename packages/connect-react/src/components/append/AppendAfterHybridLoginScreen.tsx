@@ -10,6 +10,7 @@ import { PasskeyAddIcon } from '../shared/icons/PasskeyAddIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 
 const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();
@@ -28,6 +29,10 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+      }
+
       log.error('error:', res.val);
       setLoading(false);
       setError('Passkey operation was cancelled or timed out.');
@@ -39,6 +44,10 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+        }
+
         log.error('error:', createEventRes.val);
       }
     }
@@ -54,6 +63,10 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+        }
+
         log.error('error:', createEventRes.val);
       }
     }

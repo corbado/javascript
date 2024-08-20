@@ -1,4 +1,9 @@
-import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import {
+  ConnectRequestTimedOut,
+  ConnectUserNotFound,
+  PasskeyChallengeCancelledError,
+  PasskeyLoginSource,
+} from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
 import { useEffect } from 'react';
@@ -100,6 +105,10 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     );
 
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onFallback(prefilledIdentifier ?? '');
+      }
+
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
         setCuiBasedLoading(false);
         return;
@@ -130,6 +139,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     if (resStart.err) {
       setIdentifierBasedLoading(false);
+
+      if (resStart.val instanceof ConnectRequestTimedOut) {
+        config.onFallback(identifier);
+      }
+
       if (resStart.val.ignore) {
         return;
       }
@@ -157,6 +171,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     if (res.err) {
       setIdentifierBasedLoading(false);
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onFallback(identifier);
+      }
+
       if (res.val.ignore) {
         return;
       }

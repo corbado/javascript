@@ -1,5 +1,5 @@
 import type { CorbadoError } from '@corbado/web-core';
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
@@ -38,6 +38,11 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
 
     if (res.err) {
       setLoading(false);
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        handleFallback();
+      }
+
       if (res.val.ignore) {
         return;
       }

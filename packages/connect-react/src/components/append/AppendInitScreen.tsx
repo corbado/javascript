@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -56,6 +56,10 @@ const AppendInitScreen = () => {
           return;
         }
 
+        if (startAppendRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+        }
+
         if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
           config.onError?.('PasskeyChallengeAborted');
         }
@@ -106,6 +110,10 @@ const AppendInitScreen = () => {
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+      }
+
       log.error('error:', res.val);
       setAppendPending(false);
       setError('Passkey operation was cancelled or timed out.');

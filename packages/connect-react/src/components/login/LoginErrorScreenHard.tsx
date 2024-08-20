@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -28,6 +28,10 @@ const LoginErrorScreenHard = () => {
       setLoading(false);
       if (res.val.ignore) {
         return;
+      }
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onFallback(currentIdentifier);
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {

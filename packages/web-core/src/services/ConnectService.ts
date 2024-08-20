@@ -1,5 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import type { AxiosHeaders, AxiosInstance, CreateAxiosDefaults, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
@@ -66,7 +66,7 @@ export class ConnectService {
     return ConnectProcess.clearStorage(this.#projectId);
   }
 
-  #createAxiosInstanceV2(processId: string, options?: CreateAxiosDefaults): AxiosInstance {
+  #createAxiosInstanceV2(processId: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -76,8 +76,6 @@ export class ConnectService {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
     };
-
-    console.log(options);
 
     const out = axios.create({
       timeout: this.#timeout,
@@ -393,8 +391,9 @@ export class ConnectService {
     }
 
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }),
+      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 5 * 1000 }),
     );
+
     if (res.ok) {
       const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
       latestLogin.persistToStorage(this.#projectId);

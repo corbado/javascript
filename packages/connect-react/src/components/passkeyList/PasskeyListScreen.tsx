@@ -262,6 +262,7 @@ const PasskeyListScreen = () => {
     <PasskeyList
       passkeys={passkeyList}
       onDeleteClick={passkey => {
+        setHardErrorMessage(null);
         show(DeleteModalContent(passkey));
       }}
       isLoading={loading}

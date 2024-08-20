@@ -218,7 +218,7 @@ const PasskeyListScreen = () => {
                 className='cb-passkey-list-modal-button-submit'
                 isLoading={loading}
               >
-                Remove
+                Delete
               </PrimaryButton>
             </div>
           </div>

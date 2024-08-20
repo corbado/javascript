@@ -1,3 +1,4 @@
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -9,7 +10,6 @@ import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { ConnectRequestTimedOut } from '@corbado/web-core';
 
 const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();

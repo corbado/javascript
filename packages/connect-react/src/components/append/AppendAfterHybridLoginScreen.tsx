@@ -1,3 +1,4 @@
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -10,7 +11,6 @@ import { PasskeyAddIcon } from '../shared/icons/PasskeyAddIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { ConnectRequestTimedOut } from '@corbado/web-core';
 
 const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { config, navigateToScreen } = useAppendProcess();

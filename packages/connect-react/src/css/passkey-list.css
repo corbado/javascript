@@ -63,9 +63,20 @@
   box-sizing: border-box;
 }
 
-.cb-passkey-list-item-icon {
+.cb-passkey-list-item-icon-container {
   width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: black;
+  box-sizing: border-box;
+
+  .cb-passkey-list-item-icon {
+    width: 100%;
+    height: 100%;
+    color: black;
+  }
 }
 
 .cb-passkey-list-item-delete-icon {
@@ -78,7 +89,7 @@
 }
 
 .cb-passkey-list-item-title {
-  color: black;
+  color: var(--cb-color-primary);
   font-size: 1rem;
 }
 

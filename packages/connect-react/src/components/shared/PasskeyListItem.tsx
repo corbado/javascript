@@ -59,11 +59,13 @@ export const PasskeyListItem: FC<Props> = ({
   return (
     <div className='cb-passkey-list-item'>
       {icon ? (
-        <img
-          className='cb-passkey-list-item-icon'
-          src={icon}
-          alt={name}
-        />
+        <div className='cb-passkey-list-item-icon-container'>
+          <img
+            className='cb-passkey-list-item-icon'
+            src={icon}
+            alt={name}
+          />
+        </div>
       ) : (
         <PasskeyIcon className='cb-passkey-list-item-icon' />
       )}

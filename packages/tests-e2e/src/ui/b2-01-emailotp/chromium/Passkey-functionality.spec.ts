@@ -2,10 +2,11 @@ import { test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, IdentifierVerification, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with passkey proper user behavior', () => {
-  test('without verifying identifier', async ({ loginFlow, page }) => {
+  test('without verifying identifier', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, true);
     await page.getByText('Log in').click();
@@ -15,10 +16,11 @@ test.describe('Login with passkey proper user behavior', () => {
     await loginFlow.checkLandedOnScreen(ScreenNames.End);
   });
 
-  test('with conditional UI', async ({ loginFlow, page }) => {
+  test('with conditional UI', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     await loginFlow.createAccount([IdentifierType.Email], [IdentifierVerification.EmailOtp], true, true);
 

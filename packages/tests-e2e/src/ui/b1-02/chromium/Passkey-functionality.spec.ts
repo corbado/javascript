@@ -2,10 +2,11 @@ import { test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with passkey proper user behavior', () => {
-  test('before verifying identifier', async ({ signupFlow, page }) => {
+  test('before verifying identifier', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -20,10 +21,11 @@ test.describe('Signup with passkey proper user behavior', () => {
     await signupFlow.checkPasskeyRegistered();
   });
 
-  test('after verifying identifier', async ({ signupFlow, page }) => {
+  test('after verifying identifier', async ({ signupFlow, page, context }, testInfo) => {
     await signupFlow.initializeCDPSession();
     await signupFlow.addWebAuthn();
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();

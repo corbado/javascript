@@ -2,12 +2,13 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with Microsoft proper user behavior', () => {
-  test('with no passkey support', async ({ loginFlow, page, browserName }) => {
+  test('with no passkey support', async ({ loginFlow, page, browserName, context }, testInfo) => {
     if (browserName === 'chromium') {
       await loginFlow.initializeCDPSession();
       await loginFlow.addWebAuthn(false);
     }
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     await loginFlow.createAccountWithSocial();
 

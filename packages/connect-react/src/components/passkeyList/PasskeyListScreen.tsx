@@ -218,7 +218,7 @@ const PasskeyListScreen = () => {
                 className='cb-passkey-list-modal-button-submit'
                 isLoading={loading}
               >
-                Remove
+                Delete
               </PrimaryButton>
             </div>
           </div>
@@ -262,6 +262,7 @@ const PasskeyListScreen = () => {
     <PasskeyList
       passkeys={passkeyList}
       onDeleteClick={passkey => {
+        setHardErrorMessage(null);
         show(DeleteModalContent(passkey));
       }}
       isLoading={loading}

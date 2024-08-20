@@ -1,4 +1,4 @@
-import type { BrowserContext, CDPSession, Page } from '@playwright/test';
+import type { BrowserContext, CDPSession, Page, TestInfo } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { AuthType, IdentifierType, IdentifierVerification, operationTimeout } from '../utils/constants';
@@ -25,6 +25,19 @@ export class UILoginFlow {
   // because Corbado checks for WebAuthn support on page load
   async loadAuth() {
     await loadAuth(this.page, this.projectId);
+  }
+
+  async printTestInfo(page: Page, context: BrowserContext, testInfo: TestInfo) {
+    await page.waitForTimeout(400); // additional wait necessary for cookies to load
+    const cboAuthProcessRaw = (await context.storageState()).origins
+      .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
+      ?.localStorage.find(item => item.name === 'cbo_auth_process')?.value;
+    let processId = '_';
+    if (cboAuthProcessRaw) {
+      const cboAuthProcess = JSON.parse(cboAuthProcessRaw);
+      processId = cboAuthProcess.id;
+    }
+    console.log(testInfo.project.name, testInfo.title, this.projectId, processId);
   }
 
   async initializeCDPSession() {

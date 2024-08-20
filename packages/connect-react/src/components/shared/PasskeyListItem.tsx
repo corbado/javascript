@@ -59,11 +59,13 @@ export const PasskeyListItem: FC<Props> = ({
   return (
     <div className='cb-passkey-list-item'>
       {icon ? (
-        <img
-          className='cb-passkey-list-item-icon'
-          src={icon}
-          alt={name}
-        />
+        <div className='cb-passkey-list-item-icon-container'>
+          <img
+            className='cb-passkey-list-item-icon'
+            src={icon}
+            alt={name}
+          />
+        </div>
       ) : (
         <PasskeyIcon className='cb-passkey-list-item-icon' />
       )}
@@ -82,10 +84,10 @@ export const PasskeyListItem: FC<Props> = ({
         </div>
 
         <p className='cb-passkey-list-item-details'>
-          Created: {format(createdAt, 'dd/MM/yyyy HH:mm:ss')} with {browser} on {os}
+          Created: {format(createdAt, 'dd-MM-yyyy HH:mm:ss')} with {browser} on {os}
         </p>
 
-        <p className='cb-passkey-list-item-details'>Last used: {format(lastUsed, 'dd/MM/yyyy HH:mm:ss')}</p>
+        <p className='cb-passkey-list-item-details'>Last used: {format(lastUsed, 'dd-MM-yyyy HH:mm:ss')}</p>
       </div>
       {onDeleteClick && (
         <div className='cb-passkey-list-item-delete-icon'>

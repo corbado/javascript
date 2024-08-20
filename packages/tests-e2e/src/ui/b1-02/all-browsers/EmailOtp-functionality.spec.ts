@@ -2,12 +2,13 @@ import { test } from '../../../fixtures/UISignupTest';
 import { OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Signup with email OTP proper user behavior', () => {
-  test('with no passkey support', async ({ signupFlow, page, browserName }) => {
+  test('with no passkey support', async ({ signupFlow, page, browserName, context }, testInfo) => {
     if (browserName === 'chromium') {
       await signupFlow.initializeCDPSession();
       await signupFlow.addWebAuthn(false);
     }
     await signupFlow.loadAuth();
+    await signupFlow.printTestInfo(page, context, testInfo);
 
     const [, email] = await signupFlow.fillIdentifiers(false, true, false);
     await page.getByRole('button', { name: 'Continue' }).click();

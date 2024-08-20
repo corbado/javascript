@@ -3,7 +3,6 @@ import SettingsContext from '../contexts/SettingsContext';
 
 const dropdownItems = [
   { id: process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!, label: 'Manual Testing' },
-  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_Tests!, label: 'Tests' },
   { id: process.env.REACT_APP_CORBADO_PROJECT_ID_LocalDevelopment!, label: 'Local Development' },
 ];
 

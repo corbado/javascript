@@ -2,10 +2,11 @@ import { expect, test } from '../../../fixtures/UILoginTest';
 import { IdentifierType, IdentifierVerification, OtpType, ScreenNames } from '../../../utils/constants';
 
 test.describe('Login with phone OTP proper user behavior', () => {
-  test('fallback without appending passkey', async ({ loginFlow, page }) => {
+  test('fallback without appending passkey', async ({ loginFlow, page, context }, testInfo) => {
     await loginFlow.initializeCDPSession();
     await loginFlow.addWebAuthn();
     await loginFlow.loadAuth();
+    await loginFlow.printTestInfo(page, context, testInfo);
 
     let [, , phone] = await loginFlow.createAccount(
       [IdentifierType.Phone],

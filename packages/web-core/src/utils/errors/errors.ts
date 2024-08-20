@@ -80,6 +80,10 @@ export class CorbadoError extends Error {
       return new ConnectUserNotFound();
     }
 
+    if (error.code === 'ECONNABORTED') {
+      return new ConnectRequestTimedOut();
+    }
+
     const errorRespRaw = error.response.data as ErrorRsp;
     log.debug('errorRespRaw', errorRespRaw.error.type);
     const errorResp = errorRespRaw.error;
@@ -294,5 +298,11 @@ export class ExcludeCredentialsMatchError extends RecoverableError {
   constructor() {
     super('Exclude credentials match => passkey was not created');
     this.name = 'errors.excludeCredentialsMatch';
+  }
+}
+
+export class ConnectRequestTimedOut extends RecoverableError {
+  constructor() {
+    super('Request timed out');
   }
 }

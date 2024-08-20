@@ -72,16 +72,16 @@ export class CorbadoError extends Error {
   static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
     log.debug('axios error', error);
 
+    if (error.code === 'ECONNABORTED') {
+      return new ConnectRequestTimedOut();
+    }
+
     if (!error.response || !error.response.data) {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
     }
 
     if (error.response.status === 404) {
       return new ConnectUserNotFound();
-    }
-
-    if (error.code === 'ECONNABORTED') {
-      return new ConnectRequestTimedOut();
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;

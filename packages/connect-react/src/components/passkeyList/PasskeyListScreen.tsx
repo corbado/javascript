@@ -1,6 +1,10 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { CorbadoError, Passkey } from '@corbado/web-core';
-import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import {
+  ConnectRequestTimedOut,
+  ExcludeCredentialsMatchError,
+  PasskeyChallengeCancelledError,
+} from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -80,6 +84,10 @@ const PasskeyListScreen = () => {
       const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
 
       if (deletePasskeyRes.err) {
+        if (deletePasskeyRes.val instanceof ConnectRequestTimedOut) {
+          setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
+        }
+
         finishLoading();
         return;
       }
@@ -101,7 +109,7 @@ const PasskeyListScreen = () => {
 
     const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
     if (startAppendRes.err || !startAppendRes.val) {
-      handlePreWebauthnError();
+      handlePreWebauthnError(startAppendRes.err ? startAppendRes.val : undefined);
       return;
     }
 
@@ -116,8 +124,14 @@ const PasskeyListScreen = () => {
     setAppendPending(false);
   }, [config, passkeyListToken, appendPending]);
 
-  const handlePreWebauthnError = () => {
+  const handlePreWebauthnError = (error?: CorbadoError) => {
     setAppendPending(false);
+
+    if (error instanceof ConnectRequestTimedOut) {
+      setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
+      return;
+    }
+
     setHardErrorMessage(
       'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
     );
@@ -133,6 +147,11 @@ const PasskeyListScreen = () => {
 
     if (error instanceof ExcludeCredentialsMatchError) {
       show(AlreadyExistingModal());
+      return;
+    }
+
+    if (error instanceof ConnectRequestTimedOut) {
+      setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
       return;
     }
 

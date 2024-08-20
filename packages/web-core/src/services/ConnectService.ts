@@ -1,5 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import type { AxiosHeaders, AxiosInstance, CreateAxiosDefaults, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
@@ -46,7 +46,7 @@ export class ConnectService {
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
-    this.#timeout = 30 * 1000;
+    this.#timeout = 3 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
@@ -66,7 +66,7 @@ export class ConnectService {
     return ConnectProcess.clearStorage(this.#projectId);
   }
 
-  #createAxiosInstanceV2(processId: string): AxiosInstance {
+  #createAxiosInstanceV2(processId: string, options?: CreateAxiosDefaults): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -76,6 +76,8 @@ export class ConnectService {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
     };
+
+    console.log(options);
 
     const out = axios.create({
       timeout: this.#timeout,

@@ -3,6 +3,7 @@ import { CORBADO_PROJECT_ID } from './environment';
 
 await Corbado.load({
   projectId: CORBADO_PROJECT_ID,
+  frontendApiUrlSuffix: 'frontendapi.cloud.corbado-staging.io',
   darkMode: 'auto',
   setShortSessionCookie: true,
 });

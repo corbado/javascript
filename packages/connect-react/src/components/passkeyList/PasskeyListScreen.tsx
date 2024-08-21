@@ -186,10 +186,8 @@ const PasskeyListScreen = () => {
     let passkeyList = await getConnectService().manageList(listTokenRes);
 
     if (passkeyList.err) {
-      if (passkeyList.val instanceof PasskeyChallengeCancelledError) {
-        setHardErrorMessage(
-          'Passkey creation was interrupted. You can try again by clicking the "Add passkey" button.',
-        );
+      if (passkeyList.val instanceof ConnectRequestTimedOut) {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
         return;
       }
 
@@ -200,10 +198,8 @@ const PasskeyListScreen = () => {
 
       passkeyList = await getConnectService().manageList(listTokenRes);
       if (passkeyList.err) {
-        if (passkeyList.val instanceof PasskeyChallengeCancelledError) {
-          setHardErrorMessage(
-            'Passkey creation was interrupted. You can try again by clicking the "Add passkey" button.',
-          );
+        if (passkeyList.val instanceof ConnectRequestTimedOut) {
+          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
         }
         return;
       }

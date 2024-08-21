@@ -29,6 +29,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
+        await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
         void config.onComplete();
 
         return;

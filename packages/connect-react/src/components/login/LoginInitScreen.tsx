@@ -157,7 +157,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     if (resStart.err) {
       setIdentifierBasedLoading(false);
-
       if (resStart.val instanceof ConnectRequestTimedOut) {
         handleFallback(identifier);
         return;

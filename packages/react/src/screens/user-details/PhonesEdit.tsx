@@ -8,6 +8,7 @@ import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
+import Alert from '../../components/user-details/Alert';
 import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
@@ -15,7 +16,6 @@ import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
-import Alert from '../../components/user-details/Alert';
 
 const PhonesEdit = () => {
   const { createIdentifier, verifyIdentifierStart } = useCorbado();

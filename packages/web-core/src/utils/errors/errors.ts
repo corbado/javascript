@@ -72,7 +72,7 @@ export class CorbadoError extends Error {
   static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
     log.debug('axios error', error);
 
-    if (error.code === 'ECONNABORTED' || error.code === 'ERR_INTERNET_DISCONNECTED') {
+    if (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK') {
       return new ConnectRequestTimedOut();
     }
 

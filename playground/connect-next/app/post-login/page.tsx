@@ -20,7 +20,7 @@ export default function PostLoginPage() {
 
               return t;
             }}
-            onComplete={() => router.push('/home')}
+            onComplete={async () => router.push('/home')}
           />
         </div>
       </div>

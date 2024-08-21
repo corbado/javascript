@@ -30,6 +30,7 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
+        await getConnectService().recordEventAppendCredentialExistsError();
         void config.onComplete();
 
         return;

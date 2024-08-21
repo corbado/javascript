@@ -512,6 +512,10 @@ export class ConnectService {
     return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterLoginErrorBlacklisted);
   }
 
+  recordEventAppendCredentialExistsError() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendCredentialExists);
+  }
+
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
   #recordEvent(eventType: ConnectEventCreateReqEventTypeEnum) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);

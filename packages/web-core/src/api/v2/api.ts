@@ -557,7 +557,8 @@ export const ConnectEventCreateReqEventTypeEnum = {
     LoginError: 'login-error',
     LoginOneTapSwitch: 'login-one-tap-switch',
     UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
-    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted'
+    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
+    AppendCredentialExists: 'append-credential-exists'
 } as const;
 
 export type ConnectEventCreateReqEventTypeEnum = typeof ConnectEventCreateReqEventTypeEnum[keyof typeof ConnectEventCreateReqEventTypeEnum];
@@ -1287,6 +1288,21 @@ export interface LoginIdentifier {
      * @memberof LoginIdentifier
      */
     'identifier': string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface LoginIdentifierConfig
+ */
+export interface LoginIdentifierConfig {
+    /**
+     * 
+     * @type {LoginIdentifierType}
+     * @memberof LoginIdentifierConfig
+     */
+    'type': LoginIdentifierType;
 }
 
 
@@ -2216,6 +2232,25 @@ export interface SocialVerifyStartReq {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface UserDetailsConfigRsp
+ */
+export interface UserDetailsConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserDetailsConfigRsp
+     */
+    'fullNameRequired': boolean;
+    /**
+     * 
+     * @type {Array<LoginIdentifierConfig>}
+     * @memberof UserDetailsConfigRsp
+     */
+    'identifiers': Array<LoginIdentifierConfig>;
+}
 /**
  * 
  * @export
@@ -3792,6 +3827,42 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Gets configs needed by the UserDetails component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserDetailsConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/user-details-config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -3809,6 +3880,15 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
          */
         async getSessionConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionConfigRsp>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Gets configs needed by the UserDetails component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserDetailsConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDetailsConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserDetailsConfig(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3829,6 +3909,14 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
         getSessionConfig(options?: any): AxiosPromise<SessionConfigRsp> {
             return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
         },
+        /**
+         * Gets configs needed by the UserDetails component
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserDetailsConfig(options?: any): AxiosPromise<UserDetailsConfigRsp> {
+            return localVarFp.getUserDetailsConfig(options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -3847,6 +3935,16 @@ export class ConfigsApi extends BaseAPI {
      */
     public getSessionConfig(options?: AxiosRequestConfig) {
         return ConfigsApiFp(this.configuration).getSessionConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets configs needed by the UserDetails component
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getUserDetailsConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getUserDetailsConfig(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

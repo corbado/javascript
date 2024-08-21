@@ -1,6 +1,10 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { CorbadoError, Passkey } from '@corbado/web-core';
-import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import {
+  ConnectRequestTimedOut,
+  ExcludeCredentialsMatchError,
+  PasskeyChallengeCancelledError,
+} from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -16,6 +20,9 @@ import { PasskeyListItem } from '../shared/PasskeyListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import PasskeyList from './PasskeyList';
+
+const REQUEST_TIMEOUT_ERROR_MESSAGE =
+  'Something went wrong. Please check if you can access the internet and try again later';
 
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
@@ -39,6 +46,12 @@ const PasskeyListScreen = () => {
 
       if (res.err) {
         finishLoading();
+
+        if (res.val instanceof ConnectRequestTimedOut) {
+          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+          return;
+        }
+
         log.error(res.val);
         return;
       }
@@ -75,12 +88,27 @@ const PasskeyListScreen = () => {
         return;
       }
 
-      const deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
+      let deleteToken;
+
+      try {
+        deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
+      } catch {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+
+        finishLoading();
+        setDeletePending(false);
+        return;
+      }
 
       const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
 
       if (deletePasskeyRes.err) {
+        if (deletePasskeyRes.val instanceof ConnectRequestTimedOut) {
+          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+        }
+
         finishLoading();
+        setDeletePending(false);
         return;
       }
 
@@ -97,11 +125,19 @@ const PasskeyListScreen = () => {
 
     setAppendPending(true);
     setHardErrorMessage(null);
-    const appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
+
+    let appendToken;
+    try {
+      appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
+    } catch {
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+      setAppendPending(false);
+      return;
+    }
 
     const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
     if (startAppendRes.err || !startAppendRes.val) {
-      handlePreWebauthnError();
+      handlePreWebauthnError(startAppendRes.err ? startAppendRes.val : undefined);
       return;
     }
 
@@ -116,8 +152,14 @@ const PasskeyListScreen = () => {
     setAppendPending(false);
   }, [config, passkeyListToken, appendPending]);
 
-  const handlePreWebauthnError = () => {
+  const handlePreWebauthnError = (error?: CorbadoError) => {
     setAppendPending(false);
+
+    if (error instanceof ConnectRequestTimedOut) {
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+      return;
+    }
+
     setHardErrorMessage(
       'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
     );
@@ -136,6 +178,11 @@ const PasskeyListScreen = () => {
       return;
     }
 
+    if (error instanceof ConnectRequestTimedOut) {
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+      return;
+    }
+
     setHardErrorMessage(
       'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
     );
@@ -148,7 +195,13 @@ const PasskeyListScreen = () => {
     let listTokenRes = passkeyListToken;
 
     if (!listTokenRes) {
-      listTokenRes = await fetchListToken(config);
+      try {
+        listTokenRes = await fetchListToken(config);
+      } catch {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+        return;
+      }
+
       if (!listTokenRes) {
         return;
       }
@@ -157,6 +210,11 @@ const PasskeyListScreen = () => {
     let passkeyList = await getConnectService().manageList(listTokenRes);
 
     if (passkeyList.err) {
+      if (passkeyList.val instanceof ConnectRequestTimedOut) {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+        return;
+      }
+
       listTokenRes = await fetchListToken(config);
       if (!listTokenRes) {
         return;
@@ -164,6 +222,9 @@ const PasskeyListScreen = () => {
 
       passkeyList = await getConnectService().manageList(listTokenRes);
       if (passkeyList.err) {
+        if (passkeyList.val instanceof ConnectRequestTimedOut) {
+          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+        }
         return;
       }
     }

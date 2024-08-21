@@ -4,7 +4,7 @@ export type CorbadoConnectLoginConfig = {
   onFallback(identifier: string): void;
   onError?(error: ConnectLoginError): void;
   onLoaded(message: string, isFallBackTriggered: boolean): void;
-  onComplete(session: string): void;
+  onComplete(session: string): Promise<void>;
   onConditionalLoginStart?(ac: AbortController): void;
   onLoginStart?(): void;
   onHelpClick?(): void;
@@ -15,7 +15,7 @@ export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
   onError?(error: ConnectAppendError): void;
   onSkip(): void;
-  onComplete(): void;
+  onComplete(): Promise<void>;
 };
 
 export enum ConnectTokenType {

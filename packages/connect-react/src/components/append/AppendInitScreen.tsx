@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -31,6 +31,11 @@ const AppendInitScreen = () => {
       startLoading();
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
+        if (res.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+          return;
+        }
+
         if (res.val.ignore) {
           return;
         }
@@ -48,11 +53,23 @@ const AppendInitScreen = () => {
         return;
       }
 
-      const appendToken = await config.appendTokenProvider();
+      let appendToken: string;
+
+      try {
+        appendToken = await config.appendTokenProvider();
+      } catch {
+        config.onSkip();
+        return;
+      }
 
       const startAppendRes = await getConnectService().startAppend(appendToken, ac);
       if (startAppendRes.err) {
         if (startAppendRes.val.ignore) {
+          return;
+        }
+
+        if (startAppendRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
           return;
         }
 
@@ -106,6 +123,11 @@ const AppendInitScreen = () => {
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+        return;
+      }
+
       log.error('error:', res.val);
       setAppendPending(false);
       setError('Passkey operation was cancelled or timed out.');

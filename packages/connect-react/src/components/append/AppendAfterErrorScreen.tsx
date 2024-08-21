@@ -1,3 +1,4 @@
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -27,6 +28,11 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+
+        return;
+      }
       log.error('error:', res.val);
       setLoading(false);
       setError('Passkey operation was cancelled or timed out.');
@@ -38,6 +44,11 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+
+          return;
+        }
         log.error('error:', createEventRes.val);
       }
     }
@@ -51,6 +62,11 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+
+          return;
+        }
         log.error('error:', createEventRes.val);
       }
     }

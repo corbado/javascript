@@ -1,3 +1,4 @@
+import { ConnectRequestTimedOut } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -28,6 +29,12 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        config.onSkip();
+
+        return;
+      }
+
       log.error('error:', res.val);
       setLoading(false);
       setError('Passkey operation was cancelled or timed out.');
@@ -39,6 +46,12 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+
+          return;
+        }
+
         log.error('error:', createEventRes.val);
       }
     }
@@ -54,6 +67,12 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
 
       if (createEventRes?.err) {
+        if (createEventRes.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+
+          return;
+        }
+
         log.error('error:', createEventRes.val);
       }
     }

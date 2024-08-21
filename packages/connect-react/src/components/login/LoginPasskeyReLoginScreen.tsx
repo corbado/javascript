@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { ConnectRequestTimedOut, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -12,6 +12,11 @@ export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
+
+  const handleFallback = useCallback(() => {
+    navigateToScreen(LoginScreenType.Invisible);
+    config.onFallback(currentIdentifier);
+  }, [navigateToScreen, config, currentIdentifier]);
 
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
@@ -30,6 +35,12 @@ export const LoginPasskeyReLoginScreen = () => {
     const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap);
     if (res.err) {
       setLoading(false);
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        handleFallback();
+        return;
+      }
+
       if (res.val.ignore) {
         return;
       }
@@ -49,7 +60,11 @@ export const LoginPasskeyReLoginScreen = () => {
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback();
+    }
   }, [getConnectService, config, currentIdentifier]);
 
   const beginNewLogin = useCallback(

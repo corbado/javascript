@@ -137,7 +137,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback(prefilledIdentifier ?? '');
+    }
   };
 
   const handleSubmit = useCallback(async () => {
@@ -210,7 +214,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback(identifier);
+    }
   }, [getConnectService, config]);
 
   useEffect(() => {

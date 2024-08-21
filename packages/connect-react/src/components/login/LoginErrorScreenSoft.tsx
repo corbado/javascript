@@ -52,7 +52,11 @@ const LoginErrorScreenSoft = () => {
 
     setLoading(false);
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback();
+    }
   }, [getConnectService, config]);
 
   const handleFallback = useCallback(() => {

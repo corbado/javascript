@@ -60,7 +60,11 @@ export const LoginPasskeyReLoginScreen = () => {
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback();
+    }
   }, [getConnectService, config, currentIdentifier]);
 
   const beginNewLogin = useCallback(

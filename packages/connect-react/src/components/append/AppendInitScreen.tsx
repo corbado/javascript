@@ -53,7 +53,14 @@ const AppendInitScreen = () => {
         return;
       }
 
-      const appendToken = await config.appendTokenProvider();
+      let appendToken: string;
+
+      try {
+        appendToken = await config.appendTokenProvider();
+      } catch {
+        config.onSkip();
+        return;
+      }
 
       const startAppendRes = await getConnectService().startAppend(appendToken, ac);
       if (startAppendRes.err) {

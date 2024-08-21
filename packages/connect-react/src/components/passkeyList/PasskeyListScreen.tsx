@@ -88,7 +88,17 @@ const PasskeyListScreen = () => {
         return;
       }
 
-      const deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
+      let deleteToken;
+
+      try {
+        deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
+      } catch {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+
+        finishLoading();
+        setDeletePending(false);
+        return;
+      }
 
       const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
 
@@ -115,7 +125,15 @@ const PasskeyListScreen = () => {
 
     setAppendPending(true);
     setHardErrorMessage(null);
-    const appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
+
+    let appendToken;
+    try {
+      appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
+    } catch {
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+      setAppendPending(false);
+      return;
+    }
 
     const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
     if (startAppendRes.err || !startAppendRes.val) {
@@ -177,7 +195,13 @@ const PasskeyListScreen = () => {
     let listTokenRes = passkeyListToken;
 
     if (!listTokenRes) {
-      listTokenRes = await fetchListToken(config);
+      try {
+        listTokenRes = await fetchListToken(config);
+      } catch {
+        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
+        return;
+      }
+
       if (!listTokenRes) {
         return;
       }

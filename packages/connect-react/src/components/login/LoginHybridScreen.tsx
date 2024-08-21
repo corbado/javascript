@@ -64,7 +64,11 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback();
+    }
   }, [getConnectService, config, navigateToScreen, currentIdentifier, loading]);
 
   return (

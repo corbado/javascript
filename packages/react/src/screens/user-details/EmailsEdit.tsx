@@ -15,6 +15,7 @@ import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode, validateEmail } from '../../util';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
+import Alert from '../../components/user-details/Alert';
 
 const EmailsEdit = () => {
   const { createIdentifier, verifyIdentifierStart } = useCorbado();
@@ -25,6 +26,7 @@ const EmailsEdit = () => {
   const [deletingEmail, setDeletingEmail] = useState<Identifier>();
   const [newEmail, setNewEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [verifyErrorMessage, setVerifyErrorMessage] = useState<{ message: string; index: number }>();
 
   const headerEmail = useMemo(() => t('user-details.email'), [t]);
 
@@ -54,7 +56,9 @@ const EmailsEdit = () => {
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
+        if (code === 'identifier_already_in_use') {
+          setErrorMessage(t('user-details.email_unique'));
+        }
         console.error(t(`errors.${code}`));
       }
       return;
@@ -65,12 +69,15 @@ const EmailsEdit = () => {
   };
 
   const startEmailVerification = async (index: number) => {
+    setVerifyErrorMessage(undefined);
     const res = await verifyIdentifierStart(emails[index].id);
 
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: wait_before_retry
+        if (code === 'wait_before_retry') {
+          setVerifyErrorMessage({ message: t('user-details.wait_before_retry'), index });
+        }
         console.error(t(`errors.${code}`));
       }
       return;
@@ -152,6 +159,12 @@ const EmailsEdit = () => {
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
                 />
               </div>
+              {verifyErrorMessage && verifyErrorMessage.index === index && (
+                <Alert
+                  variant='error'
+                  text={verifyErrorMessage.message}
+                />
+              )}
               {deletingEmail === email && (
                 <IdentifierDeleteDialog
                   identifier={email}

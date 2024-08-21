@@ -1,6 +1,6 @@
 import type { Identifier } from '@corbado/types';
 import type { FC } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, Text } from '../../components';
@@ -18,18 +18,22 @@ const IdentifierDeleteDialog: FC<Props> = ({ identifier, onCancel }) => {
   const { t } = useTranslation('translation');
   const { deleteIdentifier } = useCorbado();
   const { getCurrentUser } = useCorbadoUserDetails();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const removeEmail = async () => {
     const res = await deleteIdentifier(identifier.id);
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible codes: no_remaining_identifier, no_remaining_verified_identifier
+        if (code === 'no_remaining_verified_identifier' || code === 'no_remaining_identifier') {
+          setErrorMessage(t('user-details.no_remaining_verified_identifier'));
+        }
         console.error(t(`errors.${code}`));
       }
       return;
     }
     void getCurrentUser();
+    onCancel();
   };
 
   const getHeading = () => {
@@ -67,35 +71,50 @@ const IdentifierDeleteDialog: FC<Props> = ({ identifier, onCancel }) => {
 
   return (
     <div className='cb-user-details-deletion-dialog'>
-      <Text
-        level='3'
-        fontWeight='bold'
-      >
-        {getHeading()}
-      </Text>
-      <Text className='cb-text-2'>{getBody()}</Text>
+      {errorMessage ? (
+        <>
+          <Alert
+            text={t('user-details.no_remaining_verified_identifier')}
+            variant='error'
+          />
+          <Button
+            className='cb-primary-button cb-user-details-deletion-dialog-secondary-button'
+            onClick={() => onCancel()}
+          >
+            {t('user-details.cancel')}
+          </Button>
+        </>
+      ) : (
+        <>
+          <Text
+            level='3'
+            fontWeight='bold'
+          >
+            {getHeading()}
+          </Text>
+          <Text className='cb-text-2'>{getBody()}</Text>
 
-      <Alert
-        text={getAlert()}
-        variant='info'
-      ></Alert>
-      <div className='cb-user-details-deletion-dialog-cta'>
-        <Button
-          className='cb-primary-button cb-user-details-deletion-dialog-primary-button'
-          onClick={() => {
-            void removeEmail();
-            onCancel();
-          }}
-        >
-          {t('user-details.remove')}
-        </Button>
-        <Button
-          className='cb-primary-button cb-user-details-deletion-dialog-secondary-button'
-          onClick={onCancel}
-        >
-          {t('user-details.cancel')}
-        </Button>
-      </div>
+          <Alert
+            text={getAlert()}
+            variant='info'
+          ></Alert>
+
+          <div className='cb-user-details-deletion-dialog-cta'>
+            <Button
+              className='cb-primary-button cb-user-details-deletion-dialog-primary-button'
+              onClick={() => void removeEmail()}
+            >
+              {t('user-details.remove')}
+            </Button>
+            <Button
+              className='cb-primary-button cb-user-details-deletion-dialog-secondary-button'
+              onClick={onCancel}
+            >
+              {t('user-details.cancel')}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

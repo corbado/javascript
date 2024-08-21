@@ -15,6 +15,7 @@ import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
+import Alert from '../../components/user-details/Alert';
 
 const PhonesEdit = () => {
   const { createIdentifier, verifyIdentifierStart } = useCorbado();
@@ -25,6 +26,7 @@ const PhonesEdit = () => {
   const [deletingPhone, setDeletingPhone] = useState<Identifier>();
   const [addingPhone, setAddingPhone] = useState<boolean>(false);
   const [newPhone, setNewPhone] = useState<string>('');
+  const [verifyErrorMessage, setVerifyErrorMessage] = useState<{ message: string; index: number }>();
 
   const headerPhone = useMemo(() => t('user-details.phone'), [t]);
 
@@ -53,9 +55,12 @@ const PhonesEdit = () => {
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
+        if (code === 'identifier_already_in_use') {
+          setErrorMessage(t('user-details.phone_unique'));
+        }
+
         console.error(t(`errors.${code}`));
       }
-      setErrorMessage(res.val.message);
       return;
     }
 
@@ -70,7 +75,8 @@ const PhonesEdit = () => {
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: wait_before_retry
+        setVerifyErrorMessage({ message: t('user-details.wait_before_retry'), index });
+
         console.error(t(`errors.${code}`));
       }
       return;
@@ -146,6 +152,12 @@ const PhonesEdit = () => {
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
                 />
               </div>
+              {verifyErrorMessage && verifyErrorMessage.index === index && (
+                <Alert
+                  variant='error'
+                  text={verifyErrorMessage.message}
+                />
+              )}
               {deletingPhone && (
                 <IdentifierDeleteDialog
                   identifier={phone}

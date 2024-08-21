@@ -18,6 +18,8 @@ const UsernameEdit = () => {
   const [addingUsername, setAddingUsername] = useState<boolean>(false);
   const [editingUsername, setEditingUsername] = useState<boolean>(false);
 
+  const [newUsername, setNewUsername] = useState<string | undefined>(username?.value);
+
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const headerUsername = useMemo(() => t('user-details.username'), [t]);
@@ -39,7 +41,10 @@ const UsernameEdit = () => {
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: unsupported_identifier_type (but the current UI flow should prevent this, because unsupported types are not shown)
+        if (code === 'identifier_already_in_use') {
+          setErrorMessage(t('user-details.username_unique'));
+        }
+
         console.error(t(`errors.${code}`));
       }
       return;
@@ -49,13 +54,26 @@ const UsernameEdit = () => {
   };
 
   const changeUsername = async () => {
-    if (!username || !username.value) {
+    setErrorMessage(undefined);
+
+    if (!username || !newUsername) {
       setErrorMessage(t('user-details.username_required'));
       return;
     }
-    const res = await updateUsername(username.id, username.value);
+
+    if (username.value === newUsername) {
+      setErrorMessage(t('user-details.username_unique'));
+      return;
+    }
+
+    const res = await updateUsername(username.id, newUsername);
     if (res.err) {
-      // no possible error code
+      const code = getErrorCode(res.val.message);
+
+      if (code === 'identifier_already_in_use') {
+        setErrorMessage(t('user-details.username_unique'));
+      }
+
       console.error(res.val.message);
       return;
     }
@@ -75,8 +93,7 @@ const UsernameEdit = () => {
             <div>
               <div className='cb-user-details-body-row'>
                 <InputField
-                  className='cb-user-details-text'
-                  // key={`user-entry-${processUser.username}`}
+                  className='cb-user-details-input'
                   value={username?.value}
                   errorMessage={errorMessage}
                   onChange={e => setUsername({ id: '', type: 'username', status: 'verified', value: e.target.value })}
@@ -124,10 +141,10 @@ const UsernameEdit = () => {
               <div className='cb-user-details-body-row'>
                 <InputField
                   className='cb-user-details-input'
-                  // key={`user-entry-${processUser.username}`}
-                  value={username?.value}
+                  value={newUsername || username.value}
                   disabled={!editingUsername}
-                  onChange={e => setUsername({ ...username, value: e.target.value })}
+                  errorMessage={errorMessage}
+                  onChange={e => setNewUsername(e.target.value)}
                 />
                 <CopyIcon
                   className='cb-user-details-body-row-icon'

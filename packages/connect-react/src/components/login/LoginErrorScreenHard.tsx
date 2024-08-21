@@ -32,6 +32,7 @@ const LoginErrorScreenHard = () => {
 
       if (res.val instanceof ConnectRequestTimedOut) {
         handleFallback();
+        return;
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {

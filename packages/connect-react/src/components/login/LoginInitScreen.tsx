@@ -54,6 +54,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
           return;
         }
 
+        if (res.val instanceof ConnectRequestTimedOut) {
+          handleFallback(prefilledIdentifier ?? '');
+          return;
+        }
+
         log.error(res.val);
         return;
       }

@@ -1,4 +1,4 @@
-import { ConnectRequestTimedOut } from '@corbado/web-core';
+import { ConnectRequestTimedOut, ExcludeCredentialsMatchError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -29,6 +29,12 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ExcludeCredentialsMatchError) {
+        void config.onComplete();
+
+        return;
+      }
+
       if (res.val instanceof ConnectRequestTimedOut) {
         config.onSkip();
 

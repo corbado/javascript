@@ -1,4 +1,8 @@
-import { ConnectRequestTimedOut, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import {
+  ConnectRequestTimedOut,
+  ExcludeCredentialsMatchError,
+  PasskeyChallengeCancelledError,
+} from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -123,6 +127,12 @@ const AppendInitScreen = () => {
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
+      if (res.val instanceof ExcludeCredentialsMatchError) {
+        void config.onComplete();
+
+        return;
+      }
+
       if (res.val instanceof ConnectRequestTimedOut) {
         config.onSkip();
         return;

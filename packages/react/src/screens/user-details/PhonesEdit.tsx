@@ -134,6 +134,10 @@ const PhonesEdit = () => {
     return items;
   };
 
+  const copyPhone = async (phone: string) => {
+    await navigator.clipboard.writeText(phone);
+  };
+
   return (
     <UserDetailsCard header={headerPhone}>
       {phones.reverse().map((phone, index) => (
@@ -163,6 +167,8 @@ const PhonesEdit = () => {
                       void startPhoneVerification(index);
                     } else if (item === buttonRemove) {
                       setDeletingPhone(phone);
+                    } else {
+                      void copyPhone(phone.value);
                     }
                   }}
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
@@ -174,7 +180,7 @@ const PhonesEdit = () => {
                   text={verifyErrorMessage.message}
                 />
               )}
-              {deletingPhone && (
+              {deletingPhone === phone && (
                 <IdentifierDeleteDialog
                   identifier={phone}
                   onCancel={() => setDeletingPhone(undefined)}
@@ -185,18 +191,23 @@ const PhonesEdit = () => {
         </div>
       ))}
       {addingPhone ? (
-        <div className='cb-user-details-identifier-container'>
+        <form
+          onSubmit={e => e.preventDefault()}
+          className='cb-user-details-identifier-container'
+        >
           <PhoneInputField
             errorMessage={errorMessage}
             onChange={setNewPhone}
           />
           <Button
+            type='submit'
             className='cb-user-details-body-button-primary'
             onClick={() => void addPhone()}
           >
             <Text className='cb-user-details-subheader'>{buttonSave}</Text>
           </Button>
           <Button
+            type='button'
             className='cb-user-details-body-button-secondary'
             onClick={() => {
               setAddingPhone(false);
@@ -205,7 +216,7 @@ const PhonesEdit = () => {
           >
             <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
           </Button>
-        </div>
+        </form>
       ) : (
         <Button
           className='cb-user-details-body-button'

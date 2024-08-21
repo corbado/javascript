@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,7 +51,8 @@ const NameEdit: FC = () => {
     return;
   }
 
-  const onCancel = () => {
+  const onCancel = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setName(processUser.name);
     setEditingName(false);
     setErrorMessage(undefined);
@@ -71,11 +72,14 @@ const NameEdit: FC = () => {
           <Text className='cb-user-details-subheader'>{buttonAddName}</Text>
         </Button>
       ) : (
-        <div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+        >
           <div className='cb-user-details-body-row'>
             <InputField
               className='cb-user-details-input'
-              // key={`user-entry-${processUser.name}`}
               value={name}
               disabled={!editingName}
               onChange={e => setName(e.target.value)}
@@ -91,11 +95,15 @@ const NameEdit: FC = () => {
             <div>
               <Button
                 className='cb-user-details-body-button-primary'
-                onClick={() => void changeName()}
+                type='submit'
+                onClick={() => {
+                  void changeName();
+                }}
               >
                 <Text className='cb-user-details-subheader'>{buttonSave}</Text>
               </Button>
               <Button
+                type='button'
                 className='cb-user-details-body-button-secondary'
                 onClick={onCancel}
               >
@@ -105,13 +113,16 @@ const NameEdit: FC = () => {
           ) : (
             <Button
               className='cb-user-details-body-button'
-              onClick={() => setEditingName(true)}
+              type='button'
+              onClick={() => {
+                setEditingName(true);
+              }}
             >
               <ChangeIcon className='cb-user-details-body-button-icon' />
               <Text className='cb-user-details-subheader'>{buttonChange}</Text>
             </Button>
           )}
-        </div>
+        </form>
       )}
     </UserDetailsCard>
   );

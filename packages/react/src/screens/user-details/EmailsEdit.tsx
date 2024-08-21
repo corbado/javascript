@@ -192,7 +192,10 @@ const EmailsEdit = () => {
         </div>
       ))}
       {addingEmail ? (
-        <div className='cb-user-details-identifier-container'>
+        <form
+          onSubmit={e => e.preventDefault()}
+          className='cb-user-details-identifier-container'
+        >
           <InputField
             className='cb-user-details-input'
             value={newEmail}
@@ -200,12 +203,14 @@ const EmailsEdit = () => {
             errorMessage={errorMessage}
           />
           <Button
+            type='submit'
             className='cb-user-details-body-button-primary'
             onClick={() => void addEmail()}
           >
             <Text className='cb-user-details-subheader'>{buttonSave}</Text>
           </Button>
           <Button
+            type='button'
             className='cb-user-details-body-button-secondary'
             onClick={() => {
               setAddingEmail(false);
@@ -214,7 +219,7 @@ const EmailsEdit = () => {
           >
             <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
           </Button>
-        </div>
+        </form>
       ) : (
         <Button
           className='cb-user-details-body-button'

@@ -90,7 +90,12 @@ const UsernameEdit = () => {
       {!processUser.username ? (
         <div>
           {addingUsername ? (
-            <div>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                void addUsername();
+              }}
+            >
               <div className='cb-user-details-body-row'>
                 <InputField
                   className='cb-user-details-input'
@@ -120,7 +125,7 @@ const UsernameEdit = () => {
               >
                 <Text className='cb-user-details-subheader'>{buttonCancel}</Text>
               </Button>
-            </div>
+            </form>
           ) : (
             <Button
               className='cb-user-details-body-button'
@@ -137,7 +142,7 @@ const UsernameEdit = () => {
       ) : (
         <div>
           {username && (
-            <div>
+            <form onSubmit={e => e.preventDefault()}>
               <div className='cb-user-details-body-row'>
                 <InputField
                   className='cb-user-details-input'
@@ -155,6 +160,7 @@ const UsernameEdit = () => {
               {editingUsername ? (
                 <div>
                   <Button
+                    type='submit'
                     className='cb-user-details-body-button-primary'
                     onClick={() => void changeUsername()}
                   >
@@ -162,6 +168,7 @@ const UsernameEdit = () => {
                   </Button>
                   <Button
                     className='cb-user-details-body-button-secondary'
+                    type='button'
                     onClick={() => {
                       setUsername({ ...username, value: processUser.username });
                       setEditingUsername(false);
@@ -174,13 +181,14 @@ const UsernameEdit = () => {
               ) : (
                 <Button
                   className='cb-user-details-body-button'
+                  type='button'
                   onClick={() => setEditingUsername(true)}
                 >
                   <ChangeIcon className='cb-user-details-body-button-icon' />
                   <Text className='cb-user-details-subheader'>{buttonChange}</Text>
                 </Button>
               )}
-            </div>
+            </form>
           )}
         </div>
       )}

@@ -1,7 +1,7 @@
 import { LoginIdentifierType } from '@corbado/shared-ui';
 import type { Identifier } from '@corbado/types';
 import { t } from 'i18next';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, PhoneInputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
@@ -20,6 +20,8 @@ import Alert from '../../components/user-details/Alert';
 const PhonesEdit = () => {
   const { createIdentifier, verifyIdentifierStart } = useCorbado();
   const { phones = [], getCurrentUser, phoneEnabled } = useCorbadoUserDetails();
+
+  const initialPhones = useRef<Identifier[]>();
 
   const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -42,7 +44,21 @@ const PhonesEdit = () => {
   const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
 
   useEffect(() => {
+    if (initialPhones.current === undefined && phones.length > 0) {
+      initialPhones.current = phones;
+
+      setVerifyingPhones(new Array(phones.length).fill(false));
+      return;
+    }
     setVerifyingPhones(new Array(phones.length).fill(false));
+
+    phones.forEach((email, index) => {
+      if (initialPhones.current?.every(e => e.id !== email.id)) {
+        void startPhoneVerification(index);
+      }
+    });
+
+    initialPhones.current = undefined;
   }, [phones]);
 
   const addPhone = async () => {
@@ -120,7 +136,7 @@ const PhonesEdit = () => {
 
   return (
     <UserDetailsCard header={headerPhone}>
-      {phones.map((phone, index) => (
+      {phones.reverse().map((phone, index) => (
         <div
           className='cb-user-details-identifier-container'
           key={index}

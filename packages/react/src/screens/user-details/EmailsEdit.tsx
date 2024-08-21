@@ -1,7 +1,7 @@
 import { LoginIdentifierType } from '@corbado/shared-ui';
 import type { Identifier } from '@corbado/types';
 import { t } from 'i18next';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
@@ -20,6 +20,8 @@ import Alert from '../../components/user-details/Alert';
 const EmailsEdit = () => {
   const { createIdentifier, verifyIdentifierStart } = useCorbado();
   const { emails = [], getCurrentUser, emailEnabled } = useCorbadoUserDetails();
+
+  const initialEmails = useRef<Identifier[]>();
 
   const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
@@ -44,7 +46,21 @@ const EmailsEdit = () => {
   const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
 
   useEffect(() => {
+    if (initialEmails.current === undefined && emails.length > 0) {
+      initialEmails.current = emails;
+
+      setVerifyingEmails(new Array(emails.length).fill(false));
+      return;
+    }
     setVerifyingEmails(new Array(emails.length).fill(false));
+
+    emails.forEach((email, index) => {
+      if (initialEmails.current?.every(e => e.id !== email.id)) {
+        void startEmailVerification(index);
+      }
+    });
+
+    initialEmails.current = undefined;
   }, [emails]);
 
   const addEmail = async () => {

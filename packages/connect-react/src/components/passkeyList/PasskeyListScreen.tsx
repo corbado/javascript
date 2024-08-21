@@ -21,6 +21,9 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 import { SecondaryButton } from '../shared/SecondaryButton';
 import PasskeyList from './PasskeyList';
 
+const REQUEST_TIMEOUT_ERROR_MESSAGE =
+  'Something went wrong. Please check if you can access the internet and try again later';
+
 const PasskeyListScreen = () => {
   const { navigateToScreen, config } = useManageProcess();
   const { setPasskeyListToken, passkeyListToken } = useManageProcess();
@@ -85,7 +88,7 @@ const PasskeyListScreen = () => {
 
       if (deletePasskeyRes.err) {
         if (deletePasskeyRes.val instanceof ConnectRequestTimedOut) {
-          setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
+          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
         }
 
         finishLoading();
@@ -128,7 +131,7 @@ const PasskeyListScreen = () => {
     setAppendPending(false);
 
     if (error instanceof ConnectRequestTimedOut) {
-      setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
       return;
     }
 
@@ -151,7 +154,7 @@ const PasskeyListScreen = () => {
     }
 
     if (error instanceof ConnectRequestTimedOut) {
-      setHardErrorMessage('Something went wrong. Please check if you can access the internet and try again later');
+      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
       return;
     }
 

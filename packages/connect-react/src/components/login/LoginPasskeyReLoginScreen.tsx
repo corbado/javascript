@@ -13,6 +13,11 @@ export const LoginPasskeyReLoginScreen = () => {
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
+  const handleFallback = useCallback(() => {
+    navigateToScreen(LoginScreenType.Invisible);
+    config.onFallback(currentIdentifier);
+  }, [navigateToScreen, config, currentIdentifier]);
+
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
     if (!lastLogin?.identifierValue) {
@@ -32,7 +37,8 @@ export const LoginPasskeyReLoginScreen = () => {
       setLoading(false);
 
       if (res.val instanceof ConnectRequestTimedOut) {
-        config.onFallback(currentIdentifier);
+        handleFallback();
+        return;
       }
 
       if (res.val.ignore) {

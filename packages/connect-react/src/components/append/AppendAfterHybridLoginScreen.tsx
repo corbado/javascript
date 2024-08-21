@@ -31,6 +31,8 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
     if (res.err) {
       if (res.val instanceof ConnectRequestTimedOut) {
         config.onSkip();
+
+        return;
       }
 
       log.error('error:', res.val);
@@ -46,6 +48,8 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       if (createEventRes?.err) {
         if (createEventRes.val instanceof ConnectRequestTimedOut) {
           config.onSkip();
+
+          return;
         }
 
         log.error('error:', createEventRes.val);
@@ -65,6 +69,8 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       if (createEventRes?.err) {
         if (createEventRes.val instanceof ConnectRequestTimedOut) {
           config.onSkip();
+
+          return;
         }
 
         log.error('error:', createEventRes.val);

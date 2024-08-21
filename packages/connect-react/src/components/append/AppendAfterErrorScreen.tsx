@@ -30,6 +30,8 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     if (res.err) {
       if (res.val instanceof ConnectRequestTimedOut) {
         config.onSkip();
+
+        return;
       }
       log.error('error:', res.val);
       setLoading(false);
@@ -44,6 +46,8 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       if (createEventRes?.err) {
         if (createEventRes.val instanceof ConnectRequestTimedOut) {
           config.onSkip();
+
+          return;
         }
         log.error('error:', createEventRes.val);
       }
@@ -60,6 +64,8 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       if (createEventRes?.err) {
         if (createEventRes.val instanceof ConnectRequestTimedOut) {
           config.onSkip();
+
+          return;
         }
         log.error('error:', createEventRes.val);
       }

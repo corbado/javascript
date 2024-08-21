@@ -31,7 +31,7 @@ const LoginErrorScreenSoft = () => {
       }
 
       if (res.val instanceof ConnectRequestTimedOut) {
-        config.onFallback(currentIdentifier);
+        handleFallback();
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {

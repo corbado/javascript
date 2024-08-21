@@ -41,6 +41,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
 
       if (res.val instanceof ConnectRequestTimedOut) {
         handleFallback();
+        return;
       }
 
       if (res.val.ignore) {

@@ -31,6 +31,11 @@ const AppendInitScreen = () => {
       startLoading();
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
+        if (res.val instanceof ConnectRequestTimedOut) {
+          config.onSkip();
+          return;
+        }
+
         if (res.val.ignore) {
           return;
         }
@@ -58,6 +63,7 @@ const AppendInitScreen = () => {
 
         if (startAppendRes.val instanceof ConnectRequestTimedOut) {
           config.onSkip();
+          return;
         }
 
         if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
@@ -112,6 +118,7 @@ const AppendInitScreen = () => {
     if (res.err) {
       if (res.val instanceof ConnectRequestTimedOut) {
         config.onSkip();
+        return;
       }
 
       log.error('error:', res.val);

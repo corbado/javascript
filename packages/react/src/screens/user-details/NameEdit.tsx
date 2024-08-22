@@ -16,6 +16,7 @@ const NameEdit: FC = () => {
   const { t } = useTranslation('translation');
 
   const [editingName, setEditingName] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const headerName = useMemo(() => t('user-details.name'), [t]);
   const buttonAddName = useMemo(() => t('user-details.add_name'), [t]);
@@ -29,18 +30,27 @@ const NameEdit: FC = () => {
   const changeName = async () => {
     setErrorMessage(undefined);
 
+    if (loading) return;
+
     if (!name) {
       setErrorMessage(t('user-details.name_required'));
       return;
     }
+
+    setLoading(true);
     const res = await updateFullName(name);
     if (res.err) {
       // no possible error code
       console.error(res.val.message);
+      setLoading(false);
       return;
     }
-    setEditingName(false);
-    void getCurrentUser();
+
+    void getCurrentUser()
+      .then(() => setEditingName(false))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   if (!processUser || !fullNameRequired) {
@@ -88,9 +98,11 @@ const NameEdit: FC = () => {
               <Button
                 className='cb-user-details-body-button-primary'
                 type='submit'
+                isLoading={loading}
                 onClick={() => {
                   void changeName();
                 }}
+                spinnerClassName='cb-user-details-button-spinner'
               >
                 <Text className='cb-user-details-subheader'>{buttonSave}</Text>
               </Button>

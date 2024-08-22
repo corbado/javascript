@@ -428,6 +428,13 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
   padding: 0.2rem 0.4rem;
 }
 
+.cb-user-details-button-spinner {
+  border-width: 2px;
+  border-color: transparent var(--cb-white) var(--cb-white) var(--cb-white);
+  width: 8px;
+  height: 8px;
+}
+
 @media screen and (max-width: 481px) {
   .cb-user-details-section-indentifier {
     width: 75%;

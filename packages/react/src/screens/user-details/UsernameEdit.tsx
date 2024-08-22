@@ -18,6 +18,7 @@ const UsernameEdit = () => {
 
   const [addingUsername, setAddingUsername] = useState<boolean>(false);
   const [editingUsername, setEditingUsername] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [newUsername, setNewUsername] = useState<string | undefined>(username?.value);
 
@@ -36,6 +37,8 @@ const UsernameEdit = () => {
   const addUsername = async () => {
     setErrorMessage(undefined);
 
+    if (loading) return;
+
     if (!username || !username.value) {
       setErrorMessage(t('user-details.username_required'));
       return;
@@ -50,14 +53,22 @@ const UsernameEdit = () => {
 
         console.error(t(`errors.${code}`));
       }
+
+      setLoading(false);
       return;
     }
-    setAddingUsername(false);
-    void getCurrentUser();
+
+    void getCurrentUser()
+      .then(() => setAddingUsername(false))
+      .finally(() => setLoading(false));
   };
 
   const changeUsername = async () => {
     setErrorMessage(undefined);
+
+    if (loading) return;
+
+    setLoading(true);
 
     if (!username || !newUsername) {
       setErrorMessage(t('user-details.username_required'));
@@ -77,11 +88,14 @@ const UsernameEdit = () => {
         setErrorMessage(t('user-details.username_unique'));
       }
 
+      setLoading(false);
       console.error(res.val.message);
       return;
     }
-    setEditingUsername(false);
-    void getCurrentUser();
+
+    void getCurrentUser()
+      .then(() => setEditingUsername(false))
+      .finally(() => setLoading(false));
   };
 
   if (!processUser || !usernameEnabled) {
@@ -114,6 +128,8 @@ const UsernameEdit = () => {
               </div>
               <Button
                 className='cb-user-details-body-button-primary'
+                isLoading={loading}
+                spinnerClassName='cb-user-details-button-spinner'
                 onClick={() => void addUsername()}
               >
                 <Text className='cb-user-details-subheader'>{buttonSave}</Text>
@@ -161,7 +177,9 @@ const UsernameEdit = () => {
                   <Button
                     type='submit'
                     className='cb-user-details-body-button-primary'
+                    isLoading={loading}
                     onClick={() => void changeUsername()}
+                    spinnerClassName='cb-user-details-button-spinner'
                   >
                     <Text className='cb-user-details-subheader'>{buttonSave}</Text>
                   </Button>

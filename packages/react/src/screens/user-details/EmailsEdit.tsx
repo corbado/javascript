@@ -22,6 +22,7 @@ const EmailsEdit = () => {
 
   const initialEmails = useRef<Identifier[]>();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [verifyingEmails, setVerifyingEmails] = useState<Identifier[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
   const [deletingEmail, setDeletingEmail] = useState<Identifier>();
@@ -60,10 +61,15 @@ const EmailsEdit = () => {
   }, [emails]);
 
   const addEmail = async () => {
+    if (loading) return;
+
     if (!newEmail || !validateEmail(newEmail)) {
       setErrorMessage(warningEmail);
       return;
     }
+
+    setLoading(true);
+
     const res = await createIdentifier(LoginIdentifierType.Email, newEmail);
     if (res.err) {
       const code = getErrorCode(res.val.message);
@@ -73,11 +79,16 @@ const EmailsEdit = () => {
         }
         console.error(t(`errors.${code}`));
       }
+      setLoading(false);
       return;
     }
-    setNewEmail('');
-    setAddingEmail(false);
-    void getCurrentUser();
+
+    void getCurrentUser()
+      .then(() => {
+        setNewEmail('');
+        setAddingEmail(false);
+      })
+      .finally(() => setLoading(false));
   };
 
   const startEmailVerification = (email: Identifier) => {
@@ -181,6 +192,8 @@ const EmailsEdit = () => {
           <Button
             type='submit'
             className='cb-user-details-body-button-primary'
+            spinnerClassName='cb-user-details-button-spinner'
+            isLoading={loading}
             onClick={() => void addEmail()}
           >
             <Text className='cb-user-details-subheader'>{buttonSave}</Text>

@@ -22,6 +22,7 @@ const PhonesEdit = () => {
 
   const initialPhones = useRef<Identifier[]>();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [verifyingPhones, setVerifyingPhones] = useState<Identifier[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [deletingPhone, setDeletingPhone] = useState<Identifier>();
@@ -58,11 +59,13 @@ const PhonesEdit = () => {
   }, [phones]);
 
   const addPhone = async () => {
+    if (loading) return;
+
     if (!newPhone) {
       setErrorMessage(t('user-details.warning_invalid_phone'));
       return;
     }
-
+    setLoading(true);
     const res = await createIdentifier(LoginIdentifierType.Phone, newPhone);
     if (res.err) {
       const code = getErrorCode(res.val.message);
@@ -73,12 +76,16 @@ const PhonesEdit = () => {
 
         console.error(t(`errors.${code}`));
       }
+      setLoading(false);
       return;
     }
 
-    setNewPhone('');
-    setAddingPhone(false);
-    void getCurrentUser();
+    void getCurrentUser()
+      .then(() => {
+        setNewPhone('');
+        setAddingPhone(false);
+      })
+      .finally(() => setLoading(false));
   };
 
   const startPhoneVerification = (phone: Identifier) => {
@@ -179,7 +186,9 @@ const PhonesEdit = () => {
           />
           <Button
             type='submit'
+            isLoading={loading}
             className='cb-user-details-body-button-primary'
+            spinnerClassName='cb-user-details-button-spinner'
             onClick={() => void addPhone()}
           >
             <Text className='cb-user-details-subheader'>{buttonSave}</Text>

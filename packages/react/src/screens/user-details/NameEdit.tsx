@@ -3,12 +3,12 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, InputField, Text } from '../../components';
+import CopyButton from '../../components/ui/buttons/CopyButton';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
-import CopyButton from '../../components/ui/buttons/CopyButton';
 
 const NameEdit: FC = () => {
   const { updateFullName } = useCorbado();

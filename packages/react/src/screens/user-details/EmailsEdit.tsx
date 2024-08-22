@@ -80,7 +80,7 @@ const EmailsEdit = () => {
     void getCurrentUser();
   };
 
-  const startEmailVerification = async (email: Identifier) => {
+  const startEmailVerification = (email: Identifier) => {
     setVerifyingEmails(prev => [...prev, email]);
   };
 

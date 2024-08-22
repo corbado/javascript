@@ -45,10 +45,10 @@ import rightIcon from './assets/right-arrow.svg';
 import secureIcon from './assets/secure-icon.svg';
 import shieldIcon from './assets/shield.svg';
 import syncIcon from './assets/sync.svg';
+import tickIcon from './assets/tick.svg';
 import verifiedIcon from './assets/verified.svg';
 import visibilityIcon from './assets/visibility.svg';
 import yahooIcon from './assets/yahoo.svg';
-import tickIcon from './assets/tick.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
 

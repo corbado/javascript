@@ -81,7 +81,7 @@ const PhonesEdit = () => {
     void getCurrentUser();
   };
 
-  const startPhoneVerification = async (phone: Identifier) => {
+  const startPhoneVerification = (phone: Identifier) => {
     setVerifyingPhones(prev => [...prev, phone]);
   };
 

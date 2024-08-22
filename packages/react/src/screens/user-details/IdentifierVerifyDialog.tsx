@@ -60,7 +60,8 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
 
   useEffect(() => {
     setLoading(false);
-    resendEmailVerification();
+
+    void resendEmailVerification();
 
     const timer = startTimer();
 

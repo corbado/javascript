@@ -1,7 +1,9 @@
-import React, { FC, useEffect, useState } from 'react';
+import type { FC } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { CopyIcon } from '../icons/CopyIcon';
 import { TickIcon } from '../icons/TickIcon';
-import { useTranslation } from 'react-i18next';
 import { Text } from '../typography';
 
 interface Props {

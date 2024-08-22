@@ -3,6 +3,7 @@ import { t } from 'i18next';
 import React, { useMemo, useState } from 'react';
 
 import { Button, InputField, Text } from '../../components';
+import CopyButton from '../../components/ui/buttons/CopyButton';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import { CopyIcon } from '../../components/ui/icons/CopyIcon';
@@ -10,7 +11,6 @@ import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
-import CopyButton from '../../components/ui/buttons/CopyButton';
 
 const UsernameEdit = () => {
   const { createIdentifier, updateUsername } = useCorbado();

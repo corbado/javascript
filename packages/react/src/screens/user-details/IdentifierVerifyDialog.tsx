@@ -60,6 +60,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
 
   useEffect(() => {
     setLoading(false);
+    resendEmailVerification();
 
     const timer = startTimer();
 
@@ -107,19 +108,20 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
     void finishEmailVerification(otp).finally(() => setLoading(false));
   }, []);
 
-  const resendEmailVerification = async (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const resendEmailVerification = async (e?: MouseEvent<HTMLAnchorElement>) => {
+    e?.preventDefault();
 
     if (remainingTime > 0) {
       return;
     }
+
+    setErrorMessage(undefined);
 
     const res = await verifyIdentifierStart(identifier.id);
 
     if (res.err) {
       const code = getErrorCode(res.val.message);
       if (code) {
-        // possible code: invalid_challenge_solution_email-otp
         console.error(t(`errors.${code}`));
       }
       return;
@@ -139,6 +141,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
       <Text
         level='2'
         textColorVariant='secondary'
+        className='cb-truncate'
       >
         {identifier.value}
       </Text>

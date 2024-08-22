@@ -8,7 +8,6 @@ import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
-import Alert from '../../components/user-details/Alert';
 import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
@@ -18,17 +17,16 @@ import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
 const PhonesEdit = () => {
-  const { createIdentifier, verifyIdentifierStart } = useCorbado();
+  const { createIdentifier } = useCorbado();
   const { phones = [], getCurrentUser, phoneEnabled } = useCorbadoUserDetails();
 
   const initialPhones = useRef<Identifier[]>();
 
-  const [verifyingPhones, setVerifyingPhones] = useState<boolean[]>([]);
+  const [verifyingPhones, setVerifyingPhones] = useState<Identifier[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [deletingPhone, setDeletingPhone] = useState<Identifier>();
   const [addingPhone, setAddingPhone] = useState<boolean>(false);
   const [newPhone, setNewPhone] = useState<string>('');
-  const [verifyErrorMessage, setVerifyErrorMessage] = useState<{ message: string; index: number }>();
 
   const headerPhone = useMemo(() => t('user-details.phone'), [t]);
 
@@ -47,14 +45,12 @@ const PhonesEdit = () => {
     if (initialPhones.current === undefined && phones.length > 0) {
       initialPhones.current = phones;
 
-      setVerifyingPhones(new Array(phones.length).fill(false));
       return;
     }
-    setVerifyingPhones(new Array(phones.length).fill(false));
 
-    phones.forEach((email, index) => {
-      if (initialPhones.current?.every(e => e.id !== email.id)) {
-        void startPhoneVerification(index);
+    phones.forEach(phone => {
+      if (initialPhones.current?.every(p => p.id !== phone.id)) {
+        setVerifyingPhones(prev => [...prev, phone]);
       }
     });
 
@@ -85,24 +81,12 @@ const PhonesEdit = () => {
     void getCurrentUser();
   };
 
-  const startPhoneVerification = async (index: number) => {
-    const res = await verifyIdentifierStart(phones[index].id);
-
-    if (res.err) {
-      const code = getErrorCode(res.val.message);
-      if (code) {
-        setVerifyErrorMessage({ message: t('user-details.wait_before_retry'), index });
-
-        console.error(t(`errors.${code}`));
-      }
-      return;
-    }
-
-    setVerifyingPhones(prev => prev.map((v, i) => (i === index ? true : v)));
+  const startPhoneVerification = async (phone: Identifier) => {
+    setVerifyingPhones(prev => [...prev, phone]);
   };
 
-  const onFinishEmailVerification = (index: number) => {
-    setVerifyingPhones(prev => prev.map((v, i) => (i === index ? false : v)));
+  const onFinishPhoneVerification = (phone: Identifier) => {
+    setVerifyingPhones(prev => prev.filter(v => v.id !== phone.id));
   };
 
   if (!phoneEnabled) {
@@ -145,10 +129,10 @@ const PhonesEdit = () => {
           className='cb-user-details-identifier-container'
           key={index}
         >
-          {verifyingPhones[index] ? (
+          {verifyingPhones.some(verifyingPhone => verifyingPhone.id === phone.id) ? (
             <IdentifierVerifyDialog
               identifier={phone}
-              onCancel={() => onFinishEmailVerification(index)}
+              onCancel={() => onFinishPhoneVerification(phone)}
             />
           ) : (
             <>
@@ -164,7 +148,7 @@ const PhonesEdit = () => {
                   items={getMenuItems(phone)}
                   onItemClick={item => {
                     if (item === buttonVerify) {
-                      void startPhoneVerification(index);
+                      void startPhoneVerification(phone);
                     } else if (item === buttonRemove) {
                       setDeletingPhone(phone);
                     } else {
@@ -174,12 +158,6 @@ const PhonesEdit = () => {
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
                 />
               </div>
-              {verifyErrorMessage && verifyErrorMessage.index === index && (
-                <Alert
-                  variant='error'
-                  text={verifyErrorMessage.message}
-                />
-              )}
               {deletingPhone === phone && (
                 <IdentifierDeleteDialog
                   identifier={phone}

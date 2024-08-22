@@ -8,7 +8,6 @@ import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { PendingIcon } from '../../components/ui/icons/PendingIcon';
 import { PrimaryIcon } from '../../components/ui/icons/PrimaryIcon';
 import { VerifiedIcon } from '../../components/ui/icons/VerifiedIcon';
-import Alert from '../../components/user-details/Alert';
 import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
@@ -18,17 +17,16 @@ import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
 const EmailsEdit = () => {
-  const { createIdentifier, verifyIdentifierStart } = useCorbado();
+  const { createIdentifier } = useCorbado();
   const { emails = [], getCurrentUser, emailEnabled } = useCorbadoUserDetails();
 
   const initialEmails = useRef<Identifier[]>();
 
-  const [verifyingEmails, setVerifyingEmails] = useState<boolean[]>([]);
+  const [verifyingEmails, setVerifyingEmails] = useState<Identifier[]>([]);
   const [addingEmail, setAddingEmail] = useState<boolean>(false);
   const [deletingEmail, setDeletingEmail] = useState<Identifier>();
   const [newEmail, setNewEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [verifyErrorMessage, setVerifyErrorMessage] = useState<{ message: string; index: number }>();
 
   const headerEmail = useMemo(() => t('user-details.email'), [t]);
 
@@ -49,14 +47,12 @@ const EmailsEdit = () => {
     if (initialEmails.current === undefined && emails.length > 0) {
       initialEmails.current = emails;
 
-      setVerifyingEmails(new Array(emails.length).fill(false));
       return;
     }
-    setVerifyingEmails(new Array(emails.length).fill(false));
 
-    emails.forEach((email, index) => {
+    emails.forEach(email => {
       if (initialEmails.current?.every(e => e.id !== email.id)) {
-        void startEmailVerification(index);
+        setVerifyingEmails(prev => [...prev, email]);
       }
     });
 
@@ -84,26 +80,12 @@ const EmailsEdit = () => {
     void getCurrentUser();
   };
 
-  const startEmailVerification = async (index: number) => {
-    setVerifyErrorMessage(undefined);
-    const res = await verifyIdentifierStart(emails[index].id);
-
-    if (res.err) {
-      const code = getErrorCode(res.val.message);
-      if (code) {
-        if (code === 'wait_before_retry') {
-          setVerifyErrorMessage({ message: t('user-details.wait_before_retry'), index });
-        }
-        console.error(t(`errors.${code}`));
-      }
-      return;
-    }
-
-    setVerifyingEmails(prev => prev.map((v, i) => (i === index ? true : v)));
+  const startEmailVerification = async (email: Identifier) => {
+    setVerifyingEmails(prev => [...prev, email]);
   };
 
-  const onFinishEmailVerification = (index: number) => {
-    setVerifyingEmails(prev => prev.map((v, i) => (i === index ? false : v)));
+  const onFinishEmailVerification = (email: Identifier) => {
+    setVerifyingEmails(prev => prev.filter(v => v.id !== email.id));
   };
 
   if (!emailEnabled) {
@@ -146,10 +128,10 @@ const EmailsEdit = () => {
           className='cb-user-details-identifier-container'
           key={index}
         >
-          {verifyingEmails[index] ? (
+          {verifyingEmails.some(verifyingEmail => verifyingEmail.id === email.id) ? (
             <IdentifierVerifyDialog
               identifier={email}
-              onCancel={() => onFinishEmailVerification(index)}
+              onCancel={() => onFinishEmailVerification(email)}
             />
           ) : (
             <>
@@ -165,7 +147,7 @@ const EmailsEdit = () => {
                   items={getMenuItems(email)}
                   onItemClick={item => {
                     if (item === buttonVerify) {
-                      void startEmailVerification(index);
+                      void startEmailVerification(email);
                     } else if (item === buttonRemove) {
                       setDeletingEmail(email);
                     } else {
@@ -175,12 +157,6 @@ const EmailsEdit = () => {
                   getItemClassName={item => (item === buttonRemove ? 'cb-error-text-color' : '')}
                 />
               </div>
-              {verifyErrorMessage && verifyErrorMessage.index === index && (
-                <Alert
-                  variant='error'
-                  text={verifyErrorMessage.message}
-                />
-              )}
               {deletingEmail === email && (
                 <IdentifierDeleteDialog
                   identifier={email}

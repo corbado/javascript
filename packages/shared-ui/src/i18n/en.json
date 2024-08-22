@@ -448,7 +448,6 @@
     "username_unique": "This username is already used",
     "email_unique": "This email address is already used",
     "phone_unique": "This phone number is already used",
-    "wait_before_retry": "Please wait for at least 30s to resend",
     "no_remaining_verified_identifier": "Can not remove the last verified identifier",
     "email_delete": {
       "header": "Remove Email Address",

@@ -37,7 +37,9 @@ const UsernameEdit = () => {
   const addUsername = async () => {
     setErrorMessage(undefined);
 
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     if (!username || !username.value) {
       setErrorMessage(t('user-details.username_required'));
@@ -66,7 +68,9 @@ const UsernameEdit = () => {
   const changeUsername = async () => {
     setErrorMessage(undefined);
 
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     setLoading(true);
 

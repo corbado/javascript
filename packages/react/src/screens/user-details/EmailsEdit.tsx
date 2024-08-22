@@ -61,7 +61,9 @@ const EmailsEdit = () => {
   }, [emails]);
 
   const addEmail = async () => {
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     if (!newEmail || !validateEmail(newEmail)) {
       setErrorMessage(warningEmail);

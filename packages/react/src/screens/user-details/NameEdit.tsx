@@ -30,7 +30,9 @@ const NameEdit: FC = () => {
   const changeName = async () => {
     setErrorMessage(undefined);
 
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     if (!name) {
       setErrorMessage(t('user-details.name_required'));

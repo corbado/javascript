@@ -59,7 +59,9 @@ const PhonesEdit = () => {
   }, [phones]);
 
   const addPhone = async () => {
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     if (!newPhone) {
       setErrorMessage(t('user-details.warning_invalid_phone'));

@@ -408,6 +408,7 @@
     }
   },
   "user-details": {
+    "copied":"Copied",
     "title": "User Details",
     "name": "Name",
     "username": "Username",

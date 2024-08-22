@@ -10,6 +10,7 @@ import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
 import { getErrorCode } from '../../util';
+import CopyButton from '../../components/ui/buttons/CopyButton';
 
 const UsernameEdit = () => {
   const { createIdentifier, updateUsername } = useCorbado();
@@ -33,6 +34,8 @@ const UsernameEdit = () => {
   };
 
   const addUsername = async () => {
+    setErrorMessage(undefined);
+
     if (!username || !username.value) {
       setErrorMessage(t('user-details.username_required'));
       return;
@@ -146,16 +149,12 @@ const UsernameEdit = () => {
               <div className='cb-user-details-body-row'>
                 <InputField
                   className='cb-user-details-input'
-                  value={newUsername || username.value}
+                  value={editingUsername ? newUsername : username.value}
                   disabled={!editingUsername}
                   errorMessage={errorMessage}
                   onChange={e => setNewUsername(e.target.value)}
                 />
-                <CopyIcon
-                  className='cb-user-details-body-row-icon'
-                  color='secondary'
-                  onClick={() => void copyUsername()}
-                />
+                <CopyButton text={username.value} />
               </div>
               {editingUsername ? (
                 <div>
@@ -170,7 +169,7 @@ const UsernameEdit = () => {
                     className='cb-user-details-body-button-secondary'
                     type='button'
                     onClick={() => {
-                      setUsername({ ...username, value: processUser.username });
+                      setNewUsername(username.value);
                       setEditingUsername(false);
                       setErrorMessage(undefined);
                     }}

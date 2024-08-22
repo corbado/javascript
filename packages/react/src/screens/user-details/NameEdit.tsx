@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { Button, InputField, Text } from '../../components';
 import { AddIcon } from '../../components/ui/icons/AddIcon';
 import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
-import { CopyIcon } from '../../components/ui/icons/CopyIcon';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+import CopyButton from '../../components/ui/buttons/CopyButton';
 
 const NameEdit: FC = () => {
   const { updateFullName } = useCorbado();
@@ -26,13 +26,9 @@ const NameEdit: FC = () => {
 
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-  const copyName = async () => {
-    if (name) {
-      await navigator.clipboard.writeText(name);
-    }
-  };
-
   const changeName = async () => {
+    setErrorMessage(undefined);
+
     if (!name) {
       setErrorMessage(t('user-details.name_required'));
       return;
@@ -85,11 +81,7 @@ const NameEdit: FC = () => {
               onChange={e => setName(e.target.value)}
               errorMessage={errorMessage}
             />
-            <CopyIcon
-              className='cb-user-details-body-row-icon'
-              color='secondary'
-              onClick={() => void copyName()}
-            />
+            <CopyButton text={name} />
           </div>
           {editingName ? (
             <div>

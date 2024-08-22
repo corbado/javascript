@@ -48,6 +48,7 @@ import syncIcon from './assets/sync.svg';
 import verifiedIcon from './assets/verified.svg';
 import visibilityIcon from './assets/visibility.svg';
 import yahooIcon from './assets/yahoo.svg';
+import tickIcon from './assets/tick.svg';
 import i18nDe from './i18n/de.json';
 import i18nEn from './i18n/en.json';
 
@@ -108,4 +109,5 @@ export const assets = {
   primaryIcon,
   verifiedIcon,
   pendingIcon,
+  tickIcon,
 };

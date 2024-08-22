@@ -48,7 +48,12 @@ const DropdownMenu: FC<Props> = ({ items, onItemClick, getItemClassName }) => {
                 }}
                 className='cb-dropdown-menu-item'
               >
-                <Text className={getItemClassName(item)}>{item}</Text>
+                <Text
+                  level='2'
+                  className={getItemClassName(item)}
+                >
+                  {item}
+                </Text>
               </div>
             ))}
           </div>

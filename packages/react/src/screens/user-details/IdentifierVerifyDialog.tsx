@@ -155,7 +155,13 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
           error={errorMessage}
           showErrorMessage={Boolean(errorMessage)}
         />
-        {loading ? <LoadingSpinner className='cb-otp-inputs-loader' /> : <div className='cb-otp-inputs-placeholder' />}
+        {loading ? (
+          <div className='cb-otp-inputs-loader-container'>
+            <LoadingSpinner className='cb-otp-inputs-loader' />
+          </div>
+        ) : (
+          <div className='cb-otp-inputs-placeholder' />
+        )}
       </div>
       <Link
         href={'#'}
@@ -169,7 +175,7 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
         onClick={onCancel}
       >
         <Text
-          level='1'
+          level='3'
           fontWeight='bold'
           className='cb-secondary-link'
         >

@@ -93,6 +93,10 @@
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-primary-font);
+
+  &:hover {
+    background-color: var(--cb-box-color-hover);
+  }
 }
 
 .cb-user-details-body-button-icon {
@@ -112,7 +116,10 @@
 
   span {
     color: var(--cb-button-text-primary-color);
-    font-size: 13px;
+  }
+
+  &:hover {
+    background-color: var(--cb-primary-color-hover);
   }
 }
 
@@ -122,10 +129,15 @@
   padding: 0.4rem 3rem;
   background-color: var(--cb-secondary-color);
   border: 1px solid transparent;
-  border-radius: var(--cb-border-radius);
+  border-radius: var(--cb-border-radius-sm);
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-primary-font);
+  margin-left: 0.5rem;
+
+  &:hover {
+    background-color: var(--cb-box-color-hover);
+  }
 }
 
 .cb-user-details-verify-identifier-button-cancel {
@@ -135,7 +147,6 @@
 
 .cb-user-details-body-button-secondary span {
   color: var(--cb-secondary-link-color);
-  font-size: 10px;
 }
 
 .cb-user-details-body-button-delete {
@@ -147,6 +158,7 @@
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-primary-font);
+  padding-right: 1rem;
 }
 
 .cb-user-details-identifier-container {
@@ -279,17 +291,18 @@
 }
 
 .cb-dropdown-menu-item {
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem 0.7rem;
   border-bottom: 1px solid var(--cb-border-color);
   cursor: pointer;
-}
 
-.cb-dropdown-menu-item:hover {
-  cursor: pointer;
-}
+  &:hover {
+    background-color: var(--cb-box-color-hover);
+    cursor: pointer;
+  }
 
-.cb-dropdown-menu-item:last-child {
-  border-bottom: none;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .cb-dropdown-menu-trigger {
@@ -338,11 +351,11 @@ button.cb-user-details-deletion-dialog-secondary-button {
 }
 
 button.cb-user-details-deletion-dialog-primary-button:hover {
-  background-color: var(--cb-error-color);
+  background-color: var(--cb-error-color-hover);
 }
 
 button.cb-user-details-deletion-dialog-secondary-button:hover {
-  background-color: transparent;
+  background-color: var(--cb-box-color-hover);
 }
 
 .cb-user-details-deletion-dialog-cta {
@@ -357,7 +370,6 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
   gap: 0.5rem;
   margin-bottom: 1rem;
   width: 100%;
-  align-items: center;
   max-width: 340px;
   margin-top: 0.5rem;
 
@@ -374,8 +386,16 @@ button.cb-user-details-deletion-dialog-secondary-button:hover {
   display: block;
   flex-shrink: 0;
 }
+
 .cb-otp-inputs-loader {
   border-color: var(--cb-primary-color) var(--cb-primary-color) var(--cb-primary-color) transparent;
+}
+
+.cb-otp-inputs-loader-container {
+  margin-top: 0.3rem;
+  display: flex;
+  justify-items: center;
+  height: 52px;
 }
 
 .cb-user-details-verify-identifier-container {

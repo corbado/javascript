@@ -1,6 +1,6 @@
 import type { CorbadoConnectLoginConfig } from '@corbado/types';
-import { FC, PropsWithChildren, useEffect } from 'react';
-import React, { useCallback, useMemo, useState } from 'react';
+import type { FC, PropsWithChildren } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Flags } from '../types/flags';
 import type { LoginScreenType } from '../types/screenTypes';

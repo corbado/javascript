@@ -1,12 +1,12 @@
 import type { ConnectAppendError, CorbadoConnectAppendConfig } from '@corbado/types';
+import log from 'loglevel';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
+import useShared from '../hooks/useShared';
 import type { AppendScreenType } from '../types/screenTypes';
 import type { AppendProcessContextProps } from './AppendProcessContext';
 import AppendProcessContext from './AppendProcessContext';
-import useShared from '../hooks/useShared';
-import log from 'loglevel';
 
 type Props = {
   config: CorbadoConnectAppendConfig;

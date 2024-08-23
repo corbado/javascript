@@ -509,6 +509,12 @@ export interface ConnectAppendStartReq {
      * @memberof ConnectAppendStartReq
      */
     'forcePasskeyAppend'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectAppendStartReq
+     */
+    'loadedMs': number;
 }
 /**
  * 
@@ -558,7 +564,9 @@ export const ConnectEventCreateReqEventTypeEnum = {
     LoginOneTapSwitch: 'login-one-tap-switch',
     UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
     UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
-    AppendCredentialExists: 'append-credential-exists'
+    AppendCredentialExists: 'append-credential-exists',
+    AppendExplicitAbort: 'append-explicit-abort',
+    AppendError: 'append-error'
 } as const;
 
 export type ConnectEventCreateReqEventTypeEnum = typeof ConnectEventCreateReqEventTypeEnum[keyof typeof ConnectEventCreateReqEventTypeEnum];
@@ -687,6 +695,12 @@ export interface ConnectLoginStartReq {
      * @memberof ConnectLoginStartReq
      */
     'source': ConnectLoginStartReqSourceEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectLoginStartReq
+     */
+    'loadedMs': number;
 }
 
 export const ConnectLoginStartReqSourceEnum = {

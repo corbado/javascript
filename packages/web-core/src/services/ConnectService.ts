@@ -179,8 +179,12 @@ export class ConnectService {
     return Ok(loginData);
   }
 
-  async login(identifier: string, source: PasskeyLoginSource): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const resStart = await this.loginStart(identifier, source);
+  async login(
+    identifier: string,
+    source: PasskeyLoginSource,
+    loadedMs: number,
+  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    const resStart = await this.loginStart(identifier, source, loadedMs);
 
     return this.loginContinue(resStart);
   }
@@ -188,6 +192,7 @@ export class ConnectService {
   async loginStart(
     identifier: string,
     source: PasskeyLoginSource,
+    loadedMs: number,
   ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
@@ -198,6 +203,7 @@ export class ConnectService {
       this.#connectApi.connectLoginStart({
         identifier,
         source: source as ConnectLoginStartReqSourceEnum,
+        loadedMs,
       }),
     );
     if (res.err) {
@@ -316,14 +322,14 @@ export class ConnectService {
     return Ok(appendData);
   }
 
-  async append(appendTokenValue: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
+  async append(appendTokenValue: string, loadedMs: number): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
 
     const resStart = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue }),
+      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue, loadedMs }),
     );
     if (resStart.err) {
       return resStart;
@@ -339,6 +345,7 @@ export class ConnectService {
 
   async startAppend(
     appendTokenValue: string,
+    loadedMs: number,
     abortController?: AbortController,
     initiatedByUser?: boolean,
   ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
@@ -349,7 +356,7 @@ export class ConnectService {
 
     return this.wrapWithErr(() =>
       this.#connectApi.connectAppendStart(
-        { appendTokenValue: appendTokenValue, forcePasskeyAppend: initiatedByUser },
+        { appendTokenValue: appendTokenValue, forcePasskeyAppend: initiatedByUser, loadedMs },
         abortController && { signal: abortController.signal },
       ),
     );
@@ -514,6 +521,14 @@ export class ConnectService {
 
   recordEventAppendCredentialExistsError() {
     return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendCredentialExists);
+  }
+
+  recordEventAppendError() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendError);
+  }
+
+  recordEventAppendExplicitAbort() {
+    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendExplicitAbort);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)

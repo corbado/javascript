@@ -1240,12 +1240,16 @@ components:
       required:
         - identifier
         - source
+        - loadedMs
       properties:
         identifier:
           type: string
         source:
           type: string
           enum: [ 'one-tap', 'text-field', 'error-soft', 'error-hard' ]
+        loadedMs:
+          type: integer
+          format: int64
 
     connectLoginStartRsp:
       type: object
@@ -1321,11 +1325,15 @@ components:
       type: object
       required:
         - appendTokenValue
+        - loadedMs
       properties:
         appendTokenValue:
           type: string
         forcePasskeyAppend:
           type: boolean
+        loadedMs:
+          type: integer
+          format: int64
 
     connectAppendStartRsp:
       type: object
@@ -1446,6 +1454,8 @@ components:
             - user-append-after-cross-platform-blacklisted
             - user-append-after-login-error-blacklisted
             - append-credential-exists
+            - append-explicit-abort
+            - append-error
 
     passkey:
       type: object

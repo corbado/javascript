@@ -1,5 +1,4 @@
-import { ConnectRequestTimedOut, ExcludeCredentialsMatchError } from '@corbado/web-core';
-import log from 'loglevel';
+import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import React, { useCallback, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
@@ -13,13 +12,14 @@ import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptions: string }) => {
-  const { config, navigateToScreen } = useAppendProcess();
+  const { config, navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip } =
+    useAppendProcess();
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const { getConnectService } = useShared();
 
-  const handleSubmit = useCallback(async () => {
+  const onSubmitClick = useCallback(async () => {
     if (loading) {
       return;
     }
@@ -30,36 +30,27 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
-        await getConnectService().recordEventAppendCredentialExistsError();
-        void config.onComplete();
-
+        await handleCredentialExistsError();
+        setLoading(false);
         return;
       }
 
-      if (res.val instanceof ConnectRequestTimedOut) {
-        config.onSkip();
-
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        setError('Passkey operation was cancelled or timed out.');
+        await handleErrorSoft('PasskeyChallengeAborted', res.val);
+        setLoading(false);
         return;
       }
 
-      log.error('error:', res.val);
+      void handleErrorHard('FrontendApiNotReachable', res.val);
       setLoading(false);
-      setError('Passkey operation was cancelled or timed out.');
-
       return;
     }
 
     if (dontShowAgain) {
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
-
       if (createEventRes?.err) {
-        if (createEventRes.val instanceof ConnectRequestTimedOut) {
-          config.onSkip();
-
-          return;
-        }
-
-        log.error('error:', createEventRes.val);
+        void handleErrorHard('FrontendApiNotReachable', createEventRes.val);
       }
     }
 
@@ -69,22 +60,15 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
 
   const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
 
-  const handleSkip = async () => {
+  const onSkipClick = async () => {
     if (dontShowAgain) {
       const createEventRes = await getConnectService().recordEventUserAppendAfterCrossPlatformBlacklisted();
-
       if (createEventRes?.err) {
-        if (createEventRes.val instanceof ConnectRequestTimedOut) {
-          config.onSkip();
-
-          return;
-        }
-
-        log.error('error:', createEventRes.val);
+        void handleErrorHard('FrontendApiNotReachable', createEventRes.val);
       }
     }
 
-    config.onSkip();
+    return handleSkip('onClickSkip', true);
   };
 
   return (
@@ -111,13 +95,13 @@ const AppendAfterHybridLoginScreen = ({ attestationOptions }: { attestationOptio
       <div className='cb-append-after-hybrid-login-cta'>
         <PrimaryButton
           isLoading={loading}
-          onClick={() => void handleSubmit()}
+          onClick={() => void onSubmitClick()}
           className='cb-append-after-hybrid-login-button'
         >
           Add new passkey
         </PrimaryButton>
         <LinkButton
-          onClick={() => void handleSkip()}
+          onClick={() => void onSkipClick()}
           className='cb-append-after-hybrid-login-fallback'
         >
           Continue without new passkey

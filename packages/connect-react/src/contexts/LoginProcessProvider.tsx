@@ -1,5 +1,5 @@
 import type { CorbadoConnectLoginConfig } from '@corbado/types';
-import type { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import type { Flags } from '../types/flags';
@@ -17,6 +17,13 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
   const [currentScreenOptions, setCurrentScreenOptions] = useState<any>();
   const [currentIdentifier, setCurrentIdentifier] = useState<string>('');
   const [flags, setFlags] = useState<Flags | undefined>();
+  const [loadedMs, setLoadedMs] = useState<number>(0);
+
+  useEffect(() => {
+    return () => {
+      setLoadedMs(Date.now());
+    };
+  }, []);
 
   const navigateToScreen = useCallback((screenType: LoginScreenType, options?: any) => {
     setCurrentScreenType(screenType);
@@ -33,6 +40,7 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
       flags,
       setFlags,
       currentScreenOptions,
+      loadedMs,
     }),
     [currentScreenType, navigateToScreen, config, currentIdentifier, currentScreenOptions, flags],
   );

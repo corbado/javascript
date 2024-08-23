@@ -135,7 +135,8 @@ const PasskeyListScreen = () => {
       return;
     }
 
-    const startAppendRes = await getConnectService().startAppend(appendToken, undefined, true);
+    const loadedMs = Date.now();
+    const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, undefined, true);
     if (startAppendRes.err || !startAppendRes.val) {
       handlePreWebauthnError(startAppendRes.err ? startAppendRes.val : undefined);
       return;
@@ -174,6 +175,7 @@ const PasskeyListScreen = () => {
     }
 
     if (error instanceof ExcludeCredentialsMatchError) {
+      void getConnectService().recordEventAppendCredentialExistsError();
       show(AlreadyExistingModal());
       return;
     }

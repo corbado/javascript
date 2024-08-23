@@ -26,7 +26,7 @@ interface Props {
 }
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
   const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
@@ -153,7 +153,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     config.onLoginStart?.();
 
-    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField);
+    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
 
     if (resStart.err) {
       setIdentifierBasedLoading(false);
@@ -218,7 +218,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     } catch {
       handleFallback(identifier);
     }
-  }, [getConnectService, config]);
+  }, [getConnectService, config, loadedMs]);
 
   useEffect(() => {
     if (!loading && isInitialLoadingStarted) {

@@ -1,8 +1,4 @@
-import {
-  ConnectRequestTimedOut,
-  ExcludeCredentialsMatchError,
-  PasskeyChallengeCancelledError,
-} from '@corbado/web-core';
+import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -22,7 +18,8 @@ import { PrimaryButton } from '../shared/PrimaryButton';
 import AppendBenefitsScreen from './AppendBenetifsScreen';
 
 const AppendInitScreen = () => {
-  const { config, navigateToScreen } = useAppendProcess();
+  const { config, navigateToScreen, handleErrorHard, handleErrorSoft, handleSkip, handleCredentialExistsError } =
+    useAppendProcess();
   const { getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
@@ -32,28 +29,22 @@ const AppendInitScreen = () => {
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
+      // get the time when the component is loaded (unix milliseconds)
+      const loadedMs = Date.now();
+
       startLoading();
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
-        if (res.val instanceof ConnectRequestTimedOut) {
-          config.onSkip();
-          return;
-        }
-
         if (res.val.ignore) {
           return;
         }
 
-        config.onSkip();
-
-        config.onError?.('PasskeyNotSupported');
+        void handleErrorHard('FrontendApiNotReachable', res.val);
         return;
       }
 
       if (!res.val.appendAllowed) {
-        config.onSkip();
-
-        config.onError?.('PasskeyNotSupported');
+        void handleSkip('partial rollout');
         return;
       }
 
@@ -62,34 +53,22 @@ const AppendInitScreen = () => {
       try {
         appendToken = await config.appendTokenProvider();
       } catch {
-        config.onSkip();
+        void handleErrorHard('ConnectTokenProviderError');
         return;
       }
 
-      const startAppendRes = await getConnectService().startAppend(appendToken, ac);
+      const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, ac);
       if (startAppendRes.err) {
         if (startAppendRes.val.ignore) {
           return;
         }
 
-        if (startAppendRes.val instanceof ConnectRequestTimedOut) {
-          config.onSkip();
-          return;
-        }
-
-        if (startAppendRes.val instanceof PasskeyChallengeCancelledError) {
-          config.onError?.('PasskeyChallengeAborted');
-        }
-
-        config.onSkip();
-
+        void handleErrorHard('FrontendApiNotReachable', startAppendRes.val);
         return;
       }
 
       if (startAppendRes.val.attestationOptions === '') {
-        config.onError?.('PasskeyAlreadyExistsOnDevice');
-        config.onSkip();
-
+        void handleSkip('passkey intelligence');
         return;
       }
 
@@ -128,21 +107,18 @@ const AppendInitScreen = () => {
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
-        await getConnectService().recordEventAppendCredentialExistsError();
-        void config.onComplete();
-
+        await handleCredentialExistsError();
         return;
       }
 
-      if (res.val instanceof ConnectRequestTimedOut) {
-        config.onSkip();
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        setError('Passkey operation was cancelled or timed out.');
+        void handleErrorSoft('PasskeyChallengeAborted', res.val);
+        setAppendPending(false);
         return;
       }
 
-      log.error('error:', res.val);
-      setAppendPending(false);
-      setError('Passkey operation was cancelled or timed out.');
-
+      void handleErrorHard('FrontendApiNotReachable', res.val);
       return;
     }
 
@@ -175,7 +151,7 @@ const AppendInitScreen = () => {
         <div className='cb-append-skip-container'>
           <LinkButton
             className='cb-append-skip'
-            onClick={() => config.onSkip()}
+            onClick={() => void handleSkip('user skipped passkey append', true)}
           >
             Skip
           </LinkButton>

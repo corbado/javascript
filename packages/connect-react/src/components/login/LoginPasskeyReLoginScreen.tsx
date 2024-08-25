@@ -9,7 +9,7 @@ import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
 
 export const LoginPasskeyReLoginScreen = () => {
-  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +32,7 @@ export const LoginPasskeyReLoginScreen = () => {
     setLoading(true);
     config.onLoginStart?.();
 
-    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap);
+    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap, loadedMs);
     if (res.err) {
       setLoading(false);
 

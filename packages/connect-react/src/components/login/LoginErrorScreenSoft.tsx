@@ -12,7 +12,7 @@ import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginErrorScreenSoft = () => {
-  const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +23,7 @@ const LoginErrorScreenSoft = () => {
 
     setLoading(true);
 
-    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorSoft);
+    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorSoft, loadedMs);
     if (res.err) {
       setLoading(false);
       if (res.val.ignore) {

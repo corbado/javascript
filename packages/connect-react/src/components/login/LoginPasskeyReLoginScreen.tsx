@@ -65,7 +65,7 @@ export const LoginPasskeyReLoginScreen = () => {
     } catch {
       handleFallback();
     }
-  }, [getConnectService, config, currentIdentifier]);
+  }, [getConnectService, config, currentIdentifier, loadedMs]);
 
   const beginNewLogin = useCallback(
     (identifier: string) => {

@@ -57,7 +57,7 @@ const LoginErrorScreenSoft = () => {
     } catch {
       handleFallback();
     }
-  }, [getConnectService, config]);
+  }, [getConnectService, config, loadedMs]);
 
   const handleFallback = useCallback(() => {
     navigateToScreen(LoginScreenType.Invisible);

@@ -83,7 +83,8 @@ const IdentifierVerifyDialog: FC<Props> = ({ identifier, onCancel }) => {
       }
       return;
     }
-    void getCurrentUser();
+
+    void getCurrentUser().then(() => onCancel());
   };
 
   function startTimer() {

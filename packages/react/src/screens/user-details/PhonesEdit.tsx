@@ -17,7 +17,7 @@ import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
 const PhonesEdit = () => {
-  const { createIdentifier } = useCorbado();
+  const { createIdentifier, makePrimary } = useCorbado();
   const { phones = [], getCurrentUser, phoneEnabled } = useCorbadoUserDetails();
 
   const initialPhones = useRef<Identifier[]>();
@@ -39,6 +39,7 @@ const PhonesEdit = () => {
   const buttonCopy = useMemo(() => t('user-details.copy'), [t]);
   const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
   const buttonAddPhone = useMemo(() => t('user-details.add_phone'), [t]);
+  const buttonPrimary = useMemo(() => t('user-details.make_primary'), [t]);
   const buttonVerify = useMemo(() => t('user-details.verify'), [t]);
   const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
 
@@ -67,7 +68,9 @@ const PhonesEdit = () => {
       setErrorMessage(t('user-details.warning_invalid_phone'));
       return;
     }
+
     setLoading(true);
+
     const res = await createIdentifier(LoginIdentifierType.Phone, newPhone);
     if (res.err) {
       const code = getErrorCode(res.val.message);
@@ -95,6 +98,18 @@ const PhonesEdit = () => {
       .finally(() => setLoading(false));
   };
 
+  const makePhonePrimary = async (phone: Identifier) => {
+    setLoading(true);
+
+    const res = await makePrimary(phone.id, LoginIdentifierType.Phone);
+    if (res.err) {
+      console.error(res.val.message);
+    }
+
+    void getCurrentUser()
+      .then(() => setLoading(false));
+  }
+
   const startPhoneVerification = (phone: Identifier) => {
     setVerifyingPhones(prev => [...prev, phone]);
   };
@@ -107,17 +122,20 @@ const PhonesEdit = () => {
     return null;
   }
 
-  const getBadge = (phone: Identifier) => {
-    switch (phone.status) {
-      case 'primary':
-        return { text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> };
-
-      case 'verified':
-        return { text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> };
-
-      default:
-        return { text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> };
+  const getBadges = (email: Identifier) => {
+    const badges = [];
+    
+    if (email.status === 'verified') {
+      badges.push({ text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> });
+    } else {
+      badges.push({ text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> });
     }
+    
+    if (email.primary) {
+      badges.push({ text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> });
+    }
+
+    return badges
   };
 
   const getMenuItems = (phone: Identifier) => {
@@ -153,15 +171,19 @@ const PhonesEdit = () => {
               <div className='cb-user-details-body-row'>
                 <div className='cb-user-details-header-badge-section'>
                   <Text className='cb-user-details-text'>{phone.value}</Text>
-                  <div className='cb-user-details-header-badge'>
-                    {getBadge(phone).icon}
-                    <Text className='cb-user-details-badge-text'>{getBadge(phone).text}</Text>
-                  </div>
+                  {getBadges(phone).map(badge => (
+                    <div className='cb-user-details-header-badge'>
+                      {badge.icon}
+                      <Text className='cb-user-details-badge-text'>{badge.text}</Text>
+                    </div>
+                  ))}
                 </div>
                 <DropdownMenu
                   items={getMenuItems(phone)}
                   onItemClick={item => {
-                    if (item === buttonVerify) {
+                    if (item === buttonPrimary) {
+                      void makePhonePrimary(phone);
+                    } else if (item === buttonVerify) {
                       void startPhoneVerification(phone);
                     } else if (item === buttonRemove) {
                       setDeletingPhone(phone);

@@ -53,6 +53,7 @@ export interface Identifier {
   value: string;
   type: LoginIdentifierType;
   status: string;
+  primary: boolean;
 }
 
 /**

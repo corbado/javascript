@@ -420,6 +420,7 @@
     "delete_account_text": "This will permanently remove your personal account and all of its content.",
     "delete_account_alert": "This action is not reversible",
     "primary": "Primary",
+    "make_primary": "Make primary",
     "verified": "Verified",
     "pending": "Pending",
     "verify": "Verify",

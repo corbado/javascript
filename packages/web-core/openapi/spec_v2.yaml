@@ -71,7 +71,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/meRsp'
     patch:
-      description: Updates current user
+      description: Updates current user (full name, primary email, or primary phone)
       operationId: CurrentUserUpdate
       tags:
         - Users
@@ -1445,6 +1445,7 @@ components:
             - login-one-tap-switch
             - user-append-after-cross-platform-blacklisted
             - user-append-after-login-error-blacklisted
+            - append-credential-exists
 
     passkey:
       type: object
@@ -1912,10 +1913,12 @@ components:
 
     meUpdateReq:
       type: object
-      required:
-        - fullName
       properties:
         fullName:
+          type: string
+        primaryEmailIdentifierID:
+          type: string
+        primaryPhoneIdentifierID:
           type: string
 
     identifier:
@@ -1925,6 +1928,7 @@ components:
         - value
         - type
         - status
+        - primary
       properties:
         id:
           type: string
@@ -1934,6 +1938,8 @@ components:
           $ref: '#/components/schemas/loginIdentifierType'
         status:
           type: string
+        primary:
+          type: boolean
 
     socialAccount:
       type: object

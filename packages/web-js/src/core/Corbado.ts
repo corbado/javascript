@@ -136,6 +136,10 @@ export class Corbado {
     return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierFinish(identifierId, code);
   }
 
+  makePrimary(identifierId: string, identifierType: LoginIdentifierType) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.makePrimary(identifierId, identifierType);
+  }
+
   deleteUser() {
     return this.#getCorbadoAppState().corbadoApp.sessionService.deleteUser();
   }

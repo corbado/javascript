@@ -25,6 +25,7 @@ export interface CorbadoSessionContextProps {
   deleteIdentifier: (identifierId: string) => Promise<Result<void, CorbadoError>>;
   verifyIdentifierStart: (identifierId: string) => Promise<Result<void, CorbadoError>>;
   verifyIdentifierFinish: (identifierId: string, code: string) => Promise<Result<void, CorbadoError>>;
+  makePrimary: (identifierId: string, identifierType: LoginIdentifierType) => Promise<Result<void, CorbadoError>>;
   deleteUser: () => Promise<Result<void, CorbadoError>>;
   globalError: NonRecoverableError | undefined;
 }
@@ -48,6 +49,7 @@ export const initialContext: CorbadoSessionContextProps = {
   deleteIdentifier: missingImplementation,
   verifyIdentifierStart: missingImplementation,
   verifyIdentifierFinish: missingImplementation,
+  makePrimary: missingImplementation,
   deleteUser: missingImplementation,
 };
 

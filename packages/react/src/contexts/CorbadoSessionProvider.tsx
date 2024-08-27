@@ -135,6 +135,13 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const makePrimary = useCallback(
+    (identifierId: string, identifierType: LoginIdentifierType) => {
+      return corbadoApp.sessionService.makePrimary(identifierId, identifierType);
+    },
+    [corbadoApp],
+  );
+
   const deleteUser = useCallback(() => {
     return corbadoApp.sessionService.deleteUser();
   }, [corbadoApp]);
@@ -156,6 +163,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         deleteIdentifier,
         verifyIdentifierStart,
         verifyIdentifierFinish,
+        makePrimary,
         deleteUser,
         getPasskeys,
         deletePasskey,

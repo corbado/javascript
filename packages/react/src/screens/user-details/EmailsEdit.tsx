@@ -17,7 +17,7 @@ import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
 const EmailsEdit = () => {
-  const { createIdentifier } = useCorbado();
+  const { createIdentifier, makePrimary } = useCorbado();
   const { emails = [], getCurrentUser, emailEnabled } = useCorbadoUserDetails();
 
   const initialEmails = useRef<Identifier[]>();
@@ -41,6 +41,7 @@ const EmailsEdit = () => {
   const buttonCancel = useMemo(() => t('user-details.cancel'), [t]);
   const buttonCopy = useMemo(() => t('user-details.copy'), [t]);
   const buttonAddEmail = useMemo(() => t('user-details.add_email'), [t]);
+  const buttonPrimary = useMemo(() => t('user-details.make_primary'), [t]);
   const buttonVerify = useMemo(() => t('user-details.verify'), [t]);
   const buttonRemove = useMemo(() => t('user-details.remove'), [t]);
 
@@ -99,6 +100,18 @@ const EmailsEdit = () => {
       .finally(() => setLoading(false));
   };
 
+  const makeEmailPrimary = async (email: Identifier) => {
+    setLoading(true);
+
+    const res = await makePrimary(email.id, LoginIdentifierType.Email);
+    if (res.err) {
+      console.error(res.val.message);
+    }
+
+    void getCurrentUser()
+      .then(() => setLoading(false));
+  }
+
   const startEmailVerification = (email: Identifier) => {
     setVerifyingEmails(prev => [...prev, email]);
   };
@@ -111,17 +124,20 @@ const EmailsEdit = () => {
     return null;
   }
 
-  const getBadge = (email: Identifier) => {
-    switch (email.status) {
-      case 'primary':
-        return { text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> };
-
-      case 'verified':
-        return { text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> };
-
-      default:
-        return { text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> };
+  const getBadges = (email: Identifier) => {
+    const badges = [];
+    
+    if (email.status === 'verified') {
+      badges.push({ text: badgeVerified, icon: <VerifiedIcon className='cb-user-details-header-badge-icon' /> });
+    } else {
+      badges.push({ text: badgePending, icon: <PendingIcon className='cb-user-details-header-badge-icon' /> });
     }
+    
+    if (email.primary) {
+      badges.push({ text: badgePrimary, icon: <PrimaryIcon className='cb-user-details-header-badge-icon' /> });
+    }
+
+    return badges
   };
 
   const copyEmail = async (email: string) => {
@@ -131,7 +147,11 @@ const EmailsEdit = () => {
   const getMenuItems = (email: Identifier) => {
     const items = [buttonCopy];
 
-    if (email.status !== 'verified') {
+    if (email.status === 'verified') {
+      if (!email.primary) {
+        items.push(buttonPrimary);
+      }
+    } else {
       items.push(buttonVerify);
     }
 
@@ -157,15 +177,19 @@ const EmailsEdit = () => {
               <div className='cb-user-details-body-row'>
                 <div className='cb-user-details-header-badge-section'>
                   <Text className='cb-user-details-text'>{email.value}</Text>
-                  <div className='cb-user-details-header-badge'>
-                    {getBadge(email).icon}
-                    <Text className='cb-user-details-badge-text'>{getBadge(email).text}</Text>
-                  </div>
+                  {getBadges(email).map(badge => (
+                    <div className='cb-user-details-header-badge'>
+                      {badge.icon}
+                      <Text className='cb-user-details-badge-text'>{badge.text}</Text>
+                    </div>
+                  ))}
                 </div>
                 <DropdownMenu
                   items={getMenuItems(email)}
                   onItemClick={item => {
-                    if (item === buttonVerify) {
+                    if (item === buttonPrimary) {
+                      void makeEmailPrimary(email);
+                    } else if (item === buttonVerify) {
                       void startEmailVerification(email);
                     } else if (item === buttonRemove) {
                       setDeletingEmail(email);

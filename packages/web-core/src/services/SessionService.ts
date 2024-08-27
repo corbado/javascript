@@ -225,6 +225,17 @@ export class SessionService {
     });
   }
 
+  async makePrimary(identifierId: string, identifierType: LoginIdentifierType): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      if (identifierType === LoginIdentifierType.Email) {
+        await this.#usersApi.currentUserUpdate({ primaryEmailIdentifierID: identifierId });
+      } else if (identifierType === LoginIdentifierType.Username) {
+        await this.#usersApi.currentUserUpdate({ primaryPhoneIdentifierID: identifierId });
+      }
+      return void 0;
+    });
+  }
+
   async deleteUser(): Promise<Result<void, CorbadoError>> {
     return Result.wrapAsync(async () => {
       await this.#usersApi.currentUserDelete({});

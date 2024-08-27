@@ -92,6 +92,10 @@ const UsernameEdit = () => {
         setErrorMessage(t('user-details.username_unique'));
       }
 
+      if (code === 'identifier_invalid_format') {
+        setErrorMessage(t('errors.identifier_invalid_format.username'));
+      }
+
       setLoading(false);
       console.error(res.val.message);
       return;

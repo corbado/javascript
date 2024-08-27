@@ -76,6 +76,10 @@ const PhonesEdit = () => {
           setErrorMessage(t('user-details.phone_unique'));
         }
 
+        if (code === 'identifier_invalid_format') {
+          setErrorMessage(t('errors.identifier_invalid_format.phone'));
+        }
+
         console.error(t(`errors.${code}`));
       }
       setLoading(false);

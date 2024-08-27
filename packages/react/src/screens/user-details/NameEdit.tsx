@@ -9,6 +9,7 @@ import { ChangeIcon } from '../../components/ui/icons/ChangeIcon';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
+import { getErrorCode } from '../../util';
 
 const NameEdit: FC = () => {
   const { updateFullName } = useCorbado();
@@ -42,7 +43,12 @@ const NameEdit: FC = () => {
     setLoading(true);
     const res = await updateFullName(name);
     if (res.err) {
-      // no possible error code
+      const code = getErrorCode(res.val.message);
+
+      if (code === 'missing_full_name') {
+        setErrorMessage(t('errors.missing_full_name'));
+      }
+
       console.error(res.val.message);
       setLoading(false);
       return;

@@ -79,6 +79,11 @@ const EmailsEdit = () => {
         if (code === 'identifier_already_in_use') {
           setErrorMessage(t('user-details.email_unique'));
         }
+
+        if (code === 'identifier_invalid_format') {
+          setErrorMessage(t('errors.identifier_invalid_format.email'));
+        }
+
         console.error(t(`errors.${code}`));
       }
       setLoading(false);

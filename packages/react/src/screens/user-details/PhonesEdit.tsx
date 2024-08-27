@@ -90,6 +90,7 @@ const PhonesEdit = () => {
       .then(() => {
         setNewPhone('');
         setAddingPhone(false);
+        setErrorMessage(undefined);
       })
       .finally(() => setLoading(false));
   };

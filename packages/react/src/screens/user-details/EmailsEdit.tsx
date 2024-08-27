@@ -12,7 +12,7 @@ import DropdownMenu from '../../components/user-details/DropdownMenu';
 import UserDetailsCard from '../../components/user-details/UserDetailsCard';
 import { useCorbado } from '../../hooks/useCorbado';
 import { useCorbadoUserDetails } from '../../hooks/useCorbadoUserDetails';
-import { getErrorCode, validateEmail } from '../../util';
+import { getErrorCode } from '../../util';
 import IdentifierDeleteDialog from './IdentifierDeleteDialog';
 import IdentifierVerifyDialog from './IdentifierVerifyDialog';
 
@@ -65,7 +65,7 @@ const EmailsEdit = () => {
       return;
     }
 
-    if (!newEmail || !validateEmail(newEmail)) {
+    if (!newEmail) {
       setErrorMessage(warningEmail);
       return;
     }
@@ -94,6 +94,7 @@ const EmailsEdit = () => {
       .then(() => {
         setNewEmail('');
         setAddingEmail(false);
+        setErrorMessage(undefined);
       })
       .finally(() => setLoading(false));
   };

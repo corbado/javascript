@@ -53,6 +53,10 @@ const UsernameEdit = () => {
           setErrorMessage(t('user-details.username_unique'));
         }
 
+        if (code === 'identifier_invalid_format') {
+          setErrorMessage(t('errors.identifier_invalid_format.username'));
+        }
+
         console.error(t(`errors.${code}`));
       }
 
@@ -61,7 +65,10 @@ const UsernameEdit = () => {
     }
 
     void getCurrentUser()
-      .then(() => setAddingUsername(false))
+      .then(() => {
+        setAddingUsername(false);
+        setErrorMessage(undefined);
+      })
       .finally(() => setLoading(false));
   };
 

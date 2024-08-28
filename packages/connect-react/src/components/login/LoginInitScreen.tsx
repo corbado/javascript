@@ -1,4 +1,9 @@
-import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import {
+  ConnectRequestTimedOut,
+  ConnectUserNotFound,
+  PasskeyChallengeCancelledError,
+  PasskeyLoginSource,
+} from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
 import { useEffect } from 'react';
@@ -21,7 +26,7 @@ interface Props {
 }
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
   const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
@@ -29,6 +34,14 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
   const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const emailFieldRef = useRef<HTMLInputElement>();
+
+  const handleFallback = useCallback(
+    (identifier: string) => {
+      navigateToScreen(LoginScreenType.Invisible);
+      config.onFallback(identifier);
+    },
+    [navigateToScreen, config],
+  );
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
@@ -38,6 +51,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
         if (res.val.ignore) {
+          return;
+        }
+
+        if (res.val instanceof ConnectRequestTimedOut) {
+          handleFallback(prefilledIdentifier ?? '');
           return;
         }
 
@@ -100,6 +118,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     );
 
     if (res.err) {
+      if (res.val instanceof ConnectRequestTimedOut) {
+        handleFallback(prefilledIdentifier ?? '');
+        return;
+      }
+
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
         setCuiBasedLoading(false);
         return;
@@ -114,7 +137,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       return;
     }
 
-    config.onComplete(res.val.session);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback(prefilledIdentifier ?? '');
+    }
   };
 
   const handleSubmit = useCallback(async () => {
@@ -126,10 +153,15 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     config.onLoginStart?.();
 
-    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField);
+    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
 
     if (resStart.err) {
       setIdentifierBasedLoading(false);
+      if (resStart.val instanceof ConnectRequestTimedOut) {
+        handleFallback(identifier);
+        return;
+      }
+
       if (resStart.val.ignore) {
         return;
       }
@@ -142,8 +174,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
       void getConnectService().recordEventLoginError();
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback(identifier);
+      handleFallback(identifier);
 
       return;
     }
@@ -157,6 +188,12 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     if (res.err) {
       setIdentifierBasedLoading(false);
+
+      if (res.val instanceof ConnectRequestTimedOut) {
+        handleFallback(identifier);
+        return;
+      }
+
       if (res.val.ignore) {
         return;
       }
@@ -171,14 +208,17 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       log.debug('fallback: error during password login start');
       config.onError?.('PasskeyLoginFailure');
       void getConnectService().recordEventLoginError();
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback(identifier);
+      handleFallback(identifier);
 
       return;
     }
 
-    config.onComplete(res.val.session);
-  }, [getConnectService, config]);
+    try {
+      await config.onComplete(res.val.session);
+    } catch {
+      handleFallback(identifier);
+    }
+  }, [getConnectService, config, loadedMs]);
 
   useEffect(() => {
     if (!loading && isInitialLoadingStarted) {

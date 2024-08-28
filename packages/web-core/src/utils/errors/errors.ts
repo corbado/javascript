@@ -72,6 +72,10 @@ export class CorbadoError extends Error {
   static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
     log.debug('axios error', error);
 
+    if (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK') {
+      return new ConnectRequestTimedOut();
+    }
+
     if (!error.response || !error.response.data) {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
     }
@@ -294,5 +298,11 @@ export class ExcludeCredentialsMatchError extends RecoverableError {
   constructor() {
     super('Exclude credentials match => passkey was not created');
     this.name = 'errors.excludeCredentialsMatch';
+  }
+}
+
+export class ConnectRequestTimedOut extends RecoverableError {
+  constructor() {
+    super('Request timed out');
   }
 }

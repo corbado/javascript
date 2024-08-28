@@ -17,6 +17,7 @@ export interface LoginProcessContextProps {
   currentIdentifier: string;
   flags: Flags | undefined;
   setFlags: (f: Flags) => void;
+  loadedMs: number;
 }
 
 export const initialContext: LoginProcessContextProps = {
@@ -28,6 +29,7 @@ export const initialContext: LoginProcessContextProps = {
   currentScreenOptions: undefined,
   flags: undefined,
   setFlags: missingImplementation,
+  loadedMs: 0,
 };
 
 const LoginProcessContext = createContext<LoginProcessContextProps>(initialContext);

@@ -1,4 +1,4 @@
-import type { CorbadoConnectAppendConfig } from '@corbado/types';
+import type { ConnectAppendError, CorbadoConnectAppendConfig } from '@corbado/types';
 import { createContext } from 'react';
 
 import { AppendScreenType } from '../types/screenTypes';
@@ -12,6 +12,10 @@ export interface AppendProcessContextProps {
   currentScreenOptions: any;
   config: CorbadoConnectAppendConfig;
   navigateToScreen: (s: AppendScreenType, options?: any) => void;
+  handleErrorSoft: (typedError: ConnectAppendError, err?: Error) => Promise<void>;
+  handleErrorHard: (typedError: ConnectAppendError, err?: Error, explicit?: boolean) => Promise<void>;
+  handleCredentialExistsError: () => Promise<void>;
+  handleSkip: (description: string, explicit?: boolean) => Promise<void>;
 }
 
 export const initialContext: AppendProcessContextProps = {
@@ -19,6 +23,10 @@ export const initialContext: AppendProcessContextProps = {
   config: {} as CorbadoConnectAppendConfig,
   navigateToScreen: missingImplementation,
   currentScreenOptions: undefined,
+  handleErrorSoft: missingImplementation,
+  handleErrorHard: missingImplementation,
+  handleCredentialExistsError: missingImplementation,
+  handleSkip: missingImplementation,
 };
 
 const AppendProcessContext = createContext<AppendProcessContextProps>(initialContext);

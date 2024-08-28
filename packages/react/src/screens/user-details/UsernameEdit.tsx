@@ -79,8 +79,6 @@ const UsernameEdit = () => {
       return;
     }
 
-    setLoading(true);
-
     if (!username || !newUsername) {
       setErrorMessage(t('user-details.username_required'));
       return;
@@ -90,6 +88,8 @@ const UsernameEdit = () => {
       setErrorMessage(t('user-details.username_unique'));
       return;
     }
+
+    setLoading(true);
 
     const res = await updateUsername(username.id, newUsername);
     if (res.err) {
@@ -133,7 +133,9 @@ const UsernameEdit = () => {
                   className='cb-user-details-input'
                   value={username?.value}
                   errorMessage={errorMessage}
-                  onChange={e => setUsername({ id: '', type: 'username', status: 'verified', primary: false, value: e.target.value })}
+                  onChange={e =>
+                    setUsername({ id: '', type: 'username', status: 'verified', primary: false, value: e.target.value })
+                  }
                 />
                 <CopyIcon
                   className='cb-user-details-body-row-icon'

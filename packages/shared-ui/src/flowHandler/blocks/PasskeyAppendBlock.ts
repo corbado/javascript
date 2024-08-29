@@ -50,7 +50,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
         this.initialScreen = ScreenNames.PasskeyAppendAfterHybrid;
         break;
       case GeneralBlockPasskeyAppendVariantEnum.AfterError:
-        this.initialScreen = ScreenNames.PasskeyAppend;
+        this.initialScreen = ScreenNames.PasskeyAppendAfterError;
         break;
     }
 

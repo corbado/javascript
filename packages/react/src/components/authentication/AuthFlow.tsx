@@ -25,7 +25,7 @@ import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingF
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
-import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append-after-hybrid/PasskeyAppendAfterHybrid';
+import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterHybrid';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
@@ -38,6 +38,7 @@ import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
 import ErrorPopup from '../ui/errors/ErrorPopup';
 import { FreemiumBadge } from '../ui/FreemiumBadge';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
+import { PasskeyAppendAfterError } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterError';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
@@ -102,6 +103,8 @@ export const AuthFlow: FC = () => {
         switch (currentScreen.screen) {
           case ScreenNames.PasskeyAppendAfterHybrid:
             return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.PasskeyAppendAfterError:
+            return <PasskeyAppendAfterError block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyAppend:
             return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:

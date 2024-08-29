@@ -38,7 +38,7 @@ export const PasskeyCreate: FC<PasskeyCreateProps> = memo(({ fetchPasskeys }) =>
     }
 
     switch (dialogError.name) {
-      case 'errors.passkeyAlreadyExists':
+      case 'errors.excludeCredentialsMatch':
         return {
           dialogHeader: t('dialog_passkeyAlreadyExists.header'),
           dialogBody: t('dialog_passkeyAlreadyExists.body'),

@@ -24,8 +24,9 @@ import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingFields';
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
-import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
+import { PasskeyAppendAfterError } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterError';
 import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterHybrid';
+import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
@@ -38,7 +39,6 @@ import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
 import ErrorPopup from '../ui/errors/ErrorPopup';
 import { FreemiumBadge } from '../ui/FreemiumBadge';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
-import { PasskeyAppendAfterError } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterError';
 
 export const AuthFlow: FC = () => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();

@@ -2,17 +2,11 @@ import type {
   AuthType,
   BlockBody,
   CorbadoApp,
-  CredentialRequestOptionsJSON,
-  GeneralBlockPasskeyAppend,
+  GeneralBlockPasskeyVerify,
   GeneralBlockVerifyIdentifier,
   ProcessCommon,
 } from '@corbado/web-core';
-import {
-  BlockType,
-  checkIfOnlyHybridPasskeysAvailable,
-  OnlyHybridPasskeyAvailableError,
-  VerificationMethod,
-} from '@corbado/web-core';
+import { BlockType, GeneralBlockPasskeyVerifyLoginHintEnum, VerificationMethod } from '@corbado/web-core';
 
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -36,25 +30,13 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
     blockBody: BlockBody,
   ) {
     super(app, flowHandler, common, errorTranslator);
-    const data = blockBody.data as GeneralBlockPasskeyAppend;
+    const data = blockBody.data as GeneralBlockPasskeyVerify;
 
     this.authType = blockBody.authType;
-
-    if (data.challenge) {
-      try {
-        const challenge: CredentialRequestOptionsJSON = JSON.parse(data.challenge);
-
-        // If the challenge is a valid JSON, we check if the only available passkey is a hybrid passkey
-        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
-
-        // If the only available passkey is a hybrid passkey, we skip the passkey backgorund screen
-        if (hasOnlyHybridPasskeys) {
-          this.initialScreen = ScreenNames.PasskeyHybrid;
-        }
-      } catch (e) {
-        // If the challenge is not a valid JSON, we assume that the passkey is not a hybrid passkey
-        this.initialScreen = ScreenNames.PasskeyBackground;
-      }
+    if (data.loginHint === GeneralBlockPasskeyVerifyLoginHintEnum.Cda) {
+      this.initialScreen = ScreenNames.PasskeyHybrid;
+    } else {
+      this.initialScreen = ScreenNames.PasskeyBackground;
     }
 
     this.data = {
@@ -101,29 +83,26 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
 
   getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
 
-  async passkeyLogin(skipIfOnlyHybrid = false) {
+  async passkeyLogin() {
     this.#passkeyAborted = false;
 
-    const res = await this.app.authProcessService.loginWithPasskey(skipIfOnlyHybrid);
+    const res = await this.app.authProcessService.loginWithPasskey();
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
-      if (!this.#passkeyAborted) {
-        if (res.val instanceof OnlyHybridPasskeyAvailableError) {
-          this.updateScreen(ScreenNames.PasskeyHybrid);
-          return;
-        }
-
-        if (
-          this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground ||
-          this.flowHandler.currentScreenName === ScreenNames.PasskeyHybrid
-        ) {
-          //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
-          //If the user tries again and fails, we show the regular error screen
-          this.updateScreen(ScreenNames.PasskeyErrorLight);
-        } else {
-          this.updateScreen(ScreenNames.PasskeyError);
-        }
+      if (this.#passkeyAborted) {
+        return;
       }
+
+      await this.app.authProcessService.recordEventLoginError();
+
+      //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
+      //If the user tries again and fails, we show the regular error screen
+      if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {
+        this.updateScreen(ScreenNames.PasskeyErrorLight);
+      } else {
+        this.updateScreen(ScreenNames.PasskeyError);
+      }
+
       return;
     }
 
@@ -133,6 +112,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackEmailOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
@@ -142,6 +122,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackSmsOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
@@ -151,6 +132,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
   }
 
   async initFallbackEmailLink(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();

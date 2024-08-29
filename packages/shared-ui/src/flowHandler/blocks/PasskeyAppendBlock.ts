@@ -1,5 +1,11 @@
 import type { BlockBody, CorbadoApp, GeneralBlockPasskeyAppend, ProcessCommon } from '@corbado/web-core';
-import { AuthType, BlockType, VerificationMethod } from '@corbado/web-core';
+import {
+  AuthType,
+  BlockType,
+  ExcludeCredentialsMatchError,
+  GeneralBlockPasskeyAppendVariantEnum,
+  VerificationMethod,
+} from '@corbado/web-core';
 
 import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
@@ -10,7 +16,7 @@ import { Block } from './Block';
 export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   readonly data: BlockDataPasskeyAppend;
   readonly type = BlockTypes.PasskeyAppend;
-  readonly initialScreen = ScreenNames.PasskeyAppend;
+  readonly initialScreen: ScreenNames = ScreenNames.PasskeyAppend;
   readonly authType: AuthType;
 
   #passkeyAborted = false;
@@ -34,6 +40,18 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
 
     if (this.authType === AuthType.Login) {
       app.authProcessService.dropPasskeyAppendShown();
+    }
+
+    switch (data.variant) {
+      case GeneralBlockPasskeyAppendVariantEnum.Default:
+        this.initialScreen = ScreenNames.PasskeyAppend;
+        break;
+      case GeneralBlockPasskeyAppendVariantEnum.AfterHybrid:
+        this.initialScreen = ScreenNames.PasskeyAppendAfterHybrid;
+        break;
+      case GeneralBlockPasskeyAppendVariantEnum.AfterError:
+        this.initialScreen = ScreenNames.PasskeyAppend;
+        break;
     }
 
     this.data = {
@@ -94,9 +112,19 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     const res = await this.app.authProcessService.appendPasskey();
     if (res.err) {
       // This check is necessary because the user might have navigated away from the passkey block before the operation was completed
-      if (!this.#passkeyAborted) {
-        this.updateScreen(ScreenNames.PasskeyError);
+      if (this.#passkeyAborted) {
+        return;
       }
+
+      if (res.val instanceof ExcludeCredentialsMatchError) {
+        await this.app.authProcessService.recordEventAppendCredentialExistsError();
+        const newBlock = await this.app.authProcessService.finishAuthProcess();
+        this.updateProcess(newBlock);
+        return;
+      }
+
+      await this.app.authProcessService.recordEventAppendError();
+      this.updateScreen(ScreenNames.PasskeyError);
       return;
     }
 
@@ -106,6 +134,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async initFallbackEmailOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventAppendExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startEmailCodeVerification();
@@ -115,6 +144,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async initFallbackSmsOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventAppendExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
@@ -124,6 +154,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async initFallbackEmailLink(): Promise<void> {
+    await this.app.authProcessService.recordEventAppendExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.startEmailLinkVerification();
@@ -133,6 +164,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
   }
 
   async skipPasskeyAppend(): Promise<void> {
+    await this.app.authProcessService.recordEventAppendExplicitAbort();
     this.cancelPasskeyOperation();
 
     const newBlock = await this.app.authProcessService.finishAuthProcess();
@@ -204,6 +236,11 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
     this.updateProcess(newBlock);
     this.showPasskeyAppend();
 
+    return;
+  }
+
+  async skipFutureAppendAfterHybrid(): Promise<void> {
+    await this.app.authProcessService.recordEventUserAppendAfterCrossPlatformBlacklisted();
     return;
   }
 

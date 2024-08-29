@@ -145,6 +145,18 @@ export interface BlockBodyData {
     'passkeyIconSet': PasskeyIconSet;
     /**
      * 
+     * @type {string}
+     * @memberof BlockBodyData
+     */
+    'variant': BlockBodyDataVariantEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof BlockBodyData
+     */
+    'loginHint'?: BlockBodyDataLoginHintEnum;
+    /**
+     * 
      * @type {VerificationMethod}
      * @memberof BlockBodyData
      */
@@ -259,6 +271,18 @@ export interface BlockBodyData {
     'fieldError'?: RequestError;
 }
 
+export const BlockBodyDataVariantEnum = {
+    Default: 'default',
+    AfterHybrid: 'after-hybrid',
+    AfterError: 'after-error'
+} as const;
+
+export type BlockBodyDataVariantEnum = typeof BlockBodyDataVariantEnum[keyof typeof BlockBodyDataVariantEnum];
+export const BlockBodyDataLoginHintEnum = {
+    Cda: 'cda'
+} as const;
+
+export type BlockBodyDataLoginHintEnum = typeof BlockBodyDataLoginHintEnum[keyof typeof BlockBodyDataLoginHintEnum];
 
 /**
  * 
@@ -334,7 +358,7 @@ export interface ClientInformation {
      * @type {boolean}
      * @memberof ClientInformation
      */
-    'bluetoothAvailable': boolean;
+    'bluetoothAvailable'?: boolean;
     /**
      * 
      * @type {string}
@@ -343,10 +367,34 @@ export interface ClientInformation {
     'clientEnvHandle'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ClientInformation
+     */
+    'visitorId'?: string;
+    /**
+     * Deprecated, use isUserVerifyingPlatformAuthenticatorAvailable instead
      * @type {boolean}
      * @memberof ClientInformation
      */
-    'canUsePasskeys': boolean;
+    'canUsePasskeys'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'isUserVerifyingPlatformAuthenticatorAvailable'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'isConditionalMediationAvailable'?: boolean;
+    /**
+     * 
+     * @type {ClientCapabilities}
+     * @memberof ClientInformation
+     */
+    'clientCapabilities'?: ClientCapabilities;
     /**
      * 
      * @type {JavaScriptHighEntropy}
@@ -552,24 +600,12 @@ export type ConnectAppendStartRspVariantEnum = typeof ConnectAppendStartRspVaria
 export interface ConnectEventCreateReq {
     /**
      * 
-     * @type {string}
+     * @type {PasskeyEventType}
      * @memberof ConnectEventCreateReq
      */
-    'eventType': ConnectEventCreateReqEventTypeEnum;
+    'eventType': PasskeyEventType;
 }
 
-export const ConnectEventCreateReqEventTypeEnum = {
-    LoginExplicitAbort: 'login-explicit-abort',
-    LoginError: 'login-error',
-    LoginOneTapSwitch: 'login-one-tap-switch',
-    UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
-    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
-    AppendCredentialExists: 'append-credential-exists',
-    AppendExplicitAbort: 'append-explicit-abort',
-    AppendError: 'append-error'
-} as const;
-
-export type ConnectEventCreateReqEventTypeEnum = typeof ConnectEventCreateReqEventTypeEnum[keyof typeof ConnectEventCreateReqEventTypeEnum];
 
 /**
  * 
@@ -875,6 +911,21 @@ export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReason
 /**
  * 
  * @export
+ * @interface EventCreateReq
+ */
+export interface EventCreateReq {
+    /**
+     * 
+     * @type {PasskeyEventType}
+     * @memberof EventCreateReq
+     */
+    'eventType': PasskeyEventType;
+}
+
+
+/**
+ * 
+ * @export
  * @interface FullNameWithError
  */
 export interface FullNameWithError {
@@ -988,29 +1039,21 @@ export interface GeneralBlockPasskeyAppend {
      * @memberof GeneralBlockPasskeyAppend
      */
     'passkeyIconSet': PasskeyIconSet;
-}
-
-
-/**
- * 
- * @export
- * @interface GeneralBlockPasskeyAppendAfterHybrid
- */
-export interface GeneralBlockPasskeyAppendAfterHybrid {
     /**
      * 
      * @type {string}
-     * @memberof GeneralBlockPasskeyAppendAfterHybrid
+     * @memberof GeneralBlockPasskeyAppend
      */
-    'challenge': string;
-    /**
-     * 
-     * @type {PasskeyIconSet}
-     * @memberof GeneralBlockPasskeyAppendAfterHybrid
-     */
-    'passkeyIconSet': PasskeyIconSet;
+    'variant': GeneralBlockPasskeyAppendVariantEnum;
 }
 
+export const GeneralBlockPasskeyAppendVariantEnum = {
+    Default: 'default',
+    AfterHybrid: 'after-hybrid',
+    AfterError: 'after-error'
+} as const;
+
+export type GeneralBlockPasskeyAppendVariantEnum = typeof GeneralBlockPasskeyAppendVariantEnum[keyof typeof GeneralBlockPasskeyAppendVariantEnum];
 
 /**
  * 
@@ -1030,7 +1073,20 @@ export interface GeneralBlockPasskeyVerify {
      * @memberof GeneralBlockPasskeyVerify
      */
     'identifierValue': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockPasskeyVerify
+     */
+    'loginHint'?: GeneralBlockPasskeyVerifyLoginHintEnum;
 }
+
+export const GeneralBlockPasskeyVerifyLoginHintEnum = {
+    Cda: 'cda'
+} as const;
+
+export type GeneralBlockPasskeyVerifyLoginHintEnum = typeof GeneralBlockPasskeyVerifyLoginHintEnum[keyof typeof GeneralBlockPasskeyVerifyLoginHintEnum];
+
 /**
  * 
  * @export
@@ -1775,6 +1831,26 @@ export interface PasskeyAppendFinishReq {
  * @enum {string}
  */
 
+export const PasskeyEventType = {
+    LoginExplicitAbort: 'login-explicit-abort',
+    LoginError: 'login-error',
+    LoginOneTapSwitch: 'login-one-tap-switch',
+    UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
+    UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
+    AppendCredentialExists: 'append-credential-exists',
+    AppendExplicitAbort: 'append-explicit-abort',
+    AppendError: 'append-error'
+} as const;
+
+export type PasskeyEventType = typeof PasskeyEventType[keyof typeof PasskeyEventType];
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
 export const PasskeyIconSet = {
     Default: 'default',
     Apple: 'apple',
@@ -1914,7 +1990,7 @@ export interface ProcessInitReq {
      */
     'passkeyAppendShown'?: number;
     /**
-     * 
+     * deprecated
      * @type {boolean}
      * @memberof ProcessInitReq
      */
@@ -2330,6 +2406,48 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Creates a new user generated complete event.
+         * @param {EventCreateReq} eventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        eventCreate: async (eventCreateReq: EventCreateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventCreateReq' is not null or undefined
+            assertParamExists('eventCreate', 'eventCreateReq', eventCreateReq)
+            const localVarPath = `/v2/auth/events`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(eventCreateReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3171,6 +3289,16 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Creates a new user generated complete event.
+         * @param {EventCreateReq} eventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async eventCreate(eventCreateReq: EventCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.eventCreate(eventCreateReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * tbd
          * @param {IdentifierUpdateReq} identifierUpdateReq 
          * @param {*} [options] Override http request option.
@@ -3385,6 +3513,15 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.blockSkip(options).then((request) => request(axios, basePath));
         },
         /**
+         * Creates a new user generated complete event.
+         * @param {EventCreateReq} eventCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        eventCreate(eventCreateReq: EventCreateReq, options?: any): AxiosPromise<void> {
+            return localVarFp.eventCreate(eventCreateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
          * tbd
          * @param {IdentifierUpdateReq} identifierUpdateReq 
          * @param {*} [options] Override http request option.
@@ -3578,6 +3715,17 @@ export class AuthApi extends BaseAPI {
      */
     public blockSkip(options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).blockSkip(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates a new user generated complete event.
+     * @param {EventCreateReq} eventCreateReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public eventCreate(eventCreateReq: EventCreateReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).eventCreate(eventCreateReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

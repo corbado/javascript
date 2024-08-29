@@ -4,13 +4,9 @@ import log from 'loglevel';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Header, SecondaryButton, SocialLoginButtons, SubHeader, Text } from '../../../components';
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
-import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
-import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
-import { Header } from '../../../components/ui/typography/Header';
-import { SubHeader } from '../../../components/ui/typography/SubHeader';
-import { Text } from '../../../components/ui/typography/Text';
 
 export const LoginInit = ({ block }: { block: LoginInitBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });

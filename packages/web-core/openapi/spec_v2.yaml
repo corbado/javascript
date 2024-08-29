@@ -651,6 +651,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/processResponse'
 
+  /v2/auth/events:
+    post:
+      description: Creates a new user generated complete event.
+      operationId: EventCreate
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventCreateReq'
+      responses:
+        '204':
+          description: tbd
+
   /v2/connect/login/init:
     post:
       description: Initializes a connect process for login.
@@ -880,6 +896,7 @@ components:
           format: int64
         optOutOfPasskeyAppendAfterHybrid:
           type: boolean
+          description: deprecated
         preferredBlock:
           $ref: '#/components/schemas/blockType'
 
@@ -1446,16 +1463,7 @@ components:
         - eventType
       properties:
         eventType:
-          type: string
-          enum:
-            - login-explicit-abort
-            - login-error
-            - login-one-tap-switch
-            - user-append-after-cross-platform-blacklisted
-            - user-append-after-login-error-blacklisted
-            - append-credential-exists
-            - append-explicit-abort
-            - append-error
+          $ref: '#/components/schemas/passkeyEventType'
 
     passkey:
       type: object
@@ -1517,6 +1525,14 @@ components:
           $ref: '#/components/schemas/processCommon'
         newProcess:
           $ref: '#/components/schemas/processStaticInfo'
+
+    eventCreateReq:
+      type: object
+      required:
+        - eventType
+      properties:
+        eventType:
+          $ref: '#/components/schemas/passkeyEventType'
 
     processStaticInfo:
       type: object
@@ -1587,7 +1603,6 @@ components:
           type: object
           anyOf:
             - $ref: '#/components/schemas/generalBlockPasskeyAppend'
-            - $ref: '#/components/schemas/generalBlockPasskeyAppendAfterHybrid'
             - $ref: '#/components/schemas/generalBlockPasskeyVerify'
             - $ref: '#/components/schemas/generalBlockVerifyIdentifier'
             - $ref: '#/components/schemas/generalBlockPasskeyAppended'
@@ -1643,6 +1658,10 @@ components:
     loginIdentifierType:
       type: string
       enum: [ email, phone, username ]
+
+    passkeyEventType:
+      type: string
+      enum: [ login-explicit-abort, login-error, login-one-tap-switch, user-append-after-cross-platform-blacklisted, user-append-after-login-error-blacklisted, append-credential-exists, append-explicit-abort, append-error ]
 
     blockType:
       type: string
@@ -1720,6 +1739,7 @@ components:
         - identifierType
         - autoSubmit
         - passkeyIconSet
+        - variant
       properties:
         challenge:
           type: string
@@ -1731,17 +1751,9 @@ components:
           type: boolean
         passkeyIconSet:
           $ref: '#/components/schemas/passkeyIconSet'
-
-    generalBlockPasskeyAppendAfterHybrid:
-      type: object
-      required:
-        - challenge
-        - passkeyIconSet
-      properties:
-        challenge:
+        variant:
           type: string
-        passkeyIconSet:
-          $ref: '#/components/schemas/passkeyIconSet'
+          enum: [ 'default', 'after-hybrid', 'after-error' ]
 
     generalBlockPasskeyVerify:
       type: object
@@ -1753,6 +1765,9 @@ components:
           type: string
         identifierValue:
           type: string
+        loginHint:
+          type: string
+          enum: [ "cda" ]
 
     generalBlockPasskeyAppended:
       type: object
@@ -1800,16 +1815,22 @@ components:
 
     clientInformation:
       type: object
-      required:
-        - bluetoothAvailable
-        - canUsePasskeys
       properties:
         bluetoothAvailable:
           type: boolean
         clientEnvHandle:
           type: string
+        visitorId:
+          type: string
         canUsePasskeys:
           type: boolean
+          description: Deprecated, use isUserVerifyingPlatformAuthenticatorAvailable instead
+        isUserVerifyingPlatformAuthenticatorAvailable:
+          type: boolean
+        isConditionalMediationAvailable:
+          type: boolean
+        clientCapabilities:
+          $ref: '#/components/schemas/clientCapabilities'
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'
 

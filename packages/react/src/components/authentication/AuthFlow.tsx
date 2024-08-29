@@ -3,7 +3,6 @@ import type {
   EmailVerifyBlock,
   LoginInitBlock,
   MissingFieldsBlock,
-  PasskeyAppendAfterHybridBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
   PasskeyVerifyBlock,
@@ -101,6 +100,8 @@ export const AuthFlow: FC = () => {
         }
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
+          case ScreenNames.PasskeyAppendAfterHybrid:
+            return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyAppend:
             return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
@@ -125,8 +126,6 @@ export const AuthFlow: FC = () => {
         }
       case BlockTypes.PasskeyAppended:
         return <PasskeyAppended block={currentScreen.block as PasskeyAppendedBlock} />;
-      case BlockTypes.PasskeyAppendAfterHybrid:
-        return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendAfterHybridBlock} />;
       case BlockTypes.Completed:
         return null;
       case BlockTypes.ContinueOnOtherEnv:

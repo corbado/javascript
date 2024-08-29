@@ -1,4 +1,4 @@
-import type { PasskeyAppendAfterHybridBlock } from '@corbado/shared-ui';
+import type { PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,7 +6,7 @@ import { Checkbox, Header, PrimaryButton, SecondaryButton, Text } from '../../..
 import { LockIcon } from '../../../components/ui/icons/LockIcon';
 import { PasskeyAppendAfterHybridIcon } from '../../../components/ui/icons/PasskeyAppendAfterHybridIcon';
 
-export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterHybridBlock }) => {
+export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `${block.authType}.passkey-append-after-hybrid.passkey-append-after-hybrid`,
   });
@@ -19,9 +19,22 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterH
   const primaryButtonText = useMemo(() => t('button_appendPasskey'), [t]);
   const secondaryButtonText = useMemo(() => t('button_continue'), [t]);
 
-  const handleContinue = useCallback(() => {
+  const handleContinue = useCallback(async () => {
     setLoading(true);
-    return void block.passkeyAppend();
+
+    if (dontShowAgainChecked) {
+      await block.skipFutureAppendAfterHybrid();
+    }
+
+    await block.passkeyAppend();
+  }, [block]);
+
+  const handleSkip = useCallback(() => {
+    if (dontShowAgainChecked) {
+      void block.skipFutureAppendAfterHybrid();
+    }
+
+    void block.skipPasskeyAppend();
   }, [block]);
 
   useEffect(() => {
@@ -40,7 +53,6 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterH
 
   const handleDontShowAgainChange = useCallback(() => {
     setDontShowAgainChecked(!dontShowAgainChecked);
-    block.skipBlockInFuture(!dontShowAgainChecked);
   }, [dontShowAgainChecked]);
 
   return (
@@ -64,14 +76,14 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendAfterH
         onChange={handleDontShowAgainChange}
       />
       <PrimaryButton
-        onClick={handleContinue}
+        onClick={() => void handleContinue()}
         isLoading={loading}
       >
         {primaryButtonText}
       </PrimaryButton>
       <div className='cb-pk-append-after-hybrid-button'>
         <SecondaryButton
-          onClick={() => void block.skipPasskeyAppend()}
+          onClick={handleSkip}
           disabled={loading}
         >
           {secondaryButtonText}

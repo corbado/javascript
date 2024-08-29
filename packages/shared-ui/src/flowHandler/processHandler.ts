@@ -17,7 +17,6 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
-import { PasskeyAppendAfterHybridBlock } from './blocks/PasskeyAppendAfterHybridBlock';
 import type { BlockTypes, ScreenNames } from './constants';
 import { initScreenBlocks } from './constants';
 import { ErrorTranslator } from './errorTranslator';
@@ -308,9 +307,6 @@ export class ProcessHandler {
         break;
       case BlockType.PasskeyVerify:
         block = new PasskeyVerifyBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
-        break;
-      case BlockType.PasskeyAppendAfterHybrid:
-        block = new PasskeyAppendAfterHybridBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       //TODO: Add MissingFieldsBlock
       // case BlockType.MissingFields:

@@ -21,8 +21,7 @@ import type {
   ConnectManageListReq,
   ConnectManageListRsp,
 } from '../api/v2';
-import { ConnectEventCreateReqEventTypeEnum } from '../api/v2';
-import { CorbadoConnectApi } from '../api/v2';
+import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
@@ -75,6 +74,7 @@ export class ConnectService {
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
+      'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     const out = axios.create({
@@ -226,7 +226,7 @@ export class ConnectService {
       return resStart;
     }
 
-    const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false, false);
+    const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false);
 
     if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
@@ -252,7 +252,7 @@ export class ConnectService {
 
     const challenge = existingProcess.loginData?.conditionalUIChallenge;
 
-    const res = await this.#webAuthnService.login(challenge, true, false, preWebAuthn);
+    const res = await this.#webAuthnService.login(challenge, true, preWebAuthn);
     if (res.err) {
       return res;
     }
@@ -500,39 +500,39 @@ export class ConnectService {
   }
 
   recordEventLoginError() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginError);
+    return this.#recordEvent(PasskeyEventType.LoginError);
   }
 
   recordEventLoginExplicitAbort() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginExplicitAbort);
+    return this.#recordEvent(PasskeyEventType.LoginExplicitAbort);
   }
 
   recordEventLoginOneTapSwitch() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.LoginOneTapSwitch);
+    return this.#recordEvent(PasskeyEventType.LoginOneTapSwitch);
   }
 
   recordEventUserAppendAfterCrossPlatformBlacklisted() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterCrossPlatformBlacklisted);
+    return this.#recordEvent(PasskeyEventType.UserAppendAfterCrossPlatformBlacklisted);
   }
 
   recordEventUserAppendAfterLoginErrorBlacklisted() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.UserAppendAfterLoginErrorBlacklisted);
+    return this.#recordEvent(PasskeyEventType.UserAppendAfterLoginErrorBlacklisted);
   }
 
   recordEventAppendCredentialExistsError() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendCredentialExists);
+    return this.#recordEvent(PasskeyEventType.AppendCredentialExists);
   }
 
   recordEventAppendError() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendError);
+    return this.#recordEvent(PasskeyEventType.AppendError);
   }
 
   recordEventAppendExplicitAbort() {
-    return this.#recordEvent(ConnectEventCreateReqEventTypeEnum.AppendExplicitAbort);
+    return this.#recordEvent(PasskeyEventType.AppendExplicitAbort);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
-  #recordEvent(eventType: ConnectEventCreateReqEventTypeEnum) {
+  #recordEvent(eventType: PasskeyEventType) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
 
     if (!existingProcess) {
@@ -574,26 +574,11 @@ export class ConnectService {
       this.#visitorId = visitorId;
     }
 
-    const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
-    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
-    const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
-    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
-    const maybeClientHandle = WebAuthnService.getClientHandle();
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
-
-    // iOS & macOS Only so far
-    const clientCapabilities = await WebAuthnService.getClientCapabilities();
+    const clientInformation = await this.#webAuthnService.getClientInformation();
 
     const req = {
-      clientInformation: {
-        bluetoothAvailable: bluetoothAvailable,
-        isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
-        isConditionalMediationAvailable: canUseConditionalUI,
-        clientEnvHandle: maybeClientHandle ?? undefined,
-        visitorId: currentVisitorId,
-        javaScriptHighEntropy: javaScriptHighEntropy,
-        clientCapabilities,
-      },
+      clientInformation: clientInformation,
       flags: flags.getItemsObject(),
     } as T;
 

@@ -8,6 +8,7 @@ export {
   BlockBody,
   GeneralBlockPasskeyAppend,
   GeneralBlockVerifyIdentifier,
+  GeneralBlockPasskeyVerify,
   ProcessResponse,
   ProcessCommon,
   ContinueOnOtherDevice,
@@ -16,6 +17,7 @@ export {
   ContinueOnOtherDeviceReasonEnum,
   SocialProviderType,
   SocialDataStatusEnum,
-  GeneralBlockPasskeyAppendAfterHybrid,
+  GeneralBlockPasskeyAppendVariantEnum,
+  GeneralBlockPasskeyVerifyLoginHintEnum,
   Passkey,
 } from './v2';

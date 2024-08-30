@@ -14,6 +14,7 @@ import { Err, Ok } from 'ts-results';
 import { Configuration } from '../api/v1';
 import type {
   AuthType,
+  EventCreateReq,
   LoginIdentifier,
   PasskeyOperation,
   ProcessInitReq,
@@ -21,8 +22,14 @@ import type {
   ProcessResponse,
   SocialProviderType,
 } from '../api/v2';
-import { SocialDataStatusEnum } from '../api/v2';
-import { AuthApi, BlockType, LoginIdentifierType, VerificationMethod } from '../api/v2';
+import {
+  AuthApi,
+  BlockType,
+  LoginIdentifierType,
+  PasskeyEventType,
+  SocialDataStatusEnum,
+  VerificationMethod,
+} from '../api/v2';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
@@ -67,7 +74,7 @@ export class ProcessService {
     }
 
     // we check if there is a process in local storage, if not we have to create a new one
-    const process = AuthProcess.loadFromStorage();
+    const process = AuthProcess.loadFromStorage(this.#projectId);
     if (!process) {
       console.log('process is missing');
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
@@ -110,7 +117,7 @@ export class ProcessService {
   }
 
   clearProcess() {
-    return AuthProcess.clearStorage();
+    return AuthProcess.clearStorage(this.#projectId);
   }
 
   initEmailVerifyFromUrl(): Result<EmailVerifyFromUrl | null, CorbadoError> {
@@ -126,7 +133,7 @@ export class ProcessService {
     }
 
     try {
-      const maybeProcess = AuthProcess.loadFromStorage();
+      const maybeProcess = AuthProcess.loadFromStorage(this.#projectId);
       const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
 
       this.#setApisV2(emailVerifyFromUrl.process);
@@ -146,6 +153,7 @@ export class ProcessService {
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
+      'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
@@ -179,7 +187,12 @@ export class ProcessService {
       return res;
     }
 
-    const newProcess = new AuthProcess(res.val.token, res.val.expiresAt, res.val.processResponse.common.frontendApiUrl);
+    const newProcess = new AuthProcess(
+      res.val.token,
+      this.#projectId,
+      res.val.expiresAt,
+      res.val.processResponse.common.frontendApiUrl,
+    );
     this.#setApisV2(newProcess);
     newProcess.persistToStorage();
 
@@ -205,22 +218,13 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
-    const maybeClientHandle = WebAuthnService.getClientHandle();
-
     const passkeyAppendShownRaw = localStorage.getItem(passkeyAppendShownKey);
     let passkeyAppendShown: number | null = null;
     if (passkeyAppendShownRaw) {
       passkeyAppendShown = parseInt(passkeyAppendShownRaw, 10);
     }
 
-    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
-    const res = await this.#processInit(
-      abortController,
-      canUsePasskeys,
-      maybeClientHandle,
-      passkeyAppendShown,
-      frontendPreferredBlockType,
-    );
+    const res = await this.#processInit(abortController, passkeyAppendShown, frontendPreferredBlockType);
     if (res.err) {
       return res;
     }
@@ -248,18 +252,11 @@ export class ProcessService {
 
   async #processInit(
     abortController: AbortController,
-    canUsePasskeys: boolean,
-    clientHandle: string | null,
     passkeyAppendShown: number | null,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
     const req: ProcessInitReq = {
-      clientInformation: {
-        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
-        canUsePasskeys: canUsePasskeys,
-        clientEnvHandle: clientHandle ?? undefined,
-        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
-      },
+      clientInformation: await this.#webAuthnService.getClientInformation(),
       passkeyAppendShown: passkeyAppendShown ?? undefined,
       preferredBlock: frontendPreferredBlockType,
       optOutOfPasskeyAppendAfterHybrid: localStorage.getItem(skipPasskeyAppendAfterHybridKey) === 'true',
@@ -286,6 +283,7 @@ export class ProcessService {
     if (res.ok && res.val.newProcess) {
       const newProcess = new AuthProcess(
         res.val.newProcess.token,
+        this.#projectId,
         res.val.newProcess.expiresAt,
         res.val.common.frontendApiUrl,
       );
@@ -493,7 +491,6 @@ export class ProcessService {
 
     const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val.blockBody.data.challenge);
     if (signedChallenge.err) {
-      // TODO: return block body with client generated error
       return signedChallenge;
     }
 
@@ -502,7 +499,7 @@ export class ProcessService {
 
   // perform a passkey login
   // if the procedure fails, clear the last identifier
-  async loginWithPasskey(skipIfOnlyHybrid = false): Promise<Result<ProcessResponse, CorbadoError>> {
+  async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       return respStart;
@@ -514,11 +511,7 @@ export class ProcessService {
       return respStart;
     }
 
-    const signedChallenge = await this.#webAuthnService.login(
-      respStart.val.blockBody.data.challenge,
-      false,
-      skipIfOnlyHybrid,
-    );
+    const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
     if (signedChallenge.err) {
       this.dropLastIdentifier(undefined);
 
@@ -594,9 +587,48 @@ export class ProcessService {
     return flags.join(',');
   };
 
-  skipPasskeyAppendAfterHybrid(skip: boolean) {
-    const skipAppend = skip ? 'true' : 'false';
-    localStorage.setItem(skipPasskeyAppendAfterHybridKey, skipAppend);
+  recordEventLoginError() {
+    return this.#recordEvent(PasskeyEventType.LoginError);
+  }
+
+  recordEventLoginExplicitAbort() {
+    return this.#recordEvent(PasskeyEventType.LoginExplicitAbort);
+  }
+
+  recordEventUserAppendAfterCrossPlatformBlacklisted() {
+    return this.#recordEvent(PasskeyEventType.UserAppendAfterCrossPlatformBlacklisted);
+  }
+
+  recordEventUserAppendAfterLoginErrorBlacklisted() {
+    return this.#recordEvent(PasskeyEventType.UserAppendAfterLoginErrorBlacklisted);
+  }
+
+  recordEventAppendCredentialExistsError() {
+    return this.#recordEvent(PasskeyEventType.AppendCredentialExists);
+  }
+
+  recordEventAppendError() {
+    return this.#recordEvent(PasskeyEventType.AppendError);
+  }
+
+  recordEventAppendExplicitAbort() {
+    return this.#recordEvent(PasskeyEventType.AppendExplicitAbort);
+  }
+
+  // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
+  #recordEvent(eventType: PasskeyEventType) {
+    const existingProcess = AuthProcess.loadFromStorage(this.#projectId);
+    if (!existingProcess) {
+      log.warn('No process found to record event.');
+
+      return;
+    }
+
+    const req: EventCreateReq = {
+      eventType,
+    };
+
+    return this.wrapWithErr(() => this.#authApi.eventCreate(req));
   }
 }
 

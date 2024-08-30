@@ -51,6 +51,7 @@ export enum ScreenNames {
   PasskeyErrorLight = 'passkey-error-light',
   PasskeyAppend = 'passkey-append',
   PasskeyAppendAfterHybrid = 'passkey-append-after-hybrid',
+  PasskeyAppendAfterError = 'passkey-append-after-error',
   PasskeySuccess = 'passkey-success',
   PasskeyBackground = 'passkey-background',
   PasskeyHybrid = 'passkey-hybrid',
@@ -69,7 +70,6 @@ export enum BlockTypes {
   PasskeyAppend = 'passkey-append',
   PasskeyVerify = 'passkey-verify',
   PasskeyAppended = 'passkey-appended',
-  PasskeyAppendAfterHybrid = 'passkey-append-after-hybrid',
   Completed = 'completed',
   ContinueOnOtherEnv = 'continue-on-other-env',
 }

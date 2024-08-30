@@ -158,16 +158,9 @@ export class SessionService {
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
-    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
-
-    const clientHandle = WebAuthnService.getClientHandle();
+    const clientInformation = await this.#webAuthnService.getClientInformation();
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
-      clientInformation: {
-        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
-        canUsePasskeys: canUsePasskeys,
-        clientEnvHandle: clientHandle ?? undefined,
-        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
-      },
+      clientInformation: clientInformation,
     });
 
     if (respStart.data.newClientEnvHandle) {
@@ -192,12 +185,7 @@ export class SessionService {
 
     await this.#usersApi.currentUserPasskeyAppendFinish({
       attestationResponse: signedChallenge.val,
-      clientInformation: {
-        bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
-        canUsePasskeys: canUsePasskeys,
-        clientEnvHandle: clientHandle ?? undefined,
-        javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
-      },
+      clientInformation: clientInformation,
     });
 
     return Ok(void 0);
@@ -280,6 +268,7 @@ export class SessionService {
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
       'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+      'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
       'Cache-Control': 'no-cache',
       Pragma: 'no-cache',
       Expires: '0',

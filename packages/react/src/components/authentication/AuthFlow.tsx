@@ -3,7 +3,6 @@ import type {
   EmailVerifyBlock,
   LoginInitBlock,
   MissingFieldsBlock,
-  PasskeyAppendAfterHybridBlock,
   PasskeyAppendBlock,
   PasskeyAppendedBlock,
   PasskeyVerifyBlock,
@@ -25,8 +24,9 @@ import { LoginInit } from '../../screens/auth-blocks/login-init/LoginInit';
 import { MissingFields } from '../../screens/auth-blocks/missing-fields/MissingFields';
 import { EditUserData } from '../../screens/auth-blocks/passkey-append/EditUserData';
 import { PasskeyAppend } from '../../screens/auth-blocks/passkey-append/PasskeyAppend';
+import { PasskeyAppendAfterError } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterError';
+import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append/PasskeyAppendAfterHybrid';
 import { PasskeyError as PasskeyAppendPasskeyError } from '../../screens/auth-blocks/passkey-append/PasskeyError';
-import { PasskeyAppendAfterHybrid } from '../../screens/auth-blocks/passkey-append-after-hybrid/PasskeyAppendAfterHybrid';
 import { PasskeyAppended } from '../../screens/auth-blocks/passkey-appended/PasskeyAppended';
 import { PasskeyBackground } from '../../screens/auth-blocks/passkey-verify/PasskeyBackground';
 import { PasskeyError as PasskeyVerifyPasskeyError } from '../../screens/auth-blocks/passkey-verify/PasskeyError';
@@ -101,6 +101,10 @@ export const AuthFlow: FC = () => {
         }
       case BlockTypes.PasskeyAppend:
         switch (currentScreen.screen) {
+          case ScreenNames.PasskeyAppendAfterHybrid:
+            return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendBlock} />;
+          case ScreenNames.PasskeyAppendAfterError:
+            return <PasskeyAppendAfterError block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyAppend:
             return <PasskeyAppend block={currentScreen.block as PasskeyAppendBlock} />;
           case ScreenNames.PasskeyError:
@@ -125,8 +129,6 @@ export const AuthFlow: FC = () => {
         }
       case BlockTypes.PasskeyAppended:
         return <PasskeyAppended block={currentScreen.block as PasskeyAppendedBlock} />;
-      case BlockTypes.PasskeyAppendAfterHybrid:
-        return <PasskeyAppendAfterHybrid block={currentScreen.block as PasskeyAppendAfterHybridBlock} />;
       case BlockTypes.Completed:
         return null;
       case BlockTypes.ContinueOnOtherEnv:

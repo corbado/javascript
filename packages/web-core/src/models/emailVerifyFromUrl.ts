@@ -12,6 +12,7 @@ type EmailVerifyFromUrlData = {
   authType: number;
   process: {
     id: string;
+    projectId: string;
     expires: number;
     frontendApiUrl: string;
   };
@@ -59,7 +60,7 @@ export class EmailVerifyFromUrl {
       authType = AuthType.Signup;
     }
 
-    const authProcess = new AuthProcess(process.id, process.expires, process.frontendApiUrl);
+    const authProcess = new AuthProcess(process.id, process.projectId, process.expires, process.frontendApiUrl);
 
     return new EmailVerifyFromUrl(data, token, isNewDevice, authProcess, authType);
   }

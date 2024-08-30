@@ -1,14 +1,16 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
 import { create, get } from '@github/webauthn-json';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import type { JavaScriptHighEntropy } from '../api/v2';
-import { checkIfOnlyHybridPasskeysAvailable, CorbadoError } from '../utils';
+import type { ClientInformation, ClientInformationV2, JavaScriptHighEntropy } from '../api/v2';
+import { CorbadoError } from '../utils';
+
 const clientHandleKey = 'cbo_client_handle';
 
 /**
@@ -17,6 +19,7 @@ const clientHandleKey = 'cbo_client_handle';
  */
 export class WebAuthnService {
   #abortController: AbortController | undefined;
+  #visitorId: string | undefined;
 
   async createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     try {
@@ -41,21 +44,12 @@ export class WebAuthnService {
   async login(
     serializedChallenge: string,
     conditional: boolean,
-    skipIfOnlyHybrid = false,
     onConditionalLoginStart?: (ac: AbortController) => void,
   ): Promise<Result<string, CorbadoError>> {
     try {
       const abortController = this.abortOngoingOperation();
 
       const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
-
-      if (skipIfOnlyHybrid) {
-        const hasOnlyHybridPasskeys = checkIfOnlyHybridPasskeysAvailable(challenge);
-
-        if (hasOnlyHybridPasskeys) {
-          return Err(CorbadoError.onlyHybridPasskeyAvailable());
-        }
-      }
 
       challenge.signal = abortController.signal;
       this.#abortController = abortController;
@@ -76,6 +70,37 @@ export class WebAuthnService {
         return Err(CorbadoError.fromUnknownFrontendError(e));
       }
     }
+  }
+
+  async getClientInformation(): Promise<ClientInformation | ClientInformationV2> {
+    const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
+    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
+    const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
+    const maybeClientHandle = WebAuthnService.getClientHandle();
+
+    // iOS & macOS Only so far
+    const clientCapabilities = await WebAuthnService.getClientCapabilities();
+
+    let currentVisitorId = this.#visitorId;
+
+    if (!currentVisitorId) {
+      const fpJS = await FingerprintJS.load();
+      const { visitorId } = await fpJS.get();
+
+      currentVisitorId = visitorId;
+      this.#visitorId = visitorId;
+    }
+
+    return {
+      bluetoothAvailable: bluetoothAvailable,
+      isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+      isConditionalMediationAvailable: canUseConditionalUI,
+      clientEnvHandle: maybeClientHandle ?? undefined,
+      visitorId: currentVisitorId,
+      javaScriptHighEntropy: javaScriptHighEntropy,
+      clientCapabilities,
+    };
   }
 
   static async doesBrowserSupportPasskeys(): Promise<boolean> {

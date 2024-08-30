@@ -51,17 +51,20 @@ export class CorbadoError extends Error {
     return new CorbadoError(false, true);
   }
 
-  // We need to ignore the errors that are thrown when the user logs out or refreshes the token when the refresh token is expired
-  static #ignoreError(error: AxiosError): boolean {
-    if (!error.config || !error.config.url) {
+  // We need to ignore the errors log that are thrown when the user logs out or refreshes the token when the refresh token is expired
+  static #ignoreErrorLog(error: AxiosError): boolean {
+    if (!error.config || !error.config.url || !error.response) {
       return false;
     }
 
-    return error.code === '401' && (error.config?.url?.includes('logout') || error.config?.url?.includes('refresh'));
+    return (
+      error.response?.status === 401 &&
+      (error.config?.url?.includes('logout') || error.config?.url?.includes('refresh'))
+    );
   }
 
   static fromAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
-    if (!this.#ignoreError(error)) {
+    if (!this.#ignoreErrorLog(error)) {
       log.error('axios error', error);
     }
 

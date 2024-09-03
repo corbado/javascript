@@ -74,7 +74,7 @@ export class WebAuthnService {
 
   async getClientInformation(): Promise<ClientInformation | ClientInformationV2> {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
-    const canUsePasskeys = await WebAuthnService.doesBrowserSupportPasskeys();
+    const isUserVerifyingPlatformAuthenticatorAvailable = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
     const maybeClientHandle = WebAuthnService.getClientHandle();
@@ -94,7 +94,7 @@ export class WebAuthnService {
 
     return {
       bluetoothAvailable: bluetoothAvailable,
-      isUserVerifyingPlatformAuthenticatorAvailable: canUsePasskeys,
+      isUserVerifyingPlatformAuthenticatorAvailable: isUserVerifyingPlatformAuthenticatorAvailable,
       isConditionalMediationAvailable: canUseConditionalUI,
       clientEnvHandle: maybeClientHandle ?? undefined,
       visitorId: currentVisitorId,
@@ -103,25 +103,35 @@ export class WebAuthnService {
     };
   }
 
-  static async doesBrowserSupportPasskeys(): Promise<boolean> {
-    return (
-      window.PublicKeyCredential && (await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())
-    );
+  static async doesBrowserSupportPasskeys(): Promise<boolean | undefined> {
+    if (!window.PublicKeyCredential) {
+      return undefined;
+    }
+
+    try {
+      return await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    } catch (e) {
+      log.debug('Error checking passkey availability', e);
+      return;
+    }
   }
 
-  static async doesBrowserSupportConditionalUI(): Promise<boolean> {
-    return window.PublicKeyCredential && (await window.PublicKeyCredential.isConditionalMediationAvailable());
+  static async doesBrowserSupportConditionalUI(): Promise<boolean | undefined> {
+    if (!window.PublicKeyCredential) {
+      return undefined;
+    }
+
+    try {
+      return await window.PublicKeyCredential.isConditionalMediationAvailable();
+    } catch (e) {
+      log.debug('Error checking conditional UI availability', e);
+      return;
+    }
   }
 
   static async canUseBluetooth(): Promise<boolean | undefined> {
     try {
-      const availability = await navigator.bluetooth.getAvailability();
-
-      if (availability) {
-        return true;
-      }
-
-      return false;
+      return await navigator.bluetooth.getAvailability();
     } catch (e) {
       // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
       log.debug('Error checking bluetooth availability', e);

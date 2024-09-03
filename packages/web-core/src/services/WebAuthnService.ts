@@ -181,7 +181,7 @@ export class WebAuthnService {
   }
 
   static async getClientCapabilities(): Promise<ClientCapabilities | undefined> {
-    if (!PublicKeyCredential) {
+    if (!window.PublicKeyCredential) {
       log.debug('PublicKeyCredential is not supported on this browser');
       return;
     }
@@ -189,7 +189,7 @@ export class WebAuthnService {
     try {
       // We will ignore the type check as getClientCapabilities does not exist in the stable authn version and types
       // @ts-ignore
-      return await PublicKeyCredential.getClientCapabilities();
+      return await window.PublicKeyCredential.getClientCapabilities();
     } catch (e) {
       log.debug('Error using getClientCapabilities: ', e);
       return;

@@ -521,8 +521,13 @@ export class ProcessService {
     return await this.finishPasskeyLogin(signedChallenge.val);
   }
 
-  isConditionalUISupported(): Promise<boolean> {
-    return WebAuthnService.doesBrowserSupportConditionalUI();
+  async isConditionalUISupported(): Promise<boolean> {
+    const r = await WebAuthnService.doesBrowserSupportConditionalUI();
+    if (!r) {
+      return false;
+    }
+
+    return true;
   }
 
   async loginWithPasskeyChallenge(

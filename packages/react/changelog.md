@@ -1,3 +1,11 @@
+## 2.13.0
+
+### Minor changes
+
+- Include timezone information in request headers (this enables the backend to use the correct timezone for the user, e.g. in emails).
+- Added new features of passkey intelligence to Corbado Complete (new screens for hybrid login and improved error handling).
+- More checks for the availability of Web APIs.
+
 ## 2.12.1
 
 ### Minor changes

@@ -145,16 +145,17 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
   };
 
   const handleSubmit = useCallback(async () => {
-    setIdentifierBasedLoading(true);
-
     const identifier = emailFieldRef.current?.value ?? '';
+    if (identifier === '') {
+      setError('Please enter your email address.');
+      return;
+    }
 
+    setIdentifierBasedLoading(true);
     setCurrentIdentifier(identifier);
-
     config.onLoginStart?.();
 
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
-
     if (resStart.err) {
       setIdentifierBasedLoading(false);
       if (resStart.val instanceof ConnectRequestTimedOut) {

@@ -168,7 +168,6 @@ export class ProcessService {
     out.interceptors.response.use(
       response => response,
       (error: AxiosError) => {
-        console.log('axios error', error);
         const e = CorbadoError.fromAxiosError(error);
         return Promise.reject(e);
       },

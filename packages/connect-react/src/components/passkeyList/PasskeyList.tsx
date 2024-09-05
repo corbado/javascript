@@ -14,7 +14,7 @@ interface PasskeyListProps {
   passkeys: Passkey[];
   onDeleteClick: (passkey: Passkey) => void;
   isLoading: boolean;
-  onAppendClick: () => void;
+  onAppendClick?: () => void;
   appendLoading: boolean;
   deleteLoading: boolean;
   hardErrorMessage: string | null;
@@ -69,16 +69,18 @@ const PasskeyList: FC<PasskeyListProps> = ({
         )}
       </div>
 
-      <div className='cb-passkey-list-append-cta'>
-        <Button
-          className='cb-passkey-list-append-button'
-          onClick={() => (isLoading ? null : void onAppendClick())}
-          isLoading={appendLoading}
-        >
-          <p>Add a passkey</p>
-          <PlusIcon className='cb-passkey-list-append-icon' />
-        </Button>
-      </div>
+      {onAppendClick ? (
+        <div className='cb-passkey-list-append-cta'>
+          <Button
+            className='cb-passkey-list-append-button'
+            onClick={() => (isLoading ? null : onAppendClick())}
+            isLoading={appendLoading}
+          >
+            <p>Add a passkey</p>
+            <PlusIcon className='cb-passkey-list-append-icon' />
+          </Button>
+        </div>
+      ) : null}
     </>
   );
 };

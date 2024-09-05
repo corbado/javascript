@@ -30,14 +30,14 @@ export class ConnectProcess {
   }
 
   isValid(): boolean {
-    return this.expiresAt > Date.now() / 1000;
+    return this.expiresAt > Date.now() / 1000 + 10;
   }
 
-  copyWithLoginData(loginData: ConnectLoginInitData): ConnectProcess {
+  copyWithLoginData(loginData: ConnectLoginInitData, expiresAt: number): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      this.expiresAt,
+      expiresAt,
       this.frontendApiUrl,
       loginData,
       this.appendData,
@@ -45,11 +45,11 @@ export class ConnectProcess {
     );
   }
 
-  copyWithAppendData(appendData: ConnectAppendInitData): ConnectProcess {
+  copyWithAppendData(appendData: ConnectAppendInitData, expiresAt: number): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      this.expiresAt,
+      expiresAt,
       this.frontendApiUrl,
       this.loginData,
       appendData,
@@ -57,11 +57,11 @@ export class ConnectProcess {
     );
   }
 
-  copyWithManageData(manageData: ConnectManageInitData): ConnectProcess {
+  copyWithManageData(manageData: ConnectManageInitData, expiresAt: number): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      this.expiresAt,
+      expiresAt,
       this.frontendApiUrl,
       this.loginData,
       this.appendData,

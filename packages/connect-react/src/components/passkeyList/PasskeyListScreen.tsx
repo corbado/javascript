@@ -12,7 +12,6 @@ import useLoading from '../../hooks/useLoading';
 import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
-import { ManageScreenType } from '../../types/screenTypes';
 import { ConnectTokenType } from '../../types/tokens';
 import aaguidMappings from '../../utils/aaguidMappings';
 import { CrossIcon } from '../shared/icons/CrossIcon';
@@ -25,7 +24,7 @@ const REQUEST_TIMEOUT_ERROR_MESSAGE =
   'Something went wrong. Please check if you can access the internet and try again later';
 
 const PasskeyListScreen = () => {
-  const { navigateToScreen, config } = useManageProcess();
+  const { config } = useManageProcess();
   const { setPasskeyListToken, passkeyListToken } = useManageProcess();
   const { show, hide } = useModal();
   const { getConnectService } = useShared();
@@ -35,6 +34,7 @@ const PasskeyListScreen = () => {
   const [deletePending, setDeletePending] = useState<boolean>(false);
   const [appendPending, setAppendPending] = useState<boolean>(false);
   const [hardErrorMessage, setHardErrorMessage] = useState<string | null>(null);
+  const [appendAllowed, setAppendAllowed] = useState<boolean>(false);
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
@@ -56,12 +56,8 @@ const PasskeyListScreen = () => {
         return;
       }
 
-      if (!res.val.manageAllowed) {
-        finishLoading();
-        log.debug('manage passkeys is not allowed');
-        navigateToScreen(ManageScreenType.Invisible);
-        return;
-      }
+      // we use the manageAllowed flag to determine if appending a passkey is allowed
+      setAppendAllowed(res.val.manageAllowed);
 
       await getPasskeyList(config);
       finishLoading();
@@ -329,7 +325,7 @@ const PasskeyListScreen = () => {
         show(DeleteModalContent(passkey));
       }}
       isLoading={loading}
-      onAppendClick={() => void onAppendClick()}
+      onAppendClick={appendAllowed ? () => void onAppendClick() : undefined}
       appendLoading={appendPending}
       deleteLoading={deletePending}
       hardErrorMessage={hardErrorMessage}

@@ -61,10 +61,6 @@ export class ConnectService {
     }
   }
 
-  clearProcess() {
-    return ConnectProcess.clearStorage(this.#projectId);
-  }
-
   #createAxiosInstanceV2(processId: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
@@ -127,18 +123,17 @@ export class ConnectService {
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcess?.isValid()) {
+    if (existingProcess) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
-    }
 
-    // process has already been initialized
-    if (existingProcess?.loginData) {
-      return Ok(existingProcess.loginData);
+      // process has already been initialized
+      if (existingProcess?.loginData) {
+        return Ok(existingProcess.loginData);
+      }
     }
 
     const { req, flags } = await this.#getInitReq();
-
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
     );
@@ -179,6 +174,23 @@ export class ConnectService {
     return Ok(loginData);
   }
 
+  async #getExistingProcess(generator: () => Promise<Result<unknown, CorbadoError>>): Promise<ConnectProcess | null> {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcess) {
+      log.debug('process found', existingProcess.expiresAt);
+      return existingProcess;
+    }
+
+    log.debug('process not found, trying to reinitialize');
+    const generatorResult = await generator();
+    const newProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (generatorResult.err || !newProcess) {
+      return null;
+    }
+
+    return newProcess;
+  }
+
   async login(
     identifier: string,
     source: PasskeyLoginSource,
@@ -194,7 +206,7 @@ export class ConnectService {
     source: PasskeyLoginSource,
     loadedMs: number,
   ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -241,7 +253,7 @@ export class ConnectService {
     postWebAuthn: () => void,
     onLoginEnd: () => void,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -266,18 +278,17 @@ export class ConnectService {
 
   async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcess?.isValid()) {
+    if (existingProcess) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
-    }
 
-    // process has already been initialized
-    if (existingProcess?.appendData) {
-      return Ok(existingProcess.appendData);
+      // process has already been initialized
+      if (existingProcess?.appendData) {
+        return Ok(existingProcess.appendData);
+      }
     }
 
     const { req, flags } = await this.#getInitReq();
-
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
     );
@@ -300,7 +311,7 @@ export class ConnectService {
 
     // update local state with process
     if (existingProcess) {
-      const p = existingProcess.copyWithAppendData(appendData);
+      const p = existingProcess.copyWithAppendData(appendData, res.val.expiresAt);
       p.persistToStorage();
     } else {
       const newProcess = new ConnectProcess(
@@ -323,7 +334,7 @@ export class ConnectService {
   }
 
   async append(appendTokenValue: string, loadedMs: number): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -349,7 +360,7 @@ export class ConnectService {
     abortController?: AbortController,
     initiatedByUser?: boolean,
   ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -363,7 +374,7 @@ export class ConnectService {
   }
 
   async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -392,9 +403,9 @@ export class ConnectService {
     assertionResponse: string,
     isConditionalUI: boolean,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
-      throw CorbadoError.missingInit();
+      return Err(CorbadoError.missingInit());
     }
 
     const res = await this.wrapWithErr(() =>
@@ -411,18 +422,17 @@ export class ConnectService {
 
   async manageInit(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcess?.isValid()) {
+    if (existingProcess) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
-    }
 
-    // process has already been initialized
-    if (existingProcess?.manageData) {
-      return Ok(existingProcess.manageData);
+      // process has already been initialized
+      if (existingProcess?.manageData) {
+        return Ok(existingProcess.manageData);
+      }
     }
 
     const { req, flags } = await this.#getInitReq();
-
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectManageInit(req, { signal: abortController.signal }),
     );
@@ -445,7 +455,7 @@ export class ConnectService {
 
     // update local state with process
     if (existingProcess) {
-      const p = existingProcess.copyWithManageData(manageData);
+      const p = existingProcess.copyWithManageData(manageData, res.val.expiresAt);
       p.persistToStorage();
     } else {
       const newProcess = new ConnectProcess(
@@ -468,8 +478,7 @@ export class ConnectService {
   }
 
   async manageList(passkeyListToken: string): Promise<Result<ConnectManageListRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-
+    const existingProcess = await this.#getExistingProcess(() => this.manageInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -485,8 +494,7 @@ export class ConnectService {
     passkeyDeleteToken: string,
     credentialID: string,
   ): Promise<Result<ConnectManageDeleteRsp, CorbadoError>> {
-    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-
+    const existingProcess = await this.#getExistingProcess(() => this.manageInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
@@ -534,7 +542,6 @@ export class ConnectService {
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
   #recordEvent(eventType: PasskeyEventType) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-
     if (!existingProcess) {
       log.warn('No process found to record event.');
 

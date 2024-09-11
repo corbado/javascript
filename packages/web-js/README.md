@@ -55,12 +55,12 @@ Include the script and styles directly in your HTML:
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@corbado/web-js@latest/dist/bundle/index.css"
+  href="https://unpkg.com/@corbado/web-js@2/dist/bundle/index.css"
 />
-<script src="https://unpkg.com/@corbado/web-js@latest/dist/bundle/index.js"></script>
+<script src="https://unpkg.com/@corbado/web-js@2/dist/bundle/index.js"></script>
 ```
 
-Replace `@latest` with the specific version number you intend to use.
+`@2` loads the most recent version of major version 2. Replace `@2` with a specific version number if you want to pin it. Use `@latest` if you always want to have the most recent version **including** majors (not recommended for production).
 
 ---
 

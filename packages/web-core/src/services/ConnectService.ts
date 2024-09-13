@@ -413,8 +413,7 @@ export class ConnectService {
     );
 
     if (isConditionalUI) {
-      existingProcess.resetLoginData();
-      existingProcess.persistToStorage();
+      existingProcess.resetLoginData().persistToStorage();
     }
 
     if (res.ok) {

@@ -45,7 +45,7 @@ export class ConnectService {
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
-    this.#timeout = 3 * 1000;
+    this.#timeout = 5 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
@@ -409,8 +409,13 @@ export class ConnectService {
     }
 
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 5 * 1000 }),
+      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 8 * 1000 }),
     );
+
+    if (isConditionalUI) {
+      existingProcess.resetLoginData();
+      existingProcess.persistToStorage();
+    }
 
     if (res.ok) {
       const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);

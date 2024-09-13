@@ -33,6 +33,18 @@ export class ConnectProcess {
     return this.expiresAt > Date.now() / 1000 + 10;
   }
 
+  resetLoginData(): ConnectProcess {
+    return new ConnectProcess(
+      this.id,
+      this.projectId,
+      this.expiresAt,
+      this.frontendApiUrl,
+      null,
+      this.appendData,
+      this.manageData,
+    );
+  }
+
   copyWithLoginData(loginData: ConnectLoginInitData, expiresAt: number): ConnectProcess {
     return new ConnectProcess(
       this.id,

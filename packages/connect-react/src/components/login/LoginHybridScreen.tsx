@@ -1,31 +1,20 @@
-import type { CorbadoError } from '@corbado/web-core';
-import { ConnectRequestTimedOut, PasskeyChallengeCancelledError } from '@corbado/web-core';
-import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
+import { PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
-import type { Result } from 'ts-results';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { HybridIcon } from '../shared/icons/HybridIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
+import { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 
-const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>) => {
+const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
   const [loading, setLoading] = useState(false);
   const { getConnectService } = useShared();
-
-  const handleFallback = useCallback(() => {
-    navigateToScreen(LoginScreenType.Invisible);
-    config.onFallback(currentIdentifier);
-  }, [navigateToScreen, config, currentIdentifier]);
-
-  const handleExplicitFallback = useCallback(() => {
-    void getConnectService().recordEventLoginExplicitAbort();
-    handleFallback();
-  }, [getConnectService, handleFallback]);
 
   const handleSubmit = useCallback(async () => {
     if (loading) {
@@ -33,43 +22,52 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
     }
 
     setLoading(true);
-
     const res = await getConnectService().loginContinue(resStart);
-
     if (res.err) {
-      setLoading(false);
-
-      if (res.val instanceof ConnectRequestTimedOut) {
-        handleFallback();
-        return;
-      }
-
-      if (res.val.ignore) {
-        return;
-      }
-
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasskeyChallengeAborted');
-        navigateToScreen(LoginScreenType.ErrorSoft);
-        void getConnectService().recordEventLoginError();
-        return;
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      log.debug('fallback: error during password login start');
-      config.onError?.('PasskeyLoginFailure');
-      void getConnectService().recordEventLoginError();
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback(currentIdentifier);
-
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     try {
       await config.onComplete(res.val.session);
     } catch {
-      handleFallback();
+      return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
   }, [getConnectService, config, navigateToScreen, currentIdentifier, loading]);
+
+  const handleSituation = (situationCode: LoginSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
+
+    const identifier = currentIdentifier;
+    const message = getLoginErrorMessage(situationCode);
+
+    switch (situationCode) {
+      case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+        void getConnectService().recordEventLoginErrorUntyped();
+
+        setLoading(false);
+        break;
+      case LoginSituationCode.ClientPasskeyOperationCancelled:
+        navigateToScreen(LoginScreenType.ErrorSoft);
+        config.onError?.(situationCode.toString());
+        void getConnectService().recordEventLoginError();
+
+        setLoading(false);
+        break;
+      case LoginSituationCode.ExplicitFallbackByUser:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+
+        void getConnectService().recordEventLoginExplicitAbort();
+        break;
+    }
+  };
 
   return (
     <div className='cb-login-hybrid-container'>
@@ -89,7 +87,7 @@ const LoginHybridScreen = (resStart: Result<ConnectLoginStartRsp, CorbadoError>)
           Use mobile device
         </PrimaryButton>
         <LinkButton
-          onClick={handleExplicitFallback}
+          onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
           className='cb-login-hybrid-fallback'
         >
           Continue with email

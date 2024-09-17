@@ -728,6 +728,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectLoginFinishRsp'
+        '404':
+          description: No credential was found for the identifier
 
   /v2/connect/append/init:
     post:
@@ -1661,7 +1663,7 @@ components:
 
     passkeyEventType:
       type: string
-      enum: [ login-explicit-abort, login-error, login-one-tap-switch, user-append-after-cross-platform-blacklisted, user-append-after-login-error-blacklisted, append-credential-exists, append-explicit-abort, append-error ]
+      enum: [ login-explicit-abort, login-error, login-error-untyped, login-one-tap-switch, user-append-after-cross-platform-blacklisted, user-append-after-login-error-blacklisted, append-credential-exists, append-explicit-abort, append-error ]
 
     blockType:
       type: string

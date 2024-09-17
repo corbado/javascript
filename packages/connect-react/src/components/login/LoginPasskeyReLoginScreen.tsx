@@ -1,10 +1,11 @@
-import { ConnectRequestTimedOut, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { LoginSituationCode, getLoginErrorMessage } from '../../types/situations';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
 
@@ -12,11 +13,6 @@ export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
-
-  const handleFallback = useCallback(() => {
-    navigateToScreen(LoginScreenType.Invisible);
-    config.onFallback(currentIdentifier);
-  }, [navigateToScreen, config, currentIdentifier]);
 
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
@@ -28,52 +24,60 @@ export const LoginPasskeyReLoginScreen = () => {
     setCurrentIdentifier(lastLogin.identifierValue);
   }, [getConnectService]);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     setLoading(true);
     config.onLoginStart?.();
+    const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.OneTap, loadedMs);
+    if (resStart.err) {
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+    }
 
-    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.OneTap, loadedMs);
-    if (res.err) {
-      setLoading(false);
-
-      if (res.val instanceof ConnectRequestTimedOut) {
-        handleFallback();
-        return;
+    const resFinish = await getConnectService().loginContinue(resStart.val);
+    if (resFinish.err) {
+      if (resFinish.val instanceof PasskeyChallengeCancelledError) {
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      if (res.val.ignore) {
-        return;
-      }
-
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasskeyChallengeAborted');
-        void getConnectService().recordEventLoginError();
-        navigateToScreen(LoginScreenType.ErrorSoft);
-        return;
-      }
-
-      log.debug('login not allowed');
-      config.onError?.('PasskeyLoginFailure');
-      void getConnectService().recordEventLoginError();
-      beginNewLogin(currentIdentifier);
-
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(resFinish.val.session);
     } catch {
-      handleFallback();
+      return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
-  }, [getConnectService, config, currentIdentifier, loadedMs]);
+  };
 
-  const beginNewLogin = useCallback(
-    (identifier: string) => {
-      getConnectService().clearLastLogin();
-      navigateToScreen(LoginScreenType.Init, { prefilledIdentifier: identifier });
-    },
-    [navigateToScreen, getConnectService],
-  );
+  const beginNewLogin = (identifier: string) => {
+    getConnectService().clearLastLogin();
+    navigateToScreen(LoginScreenType.Init, { prefilledIdentifier: identifier });
+  };
+
+  const handleSituation = (situationCode: LoginSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
+
+    const identifier = currentIdentifier;
+    const message = getLoginErrorMessage(situationCode);
+
+    switch (situationCode) {
+      case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+        void getConnectService().recordEventLoginErrorUntyped();
+
+        setLoading(false);
+        break;
+      case LoginSituationCode.ClientPasskeyOperationCancelled:
+        navigateToScreen(LoginScreenType.ErrorSoft);
+        config.onError?.(situationCode.toString());
+        void getConnectService().recordEventLoginError();
+
+        setLoading(false);
+        break;
+    }
+  };
 
   return (
     <>

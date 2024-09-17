@@ -1834,6 +1834,7 @@ export interface PasskeyAppendFinishReq {
 export const PasskeyEventType = {
     LoginExplicitAbort: 'login-explicit-abort',
     LoginError: 'login-error',
+    LoginErrorUntyped: 'login-error-untyped',
     LoginOneTapSwitch: 'login-one-tap-switch',
     UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
     UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',

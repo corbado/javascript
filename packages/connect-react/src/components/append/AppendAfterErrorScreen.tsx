@@ -1,81 +1,80 @@
 import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
-import React, { useCallback, useState } from 'react';
+import log from 'loglevel';
+import React, { useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
-import Checkbox from '../shared/Checkbox';
+import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
 import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
 const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
-  const { config, navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip } =
+  const { navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip } =
     useAppendProcess();
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
   const { getConnectService } = useShared();
 
-  const onSubmitClick = useCallback(async () => {
+  const onSubmitClick = async () => {
     if (loading) {
       return;
     }
 
     setLoading(true);
-    setError(undefined);
+    setErrorMessage(undefined);
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
-        await handleCredentialExistsError();
-        setLoading(false);
-        return;
+        return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        setError('Passkey operation was cancelled or timed out.');
-        await handleErrorSoft('PasskeyChallengeAborted', res.val);
-        setLoading(false);
-        return;
+        return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      void handleErrorHard('FrontendApiNotReachable', res.val);
-      setLoading(false);
-      return;
-    }
-
-    if (dontShowAgain) {
-      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
-      if (createEventRes?.err) {
-        void handleErrorHard('FrontendApiNotReachable', createEventRes.val);
-      }
+      return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     setLoading(false);
     navigateToScreen(AppendScreenType.Success);
-  }, [getConnectService, config, navigateToScreen, loading, dontShowAgain]);
-
-  const onClickSkip = async () => {
-    if (dontShowAgain) {
-      const createEventRes = await getConnectService().recordEventUserAppendAfterLoginErrorBlacklisted();
-      if (createEventRes?.err) {
-        void handleErrorHard('FrontendApiNotReachable', createEventRes.val);
-      }
-    }
-
-    return handleSkip('onClickSkip', true);
   };
 
-  const toggleDontShowAgain = () => setDontShowAgain(prev => !prev);
+  const handleSituation = (situationCode: AppendSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
+
+    const message = getAppendErrorMessage(situationCode);
+    if (message) {
+      setErrorMessage(message);
+    }
+
+    switch (situationCode) {
+      case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
+      case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
+      case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
+        void handleErrorHard(situationCode);
+        break;
+      case AppendSituationCode.ClientPasskeyOperationCancelled:
+        void handleErrorSoft(situationCode);
+        break;
+      case AppendSituationCode.ClientExcludeCredentialsMatch:
+        void handleCredentialExistsError();
+        break;
+      case AppendSituationCode.ExplicitSkipByUser:
+        void handleSkip(situationCode, true);
+        break;
+    }
+  };
 
   return (
     <div className='cb-append-after-error-container'>
       <div className='cb-h2'>Issues using passkeys?</div>
-      {error ? (
+      {errorMessage ? (
         <Notification
           className='cb-error-notification'
-          message={error}
+          message={errorMessage}
         />
       ) : null}
       <div className='cb-append-after-error-icons'>
@@ -83,11 +82,6 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       </div>
       <div className='cb-p'>We detected you had an issue using your passkey.</div>
       <div className='cb-p'>Try adding another passkey to resolve the problem.</div>
-      <Checkbox
-        label={"Don't show this again"}
-        checked={dontShowAgain}
-        onChange={toggleDontShowAgain}
-      />
       <div className='cb-append-after-error-cta'>
         <PrimaryButton
           isLoading={loading}
@@ -97,7 +91,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
           Add passkey
         </PrimaryButton>
         <LinkButton
-          onClick={() => void onClickSkip()}
+          onClick={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
           className='cb-append-after-error-fallback'
         >
           Skip

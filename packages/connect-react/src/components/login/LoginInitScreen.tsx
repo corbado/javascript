@@ -12,7 +12,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
-import { LoginSituationCode, getLoginErrorMessage } from '../../types/situations';
+import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';

@@ -1,4 +1,5 @@
 import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -9,7 +10,6 @@ import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations
 import { HybridIcon } from '../shared/icons/HybridIcon';
 import { LinkButton } from '../shared/LinkButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 
 const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();

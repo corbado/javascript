@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
-import { LoginSituationCode, getLoginErrorMessage } from '../../types/situations';
+import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { LinkButton } from '../shared/LinkButton';
 import { PasskeyButton } from '../shared/PasskeyButton';
 

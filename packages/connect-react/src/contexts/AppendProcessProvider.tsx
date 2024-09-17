@@ -5,9 +5,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import useShared from '../hooks/useShared';
 import type { AppendScreenType } from '../types/screenTypes';
+import type { AppendSituationCode } from '../types/situations';
 import type { AppendProcessContextProps } from './AppendProcessContext';
 import AppendProcessContext from './AppendProcessContext';
-import { AppendSituationCode } from '../types/situations';
 
 type Props = {
   config: CorbadoConnectAppendConfig;

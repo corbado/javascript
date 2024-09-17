@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { CrossIcon } from './icons/CrossIcon';
-import { SecondaryButton } from './SecondaryButton';
 import { PrimaryButton } from './PrimaryButton';
+import { SecondaryButton } from './SecondaryButton';
 
 type Props = {
   onCloseButton?: () => void;

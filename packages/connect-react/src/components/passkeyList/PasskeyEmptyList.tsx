@@ -1,9 +1,13 @@
 import React from 'react';
 
-const PasskeyEmptyList = () => {
+type Props = {
+  message: string;
+};
+
+const PasskeyEmptyList = ({ message }: Props) => {
   return (
     <div className='cb-passkey-list-empty'>
-      <p>There is currently no passkeys saved for this account.</p>
+      <p>{message}</p>
     </div>
   );
 };

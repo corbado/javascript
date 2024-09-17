@@ -1,11 +1,12 @@
 import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
-import useLoading from '../../hooks/useLoading';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
+import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
+import { StatefulLoader } from '../../utils/statefulLoader';
 import { Button } from '../shared/Button';
 import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
@@ -17,44 +18,75 @@ import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
 import { PrimaryButton } from '../shared/PrimaryButton';
 import AppendBenefitsScreen from './AppendBenetifsScreen';
 
+export enum AppendInitState {
+  SilentLoading,
+  Loading,
+  Loaded,
+  ShowBenefits,
+}
+
 const AppendInitScreen = () => {
   const { config, navigateToScreen, handleErrorHard, handleErrorSoft, handleSkip, handleCredentialExistsError } =
     useAppendProcess();
   const { getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
-  const [error, setError] = useState<string | undefined>(undefined);
-  const { startLoading, loading, finishLoading, isInitialLoadingStarted } = useLoading();
-  const [appendPending, setAppendPending] = useState(false);
-  const [showBenefits, setShowBenefits] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const [appendLoading, setAppendLoading] = useState(false);
+  const [appendInitState, setAppendInitState] = useState(AppendInitState.SilentLoading);
+  const statefulLoader = useRef(
+    new StatefulLoader(
+      () => setAppendInitState(AppendInitState.Loading),
+      () => {
+        setAppendInitState(AppendInitState.Loaded);
+      },
+      () => {
+        setAppendInitState(AppendInitState.Loaded);
+      },
+    ),
+  );
+
+  const simulateError = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const maybeError = urlParams.get('cboSimulate');
+    if (!maybeError) {
+      return false;
+    }
+
+    // parse string to AppendSituationCode
+    const typed = AppendSituationCode[maybeError as keyof typeof AppendSituationCode];
+    void handleSituation(typed);
+
+    return true;
+  };
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
+      if (simulateError()) {
+        return;
+      }
+
       // get the time when the component is loaded (unix milliseconds)
       const loadedMs = Date.now();
 
-      startLoading();
+      statefulLoader.current.start();
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
         if (res.val.ignore) {
           return;
         }
 
-        void handleErrorHard('FrontendApiNotReachable', res.val);
-        return;
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePreAuthenticator);
       }
 
       if (!res.val.appendAllowed) {
-        void handleSkip('partial rollout');
-        return;
+        return handleSituation(AppendSituationCode.DeniedByPartialRollout);
       }
 
       let appendToken: string;
-
       try {
         appendToken = await config.appendTokenProvider();
       } catch {
-        void handleErrorHard('ConnectTokenProviderError');
-        return;
+        return handleSituation(AppendSituationCode.CtApiNotAvailablePreAuthenticator);
       }
 
       const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, ac);
@@ -63,13 +95,11 @@ const AppendInitScreen = () => {
           return;
         }
 
-        void handleErrorHard('FrontendApiNotReachable', startAppendRes.val);
-        return;
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
       }
 
       if (startAppendRes.val.attestationOptions === '') {
-        void handleSkip('passkey intelligence');
-        return;
+        return handleSituation(AppendSituationCode.DeniedByPasskeyIntel);
       }
 
       if (startAppendRes.val.variant === 'after-hybrid') {
@@ -85,7 +115,7 @@ const AppendInitScreen = () => {
       }
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
-      finishLoading();
+      statefulLoader.current.finish();
     };
 
     log.debug('init AppendInitScreen');
@@ -101,104 +131,128 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    setAppendPending(true);
-    setError(undefined);
+    setAppendLoading(true);
+    setErrorMessage(undefined);
 
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
       if (res.val instanceof ExcludeCredentialsMatchError) {
-        await handleCredentialExistsError();
-        return;
+        return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
       }
 
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        setError('Passkey operation was cancelled or timed out.');
-        void handleErrorSoft('PasskeyChallengeAborted', res.val);
-        setAppendPending(false);
-        return;
+        return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      void handleErrorHard('FrontendApiNotReachable', res.val);
-      return;
+      return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
-    setAppendPending(false);
+    setAppendLoading(false);
     navigateToScreen(AppendScreenType.Success);
   }, [attestationOptions, config, getConnectService]);
 
-  // when passkey based login is not allowed, our component just returns an empty div
+  const handleSituation = async (situationCode: AppendSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
 
-  if (showBenefits) {
-    return <AppendBenefitsScreen onClick={() => setShowBenefits(false)} />;
-  }
+    const message = getAppendErrorMessage(situationCode);
+    if (message) {
+      setErrorMessage(message);
+    }
 
-  if (!isInitialLoadingStarted) {
-    return <></>;
-  }
+    switch (situationCode) {
+      case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
+      case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
+      case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
+        void handleErrorHard(situationCode);
 
-  if (loading) {
-    return (
-      <div className='cb-passkey-list-loader-container'>
-        <LoadingSpinner className='cb-passkey-list-loader' />
-      </div>
-    );
-  }
+        statefulLoader.current.finishWithError();
+        break;
+      case AppendSituationCode.ClientPasskeyOperationCancelled:
+        void handleErrorSoft(situationCode);
+        setAppendLoading(false);
+        break;
+      case AppendSituationCode.ClientExcludeCredentialsMatch:
+        void handleCredentialExistsError();
+        setAppendLoading(false);
+        break;
+      case AppendSituationCode.DeniedByPartialRollout:
+      case AppendSituationCode.DeniedByPasskeyIntel:
+        await handleSkip(situationCode, false);
+        break;
+      case AppendSituationCode.ExplicitSkipByUser:
+        await handleSkip(situationCode, true);
+        break;
+    }
+  };
 
-  return (
-    <>
-      <div className='cb-append-header'>
-        <h2 className='cb-h2'>Activate a passkey</h2>
-        <div className='cb-append-skip-container'>
-          <LinkButton
-            className='cb-append-skip'
-            onClick={() => void handleSkip('user skipped passkey append', true)}
-          >
-            Skip
-          </LinkButton>
+  switch (appendInitState) {
+    case AppendInitState.SilentLoading:
+      return <></>;
+    case AppendInitState.Loading:
+      return (
+        <div className='cb-passkey-list-loader-container'>
+          <LoadingSpinner className='cb-passkey-list-loader' />
         </div>
-      </div>
-      <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
-      {error ? (
-        <Notification
-          className='cb-error-notification'
-          message={error}
-        />
-      ) : null}
-      <div className='cb-append-info-list'>
-        <PasskeyInfoListItem
-          title='No more forgotten passwords'
-          description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
-          icon={<FingerprintIcon platform='default' />}
-        />
-        <PasskeyInfoListItem
-          title='Next-generation security'
-          description='Forget the fear of stolen passwords'
-          icon={<SuccessIcon />}
-        />
-        <PasskeyInfoListItem
-          title='Syncs across your devices'
-          description='Faster sign-in from your password manager'
-          icon={<PasskeyIcon />}
-        />
-      </div>
-      <div className='cb-connect-append-cta'>
-        <Button
-          onClick={() => setShowBenefits(true)}
-          className='cb-outline-button'
-        >
-          Learn more
-        </Button>
-        <PrimaryButton
-          isLoading={appendPending}
-          type='submit'
-          onClick={() => void handleSubmit()}
-          className='cb-append-activate-button'
-        >
-          Activate passkey
-        </PrimaryButton>
-      </div>
-    </>
-  );
+      );
+    case AppendInitState.ShowBenefits:
+      return <AppendBenefitsScreen onClick={() => setAppendInitState(AppendInitState.Loaded)} />;
+    case AppendInitState.Loaded:
+      return (
+        <>
+          <div className='cb-append-header'>
+            <h2 className='cb-h2'>Activate a passkey</h2>
+            <div className='cb-append-skip-container'>
+              <LinkButton
+                className='cb-append-skip'
+                onClick={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
+              >
+                Skip
+              </LinkButton>
+            </div>
+          </div>
+          <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
+          {errorMessage ? (
+            <Notification
+              className='cb-error-notification'
+              message={errorMessage}
+            />
+          ) : null}
+          <div className='cb-append-info-list'>
+            <PasskeyInfoListItem
+              title='No more forgotten passwords'
+              description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
+              icon={<FingerprintIcon platform='default' />}
+            />
+            <PasskeyInfoListItem
+              title='Next-generation security'
+              description='Forget the fear of stolen passwords'
+              icon={<SuccessIcon />}
+            />
+            <PasskeyInfoListItem
+              title='Syncs across your devices'
+              description='Faster sign-in from your password manager'
+              icon={<PasskeyIcon />}
+            />
+          </div>
+          <div className='cb-connect-append-cta'>
+            <Button
+              onClick={() => setAppendInitState(AppendInitState.ShowBenefits)}
+              className='cb-outline-button'
+            >
+              Learn more
+            </Button>
+            <PrimaryButton
+              isLoading={appendLoading}
+              type='submit'
+              onClick={() => void handleSubmit()}
+              className='cb-append-activate-button'
+            >
+              Activate passkey
+            </PrimaryButton>
+          </div>
+        </>
+      );
+  }
 };
 
 export default AppendInitScreen;

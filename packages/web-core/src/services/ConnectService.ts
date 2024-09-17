@@ -83,8 +83,8 @@ export class ConnectService {
     out.interceptors.response.use(
       response => response,
       (error: AxiosError) => {
-        log.error('axios error', error);
         const e = CorbadoError.fromConnectAxiosError(error);
+        log.debug('axios error', error, e);
         return Promise.reject(e);
       },
     );
@@ -191,16 +191,6 @@ export class ConnectService {
     return newProcess;
   }
 
-  async login(
-    identifier: string,
-    source: PasskeyLoginSource,
-    loadedMs: number,
-  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const resStart = await this.loginStart(identifier, source, loadedMs);
-
-    return this.loginContinue(resStart);
-  }
-
   async loginStart(
     identifier: string,
     source: PasskeyLoginSource,
@@ -231,15 +221,8 @@ export class ConnectService {
     return res;
   }
 
-  async loginContinue(
-    resStart: Result<ConnectLoginStartRsp, CorbadoError>,
-  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    if (resStart.err) {
-      return resStart;
-    }
-
-    const res = await this.#webAuthnService.login(resStart.val.assertionOptions, false);
-
+  async loginContinue(start: ConnectLoginStartRsp): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+    const res = await this.#webAuthnService.login(start.assertionOptions, false);
     if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);
       return res;
@@ -521,6 +504,10 @@ export class ConnectService {
 
   recordEventLoginOneTapSwitch() {
     return this.#recordEvent(PasskeyEventType.LoginOneTapSwitch);
+  }
+
+  recordEventLoginErrorUntyped() {
+    return this.#recordEvent(PasskeyEventType.LoginErrorUntyped);
   }
 
   recordEventUserAppendAfterCrossPlatformBlacklisted() {

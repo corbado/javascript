@@ -10,26 +10,66 @@ import { Notification } from '../shared/Notification';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 import PasskeyEmptyList from './PasskeyEmptyList';
 
+export enum PasskeyListState {
+  SilentLoading,
+  Loading,
+  Loaded,
+  LoadingFailed,
+}
+
 interface PasskeyListProps {
   passkeys: Passkey[];
   onDeleteClick: (passkey: Passkey) => void;
-  isLoading: boolean;
+  state: PasskeyListState;
   onAppendClick?: () => void;
   appendLoading: boolean;
-  deleteLoading: boolean;
   hardErrorMessage: string | null;
 }
 
 const PasskeyList: FC<PasskeyListProps> = ({
   passkeys,
-  isLoading,
+  state,
   onDeleteClick,
   onAppendClick,
   appendLoading,
-  deleteLoading,
   hardErrorMessage,
 }) => {
-  const [selectedPasskey, setSelectedPasskey] = React.useState<Passkey | null>(null);
+  const drawContent = () => {
+    switch (state) {
+      case PasskeyListState.SilentLoading:
+        return <></>;
+      case PasskeyListState.Loading:
+        return (
+          <div className='cb-passkey-list-loader-container'>
+            <LoadingSpinner className='cb-passkey-list-loader' />
+          </div>
+        );
+      case PasskeyListState.LoadingFailed:
+        return <PasskeyEmptyList message='Passkey list is unavailable. Please try again later.' />;
+      case PasskeyListState.Loaded:
+        if (passkeys.length === 0) {
+          return <PasskeyEmptyList message='There is currently no passkey saved for this account' />;
+        }
+
+        return passkeys.map(passkey => (
+          <PasskeyListItem
+            onDeleteClick={() => {
+              onDeleteClick(passkey);
+            }}
+            name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
+            icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
+            createdAt={passkey.created}
+            lastUsed={passkey.lastUsed}
+            browser={passkey.sourceBrowser}
+            os={passkey.sourceOS}
+            isThisDevice={false}
+            isSynced={passkey.backupState}
+            isHybrid={passkey.transport.includes('hybrid')}
+            key={passkey.id}
+          />
+        ));
+    }
+  };
 
   return (
     <>
@@ -39,41 +79,12 @@ const PasskeyList: FC<PasskeyListProps> = ({
           className='cb-p cb-error-notification'
         />
       ) : null}
-      <div className='cb-passkey-list-container'>
-        {isLoading ? (
-          <div className='cb-passkey-list-loader-container'>
-            <LoadingSpinner className='cb-passkey-list-loader' />
-          </div>
-        ) : passkeys.length ? (
-          passkeys.map(passkey => (
-            <PasskeyListItem
-              onDeleteClick={() => {
-                setSelectedPasskey(passkey);
-                onDeleteClick(passkey);
-              }}
-              name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
-              icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
-              createdAt={passkey.created}
-              lastUsed={passkey.lastUsed}
-              browser={passkey.sourceBrowser}
-              os={passkey.sourceOS}
-              isThisDevice={false}
-              isSynced={passkey.backupState}
-              isHybrid={passkey.transport.includes('hybrid')}
-              key={passkey.id}
-              isDeleteLoading={deleteLoading && selectedPasskey === passkey}
-            />
-          ))
-        ) : (
-          <PasskeyEmptyList />
-        )}
-      </div>
-
+      <div className='cb-passkey-list-container'>{drawContent()}</div>
       {onAppendClick ? (
         <div className='cb-passkey-list-append-cta'>
           <Button
             className='cb-passkey-list-append-button'
-            onClick={() => (isLoading ? null : onAppendClick())}
+            onClick={() => onAppendClick()}
             isLoading={appendLoading}
           >
             <p>Add a passkey</p>

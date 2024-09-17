@@ -1,24 +1,30 @@
 import {
-  ConnectRequestTimedOut,
+  ConnectConditionalUIPasskeyDeleted,
   ConnectUserNotFound,
   PasskeyChallengeCancelledError,
   PasskeyLoginSource,
 } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC } from 'react';
-import { useEffect } from 'react';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import useLoading from '../../hooks/useLoading';
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
+import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
+import { StatefulLoader } from '../../utils/statefulLoader';
 import InputField from '../shared/InputField';
 import { LinkButton } from '../shared/LinkButton';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PrimaryButton } from '../shared/PrimaryButton';
+
+export enum LoginInitState {
+  SilentLoading,
+  Loading,
+  Loaded,
+}
 
 interface Props {
   showFallback?: boolean;
@@ -31,56 +37,64 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
   const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
   const [error, setError] = useState('');
-  const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
+  const [loginInitState, setLoginInitState] = useState(LoginInitState.SilentLoading);
   const emailFieldRef = useRef<HTMLInputElement>();
-
-  const handleFallback = useCallback(
-    (identifier: string) => {
-      navigateToScreen(LoginScreenType.Invisible);
-      config.onFallback(identifier);
-    },
-    [navigateToScreen, config],
+  const statefulLoader = useRef(
+    new StatefulLoader(
+      () => setLoginInitState(LoginInitState.Loading),
+      () => {
+        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        setLoginInitState(LoginInitState.Loaded);
+      },
+      () => {
+        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        setLoginInitState(LoginInitState.Loaded);
+      },
+    ),
   );
+
+  const simulateError = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const maybeError = urlParams.get('cboSimulate');
+    if (!maybeError) {
+      return false;
+    }
+
+    // parse string to AppendSituationCode
+    const typed = LoginSituationCode[maybeError as keyof typeof LoginSituationCode];
+    handleSituation(typed);
+
+    return true;
+  };
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      startLoading();
-      log.debug('running init');
+      if (simulateError()) {
+        return;
+      }
 
+      log.debug('running init');
+      statefulLoader.current.start();
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
         if (res.val.ignore) {
           return;
         }
 
-        if (res.val instanceof ConnectRequestTimedOut) {
-          handleFallback(prefilledIdentifier ?? '');
-          return;
-        }
-
-        log.error(res.val);
-        return;
+        statefulLoader.current.finishWithError();
+        return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
       }
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
       const flags = new Flags(res.val.flags);
-
       if (sharedConfig.flags) {
         flags.addFlags(sharedConfig.flags);
       }
-
       setFlags(flags);
 
       if (!res.val.loginAllowed || showFallback) {
-        log.debug('fallback: login not allowed');
-        navigateToScreen(LoginScreenType.Invisible);
-
-        config.onFallback(prefilledIdentifier ?? '');
-        setIsFallbackInitiallyTriggered(true);
-
-        finishLoading();
-        return;
+        return handleSituation(LoginSituationCode.DeniedByPartialRollout);
       }
 
       const lastLogin = getConnectService().getLastLogin();
@@ -92,7 +106,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
         void startConditionalUI(res.val.conditionalUIChallenge);
       }
 
-      finishLoading();
+      statefulLoader.current.finish();
     };
 
     const ac = new AbortController();
@@ -118,29 +132,29 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     );
 
     if (res.err) {
-      if (res.val instanceof ConnectRequestTimedOut) {
-        handleFallback(prefilledIdentifier ?? '');
-        return;
-      }
-
+      // if a user cancel during CUI, she can try again
       if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
-        setCuiBasedLoading(false);
-        return;
+        return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled);
       }
 
-      log.debug('fallback: error during conditional UI');
+      void getConnectService().recordEventLoginErrorUntyped();
+      // if a passkey has been deleted, CUI will fail => fallback with message
+      if (res.val instanceof ConnectConditionalUIPasskeyDeleted) {
+        return handleSituation(LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator);
+      }
 
-      config.onError?.('PasskeyLoginFailure');
-      setError('Your attempt to log in with your Passkey was unsuccessful. Please try again.');
-      setCuiBasedLoading(false);
+      // cuiBasedLoading === true indicates that user has passed the authenticator
+      if (cuiBasedLoading) {
+        return handleSituation(LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator);
+      }
 
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator);
     }
 
     try {
       await config.onComplete(res.val.session);
     } catch {
-      handleFallback(prefilledIdentifier ?? '');
+      return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
   };
 
@@ -157,27 +171,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
     if (resStart.err) {
-      setIdentifierBasedLoading(false);
-      if (resStart.val instanceof ConnectRequestTimedOut) {
-        handleFallback(identifier);
-        return;
-      }
-
-      if (resStart.val.ignore) {
-        return;
-      }
-
       if (resStart.val instanceof ConnectUserNotFound) {
-        setError('There is no account registered with this email.');
-        return;
+        return handleSituation(LoginSituationCode.UserNotFound);
       }
 
-      log.debug('fallback: error during password login start');
-      config.onError?.('PasskeyLoginFailure');
-      void getConnectService().recordEventLoginError();
-      handleFallback(identifier);
-
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
     if (resStart.val.isCDA) {
@@ -185,65 +183,94 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       return;
     }
 
-    const res = await getConnectService().loginContinue(resStart);
-
+    const res = await getConnectService().loginContinue(resStart.val);
     if (res.err) {
       setIdentifierBasedLoading(false);
-
-      if (res.val instanceof ConnectRequestTimedOut) {
-        handleFallback(identifier);
-        return;
-      }
-
-      if (res.val.ignore) {
-        return;
-      }
-
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        config.onError?.('PasskeyChallengeAborted');
-        navigateToScreen(LoginScreenType.ErrorSoft);
-        void getConnectService().recordEventLoginError();
-        return;
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      log.debug('fallback: error during password login start');
-      config.onError?.('PasskeyLoginFailure');
-      void getConnectService().recordEventLoginError();
-      handleFallback(identifier);
-
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     try {
       await config.onComplete(res.val.session);
     } catch {
-      handleFallback(identifier);
+      void getConnectService().recordEventLoginErrorUntyped();
+      return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
   }, [getConnectService, config, loadedMs]);
 
-  useEffect(() => {
-    if (!loading && isInitialLoadingStarted) {
-      // config.onLoaded should trigger when the form renders else it will cause issues with input detection.
-      config.onLoaded('loaded successfully', isFallbackInitiallyTriggered);
+  const fallback = (identifier: string, message: string | null) => {
+    navigateToScreen(LoginScreenType.Invisible);
+    config.onFallback(identifier, message);
+    setIsFallbackInitiallyTriggered(true);
+    void getConnectService().recordEventLoginErrorUntyped();
+  };
+
+  const handleSituation = (situationCode: LoginSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
+
+    const identifier = emailFieldRef.current?.value ?? '';
+    const message = getLoginErrorMessage(situationCode);
+
+    switch (situationCode) {
+      case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
+        fallback(identifier, message);
+
+        statefulLoader.current.finish();
+        break;
+      case LoginSituationCode.DeniedByPartialRollout:
+        fallback(identifier, message);
+
+        statefulLoader.current.finish();
+        break;
+      case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator:
+      case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
+        fallback(identifier, message);
+
+        setIdentifierBasedLoading(false);
+        break;
+      case LoginSituationCode.ClientPasskeyOperationCancelled:
+        navigateToScreen(LoginScreenType.ErrorSoft);
+        void getConnectService().recordEventLoginError();
+        config.onError?.(situationCode.toString());
+
+        setIdentifierBasedLoading(false);
+        break;
+      case LoginSituationCode.UserNotFound:
+        setError(message ?? '');
+
+        setIdentifierBasedLoading(false);
+        break;
+      case LoginSituationCode.ExplicitFallbackByUser:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+
+        void getConnectService().recordEventLoginExplicitAbort();
+        break;
     }
-  }, [loading, isFallbackInitiallyTriggered, isInitialLoadingStarted]);
+  };
 
   // Enable auto complete for username and webauthn if conditional UI is supported
   // This is needed to enable multiple login instances on the same page however only one should have the autocomplete
   // Else the conditionalUI won't work
   const enableAutoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
 
-  if (!isInitialLoadingStarted) {
-    return <></>;
-  }
-
-  return (
-    <div>
-      {loading ? (
+  switch (loginInitState) {
+    case LoginInitState.SilentLoading:
+      return <></>;
+    case LoginInitState.Loading:
+      return (
         <div className='cb-login-loader-container'>
           <LoadingSpinner className='cb-login-loader' />
         </div>
-      ) : (
+      );
+    case LoginInitState.Loaded:
+      return (
         <>
           {error ? (
             <Notification
@@ -273,19 +300,18 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
           >
             Login
           </PrimaryButton>
-        </>
-      )}
 
-      {config.onSignupClick && (
-        <LinkButton
-          onClick={() => config.onSignupClick?.()}
-          className='cb-login-init-signup'
-        >
-          Signup for an account
-        </LinkButton>
-      )}
-    </div>
-  );
+          {config.onSignupClick && (
+            <LinkButton
+              onClick={() => config.onSignupClick?.()}
+              className='cb-login-init-signup'
+            >
+              Signup for an account
+            </LinkButton>
+          )}
+        </>
+      );
+  }
 };
 
 export default LoginInitScreen;

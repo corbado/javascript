@@ -1,27 +1,19 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import type { CorbadoError, Passkey } from '@corbado/web-core';
-import {
-  ConnectRequestTimedOut,
-  ExcludeCredentialsMatchError,
-  PasskeyChallengeCancelledError,
-} from '@corbado/web-core';
+import type { Passkey } from '@corbado/web-core';
+import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import useLoading from '../../hooks/useLoading';
 import useManageProcess from '../../hooks/useManageProcess';
 import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
+import { getPasskeyListErrorMessage, PasskeyListSituationCode } from '../../types/situations';
 import { ConnectTokenType } from '../../types/tokens';
 import aaguidMappings from '../../utils/aaguidMappings';
-import { CrossIcon } from '../shared/icons/CrossIcon';
+import { StatefulLoader } from '../../utils/statefulLoader';
+import { BaseModal } from '../shared/BaseModal';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import { SecondaryButton } from '../shared/SecondaryButton';
-import PasskeyList from './PasskeyList';
-
-const REQUEST_TIMEOUT_ERROR_MESSAGE =
-  'Something went wrong. Please check if you can access the internet and try again later';
+import PasskeyList, { PasskeyListState } from './PasskeyList';
 
 const PasskeyListScreen = () => {
   const { config } = useManageProcess();
@@ -30,37 +22,49 @@ const PasskeyListScreen = () => {
   const { getConnectService } = useShared();
 
   const [passkeyList, setPasskeyList] = useState<Passkey[]>([]);
-  const { loading, startLoading, finishLoading, isInitialLoadingStarted } = useLoading();
-  const [deletePending, setDeletePending] = useState<boolean>(false);
-  const [appendPending, setAppendPending] = useState<boolean>(false);
-  const [hardErrorMessage, setHardErrorMessage] = useState<string | null>(null);
+  const [passkeyListState, setPasskeyListState] = useState<PasskeyListState>(PasskeyListState.SilentLoading);
+  const [appendLoading, setAppendLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [appendAllowed, setAppendAllowed] = useState<boolean>(false);
+  const statefulLoader = useRef(
+    new StatefulLoader(
+      () => setPasskeyListState(PasskeyListState.Loading),
+      () => setPasskeyListState(PasskeyListState.Loaded),
+      () => setPasskeyListState(PasskeyListState.LoadingFailed),
+    ),
+  );
+
+  const simulateError = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const maybeError = urlParams.get('cboSimulate');
+    if (!maybeError) {
+      return false;
+    }
+
+    // parse string to AppendSituationCode
+    const typed = PasskeyListSituationCode[maybeError as keyof typeof PasskeyListSituationCode];
+    handleSituation(typed);
+
+    return true;
+  };
 
   useEffect(() => {
     const init = async (ac: AbortController) => {
-      startLoading();
+      if (simulateError()) {
+        return;
+      }
+
+      statefulLoader.current.start();
       log.debug('running init');
       const res = await getConnectService().manageInit(ac);
-
       log.debug(res.val);
-
       if (res.err) {
-        finishLoading();
-
-        if (res.val instanceof ConnectRequestTimedOut) {
-          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-          return;
-        }
-
-        log.error(res.val);
-        return;
+        return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
       }
 
       // we use the manageAllowed flag to determine if appending a passkey is allowed
       setAppendAllowed(res.val.manageAllowed);
-
       await getPasskeyList(config);
-      finishLoading();
     };
 
     const ac = new AbortController();
@@ -72,118 +76,63 @@ const PasskeyListScreen = () => {
     };
   }, [getConnectService]);
 
-  const onDeleteClick = useCallback(
-    async (credentialsId?: string) => {
-      if (deletePending) {
-        return;
-      }
-
-      setDeletePending(true);
-      hide();
-      if (!credentialsId) {
-        return;
-      }
-
-      let deleteToken;
-
-      try {
-        deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
-      } catch {
-        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-
-        finishLoading();
-        setDeletePending(false);
-        return;
-      }
-
-      const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
-
-      if (deletePasskeyRes.err) {
-        if (deletePasskeyRes.val instanceof ConnectRequestTimedOut) {
-          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-        }
-
-        finishLoading();
-        setDeletePending(false);
-        return;
-      }
-
-      await getPasskeyList(config);
-      setDeletePending(false);
-    },
-    [config, passkeyListToken, deletePending],
-  );
-
-  const onAppendClick = useCallback(async () => {
-    if (appendPending) {
+  const onDeleteClick = async (credentialsId?: string) => {
+    if (!credentialsId) {
       return;
     }
 
-    setAppendPending(true);
-    setHardErrorMessage(null);
+    let deleteToken;
+    try {
+      deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
+    } catch {
+      return handleSituation(PasskeyListSituationCode.CtApiNotAvailablePreDelete);
+    }
 
+    const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
+    if (deletePasskeyRes.err) {
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete);
+    }
+
+    await getPasskeyList(config);
+    hide();
+  };
+
+  const onAppendClick = async () => {
+    if (appendLoading) {
+      return;
+    }
+
+    setAppendLoading(true);
+    setErrorMessage(null);
     let appendToken;
     try {
       appendToken = await config.connectTokenProvider(ConnectTokenType.PasskeyAppend);
     } catch {
-      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-      setAppendPending(false);
-      return;
+      return handleSituation(PasskeyListSituationCode.CtApiNotAvailablePreAuthenticator);
     }
 
     const loadedMs = Date.now();
     const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, undefined, true);
     if (startAppendRes.err || !startAppendRes.val) {
-      handlePreWebauthnError(startAppendRes.err ? startAppendRes.val : undefined);
-      return;
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
     const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
     if (res.err) {
-      handlePostWebauthnError(res.val);
-      return;
+      if (res.val instanceof PasskeyChallengeCancelledError) {
+        return handleSituation(PasskeyListSituationCode.ClientPasskeyOperationCancelled);
+      }
+
+      if (res.val instanceof ExcludeCredentialsMatchError) {
+        return handleSituation(PasskeyListSituationCode.ClientExcludeCredentialsMatch);
+      }
+
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     log.debug('get passkey list');
     await getPasskeyList(config);
-    setAppendPending(false);
-  }, [config, passkeyListToken, appendPending]);
-
-  const handlePreWebauthnError = (error?: CorbadoError) => {
-    setAppendPending(false);
-
-    if (error instanceof ConnectRequestTimedOut) {
-      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-      return;
-    }
-
-    setHardErrorMessage(
-      'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
-    );
-  };
-
-  const handlePostWebauthnError = (error: CorbadoError) => {
-    setAppendPending(false);
-
-    if (error instanceof PasskeyChallengeCancelledError) {
-      setHardErrorMessage('Passkey creation was interrupted. You can try again by clicking the "Add passkey" button.');
-      return;
-    }
-
-    if (error instanceof ExcludeCredentialsMatchError) {
-      void getConnectService().recordEventAppendCredentialExistsError();
-      show(AlreadyExistingModal());
-      return;
-    }
-
-    if (error instanceof ConnectRequestTimedOut) {
-      setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-      return;
-    }
-
-    setHardErrorMessage(
-      'An unexpected error occurred. Please reload this page and try again. If the problem persists, please contact support.',
-    );
+    setAppendLoading(false);
   };
 
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
@@ -191,144 +140,113 @@ const PasskeyListScreen = () => {
 
   const getPasskeyList = async (config: CorbadoConnectPasskeyListConfig) => {
     let listTokenRes = passkeyListToken;
-
     if (!listTokenRes) {
       try {
         listTokenRes = await fetchListToken(config);
       } catch {
-        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-        return;
-      }
-
-      if (!listTokenRes) {
-        return;
+        return handleSituation(PasskeyListSituationCode.CtApiNotAvailableDuringInitialLoad);
       }
     }
 
-    let passkeyList = await getConnectService().manageList(listTokenRes);
-
+    const passkeyList = await getConnectService().manageList(listTokenRes);
     if (passkeyList.err) {
-      if (passkeyList.val instanceof ConnectRequestTimedOut) {
-        setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-        return;
-      }
-
-      listTokenRes = await fetchListToken(config);
-      if (!listTokenRes) {
-        return;
-      }
-
-      passkeyList = await getConnectService().manageList(listTokenRes);
-      if (passkeyList.err) {
-        if (passkeyList.val instanceof ConnectRequestTimedOut) {
-          setHardErrorMessage(REQUEST_TIMEOUT_ERROR_MESSAGE);
-        }
-        return;
-      }
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
     }
 
+    console.log('passkeyList', passkeyList.val.passkeys);
     setPasskeyListToken(listTokenRes);
     setPasskeyList(passkeyList.val.passkeys);
+    statefulLoader.current.finish();
   };
 
-  const DeleteModalContent = useCallback(
-    (passkey: Passkey) => {
-      if (passkeyList) {
-        return (
-          <div className='cb-passkey-list-modal'>
-            <div className='cb-passkey-list-modal-header'>
-              <h2 className='cb-h2'>Delete passkey</h2>
-              <CrossIcon
-                className='cb-passkey-list-modal-exit-icon'
-                onClick={() => hide()}
-              />
-            </div>
-            <p className='cb-p'>
-              Are you sure you want to delete this passkey? You will have to set it up again by adding a passkey in your
-              settings.
-            </p>
+  const handleSituation = (situationCode: PasskeyListSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
 
-            <div className='cb-passkey-list-modal-content'>
-              <PasskeyListItem
-                name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
-                icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
-                createdAt={passkey.created}
-                lastUsed={passkey.lastUsed}
-                browser={passkey.sourceBrowser}
-                os={passkey.sourceOS}
-                isThisDevice={false}
-                isSynced
-                isHybrid
-                key={passkey.id}
-              />
-            </div>
+    const message = getPasskeyListErrorMessage(situationCode);
+    switch (situationCode) {
+      case PasskeyListSituationCode.ClientExcludeCredentialsMatch:
+        setAppendLoading(false);
+        void getConnectService().recordEventAppendCredentialExistsError();
+        show(AlreadyExistingModal());
+        break;
+      case PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad:
+      case PasskeyListSituationCode.CtApiNotAvailableDuringInitialLoad:
+        statefulLoader.current.onLoadingError();
 
-            <div className='cb-passkey-list-modal-cta'>
-              <SecondaryButton
-                onClick={() => hide()}
-                className='cb-passkey-list-modal-button-cancel'
-                isLoading={loading}
-              >
-                Cancel
-              </SecondaryButton>
+        if (message) {
+          setErrorMessage(message);
+        }
+        break;
+      case PasskeyListSituationCode.CtApiNotAvailablePreDelete:
+      case PasskeyListSituationCode.CboApiNotAvailableDuringDelete:
+        hide();
+        if (message) {
+          setErrorMessage(message);
+        }
+        break;
+      case PasskeyListSituationCode.CtApiNotAvailablePreAuthenticator:
+      case PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator:
+      case PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator:
+      case PasskeyListSituationCode.ClientPasskeyOperationCancelled:
+      default:
+        setAppendLoading(false);
+        if (message) {
+          setErrorMessage(message);
+        }
+    }
+  };
 
-              <PrimaryButton
-                onClick={() => void onDeleteClick(passkey.id)}
-                className='cb-passkey-list-modal-button-submit'
-                isLoading={loading}
-              >
-                Delete
-              </PrimaryButton>
-            </div>
-          </div>
-        );
+  const DeleteModal = (passkey: Passkey) => (
+    <BaseModal
+      onPrimaryButton={() => onDeleteClick(passkey.id)}
+      onCloseButton={() => hide()}
+      onSecondaryButton={() => hide()}
+      headerText='Delete passkey'
+      primaryButtonText='Delete'
+      secondaryButtonText='Cancel'
+      children={
+        <PasskeyListItem
+          name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
+          icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
+          createdAt={passkey.created}
+          lastUsed={passkey.lastUsed}
+          browser={passkey.sourceBrowser}
+          os={passkey.sourceOS}
+          isThisDevice={false}
+          isSynced
+          isHybrid
+          key={passkey.id}
+        />
       }
-
-      return <></>;
-    },
-    [passkeyList, loading],
+    />
   );
 
   const AlreadyExistingModal = () => (
-    <div className='cb-passkey-list-modal'>
-      <div className='cb-passkey-list-modal-header'>
-        <h2 className='cb-h2'>No passkey created</h2>
-        <CrossIcon
-          className='cb-passkey-list-modal-exit-icon'
-          onClick={() => hide()}
-        />
-      </div>
-
-      <p className='cb-p'>You already have a passkey that can be used on this device. </p>
-      <p className='cb-p'>There is no need to create a new one.</p>
-
-      <div className='cb-passkey-list-modal-content'></div>
-
-      <PrimaryButton
-        onClick={() => hide()}
-        className='cb-passkey-list-modal-button-submit'
-      >
-        Okay
-      </PrimaryButton>
-    </div>
+    <BaseModal
+      onPrimaryButton={() => hide()}
+      onCloseButton={() => hide()}
+      headerText='No passkey created'
+      primaryButtonText='Okay'
+      children={
+        <>
+          <p className='cb-p'>You already have a passkey that can be used on this device. </p>
+          <p className='cb-p'>There is no need to create a new one.</p>
+        </>
+      }
+    />
   );
-
-  if (!isInitialLoadingStarted) {
-    return <></>;
-  }
 
   return (
     <PasskeyList
       passkeys={passkeyList}
       onDeleteClick={passkey => {
-        setHardErrorMessage(null);
-        show(DeleteModalContent(passkey));
+        setErrorMessage(null);
+        show(DeleteModal(passkey));
       }}
-      isLoading={loading}
+      state={passkeyListState}
       onAppendClick={appendAllowed ? () => void onAppendClick() : undefined}
-      appendLoading={appendPending}
-      deleteLoading={deletePending}
-      hardErrorMessage={hardErrorMessage}
+      appendLoading={appendLoading}
+      hardErrorMessage={errorMessage}
     />
   );
 };

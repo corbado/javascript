@@ -1,8 +1,6 @@
-import type { ConnectAppendError, ConnectLoginError } from './errors';
-
 export type CorbadoConnectLoginConfig = {
-  onFallback(identifier: string): void;
-  onError?(error: ConnectLoginError): void;
+  onFallback(identifier: string, errorMessage: string | null): void;
+  onError?(error: string): void;
   onLoaded(message: string, isFallBackTriggered: boolean): void;
   onComplete(session: string): Promise<void>;
   onConditionalLoginStart?(ac: AbortController): void;
@@ -13,7 +11,7 @@ export type CorbadoConnectLoginConfig = {
 
 export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
-  onError?(error: ConnectAppendError): void;
+  onError?(error: string): void;
   onSkip(): void;
   onComplete(): Promise<void>;
 };

@@ -94,7 +94,13 @@ export class CorbadoError extends Error {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
     }
 
-    if (error.response.status === 404) {
+    const url = error.config?.url;
+    console.log(url);
+    if (error.response.status === 404 && url) {
+      if (url.endsWith('/connect/login/finish')) {
+        return new ConnectConditionalUIPasskeyDeleted();
+      }
+
       return new ConnectUserNotFound();
     }
 
@@ -318,5 +324,11 @@ export class ExcludeCredentialsMatchError extends RecoverableError {
 export class ConnectRequestTimedOut extends RecoverableError {
   constructor() {
     super('Request timed out');
+  }
+}
+
+export class ConnectConditionalUIPasskeyDeleted extends RecoverableError {
+  constructor() {
+    super('Passkey deleted');
   }
 }

@@ -1,10 +1,11 @@
-import type { ConnectAppendError, CorbadoConnectAppendConfig } from '@corbado/types';
+import type { CorbadoConnectAppendConfig } from '@corbado/types';
 import log from 'loglevel';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import useShared from '../hooks/useShared';
 import type { AppendScreenType } from '../types/screenTypes';
+import type { AppendSituationCode } from '../types/situations';
 import type { AppendProcessContextProps } from './AppendProcessContext';
 import AppendProcessContext from './AppendProcessContext';
 
@@ -24,37 +25,29 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   }, []);
 
   const handleErrorSoft = useCallback(
-    async (typedError: ConnectAppendError, err?: Error) => {
-      log.debug(`error (soft): ${typedError}`, err);
-
+    async (situationCode: AppendSituationCode) => {
       await getConnectService().recordEventAppendError();
-
-      config.onError?.(typedError);
+      config.onError?.(situationCode.toString());
     },
     [getConnectService, config],
   );
 
   const handleErrorHard = useCallback(
-    async (typedError: ConnectAppendError, err?: Error, explicit?: boolean) => {
-      log.debug(`error (hard): ${typedError}`, err);
-
+    async (situationCode: AppendSituationCode, explicit?: boolean) => {
       if (explicit) {
         await getConnectService().recordEventAppendExplicitAbort();
       } else {
         await getConnectService().recordEventAppendError();
       }
 
-      config.onError?.(typedError);
-
+      config.onError?.(situationCode.toString());
       config.onSkip();
     },
     [getConnectService, config],
   );
 
   const handleSkip = useCallback(
-    async (description: string, explicit?: boolean) => {
-      log.debug(`skip: ${description}`);
-
+    async (_: AppendSituationCode, explicit?: boolean) => {
       if (explicit) {
         await getConnectService().recordEventAppendExplicitAbort();
       }

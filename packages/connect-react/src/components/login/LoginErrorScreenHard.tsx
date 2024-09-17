@@ -1,10 +1,11 @@
-import { ConnectRequestTimedOut, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
+import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { Button } from '../shared/Button';
 import { ErrorIcon } from '../shared/icons/ErrorIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
@@ -16,57 +17,65 @@ const LoginErrorScreenHard = () => {
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     if (loading) {
       return;
     }
 
     setLoading(true);
+    const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.ErrorHard, loadedMs);
+    if (resStart.err) {
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+    }
 
-    const res = await getConnectService().login(currentIdentifier, PasskeyLoginSource.ErrorHard, loadedMs);
-    if (res.err) {
-      setLoading(false);
-      if (res.val.ignore) {
-        return;
+    const resFinish = await getConnectService().loginContinue(resStart.val);
+    if (resFinish.err) {
+      if (resFinish.val instanceof PasskeyChallengeCancelledError) {
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
       }
 
-      if (res.val instanceof ConnectRequestTimedOut) {
-        handleFallback();
-        return;
-      }
-
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        navigateToScreen(LoginScreenType.ErrorHard);
-        void getConnectService().recordEventLoginError();
-        config.onError?.('PasskeyChallengeAborted');
-        return;
-      }
-
-      log.debug('login not allowed');
-      void getConnectService().recordEventLoginError();
-      handleFallback();
-
-      return;
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
     setLoading(false);
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(resFinish.val.session);
     } catch {
-      handleFallback();
+      return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
-  }, [getConnectService, config, loadedMs]);
+  };
 
-  const handleFallback = useCallback(() => {
-    navigateToScreen(LoginScreenType.Invisible);
-    config.onFallback(currentIdentifier);
-  }, [navigateToScreen, config, currentIdentifier]);
+  const handleSituation = (situationCode: LoginSituationCode) => {
+    log.debug(`situation: ${situationCode}`);
 
-  const handleExplicitFallback = useCallback(() => {
-    void getConnectService().recordEventLoginExplicitAbort();
-    handleFallback();
-  }, [getConnectService, handleFallback]);
+    const identifier = currentIdentifier;
+    const message = getLoginErrorMessage(situationCode);
+
+    switch (situationCode) {
+      case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
+      case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+        void getConnectService().recordEventLoginErrorUntyped();
+
+        setLoading(false);
+        break;
+      case LoginSituationCode.ClientPasskeyOperationCancelled:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+        void getConnectService().recordEventLoginError();
+
+        setLoading(false);
+        break;
+      case LoginSituationCode.ExplicitFallbackByUser:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+
+        void getConnectService().recordEventLoginExplicitAbort();
+        break;
+    }
+  };
 
   return (
     <>
@@ -88,7 +97,7 @@ const LoginErrorScreenHard = () => {
 
       <div className='cb-login-error-hard-cta'>
         <Button
-          onClick={handleExplicitFallback}
+          onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
           className='cb-outline-button'
         >
           Skip passkey login

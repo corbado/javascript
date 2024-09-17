@@ -8,7 +8,6 @@ import { PasskeyIcon } from './icons/PasskeyIcon';
 import { ShieldTickIcon } from './icons/ShieldTickIcon';
 import { SyncIcon } from './icons/SyncIcon';
 import { LinkButton } from './LinkButton';
-import { LoadingSpinner } from './LoadingSpinner';
 import { Tag } from './Tag';
 
 export type Props = {
@@ -22,7 +21,6 @@ export type Props = {
   isSynced?: boolean;
   isHybrid?: boolean;
   onDeleteClick?: () => void;
-  isDeleteLoading?: boolean;
 };
 
 export const PasskeyListItem: FC<Props> = ({
@@ -36,7 +34,6 @@ export const PasskeyListItem: FC<Props> = ({
   isSynced,
   isHybrid,
   isThisDevice,
-  isDeleteLoading,
 }) => {
   const getTags = () => {
     const tags = [];
@@ -91,13 +88,9 @@ export const PasskeyListItem: FC<Props> = ({
       </div>
       {onDeleteClick && (
         <div className='cb-passkey-list-item-delete-icon'>
-          {isDeleteLoading ? (
-            <LoadingSpinner variant='primary'></LoadingSpinner>
-          ) : (
-            <LinkButton onClick={onDeleteClick}>
-              <CrossIcon />
-            </LinkButton>
-          )}
+          <LinkButton onClick={onDeleteClick}>
+            <CrossIcon />
+          </LinkButton>
         </div>
       )}
     </div>

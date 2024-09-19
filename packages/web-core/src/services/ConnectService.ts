@@ -69,7 +69,7 @@ export class ConnectService {
 
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
-      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion),
+      'X-Corbado-SDK': JSON.stringify(corbadoVersion),
       'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 

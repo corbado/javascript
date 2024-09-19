@@ -267,7 +267,7 @@ export class SessionService {
 
     const headers: RawAxiosRequestHeaders | AxiosHeaders | Partial<HeadersDefaults> = {
       'Content-Type': 'application/json',
-      'X-Corbado-WC-Version': JSON.stringify(corbadoVersion), // Example default version
+      'X-Corbado-SDK': JSON.stringify(corbadoVersion), // Example default version
       'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
       'Cache-Control': 'no-cache',
       Pragma: 'no-cache',

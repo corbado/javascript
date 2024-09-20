@@ -179,7 +179,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     }
 
     if (resStart.val.isCDA) {
-      navigateToScreen(LoginScreenType.LoginHybridScreen, resStart);
+      navigateToScreen(LoginScreenType.LoginHybridScreen, resStart.val);
       return;
     }
 

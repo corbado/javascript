@@ -5,7 +5,7 @@ esbuild
   .build({
     entryPoints: ['src/index.script.ts'],
     bundle: true,
-    minify: true,
+    minify: false, // we disable this for now because icons are not yet correctly loading if minified
     outfile: 'dist/bundle/index.js',
     format: 'esm',
     platform: 'browser',

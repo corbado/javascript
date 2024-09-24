@@ -46,5 +46,5 @@
     "@types/web-bluetooth": "^0.0.20",
     "user-agent-data-types": "^0.4.2"
   },
-  "gitHead": "bdc9da96c3a34574545c5d9b522464ca9d3eca57"
+  "gitHead": "a619d2f6de179f7bcde9385c509905a36bec453b"
 }

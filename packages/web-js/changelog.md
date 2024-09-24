@@ -1,3 +1,9 @@
+## 2.14.0
+
+### Minor changes
+
+- Includes a fix to the short term session secure flag always being true.
+
 ## 2.13.0
 
 ### Minor changes

@@ -389,13 +389,15 @@ export class SessionService {
 
   #getShortSessionCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
     const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
-    return `${shortSessionKey}=${value}; domain=${config.domain}; secure=${config.secure}; sameSite=${config.sameSite}; path=${config.path}; expires=${expires}`;
+    return `${shortSessionKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure=;' : ''} sameSite=${
+      config.sameSite
+    }; path=${config.path}; expires=${expires}`;
   }
 
   #getDeleteShortSessionCookieString(config: ShortSessionCookieConfig) {
-    return `${shortSessionKey}=; domain=${config.domain}; secure=${config.secure}; sameSite=${config.sameSite}; path=${
-      config.path
-    }; expires=${new Date().toUTCString()}`;
+    return `${shortSessionKey}=; domain=${config.domain}; ${config.secure ? 'secure=; ' : ''}sameSite=${
+      config.sameSite
+    }; path=${config.path}; expires=${new Date().toUTCString()}`;
   }
 
   /**

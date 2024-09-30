@@ -13,7 +13,6 @@ export async function deleteProject(id: string, playwrightProjectName: string) {
       projectId: id,
     }),
   });
-  console.log(deleteRes);
   expect(deleteRes.ok).toBeTruthy();
 
   StateManager.deleteProjectId(playwrightProjectName);

@@ -29,7 +29,6 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
       name,
     }),
   });
-  console.log(createRes);
   expect(createRes.ok).toBeTruthy();
 
   const projectId = (await createRes.json()).data.projectId;

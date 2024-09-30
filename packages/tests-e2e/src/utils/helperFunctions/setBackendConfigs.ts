@@ -94,6 +94,5 @@ export async function setBackendConfigs(
       socialProviders,
     }),
   });
-  console.log(response);
   expect(response.ok).toBeTruthy();
 }

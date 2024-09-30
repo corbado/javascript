@@ -8,15 +8,13 @@ import CorbadoConnectAppendContainer from './append/CorbadoConnectAppendContaine
 
 const CorbadoConnectAppend: FC<CorbadoConnectAppendConfig> = (config: CorbadoConnectAppendConfig) => {
   return (
-    <div className='cb-connect light'>
-      <div className='cb-connect-container cb-connect-append'>
-        <AppendProcessProvider
-          config={config}
-          initialScreenType={AppendScreenType.Init}
-        >
-          <CorbadoConnectAppendContainer />
-        </AppendProcessProvider>
-      </div>
+    <div className='cb-connect-container cb-connect-append'>
+      <AppendProcessProvider
+        config={config}
+        initialScreenType={AppendScreenType.Init}
+      >
+        <CorbadoConnectAppendContainer />
+      </AppendProcessProvider>
     </div>
   );
 };

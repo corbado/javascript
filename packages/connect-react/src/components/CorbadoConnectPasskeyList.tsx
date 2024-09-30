@@ -8,15 +8,13 @@ import CorbadoConnectPasskeyListContainer from './passkeyList/CorbadoConnectPass
 
 const CorbadoConnectPasskeyList: FC<CorbadoConnectPasskeyListConfig> = config => {
   return (
-    <div className='cb-connect light'>
-      <div className='cb-connect-container cb-connect-passkey-list'>
-        <ManageProcessProvider
-          config={config}
-          initialScreenType={ManageScreenType.Init}
-        >
-          <CorbadoConnectPasskeyListContainer />
-        </ManageProcessProvider>
-      </div>
+    <div className='cb-connect-container cb-connect-passkey-list'>
+      <ManageProcessProvider
+        config={config}
+        initialScreenType={ManageScreenType.Init}
+      >
+        <CorbadoConnectPasskeyListContainer />
+      </ManageProcessProvider>
     </div>
   );
 };

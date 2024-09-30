@@ -1,4 +1,4 @@
-import type { GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
+import { BlockType, GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
 import { AuthType } from '../api';
 import { AuthProcess } from './authProcess';
 
@@ -50,6 +50,7 @@ export class EmailVerifyFromUrl {
       retryNotBefore: decoded.blockData.retryNotBefore,
       verificationMethod: decoded.blockData.verificationMethod as VerificationMethod,
       isPostLoginVerification: decoded.blockData.isPostLoginVerification,
+      blockType: BlockType.EmailVerify,
     };
 
     const isNewDevice = existingProcess?.id !== process.id;

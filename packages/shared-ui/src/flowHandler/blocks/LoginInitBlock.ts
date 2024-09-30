@@ -1,4 +1,4 @@
-import type { CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
+import type { BlockBody, CorbadoApp, GeneralBlockLoginInit, ProcessCommon } from '@corbado/web-core';
 import { AuthType, PasskeyChallengeCancelledError, SocialDataStatusEnum } from '@corbado/web-core';
 import type { SocialProviderType } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
@@ -21,10 +21,11 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
     flowHandler: ProcessHandler,
     common: ProcessCommon,
     errorTranslator: ErrorTranslator,
-    data: GeneralBlockLoginInit,
+    blockBody: BlockBody,
   ) {
     super(app, flowHandler, common, errorTranslator);
 
+    const data = blockBody.data as GeneralBlockLoginInit;
     const loginIdentifierError = errorTranslator.translate(data.fieldError);
     const lastIdentifierError = app.authProcessService.getLastIdentifier();
 

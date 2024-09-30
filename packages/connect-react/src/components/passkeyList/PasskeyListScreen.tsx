@@ -59,6 +59,10 @@ const PasskeyListScreen = () => {
       const res = await getConnectService().manageInit(ac);
       log.debug(res.val);
       if (res.err) {
+        if (res.val.ignore) {
+          return;
+        }
+
         return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
       }
 

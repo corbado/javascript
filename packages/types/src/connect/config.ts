@@ -9,6 +9,14 @@ export type CorbadoConnectLoginConfig = {
   onSignupClick?(): void;
 };
 
+export type CorbadoConnectLoginSecondFactorConfig = {
+  loginTokenProvider(): Promise<string>;
+  onFallback(errorMessage: string | null): void;
+  onError?(error: string): void;
+  onLoaded(message: string): void;
+  onComplete(session: string): Promise<void>;
+};
+
 export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
   onError?(error: string): void;

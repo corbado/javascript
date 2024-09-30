@@ -16,6 +16,12 @@ export enum LoginScreenType {
   Invisible = 'Invisible',
 }
 
+export enum LoginSecondFactorScreenType {
+  Init = 'Init',
+  Loading = 'Loading',
+  ErrorHard = 'ErrorHard',
+}
+
 export enum ManageScreenType {
   Init = 'ManageInit',
   Invisible = 'Invisible',

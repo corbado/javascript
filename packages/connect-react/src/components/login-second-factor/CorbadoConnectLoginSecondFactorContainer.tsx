@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
+
+import useLoginSecondFactorProcess from '../../hooks/useLoginSecondFactorProcess';
 import { LoginSecondFactorScreenType } from '../../types/screenTypes';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
-import useLoginSecondFactorProcess from '../../hooks/useLoginSecondFactorProcess';
 import InitScreen from './InitScreen';
 
 const CorbadoConnectLoginSecondFactorContainer = () => {

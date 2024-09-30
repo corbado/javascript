@@ -1,6 +1,7 @@
-import { CorbadoConnectLoginSecondFactorConfig } from '@corbado/types';
+import type { CorbadoConnectLoginSecondFactorConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
+
 import LoginSecondFactorProcessProvider from '../contexts/LoginSecondFactorProcessProvider';
 import { LoginSecondFactorScreenType } from '../types/screenTypes';
 import CorbadoConnectLoginSecondFactorContainer from './login-second-factor/CorbadoConnectLoginSecondFactorContainer';

@@ -1,4 +1,5 @@
-import { BlockType, GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
+import type { GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
+import { BlockType } from '../api';
 import { AuthType } from '../api';
 import { AuthProcess } from './authProcess';
 

@@ -4,9 +4,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import type { Flags } from '../types/flags';
 import type { LoginSecondFactorScreenType } from '../types/screenTypes';
-import LoginSecondFactorProcessContext, {
-  LoginSecondFactorProcessContextProps,
-} from './LoginSecondFactorProcessContext';
+import type { LoginSecondFactorProcessContextProps } from './LoginSecondFactorProcessContext';
+import LoginSecondFactorProcessContext from './LoginSecondFactorProcessContext';
 
 type Props = {
   config: CorbadoConnectLoginSecondFactorConfig;

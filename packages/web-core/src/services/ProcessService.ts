@@ -12,7 +12,7 @@ import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import {
+import type {
   AuthType,
   EventCreateReq,
   GeneralBlockLoginInit,

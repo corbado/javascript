@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import LoginSecondFactorProcessContext, {
-  LoginSecondFactorProcessContextProps,
-} from '../contexts/LoginSecondFactorProcessContext';
+
+import type { LoginSecondFactorProcessContextProps } from '../contexts/LoginSecondFactorProcessContext';
+import LoginSecondFactorProcessContext from '../contexts/LoginSecondFactorProcessContext';
 
 const useLoginSecondFactorProcess = (
   context = LoginSecondFactorProcessContext,

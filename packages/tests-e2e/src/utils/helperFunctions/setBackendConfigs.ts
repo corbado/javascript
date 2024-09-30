@@ -84,7 +84,7 @@ export async function setBackendConfigs(
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      Authorization: `Bearer ${process.env.PLAYWRIGHT_JWT_TOKEN}`,
     },
     body: JSON.stringify({
       fullNameRequired: false,
@@ -94,6 +94,6 @@ export async function setBackendConfigs(
       socialProviders,
     }),
   });
-
+  console.log(response);
   expect(response.ok).toBeTruthy();
 }

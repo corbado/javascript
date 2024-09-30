@@ -7,12 +7,13 @@ export async function deleteProject(id: string, playwrightProjectName: string) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      Authorization: `Bearer ${process.env.PLAYWRIGHT_JWT_TOKEN}`,
     },
     body: JSON.stringify({
-      id,
+      projectId: id,
     }),
   });
+  console.log(deleteRes);
   expect(deleteRes.ok).toBeTruthy();
 
   StateManager.deleteProjectId(playwrightProjectName);

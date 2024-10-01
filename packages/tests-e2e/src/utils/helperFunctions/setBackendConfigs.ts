@@ -80,7 +80,7 @@ export async function setBackendConfigs(
   identifiers: Identifier[],
   socialProviders: SocialProvider[] = [],
 ) {
-  const response = await fetch(`${process.env.CORE_API_URL}/v1/projects/${projectId}/componentConfig`, {
+  const response = await fetch(`${process.env.DEVELOPERPANEL_API_URL}/v1/projects/${projectId}/componentConfig`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

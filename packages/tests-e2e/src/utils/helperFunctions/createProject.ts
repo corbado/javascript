@@ -19,7 +19,7 @@ function generateProjectName(prefix: string) {
 export async function createProject(namePrefix: string, playwrightProjectName: string) {
   const name = generateProjectName(namePrefix);
 
-  const createRes = await fetch(`${process.env.CORE_API_URL}/v1/projects`, {
+  const createRes = await fetch(`${process.env.DEVELOPERPANEL_API_URL}/v1/projects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

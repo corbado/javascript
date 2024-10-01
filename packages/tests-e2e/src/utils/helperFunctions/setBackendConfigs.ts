@@ -80,11 +80,11 @@ export async function setBackendConfigs(
   identifiers: Identifier[],
   socialProviders: SocialProvider[] = [],
 ) {
-  const response = await fetch(`${process.env.CORE_API_URL}/v1/projects/${projectId}/componentConfig`, {
+  const response = await fetch(`${process.env.DEVELOPERPANEL_API_URL}/v1/projects/${projectId}/componentConfig`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      Authorization: `Bearer ${process.env.PLAYWRIGHT_JWT_TOKEN}`,
     },
     body: JSON.stringify({
       fullNameRequired: false,
@@ -94,6 +94,5 @@ export async function setBackendConfigs(
       socialProviders,
     }),
   });
-
   expect(response.ok).toBeTruthy();
 }

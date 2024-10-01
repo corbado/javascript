@@ -19,11 +19,11 @@ function generateProjectName(prefix: string) {
 export async function createProject(namePrefix: string, playwrightProjectName: string) {
   const name = generateProjectName(namePrefix);
 
-  const createRes = await fetch(`${process.env.CORE_API_URL}/v1/projects`, {
+  const createRes = await fetch(`${process.env.DEVELOPERPANEL_API_URL}/v1/projects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `cbo_short_session=${process.env.PLAYWRIGHT_JWT_TOKEN}`,
+      Authorization: `Bearer ${process.env.PLAYWRIGHT_JWT_TOKEN}`,
     },
     body: JSON.stringify({
       name,
@@ -31,7 +31,7 @@ export async function createProject(namePrefix: string, playwrightProjectName: s
   });
   expect(createRes.ok).toBeTruthy();
 
-  const projectId = (await createRes.json()).data.project.id;
+  const projectId = (await createRes.json()).data.projectId;
   StateManager.setProjectId(playwrightProjectName, projectId);
 
   const configureRes = await fetch(`${process.env.BACKEND_API_URL}/v1/projectConfig`, {

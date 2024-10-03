@@ -68,10 +68,5 @@ export default defineConfig({
       name: 'passkey-list-general',
       testMatch: ['ui/passkey-list-general/*.ts'],
     },
-    {
-      name: 'commitly',
-      use: devices['Desktop Chrome'],
-      testMatch: ['ui/**/*.ts'],
-    },
   ],
 });

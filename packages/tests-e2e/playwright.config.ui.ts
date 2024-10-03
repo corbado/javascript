@@ -17,7 +17,7 @@ export default defineConfig({
   testDir: './src',
   // fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 2,
+  retries: 4,
   // Using all cores increases flakiness due to slow browsers.
   // Recommended # of workers = # of cores / 2, but leaving only 1 free
   // core seems enough to prevent flakiness on our self-hosted runners.

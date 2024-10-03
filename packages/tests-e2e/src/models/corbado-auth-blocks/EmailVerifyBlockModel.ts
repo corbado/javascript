@@ -27,8 +27,8 @@ export class EmailVerifyBlockModel {
     }
   }
 
-  async clickEmailLink(context: BrowserContext, projectID: string, email: string, authType: AuthType, type: LinkType) {
-    const link = await this.#generateEmailLink(context, projectID, email, authType, type);
+  async clickEmailLink(projectID: string, email: string, authType: AuthType, type: LinkType) {
+    const link = await this.#generateEmailLink(projectID, email, authType, type);
     await this.page.goto(link);
   }
 
@@ -64,20 +64,9 @@ export class EmailVerifyBlockModel {
     ).toBeVisible();
   }
 
-  async #generateEmailLink(
-    context: BrowserContext,
-    projectId: string,
-    email: string,
-    authType: AuthType,
-    linkType: LinkType,
-  ) {
-    const storageState = await context.storageState();
-    const localStorage = storageState.origins.find(
-      origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''),
-    )?.localStorage;
-    console.log('localStorage', localStorage);
-
-    const cboAuthProcessRaw = localStorage?.find(item => item.name === `cbo_auth_process-${projectId}`)?.value;
+  async #generateEmailLink(projectID: string, email: string, authType: AuthType, linkType: LinkType) {
+    const key = `cbo_auth_process-${projectID}`;
+    const cboAuthProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboAuthProcessRaw) {
       throw new Error('getCboAuthProcess: cbo_auth_process not found in local storage');
     }
@@ -100,6 +89,6 @@ export class EmailVerifyBlockModel {
 
     const serializedBlock = btoa(JSON.stringify(urlBlock));
 
-    return `${process.env.PLAYWRIGHT_TEST_URL}/${projectId}/auth?corbadoEmailLinkID=${serializedBlock}&corbadoToken=${linkType}`;
+    return `${process.env.PLAYWRIGHT_TEST_URL}/${projectID}/auth?corbadoEmailLinkID=${serializedBlock}&corbadoToken=${linkType}`;
   }
 }

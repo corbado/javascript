@@ -61,7 +61,7 @@ jobs:
           export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.react.playground.corbado.io"
           PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts --project=commitly
         env:
-          PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_NUM_CORES: 2
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
           PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}

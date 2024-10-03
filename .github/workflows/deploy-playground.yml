@@ -23,21 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
 
-      #- name: Cache node modules
-      #  id: cache-nodemodules
-      #  uses: actions/cache@v2
-      #  env:
-      #    cache-name: cache-node-modules
-      #  with:
-      #    path: node_modules
-      #    key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-build-${{ env.cache-name }}-
-      #      ${{ runner.os }}-build-
-      #      ${{ runner.os }}-
-
       - name: Install Dependencies
-      #  if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
           npm ci
           npm install lerna
@@ -59,16 +45,6 @@ jobs:
           echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
         shell: bash
 
-      - name: Deploy connect next playground to Vercel
-        run: |
-          npx vercel link --yes --project connect-next-playground --scope corbado -t $VERCEL_TOKEN
-          npx vercel pull --environment=preview -t $VERCEL_TOKEN
-          npx vercel build -t $VERCEL_TOKEN
-          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
-          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-next.playground.corbado.io
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
-
       - name: Deploy react playground to Vercel
         run: |
           npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
@@ -78,6 +54,16 @@ jobs:
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_PLAYGROUND }}
+
+      - name: Deploy connect next playground to Vercel
+        run: |
+          npx vercel link --yes --project connect-next-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-next.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
 
       - name: Deploy web-js playground to Vercel
         run: |

@@ -39,7 +39,7 @@ jobs:
       - name: Install Dependencies
       #  if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
-          npm ci
+          npm i
           npm install lerna
           npm install vercel@33.2.0
 

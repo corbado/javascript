@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 
 import type { IdentifierEnforceVerification, IdentifierType } from './constants';
+import { SocialProviderType } from './constants';
 
 interface Identifier {
   type: IdentifierType;
@@ -78,7 +79,9 @@ export async function deleteProjectNew(projectId: string) {
       projectId: projectId,
     }),
   });
+
   expect(deleteRes.ok).toBeTruthy();
+  console.log(`Deleted project ${projectId}`);
 }
 
 export function makeIdentifier(

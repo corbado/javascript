@@ -7,7 +7,6 @@ export class VirtualAuthenticator {
   #authenticatorId = '';
 
   async initializeCDPSession(page: Page) {
-    console.log('setting up cdp client');
     this.#cdpClient = await page.context().newCDPSession(page);
   }
 

@@ -1,9 +1,3 @@
-# When running this on a different self-hosted runner, the following needs
-# to be done before the workflow will properly run:
-#   1. Install Node.js and npm on the server
-#   2. Change the PLAYWRIGHT_NUM_CORES value in the bottom of this file to 
-#      match the number of cores on the server
-
 name: Commitly End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
@@ -12,68 +6,15 @@ on:
   pull_request:
   push:
     branches:
-      - main
       - develop
-      - feature-refactor-to-thin-frontend
+  workflow_dispatch:
+  schedule:
+    - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
 
 jobs:
-  prepare:
-    # runs-on: [ self-hosted, "javascript" ]
-    runs-on: ubuntu-20.04
-    outputs:
-      BRANCH_NAME: ${{ steps.set_branch_name.outputs.BRANCH_NAME }}
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Normalize branch name
-      id: set_branch_name
-      run: echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> $GITHUB_OUTPUT
-      shell: bash
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-
-    # # The self-hosted runners are so fast that caching overhead is more 
-    # # expensive than just installing the dependencies
-    # - name: Cache dependencies
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ~/.npm
-    #     key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
-    #     restore-keys: ${{ runner.os }}-build-
-
-    - name: Install Dependencies
-      run: |
-        npm ci
-        npm install lerna
-
-    # Compressing node_modules preserves file permissions and decreases download/upload times
-    - name: 'Tar node_modules'
-      run: tar -czf node_modules.tar.gz node_modules
-
-    - name: Upload node_modules
-      uses: actions/upload-artifact@v4
-      with:
-        name: node-modules
-        path: node_modules.tar.gz
-
   e2e-tests:
     timeout-minutes: 60
-    needs: prepare
-    # runs-on: [ self-hosted, "javascript" ]
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        include:
-          - app: "react"
-            url: ".react.playground.corbado.io/"
-            type: "ui"
-          # - app: "react-sdk"
-          #   url: ".react-sdk.korbado.com/"
-          #   type: "sdk"
-          # Add more playground apps as needed
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,43 +22,55 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
-        with:
-          name: node-modules
-          path: .
-      
-      - name: Extract node_modules
-        run: tar -xzf node_modules.tar.gz
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
 
-      - name: Install Playwright Browsers
-        run: |
-          npx playwright install --with-deps
-
-      - name: Run E2E Test for ${{ matrix.app }}
-        run: |
-          if [ "${{ matrix.type }}" = "sdk" ]; then
-            npm run test:e2e:sdk
-          else
-            npm run test:e2e:ui:commitly
-          fi
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
         env:
-          PLAYWRIGHT_NUM_CORES: 2
-          PLAYWRIGHT_TEST_URL: ${{ format('https://{0}{1}', needs.prepare.outputs.BRANCH_NAME, matrix.url) }}
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: |
+          cd packages/tests-e2e
+          npm list
+
+      - name: Install Dependencies
+        run: |
+          cd packages/tests-e2e
+          npm install
+
+      - name: Install and run E2E Test for react
+        run: |
+          cd packages/tests-e2e
+          npx playwright install --with-deps
+          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
+          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.react.playground.corbado.io"
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts --project=commitly
+        env:
+          PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
           PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
-      - name: Clean up any remaining project IDs
-        if: always()
-        run: |
-          cd packages/tests-e2e
-          bash cleanup.sh
-        env:
-          PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}

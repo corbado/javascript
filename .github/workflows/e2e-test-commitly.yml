@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - develop
+  workflow_dispatch:
+  schedule:
+    - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
 
 jobs:
   e2e-tests:
@@ -63,6 +66,7 @@ jobs:
           PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
 
       - uses: actions/upload-artifact@v4
         if: always()

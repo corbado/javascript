@@ -15,7 +15,7 @@ export const AuthDetails = () => {
           onClick={async () => {
             await logout();
 
-            navigate(`/${projectId}/auth#login-init`);
+            navigate(`/${projectId}/auth`);
           }}
         >
           Logout

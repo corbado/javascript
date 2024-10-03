@@ -73,6 +73,12 @@ export class ProcessService {
       log.setLevel('error');
     }
 
+    // if frontendPreferredBlockType is not set, we check if lastIdentifierKey has been set in localstorage
+    // if that is the case we show login-init block
+    if (!frontendPreferredBlockType && localStorage.getItem(lastIdentifierKey)) {
+      frontendPreferredBlockType = BlockType.LoginInit;
+    }
+
     // we check if there is a process in local storage, if not we have to create a new one
     const process = AuthProcess.loadFromStorage(this.#projectId);
     if (!process) {

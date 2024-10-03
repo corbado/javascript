@@ -32,6 +32,7 @@ export interface CorbadoConfig extends CorbadoAppParams {
 export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
   handleNavigationEvents?: boolean;
+  initialBlock?: 'signup-init' | 'login-init';
 }
 
 /**

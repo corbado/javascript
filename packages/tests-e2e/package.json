@@ -12,7 +12,6 @@
     "url": "git+https://github.com/corbado/javascript.git"
   },
   "scripts": {
-    "e2e:sdk": "playwright test --config=playwright.config.sdk.ts",
     "e2e:ui:commitly": "playwright test --config=playwright.config.ui.ts --project=commitly",
     "e2e:ui:nightly": "playwright test --config=playwright.config.ui.ts --project=nightly",
     "e2e:report": "npx playwright show-report"

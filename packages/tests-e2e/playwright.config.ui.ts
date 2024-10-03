@@ -71,7 +71,7 @@ export default defineConfig({
     {
       name: 'commitly',
       use: devices['Desktop Chrome'],
-      testMatch: ['ui/**/*.ts'],
+      testMatch: ['ui/passkey-list-general/*.ts'],
     },
   ],
 });

@@ -26,6 +26,31 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 /**
  * 
  * @export
+ * @interface AaguidDetails
+ */
+export interface AaguidDetails {
+    /**
+     * 
+     * @type {string}
+     * @memberof AaguidDetails
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AaguidDetails
+     */
+    'iconLight': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AaguidDetails
+     */
+    'iconDark': string;
+}
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -1659,6 +1684,12 @@ export interface Passkey {
      * @memberof Passkey
      */
     'status': PasskeyStatusEnum;
+    /**
+     * 
+     * @type {AaguidDetails}
+     * @memberof Passkey
+     */
+    'aaguidDetails': AaguidDetails;
 }
 
 export const PasskeyTransportEnum = {

@@ -9,7 +9,6 @@ import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { getPasskeyListErrorMessage, PasskeyListSituationCode } from '../../types/situations';
 import { ConnectTokenType } from '../../types/tokens';
-import aaguidMappings from '../../utils/aaguidMappings';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import { BaseModal } from '../shared/BaseModal';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
@@ -210,8 +209,8 @@ const PasskeyListScreen = () => {
       secondaryButtonText='Cancel'
       children={
         <PasskeyListItem
-          name={aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey'}
-          icon={aaguidMappings[passkey.authenticatorAAGUID]?.icon_light}
+          name={passkey.aaguidDetails.name}
+          icon={passkey.aaguidDetails.iconLight}
           createdAt={passkey.created}
           lastUsed={passkey.lastUsed}
           browser={passkey.sourceBrowser}

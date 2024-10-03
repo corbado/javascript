@@ -1424,6 +1424,7 @@ components:
         - backupEligible
         - backupState
         - authenticatorAAGUID
+        - aaguidDetails
         - sourceOS
         - sourceBrowser
         - lastUsed
@@ -1461,6 +1462,22 @@ components:
           type: string
           enum: [ 'pending', 'active' ]
           description: "Status"
+        aaguidDetails:
+          $ref: '#/components/schemas/aaguidDetails'
+
+    aaguidDetails:
+      type: object
+      required:
+        - name
+        - iconLight
+        - iconDark
+      properties:
+        name:
+          type: string
+        iconLight:
+          type: string
+        iconDark:
+          type: string
 
     processResponse:
       type: object

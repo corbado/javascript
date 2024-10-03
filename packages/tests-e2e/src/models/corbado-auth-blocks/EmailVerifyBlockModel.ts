@@ -72,10 +72,12 @@ export class EmailVerifyBlockModel {
     linkType: LinkType,
   ) {
     const storageState = await context.storageState();
-    const cboAuthProcessRaw = storageState.origins
-      // remove trailing slashes from the end of URLs
-      .find(origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''))
-      ?.localStorage.find(item => item.name === `cbo_auth_process-${projectId}`)?.value;
+    const localStorage = storageState.origins.find(
+      origin => origin.origin.replace(/\/$/, '') === process.env.PLAYWRIGHT_TEST_URL?.replace(/\/$/, ''),
+    )?.localStorage;
+    console.log('localStorage', localStorage);
+
+    const cboAuthProcessRaw = localStorage?.find(item => item.name === `cbo_auth_process-${projectId}`)?.value;
     if (!cboAuthProcessRaw) {
       throw new Error('getCboAuthProcess: cbo_auth_process not found in local storage');
     }

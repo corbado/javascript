@@ -1,3 +1,10 @@
+## 2.15.0
+
+### Minor changes
+
+- Extend list of supported AAGUIDs in passkey-list (complete and connect).
+- Adding client-state based routing (a user will be navigated to the login component if she has logged in before).
+
 ## 2.14.0
 
 ### Minor changes

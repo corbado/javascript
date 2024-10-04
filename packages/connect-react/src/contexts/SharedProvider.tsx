@@ -1,6 +1,7 @@
 import type { CorbadoConnectConfig } from '@corbado/types';
 import { ConnectService } from '@corbado/web-core';
-import { FC, PropsWithChildren, useCallback } from 'react';
+import type { FC, PropsWithChildren } from 'react';
+import { useCallback } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import type { SharedContextProps } from './SharedContext';

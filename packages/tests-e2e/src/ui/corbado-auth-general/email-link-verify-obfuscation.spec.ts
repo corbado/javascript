@@ -28,7 +28,7 @@ test.describe('email-verify block should obfuscate email addresses if they have 
     await deleteProjectNew(projectId);
   });
 
-  test('email is obfuscated during login if the login is started with username', async ({ model, page, context }) => {
+  test('email is obfuscated during login if the login is started with username', async ({ model, page }) => {
     await model.load(projectId, false, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
@@ -38,7 +38,7 @@ test.describe('email-verify block should obfuscate email addresses if they have 
     await model.signupInit.submitPrimary();
     await model.expectScreen(ScreenNames.EmailLinkSentSignup);
 
-    await model.emailVerify.clickEmailLink(context, projectId, email, AuthType.Login, LinkType.Correct);
+    await model.emailVerify.clickEmailLink(projectId, email, AuthType.Login, LinkType.Correct);
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 

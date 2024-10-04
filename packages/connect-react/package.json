@@ -1,6 +1,6 @@
 {
   "name": "@corbado/connect-react",
-  "version": "0.2.4-alpha.0",
+  "version": "0.3.2-alpha.0",
   "description": "This package provides a set of React components to integrate passkeys into an existing authentication system.",
   "author": "Martin Kellner <martin.kellner@corbado.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -31,7 +31,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/web-core": "^2.13.0",
+    "@corbado/web-core": "^2.13.1",
     "date-fns": "^3.6.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",

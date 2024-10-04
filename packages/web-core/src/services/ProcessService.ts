@@ -15,6 +15,10 @@ import { Configuration } from '../api/v1';
 import type {
   AuthType,
   EventCreateReq,
+  GeneralBlockLoginInit,
+  GeneralBlockPasskeyAppend,
+  GeneralBlockPasskeyVerify,
+  GeneralBlockSignupInit,
   LoginIdentifier,
   PasskeyOperation,
   ProcessInitReq,
@@ -324,7 +328,7 @@ export class ProcessService {
   async startPasskeyAppend(): Promise<Result<ProcessResponse, CorbadoError>> {
     return this.wrapWithErr(() =>
       this.#authApi.passkeyAppendStart({
-        clientInfo: {},
+        clientInformation: {},
       }),
     );
   }
@@ -465,14 +469,22 @@ export class ProcessService {
       }),
     );
 
+    if (res.err) {
+      return res;
+    }
+
     // redirects must be done carefully => we don't want to trigger that redirect during the usual process update cycle but immediately after we received a response from the backend
-    if (
-      res.ok &&
-      res.val.blockBody.data.socialData &&
-      res.val.blockBody.data.socialData.status === SocialDataStatusEnum.Started &&
-      res.val.blockBody.data.socialData.oauthUrl
-    ) {
-      window.location.href = res.val.blockBody.data.socialData.oauthUrl;
+    let typed: GeneralBlockLoginInit | GeneralBlockSignupInit;
+    if (res.val.blockBody.block === BlockType.SignupInit) {
+      typed = res.val.blockBody.data as GeneralBlockSignupInit;
+    } else if (res.val.blockBody.block === BlockType.LoginInit) {
+      typed = res.val.blockBody.data as GeneralBlockSignupInit;
+    } else {
+      return res;
+    }
+
+    if (typed.socialData && typed.socialData.status === SocialDataStatusEnum.Started && typed.socialData.oauthUrl) {
+      window.location.href = typed.socialData.oauthUrl;
 
       return null;
     }
@@ -494,7 +506,8 @@ export class ProcessService {
       return respStart;
     }
 
-    const signedChallenge = await this.#webAuthnService.createPasskey(respStart.val.blockBody.data.challenge);
+    const typed = respStart.val.blockBody.data as GeneralBlockPasskeyAppend;
+    const signedChallenge = await this.#webAuthnService.createPasskey(typed.challenge);
     if (signedChallenge.err) {
       return signedChallenge;
     }
@@ -516,7 +529,8 @@ export class ProcessService {
       return respStart;
     }
 
-    const signedChallenge = await this.#webAuthnService.login(respStart.val.blockBody.data.challenge, false);
+    const typed = respStart.val.blockBody.data as GeneralBlockPasskeyVerify;
+    const signedChallenge = await this.#webAuthnService.login(typed.challenge, false);
     if (signedChallenge.err) {
       this.dropLastIdentifier(undefined);
 
@@ -646,17 +660,16 @@ export class ProcessService {
 function isProcessInitial(process: ProcessResponse): boolean {
   switch (process.blockBody.block) {
     case BlockType.LoginInit: {
-      const identifiersExist = process.blockBody.data.identifierValue.length > 0;
-      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
+      const typed = process.blockBody.data as GeneralBlockLoginInit;
+      const identifiersExist = typed.identifierValue.length > 0;
+      const socialInProgress = typed.socialData?.status !== SocialDataStatusEnum.Initial;
 
       return !identifiersExist && !socialInProgress;
     }
     case BlockType.SignupInit: {
-      const identifiersExist = process.blockBody.data.identifiers.reduce(
-        (acc, curr) => acc || curr.identifier.length > 0,
-        false,
-      );
-      const socialInProgress = process.blockBody.data.socialData?.status !== SocialDataStatusEnum.Initial;
+      const typed = process.blockBody.data as GeneralBlockSignupInit;
+      const identifiersExist = typed.identifiers.reduce((acc, curr) => acc || curr.identifier.length > 0, false);
+      const socialInProgress = typed.socialData?.status !== SocialDataStatusEnum.Initial;
 
       return !identifiersExist && !socialInProgress;
     }

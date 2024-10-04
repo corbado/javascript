@@ -90,6 +90,10 @@ export class CorbadoError extends Error {
       return new ConnectRequestTimedOut();
     }
 
+    if (error.name === 'CanceledError') {
+      return CorbadoError.ignore();
+    }
+
     if (!error.response || !error.response.data) {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
     }

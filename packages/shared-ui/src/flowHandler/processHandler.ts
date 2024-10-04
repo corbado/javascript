@@ -1,6 +1,13 @@
-import type { BlockBody, CorbadoError, EmailVerifyFromUrl, ProcessCommon, ProcessResponse } from '@corbado/web-core';
+import type {
+  BlockBody,
+  CorbadoError,
+  EmailVerifyFromUrl,
+  GeneralBlockVerifyIdentifier,
+  ProcessCommon,
+  ProcessResponse,
+} from '@corbado/web-core';
 import { AuthType, BlockType, type CorbadoApp } from '@corbado/web-core';
-import type { AuthenticationResponse } from '@corbado/web-core/dist/api/v2';
+import type { GeneralBlockCompleted } from '@corbado/web-core/dist/api/v2';
 import type { i18n } from 'i18next';
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
@@ -97,7 +104,7 @@ export class ProcessHandler {
     return Ok(void 0);
   }
 
-  onProcessCompleted(data: AuthenticationResponse) {
+  onProcessCompleted(data: GeneralBlockCompleted) {
     this.#corbadoApp.authProcessService.clearProcess();
     this.#corbadoApp.authProcessService.dropLastIdentifier(data.passkeyOperation);
     this.#currentBlock = null;
@@ -281,10 +288,10 @@ export class ProcessHandler {
         block = new PasskeyAppendBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       case BlockType.SignupInit:
-        block = new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        block = new SignupInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       case BlockType.LoginInit:
-        block = new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody.data);
+        block = new LoginInitBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
         break;
       case BlockType.PasskeyAppended:
         block = new PasskeyAppendedBlock(this.#corbadoApp, this, common, this.#errorTranslator, blockBody);
@@ -296,7 +303,7 @@ export class ProcessHandler {
           this,
           common,
           this.#errorTranslator,
-          blockBody.data,
+          blockBody.data as GeneralBlockVerifyIdentifier,
           blockBody.authType,
         );
         break;

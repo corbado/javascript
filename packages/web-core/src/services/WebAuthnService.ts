@@ -8,7 +8,7 @@ import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import type { ClientInformation, ClientInformationV2, JavaScriptHighEntropy } from '../api/v2';
+import type { ClientInformation, JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
 
 const clientHandleKey = 'cbo_client_handle';
@@ -72,7 +72,7 @@ export class WebAuthnService {
     }
   }
 
-  async getClientInformation(): Promise<ClientInformation | ClientInformationV2> {
+  async getClientInformation(): Promise<ClientInformation> {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const isUserVerifyingPlatformAuthenticatorAvailable = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();

@@ -195,18 +195,24 @@ export class ConnectService {
     identifier: string,
     source: PasskeyLoginSource,
     loadedMs: number,
+    connectToken?: string,
+    ac?: AbortController,
   ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
-    const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
+    const existingProcess = await this.#getExistingProcess(() => this.loginInit(ac ?? new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
     }
 
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginStart({
-        identifier,
-        source: source as ConnectLoginStartReqSourceEnum,
-        loadedMs,
-      }),
+      this.#connectApi.connectLoginStart(
+        {
+          identifier,
+          source: source as ConnectLoginStartReqSourceEnum,
+          loadedMs,
+          loginConnectToken: connectToken,
+        },
+        { signal: ac?.signal },
+      ),
     );
     if (res.err) {
       ConnectLastLogin.clearStorage(this.#projectId);

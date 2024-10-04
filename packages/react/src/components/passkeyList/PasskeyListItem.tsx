@@ -1,4 +1,3 @@
-import { aaguidMappings } from '@corbado/shared-ui';
 import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React, { memo } from 'react';
@@ -17,9 +16,7 @@ export interface PasskeyListItemProps {
 export const PasskeyListItem: FC<PasskeyListItemProps> = memo(({ passkey, fetchPasskeys }) => {
   const { deletePasskey } = useCorbado();
   const { darkMode } = useTheme();
-  const icon = darkMode
-    ? aaguidMappings[passkey.authenticatorAAGUID]?.icon_dark
-    : aaguidMappings[passkey.authenticatorAAGUID]?.icon_light;
+  const icon = darkMode ? passkey.aaguidDetails.iconDark : passkey.aaguidDetails.iconLight;
 
   const handleDeletePasskey = async (id: string) => {
     await deletePasskey(id);

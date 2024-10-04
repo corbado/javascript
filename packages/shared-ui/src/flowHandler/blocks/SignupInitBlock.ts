@@ -1,4 +1,5 @@
 import type {
+  BlockBody,
   CorbadoApp,
   GeneralBlockSignupInit,
   LoginIdentifier,
@@ -25,7 +26,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     flowHandler: ProcessHandler,
     common: ProcessCommon,
     errorTranslator: ErrorTranslator,
-    data: GeneralBlockSignupInit,
+    blockBody: BlockBody,
   ) {
     super(app, flowHandler, common, errorTranslator);
 
@@ -34,6 +35,7 @@ export class SignupInitBlock extends Block<BlockDataSignupInit> {
     let userName: TextFieldWithError | null = null;
     let fullName: TextFieldWithError | null = null;
 
+    const data = blockBody.data as GeneralBlockSignupInit;
     data.identifiers.forEach(item => {
       switch (item.type) {
         case 'email':

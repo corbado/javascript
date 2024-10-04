@@ -1,7 +1,7 @@
 import type { CorbadoConnectConfig, CustomThemes } from '@corbado/types';
 import type { ConnectService } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ModalProvider from '../contexts/ModalProvider';
 import SharedProvider from '../contexts/SharedProvider';
@@ -14,7 +14,7 @@ export interface CorbadoConnectProviderProps extends CorbadoConnectConfig {
   isWebJs?: boolean;
 }
 
-const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>> = ({
+export const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>> = ({
   children,
   customTranslations,
   theme,
@@ -23,7 +23,7 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
   enableHighlight,
   ...configProperties
 }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [connectContainerHeight, setConnectContainerHeight] = useState(0);
 
   useEffect(() => {
@@ -57,14 +57,15 @@ const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProviderProps>>
     >
       <ModalProvider>
         {!isWebJs && <CorbadoConnectModal />}
-        <div
-          className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}
-          ref={containerRef}
-        >
-          {children}
+        <div className='cb-connect light'>
+          <div
+            className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}
+            ref={containerRef}
+          >
+            {children}
+          </div>
         </div>
       </ModalProvider>
     </SharedProvider>
   );
 };
-export default CorbadoConnectProvider;

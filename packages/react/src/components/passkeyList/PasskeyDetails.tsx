@@ -1,4 +1,3 @@
-import { aaguidMappings } from '@corbado/shared-ui';
 import type { PassKeyItem } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
@@ -38,7 +37,7 @@ export const PasskeyDetails: FC<PasskeyDetailsProps> = ({ passkey }) => {
 
   const sourceBrowser = passkey.sourceBrowser;
   const sourceOS = passkey.sourceOS;
-  const title = aaguidMappings[passkey.authenticatorAAGUID]?.name ?? 'Passkey';
+  const title = passkey.aaguidDetails.name;
   const hasMultipleBadgesClassName = passkeyBadges.length > 1 ? ' cb-has-multiple-badges' : '';
 
   return (

@@ -17,7 +17,7 @@ export default defineConfig({
   testDir: './src',
   // fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 2,
+  retries: 4,
   // Using all cores increases flakiness due to slow browsers.
   // Recommended # of workers = # of cores / 2, but leaving only 1 free
   // core seems enough to prevent flakiness on our self-hosted runners.
@@ -39,6 +39,7 @@ export default defineConfig({
             key: 'Test Run Info',
             value: `https://github.com/corbado/javascript/actions/runs/${process.env.GITHUB_RUN_ID}`,
           },
+          { key: 'branch', value: `${process.env.GITHUB_BRANCH_NAME}` },
         ],
       },
     ],
@@ -67,11 +68,6 @@ export default defineConfig({
     {
       name: 'passkey-list-general',
       testMatch: ['ui/passkey-list-general/*.ts'],
-    },
-    {
-      name: 'commitly',
-      use: devices['Desktop Chrome'],
-      testMatch: ['ui/**/*.ts'],
     },
   ],
 });

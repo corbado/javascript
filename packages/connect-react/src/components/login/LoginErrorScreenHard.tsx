@@ -16,6 +16,7 @@ const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
+  const [hardErrorCount, setHardErrorCount] = useState(1);
 
   const handleSubmit = async () => {
     if (loading) {
@@ -62,8 +63,16 @@ const LoginErrorScreenHard = () => {
         setLoading(false);
         break;
       case LoginSituationCode.ClientPasskeyOperationCancelled:
-        navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        if (hardErrorCount === 3) {
+          navigateToScreen(LoginScreenType.Invisible);
+          config.onFallback(identifier, message);
+          void getConnectService().recordEventLoginError();
+
+          setLoading(false);
+          return;
+        }
+
+        setHardErrorCount(hardErrorCount + 1);
         void getConnectService().recordEventLoginError();
 
         setLoading(false);

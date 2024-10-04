@@ -18,6 +18,7 @@ playground/*/node_modules/
 playground/*/package-lock.json
 playground/*/yalc.lock
 playground/*/build/
+playground/connect-next/.next
 
 examples/*/node_modules/
 examples/*/package-lock.json

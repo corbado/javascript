@@ -3,13 +3,13 @@ env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
-  pull_request:
-  push:
-    branches:
-      - develop
   workflow_dispatch:
   schedule:
     - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
+  workflow_run:
+    workflows: ["Deploy Playground Apps to Vercel"]
+    types:
+      - completed
 
 jobs:
   e2e-tests:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Get installed Playwright version
         id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+        run: echo "::set-output name=version::$(yarn why --json @playwright/test | grep -h 'workspace:.' | jq --raw-output '.children[].locator' | sed -e 's/@playwright\/test@.*://')"
 
       - name: Cache node modules
         id: cache-npm
@@ -34,8 +34,7 @@ jobs:
         with:
           path: |
             ~/.npm
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -53,13 +52,26 @@ jobs:
           cd packages/tests-e2e
           npm install
 
-      - name: Install and run E2E Test for react
+      - uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: '~/.cache/ms-playwright'
+          key: '${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}'
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright's dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
           cd packages/tests-e2e
           npx playwright install --with-deps
+
+      - name: Install and run E2E Test for react
+        run: |
+          cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
           export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.react.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts --project=commitly
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
@@ -67,6 +79,7 @@ jobs:
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+          GITHUB_BRANCH_NAME: ${{ github.ref_name }}
 
       - uses: actions/upload-artifact@v4
         if: always()

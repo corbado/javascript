@@ -63,7 +63,7 @@ export class PasskeyListModel {
   }
 
   async expectPasskeys(n: number) {
-    await expect(this.page.getByAltText('passkey-default')).toHaveCount(n);
+    await expect(this.page.getByAltText('cancel')).toHaveCount(n);
   }
 
   expectError(value: string) {

@@ -39,6 +39,7 @@ export default defineConfig({
             key: 'Test Run Info',
             value: `https://github.com/corbado/javascript/actions/runs/${process.env.GITHUB_RUN_ID}`,
           },
+          { key: 'branch', value: `${process.env.GITHUB_BRANCH_NAME}` },
         ],
       },
     ],

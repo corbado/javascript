@@ -31,23 +31,20 @@ jobs:
         with:
           path: |
             ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+            ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}-force-1
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
-        continue-on-error: true
-        run: |
-          npm list
-
-      - name: Install Dependencies
+        name: Install Dependencies
         run: |
           npm i
           npm install lerna
           npm install vercel@33.2.0
+          npm list
 
       - name: Check ESLint Errors
         run: npm run lint

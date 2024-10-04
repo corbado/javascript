@@ -1,6 +1,6 @@
 import type { CorbadoConnectConfig } from '@corbado/types';
 import { ConnectService } from '@corbado/web-core';
-import type { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useCallback } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import type { SharedContextProps } from './SharedContext';
@@ -28,9 +28,9 @@ export const SharedProvider: FC<PropsWithChildren<Props>> = ({ children, connect
     };
   }, []);
 
-  const getConnectService = () => {
+  const getConnectService = useCallback(() => {
     return _connectService;
-  };
+  }, [_connectService]);
 
   const contextValue = useMemo<SharedContextProps>(
     () => ({

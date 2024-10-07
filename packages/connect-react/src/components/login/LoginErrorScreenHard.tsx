@@ -32,6 +32,10 @@ const LoginErrorScreenHard = () => {
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
       if (resFinish.val instanceof PasskeyChallengeCancelledError) {
+        if (hardErrorCount >= 3) {
+          return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes);
+        }
+
         return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
       }
 
@@ -62,16 +66,15 @@ const LoginErrorScreenHard = () => {
 
         setLoading(false);
         break;
+      case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
+        navigateToScreen(LoginScreenType.Invisible);
+        config.onFallback(identifier, message);
+        void getConnectService().recordEventLoginError();
+
+        setLoading(false);
+        break;
+
       case LoginSituationCode.ClientPasskeyOperationCancelled:
-        if (hardErrorCount === 3) {
-          navigateToScreen(LoginScreenType.Invisible);
-          config.onFallback(identifier, message);
-          void getConnectService().recordEventLoginError();
-
-          setLoading(false);
-          return;
-        }
-
         setHardErrorCount(hardErrorCount + 1);
         void getConnectService().recordEventLoginError();
 

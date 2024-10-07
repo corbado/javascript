@@ -1,6 +1,7 @@
 export enum LoginSituationCode {
   CboApiNotAvailablePreConditionalAuthenticator,
   ClientPasskeyConditionalOperationCancelled,
+  ClientPasskeyOperationCancelledTooManyTimes,
   PasskeyNotAvailablePostConditionalAuthenticator,
   CboApiNotAvailablePostConditionalAuthenticator,
   CboApiNotAvailablePreAuthenticator,
@@ -40,6 +41,7 @@ export const getLoginErrorMessage = (code: LoginSituationCode): string | null =>
     case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
     case LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator:
     case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
+    case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
       return 'Passkey login failed unexpectedly. Please use your password to log in.';
 
     case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:

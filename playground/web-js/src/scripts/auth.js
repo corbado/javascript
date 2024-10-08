@@ -14,4 +14,5 @@ Corbado.mountAuthUI(authElement, {
   onLoggedIn: () => {
     window.location.href = '/';
   },
+  initialBlock: 'login-init',
 });

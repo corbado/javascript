@@ -169,7 +169,7 @@ button.cb-outline-button {
 }
 
 .cb-notification-icon {
-  width: 25px;
+  width: 20px;
   margin-right: 0.25rem;
   fill: var(--cb-color-on-secondary-container);
 }

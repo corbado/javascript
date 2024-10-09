@@ -14,10 +14,7 @@ const AuthPage = () => {
     <>
       <Header />
       <div className='component'>
-        <CorbadoAuth
-          onLoggedIn={onLoggedIn}
-          initialBlock='login-init'
-        />
+        <CorbadoAuth onLoggedIn={onLoggedIn} />
       </div>
     </>
   );

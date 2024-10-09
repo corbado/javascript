@@ -37,7 +37,7 @@ import {
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
-import { CorbadoError, skipPasskeyAppendAfterHybridKey } from '../utils';
+import { CorbadoError, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -498,21 +498,24 @@ export class ProcessService {
 
   async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyAppend();
-    if (respStart.err) {
-      return respStart;
-    }
-
-    if (respStart.val.blockBody.error) {
+    if (respStart.err || respStart.val.blockBody.error) {
+      await this.recordEventAppendError();
       return respStart;
     }
 
     const typed = respStart.val.blockBody.data as GeneralBlockPasskeyAppend;
     const signedChallenge = await this.#webAuthnService.createPasskey(typed.challenge);
     if (signedChallenge.err) {
+      await this.recordEventAppendError(typed.challenge);
       return signedChallenge;
     }
 
-    return await this.finishPasskeyAppend(signedChallenge.val);
+    const respFinish = await this.finishPasskeyAppend(signedChallenge.val);
+    if (respFinish.err) {
+      await this.recordEventAppendError(typed.challenge);
+    }
+
+    return respFinish;
   }
 
   // perform a passkey login
@@ -520,10 +523,13 @@ export class ProcessService {
   async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
+      await this.recordEventLoginError();
+
       return respStart;
     }
 
     if (respStart.val.blockBody.error) {
+      await this.recordEventLoginError();
       this.dropLastIdentifier(undefined);
 
       return respStart;
@@ -532,12 +538,18 @@ export class ProcessService {
     const typed = respStart.val.blockBody.data as GeneralBlockPasskeyVerify;
     const signedChallenge = await this.#webAuthnService.login(typed.challenge, false);
     if (signedChallenge.err) {
+      await this.recordEventLoginError(typed.challenge);
       this.dropLastIdentifier(undefined);
 
       return signedChallenge;
     }
 
-    return await this.finishPasskeyLogin(signedChallenge.val);
+    const respFinish = await this.finishPasskeyLogin(signedChallenge.val);
+    if (respFinish.err) {
+      await this.recordEventLoginError(typed.challenge);
+    }
+
+    return respFinish;
   }
 
   async isConditionalUISupported(): Promise<boolean> {
@@ -554,14 +566,22 @@ export class ProcessService {
     onAuthenticatorCompleted?: () => void,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
-
     if (signedChallenge.err) {
+      if (!(signedChallenge.val.ignore && signedChallenge.val instanceof PasskeyChallengeCancelledError)) {
+        await this.recordEventLoginError(challenge);
+      }
+
       return signedChallenge;
     }
 
     onAuthenticatorCompleted?.();
 
-    return await this.finishPasskeyMediation(signedChallenge.val);
+    const respFinish = await this.finishPasskeyMediation(signedChallenge.val);
+    if (respFinish.err) {
+      await this.recordEventLoginError(challenge);
+    }
+
+    return respFinish;
   }
 
   // record time of last passkey append as unix timestamp (seconds)
@@ -611,8 +631,8 @@ export class ProcessService {
     return flags.join(',');
   };
 
-  recordEventLoginError() {
-    return this.#recordEvent(PasskeyEventType.LoginError);
+  recordEventLoginError(challenge?: string) {
+    return this.#recordEvent(PasskeyEventType.LoginError, challenge);
   }
 
   recordEventLoginExplicitAbort() {
@@ -631,8 +651,8 @@ export class ProcessService {
     return this.#recordEvent(PasskeyEventType.AppendCredentialExists);
   }
 
-  recordEventAppendError() {
-    return this.#recordEvent(PasskeyEventType.AppendError);
+  recordEventAppendError(challenge?: string) {
+    return this.#recordEvent(PasskeyEventType.AppendError, challenge);
   }
 
   recordEventAppendExplicitAbort() {
@@ -640,7 +660,7 @@ export class ProcessService {
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
-  #recordEvent(eventType: PasskeyEventType) {
+  #recordEvent(eventType: PasskeyEventType, challenge?: string) {
     const existingProcess = AuthProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       log.warn('No process found to record event.');
@@ -650,6 +670,7 @@ export class ProcessService {
 
     const req: EventCreateReq = {
       eventType,
+      challenge,
     };
 
     return this.wrapWithErr(() => this.#authApi.eventCreate(req));

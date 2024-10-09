@@ -107,13 +107,10 @@ export class LoginInitBlock extends Block<BlockDataLoginInit> {
       onAuthenticatorCompleted,
     );
 
-    if (b.err) {
-      if (b.val.ignore || b.val instanceof PasskeyChallengeCancelledError) {
-        return;
-      }
-
-      await this.app.authProcessService.recordEventLoginError();
+    if (b.err && (b.val.ignore || b.val instanceof PasskeyChallengeCancelledError)) {
+      return;
     }
+
     this.updateProcess(b);
   }
 

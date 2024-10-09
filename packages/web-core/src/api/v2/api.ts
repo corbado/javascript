@@ -388,6 +388,12 @@ export interface ConnectEventCreateReq {
      * @memberof ConnectEventCreateReq
      */
     'eventType': PasskeyEventType;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectEventCreateReq
+     */
+    'challenge'?: string;
 }
 
 
@@ -710,6 +716,12 @@ export interface EventCreateReq {
      * @memberof EventCreateReq
      */
     'eventType': PasskeyEventType;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventCreateReq
+     */
+    'challenge'?: string;
 }
 
 

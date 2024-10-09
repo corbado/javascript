@@ -123,7 +123,6 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
         return;
       }
 
-      await this.app.authProcessService.recordEventAppendError();
       this.updateScreen(ScreenNames.PasskeyError);
       return;
     }

@@ -23,7 +23,8 @@
     "noErrorTruncation": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
   "ts-node": {
     "compilerOptions": {

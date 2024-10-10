@@ -93,8 +93,6 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
         return;
       }
 
-      await this.app.authProcessService.recordEventLoginError();
-
       //In case of a first error, we show a different screen which has a lighter tone then the regular error screen
       //If the user tries again and fails, we show the regular error screen
       if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {

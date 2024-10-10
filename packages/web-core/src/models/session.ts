@@ -1,6 +1,6 @@
 import type { SessionUser } from '@corbado/types';
 
-import {base64decode} from "../utils";
+import { base64decode } from '../utils';
 
 export class ShortSession {
   readonly #value: string;

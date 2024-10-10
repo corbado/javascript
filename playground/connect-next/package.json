@@ -11,14 +11,14 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.423.0",
     "@aws-sdk/credential-providers": "^3.624.0",
+    "@corbado/connect-react": "*",
     "aws-sdk": "^2.1646.0",
     "axios": "^1.7.3",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
-    "next": "14.2.4",
+    "next": "^14.2.15",
     "react": "^18",
-    "react-dom": "^18",
-    "@corbado/connect-react": "*"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

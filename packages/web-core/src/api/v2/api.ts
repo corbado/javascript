@@ -1128,6 +1128,12 @@ export interface Identifier {
      * @memberof Identifier
      */
     'status': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Identifier
+     */
+    'primary': boolean;
 }
 
 
@@ -1579,7 +1585,19 @@ export interface MeUpdateReq {
      * @type {string}
      * @memberof MeUpdateReq
      */
-    'fullName': string;
+    'fullName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeUpdateReq
+     */
+    'primaryEmailIdentifierID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeUpdateReq
+     */
+    'primaryPhoneIdentifierID'?: string;
 }
 /**
  * 
@@ -5146,7 +5164,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Updates current user
+         * Updates current user (full name, primary email, or primary phone)
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5323,7 +5341,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Updates current user
+         * Updates current user (full name, primary email, or primary phone)
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5455,7 +5473,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
         },
         /**
-         * Updates current user
+         * Updates current user (full name, primary email, or primary phone)
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5612,7 +5630,7 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Updates current user
+     * Updates current user (full name, primary email, or primary phone)
      * @param {MeUpdateReq} meUpdateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

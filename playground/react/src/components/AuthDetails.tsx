@@ -1,4 +1,4 @@
-import { PasskeyList, useCorbado, User } from '@corbado/react';
+import { UserDetails, PasskeyList, useCorbado } from '@corbado/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const AuthDetails = () => {
@@ -9,7 +9,7 @@ export const AuthDetails = () => {
   return (
     <div className='component'>
       <div className='sub-container'>
-        <User />
+        <UserDetails />
         <PasskeyList />
         <button
           onClick={async () => {

@@ -43,14 +43,17 @@ export interface CorbadoUser {
 /**
  * Interface for Identifier.
  * @interface
+ * @property {string} id - The ID of the identifier.
  * @property {string} value - The value of the identifier.
  * @property {LoginIdentifierType} type - The type of the identifier.
  * @property {string} status - The status of the identifier.
  */
 export interface Identifier {
+  id: string;
   value: string;
   type: LoginIdentifierType;
   status: string;
+  primary: boolean;
 }
 
 /**
@@ -86,3 +89,25 @@ export const LoginIdentifierType = {
  * @typedef {string} LoginIdentifierType
  */
 export type LoginIdentifierType = (typeof LoginIdentifierType)[keyof typeof LoginIdentifierType];
+
+/**
+ * Interface for IdentifierConfig.
+ * @interface
+ * @property {LoginIdentifierType} type - The type of the identifier.
+ * @property {string} enforceVerification - Indicates verification policy.
+ * @property {boolean} useAsLoginIdentifier - Indicates used for login.
+ */
+export interface IdentifierConfig {
+  type: LoginIdentifierType;
+}
+
+/**
+ * Interface for UserDetailsConfig.
+ * @interface
+ * @property {boolean} fullNameRequired - Indicates if full name is required.
+ * @property {Array<IdentifierConfig>} identifiers - Config for each identifier type.
+ */
+export interface UserDetailsConfig {
+  fullNameRequired: boolean;
+  identifiers: Array<IdentifierConfig>;
+}

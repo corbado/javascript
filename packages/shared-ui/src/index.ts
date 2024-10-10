@@ -1,9 +1,12 @@
 import './styles/index.css';
 
 import addIcon from './assets/add.svg';
+import alertIcon from './assets/alert.svg';
 import appleIcon from './assets/apple.svg';
 import cancelIcon from './assets/cancel.svg';
+import changeIcon from './assets/change.svg';
 import circleExclamationIcon from './assets/circle-exclamation.svg';
+import copyIcon from './assets/copy.svg';
 import deleteIcon from './assets/delete.svg';
 import deviceIcon from './assets/device-icon.svg';
 import editIcon from './assets/edit.svg';
@@ -34,12 +37,16 @@ import passkeyDefaultIcon from './assets/passkey-default.svg';
 import passkeyErrorIcon from './assets/passkey-error.svg';
 import passkeyHybridIcon from './assets/passkey-hybrid.svg';
 import passkeyHybridDarkIcon from './assets/passkey-hybrid-dark.svg';
+import pendingIcon from './assets/pending.svg';
 import personIcon from './assets/person.svg';
 import phoneIcon from './assets/phone.svg';
+import primaryIcon from './assets/primary.svg';
 import rightIcon from './assets/right-arrow.svg';
 import secureIcon from './assets/secure-icon.svg';
 import shieldIcon from './assets/shield.svg';
 import syncIcon from './assets/sync.svg';
+import tickIcon from './assets/tick.svg';
+import verifiedIcon from './assets/verified.svg';
 import visibilityIcon from './assets/visibility.svg';
 import yahooIcon from './assets/yahoo.svg';
 import i18nDe from './i18n/de.json';
@@ -54,6 +61,7 @@ export * from './flowHandler';
 export type { BehaviorSubject } from 'rxjs';
 
 export const assets = {
+  alertIcon,
   rightIcon,
   deleteIcon,
   passkeyDefaultIcon,
@@ -96,4 +104,10 @@ export const assets = {
   passkeyHybridIcon,
   passkeyHybridDarkIcon,
   lockIcon,
+  copyIcon,
+  changeIcon,
+  primaryIcon,
+  verifiedIcon,
+  pendingIcon,
+  tickIcon,
 };

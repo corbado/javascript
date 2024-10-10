@@ -16,7 +16,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...rest}
       >
-        {isLoading ? <LoadingSpinner className={spinnerClassName} /> : children}
+        {children}
+        {isLoading && (
+          <div className='cb-button-loading'>
+            <LoadingSpinner className={spinnerClassName} />
+          </div>
+        )}
       </button>
     );
   },

@@ -1,5 +1,5 @@
-import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
-import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
+import { CorbadoAuth, Login, PasskeyList, SignUp, UserDetails } from '@corbado/react';
+import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig, LoginIdentifierType } from '@corbado/types';
 import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
@@ -74,11 +74,11 @@ export class Corbado {
     this.#unmountComponent(element);
   }
 
-  mountUserUI(element: HTMLElement) {
-    this.#mountComponent(element, User, {});
+  mountUserDetailsUI(element: HTMLElement) {
+    this.#mountComponent(element, UserDetails, {});
   }
 
-  unmountUserUI(element: HTMLElement) {
+  unmountUserDetailsUI(element: HTMLElement) {
     this.#unmountComponent(element);
   }
 
@@ -104,6 +104,44 @@ export class Corbado {
 
   getFullUser(abortController?: AbortController) {
     return this.#getCorbadoAppState().corbadoApp.sessionService.getFullUser(abortController ?? new AbortController());
+  }
+
+  getUserDetailsConfig(abortController?: AbortController) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.getUserDetailsConfig(
+      abortController ?? new AbortController(),
+    );
+  }
+
+  updateFullName(fullName: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateFullName(fullName);
+  }
+
+  updateUsername(identifierId: string, username: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.updateUsername(identifierId, username);
+  }
+
+  createIdentifier(identifierType: LoginIdentifierType, value: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.createIdentifier(identifierType, value);
+  }
+
+  deleteIdentifier(identifierId: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteIdentifier(identifierId);
+  }
+
+  verifyIdentifierStart(identifierId: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierStart(identifierId);
+  }
+
+  verifyIdentifierFinish(identifierId: string, code: string) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.verifyIdentifierFinish(identifierId, code);
+  }
+
+  makePrimary(identifierId: string, identifierType: LoginIdentifierType) {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.makePrimary(identifierId, identifierType);
+  }
+
+  deleteUser() {
+    return this.#getCorbadoAppState().corbadoApp.sessionService.deleteUser();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

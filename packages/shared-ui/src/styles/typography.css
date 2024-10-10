@@ -6,6 +6,10 @@
   color: var(--cb-text-secondary-color);
 }
 
+.cb-error-text-color {
+  color: var(--cb-error-text-color);
+}
+
 .cb-header-text-color {
   color: var(--cb-header-text-color);
 }
@@ -59,4 +63,10 @@
 .cb-text-7 {
   font-family: var(--cb-primary-font);
   font-size: calc(var(--cb-base-font-size) * 2.3);
+}
+
+.cb-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

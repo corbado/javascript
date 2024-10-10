@@ -53,9 +53,7 @@ const PasskeyList: FC = () => {
   return (
     <PasskeyListErrorBoundary globalError={globalError}>
       <div className='cb-passkey-list-container'>
-        <div className='cb-passkey-list-title'>
-          <Text className='cb-passkey-list-title'>{t('title')}</Text>
-        </div>
+        <Text className='cb-passkey-list-title'>{t('title')}</Text>
         {passkeys?.passkeys.map(passkey => (
           <PasskeyListItem
             key={passkey.id}

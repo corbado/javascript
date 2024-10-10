@@ -1,5 +1,5 @@
 /// <reference types="user-agent-data-types" /> <- add this line
-import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
+import type { CorbadoUser, PassKeyList, SessionUser, UserDetailsConfig } from '@corbado/types';
 import type {
   AxiosHeaders,
   AxiosInstance,
@@ -15,7 +15,7 @@ import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
-import { ConfigsApi, UsersApi } from '../api/v2';
+import { ConfigsApi, LoginIdentifierType, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import {
   AuthState,
@@ -45,6 +45,7 @@ const packageVersion = '0.0.0';
  */
 export class SessionService {
   #usersApi: UsersApi = new UsersApi();
+  #configsApi: ConfigsApi;
   #webAuthnService: WebAuthnService;
 
   readonly #setShortSessionCookie: boolean;
@@ -68,6 +69,13 @@ export class SessionService {
     this.#longSession = undefined;
     this.#setShortSessionCookie = setShortSessionCookie;
     this.#isPreviewMode = isPreviewMode;
+
+    const config = new Configuration({
+      apiKey: this.#projectId,
+    });
+
+    const axiosInstance = this.#createAxiosInstanceV2();
+    this.#configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
   }
 
   /**
@@ -155,6 +163,84 @@ export class SessionService {
 
   public async getFullUser(abortController: AbortController): Promise<Result<CorbadoUser, CorbadoError>> {
     return this.wrapWithErr(async () => this.#usersApi.currentUserGet({ signal: abortController.signal }));
+  }
+
+  public async getUserDetailsConfig(
+    abortController: AbortController,
+  ): Promise<Result<UserDetailsConfig, CorbadoError>> {
+    return this.wrapWithErr(async () => this.#configsApi.getUserDetailsConfig({ signal: abortController.signal }));
+  }
+
+  async updateFullName(fullName: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserUpdate({ fullName });
+      return void 0;
+    });
+  }
+
+  async updateUsername(identifierId: string, username: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierUpdate({
+        identifierID: identifierId,
+        identifierType: LoginIdentifierType.Username,
+        value: username,
+      });
+      return void 0;
+    });
+  }
+
+  async createIdentifier(identifierType: LoginIdentifierType, value: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierCreate({ identifierType, value });
+      return void 0;
+    });
+  }
+
+  async deleteIdentifier(identifierId: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierDelete({ identifierID: identifierId });
+      return void 0;
+    });
+  }
+
+  async verifyIdentifierStart(identifierId: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierVerifyStart({
+        identifierID: identifierId,
+        clientInformation: {
+          bluetoothAvailable: (await WebAuthnService.canUseBluetooth()) ?? false,
+          canUsePasskeys: await WebAuthnService.doesBrowserSupportPasskeys(),
+          clientEnvHandle: WebAuthnService.getClientHandle() ?? undefined,
+          javaScriptHighEntropy: await WebAuthnService.getHighEntropyValues(),
+        },
+      });
+      return void 0;
+    });
+  }
+
+  async verifyIdentifierFinish(identifierId: string, code: string): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserIdentifierVerifyFinish({ identifierID: identifierId, code });
+      return void 0;
+    });
+  }
+
+  async makePrimary(identifierId: string, identifierType: LoginIdentifierType): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      if (identifierType === LoginIdentifierType.Email) {
+        await this.#usersApi.currentUserUpdate({ primaryEmailIdentifierID: identifierId });
+      } else if (identifierType === LoginIdentifierType.Username) {
+        await this.#usersApi.currentUserUpdate({ primaryPhoneIdentifierID: identifierId });
+      }
+      return void 0;
+    });
+  }
+
+  async deleteUser(): Promise<Result<void, CorbadoError>> {
+    return Result.wrapAsync(async () => {
+      await this.#usersApi.currentUserDelete({});
+      return void 0;
+    });
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
@@ -519,15 +605,8 @@ export class SessionService {
   };
 
   #loadSessionConfig = async (): Promise<Result<SessionConfigRsp, CorbadoError>> => {
-    const config = new Configuration({
-      apiKey: this.#projectId,
-    });
-
-    const axiosInstance = this.#createAxiosInstanceV2();
-    const configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
-
     return Result.wrapAsync(async () => {
-      const r = await configsApi.getSessionConfig();
+      const r = await this.#configsApi.getSessionConfig();
       return r.data;
     });
   };

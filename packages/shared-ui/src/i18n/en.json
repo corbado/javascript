@@ -383,7 +383,7 @@
     }
   },
   "passkey-list": {
-    "title": "PASSKEYS",
+    "title": "Passkeys",
     "warning_notLoggedIn": "Please log in to see your passkeys.",
     "message_noPasskeys": "You don't have any passkeys yet.",
     "button_createPasskey": "Create a Passkey",
@@ -411,20 +411,68 @@
       "button_confirm": "Ok"
     }
   },
-  "user": {
-    "header": "Your Account",
+  "user-details": {
+    "copied": "Copied",
+    "title": "User Details",
     "name": "Name",
     "username": "Username",
-    "email": "Email",
+    "email": "Email address",
     "phone": "Phone number",
     "social": "Social accounts",
-    "verified": "verified",
-    "unverified": "pending",
+    "delete_account": "Delete account",
+    "delete_account_title": "Do you want to delete this account? ",
+    "delete_account_text": "This will permanently remove your personal account and all of its content.",
+    "delete_account_alert": "This action is not reversible",
+    "primary": "Primary",
+    "make_primary": "Make primary",
+    "verified": "Verified",
+    "pending": "Pending",
+    "verify": "Verify",
+    "remove": "Remove",
+    "save": "Save",
+    "copy": "Copy",
+    "cancel": "Cancel",
+    "change": "Change",
+    "confirm": "Confirm",
+    "add_name": "Add name",
+    "add_username": "Add username",
+    "add_email": "Add email",
+    "add_phone": "Add phone",
+    "delete": "Delete",
     "warning_notLoggedIn": "Please log in to see your current user information.",
+    "warning_invalid_email": "Please enter a valid email",
+    "warning_invalid_phone": "Please enter a valid phone number",
+    "warning_invalid_challenge": "Please enter the correct code",
     "providers": {
       "google": "Google",
       "microsoft": "Microsoft",
       "github": "GitHub"
+    },
+    "name_required": "Please enter a valid name.",
+    "username_required": "Please enter a valid username.",
+    "username_unique": "This username is already used",
+    "email_unique": "This email address is already used",
+    "phone_unique": "This phone number is already used",
+    "no_remaining_verified_identifier": "Can not remove the last verified identifier",
+    "email_delete": {
+      "header": "Remove Email Address",
+      "body": "Are you sure you want to remove this email address ?",
+      "alert": "You will no longer be able to log in with this email address. "
+    },
+    "email_verify": {
+      "header": "Verify your email address",
+      "body": "Please verify your email by entering the one-time passcode we just sent to your email.",
+      "link": "Didn’t receive an email? Resend ({{counter}}s)"
+    },
+    "phone_delete": {
+      "header": "Remove Phone Number",
+      "body": "Are you sure you want to remove this phone number ?",
+      "alert": "You will no longer be able to log in with this phone number. "
+    },
+    "phone_verify": {
+      "header": "Verify your phone number",
+      "body": "Please verify your phone number by entering the one-time passcode we just sent to your phone number.",
+      "link": "Didn’t receive an SMS? Resend ({{counter}}s)"
     }
   }
 }

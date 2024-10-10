@@ -1,4 +1,4 @@
-import type { CorbadoAppParams, SessionUser } from '@corbado/types';
+import type { CorbadoAppParams, LoginIdentifierType, SessionUser } from '@corbado/types';
 import type { NonRecoverableError } from '@corbado/web-core';
 import { CorbadoApp } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
@@ -86,6 +86,66 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const getUserDetailsConfig = useCallback(
+    (abortController?: AbortController) => {
+      return corbadoApp?.sessionService.getUserDetailsConfig(abortController ?? new AbortController());
+    },
+    [corbadoApp],
+  );
+
+  const updateFullName = useCallback(
+    (fullName: string) => {
+      return corbadoApp.sessionService.updateFullName(fullName);
+    },
+    [corbadoApp],
+  );
+
+  const updateUsername = useCallback(
+    (identifierId: string, username: string) => {
+      return corbadoApp.sessionService.updateUsername(identifierId, username);
+    },
+    [corbadoApp],
+  );
+
+  const createIdentifier = useCallback(
+    (identifierType: LoginIdentifierType, value: string) => {
+      return corbadoApp.sessionService.createIdentifier(identifierType, value);
+    },
+    [corbadoApp],
+  );
+
+  const deleteIdentifier = useCallback(
+    (identifierId: string) => {
+      return corbadoApp.sessionService.deleteIdentifier(identifierId);
+    },
+    [corbadoApp],
+  );
+
+  const verifyIdentifierStart = useCallback(
+    (identifierId: string) => {
+      return corbadoApp.sessionService.verifyIdentifierStart(identifierId);
+    },
+    [corbadoApp],
+  );
+
+  const verifyIdentifierFinish = useCallback(
+    (identifierId: string, code: string) => {
+      return corbadoApp.sessionService.verifyIdentifierFinish(identifierId, code);
+    },
+    [corbadoApp],
+  );
+
+  const makePrimary = useCallback(
+    (identifierId: string, identifierType: LoginIdentifierType) => {
+      return corbadoApp.sessionService.makePrimary(identifierId, identifierType);
+    },
+    [corbadoApp],
+  );
+
+  const deleteUser = useCallback(() => {
+    return corbadoApp.sessionService.deleteUser();
+  }, [corbadoApp]);
+
   return (
     <CorbadoSessionContext.Provider
       value={{
@@ -96,6 +156,15 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
         isAuthenticated,
         appendPasskey,
         getFullUser,
+        getUserDetailsConfig,
+        updateFullName,
+        updateUsername,
+        createIdentifier,
+        deleteIdentifier,
+        verifyIdentifierStart,
+        verifyIdentifierFinish,
+        makePrimary,
+        deleteUser,
         getPasskeys,
         deletePasskey,
         logout,

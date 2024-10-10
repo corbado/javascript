@@ -1,5 +1,7 @@
 import type { SessionUser } from '@corbado/types';
 
+import { base64decode } from '../utils';
+
 export class ShortSession {
   readonly #value: string;
   readonly #user: SessionUser;
@@ -9,7 +11,7 @@ export class ShortSession {
 
     // this is a quick and easy way to parse JWT tokens without using a library
     const splits = value.split('.');
-    this.#user = JSON.parse(atob(splits[1]));
+    this.#user = JSON.parse(base64decode(splits[1]));
   }
 
   get value() {

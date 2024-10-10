@@ -19,6 +19,7 @@ import { ConfigsApi, UsersApi } from '../api/v2';
 import { ShortSession } from '../models/session';
 import {
   AuthState,
+  base64decode,
   CorbadoError,
   PasskeyAlreadyExistsError,
   type PasskeyDeleteError,
@@ -123,9 +124,8 @@ export class SessionService {
     }
 
     const sessionParts = this.#shortSession.value.split('.');
-    const sessionPayload = JSON.parse(atob(sessionParts[1]));
 
-    return sessionPayload;
+    return JSON.parse(base64decode(sessionParts[1]));
   }
 
   /**

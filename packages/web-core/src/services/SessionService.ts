@@ -1,5 +1,5 @@
 /// <reference types="user-agent-data-types" /> <- add this line
-import type { CorbadoUser, PassKeyList, SessionUser } from '@corbado/types';
+import type {CorbadoUser, PassKeyList, SessionUser} from '@corbado/types';
 import type {
   AxiosHeaders,
   AxiosInstance,
@@ -8,23 +8,23 @@ import type {
   HeadersDefaults,
   RawAxiosRequestHeaders,
 } from 'axios';
-import axios, { type AxiosError } from 'axios';
+import axios, {type AxiosError} from 'axios';
 import log from 'loglevel';
-import { BehaviorSubject } from 'rxjs';
-import { Err, Ok, Result } from 'ts-results';
+import {BehaviorSubject} from 'rxjs';
+import {Err, Ok, Result} from 'ts-results';
 
-import { Configuration } from '../api/v1';
-import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
-import { ConfigsApi, UsersApi } from '../api/v2';
-import { ShortSession } from '../models/session';
+import {Configuration} from '../api/v1';
+import type {SessionConfigRsp, ShortSessionCookieConfig} from '../api/v2';
+import {ConfigsApi, UsersApi} from '../api/v2';
+import {ShortSession} from '../models/session';
 import {
-  AuthState,
+  AuthState, base64decode,
   CorbadoError,
   PasskeyAlreadyExistsError,
   type PasskeyDeleteError,
   PasskeysNotSupported,
 } from '../utils';
-import { WebAuthnService } from './WebAuthnService';
+import {WebAuthnService} from './WebAuthnService';
 
 const shortSessionKey = 'cbo_short_session';
 const longSessionKey = 'cbo_long_session';
@@ -123,9 +123,8 @@ export class SessionService {
     }
 
     const sessionParts = this.#shortSession.value.split('.');
-    const sessionPayload = JSON.parse(atob(sessionParts[1]));
 
-    return sessionPayload;
+    return JSON.parse(base64decode(sessionParts[1]));
   }
 
   /**

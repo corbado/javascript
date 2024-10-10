@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "@github/webauthn-json": "^2.1.1",
+    "@github/webauthn-json": "github:corbado/webauthn-json#with-dist",
     "axios": "^1.7.4",
     "loglevel": "^1.8.1",
     "rxjs": "^7.8.1",

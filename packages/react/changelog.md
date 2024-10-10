@@ -1,3 +1,10 @@
+## 2.16.0
+
+### Minor changes
+
+- Optimized atob() handling
+- Enable support for client-hints
+
 ## 2.15.0
 
 ### Minor changes

@@ -1,9 +1,9 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
+import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
+import { create, get } from '@corbado/webauthn-json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import type { CredentialRequestOptionsJSON } from '@github/webauthn-json';
-import { create, get } from '@github/webauthn-json';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';

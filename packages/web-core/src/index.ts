@@ -8,4 +8,4 @@ export * from './models/lastIdentifier';
 
 export * from './models/connect/connectLastLogin';
 
-export { CredentialRequestOptionsJSON } from '@github/webauthn-json';
+export { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';

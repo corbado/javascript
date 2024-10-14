@@ -76,6 +76,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
 
       log.debug('running init');
       statefulLoader.current.start();
+
+      const url = new URL(window.location.href);
+      const invitationToken = url.searchParams.get('invitationToken');
+      if (invitationToken) {
+        getConnectService().setInvitation(invitationToken);
+      }
+
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
         if (res.val.ignore) {

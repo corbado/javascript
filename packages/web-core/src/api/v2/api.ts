@@ -279,6 +279,12 @@ export interface ConnectAppendInitReq {
      * @memberof ConnectAppendInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitReq
+     */
+    'invitationToken'?: string;
 }
 /**
  * 
@@ -453,6 +459,12 @@ export interface ConnectLoginInitReq {
      * @memberof ConnectLoginInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitReq
+     */
+    'invitationToken'?: string;
 }
 /**
  * 

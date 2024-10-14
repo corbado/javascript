@@ -69,6 +69,12 @@ const AppendInitScreen = () => {
       const loadedMs = Date.now();
 
       statefulLoader.current.start();
+      const url = new URL(window.location.href);
+      const invitationToken = url.searchParams.get('invitationToken');
+      if (invitationToken) {
+        getConnectService().setInvitation(invitationToken);
+      }
+
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
         if (res.val.ignore) {

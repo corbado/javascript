@@ -30,6 +30,7 @@ import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData
 import type { PasskeyLoginSource } from '../utils';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
+import { ConnectInvitation } from '../models/connect/connectInvitation';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
@@ -500,6 +501,11 @@ export class ConnectService {
     return this.wrapWithErr(() => this.#connectApi.connectManageDelete(req));
   }
 
+  setInvitation(token: string) {
+    const invitation = new ConnectInvitation(token);
+    invitation.persistToStorage();
+  }
+
   recordEventLoginError() {
     return this.#recordEvent(PasskeyEventType.LoginError);
   }
@@ -580,10 +586,12 @@ export class ConnectService {
 
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
     const clientInformation = await this.#webAuthnService.getClientInformation();
+    const invitationToken = ConnectInvitation.loadFromStorage()?.token;
 
     const req = {
       clientInformation: clientInformation,
       flags: flags.getItemsObject(),
+      invitationToken: invitationToken,
     } as T;
 
     return { req, flags };

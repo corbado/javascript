@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { CrossIcon } from './icons/CrossIcon';
 import { PrimaryButton } from './PrimaryButton';
-import { SecondaryButton } from './SecondaryButton';
+import { OutlineButton } from './OutlineButton';
 
 type Props = {
   onCloseButton?: () => void;
@@ -57,15 +57,6 @@ export const BaseModal = ({
       <div className='cb-modal-content'>{children}</div>
 
       <div className='cb-modal-cta'>
-        {onSecondaryButton && (
-          <SecondaryButton
-            onClick={() => void onSecondary()}
-            className='cb-modal-button-secondary'
-            isLoading={secondaryButtonLoading}
-          >
-            {secondaryButtonText}
-          </SecondaryButton>
-        )}
         <PrimaryButton
           onClick={() => void onPrimary()}
           className='cb-modal-button-primary'
@@ -73,6 +64,15 @@ export const BaseModal = ({
         >
           {primaryButtonText}
         </PrimaryButton>
+        {onSecondaryButton && (
+          <OutlineButton
+            onClick={() => void onSecondary()}
+            className='cb-modal-button-secondary'
+            isLoading={secondaryButtonLoading}
+          >
+            {secondaryButtonText}
+          </OutlineButton>
+        )}
       </div>
     </div>
   );

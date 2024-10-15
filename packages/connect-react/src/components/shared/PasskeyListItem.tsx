@@ -69,22 +69,22 @@ export const PasskeyListItem: FC<Props> = ({
 
       <div className='cb-passkey-list-item-content'>
         <div className='cb-passkey-list-item-header'>
+          <div className='cb-passkey-list-item-title'>{name}</div>
           <div className='cb-passkey-list-item-tags'>
             {getTags().map(({ text, icon }) => (
               <Tag key={text}>
                 {icon('cb-passkey-list-item-tag-icon')}
-                <p>{text}</p>
+                <span>{text}</span>
               </Tag>
             ))}
           </div>
-          <h2 className='cb-passkey-list-item-title cb-bold'>{name}</h2>
         </div>
 
-        <p className='cb-passkey-list-item-details'>
+        <div className='cb-passkey-list-item-details'>
           Created: {format(createdAt, 'dd-MM-yyyy HH:mm:ss')} with {browser} on {os}
-        </p>
+        </div>
 
-        <p className='cb-passkey-list-item-details'>Last used: {format(lastUsed, 'dd-MM-yyyy HH:mm:ss')}</p>
+        <div className='cb-passkey-list-item-details'>Last used: {format(lastUsed, 'dd-MM-yyyy HH:mm:ss')}</div>
       </div>
       {onDeleteClick && (
         <div className='cb-passkey-list-item-delete-icon'>

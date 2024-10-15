@@ -37,31 +37,22 @@
 .cb-link-button {
   cursor: pointer;
   width: 100%;
-  text-align: center;
   text-decoration: underline;
+  margin: .5rem 0;
 }
 
 .cb-connect-container {
   font-family: var(--cb-font-family-primary);
+  background-color: var(--cb-color-surface);
   display: flex;
   flex-direction: column;
-  background-color: var(--cb-color-surface);
-  box-sizing: content-box;
-  padding: 1rem;
+  box-sizing: border-box;
   text-align: left;
-}
-
-.cb-connect-login,
-.cb-connect-append {
-  max-width: 400px;
-}
-
-.cb-connect-passkey-list {
-  max-width: 600px;
+  width: 100%;
 }
 
 button.cb-primary-button {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-on-primary);
   background-color: var(--cb-color-primary);
   border-radius: var(--cb-border-radius);
@@ -70,6 +61,7 @@ button.cb-primary-button {
   box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
   width: 100%;
+  text-decoration: none;
 }
 
 .cb-primary-button:hover,
@@ -83,8 +75,12 @@ button.cb-primary-button {
   opacity: 84%;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 button.cb-secondary-button {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-on-secondary);
   background-color: var(--cb-color-secondary);
   border-radius: var(--cb-border-radius);
@@ -103,7 +99,7 @@ button.cb-secondary-button {
 }
 
 button.cb-outline-button {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-primary);
   background-color: transparent;
   border-radius: var(--cb-border-radius);
@@ -117,7 +113,8 @@ button.cb-outline-button {
 .cb-input {
   flex-grow: 1;
   border-radius: var(--cb-border-radius);
-  border: 1px solid var(--cb-color-tertiary);
+  color: var(--cb-color-tertiary);
+  border: 1px solid var(--cb-color-outline);
   padding: 0.75rem 0.5rem;
   justify-content: center;
   box-sizing: border-box;
@@ -153,6 +150,7 @@ button.cb-outline-button {
 }
 
 .cb-input-label {
+  font-family: var(--cb-font-family-secondary);
   margin: 0.25rem 0.5rem;
 }
 
@@ -165,7 +163,6 @@ button.cb-outline-button {
   background: var(--cb-color-secondary-container);
   color: var(--cb-color-on-secondary-container);
   border-radius: 0.7rem;
-  border: 1px solid var(--cb-color-outline);
 }
 
 .cb-notification-icon {
@@ -181,10 +178,14 @@ button.cb-outline-button {
 }
 
 .cb-error-notification {
+  width: 100%;
+  box-sizing: border-box;
   background-color: var(--cb-color-error-container);
   color: var(--cb-color-on-error-container);
-  border: 1px solid var(--cb-color-on-error-container);
   border-radius: var(--cb-border-radius);
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .loader {

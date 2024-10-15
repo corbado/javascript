@@ -11,7 +11,7 @@ export const PasskeyInfoListItem = ({ title, description, icon }: Props) => {
     <div className='cb-passkey-info-list-item'>
       <div className='cb-passkey-info-list-item-icon'>{icon}</div>
       <div className='cb-passkey-info-list-item-text'>
-        <div className='cb-span cb-bold'>{title}</div>
+        <div className='cb-span cb-bold cb-passkey-info-list-item-header'>{title}</div>
         <div className='cb-span'>{description}</div>
       </div>
     </div>

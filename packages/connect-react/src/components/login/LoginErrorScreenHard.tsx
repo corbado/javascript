@@ -6,10 +6,10 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
-import { Button } from '../shared/Button';
 import { ErrorIcon } from '../shared/icons/ErrorIcon';
 import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
 import { LinkButton } from '../shared/LinkButton';
+import { OutlineButton } from '../shared/OutlineButton';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
 const LoginErrorScreenHard = () => {
@@ -108,12 +108,9 @@ const LoginErrorScreenHard = () => {
       )}
 
       <div className='cb-login-error-hard-cta'>
-        <Button
-          onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
-          className='cb-outline-button'
-        >
+        <OutlineButton onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}>
           Skip passkey login
-        </Button>
+        </OutlineButton>
         <PrimaryButton
           onClick={() => void handleSubmit()}
           isLoading={loading}

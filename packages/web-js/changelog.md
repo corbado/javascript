@@ -2,7 +2,7 @@
 
 ### Patch changes
 
-- Replace @github/webauthn-json dependency with published version of forked repository. 
+- Replace @github/webauthn-json dependency with published version of forked repository.
 
 ## 2.16.0
 

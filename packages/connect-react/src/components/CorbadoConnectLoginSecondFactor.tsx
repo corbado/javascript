@@ -10,15 +10,13 @@ const CorbadoConnectLoginSecondFactor: FC<CorbadoConnectLoginSecondFactorConfig>
   config: CorbadoConnectLoginSecondFactorConfig,
 ) => {
   return (
-    <div className='cb-connect light'>
-      <div className='cb-connect-container cb-connect-login'>
-        <LoginSecondFactorProcessProvider
-          config={config}
-          initialScreenType={LoginSecondFactorScreenType.Init}
-        >
-          <CorbadoConnectLoginSecondFactorContainer />
-        </LoginSecondFactorProcessProvider>
-      </div>
+    <div className='cb-connect-container cb-connect-login'>
+      <LoginSecondFactorProcessProvider
+        config={config}
+        initialScreenType={LoginSecondFactorScreenType.Init}
+      >
+        <CorbadoConnectLoginSecondFactorContainer />
+      </LoginSecondFactorProcessProvider>
     </div>
   );
 };

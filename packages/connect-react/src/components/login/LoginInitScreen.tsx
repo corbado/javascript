@@ -302,6 +302,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
           />
           <PrimaryButton
             type='submit'
+            className='cb-login-init-submit'
             isLoading={cuiBasedLoading || identifierBasedLoading}
             onClick={() => void handleSubmit()}
           >

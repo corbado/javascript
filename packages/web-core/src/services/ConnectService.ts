@@ -24,13 +24,13 @@ import type {
 import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
 import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
+import { ConnectInvitation } from '../models/connect/connectInvitation';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import type { PasskeyLoginSource } from '../utils';
 import { CorbadoError } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
-import { ConnectInvitation } from '../models/connect/connectInvitation';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 

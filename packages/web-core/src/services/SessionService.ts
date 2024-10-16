@@ -28,6 +28,7 @@ import {
 import { WebAuthnService } from './WebAuthnService';
 
 const shortSessionKey = 'cbo_short_session';
+const sessionTokenKey = 'cbo_session_token';
 const longSessionKey = 'cbo_long_session';
 
 // controls how long before the shortSession expires we should refresh it
@@ -323,13 +324,16 @@ export class SessionService {
       return new ShortSession(localStorageValue);
     }
 
-    // we currently only add this here to be backwards compatible with the legacy webcomponent
-    // the idea is that a user can log into an application that uses the legacy webcomponent
-    // the webcomponent will set the short term session token in a cookie and this package can then take it from there
-    // as soon as the legacy webcomponent is removed, this can be removed as well
-    const cookieValue = this.#getCookieValue(shortSessionKey);
-    if (cookieValue) {
-      return new ShortSession(cookieValue);
+    // Get new session-token
+    const sessionToken = this.#getCookieValue(sessionTokenKey);
+    if (sessionToken) {
+      return new ShortSession(sessionToken);
+    }
+
+    // Fallback for deprecated short-term session
+    const shortSession = this.#getCookieValue(shortSessionKey);
+    if (shortSession) {
+      return new ShortSession(shortSession);
     }
 
     return undefined;
@@ -370,7 +374,9 @@ export class SessionService {
 
     if (this.#setShortSessionCookie) {
       const cookieConfig = this.#getShortSessionCookieConfig();
+
       document.cookie = this.#getShortSessionCookieString(cookieConfig, value);
+      document.cookie = this.#getSessionTokenCookieString(cookieConfig, value);
     }
   }
 
@@ -390,6 +396,13 @@ export class SessionService {
   #getShortSessionCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
     const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
     return `${shortSessionKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
+      config.sameSite
+    }; path=${config.path}; expires=${expires}`;
+  }
+
+  #getSessionTokenCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
+    const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
+    return `${sessionTokenKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
     }; path=${config.path}; expires=${expires}`;
   }

@@ -389,7 +389,9 @@ export class SessionService {
 
     if (this.#setShortSessionCookie) {
       const cookieConfig = this.#getShortSessionCookieConfig();
+
       document.cookie = this.#getDeleteShortSessionCookieString(cookieConfig);
+      document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
     }
   }
 
@@ -409,6 +411,12 @@ export class SessionService {
 
   #getDeleteShortSessionCookieString(config: ShortSessionCookieConfig) {
     return `${shortSessionKey}=; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
+      config.sameSite
+    }; path=${config.path}; expires=${new Date().toUTCString()}`;
+  }
+
+  #getDeleteSessionTokenCookieString(config: ShortSessionCookieConfig) {
+    return `${sessionTokenKey}=; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
     }; path=${config.path}; expires=${new Date().toUTCString()}`;
   }

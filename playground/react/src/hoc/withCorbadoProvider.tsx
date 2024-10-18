@@ -19,7 +19,6 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
           darkMode={darkMode ? 'on' : 'off'}
           isDevMode={true}
           frontendApiUrlSuffix={process.env.REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX}
-          setShortSessionCookie={true}
         >
           <WrappedComponent {...(props as T)} />
         </CorbadoProvider>

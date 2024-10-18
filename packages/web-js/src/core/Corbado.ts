@@ -26,7 +26,14 @@ export class Corbado {
     return this.#getCorbadoAppState().shortSession;
   }
 
+  /**
+   * @deprecated Use sessionTokenChanges() instead
+   */
   get shortSessionChanges() {
+    return this.#getCorbadoAppState().shortSessionChanges;
+  }
+
+  get sessionTokenChanges() {
     return this.#getCorbadoAppState().shortSessionChanges;
   }
 

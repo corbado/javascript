@@ -28,7 +28,7 @@ export class CorbadoApp {
       projectId,
       apiTimeout = defaultTimeout,
       frontendApiUrlSuffix = 'frontendapi.corbado.io',
-      setShortSessionCookie = false,
+      setShortSessionCookie = true,
       isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;

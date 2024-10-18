@@ -16,7 +16,7 @@ export class Corbado {
   }
 
   /**
-   * @deprecated
+   * @deprecated Use sessionToken() instead
    */
   get shortSession() {
     return this.#getCorbadoAppState().shortSession;

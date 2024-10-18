@@ -86,11 +86,14 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
+  const sessionToken = shortSession;
+
   return (
     <CorbadoSessionContext.Provider
       value={{
         corbadoApp,
         shortSession,
+        sessionToken,
         loading,
         user,
         isAuthenticated,

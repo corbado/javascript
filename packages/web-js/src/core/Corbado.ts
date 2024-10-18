@@ -15,7 +15,14 @@ export class Corbado {
     return this.#getCorbadoAppState().user;
   }
 
+  /**
+   * @deprecated
+   */
   get shortSession() {
+    return this.#getCorbadoAppState().shortSession;
+  }
+
+  get sessionToken() {
     return this.#getCorbadoAppState().shortSession;
   }
 

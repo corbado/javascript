@@ -69,19 +69,25 @@ test.describe('social logins', () => {
     await model.logout();
   });
 
-  test.skip('signup with social should be possible (account exists, social has been linked)', async ({ model }) => {});
+  test.skip('signup with social should be possible (account exists, social has been linked)', async () => {
+    // redirects to end screen (logged in)
+  });
 
   // in that case only identifier based login should be possible
-  test.skip('signup with social should not be possible (account exists, social has not been linked)', async ({
-    model,
-  }) => {});
+  test.skip('signup with social should not be possible (account exists, social has not been linked)', async () => {
+    // redirects to login screen
+  });
 
-  test.skip('login with social should be possible (account does not exist)', async ({ model }) => {});
+  test.skip('login with social should be possible (account does not exist)', async () => {
+    // redirects to passkey append screen
+  });
 
-  test.skip('login with social should be possible (account exists, social has been linked)', async ({ model }) => {});
+  test.skip('login with social should be possible (account exists, social has been linked)', async () => {
+    // redirects to end screen (logged in)
+  });
 
   // in that case only identifier based login should be possible
-  test.skip('login with social should not be possible (account exists, social has not been linked)', async ({
-    model,
-  }) => {});
+  test.skip('login with social should not be possible (account exists, social has not been linked)', async () => {
+    // TODO: it's possible for some reason (logged in)
+  });
 });

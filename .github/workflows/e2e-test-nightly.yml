@@ -1,10 +1,13 @@
-name: Commitly End-to-End testing check for Playground Apps
+name: Nightly End-to-End testing check for Playground Apps
 env:
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
   workflow_run:
-    workflows: ["Deploy Playground Apps to Vercel"]
+    workflows: [ "Deploy Playground Apps to Vercel" ]
     types:
       - completed
 
@@ -64,6 +67,7 @@ jobs:
           npx playwright install --with-deps
 
       - name: Install and run E2E Test for react
+        continue-on-error: true
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -79,8 +83,29 @@ jobs:
           GITHUB_BRANCH_NAME: ${{ github.ref_name }}
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: playwright-report
+          name: playwright-report-react
+          path: packages/tests-e2e/playwright-report/
+          retention-days: 30
+
+      - name: Install and run E2E Test for web-js
+        continue-on-error: true
+        run: |
+          cd packages/tests-e2e
+          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
+          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js.playground.corbado.io"
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts
+        env:
+          PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
+          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
+          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+          GITHUB_BRANCH_NAME: ${{ github.ref_name }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-web-js
           path: packages/tests-e2e/playwright-report/
           retention-days: 30

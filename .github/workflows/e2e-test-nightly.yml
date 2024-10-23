@@ -8,7 +8,7 @@ on:
     - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
 
 jobs:
-  e2e-tests:
+  prepare:
     timeout-minutes: 60
     runs-on: ubuntu-20.04
     steps:
@@ -63,7 +63,6 @@ jobs:
           npx playwright install --with-deps
 
       - name: Install and run E2E Test for react
-        continue-on-error: true
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -79,13 +78,13 @@ jobs:
           GITHUB_BRANCH_NAME: ${{ github.ref_name }}
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: playwright-report-react
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
       - name: Install and run E2E Test for web-js
-        continue-on-error: true
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -101,6 +100,7 @@ jobs:
           GITHUB_BRANCH_NAME: ${{ github.ref_name }}
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: playwright-report-web-js
           path: packages/tests-e2e/playwright-report/

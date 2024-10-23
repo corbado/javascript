@@ -64,7 +64,6 @@ jobs:
           npx playwright install --with-deps
 
       - name: Install and run E2E Test for react
-        continue-on-error: true
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')

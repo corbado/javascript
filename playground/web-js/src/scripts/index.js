@@ -17,7 +17,7 @@ async function loadPage() {
   window.onpopstate = loadPage;
 
   if (pathParts.includes('auth')) {
-    history.replaceState(null, '', `/${projectId}/auth`);
+    history.replaceState(null, '', `/${projectId}/auth${window.location.hash}`);
     loadAuthDOM();
 
     const authElement = document.getElementById('corbado-auth');
@@ -26,7 +26,7 @@ async function loadPage() {
         history.pushState(null, '', `/${projectId}`);
         await loadPage();
       },
-      initialBlock: 'login-init',
+      initialBlock: 'signup-init',
     });
   } else {
     history.replaceState(null, '', `/${projectId}`);

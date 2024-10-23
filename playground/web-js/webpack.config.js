@@ -6,22 +6,17 @@ const env = process.env.NODE_ENV;
 module.exports = {
   entry: {
     index: './src/scripts/index.js',
-    auth: './src/scripts/auth.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
+    publicPath: '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/pages/index.html',
       filename: 'index.html',
       chunks: ['index'],
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/pages/auth.html',
-      filename: 'auth.html',
-      chunks: ['auth'],
     }),
     new Dotenv({
       path: `./.env.${env}`,
@@ -32,5 +27,6 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     port: 9000,
+    historyApiFallback: true,
   },
 };

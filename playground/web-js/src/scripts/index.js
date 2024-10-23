@@ -1,18 +1,23 @@
 import Corbado from '@corbado/web-js';
 import { CORBADO_PROJECT_ID, CORBADO_FRONTEND_API_URL_SUFFIX } from './environment';
 
+let loaded = false;
+
 await loadPage();
 
 async function loadPage() {
   const pathParts = window.location.pathname.split('/');
   const projectId = pathParts.find(part => part.startsWith('pro-')) || CORBADO_PROJECT_ID;
 
-  await Corbado.load({
-    projectId: projectId,
-    frontendApiUrlSuffix: CORBADO_FRONTEND_API_URL_SUFFIX,
-    darkMode: 'auto',
-    setShortSessionCookie: true,
-  });
+  if (!loaded) {
+    loaded = true;
+    await Corbado.load({
+      projectId: projectId,
+      frontendApiUrlSuffix: CORBADO_FRONTEND_API_URL_SUFFIX,
+      darkMode: 'auto',
+      setShortSessionCookie: true,
+    });
+  }
 
   window.onpopstate = loadPage;
 
@@ -21,6 +26,7 @@ async function loadPage() {
     loadAuthDOM();
 
     const authElement = document.getElementById('corbado-auth');
+    Corbado.unmountAuthUI(authElement);
     Corbado.mountAuthUI(authElement, {
       onLoggedIn: async () => {
         history.pushState(null, '', `/${projectId}`);

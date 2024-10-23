@@ -8,9 +8,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
       - develop
-      - feature-refactor-to-thin-frontend
 
 jobs:
   deploy:

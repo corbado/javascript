@@ -1,6 +1,6 @@
 name: Commitly End-to-End testing check for Playground Apps
 env:
-  BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
+  BRANCH_NAME_RAW: ${{ github.event.workflow_run.head_branch }}
 
 on:
   workflow_run:

@@ -6,10 +6,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '42 1 * * *'  # 1:42 AM UTC = 3:42 AM CEST
-  workflow_run:
-    workflows: [ "Deploy Playground Apps to Vercel" ]
-    types:
-      - completed
 
 jobs:
   e2e-tests:

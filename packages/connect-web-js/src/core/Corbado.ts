@@ -9,21 +9,30 @@ import type { FC } from 'react';
 import type { Root } from 'react-dom/client';
 
 import { CorbadoState } from '../models/CorbadoState';
-import { mountComponent, unmountComponent } from '../ui/mountConnectComponent';
+import { mountComponent, mountShadowDom, unmountComponent } from '../ui/mountConnectComponent';
 
 export class Corbado {
   #componentInstances: Map<HTMLElement, Root> = new Map();
+  #shadowDomInstances: Map<HTMLElement, { shadow: ShadowRoot; reactEntry: HTMLElement }> = new Map();
 
-  mountCorbadoConnectLogin(element: HTMLElement, options: CorbadoConnectLoginConfig & CorbadoConnectConfig) {
-    this.#mountConnectComponent(element, CorbadoConnectLogin, options);
+  mountCorbadoConnectLogin(
+    element: HTMLElement,
+    options: CorbadoConnectLoginConfig & CorbadoConnectConfig,
+    customStyles?: string,
+  ) {
+    this.#mountConnectComponent(element, CorbadoConnectLogin, options, customStyles);
   }
 
   unmountCorbadoConnectLogin(element: HTMLElement) {
     this.#unmountConnectComponent(element);
   }
 
-  mountCorbadoConnectAppend(element: HTMLElement, options: CorbadoConnectAppendConfig & CorbadoConnectConfig) {
-    this.#mountConnectComponent(element, CorbadoConnectAppend, options);
+  mountCorbadoConnectAppend(
+    element: HTMLElement,
+    options: CorbadoConnectAppendConfig & CorbadoConnectConfig,
+    customStyles?: string,
+  ) {
+    this.#mountConnectComponent(element, CorbadoConnectAppend, options, customStyles);
   }
 
   unmountCorbadoConnectAppend(element: HTMLElement) {
@@ -33,8 +42,9 @@ export class Corbado {
   mountCorbadoConnectPasskeyList(
     element: HTMLElement,
     options: CorbadoConnectPasskeyListConfig & CorbadoConnectConfig,
+    customStyles?: string,
   ) {
-    this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options);
+    this.#mountConnectComponent(element, CorbadoConnectPasskeyList, options, customStyles);
   }
 
   unmountCorbadoConnectPasskeyList(element: HTMLElement) {
@@ -45,12 +55,19 @@ export class Corbado {
     element: HTMLElement,
     Component: FC<T & CorbadoConnectConfig>,
     componentOptions: T & CorbadoConnectConfig,
+    customStyles?: string,
   ) => {
     const corbadoState = new CorbadoState(componentOptions);
 
     this.#unmountConnectComponent(element);
 
-    const root = mountComponent(corbadoState, element, Component, componentOptions);
+    let mabyeShadowDomContainer = this.#shadowDomInstances.get(element);
+    if (!mabyeShadowDomContainer) {
+      mabyeShadowDomContainer = mountShadowDom(element, customStyles);
+      this.#shadowDomInstances.set(element, mabyeShadowDomContainer);
+    }
+
+    const root = mountComponent(corbadoState, mabyeShadowDomContainer.reactEntry, Component, componentOptions);
 
     this.#componentInstances.set(element, root);
   };

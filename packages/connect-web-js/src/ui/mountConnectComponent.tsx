@@ -5,10 +5,35 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
+import '@corbado/connect-react/src/index.css';
 
-import type { CorbadoState } from '../models/CorbadoState';
+import type { CorbadoState } from '../models/CorbadoState'; // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mountShadowDom(element: HTMLElement, customStyles?: string) {
+  const reactEntry = document.createElement('div');
+  const cboStyles = process.env.CBO_STYLES;
+  const defaultStylesElement = document.createElement('style');
+  if (!cboStyles) {
+    throw new Error('CBO_STYLES is not defined');
+  }
+
+  defaultStylesElement.innerHTML = cboStyles;
+
+  const shadow = element.attachShadow({ mode: 'open' });
+  shadow.appendChild(defaultStylesElement);
+
+  if (customStyles) {
+    const customStylesElement = document.createElement('link');
+    customStylesElement.setAttribute('rel', 'stylesheet');
+    customStylesElement.setAttribute('href', customStyles);
+    shadow.appendChild(customStylesElement);
+  }
+  shadow.appendChild(reactEntry);
+
+  return { shadow, reactEntry };
+}
+
 export function mountComponent<T extends Record<string, any>>(
   corbadoState: CorbadoState,
   element: HTMLElement,

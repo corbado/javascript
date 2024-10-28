@@ -3,6 +3,7 @@ env:
   BRANCH_NAME_RAW: ${{ github.event.workflow_run.head_branch }}
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Deploy Playground Apps to Vercel"]
     types:

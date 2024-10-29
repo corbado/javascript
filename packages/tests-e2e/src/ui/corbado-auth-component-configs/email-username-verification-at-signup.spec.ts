@@ -40,6 +40,7 @@ test.describe('tests that focus on these identifiers: email (verification at sig
     await model.expectScreen(ScreenNames.End);
 
     await model.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
 
     // we first try login with email
     await model.loginInit.removePasskeyButton();
@@ -48,6 +49,7 @@ test.describe('tests that focus on these identifiers: email (verification at sig
     await model.expectScreen(ScreenNames.End);
 
     await model.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
 
     // we then try login with username
     await model.loginInit.removePasskeyButton();

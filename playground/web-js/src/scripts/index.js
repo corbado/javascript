@@ -22,7 +22,7 @@ async function loadPage() {
   window.onpopstate = loadPage;
 
   if (pathParts.includes('auth')) {
-    history.replaceState(null, '', `/${projectId}/auth${window.location.hash}`);
+    history.replaceState(null, '', `/${projectId}/auth${window.location.search}${window.location.hash}`);
     loadAuthDOM();
 
     const authElement = document.getElementById('corbado-auth');

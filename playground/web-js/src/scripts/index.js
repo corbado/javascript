@@ -35,7 +35,7 @@ async function loadPage() {
       // initialBlock: 'signup-init',
     });
   } else {
-    history.replaceState(null, '', `/${projectId}`);
+    history.replaceState(null, '', `/${projectId}${window.location.search}${window.location.hash}`);
     loadHomeDOM();
 
     if (!Corbado.user) {

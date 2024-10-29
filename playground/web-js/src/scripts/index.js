@@ -32,7 +32,7 @@ async function loadPage() {
         history.pushState(null, '', `/${projectId}`);
         await loadPage();
       },
-      initialBlock: 'signup-init',
+      // initialBlock: 'signup-init',
     });
   } else {
     history.replaceState(null, '', `/${projectId}`);

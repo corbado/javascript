@@ -50,6 +50,11 @@ export class Corbado {
   }
 
   async load(options: CorbadoConfig) {
+    console.log("Corbado.load()");
+    //if (this.#corbadoAppState) {
+    //  return;
+    //}
+
     const corbadoAppState = new CorbadoAppState(options);
     await corbadoAppState.init();
 

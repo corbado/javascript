@@ -24,6 +24,8 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: CorbadoAppParams) {
+    console.log("CorbadoApp.constructor()");
+
     const {
       projectId,
       apiTimeout = defaultTimeout,

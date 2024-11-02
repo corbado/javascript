@@ -64,6 +64,8 @@ export class SessionService {
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
   constructor(projectId: string, setShortSessionCookie: boolean, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
+    console.log("SessionService.constructor()");
+
     this.#projectId = projectId;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
@@ -96,6 +98,7 @@ export class SessionService {
     this.#setApisV2(this.#longSession);
 
     // init scheduled session refresh
+    console.log("SessionService.setInterval()");
     this.#refreshIntervalId = setInterval(() => {
       void this.#handleRefreshRequest();
     }, shortSessionRefreshIntervalMs);
@@ -482,6 +485,8 @@ export class SessionService {
   }
 
   #handleVisibilityChange() {
+    console.log("SessionService.handleVisibilityChange()");
+
     if (document.hidden) {
       log.debug('session refresh: no refresh, page is hidden');
 

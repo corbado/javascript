@@ -39,7 +39,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
   const [error, setError] = useState('');
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const [loginInitState, setLoginInitState] = useState(LoginInitState.SilentLoading);
-  const emailFieldRef = useRef<HTMLInputElement>();
+  const emailFieldRef = useRef<HTMLInputElement | null>();
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setLoginInitState(LoginInitState.Loading),
@@ -125,14 +125,24 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
     };
   }, [getConnectService]);
 
+  useEffect(() => {
+    if (prefilledIdentifier && emailFieldRef.current) {
+      emailFieldRef.current.value = prefilledIdentifier;
+    }
+  }, [prefilledIdentifier, emailFieldRef.current]);
+
   const startConditionalUI = async (challenge: string | null) => {
     if (!challenge) {
       return;
     }
 
+    let cuiStarted = false;
     const res = await getConnectService().conditionalUILogin(
       ac => config.onConditionalLoginStart?.(ac),
-      () => setCuiBasedLoading(true),
+      () => {
+        setCuiBasedLoading(true);
+        cuiStarted = true;
+      },
       () => {
         return;
       },
@@ -150,8 +160,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
         return handleSituation(LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator);
       }
 
-      // cuiBasedLoading === true indicates that user has passed the authenticator
-      if (cuiBasedLoading) {
+      // cuiStarted === true indicates that user has passed the authenticator
+      if (cuiStarted) {
         return handleSituation(LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator);
       }
 
@@ -293,15 +303,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
             autoComplete={enableAutoComplete}
             autoFocus={true}
             placeholder=''
-            ref={(el: HTMLInputElement | null) => {
-              el && (emailFieldRef.current = el);
-              if (prefilledIdentifier && el) {
-                el.value = prefilledIdentifier;
-              }
-            }}
+            ref={(el: HTMLInputElement | null) => (emailFieldRef.current = el)}
           />
           <PrimaryButton
             type='submit'
+            className='cb-login-init-submit'
             isLoading={cuiBasedLoading || identifierBasedLoading}
             onClick={() => void handleSubmit()}
           >
@@ -320,5 +326,4 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       );
   }
 };
-
 export default LoginInitScreen;

@@ -8,7 +8,6 @@ export enum AppendScreenType {
 export enum LoginScreenType {
   LoginHybridScreen = 'LoginHybridScreen',
   Init = 'Init',
-  Success = 'Success',
   PasskeyReLogin = 'PasskeyReLogin',
   Loading = 'Loading',
   ErrorSoft = 'ErrorSoft',

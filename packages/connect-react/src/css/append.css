@@ -1,7 +1,8 @@
 .cb-passkey-info-list-item {
   display: flex;
-  margin: 0.5rem 0rem;
+  margin: 0.5rem 0;
   width: 100%;
+  align-items: center;
 }
 
 .cb-passkey-info-list-item-icon {
@@ -9,10 +10,15 @@
   margin-right: 0.25rem;
   flex: 0 0 60px;
   padding: 0.5rem;
+  color: var(--cb-color-primary);
 }
 
 .cb-passkey-info-list-item-text {
   flex: 1;
+}
+
+.cb-passkey-info-list-item-header {
+  color: var(--cb-color-primary);
 }
 
 .cb-append-benefits-icons {
@@ -72,7 +78,7 @@
 
 .cb-append-skip-container {
   width: fit-content;
-  padding: 1rem 2rem;
+  padding: 0 1rem;
   display: flex;
   justify-content: center;
 }
@@ -82,6 +88,7 @@
   margin: 1rem 0;
   display: flex;
   justify-content: center;
+  color: var(--cb-color-primary);
 }
 
 .cb-append-after-hybrid-login-icons > *,
@@ -107,7 +114,7 @@
 .cb-append-after-hybrid-login-content,
 .cb-checkbox-input-field {
   .cb-p {
-    margin-bottom: 0rem;
+    margin-bottom: 0;
   }
 }
 

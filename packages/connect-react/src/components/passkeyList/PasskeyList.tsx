@@ -2,11 +2,11 @@ import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
-import { Button } from '../shared/Button';
 import { PlusIcon } from '../shared/icons/PlusIcon';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 import { Notification } from '../shared/Notification';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
+import { PrimaryButton } from '../shared/PrimaryButton';
 import PasskeyEmptyList from './PasskeyEmptyList';
 
 export enum PasskeyListState {
@@ -47,7 +47,7 @@ const PasskeyList: FC<PasskeyListProps> = ({
         return <PasskeyEmptyList message='Passkey list is unavailable. Please try again later.' />;
       case PasskeyListState.Loaded:
         if (passkeys.length === 0) {
-          return <PasskeyEmptyList message='There is currently no passkey saved for this account' />;
+          return <PasskeyEmptyList message='There is currently no passkey saved for this account.' />;
         }
 
         return passkeys.map(passkey => (
@@ -78,17 +78,17 @@ const PasskeyList: FC<PasskeyListProps> = ({
           className='cb-p cb-error-notification'
         />
       ) : null}
-      <div className='cb-passkey-list-container'>{drawContent()}</div>
+      {drawContent()}
       {onAppendClick ? (
         <div className='cb-passkey-list-append-cta'>
-          <Button
+          <PrimaryButton
             className='cb-passkey-list-append-button'
             onClick={() => onAppendClick()}
             isLoading={appendLoading}
           >
-            <p>Add a passkey</p>
+            <span>Add a passkey</span>
             <PlusIcon className='cb-passkey-list-append-icon' />
-          </Button>
+          </PrimaryButton>
         </div>
       ) : null}
     </>

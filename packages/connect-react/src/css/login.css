@@ -1,9 +1,5 @@
 .cb-login-init-signup {
-  margin: 0.5rem 0;
-}
-
-.cb-login-init-forgot-password {
-  margin: 0.5rem 0;
+  margin-top: 2rem;
 }
 
 .cb-login-error-hard-icons {
@@ -11,27 +7,25 @@
 }
 
 .cb-login-error-hard-icons > *,
-.cb-login-error-soft-icons > *,
-.cb-login-success-icons > * {
+.cb-login-error-soft-icons > * {
   width: 60px;
-}
-
-.cb-login-error-hard-fallback,
-.cb-login-error-soft-fallback {
-  margin: 0.5rem 0;
 }
 
 .cb-login-error-hard-icons,
 .cb-login-error-soft-icons,
 .cb-login-hybrid-icons {
   margin: 1rem 0;
+  padding: 2rem 0;
   display: flex;
   justify-content: center;
+  color: var(--cb-color-on-primary-container);
+  background: var(--cb-color-primary-container);
+  border-radius: var(--cb-border-radius);
 }
 
-.cb-login-error-soft-icons > * {
-  margin: 0.5rem;
-  color: var(--cb-color-on-primary-container);
+.cb-login-error-soft-icons,
+.cb-login-hybrid-icons {
+  gap: 2rem;
 }
 
 .cb-login-hybrid-icons > * {
@@ -58,9 +52,9 @@
   height: 50px;
 }
 
-.cb-login-init-passkey-button {
+.cb-login-error-soft-button {
   width: 100%;
-  margin: 1rem 0rem;
+  background: var(--cb-color-primary);
 }
 
 .cb-login-error-hard-icons-error {
@@ -70,22 +64,16 @@
 }
 
 .cb-login-error-hard-cta {
+  padding-top: 1rem;
   display: flex;
   width: 100%;
   gap: 1rem;
+  font-size: 0.8125rem;
 }
 
-.cb-login-success-icons {
-  margin: 1rem 0;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-}
-
-.cb-login-success-icons-success {
-  width: 32px;
-  height: 32px;
-  color: var(--cb-color-success);
+.cb-login-error-hard-cta.button {
+  text-align: center;
+  font-weight: bold;
 }
 
 .cb-switch {
@@ -93,11 +81,56 @@
 }
 
 .cb-login-error-hard-help {
-  margin: 1rem 0rem;
+  margin: 1rem 0;
 }
 
 @media screen and (max-width: 724px) {
   .cb-login-error-hard-cta {
     flex-direction: column-reverse;
   }
+}
+
+.cb-passkey-button {
+  padding: 1rem;
+  background-color: white;
+  color: var(--cb-color-on-primary);
+  border-radius: var(--cb-border-radius);
+  border: 1px solid var(--cb-color-outline);
+  font-family: var(--cb-font-family-primary);
+  width: 100%;
+  display: flex;
+  justify-items: between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cb-passkey-button-icon {
+  width: 25px;
+  height: 25px;
+  color: black;
+}
+
+.cb-passkey-button-content {
+  flex: 1;
+  text-align: left;
+}
+
+.cb-passkey-button-title {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: black;
+}
+
+.cb-passkey-button-subtitle {
+  color: var(--cb-color-primary);
+  font-size: 0.8rem;
+}
+
+.cb-passkey-button-arrow {
+  width: 9px;
+  color: black;
+}
+
+.cb-login-init-submit {
+  text-align: left;
 }

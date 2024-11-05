@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import { SecondaryButton } from '../shared/SecondaryButton';
+import { PrimaryButton } from '../shared/PrimaryButton';
 
 interface Props {
   onClick: () => void;
@@ -36,7 +36,7 @@ const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
         To activate your passkey, you will have to log in again with email address and password and activate your
         passkey
       </div>
-      <SecondaryButton onClick={onClick}>Back</SecondaryButton>
+      <PrimaryButton onClick={onClick}>Back</PrimaryButton>
     </div>
   );
 };

@@ -63,7 +63,10 @@ test.describe('social logins', () => {
   test('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
-    await model.signupInit.submitSocialMicrosoft();
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    expect(process.env.PLAYWRIGHT_MICROSOFT_EMAIL).toBeDefined();
+    await model.signupInit.submitSocialMicrosoft(email, password);
 
     await model.expectScreen(ScreenNames.PasskeyAppend1);
   });
@@ -77,11 +80,13 @@ test.describe('social logins', () => {
     // redirects to login screen
   });
 
-  test.skip('login with social should be possible (account does not exist)', async ({ model }) => {
+  test('login with social should be possible (account does not exist)', async ({ model }) => {
     // redirects to passkey append screen
     await model.load(projectId, true, 'login-init');
 
-    await model.loginInit.submitSocialMicrosoft();
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    await model.loginInit.submitSocialMicrosoft(email, password);
 
     await model.expectScreen(ScreenNames.PasskeyAppend1);
   });

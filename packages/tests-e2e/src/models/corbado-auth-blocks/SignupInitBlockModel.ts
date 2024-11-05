@@ -57,8 +57,8 @@ export class SignupInitBlockModel {
     return this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
-  async submitSocialMicrosoft() {
-    await socialLogin(this.page);
+  async submitSocialMicrosoft(email: string, password: string) {
+    await socialLogin(this.page, email, password);
   }
 
   expectErrorMissingUsername(): Promise<void> {

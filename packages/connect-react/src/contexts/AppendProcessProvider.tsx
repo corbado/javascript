@@ -1,4 +1,4 @@
-import type { CorbadoConnectAppendConfig } from '@corbado/types';
+import type { AppendStatus, CorbadoConnectAppendConfig } from '@corbado/types';
 import log from 'loglevel';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -41,18 +41,20 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
       }
 
       config.onError?.(situationCode.toString());
-      config.onSkip();
+      void config.onSkip('skip-implicit');
     },
     [getConnectService, config],
   );
 
   const handleSkip = useCallback(
     async (_: AppendSituationCode, explicit?: boolean) => {
+      let status: AppendStatus = 'skip-implicit';
       if (explicit) {
+        status = 'skip-explicit';
         await getConnectService().recordEventAppendExplicitAbort();
       }
 
-      config.onSkip();
+      void config.onSkip(status);
     },
     [getConnectService, config],
   );
@@ -61,7 +63,7 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
     log.debug('error (credential-exists)');
 
     await getConnectService().recordEventAppendCredentialExistsError();
-    void config.onComplete();
+    void config.onComplete('complete-noop');
   }, [getConnectService, config]);
 
   const contextValue = useMemo<AppendProcessContextProps>(

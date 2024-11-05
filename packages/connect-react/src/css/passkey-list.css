@@ -36,6 +36,7 @@
 
 .cb-passkey-list-item-icon {
   color: black;
+  width: 100%;
 }
 
 .cb-passkey-list-item-delete-icon {

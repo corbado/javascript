@@ -21,3 +21,10 @@ export const socialLogin = async (page: Page, email: string, password: string) =
 
   await page.getByRole('button', { name: 'No' }).click();
 };
+
+export const repeatSocialLogin = async (page: Page) => {
+  await page.getByTitle(`Continue with Microsoft`).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Let this app access your info? (1 of 1 apps)');
+
+  await page.getByRole('button', { name: 'Accept' }).click();
+}

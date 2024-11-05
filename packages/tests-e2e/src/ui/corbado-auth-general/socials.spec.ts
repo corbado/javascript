@@ -3,7 +3,7 @@ import {
   IdentifierEnforceVerification,
   IdentifierType,
   IdentifierVerification,
-  ScreenNames,
+  ScreenNames, socialOperationTimeout,
   SocialProviderType,
 } from '../../utils/constants';
 import {
@@ -17,13 +17,18 @@ import {
 test.describe('social logins', () => {
   let projectId: string;
 
-  test.beforeAll(async () => {
+  test.use({
+    actionTimeout: socialOperationTimeout,
+    navigationTimeout: socialOperationTimeout,
+  });
+
+  test.beforeEach(async () => {
     projectId = await createProjectNew();
 
     await setComponentConfig(
       projectId,
       [
-        makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.Signup, true, [
+        makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.None, true, [
           IdentifierVerification.EmailOtp,
         ]),
       ],
@@ -35,7 +40,7 @@ test.describe('social logins', () => {
     );
   });
 
-  test.afterAll(async () => {
+  test.afterEach(async () => {
     await deleteProjectNew(projectId);
   });
 
@@ -59,25 +64,52 @@ test.describe('social logins', () => {
     );
   });
 
-  // this covers signup + login
   test('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
-    expect(process.env.PLAYWRIGHT_MICROSOFT_EMAIL).toBeDefined();
-    await model.signupInit.submitSocialMicrosoft(email, password);
 
+    await model.signupInit.submitSocialMicrosoft(email, password);
     await model.expectScreen(ScreenNames.PasskeyAppend1);
   });
 
-  test.skip('signup with social should be possible (account exists, social has been linked)', async () => {
-    // redirects to end screen (logged in)
+  test.skip('signup with social should be possible (account exists, social has been linked)', async ({ model }) => {
+    await model.load(projectId, true, 'signup-init');
+
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+
+    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.expectScreen(ScreenNames.PasskeyAppend1);
+    await model.passkeyAppend.startPasskeyOperation(true);
+    await model.expectScreen(ScreenNames.End);
+    await model.logout();
+
+    await model.load(projectId, true, 'signup-init');
+
+    await model.signupInit.resubmitSocialMicrosoft();
+    // TODO: should successfully log in, but gets redirected to login-init instead.
+    await model.expectScreen(ScreenNames.End);
   });
 
   // in that case only identifier based login should be possible
-  test.skip('signup with social should not be possible (account exists, social has not been linked)', async () => {
-    // redirects to login screen
+  test('signup with social should not be possible (account exists, social has not been linked)', async ({ model }) => {
+    await model.load(projectId, true, 'signup-init');
+
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+
+    await model.signupInit.fillEmail(email);
+    await model.signupInit.submitPrimary();
+    await model.passkeyAppend.startPasskeyOperation(true);
+    await model.expectScreen(ScreenNames.End);
+    await model.logout();
+
+    await model.load(projectId, true, 'signup-init');
+
+    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.expectScreen(ScreenNames.InitLogin);
   });
 
   test('login with social should be possible (account does not exist)', async ({ model }) => {
@@ -91,12 +123,41 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.PasskeyAppend1);
   });
 
-  test.skip('login with social should be possible (account exists, social has been linked)', async () => {
-    // redirects to end screen (logged in)
+  test('login with social should be possible (account exists, social has been linked)', async ({ model }) => {
+    await model.load(projectId, true, 'signup-init');
+
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+
+    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.expectScreen(ScreenNames.PasskeyAppend1);
+    await model.passkeyAppend.startPasskeyOperation(true);
+    await model.expectScreen(ScreenNames.End);
+    await model.logout();
+
+    await model.load(projectId, true, 'login-init');
+
+    await model.signupInit.resubmitSocialMicrosoft();
+    await model.expectScreen(ScreenNames.End);
   });
 
   // in that case only identifier based login should be possible
-  test.skip('login with social should not be possible (account exists, social has not been linked)', async () => {
-    // TODO: it's possible for some reason (logged in)
+  test.skip('login with social should not be possible (account exists, social has not been linked)', async ({ model }) => {
+    await model.load(projectId, true, 'signup-init');
+
+    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';
+    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+
+    await model.signupInit.fillEmail(email);
+    await model.signupInit.submitPrimary();
+    await model.passkeyAppend.startPasskeyOperation(true);
+    await model.expectScreen(ScreenNames.End);
+    await model.logout();
+
+    await model.load(projectId, true, 'login-init');
+
+    await model.signupInit.submitSocialMicrosoft(email, password);
+    // TODO: should redirect to login-init screen, but gets successfully logged in insteaad.
+    await model.expectScreen(ScreenNames.InitLogin);
   });
 });

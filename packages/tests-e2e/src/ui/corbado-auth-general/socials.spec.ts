@@ -3,7 +3,8 @@ import {
   IdentifierEnforceVerification,
   IdentifierType,
   IdentifierVerification,
-  ScreenNames, socialOperationTimeout,
+  ScreenNames,
+  socialOperationTimeout,
   SocialProviderType,
 } from '../../utils/constants';
 import {
@@ -142,7 +143,9 @@ test.describe('social logins', () => {
   });
 
   // in that case only identifier based login should be possible
-  test.skip('login with social should not be possible (account exists, social has not been linked)', async ({ model }) => {
+  test.skip('login with social should not be possible (account exists, social has not been linked)', async ({
+    model,
+  }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';

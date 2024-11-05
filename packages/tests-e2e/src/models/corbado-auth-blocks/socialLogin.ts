@@ -27,4 +27,4 @@ export const repeatSocialLogin = async (page: Page) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Let this app access your info? (1 of 1 apps)');
 
   await page.getByRole('button', { name: 'Accept' }).click();
-}
+};

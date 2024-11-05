@@ -60,13 +60,12 @@ test.describe('social logins', () => {
   });
 
   // this covers signup + login
-  test.skip('signup with socials should be possible (account does not exist)', async ({ model }) => {
+  test('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     await model.signupInit.submitSocialMicrosoft();
 
-    await model.expectScreen(ScreenNames.End);
-    await model.logout();
+    await model.expectScreen(ScreenNames.PasskeyAppend1);
   });
 
   test.skip('signup with social should be possible (account exists, social has been linked)', async () => {
@@ -78,8 +77,13 @@ test.describe('social logins', () => {
     // redirects to login screen
   });
 
-  test.skip('login with social should be possible (account does not exist)', async () => {
+  test.skip('login with social should be possible (account does not exist)', async ({ model }) => {
     // redirects to passkey append screen
+    await model.load(projectId, true, 'login-init');
+
+    await model.loginInit.submitSocialMicrosoft();
+
+    await model.expectScreen(ScreenNames.PasskeyAppend1);
   });
 
   test.skip('login with social should be possible (account exists, social has been linked)', async () => {

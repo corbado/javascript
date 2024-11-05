@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type { SocialProviderType } from '../../utils/constants';
+import { socialLogin } from './socialLogin';
 
 export class LoginInitBlockModel {
   page: Page;
@@ -36,6 +37,10 @@ export class LoginInitBlockModel {
 
   async submitPrimary() {
     await this.page.getByRole('button', { name: 'Continue' }).click();
+  }
+
+  async submitSocialMicrosoft() {
+    await socialLogin(this.page);
   }
 
   submitPasskeyButton() {

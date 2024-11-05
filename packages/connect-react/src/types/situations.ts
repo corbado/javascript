@@ -30,6 +30,7 @@ export enum PasskeyListSituationCode {
   CboApiNotAvailableDuringDelete,
   CtApiNotAvailablePreDelete,
   CtApiNotAvailablePreAuthenticator,
+  CboApiPasskeysNotSupported,
   CboApiNotAvailablePreAuthenticator,
   CboApiNotAvailablePostAuthenticator,
   ClientPasskeyOperationCancelled,

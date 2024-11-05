@@ -116,8 +116,12 @@ const PasskeyListScreen = () => {
 
     const loadedMs = Date.now();
     const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, undefined, true);
-    if (startAppendRes.err || !startAppendRes.val) {
+    if (startAppendRes.err) {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator);
+    }
+
+    if (!startAppendRes.val) {
+      return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 
     const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
@@ -171,6 +175,10 @@ const PasskeyListScreen = () => {
         setAppendLoading(false);
         void getConnectService().recordEventAppendCredentialExistsError();
         show(AlreadyExistingModal());
+        break;
+      case PasskeyListSituationCode.CboApiPasskeysNotSupported:
+        setAppendLoading(false);
+        show(PasskeyAppendNotSupportedModal());
         break;
       case PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad:
       case PasskeyListSituationCode.CtApiNotAvailableDuringInitialLoad:
@@ -234,6 +242,20 @@ const PasskeyListScreen = () => {
         <>
           <p className='cb-p'>You already have a passkey that can be used on this device. </p>
           <p className='cb-p'>There is no need to create a new one.</p>
+        </>
+      }
+    />
+  );
+
+  const PasskeyAppendNotSupportedModal = () => (
+    <BaseModal
+      onPrimaryButton={() => hide()}
+      onCloseButton={() => hide()}
+      headerText='No passkey created'
+      primaryButtonText='Okay'
+      children={
+        <>
+          <p className='cb-p'>Your current device does not support passkeys.</p>
         </>
       }
     />

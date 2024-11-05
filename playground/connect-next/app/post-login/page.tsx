@@ -13,7 +13,7 @@ export default function PostLoginPage() {
       <div className='w-96 my-4 mx-4'>
         <div className='mb-2 flex justify-between'>
           <CorbadoConnectAppend
-            onSkip={() => router.push('/home')}
+            onSkip={async () => router.push('/home')}
             appendTokenProvider={async () => {
               const t = await getAppendToken();
               console.log(t);

@@ -18,6 +18,7 @@ import {
 test.describe('social logins', () => {
   let projectId: string;
 
+  // Microsoft social login requires longer timeout
   test.use({
     actionTimeout: socialOperationTimeout,
     navigationTimeout: socialOperationTimeout,

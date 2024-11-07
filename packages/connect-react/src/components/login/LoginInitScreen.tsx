@@ -31,7 +31,7 @@ interface Props {
   prefilledIdentifier?: string;
 }
 
-const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier }) => {
+const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
@@ -124,12 +124,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false, prefilledIdentifier 
       getConnectService().dispose();
     };
   }, [getConnectService]);
-
-  useEffect(() => {
-    if (prefilledIdentifier && emailFieldRef.current) {
-      emailFieldRef.current.value = prefilledIdentifier;
-    }
-  }, [prefilledIdentifier, emailFieldRef.current]);
 
   const startConditionalUI = async (challenge: string | null) => {
     if (!challenge) {

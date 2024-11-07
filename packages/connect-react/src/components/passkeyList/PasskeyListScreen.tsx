@@ -120,7 +120,7 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
-    if (!startAppendRes.val) {
+    if (!startAppendRes.val.attestationOptions) {
       return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 

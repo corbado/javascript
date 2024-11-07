@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 
 import { Button } from './Button';
 import { ArrowRight } from './icons/ArrowRight';
@@ -15,7 +15,10 @@ export const PasskeyButton = ({ email, isLoading, onClick }: Props) => {
   return (
     <Button
       className='cb-passkey-button'
-      onClick={onClick}
+      onClick={(e: FormEvent) => {
+        e.preventDefault();
+        onClick();
+      }}
     >
       <PasskeyLoginIcon className='cb-passkey-button-icon' />
       <div className='cb-passkey-button-content'>

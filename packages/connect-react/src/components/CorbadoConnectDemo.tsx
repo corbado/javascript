@@ -1,22 +1,21 @@
 import type { CorbadoConnectDemoConfig } from '@corbado/types';
 import type { Passkey } from '@corbado/web-core';
-
 import type { FC } from 'react';
 import React from 'react';
 
-import PasskeyList, { PasskeyListState } from './passkeyList/PasskeyList';
-import DeleteModal from './passkeyList/DeleteModal';
-import AlreadyExistingModal from './passkeyList/AlreadyExistingModal';
-import PasskeyAppendNotSupportedModal from './passkeyList/PasskeyAppendNotSupportedModal';
-import AppendInitLoading from './append/append-init/AppendInitLoading';
 import AppendInitLoaded from './append/append-init/AppendInitLoaded';
+import AppendInitLoading from './append/append-init/AppendInitLoading';
 import AppendSuccessScreen from './append/AppendSuccessScreen';
+import LoginErrorHard from './login/base/LoginErrorHard';
+import LoginErrorSoft from './login/base/LoginErrorSoft';
+import LoginHybrid from './login/base/LoginHybrid';
 import LoginInitLoaded from './login/base/LoginInitLoaded';
 import LoginInitLoading from './login/base/LoginInitLoading';
-import LoginHybrid from './login/base/LoginHybrid';
 import LoginOneTap from './login/base/LoginOneTap';
-import LoginErrorSoft from './login/base/LoginErrorSoft';
-import LoginErrorHard from './login/base/LoginErrorHard';
+import AlreadyExistingModal from './passkeyList/AlreadyExistingModal';
+import DeleteModal from './passkeyList/DeleteModal';
+import PasskeyAppendNotSupportedModal from './passkeyList/PasskeyAppendNotSupportedModal';
+import PasskeyList, { PasskeyListState } from './passkeyList/PasskeyList';
 
 const getListOfPasskeys = () => {
   const out: Passkey[] = [

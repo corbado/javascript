@@ -1,9 +1,10 @@
 import React from 'react';
-import { LinkButton } from '../../shared/LinkButton';
-import { PrimaryButton } from '../../shared/PrimaryButton';
-import { PasskeyIcon } from '../../shared/icons/PasskeyIcon';
+
 import { ErrorIcon } from '../../shared/icons/ErrorIcon';
+import { PasskeyIcon } from '../../shared/icons/PasskeyIcon';
+import { LinkButton } from '../../shared/LinkButton';
 import { OutlineButton } from '../../shared/OutlineButton';
+import { PrimaryButton } from '../../shared/PrimaryButton';
 
 type Props = {
   loading: boolean;

@@ -8,8 +8,8 @@ import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AppendBenefits from './append-init/AppendBenetifs';
-import AppendInitLoading from './append-init/AppendInitLoading';
 import AppendInitLoaded from './append-init/AppendInitLoaded';
+import AppendInitLoading from './append-init/AppendInitLoading';
 
 export enum AppendInitState {
   SilentLoading,

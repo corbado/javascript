@@ -1,4 +1,5 @@
-import React, { FormEvent } from 'react';
+import type { FormEvent } from 'react';
+import React from 'react';
 
 import { Button } from './Button';
 import { ArrowRight } from './icons/ArrowRight';

@@ -33,7 +33,8 @@
     border-radius: 0;
   }
 
-  .cb-passkey-list-empty, .cb-passkey-list-loader-container {
+  .cb-passkey-list-empty,
+  .cb-passkey-list-loader-container {
     border-bottom: 1px solid var(--cb-color-outline);
   }
 
@@ -41,7 +42,9 @@
     font-weight: bold;
   }
 
-  .cb-primary-button, .cb-secondary-button, .cb-outline-button {
+  .cb-primary-button,
+  .cb-secondary-button,
+  .cb-outline-button {
     font-weight: bold;
   }
 

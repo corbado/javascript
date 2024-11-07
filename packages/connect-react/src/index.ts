@@ -6,6 +6,7 @@ import CorbadoConnectLoginSecondFactor from './components/CorbadoConnectLoginSec
 import CorbadoConnectPasskeyList from './components/CorbadoConnectPasskeyList';
 import { CorbadoConnectProvider } from './components/CorbadoConnectProvider';
 import CorbadoConnectModal from './components/shared/CorbadoConnectModal';
+import CorbadoConnectDemo from './components/CorbadoConnectDemo';
 
 export {
   CorbadoConnectLogin,
@@ -14,6 +15,7 @@ export {
   CorbadoConnectPasskeyList,
   CorbadoConnectLoginSecondFactor,
   CorbadoConnectModal,
+  CorbadoConnectDemo,
 };
 
 export type { CorbadoConnectProviderProps } from './components/CorbadoConnectProvider';

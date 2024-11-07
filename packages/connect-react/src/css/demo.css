@@ -1,0 +1,20 @@
+.cb-demo-screen-container {
+  margin: 2rem 0;
+}
+
+.cb-demo-screen-box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.description-headline {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.demo-controls-item input {
+  margin-right: 2rem;
+  margin-top: .2rem;
+}

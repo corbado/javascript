@@ -7,9 +7,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
-import { HybridIcon } from '../shared/icons/HybridIcon';
-import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import LoginHybrid from './base/LoginHybrid';
 
 const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -70,30 +68,11 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   };
 
   return (
-    <div className='cb-login-hybrid-container'>
-      <div className='cb-h2'>Login with a mobile passkey</div>
-      <div className='cb-p'>A passkey was found on your mobile device.</div>
-      <div className='cb-login-hybrid-icons'>
-        <HybridIcon className='cb-login-hybrid-icon' />
-      </div>
-      <div className='cb-p'>Use your mobile device to log in.</div>
-      <div className='cb-p'>You can use your mobile device to log in. Simply scan the QR code.</div>
-      <div className='cb-login-hybrid-cta'>
-        <PrimaryButton
-          isLoading={loading}
-          onClick={() => void handleSubmit()}
-          className='cb-login-hybrid-button'
-        >
-          Use mobile device
-        </PrimaryButton>
-        <LinkButton
-          onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
-          className='cb-login-hybrid-fallback'
-        >
-          Continue with email
-        </LinkButton>
-      </div>
-    </div>
+    <LoginHybrid
+      loading={loading}
+      handleSubmit={() => void handleSubmit()}
+      handleFallback={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
+    />
   );
 };
 

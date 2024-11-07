@@ -1,0 +1,70 @@
+.cb-connect-custom-style {
+  --cb-color-outline: #dcdcdc;
+  --cb-color-primary: #253544;
+  --cb-color-secondary: #929aa1;
+  --cb-color-tertiary: #666;
+  --cb-color-on-primary: #fff;
+  --cb-border-radius: 5px;
+  --cb-color-surface: #fff;
+  --cb-color-primary-container: #eef2f3;
+  --cb-color-on-primary-container: #253544;
+  --cb-color-secondary-container: #ecf4e7;
+  --cb-color-on-secondary-container: #80b816;
+  --cb-font-family-primary: Verdana, Helvetica, sans-serif;
+  --cb-font-family-secondary: Museo-500, Verdana, Helvetica, sans-serif;
+
+  --cb-color-error-container: #ffd6da;
+  --cb-color-on-error-container: #cf0000;
+
+  .cb-tag {
+    border-radius: 20px;
+  }
+
+  .cb-input {
+    font-size: 12px;
+    border-radius: 0;
+    padding: 15px 10px 15px;
+    max-width: none;
+  }
+
+  .cb-passkey-list-item {
+    border: none;
+    border-bottom: 1px solid var(--cb-color-outline);
+    border-radius: 0;
+  }
+
+  .cb-passkey-list-empty, .cb-passkey-list-loader-container {
+    border-bottom: 1px solid var(--cb-color-outline);
+  }
+
+  .cb-passkey-list-append-button {
+    font-weight: bold;
+  }
+
+  .cb-primary-button, .cb-secondary-button, .cb-outline-button {
+    font-weight: bold;
+  }
+
+  .cb-modal-cta {
+    justify-content: start;
+  }
+
+  .cb-modal-cta > button {
+    width: fit-content;
+  }
+
+  .cb-connect-append-cta {
+    padding-top: 2rem;
+    border-top: 1px solid #dcdcdc;
+  }
+
+  .cb-append-benefits-container {
+    .cb-primary-button {
+      text-align: left;
+    }
+  }
+
+  .cb-passkey-button-subtitle {
+    font-size: 0.7rem;
+  }
+}

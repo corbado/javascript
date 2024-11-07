@@ -43,3 +43,7 @@ export type CorbadoConnectConfig = {
   isDebug?: boolean;
   enableHighlight?: boolean;
 };
+
+export type CorbadoConnectDemoConfig = {
+  dummy: string;
+};

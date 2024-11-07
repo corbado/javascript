@@ -14,11 +14,8 @@ import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
-import InputField from '../shared/InputField';
-import { LinkButton } from '../shared/LinkButton';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
-import { Notification } from '../shared/Notification';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import LoginInitLoaded from './base/LoginInitLoaded';
+import LoginInitLoading from './base/LoginInitLoading';
 
 export enum LoginInitState {
   SilentLoading,
@@ -269,54 +266,21 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   // Enable auto complete for username and webauthn if conditional UI is supported
   // This is needed to enable multiple login instances on the same page however only one should have the autocomplete
   // Else the conditionalUI won't work
-  const enableAutoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
+  const autoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
 
   switch (loginInitState) {
     case LoginInitState.SilentLoading:
       return <></>;
     case LoginInitState.Loading:
-      return (
-        <div className='cb-login-loader-container'>
-          <LoadingSpinner className='cb-login-loader' />
-        </div>
-      );
+      return <LoginInitLoading />;
     case LoginInitState.Loaded:
       return (
-        <>
-          {error ? (
-            <Notification
-              message={error}
-              className='cb-error-notification'
-            />
-          ) : null}
-          <InputField
-            id='email'
-            name='email'
-            label='Email address'
-            type='email'
-            autoComplete={enableAutoComplete}
-            autoFocus={true}
-            placeholder=''
-            ref={(el: HTMLInputElement | null) => (emailFieldRef.current = el)}
-          />
-          <PrimaryButton
-            type='submit'
-            className='cb-login-init-submit'
-            isLoading={cuiBasedLoading || identifierBasedLoading}
-            onClick={() => void handleSubmit()}
-          >
-            Login
-          </PrimaryButton>
-
-          {config.onSignupClick && (
-            <LinkButton
-              onClick={() => config.onSignupClick?.()}
-              className='cb-login-init-signup'
-            >
-              Signup for an account
-            </LinkButton>
-          )}
-        </>
+        <LoginInitLoaded
+          isLoading={cuiBasedLoading || identifierBasedLoading}
+          error={error}
+          autoComplete={autoComplete}
+          handleSubmit={() => void handleSubmit()}
+        />
       );
   }
 };

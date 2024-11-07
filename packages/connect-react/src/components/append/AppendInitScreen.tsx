@@ -7,16 +7,9 @@ import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
-import { Button } from '../shared/Button';
-import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
-import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
-import { SuccessIcon } from '../shared/icons/SuccessIcon';
-import { LinkButton } from '../shared/LinkButton';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
-import { Notification } from '../shared/Notification';
-import { PasskeyInfoListItem } from '../shared/PasskeyInfoListItem';
-import { PrimaryButton } from '../shared/PrimaryButton';
-import AppendBenefitsScreen from './AppendBenetifsScreen';
+import AppendBenefits from './append-init/AppendBenetifs';
+import AppendInitLoading from './append-init/AppendInitLoading';
+import AppendInitLoaded from './append-init/AppendInitLoaded';
 
 export enum AppendInitState {
   SilentLoading,
@@ -195,68 +188,18 @@ const AppendInitScreen = () => {
     case AppendInitState.SilentLoading:
       return <></>;
     case AppendInitState.Loading:
-      return (
-        <div className='cb-passkey-list-loader-container'>
-          <LoadingSpinner className='cb-passkey-list-loader' />
-        </div>
-      );
+      return <AppendInitLoading />;
     case AppendInitState.ShowBenefits:
-      return <AppendBenefitsScreen onClick={() => setAppendInitState(AppendInitState.Loaded)} />;
+      return <AppendBenefits onClick={() => setAppendInitState(AppendInitState.Loaded)} />;
     case AppendInitState.Loaded:
       return (
-        <>
-          <div className='cb-append-header'>
-            <h2 className='cb-h2'>Activate a passkey</h2>
-            <div className='cb-append-skip-container'>
-              <LinkButton
-                className='cb-append-skip'
-                onClick={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
-              >
-                Skip
-              </LinkButton>
-            </div>
-          </div>
-          <div className='cb-h3'>Fast and secure sign-in with passkeys</div>
-          {errorMessage ? (
-            <Notification
-              className='cb-error-notification'
-              message={errorMessage}
-            />
-          ) : null}
-          <div className='cb-append-info-list'>
-            <PasskeyInfoListItem
-              title='No more forgotten passwords'
-              description='Sign in easily with your face, fingerprint or pin that’s saved to your device'
-              icon={<FingerprintIcon platform='default' />}
-            />
-            <PasskeyInfoListItem
-              title='Next-generation security'
-              description='Forget the fear of stolen passwords'
-              icon={<SuccessIcon />}
-            />
-            <PasskeyInfoListItem
-              title='Syncs across your devices'
-              description='Faster sign-in from your password manager'
-              icon={<PasskeyIcon />}
-            />
-          </div>
-          <div className='cb-connect-append-cta'>
-            <Button
-              onClick={() => setAppendInitState(AppendInitState.ShowBenefits)}
-              className='cb-outline-button'
-            >
-              Learn more
-            </Button>
-            <PrimaryButton
-              isLoading={appendLoading}
-              type='submit'
-              onClick={() => void handleSubmit()}
-              className='cb-append-activate-button'
-            >
-              Activate passkey
-            </PrimaryButton>
-          </div>
-        </>
+        <AppendInitLoaded
+          errorMessage={errorMessage}
+          appendLoading={appendLoading}
+          handleShowBenefits={() => setAppendInitState(AppendInitState.ShowBenefits)}
+          handleSubmit={() => void handleSubmit()}
+          handleSkip={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
+        />
       );
   }
 };

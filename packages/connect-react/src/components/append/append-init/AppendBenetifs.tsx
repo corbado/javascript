@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import { PrimaryButton } from '../shared/PrimaryButton';
+import { PrimaryButton } from '../../shared/PrimaryButton';
 
 interface Props {
   onClick: () => void;
 }
 
-const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
+const AppendBenefits: FC<Props> = ({ onClick }) => {
   return (
     <div className='cb-append-benefits-container'>
       <div className='cb-h2'>What is a Passkey?</div>
@@ -41,4 +41,4 @@ const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
   );
 };
 
-export default AppendBenefitsScreen;
+export default AppendBenefits;

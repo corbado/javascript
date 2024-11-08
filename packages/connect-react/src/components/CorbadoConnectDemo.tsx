@@ -254,6 +254,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
           onSignupClick={() => console.log('Signup click')}
           autoComplete={'email'}
           handleSubmit={() => console.log('Submit')}
+          handleIdentifierUpdate={() => console.log('')}
         />
       ),
     },
@@ -267,6 +268,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
           onSignupClick={() => console.log('Signup click')}
           autoComplete={'email'}
           handleSubmit={() => console.log('Submit')}
+          handleIdentifierUpdate={() => console.log('')}
         />
       ),
     },

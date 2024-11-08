@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 import InputField from '../../shared/InputField';
 import { LinkButton } from '../../shared/LinkButton';
@@ -11,11 +11,17 @@ interface Props {
   autoComplete: string;
   onSignupClick?: () => void;
   handleSubmit: () => void;
+  handleIdentifierUpdate: (v: string) => void;
 }
 
-const LoginInitLoaded = ({ isLoading, error, onSignupClick, autoComplete, handleSubmit }: Props) => {
-  const emailFieldRef = useRef<HTMLInputElement | null>();
-
+const LoginInitLoaded = ({
+  isLoading,
+  error,
+  onSignupClick,
+  autoComplete,
+  handleSubmit,
+  handleIdentifierUpdate,
+}: Props) => {
   return (
     <>
       {error ? (
@@ -32,7 +38,7 @@ const LoginInitLoaded = ({ isLoading, error, onSignupClick, autoComplete, handle
         autoComplete={autoComplete}
         autoFocus={true}
         placeholder=''
-        ref={(el: HTMLInputElement | null) => (emailFieldRef.current = el)}
+        onChange={e => handleIdentifierUpdate(e.target.value)}
       />
       <PrimaryButton
         type='submit'

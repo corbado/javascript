@@ -36,7 +36,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   const [error, setError] = useState('');
   const [isFallbackInitiallyTriggered, setIsFallbackInitiallyTriggered] = useState(false);
   const [loginInitState, setLoginInitState] = useState(LoginInitState.SilentLoading);
-  const emailFieldRef = useRef<HTMLInputElement | null>();
+  const [identifier, setIdentifier] = useState<string>('');
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setLoginInitState(LoginInitState.Loading),
@@ -167,7 +167,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   };
 
   const handleSubmit = useCallback(async () => {
-    const identifier = emailFieldRef.current?.value ?? '';
     if (identifier === '') {
       setError('Please enter your email address.');
       return;
@@ -207,7 +206,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       void getConnectService().recordEventLoginErrorUntyped();
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
-  }, [getConnectService, config, loadedMs]);
+  }, [getConnectService, config, loadedMs, identifier]);
 
   const fallback = (identifier: string, message: string | null) => {
     navigateToScreen(LoginScreenType.Invisible);
@@ -219,7 +218,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   const handleSituation = (situationCode: LoginSituationCode) => {
     log.debug(`situation: ${situationCode}`);
 
-    const identifier = emailFieldRef.current?.value ?? '';
     const message = getLoginErrorMessage(situationCode);
 
     switch (situationCode) {
@@ -280,6 +278,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
           error={error}
           autoComplete={autoComplete}
           handleSubmit={() => void handleSubmit()}
+          handleIdentifierUpdate={(v: string) => setIdentifier(v)}
         />
       );
   }

@@ -6,8 +6,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
-import { LinkButton } from '../shared/LinkButton';
-import { PasskeyButton } from '../shared/PasskeyButton';
+import LoginOneTap from './base/LoginOneTap';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
@@ -80,26 +79,14 @@ export const LoginPasskeyReLoginScreen = () => {
   };
 
   return (
-    <>
-      <div className='cb-h2'>Welcome back</div>
-
-      <div className='cb-login-init-passkey-button'>
-        <PasskeyButton
-          email={currentIdentifier}
-          onClick={() => void handleSubmit()}
-          isLoading={loading}
-        />
-
-        <LinkButton
-          onClick={() => {
-            void getConnectService().recordEventLoginOneTapSwitch();
-            beginNewLogin(currentIdentifier);
-          }}
-          className='cb-switch'
-        >
-          Switch Account
-        </LinkButton>
-      </div>
-    </>
+    <LoginOneTap
+      loading={loading}
+      handleSubmit={() => void handleSubmit()}
+      currentIdentifier={currentIdentifier}
+      handleSwitch={() => {
+        void getConnectService().recordEventLoginOneTapSwitch();
+        beginNewLogin(currentIdentifier);
+      }}
+    />
   );
 };

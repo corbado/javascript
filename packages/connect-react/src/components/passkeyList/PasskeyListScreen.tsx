@@ -10,8 +10,9 @@ import useShared from '../../hooks/useShared';
 import { getPasskeyListErrorMessage, PasskeyListSituationCode } from '../../types/situations';
 import { ConnectTokenType } from '../../types/tokens';
 import { StatefulLoader } from '../../utils/statefulLoader';
-import { BaseModal } from '../shared/BaseModal';
-import { PasskeyListItem } from '../shared/PasskeyListItem';
+import AlreadyExistingModal from './AlreadyExistingModal';
+import DeleteModal from './DeleteModal';
+import PasskeyAppendNotSupportedModal from './PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './PasskeyList';
 
 const PasskeyListScreen = () => {
@@ -120,7 +121,7 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
-    if (!startAppendRes.val) {
+    if (!startAppendRes.val.attestationOptions) {
       return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 
@@ -174,11 +175,11 @@ const PasskeyListScreen = () => {
       case PasskeyListSituationCode.ClientExcludeCredentialsMatch:
         setAppendLoading(false);
         void getConnectService().recordEventAppendCredentialExistsError();
-        show(AlreadyExistingModal());
+        show(<AlreadyExistingModal hide={hide} />);
         break;
       case PasskeyListSituationCode.CboApiPasskeysNotSupported:
         setAppendLoading(false);
-        show(PasskeyAppendNotSupportedModal());
+        show(<PasskeyAppendNotSupportedModal hide={hide} />);
         break;
       case PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad:
       case PasskeyListSituationCode.CtApiNotAvailableDuringInitialLoad:
@@ -207,66 +208,18 @@ const PasskeyListScreen = () => {
     }
   };
 
-  const DeleteModal = (passkey: Passkey) => (
-    <BaseModal
-      onPrimaryButton={() => onDeleteClick(passkey.id)}
-      onCloseButton={() => hide()}
-      onSecondaryButton={() => hide()}
-      headerText='Delete passkey'
-      primaryButtonText='Delete'
-      secondaryButtonText='Cancel'
-      children={
-        <PasskeyListItem
-          name={passkey.aaguidDetails.name}
-          icon={passkey.aaguidDetails.iconLight}
-          createdAt={passkey.created}
-          lastUsed={passkey.lastUsed}
-          browser={passkey.sourceBrowser}
-          os={passkey.sourceOS}
-          isThisDevice={false}
-          isSynced
-          isHybrid
-          key={passkey.id}
-        />
-      }
-    />
-  );
-
-  const AlreadyExistingModal = () => (
-    <BaseModal
-      onPrimaryButton={() => hide()}
-      onCloseButton={() => hide()}
-      headerText='No passkey created'
-      primaryButtonText='Okay'
-      children={
-        <>
-          <p className='cb-p'>You already have a passkey that can be used on this device. </p>
-          <p className='cb-p'>There is no need to create a new one.</p>
-        </>
-      }
-    />
-  );
-
-  const PasskeyAppendNotSupportedModal = () => (
-    <BaseModal
-      onPrimaryButton={() => hide()}
-      onCloseButton={() => hide()}
-      headerText='No passkey created'
-      primaryButtonText='Okay'
-      children={
-        <>
-          <p className='cb-p'>Your current device does not support passkeys.</p>
-        </>
-      }
-    />
-  );
-
   return (
     <PasskeyList
       passkeys={passkeyList}
       onDeleteClick={passkey => {
         setErrorMessage(null);
-        show(DeleteModal(passkey));
+        show(
+          <DeleteModal
+            passkey={passkey}
+            onDeleteClick={onDeleteClick}
+            hide={hide}
+          />,
+        );
       }}
       state={passkeyListState}
       onAppendClick={appendAllowed ? () => void onAppendClick() : undefined}

@@ -20,4 +20,6 @@ export {
   GeneralBlockPasskeyAppendVariantEnum,
   GeneralBlockPasskeyVerifyLoginHintEnum,
   Passkey,
+  PasskeyStatusEnum,
+  PasskeyTransportEnum,
 } from './v2';

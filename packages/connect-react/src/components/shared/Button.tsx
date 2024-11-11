@@ -7,12 +7,20 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading = false, disabled, children, ...rest }, ref) => {
+  ({ isLoading = false, disabled, children, onClick, ...rest }, ref) => {
     return (
       <button
         style={{ position: 'relative' }}
         disabled={isLoading || disabled}
         ref={ref}
+        onClick={e => {
+          e.preventDefault();
+          if (isLoading) {
+            return;
+          }
+
+          onClick?.(e);
+        }}
         {...rest}
       >
         {isLoading && (

@@ -168,7 +168,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
   const handleSubmit = useCallback(async () => {
     if (identifier === '') {
-      return setError('Please enter your email address.');
+      return setError('Enter your email address.');
     }
 
     setIdentifierBasedLoading(true);

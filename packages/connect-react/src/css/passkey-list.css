@@ -69,8 +69,6 @@
   padding: 2px 4px;
   display: flex;
   gap: 4px;
-  width: fit-content;
-  height: fit-content;
   font-size: 0.625rem;
   font-weight: bold;
 }
@@ -102,7 +100,6 @@
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
-  width: fit-content;
   align-items: center;
   padding: 6px 10px;
 }

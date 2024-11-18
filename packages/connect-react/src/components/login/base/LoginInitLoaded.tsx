@@ -31,7 +31,6 @@ const LoginInitLoaded = ({
         />
       ) : null}
       <InputField
-        id='email'
         name='email'
         label='Email address'
         type='email'

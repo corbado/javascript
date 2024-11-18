@@ -14,6 +14,7 @@ esbuild
     loader: {
       '.svg': 'dataurl',
     },
+    target: 'es2020',
     define,
   })
   .catch(() => process.exit(1));

@@ -2,74 +2,123 @@
 <html>
   <head>
     <title>My Corbado App</title>
-    <script src="./bundle/index.js"></script>
+    <script src="/bundle/index.js"></script>
     <link
       rel="stylesheet"
-      href="./bundle/index.css"
+      href="/bundle/index.css"
     />
   </head>
 
   <body>
-    <div id="corbado-app">
-      <h1 id="header"></h1>
-      <div>
-        <h3>This is your short session</h3>
-        <p id="short-session"></p>
-      </div>
-      <button
-        id="logout"
-        style="margin: 2rem 0.2rem"
-      >
-        Logout
-      </button>
-      <div>
-        <h3>Passkey Lists</h3>
-        <div id="passkey-list"></div>
-      </div>
-    </div>
-    <div id="corbado-auth"></div>
-
     <script type="module">
-      const projectID = window.location.href.includes('localhost')
-        ? 'pro-7566555492758112393'
-        : 'pro-2979442087152677678';
+      let loaded = false;
 
-      await Corbado.load({
-        projectId: projectID,
-        frontendApiUrlSuffix: 'frontendapi.cloud.corbado-staging.io',
-        darkMode: 'auto',
-      });
+      await loadPage();
 
-      if (!Corbado.user) {
-        const corbadoAppElement = document.getElementById('corbado-app');
-        corbadoAppElement.style.display = 'none';
+      async function loadPage() {
+        const pathParts = window.location.pathname.split('/');
+        const defaultProjectId = window.location.href.includes('localhost')
+          ? 'pro-7566555492758112393'
+          : 'pro-2979442087152677678';
+        const projectId = pathParts.find(part => part.startsWith('pro-')) || defaultProjectId;
 
-        const authElement = document.getElementById('corbado-auth');
-        Corbado.mountAuthUI(authElement, {
-          onLoggedIn: () => {
-            window.location.reload();
-          },
-        });
-      } else {
-        const fallbackUI = document.getElementById('corbado-auth');
-        fallbackUI.style.display = 'none';
+        if (!loaded) {
+          loaded = true;
+          await Corbado.load({
+            projectId: projectId,
+            frontendApiUrlSuffix: 'frontendapi.cloud.corbado-staging.io',
+            darkMode: 'auto',
+            setShortSessionCookie: true,
+          });
+        }
 
-        const header = document.getElementById('header');
-        header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
+        window.onpopstate = loadPage;
 
-        const shortSession = document.getElementById('short-session');
-        shortSession.style.maxWidth = '550px';
-        Corbado.mountUserUI(shortSession);
+        if (pathParts.includes('auth')) {
+          history.replaceState(null, '', `/${projectId}/auth${window.location.search}${window.location.hash}`);
+          loadAuthDOM();
 
-        const logoutButton = document.getElementById('logout');
-        logoutButton.addEventListener('click', async () => {
-          await Corbado.logout();
-          window.location.reload();
-        });
+          const authElement = document.getElementById('corbado-auth');
+          Corbado.unmountAuthUI(authElement);
+          Corbado.mountAuthUI(authElement, {
+            onLoggedIn: async () => {
+              history.pushState(null, '', `/${projectId}`);
+              await loadPage();
+            },
+            // initialBlock: 'signup-init',
+          });
+        } else {
+          history.replaceState(null, '', `/${projectId}${window.location.search}${window.location.hash}`);
+          loadHomeDOM();
 
-        const passkeyList = document.getElementById('passkey-list');
-        passkeyList.style.maxWidth = '550px';
-        Corbado.mountPasskeyListUI(passkeyList);
+          if (!Corbado.user) {
+            const corbadoAppElement = document.getElementById('corbado-app');
+            corbadoAppElement.style.display = 'none';
+            const corbadoAuthElement = document.getElementById('login');
+            corbadoAuthElement.onclick = async () => {
+              history.pushState(null, '', `/${projectId}/auth`);
+              await loadPage();
+            };
+          } else {
+            const fallbackUI = document.getElementById('fallback-ui');
+            fallbackUI.style.display = 'none';
+
+            const header = document.getElementById('header');
+            header.innerHTML = `Hi ${Corbado.user?.orig}, you are logged in.`;
+
+            const shortSession = document.getElementById('short-session');
+            shortSession.style.maxWidth = '550px';
+            Corbado.mountUserUI(shortSession);
+
+            const logoutButton = document.getElementById('logout');
+            logoutButton.addEventListener('click', async () => {
+              await Corbado.logout();
+              history.pushState(null, '', `/${projectId}/auth#login-init`);
+              await loadPage();
+            });
+
+            const passkeyList = document.getElementById('passkey-list');
+            passkeyList.style.maxWidth = '550px';
+            Corbado.mountPasskeyListUI(passkeyList);
+          }
+        }
+      }
+
+      function loadAuthDOM() {
+        document.body.innerHTML = `
+          <div id="corbado-auth"></div>
+        `;
+      }
+
+      function loadHomeDOM() {
+        document.body.innerHTML = `
+         <div id="corbado-app">
+            <h1 id="header"></h1>
+            <div>
+              <h3>This is your short session</h3>
+              <p id="short-session"></p>
+            </div>
+            <button
+              id="logout"
+              style="margin: 2rem 0.2rem"
+            >
+              Logout
+            </button>
+            <div>
+              <h3>Passkey Lists</h3>
+              <div id="passkey-list"></div>
+            </div>
+          </div>
+          <div id="fallback-ui">
+            <p>This is the fallback UI. You should not see this unless you are not logged in.</p>
+            <button
+              id="login"
+              style="margin: 2rem 0.2rem"
+            >
+              Login
+            </button>
+          </div>
+        `;
       }
     </script>
   </body>

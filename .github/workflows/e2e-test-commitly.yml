@@ -8,7 +8,6 @@ on:
     workflows: ["Deploy Playground Apps to Vercel"]
     types:
       - completed
-    conclusion: success
 
 jobs:
   e2e-tests:

@@ -50,7 +50,8 @@ fi
 if [ -f "$BUILD_DIR/index.js" ]; then
   echo "Uploading index.js as web-js-$VERSION.min.js"
   aws s3 cp "$BUILD_DIR/index.js" "$S3_BUCKET/web-js-$VERSION.min.js" --profile "$AWS_PROFILE"
-  
+  aws s3 cp "$BUILD_DIR/index.js" "$S3_BUCKET/web-js-latest.min.js" --profile "$AWS_PROFILE"
+
   if [ $? -eq 0 ]; then
     echo "Successfully uploaded web-js-$VERSION.min.js to S3."
   else
@@ -65,7 +66,8 @@ fi
 if [ -f "$BUILD_DIR/index.css" ]; then
   echo "Uploading index.css as web-js-$VERSION.min.css"
   aws s3 cp "$BUILD_DIR/index.css" "$S3_BUCKET/web-js-$VERSION.min.css" --profile "$AWS_PROFILE"
-  
+  aws s3 cp "$BUILD_DIR/index.css" "$S3_BUCKET/web-js-latest.min.css" --profile "$AWS_PROFILE"
+
   if [ $? -eq 0 ]; then
     echo "Successfully uploaded web-js-$VERSION.min.css to S3."
   else

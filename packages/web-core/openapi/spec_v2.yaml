@@ -1348,6 +1348,8 @@ components:
           type: object
           additionalProperties:
             type: string
+        invitationToken:
+          type: string
 
     connectManageInitRsp:
       type: object
@@ -1840,6 +1842,8 @@ components:
         javaScriptHighEntropy:
           $ref: '#/components/schemas/javaScriptHighEntropy'
         isNative:
+          type: boolean
+        webdriver:
           type: boolean
 
     clientCapabilities:

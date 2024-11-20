@@ -17,7 +17,7 @@ const LoginOneTap = ({ loading, currentIdentifier, handleSubmit, handleSwitch }:
 
       <div className='cb-login-init-passkey-button'>
         <PasskeyButton
-          email={currentIdentifier}
+          identifier={currentIdentifier}
           onClick={handleSubmit}
           isLoading={loading}
         />

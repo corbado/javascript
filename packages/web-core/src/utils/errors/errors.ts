@@ -340,6 +340,5 @@ export class ConnectConditionalUIPasskeyDeleted extends RecoverableError {
 export class SessionManagementNotEnabled extends RecoverableError {
   constructor() {
     super('Session management is not enabled');
-    this.name = 'errors.sessionManagementNotEnabled';
   }
 }

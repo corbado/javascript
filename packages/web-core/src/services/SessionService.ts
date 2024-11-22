@@ -24,6 +24,7 @@ import {
   PasskeyAlreadyExistsError,
   type PasskeyDeleteError,
   PasskeysNotSupported,
+  SessionManagementNotEnabled,
 } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
@@ -79,6 +80,10 @@ export class SessionService {
     const sessionConfig = await this.#loadSessionConfig();
     if (sessionConfig.err) {
       return sessionConfig.val;
+    }
+
+    if (!sessionConfig.val.useSessionManagement) {
+      throw new SessionManagementNotEnabled();
     }
 
     this.#sessionConfig = sessionConfig.val;

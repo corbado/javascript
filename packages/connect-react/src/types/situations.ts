@@ -43,7 +43,7 @@ export const getLoginErrorMessage = (code: LoginSituationCode): string | null =>
     case LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator:
     case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
     case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
-      return 'Passkey login failed unexpectedly. Please use your password to log in.';
+      return "We couldn't log you in with your passkey due to a system error. Use your password to log in instead.";
 
     case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:
       return 'You previously deleted this passkey. Use your password to log in instead.';

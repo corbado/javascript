@@ -146,7 +146,7 @@ export class ConnectService {
     const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcessFromOtherLoginInit) {
       log.debug('process exists (after login init attempt');
-      this.#setApisV2(existingProcess);
+      this.#setApisV2(existingProcessFromOtherLoginInit);
 
       // process has already been initialized
       if (existingProcessFromOtherLoginInit?.loginData) {

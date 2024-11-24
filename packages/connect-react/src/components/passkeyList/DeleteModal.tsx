@@ -27,8 +27,8 @@ const DeleteModal = ({ onDeleteClick, hide, passkey }: Props) => (
         browser={passkey.sourceBrowser}
         os={passkey.sourceOS}
         isThisDevice={false}
-        isSynced
-        isHybrid
+        isSynced={passkey.backupState}
+        isHybrid={passkey.transport.includes('hybrid')}
         key={passkey.id}
       />
     }

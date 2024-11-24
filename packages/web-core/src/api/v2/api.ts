@@ -234,6 +234,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'isNative'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'webdriver'?: boolean;
 }
 /**
  * 
@@ -625,6 +631,12 @@ export interface ConnectManageInitReq {
      * @memberof ConnectManageInitReq
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageInitReq
+     */
+    'invitationToken'?: string;
 }
 /**
  * 

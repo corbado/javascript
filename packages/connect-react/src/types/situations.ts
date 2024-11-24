@@ -43,13 +43,13 @@ export const getLoginErrorMessage = (code: LoginSituationCode): string | null =>
     case LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator:
     case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
     case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
-      return 'Passkey login failed unexpectedly. Please use your password to log in.';
+      return "We couldn't log you in with your passkey due to a system error. Use your password to log in instead.";
 
     case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:
-      return 'This passkey has been deleted and can no longer be used. Please use your password to log in and create a new one.';
+      return 'You previously deleted this passkey. Use your password to log in instead.';
 
     case LoginSituationCode.UserNotFound:
-      return 'There is no account registered with this email.';
+      return 'There is no account registered to that email address.';
 
     default:
       return null;
@@ -59,7 +59,7 @@ export const getLoginErrorMessage = (code: LoginSituationCode): string | null =>
 export const getAppendErrorMessage = (code: AppendSituationCode): string | null => {
   switch (code) {
     case AppendSituationCode.ClientPasskeyOperationCancelled:
-      return 'Passkey operation was cancelled or timed out. Please try again.';
+      return 'You have cancelled setting up your passkey. Please try again.';
     default:
       return null;
   }
@@ -78,7 +78,7 @@ export const getPasskeyListErrorMessage = (code: PasskeyListSituationCode): stri
     case PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator:
       return 'Passkey creation failed. Please try again later.';
     case PasskeyListSituationCode.ClientPasskeyOperationCancelled:
-      return 'Passkey operation was cancelled or timed out. Please try again.';
+      return 'You have cancelled setting up your passkey. Please try again.';
     default:
       return null;
   }

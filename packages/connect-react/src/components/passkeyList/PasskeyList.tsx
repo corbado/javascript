@@ -44,7 +44,9 @@ const PasskeyList: FC<PasskeyListProps> = ({
           </div>
         );
       case PasskeyListState.LoadingFailed:
-        return <PasskeyEmptyList message='Passkey list is unavailable. Please try again later.' />;
+        return (
+          <PasskeyEmptyList message='We were unable to show you your list of passkeys due to an error. Try again later.' />
+        );
       case PasskeyListState.Loaded:
         if (passkeys.length === 0) {
           return <PasskeyEmptyList message='There is currently no passkey saved for this account.' />;

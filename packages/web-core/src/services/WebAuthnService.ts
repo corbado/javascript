@@ -100,6 +100,7 @@ export class WebAuthnService {
       visitorId: currentVisitorId,
       javaScriptHighEntropy: javaScriptHighEntropy,
       clientCapabilities,
+      webdriver: WebAuthnService.getWebdriver(),
     };
   }
 
@@ -136,6 +137,14 @@ export class WebAuthnService {
       // When using Safari and Firefox navigator.bluetooth returns undefined => we will return undefined
       log.debug('Error checking bluetooth availability', e);
       return;
+    }
+  }
+
+  static getWebdriver(): boolean {
+    try {
+      return navigator.webdriver;
+    } catch (e) {
+      return false;
     }
   }
 

@@ -24,9 +24,11 @@ export const LoginPasskeyReLoginScreen = () => {
   }, [getConnectService]);
 
   const handleSubmit = async () => {
+    const trimmedIdentifier = currentIdentifier.trim();
+
     setLoading(true);
     config.onLoginStart?.();
-    const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.OneTap, loadedMs);
+    const resStart = await getConnectService().loginStart(trimmedIdentifier, PasskeyLoginSource.OneTap, loadedMs);
     if (resStart.err) {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }

@@ -167,15 +167,16 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   };
 
   const handleSubmit = useCallback(async () => {
-    if (identifier === '') {
+    const trimmedIdentifier = identifier.trim();
+    if (trimmedIdentifier === '') {
       return setError('Enter your email address.');
     }
 
     setIdentifierBasedLoading(true);
-    setCurrentIdentifier(identifier);
+    setCurrentIdentifier(trimmedIdentifier);
     config.onLoginStart?.();
 
-    const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
+    const resStart = await getConnectService().loginStart(trimmedIdentifier, PasskeyLoginSource.TextField, loadedMs);
     if (resStart.err) {
       if (resStart.val instanceof ConnectUserNotFound) {
         return handleSituation(LoginSituationCode.UserNotFound);

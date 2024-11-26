@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 
 import type { SocialProviderType } from '../../utils/constants';
 import { getRandomIntegerN } from '../../utils/random';
+import { repeatSocialLogin, socialLogin } from './socialLogin';
 
 export class SignupInitBlockModel {
   page: Page;
@@ -53,31 +54,15 @@ export class SignupInitBlockModel {
   }
 
   submitPrimary() {
-    return this.page.getByRole('button', { name: 'Continue' }).click();
+    return this.page.getByRole('button', { name: 'Continue', exact: true }).click();
   }
 
-  async submitSocialMicrosoft() {
-    const microsoftEmail = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
-    const microsoftPassword = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+  async submitSocialMicrosoft(email: string, password: string) {
+    await socialLogin(this.page, email, password);
+  }
 
-    await this.page.getByTitle(`Continue with Microsoft`).click();
-    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Sign in');
-
-    await this.page.getByRole('textbox', { name: 'email' }).click();
-    await this.page.getByRole('textbox', { name: 'email' }).fill(microsoftEmail);
-    await expect(this.page.getByRole('textbox', { name: 'email' })).toHaveValue(microsoftEmail);
-
-    await this.page.getByRole('button', { name: 'Next' }).click();
-    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Enter password');
-
-    await this.page.getByPlaceholder('Password').click();
-    await this.page.getByPlaceholder('Password').fill(microsoftPassword);
-    await expect(this.page.getByPlaceholder('Password')).toHaveValue(microsoftPassword);
-
-    await this.page.getByRole('button', { name: 'Sign in' }).click();
-    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText('Stay signed in?');
-
-    await this.page.getByRole('button', { name: 'No' }).click();
+  async resubmitSocialMicrosoft() {
+    await repeatSocialLogin(this.page);
   }
 
   expectErrorMissingUsername(): Promise<void> {

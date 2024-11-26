@@ -46,7 +46,7 @@ export class ConnectService {
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
-    this.#timeout = 5 * 1000;
+    this.#timeout = 10 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
@@ -143,6 +143,17 @@ export class ConnectService {
       return res;
     }
 
+    const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
+    if (existingProcessFromOtherLoginInit) {
+      log.debug('process exists (after login init attempt');
+      this.#setApisV2(existingProcessFromOtherLoginInit);
+
+      // process has already been initialized
+      if (existingProcessFromOtherLoginInit?.loginData) {
+        return Ok(existingProcessFromOtherLoginInit.loginData);
+      }
+    }
+
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
       WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
@@ -216,12 +227,12 @@ export class ConnectService {
       ),
     );
     if (res.err) {
-      ConnectLastLogin.clearStorage(this.#projectId);
+      this.clearLastLogin();
       return res;
     }
 
     if (!res.val.assertionOptions) {
-      ConnectLastLogin.clearStorage(this.#projectId);
+      this.clearLastLogin();
       return Err(CorbadoError.noPasskeyAvailable());
     }
 
@@ -231,7 +242,7 @@ export class ConnectService {
   async loginContinue(start: ConnectLoginStartRsp): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const res = await this.#webAuthnService.login(start.assertionOptions, false);
     if (res.err) {
-      ConnectLastLogin.clearStorage(this.#projectId);
+      this.clearLastLogin();
       return res;
     }
 
@@ -399,7 +410,7 @@ export class ConnectService {
     }
 
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 8 * 1000 }),
+      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 15 * 1000 }),
     );
 
     if (isConditionalUI) {
@@ -481,7 +492,13 @@ export class ConnectService {
       connectToken: passkeyListToken,
     };
 
-    return this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+    const out = await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+    // self-healing mechanism: if a user has no passkeys, we clear the last login
+    if (out.ok && out.val.passkeys.length === 0) {
+      this.clearLastLogin();
+    }
+
+    return out;
   }
 
   async manageDelete(

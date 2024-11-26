@@ -58,11 +58,13 @@ export const CorbadoConnectProvider: FC<PropsWithChildren<CorbadoConnectProvider
       <ModalProvider>
         {!isWebJs && <CorbadoConnectModal />}
         <div className='cb-connect light'>
-          <div
-            className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}
-            ref={containerRef}
-          >
-            {children}
+          <div className='cb-connect-custom-style'>
+            <div
+              className={enableHighlight && connectContainerHeight ? 'cb-highlight' : undefined}
+              ref={containerRef}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </ModalProvider>

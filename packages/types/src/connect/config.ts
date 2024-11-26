@@ -20,9 +20,11 @@ export type CorbadoConnectLoginSecondFactorConfig = {
 export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
   onError?(error: string): void;
-  onSkip(): void;
-  onComplete(): Promise<void>;
+  onSkip(status: AppendStatus): Promise<void>;
+  onComplete(status: AppendStatus): Promise<void>;
 };
+
+export type AppendStatus = 'skip-implicit' | 'skip-explicit' | 'complete' | 'complete-noop';
 
 export enum ConnectTokenType {
   PasskeyList = 'passkey-list',
@@ -40,4 +42,8 @@ export type CorbadoConnectConfig = {
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;
   enableHighlight?: boolean;
+};
+
+export type CorbadoConnectDemoConfig = {
+  dummy: string;
 };

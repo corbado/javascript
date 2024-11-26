@@ -6,11 +6,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
-import { Button } from '../shared/Button';
-import { ErrorIcon } from '../shared/icons/ErrorIcon';
-import { PasskeyIcon } from '../shared/icons/PasskeyIcon';
-import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import LoginErrorHard from './base/LoginErrorHard';
 
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
@@ -90,38 +86,12 @@ const LoginErrorScreenHard = () => {
   };
 
   return (
-    <>
-      <div className='cb-h2'>Something went wrong</div>
-      <div className='cb-login-error-hard-icons'>
-        <PasskeyIcon />
-        <ErrorIcon className='cb-login-error-hard-icons-error' />
-      </div>
-      <div className='cb-p'>Login with passkeys was not possible. Try again or skip the process for now.</div>
-
-      {config.onSignupClick && (
-        <LinkButton
-          onClick={() => config.onSignupClick!()}
-          className='cb-login-error-hard-help'
-        >
-          Need help ?
-        </LinkButton>
-      )}
-
-      <div className='cb-login-error-hard-cta'>
-        <Button
-          onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
-          className='cb-outline-button'
-        >
-          Skip passkey login
-        </Button>
-        <PrimaryButton
-          onClick={() => void handleSubmit()}
-          isLoading={loading}
-        >
-          Try again
-        </PrimaryButton>
-      </div>
-    </>
+    <LoginErrorHard
+      loading={loading}
+      handleSubmit={() => void handleSubmit()}
+      handleExplicitFallback={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
+      handleNeedHelp={() => config.onHelpClick?.()}
+    />
   );
 };
 

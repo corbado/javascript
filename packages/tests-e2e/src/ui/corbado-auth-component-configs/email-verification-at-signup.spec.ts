@@ -38,6 +38,7 @@ test.describe('tests that focus on these identifiers: email (verification at sig
 
     await model.expectScreen(ScreenNames.End);
     await model.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
 
     await model.passkeyVerify.performAutomaticPasskeyVerification(() => model.loginInit.submitPasskeyButton());
     await model.expectScreen(ScreenNames.End);

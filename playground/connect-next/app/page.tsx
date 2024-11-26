@@ -14,8 +14,9 @@ export default function Home() {
       <p>
         <Link href='signup'>Signup</Link>
       </p>
-      <button onClick={() => hello()}>Test action</button>
-      <button onClick={() => hello2()}>Test action</button>
+      <p>
+        <Link href='demo'>Demo</Link>
+      </p>
     </div>
   );
 }

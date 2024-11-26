@@ -5,11 +5,7 @@ type Props = {
 };
 
 const PasskeyEmptyList = ({ message }: Props) => {
-  return (
-    <div className='cb-passkey-list-empty'>
-      <p>{message}</p>
-    </div>
-  );
+  return <div className='cb-passkey-list-empty'>{message}</div>;
 };
 
 export default PasskeyEmptyList;

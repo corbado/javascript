@@ -6,11 +6,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
-import { FaceIdIcon } from '../shared/icons/FaceIdIcon';
-import { FingerprintIcon } from '../shared/icons/FingerprintIcon';
-import { PasskeyLoginIcon } from '../shared/icons/PasskeyLoginIcon';
-import { LinkButton } from '../shared/LinkButton';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import LoginErrorSoft from './base/LoginErrorSoft';
 
 const LoginErrorScreenSoft = () => {
   const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
@@ -77,28 +73,11 @@ const LoginErrorScreenSoft = () => {
   };
 
   return (
-    <>
-      <div className='cb-h2'>Use your passkey to confirm it’s really you!</div>
-      <div className='cb-login-error-soft-icons'>
-        <FingerprintIcon platform='default' />
-        <FaceIdIcon platform='default' />
-        <PasskeyLoginIcon />
-      </div>
-      <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock.</div>
-      <PrimaryButton
-        onClick={() => void handleSubmit()}
-        isLoading={loading}
-        className='cb-login-error-soft-button'
-      >
-        Login with passkey
-      </PrimaryButton>
-      <LinkButton
-        onClick={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
-        className='cb-login-error-soft-fallback'
-      >
-        Use password instead
-      </LinkButton>
-    </>
+    <LoginErrorSoft
+      loading={loading}
+      handleSubmit={() => void handleSubmit()}
+      handleExplicitFallback={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
+    />
   );
 };
 

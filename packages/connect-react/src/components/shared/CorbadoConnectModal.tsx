@@ -11,9 +11,13 @@ const CorbadoConnectModal: FC = () => {
   }
 
   return (
-    <div className='cb-connect cb-modal-outer light'>
-      <div className='cb-modal-outer-background'></div>
-      <div className='cb-modal-outer-content'>{children}</div>
+    <div className='cb-connect light'>
+      <div className='cb-connect-custom-style'>
+        <div className='cb-modal-outer'>
+          <div className='cb-modal-outer-background'></div>
+          <div className='cb-modal-outer-content'>{children}</div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import React from 'react';
 
-import { SecondaryButton } from '../shared/SecondaryButton';
+import { PrimaryButton } from '../../shared/PrimaryButton';
 
 interface Props {
   onClick: () => void;
 }
 
-const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
+const AppendBenefits: FC<Props> = ({ onClick }) => {
   return (
     <div className='cb-append-benefits-container'>
       <div className='cb-h2'>What is a Passkey?</div>
@@ -36,9 +36,9 @@ const AppendBenefitsScreen: FC<Props> = ({ onClick }) => {
         To activate your passkey, you will have to log in again with email address and password and activate your
         passkey
       </div>
-      <SecondaryButton onClick={onClick}>Back</SecondaryButton>
+      <PrimaryButton onClick={onClick}>Back</PrimaryButton>
     </div>
   );
 };
 
-export default AppendBenefitsScreen;
+export default AppendBenefits;

@@ -9,7 +9,10 @@ export interface Props {
 export const LinkButton: FC<PropsWithChildren<Props>> = ({ onClick, className, children }) => {
   return (
     <div
-      onClick={onClick}
+      onClick={e => {
+        e.preventDefault();
+        onClick();
+      }}
       className={`cb-link-button ${className}`}
     >
       {children}

@@ -16,7 +16,7 @@ export const socialLogin = async (page: Page, email: string, password: string) =
   await page.getByPlaceholder('Password').fill(password);
   await expect(page.getByPlaceholder('Password')).toHaveValue(password);
 
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByTestId('textButtonContainer').getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Stay signed in?');
 
   await page.getByRole('button', { name: 'No' }).click();

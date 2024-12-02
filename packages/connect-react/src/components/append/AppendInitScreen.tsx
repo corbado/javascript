@@ -8,7 +8,7 @@ import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AppendBenefits from './append-init/AppendBenetifs';
-import AppendInitLoaded from './append-init/AppendInitLoaded';
+import AppendInitLoaded2 from './append-init/AppendInitLoaded2';
 import AppendInitLoading from './append-init/AppendInitLoading';
 
 export enum AppendInitState {
@@ -193,7 +193,7 @@ const AppendInitScreen = () => {
       return <AppendBenefits onClick={() => setAppendInitState(AppendInitState.Loaded)} />;
     case AppendInitState.Loaded:
       return (
-        <AppendInitLoaded
+        <AppendInitLoaded2
           errorMessage={errorMessage}
           appendLoading={appendLoading}
           handleShowBenefits={() => setAppendInitState(AppendInitState.ShowBenefits)}

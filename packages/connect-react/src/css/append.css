@@ -1,3 +1,15 @@
+.cb-connect-append {
+  border: 1px solid var(--cb-color-outline);
+  border-radius: var(--cb-border-radius);
+  padding: 1rem;
+  text-align: center;
+}
+
+.cb-connect-append-icon {
+  justify-items: center;
+  padding: 1rem 0;
+}
+
 .cb-passkey-info-list-item {
   display: flex;
   margin: 0.5rem 0;
@@ -34,12 +46,6 @@
   margin: 1rem 0;
 }
 
-.cb-append-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .cb-append-benefits-container {
   display: flex;
   flex-direction: column;
@@ -48,24 +54,14 @@
 
 .cb-connect-append-cta {
   display: flex;
+  flex-direction: column;
   width: 100%;
-  gap: 1rem;
+  gap: .5rem;
+  padding-top: 2rem;
 }
 
-.cb-append-button {
-  display: flex;
-  gap: 1rem;
-  width: fit-content;
-  align-items: center;
-  background-color: var(--cb-color-primary);
-  color: var(--cb-color-on-primary);
-  border-radius: var(--cb-border-radius);
-  padding: 6px 10px;
-}
-
-.cb-append-button .loader {
-  height: 15px;
-  width: 15px;
+button.cb-append-activate-button {
+  margin: 0 1.5rem;
 }
 
 .cb-append-icon {
@@ -77,8 +73,10 @@
 }
 
 .cb-append-skip-container {
+  color: var(--cb-color-secondary);
+  margin-top: 1rem;
   width: fit-content;
-  padding: 0 1rem;
+  padding: 0;
   display: flex;
   justify-content: center;
 }
@@ -139,8 +137,3 @@
   gap: 1rem;
 }
 
-@media screen and (max-width: 724px) {
-  .cb-connect-append-cta {
-    flex-direction: column-reverse;
-  }
-}

@@ -42,23 +42,12 @@
     font-weight: bold;
   }
 
-  .cb-primary-button,
-  .cb-secondary-button,
-  .cb-outline-button {
-    font-weight: bold;
-  }
-
   .cb-modal-cta {
     justify-content: start;
   }
 
   .cb-modal-cta > button {
     width: fit-content;
-  }
-
-  .cb-connect-append-cta {
-    padding-top: 2rem;
-    border-top: 1px solid #dcdcdc;
   }
 
   .cb-append-benefits-container {

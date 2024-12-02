@@ -42,7 +42,6 @@
   cursor: pointer;
   width: 100%;
   text-decoration: underline;
-  margin: 0.5rem 0;
 }
 
 .cb-connect-container {
@@ -56,7 +55,7 @@
 }
 
 button.cb-primary-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   color: var(--cb-color-on-primary);
   background-color: var(--cb-color-primary);
   border-radius: var(--cb-border-radius);
@@ -64,7 +63,6 @@ button.cb-primary-button {
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
-  width: 100%;
   text-decoration: none;
 }
 
@@ -84,7 +82,7 @@ button:hover {
 }
 
 button.cb-secondary-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   color: var(--cb-color-on-secondary);
   background-color: var(--cb-color-secondary);
   border-radius: var(--cb-border-radius);
@@ -92,7 +90,6 @@ button.cb-secondary-button {
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
-  width: 100%;
 }
 
 .cb-secondary-button:hover,
@@ -103,7 +100,7 @@ button.cb-secondary-button {
 }
 
 button.cb-outline-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   color: var(--cb-color-primary);
   background-color: transparent;
   border-radius: var(--cb-border-radius);
@@ -111,7 +108,6 @@ button.cb-outline-button {
   cursor: pointer;
   box-sizing: border-box;
   font-family: var(--cb-font-family-primary);
-  width: 100%;
 }
 
 .cb-input {

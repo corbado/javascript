@@ -232,7 +232,12 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
     {
       headline: 'Append successful',
       description: 'This screen is shown to the user when the append process was successful.',
-      reactElement: <AppendSuccessScreen />,
+      reactElement: (
+        <AppendSuccessScreen
+          aaguidName='iCloud Keychain'
+          aaguidIcon='https://cdn.cloud.corbado.io/aaguidIcons/fbfc3007-154e-4ecc-8c0b-6e020557d7bd/light.svg'
+        />
+      ),
     },
   ];
 
@@ -292,6 +297,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
           loading={false}
           handleSubmit={() => console.log('Submit')}
           handleExplicitFallback={() => console.log('Fallback')}
+          handleNeedHelp={() => console.log('Need help')}
         />
       ),
     },

@@ -147,7 +147,10 @@ const AppendInitScreen = () => {
     }
 
     setAppendLoading(false);
-    navigateToScreen(AppendScreenType.Success);
+    navigateToScreen(AppendScreenType.Success, {
+      aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
+      aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
+    });
   }, [attestationOptions, config, getConnectService]);
 
   const handleSituation = async (situationCode: AppendSituationCode) => {

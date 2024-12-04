@@ -13,13 +13,13 @@
 
 .cb-h2 {
   font-family: var(--cb-font-family-primary);
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
 .cb-h3 {
   font-family: var(--cb-font-family-primary);
-  font-size: 1.25rem;
+  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
@@ -27,6 +27,10 @@
   font-family: var(--cb-font-family-secondary);
   font-size: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.cb-divider {
+  height: 1rem;
 }
 
 .cb-span {
@@ -55,7 +59,7 @@
 }
 
 button.cb-primary-button {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-on-primary);
   background-color: var(--cb-color-primary);
   border-radius: var(--cb-border-radius);
@@ -82,7 +86,7 @@ button:hover {
 }
 
 button.cb-secondary-button {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-on-secondary);
   background-color: var(--cb-color-secondary);
   border-radius: var(--cb-border-radius);
@@ -100,7 +104,7 @@ button.cb-secondary-button {
 }
 
 button.cb-outline-button {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   color: var(--cb-color-primary);
   background-color: transparent;
   border-radius: var(--cb-border-radius);
@@ -231,4 +235,21 @@ button.cb-outline-button {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.cb-connect-custom-style .cb-login-error-soft-container {
+  align-items: normal;
+}
+
+.cb-connect-custom-style button.cb-login-hybrid-button {
+  width: 100%;
+}
+
+.cb-connect-custom-style button.cb-login-error-soft-button {
+  width: 100%;
+}
+
+#passkey-append .cb-connect-custom-style {
+  display: flex;
+  justify-content: center;
 }

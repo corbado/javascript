@@ -122,42 +122,42 @@ export const PasskeyAppendIcon = () => {
       <path
         d='M181.404 75.4688H149.497C148.616 75.4688 147.901 76.183 147.901 77.0641V99.3993C147.901 100.28 148.616 100.995 149.497 100.995H181.404C182.285 100.995 183 100.28 183 99.3993V77.0641C183 76.183 182.285 75.4688 181.404 75.4688Z'
         stroke='#243544'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M165.45 89.8271V94.6133'
         stroke='#243544'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M165.45 89.8274C167.653 89.8274 169.439 88.0418 169.439 85.839C169.439 83.6363 167.653 81.8506 165.45 81.8506C163.248 81.8506 161.462 83.6363 161.462 85.839C161.462 88.0418 163.248 89.8274 165.45 89.8274Z'
         stroke='#243544'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M157.474 75.4687V69.0872C157.474 66.9716 158.314 64.9427 159.81 63.4467C161.306 61.9508 163.335 61.1104 165.45 61.1104C167.566 61.1104 169.595 61.9508 171.091 63.4467C172.587 64.9427 173.427 66.9716 173.427 69.0872V75.4687'
         stroke='#243544'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M135.218 36.7926V29.822C135.218 29.5579 135.113 29.3046 134.926 29.1178C134.74 28.9311 134.486 28.8262 134.222 28.8262H114.306C114.042 28.8262 113.789 28.9311 113.602 29.1178C113.415 29.3046 113.311 29.5579 113.311 29.822V36.7926C113.311 48.7422 124.264 51.7296 124.264 51.7296C124.264 51.7296 135.218 48.7422 135.218 36.7926Z'
         fill='white'
         stroke='#243544'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M119.285 39.7801L122.273 42.7675L129.243 35.7969'
         stroke='#243544'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M67.1592 91.0519V80.9913C67.1592 78.9551 67.6832 77.0838 68.7312 75.3771C69.7791 73.6703 71.1715 72.3678 72.9081 71.4696C76.621 69.6131 80.3937 68.2208 84.2263 67.2925C88.0589 66.3644 91.9514 65.9002 95.9038 65.9002C97.1016 65.9002 98.2992 65.9451 99.4968 66.035C100.695 66.1247 101.892 66.2595 103.09 66.4391C102.85 69.9125 103.479 73.1913 104.976 76.2753C106.473 79.3593 108.659 81.8895 111.534 83.8656V91.0519H67.1592ZM124.649 101.831L119.259 96.4414V79.7336C116.624 78.9551 114.468 77.4729 112.791 75.2871C111.115 73.1014 110.276 70.5713 110.276 67.6968C110.276 64.2235 111.504 61.2591 113.959 58.804C116.414 56.3487 119.379 55.121 122.852 55.121C126.325 55.121 129.29 56.3487 131.745 58.804C134.2 61.2591 135.428 64.2235 135.428 67.6968C135.428 70.3915 134.664 72.787 133.137 74.883C131.61 76.9788 129.679 78.4761 127.343 79.3743L131.835 83.8656L126.445 89.2553L131.835 94.645L124.649 101.831ZM95.9038 62.3071C91.9514 62.3071 88.568 60.8998 85.7534 58.0852C82.9388 55.2708 81.5315 51.8872 81.5315 47.9348C81.5315 43.9824 82.9388 40.5989 85.7534 37.7844C88.568 34.9698 91.9514 33.5625 95.9038 33.5625C99.8563 33.5625 103.24 34.9698 106.054 37.7844C108.869 40.5989 110.276 43.9824 110.276 47.9348C110.276 51.8872 108.869 55.2708 106.054 58.0852C103.24 60.8998 99.8563 62.3071 95.9038 62.3071ZM122.852 69.4933C123.87 69.4933 124.723 69.149 125.412 68.4603C126.101 67.7716 126.445 66.9182 126.445 65.9002C126.445 64.8822 126.101 64.0289 125.412 63.3401C124.723 62.6514 123.87 62.3071 122.852 62.3071C121.834 62.3071 120.981 62.6514 120.292 63.3401C119.603 64.0289 119.259 64.8822 119.259 65.9002C119.259 66.9182 119.603 67.7716 120.292 68.4603C120.981 69.149 121.834 69.4933 122.852 69.4933Z'
@@ -174,58 +174,58 @@ export const PasskeyAppendIcon = () => {
       <path
         d='M29.0977 87.0859C29.6297 87.4574 30.403 87.8288 31.3697 87.8288C32.3363 87.8288 33.1097 87.4574 33.6417 87.0859'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M35.2373 81.1436V82.6293'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M27.502 81.1436V82.6293'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M31.369 81.1436V84.115C31.369 84.525 31.0226 84.8578 30.5957 84.8578'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M39.8734 78.9144V76.6859C39.8734 75.865 39.1813 75.2002 38.3268 75.2002H36.0068'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M26.727 75.2002H24.407C23.5525 75.2002 22.8604 75.865 22.8604 76.6859V78.9144'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M36.0068 91.5434H38.3268C39.1813 91.5434 39.8734 90.8785 39.8734 90.0577V87.8291'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M22.8604 87.8291V90.0577C22.8604 90.8785 23.5525 91.5434 24.407 91.5434H26.727'
         stroke='#243544'
-        stroke-miterlimit='10'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeMiterlimit='10'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );

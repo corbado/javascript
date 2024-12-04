@@ -16,9 +16,9 @@ type Props = {
 
 const AppendInitScreen2 = ({ errorMessage, appendLoading, handleShowBenefits, handleSubmit, handleSkip }: Props) => {
   return (
-    <>
+    <div className='cb-connect-append-border'>
       <div className='cb-append-header'>
-        <h2 className='cb-h2 cb-bold'>Simplify Your Sign In</h2>
+        <h2 className='cb-h2 cb-bold'>Simplify Your Login</h2>
         <div className='cb-h3'>Create a passkey</div>
       </div>
       {errorMessage ? (
@@ -55,7 +55,7 @@ const AppendInitScreen2 = ({ errorMessage, appendLoading, handleShowBenefits, ha
           Skip
         </LinkButton>
       </div>
-    </>
+    </div>
   );
 };
 

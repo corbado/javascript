@@ -4,7 +4,7 @@ import { LoadingSpinner } from '../../shared/LoadingSpinner';
 
 const AppendInitLoading = () => {
   return (
-    <div className='cb-passkey-list-loader-container'>
+    <div className='cb-append-loader-container'>
       <LoadingSpinner className='cb-passkey-list-loader' />
     </div>
   );

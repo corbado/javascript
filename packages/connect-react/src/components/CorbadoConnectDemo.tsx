@@ -2,6 +2,8 @@ import type { CorbadoConnectDemoConfig } from '@corbado/types';
 import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
+
+import AppendInitLoaded2 from './append/append-init/AppendInitLoaded2';
 import AppendInitLoading from './append/append-init/AppendInitLoading';
 import AppendSuccessScreen from './append/AppendSuccessScreen';
 import LoginErrorHard from './login/base/LoginErrorHard';
@@ -14,7 +16,6 @@ import AlreadyExistingModal from './passkeyList/AlreadyExistingModal';
 import DeleteModal from './passkeyList/DeleteModal';
 import PasskeyAppendNotSupportedModal from './passkeyList/PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './passkeyList/PasskeyList';
-import AppendInitLoaded2 from './append/append-init/AppendInitLoaded2';
 
 const getListOfPasskeys = () => {
   const out: Passkey[] = [

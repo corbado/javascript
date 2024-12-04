@@ -237,15 +237,20 @@ button.cb-outline-button {
   }
 }
 
-.cb-connect-custom-style .cb-login-error-soft-container {
+.cb-connect-custom-style div.cb-connect-append-cta {
+  border-top: none
+}
+
+.cb-connect-custom-style .cb-login-error-soft-container, .cb-connect-custom-style .cb-login-error-hard-container {
   align-items: normal;
+  width: 100%;
 }
 
 .cb-connect-custom-style button.cb-login-hybrid-button {
   width: 100%;
 }
 
-.cb-connect-custom-style button.cb-login-error-soft-button {
+.cb-connect-custom-style button.cb-login-error-soft-button, .cb-connect-custom-style button.cb-login-error-hard-button, .cb-connect-custom-style button.cb-login-error-hard-fallback {
   width: 100%;
 }
 

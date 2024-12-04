@@ -3,13 +3,6 @@
   container-type: inline-size;
 }
 
-/*
-.cb-connect-login-border {
-  border: 1px solid var(--cb-color-outline);
-  border-radius: var(--cb-border-radius);
-  padding: 2rem 1rem;
-}*/
-
 .cb-login-hybrid-container {
   display: flex;
   flex-direction: column;
@@ -51,7 +44,7 @@
 }
 
 .cb-login-error-hard-icons > * {
-  width: 100px;
+  width: 80px;
 }
 
 .cb-login-error-hard-fallback {

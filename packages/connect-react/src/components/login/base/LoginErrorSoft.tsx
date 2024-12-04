@@ -1,7 +1,8 @@
 import React from 'react';
+
+import { PasskeyAppendIcon } from '../../shared/icons/PasskeyAppendIcon';
 import { LinkButton } from '../../shared/LinkButton';
 import { PrimaryButton } from '../../shared/PrimaryButton';
-import { PasskeyAppendIcon } from '../../shared/icons/PasskeyAppendIcon';
 
 type Props = {
   loading: boolean;

@@ -9,7 +9,8 @@
   align-items: center;
 }
 
-.cb-login-hybrid-container .cb-p, .cb-login-hybrid-container .cb-link-button {
+.cb-login-hybrid-container .cb-p,
+.cb-login-hybrid-container .cb-link-button {
   text-align: center;
 }
 
@@ -21,13 +22,15 @@
   text-align: center;
 }
 
-.cb-login-error-soft-icons, .cb-login-error-hard-icons {
+.cb-login-error-soft-icons,
+.cb-login-error-hard-icons {
   margin: 1.5rem 0;
   display: flex;
   justify-content: center;
 }
 
-.cb-login-error-soft-text, .cb-login-error-hard-text {
+.cb-login-error-soft-text,
+.cb-login-error-hard-text {
   margin: 1rem 0;
   text-align: center;
 }
@@ -38,7 +41,8 @@
   color: var(--cb-color-secondary);
 }
 
-.cb-login-error-soft-button, .cb-login-error-hard-button {
+.cb-login-error-soft-button,
+.cb-login-error-hard-button {
   width: 100%;
   background: var(--cb-color-primary);
 }

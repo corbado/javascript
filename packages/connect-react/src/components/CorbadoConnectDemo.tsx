@@ -3,7 +3,7 @@ import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
-import AppendInitLoaded from './append/append-init/AppendInitLoaded';
+import AppendInitLoaded2 from './append/append-init/AppendInitLoaded2';
 import AppendInitLoading from './append/append-init/AppendInitLoading';
 import AppendSuccessScreen from './append/AppendSuccessScreen';
 import LoginErrorHard from './login/base/LoginErrorHard';
@@ -207,7 +207,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
       headline: 'Append screen initial',
       description: 'This screen is shown to the user when the append process is not yet started.',
       reactElement: (
-        <AppendInitLoaded
+        <AppendInitLoaded2
           errorMessage={undefined}
           appendLoading={false}
           handleShowBenefits={() => console.log('Show benefits')}
@@ -221,7 +221,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
       description:
         'This screen is shown to the user when an error occurs during the append process. The user can retry the append.',
       reactElement: (
-        <AppendInitLoaded
+        <AppendInitLoaded2
           errorMessage={'Passkey operation was cancelled or timed out. Please try again.'}
           appendLoading={false}
           handleShowBenefits={() => console.log('Show benefits')}
@@ -233,7 +233,12 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
     {
       headline: 'Append successful',
       description: 'This screen is shown to the user when the append process was successful.',
-      reactElement: <AppendSuccessScreen />,
+      reactElement: (
+        <AppendSuccessScreen
+          aaguidName='iCloud Keychain'
+          aaguidIcon='https://cdn.cloud.corbado.io/aaguidIcons/fbfc3007-154e-4ecc-8c0b-6e020557d7bd/light.svg'
+        />
+      ),
     },
   ];
 
@@ -293,6 +298,7 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
           loading={false}
           handleSubmit={() => console.log('Submit')}
           handleExplicitFallback={() => console.log('Fallback')}
+          handleNeedHelp={() => console.log('Need help')}
         />
       ),
     },

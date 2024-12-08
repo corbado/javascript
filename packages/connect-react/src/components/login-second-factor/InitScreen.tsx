@@ -161,7 +161,7 @@ const InitScreen = () => {
             <FaceIdIcon platform='default' />
             <PasskeyLoginIcon />
           </div>
-          <div className='cb-p'>Your device will ask you or your fingerprint, face or screen lock.</div>
+          <div className='cb-p'>Your device will ask you for your fingerprint, face or screen lock.</div>
           <PrimaryButton
             onClick={() => void handleSubmit()}
             isLoading={actionLoading}

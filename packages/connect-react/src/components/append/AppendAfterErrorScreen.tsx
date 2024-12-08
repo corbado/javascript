@@ -69,7 +69,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
   };
 
   return (
-    <div className='cb-append-after-error-container'>
+    <div className='cb-append-after-error-container cb-connect-append-border'>
       <div className='cb-h2'>Issues using passkeys?</div>
       {errorMessage ? (
         <Notification

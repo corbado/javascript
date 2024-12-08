@@ -9,7 +9,7 @@ interface Props {
 
 const AppendBenefits: FC<Props> = ({ onClick }) => {
   return (
-    <div className='cb-append-benefits-container'>
+    <div className='cb-append-benefits-container cb-connect-append-border'>
       <div className='cb-h2'>What is a Passkey?</div>
       <div className='cb-p'>
         Passkeys are a replacement for passwords that are designed to provide a more convenient, more secure,

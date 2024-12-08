@@ -1877,6 +1877,12 @@ export interface PasskeyOperation {
      * @memberof PasskeyOperation
      */
     'ceremonyType': PasskeyOperationCeremonyTypeEnum;
+    /**
+     * 
+     * @type {AaguidDetails}
+     * @memberof PasskeyOperation
+     */
+    'aaguidDetails'?: AaguidDetails;
 }
 
 export const PasskeyOperationOperationTypeEnum = {

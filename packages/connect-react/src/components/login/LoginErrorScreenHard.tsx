@@ -90,7 +90,7 @@ const LoginErrorScreenHard = () => {
       loading={loading}
       handleSubmit={() => void handleSubmit()}
       handleExplicitFallback={() => handleSituation(LoginSituationCode.ExplicitFallbackByUser)}
-      handleNeedHelp={() => config.onHelpClick?.()}
+      handleNeedHelp={config.onHelpClick ? () => config.onHelpClick?.() : undefined}
     />
   );
 };

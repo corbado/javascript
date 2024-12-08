@@ -1892,6 +1892,8 @@ components:
         ceremonyType:
           type: string
           enum: [ 'local', 'cda', 'security-key' ]
+        aaguidDetails:
+          $ref: '#/components/schemas/aaguidDetails'
 
     continueOnOtherDevice:
       type: object

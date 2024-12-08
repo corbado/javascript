@@ -124,7 +124,13 @@ export class ConnectService {
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcess) {
+    if (
+      existingProcess?.loginData &&
+      !existingProcess?.loginData.loginAllowed &&
+      ConnectInvitation.loadFromStorage()?.token
+    ) {
+      existingProcess.resetLoginData().persistToStorage();
+    } else if (existingProcess) {
       log.debug('process exists, preparing api clients');
       this.#setApisV2(existingProcess);
 
@@ -144,14 +150,11 @@ export class ConnectService {
     }
 
     const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcessFromOtherLoginInit) {
+    if (existingProcessFromOtherLoginInit?.loginData) {
       log.debug('process exists (after login init attempt');
       this.#setApisV2(existingProcessFromOtherLoginInit);
 
-      // process has already been initialized
-      if (existingProcessFromOtherLoginInit?.loginData) {
-        return Ok(existingProcessFromOtherLoginInit.loginData);
-      }
+      return Ok(existingProcessFromOtherLoginInit.loginData);
     }
 
     // if the backend decides that a new client handle is needed, we store it in local storage

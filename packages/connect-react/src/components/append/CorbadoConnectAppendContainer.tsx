@@ -19,7 +19,7 @@ const CorbadoConnectAppendContainer = () => {
       case AppendScreenType.AfterError:
         return <AppendAfterErrorScreen {...currentScreenOptions} />;
       case AppendScreenType.Success:
-        return <AppendSuccessScreen />;
+        return <AppendSuccessScreen {...currentScreenOptions} />;
     }
   }, [currentScreenType]);
 

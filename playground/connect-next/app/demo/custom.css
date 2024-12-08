@@ -10,8 +10,8 @@
   --cb-color-on-primary-container: #253544;
   --cb-color-secondary-container: #ecf4e7;
   --cb-color-on-secondary-container: #80b816;
-  --cb-font-family-primary: Verdana, Helvetica, sans-serif;
-  --cb-font-family-secondary: Museo-500, Verdana, Helvetica, sans-serif;
+  --cb-font-family-primary: Museo-500, Verdana, Helvetica, sans-serif;
+  --cb-font-family-secondary: Verdana, Helvetica, sans-serif;
 
   --cb-color-error-container: #ffd6da;
   --cb-color-on-error-container: #cf0000;
@@ -42,29 +42,12 @@
     font-weight: bold;
   }
 
-  .cb-primary-button,
-  .cb-secondary-button,
-  .cb-outline-button {
-    font-weight: bold;
-  }
-
   .cb-modal-cta {
     justify-content: start;
   }
 
   .cb-modal-cta > button {
     width: fit-content;
-  }
-
-  .cb-connect-append-cta {
-    padding-top: 2rem;
-    border-top: 1px solid #dcdcdc;
-  }
-
-  .cb-append-benefits-container {
-    .cb-primary-button {
-      text-align: left;
-    }
   }
 
   .cb-passkey-button-subtitle {

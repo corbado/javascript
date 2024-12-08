@@ -26,3 +26,6 @@ packages/tests-e2e/playwright/.cach/
 packages/tests-e2e/test-states
 packages/tests-e2e/.env.local
 .vercel
+
+# scripts
+scripts/release_connect_web_js.sh

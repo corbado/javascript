@@ -211,7 +211,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     navigateToScreen(LoginScreenType.Invisible);
     config.onFallback(identifier, message);
     setIsFallbackInitiallyTriggered(true);
-    void getConnectService().recordEventLoginErrorUntyped();
   };
 
   const handleSituation = (situationCode: LoginSituationCode) => {

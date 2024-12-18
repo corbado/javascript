@@ -16,9 +16,7 @@ export function setupVirtualAuthenticator(
   >,
 ) {
   test.beforeEach(async ({ model }) => {
-    console.log('adding');
     await model.addWebAuthn();
-    console.log('added');
   });
 
   test.afterEach(async ({ model }) => {
@@ -55,7 +53,6 @@ export function setupUser(
   >,
 ) {
   test.beforeEach(async ({ model }) => {
-    console.log('creating');
     await model.page.waitForTimeout(1000);
     await model.loadSignup();
     await model.expectScreen(ScreenNames.InitSignup);

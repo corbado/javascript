@@ -7,7 +7,6 @@ export const test = base.extend<{ model: BaseModel }>({
   model: async ({ page }, use) => {
     const authenticator = new VirtualAuthenticator();
     await authenticator.initializeCDPSession(page);
-    console.log('initialized');
 
     const model = new BaseModel(page, authenticator);
 

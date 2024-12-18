@@ -52,8 +52,13 @@ export function setupUser(
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
   >,
 ) {
-  test.beforeEach(async ({ model }) => {
-    await model.page.waitForTimeout(1000);
+  test.beforeEach(async ({ context, model }) => {
+    // setting webdriver as false still leads to fallback
+    // await context.addInitScript(() => {
+    //   Object.defineProperty(navigator, 'webdriver', {
+    //     get: () => false,
+    //   });
+    // });
     await model.loadSignup();
     await model.expectScreen(ScreenNames.InitSignup);
     await model.createUser();

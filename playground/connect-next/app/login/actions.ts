@@ -50,10 +50,8 @@ export async function postPasskeyLogin(session: string) {
   // validate session
   try {
     const tokenWrapper = JSON.parse(session) as TokenWrapper;
-    console.log('Validating token:', tokenWrapper);
     const decoded = await verifyToken(tokenWrapper.AccessToken);
     const username = decoded.username;
-    console.log('decoded:', decoded);
 
     // create client that loads profile from ~/.aws/credentials or environment variables
     const client = new CognitoIdentityProviderClient({

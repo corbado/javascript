@@ -69,12 +69,9 @@ export class ConnectProcess {
   }
 
   getValidLoginData(): ConnectLoginInitData | undefined {
-    log.debug('getValidLoginData 1', this.loginData);
     if (!this.loginData || !this.loginData.expiresAt) {
       return;
     }
-
-    log.debug('getValidLoginData 2');
 
     if (this.loginData.expiresAt < Date.now() / 1000) {
       return;

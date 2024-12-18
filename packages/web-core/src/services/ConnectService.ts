@@ -22,7 +22,6 @@ import type {
   ConnectManageListRsp,
 } from '../api/v2';
 import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
-import type { AuthProcess } from '../models/authProcess';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectInvitation } from '../models/connect/connectInvitation';
 import { ConnectLastLogin } from '../models/connect/connectLastLogin';
@@ -93,7 +92,7 @@ export class ConnectService {
     return out;
   }
 
-  #setApisV2(process?: AuthProcess): void {
+  #setApisV2(process?: ConnectProcess): void {
     let frontendApiUrl = this.#getDefaultFrontendApiUrl();
     if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
       frontendApiUrl = process.frontendApiUrl;
@@ -124,9 +123,11 @@ export class ConnectService {
 
   async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    const maybeLoginData = existingProcess?.getValidLoginData();
     if (
-      existingProcess?.loginData &&
-      !existingProcess?.loginData.loginAllowed &&
+      existingProcess &&
+      maybeLoginData &&
+      !maybeLoginData.loginAllowed &&
       ConnectInvitation.loadFromStorage()?.token
     ) {
       existingProcess.resetLoginData().persistToStorage();
@@ -135,8 +136,8 @@ export class ConnectService {
       this.#setApisV2(existingProcess);
 
       // process has already been initialized
-      if (existingProcess?.loginData) {
-        return Ok(existingProcess.loginData);
+      if (maybeLoginData) {
+        return Ok(maybeLoginData);
       }
     }
 
@@ -150,11 +151,12 @@ export class ConnectService {
     }
 
     const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcessFromOtherLoginInit?.loginData) {
+    const maybeExistingLoginDataFromOtherLoginInit = existingProcessFromOtherLoginInit?.getValidLoginData();
+    if (maybeExistingLoginDataFromOtherLoginInit) {
       log.debug('process exists (after login init attempt');
       this.#setApisV2(existingProcessFromOtherLoginInit);
 
-      return Ok(existingProcessFromOtherLoginInit.loginData);
+      return Ok(maybeExistingLoginDataFromOtherLoginInit);
     }
 
     // if the backend decides that a new client handle is needed, we store it in local storage
@@ -168,20 +170,26 @@ export class ConnectService {
       loginAllowed: res.val.loginAllowed,
       conditionalUIChallenge: res.val.conditionalUIChallenge ?? null,
       flags: flags.getItemsObject(),
+      expiresAt: res.val.expiresAt,
     };
 
-    // update local state
-    const newProcess = new ConnectProcess(
-      res.val.token,
-      this.#projectId,
-      res.val.expiresAt,
-      res.val.frontendApiUrl,
-      loginData,
-      null,
-      null,
-    );
-    this.#setApisV2(newProcess);
-    newProcess.persistToStorage();
+    if (existingProcess && existingProcess.id === res.val.token) {
+      log.debug('process exists, updating login data', loginData);
+      const p = existingProcess.copyWithLoginData(loginData);
+      p.persistToStorage();
+    } else {
+      log.debug('creating new process', loginData);
+      const newProcess = new ConnectProcess(
+        res.val.token,
+        this.#projectId,
+        res.val.frontendApiUrl,
+        loginData,
+        null,
+        null,
+      );
+      this.#setApisV2(newProcess);
+      newProcess.persistToStorage();
+    }
 
     // persist flags
     flags.persistToStorage(this.#projectId);
@@ -192,7 +200,7 @@ export class ConnectService {
   async #getExistingProcess(generator: () => Promise<Result<unknown, CorbadoError>>): Promise<ConnectProcess | null> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess) {
-      log.debug('process found', existingProcess.expiresAt);
+      log.debug('process found');
       return existingProcess;
     }
 
@@ -287,8 +295,9 @@ export class ConnectService {
       this.#setApisV2(existingProcess);
 
       // process has already been initialized
-      if (existingProcess?.appendData) {
-        return Ok(existingProcess.appendData);
+      const maybeAppendData = existingProcess?.getValidAppendData();
+      if (maybeAppendData) {
+        return Ok(maybeAppendData);
       }
     }
 
@@ -311,17 +320,19 @@ export class ConnectService {
     const appendData: ConnectAppendInitData = {
       appendAllowed: res.val.appendAllowed,
       flags: flags.getItemsObject(),
+      expiresAt: res.val.expiresAt,
     };
 
     // update local state with process
-    if (existingProcess) {
-      const p = existingProcess.copyWithAppendData(appendData, res.val.expiresAt);
+    if (existingProcess && existingProcess.id === res.val.processID) {
+      log.debug('process exists, updating append data', appendData);
+      const p = existingProcess.copyWithAppendData(appendData);
       p.persistToStorage();
     } else {
+      log.debug('creating new process', appendData);
       const newProcess = new ConnectProcess(
         res.val.processID,
         this.#projectId,
-        res.val.expiresAt,
         res.val.frontendApiUrl,
         null,
         appendData,
@@ -435,8 +446,9 @@ export class ConnectService {
       this.#setApisV2(existingProcess);
 
       // process has already been initialized
-      if (existingProcess?.manageData) {
-        return Ok(existingProcess.manageData);
+      const maybeManageData = existingProcess?.getValidManageData();
+      if (maybeManageData) {
+        return Ok(maybeManageData);
       }
     }
 
@@ -459,17 +471,17 @@ export class ConnectService {
     const manageData: ConnectManageInitData = {
       manageAllowed: res.val.manageAllowed,
       flags: flags.getItemsObject(),
+      expiresAt: res.val.expiresAt,
     };
 
     // update local state with process
-    if (existingProcess) {
-      const p = existingProcess.copyWithManageData(manageData, res.val.expiresAt);
+    if (existingProcess && existingProcess.id === res.val.processID) {
+      const p = existingProcess.copyWithManageData(manageData);
       p.persistToStorage();
     } else {
       const newProcess = new ConnectProcess(
         res.val.processID,
         this.#projectId,
-        res.val.expiresAt,
         res.val.frontendApiUrl,
         null,
         null,
@@ -526,8 +538,8 @@ export class ConnectService {
     invitation.persistToStorage();
   }
 
-  recordEventLoginError() {
-    return this.#recordEvent(PasskeyEventType.LoginError);
+  recordEventLoginError(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.LoginError, messageCode);
   }
 
   recordEventLoginExplicitAbort() {
@@ -558,12 +570,24 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.AppendError);
   }
 
+  recordEventLoginErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.LoginErrorUnexpected, messageCode);
+  }
+
+  recordEventAppendErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.AppendErrorUnexpected, messageCode);
+  }
+
+  recordEventManageErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.ManageErrorUnexpected, messageCode);
+  }
+
   recordEventAppendExplicitAbort() {
     return this.#recordEvent(PasskeyEventType.AppendExplicitAbort);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
-  #recordEvent(eventType: PasskeyEventType) {
+  #recordEvent(eventType: PasskeyEventType, message?: string) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       log.warn('No process found to record event.');
@@ -573,6 +597,7 @@ export class ConnectService {
 
     const req: ConnectEventCreateReq = {
       eventType,
+      message,
     };
 
     return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));

@@ -54,10 +54,10 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
-        void handleErrorHard(situationCode);
+        void handleErrorHard(situationCode, false);
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode);
+        void handleErrorSoft(situationCode, true);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
         void handleCredentialExistsError();

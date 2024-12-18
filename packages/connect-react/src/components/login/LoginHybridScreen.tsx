@@ -37,7 +37,8 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   }, [getConnectService, config, navigateToScreen, currentIdentifier, loading]);
 
   const handleSituation = (situationCode: LoginSituationCode) => {
-    log.debug(`situation: ${situationCode}`);
+    const messageCode = `situation: ${situationCode}`;
+    log.debug(messageCode);
 
     const identifier = currentIdentifier;
     const message = getLoginErrorMessage(situationCode);
@@ -47,14 +48,14 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback(identifier, message);
-        void getConnectService().recordEventLoginErrorUntyped();
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);
         break;
       case LoginSituationCode.ClientPasskeyOperationCancelled:
         navigateToScreen(LoginScreenType.ErrorSoft);
         config.onError?.(situationCode.toString());
-        void getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError(messageCode);
 
         setLoading(false);
         break;

@@ -145,7 +145,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled);
       }
 
-      void getConnectService().recordEventLoginErrorUntyped();
       // if a passkey has been deleted, CUI will fail => fallback with message
       if (res.val instanceof ConnectConditionalUIPasskeyDeleted) {
         return handleSituation(LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator);
@@ -214,13 +213,15 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   };
 
   const handleSituation = (situationCode: LoginSituationCode) => {
-    log.debug(`situation: ${situationCode}`);
+    const messageCode = `situation: ${situationCode}`;
+    log.debug(messageCode);
 
     const message = getLoginErrorMessage(situationCode);
 
     switch (situationCode) {
       case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
         fallback(identifier, message);
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         statefulLoader.current.finish();
         break;
@@ -235,18 +236,20 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         fallback(identifier, message);
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setIdentifierBasedLoading(false);
         break;
       case LoginSituationCode.ClientPasskeyOperationCancelled:
         navigateToScreen(LoginScreenType.ErrorSoft);
-        void getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError(messageCode);
         config.onError?.(situationCode.toString());
 
         setIdentifierBasedLoading(false);
         break;
       case LoginSituationCode.UserNotFound:
         setError(message ?? '');
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setIdentifierBasedLoading(false);
         break;

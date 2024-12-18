@@ -6,7 +6,6 @@ export class ConnectProcess {
   readonly id: string;
   readonly projectId: string;
   readonly frontendApiUrl: string;
-  readonly expiresAt: number;
   readonly loginData: ConnectLoginInitData | null;
   readonly appendData: ConnectAppendInitData | null;
   readonly manageData: ConnectManageInitData | null;
@@ -14,7 +13,6 @@ export class ConnectProcess {
   constructor(
     id: string,
     projectId: string,
-    expiresAt: number,
     frontendApiUrl: string,
     loginData: ConnectLoginInitData | null,
     appendData: ConnectAppendInitData | null,
@@ -22,7 +20,6 @@ export class ConnectProcess {
   ) {
     this.id = id;
     this.projectId = projectId;
-    this.expiresAt = expiresAt;
     this.frontendApiUrl = frontendApiUrl;
     this.loginData = loginData;
     this.appendData = appendData;
@@ -30,26 +27,17 @@ export class ConnectProcess {
   }
 
   isValid(): boolean {
-    return this.expiresAt > Date.now() / 1000 + 10;
+    return true;
   }
 
   resetLoginData(): ConnectProcess {
-    return new ConnectProcess(
-      this.id,
-      this.projectId,
-      this.expiresAt,
-      this.frontendApiUrl,
-      null,
-      this.appendData,
-      this.manageData,
-    );
+    return new ConnectProcess(this.id, this.projectId, this.frontendApiUrl, null, this.appendData, this.manageData);
   }
 
-  copyWithLoginData(loginData: ConnectLoginInitData, expiresAt: number): ConnectProcess {
+  copyWithLoginData(loginData: ConnectLoginInitData): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      expiresAt,
       this.frontendApiUrl,
       loginData,
       this.appendData,
@@ -57,11 +45,10 @@ export class ConnectProcess {
     );
   }
 
-  copyWithAppendData(appendData: ConnectAppendInitData, expiresAt: number): ConnectProcess {
+  copyWithAppendData(appendData: ConnectAppendInitData): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      expiresAt,
       this.frontendApiUrl,
       this.loginData,
       appendData,
@@ -69,16 +56,51 @@ export class ConnectProcess {
     );
   }
 
-  copyWithManageData(manageData: ConnectManageInitData, expiresAt: number): ConnectProcess {
+  copyWithManageData(manageData: ConnectManageInitData): ConnectProcess {
     return new ConnectProcess(
       this.id,
       this.projectId,
-      expiresAt,
       this.frontendApiUrl,
       this.loginData,
       this.appendData,
       manageData,
     );
+  }
+
+  getValidLoginData(): ConnectLoginInitData | undefined {
+    if (!this.loginData || !this.loginData.expiresAt) {
+      return;
+    }
+
+    if (this.loginData.expiresAt < Date.now() / 1000) {
+      return;
+    }
+
+    return this.loginData;
+  }
+
+  getValidAppendData(): ConnectAppendInitData | undefined {
+    if (!this.appendData || !this.appendData.expiresAt) {
+      return;
+    }
+
+    if (this.appendData.expiresAt < Date.now() / 1000) {
+      return;
+    }
+
+    return this.appendData;
+  }
+
+  getValidManageData(): ConnectManageInitData | undefined {
+    if (!this.manageData || !this.manageData.expiresAt) {
+      return;
+    }
+
+    if (this.manageData.expiresAt < Date.now() / 1000) {
+      return;
+    }
+
+    return this.manageData;
   }
 
   static loadFromStorage(projectId: string): ConnectProcess | undefined {
@@ -87,8 +109,8 @@ export class ConnectProcess {
       return undefined;
     }
 
-    const { id, expiresAt, frontendApiUrl, loginData, appendData, manageData } = JSON.parse(serialized);
-    const process = new ConnectProcess(id, projectId, expiresAt, frontendApiUrl, loginData, appendData, manageData);
+    const { id, frontendApiUrl, loginData, appendData, manageData } = JSON.parse(serialized);
+    const process = new ConnectProcess(id, projectId, frontendApiUrl, loginData, appendData, manageData);
     if (!process.isValid()) {
       return undefined;
     }
@@ -101,7 +123,6 @@ export class ConnectProcess {
       getStorageKey(this.projectId),
       JSON.stringify({
         id: this.id,
-        expiresAt: this.expiresAt,
         frontendApiUrl: this.frontendApiUrl,
         loginData: this.loginData,
         appendData: this.appendData,

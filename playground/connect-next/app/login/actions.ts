@@ -18,6 +18,10 @@ type DecodedToken = {
   username: string;
 };
 
+type TokenWrapper = {
+  AccessToken: string;
+};
+
 const getKey = (header: jwt.JwtHeader, callback: jwt.SigningKeyCallback) => {
   client.getSigningKey(header.kid, (err, key) => {
     const signingKey = key?.getPublicKey();
@@ -45,7 +49,8 @@ const verifyToken = async (token: string): Promise<DecodedToken> => {
 export async function postPasskeyLogin(session: string) {
   // validate session
   try {
-    const decoded = await verifyToken(session);
+    const tokenWrapper = JSON.parse(session) as TokenWrapper;
+    const decoded = await verifyToken(tokenWrapper.AccessToken);
     const username = decoded.username;
 
     // create client that loads profile from ~/.aws/credentials or environment variables

@@ -66,6 +66,6 @@ export default defineConfig({
     {
       name: 'misc',
       testMatch: ['scenarios/misc.spec.ts'],
-    }
+    },
   ],
 });

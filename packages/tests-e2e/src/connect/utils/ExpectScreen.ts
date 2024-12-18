@@ -1,4 +1,4 @@
-import type { Page} from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { ScreenNames } from './Constants';
@@ -10,11 +10,15 @@ export const expectScreen = async (page: Page, screenName: ScreenNames) => {
       return;
 
     case ScreenNames.PasskeyAppend:
-      await expect(page.locator('.cb-connect-container').locator('.cb-append-header')).toHaveText('Simplify Your Login');
+      await expect(page.locator('.cb-connect-container').locator('.cb-append-header')).toHaveText(
+        'Simplify Your Login',
+      );
       return;
 
     case ScreenNames.PasskeyAppended:
-      await expect(page.locator('.cb-connect-container').locator('.cb-append-success-header')).toHaveText('Passkey Created Successfully');
+      await expect(page.locator('.cb-connect-container').locator('.cb-append-success-header')).toHaveText(
+        'Passkey Created Successfully',
+      );
       return;
 
     case ScreenNames.InitLogin:
@@ -28,4 +32,4 @@ export const expectScreen = async (page: Page, screenName: ScreenNames) => {
     default:
       throw new Error('Invalid screen');
   }
-}
+};

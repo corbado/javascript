@@ -12,8 +12,6 @@ export class SignupModel {
     return await this.page.getByPlaceholder('Email').inputValue();
   }
 
-
-
   submit(): Promise<void> {
     return this.page.getByRole('button', { name: 'Sign up' }).click();
   }

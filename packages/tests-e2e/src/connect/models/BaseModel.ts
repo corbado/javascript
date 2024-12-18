@@ -5,7 +5,7 @@ import { ScreenNames } from '../utils/Constants';
 import { expectScreen } from '../utils/ExpectScreen';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';
-import { SignupModel } from './SIgnupModel';
+import { SignupModel } from './SignupModel';
 
 export class BaseModel {
   page: Page;

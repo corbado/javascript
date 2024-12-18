@@ -1,5 +1,4 @@
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from './login';
-import log from 'loglevel';
 
 const getStorageKey = (projectId: string) => `cbo_connect_process-${projectId}`;
 

@@ -2,12 +2,12 @@ import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-import { operationTimeout, totalTimeout } from './src/connect/utils/constants';
+import { operationTimeout, totalTimeout } from './src/connect/utils/Constants';
 
 if (process.env.CI) {
-  dotenv.config({ path: path.resolve(__dirname, '.env.ci'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.connect.ci'), override: true });
 } else {
-  dotenv.config({ path: path.resolve(__dirname, '.env.local'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.connect.local'), override: true });
 }
 
 export default defineConfig({
@@ -52,16 +52,20 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'corbado-auth-general',
-      testMatch: ['scenarios/corbado-auth-general/*.ts'],
+      name: 'login-component',
+      testMatch: ['scenarios/login.spec.ts'],
     },
     {
-      name: 'corbado-auth-component-configs',
-      testMatch: ['scenarios/corbado-auth-component-configs/*.ts'],
+      name: 'append-component',
+      testMatch: ['scenarios/append.spec.ts'],
     },
     {
-      name: 'passkey-list-general',
-      testMatch: ['scenarios/passkey-list-general/*.ts'],
+      name: 'passkey-list-component',
+      testMatch: ['scenarios/passkey-list.spec.ts'],
     },
+    {
+      name: 'misc',
+      testMatch: ['scenarios/misc.spec.ts'],
+    }
   ],
 });

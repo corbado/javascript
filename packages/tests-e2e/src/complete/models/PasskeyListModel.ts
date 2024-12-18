@@ -1,12 +1,12 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import type { VirtualAuthenticator } from './utils/VirtualAuthenticator';
-import { SignupInitBlockModel } from './corbado-auth-blocks/SignupInitBlockModel';
-import { PasskeyAppendBlockModel } from './corbado-auth-blocks/PasskeyAppendBlockModel';
+import { ScreenNames } from '../utils/constants'; // The idea of this model is to only test on PasskeyList
 import { EmailVerifyBlockModel, OtpCodeType } from './corbado-auth-blocks/EmailVerifyBlockModel';
 import { expectScreen } from './corbado-auth-blocks/expectScreen';
-import { ScreenNames } from '../utils/constants'; // The idea of this model is to only test on PasskeyList
+import { PasskeyAppendBlockModel } from './corbado-auth-blocks/PasskeyAppendBlockModel';
+import { SignupInitBlockModel } from './corbado-auth-blocks/SignupInitBlockModel';
+import type { VirtualAuthenticator } from './utils/VirtualAuthenticator';
 
 // The idea of this model is to only test on PasskeyList
 // We don't want to mix the test with other components (e.g. CorbadoAuthModel)

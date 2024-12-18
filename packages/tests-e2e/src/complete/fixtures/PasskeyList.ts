@@ -4,7 +4,7 @@ import { PasskeyListModel } from '../models/PasskeyListModel';
 import { VirtualAuthenticator } from '../models/utils/VirtualAuthenticator';
 
 export const passkeyListTest = test.extend<{ model: PasskeyListModel }>({
-  model: async ({ page }, use, testInfo) => {
+  model: async ({ page }, use) => {
     const virtualAuthenticator = new VirtualAuthenticator();
     await virtualAuthenticator.initializeCDPSession(page);
 

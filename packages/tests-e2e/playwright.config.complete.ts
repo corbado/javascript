@@ -8,9 +8,9 @@ if (process.env.CI) {
   // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
   // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the
   // value should theoretically be undefined. For now the 'override' option fixes the issue.
-  dotenv.config({ path: path.resolve(__dirname, '.env.ci'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.complete.ci'), override: true });
 } else {
-  dotenv.config({ path: path.resolve(__dirname, '.env.local'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.complete.local'), override: true });
 }
 
 export default defineConfig({

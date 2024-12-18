@@ -37,7 +37,7 @@ test.describe('login-init no public signup', () => {
     await expect(page.getByRole('button', { name: 'Sign up' })).toBeHidden();
   });
 
-  test('switch to signup should not be possible (hashCode)', async ({ model, page }) => {
+  test('switch to signup should not be possible (hashCode)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     await model.expectScreen(ScreenNames.InitLogin);

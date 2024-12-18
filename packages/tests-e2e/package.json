@@ -13,7 +13,9 @@
   },
   "scripts": {
     "e2e:complete": "playwright test --config=playwright.config.complete.ts",
+    "e2e:complete:ui": "playwright test --config=playwright.config.complete.ts --ui",
     "e2e:connect": "playwright test --config=playwright.config.connect.ts",
+    "e2e:connect:ui": "playwright test --config=playwright.config.connect.ts --ui",
     "e2e:report": "npx playwright show-report"
   },
   "bugs": {

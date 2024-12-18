@@ -151,11 +151,12 @@ export class ConnectService {
     }
 
     const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
-    if (existingProcessFromOtherLoginInit?.loginData) {
+    const maybeExistingLoginDataFromOtherLoginInit = existingProcessFromOtherLoginInit?.getValidLoginData();
+    if (maybeExistingLoginDataFromOtherLoginInit) {
       log.debug('process exists (after login init attempt');
       this.#setApisV2(existingProcessFromOtherLoginInit);
 
-      return Ok(existingProcessFromOtherLoginInit.loginData);
+      return Ok(maybeExistingLoginDataFromOtherLoginInit);
     }
 
     // if the backend decides that a new client handle is needed, we store it in local storage
@@ -173,9 +174,11 @@ export class ConnectService {
     };
 
     if (existingProcess && existingProcess.id === res.val.token) {
+      log.debug('process exists, updating login data', loginData);
       const p = existingProcess.copyWithLoginData(loginData);
       p.persistToStorage();
     } else {
+      log.debug('creating new process', loginData);
       const newProcess = new ConnectProcess(
         res.val.token,
         this.#projectId,
@@ -322,9 +325,11 @@ export class ConnectService {
 
     // update local state with process
     if (existingProcess && existingProcess.id === res.val.processID) {
+      log.debug('process exists, updating append data', appendData);
       const p = existingProcess.copyWithAppendData(appendData);
       p.persistToStorage();
     } else {
+      log.debug('creating new process', appendData);
       const newProcess = new ConnectProcess(
         res.val.processID,
         this.#projectId,
@@ -533,8 +538,8 @@ export class ConnectService {
     invitation.persistToStorage();
   }
 
-  recordEventLoginError() {
-    return this.#recordEvent(PasskeyEventType.LoginError);
+  recordEventLoginError(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.LoginError, messageCode);
   }
 
   recordEventLoginExplicitAbort() {
@@ -565,12 +570,24 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.AppendError);
   }
 
+  recordEventLoginErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.LoginErrorUnexpected, messageCode);
+  }
+
+  recordEventAppendErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.AppendErrorUnexpected, messageCode);
+  }
+
+  recordEventManageErrorUnexpected(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.ManageErrorUnexpected, messageCode);
+  }
+
   recordEventAppendExplicitAbort() {
     return this.#recordEvent(PasskeyEventType.AppendExplicitAbort);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
-  #recordEvent(eventType: PasskeyEventType) {
+  #recordEvent(eventType: PasskeyEventType, message?: string) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       log.warn('No process found to record event.');
@@ -580,6 +597,7 @@ export class ConnectService {
 
     const req: ConnectEventCreateReq = {
       eventType,
+      message,
     };
 
     return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));

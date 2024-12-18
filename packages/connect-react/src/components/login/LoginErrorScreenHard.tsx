@@ -48,7 +48,8 @@ const LoginErrorScreenHard = () => {
   };
 
   const handleSituation = (situationCode: LoginSituationCode) => {
-    log.debug(`situation: ${situationCode}`);
+    const messageCode = `situation: ${situationCode}`;
+    log.debug(messageCode);
 
     const identifier = currentIdentifier;
     const message = getLoginErrorMessage(situationCode);
@@ -58,21 +59,21 @@ const LoginErrorScreenHard = () => {
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback(identifier, message);
-        void getConnectService().recordEventLoginErrorUntyped();
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);
         break;
       case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
         navigateToScreen(LoginScreenType.Invisible);
         config.onFallback(identifier, message);
-        void getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError(messageCode);
 
         setLoading(false);
         break;
 
       case LoginSituationCode.ClientPasskeyOperationCancelled:
         setHardErrorCount(hardErrorCount + 1);
-        void getConnectService().recordEventLoginError();
+        void getConnectService().recordEventLoginError(messageCode);
 
         setLoading(false);
         break;

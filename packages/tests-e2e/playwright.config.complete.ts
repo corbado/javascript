@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-import { operationTimeout, totalTimeout } from './src/utils/constants';
+import { operationTimeout, totalTimeout } from './src/complete/utils/constants';
 
 if (process.env.CI) {
   // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
@@ -14,7 +14,7 @@ if (process.env.CI) {
 }
 
 export default defineConfig({
-  testDir: './src',
+  testDir: './src/complete',
   // fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 4,
@@ -31,7 +31,7 @@ export default defineConfig({
     [
       '../../node_modules/playwright-slack-report/dist/src/SlackReporter.js',
       {
-        channels: ['corbado-javascript-tests'],
+        channels: ['corbado-tests'],
         sendResults: 'always',
         showInThread: true,
         meta: [
@@ -53,21 +53,22 @@ export default defineConfig({
     actionTimeout: operationTimeout, // default: none
     navigationTimeout: operationTimeout, // default: none
     baseURL: process.env.PLAYWRIGHT_TEST_URL,
-    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
   },
   projects: [
     {
       name: 'corbado-auth-general',
-      testMatch: ['ui/corbado-auth-general/*.ts'],
+      testMatch: ['scenarios/corbado-auth-general/*.ts'],
     },
     {
       name: 'corbado-auth-component-configs',
-      testMatch: ['ui/corbado-auth-component-configs/*.ts'],
+      testMatch: ['scenarios/corbado-auth-component-configs/*.ts'],
     },
     {
       name: 'passkey-list-general',
-      testMatch: ['ui/passkey-list-general/*.ts'],
+      testMatch: ['scenarios/passkey-list-general/*.ts'],
     },
   ],
 });

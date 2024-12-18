@@ -31,13 +31,13 @@ Now Playwright is ready to test the local Playground deployment.
 
 ```console
 $ cd packages/tests-e2e
-$ npx playwright test --config=playwright.config.ui.ts --ui --project=nightly
+$ npx playwright test --config=playwright.config.complete.ts --ui --project=nightly
 ```
 
 ### From CLI
 
 ```console
-npx playwright test --config=playwright.config.ui.ts --project=nightly
+npx playwright test --config=playwright.config.complete.ts --project=nightly
 ```
 
 Alternatively, you can do:

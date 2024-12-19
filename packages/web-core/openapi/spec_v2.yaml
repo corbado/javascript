@@ -1847,6 +1847,8 @@ components:
           type: boolean
         webdriver:
           type: boolean
+        privateMode:
+          type: boolean
 
     clientCapabilities:
       type: object

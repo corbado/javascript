@@ -240,6 +240,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'webdriver'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'privateMode'?: boolean;
 }
 /**
  * 

@@ -4,6 +4,7 @@ import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
 import { create, get } from '@corbado/webauthn-json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
@@ -101,6 +102,7 @@ export class WebAuthnService {
       javaScriptHighEntropy: javaScriptHighEntropy,
       clientCapabilities,
       webdriver: WebAuthnService.getWebdriver(),
+      privateMode: await WebAuthnService.isPrivateMode(),
     };
   }
 
@@ -126,6 +128,15 @@ export class WebAuthnService {
       return await window.PublicKeyCredential.isConditionalMediationAvailable();
     } catch (e) {
       log.debug('Error checking conditional UI availability', e);
+      return;
+    }
+  }
+
+  static async isPrivateMode(): Promise<boolean | undefined> {
+    try {
+      const res = await detectIncognito();
+      return res.isPrivate;
+    } catch (e) {
       return;
     }
   }

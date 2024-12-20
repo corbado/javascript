@@ -7,6 +7,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorHard from './base/LoginErrorHard';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 const LoginErrorScreenHard = () => {
   const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
@@ -41,7 +42,7 @@ const LoginErrorScreenHard = () => {
     setLoading(false);
 
     try {
-      await config.onComplete(resFinish.val.session);
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

@@ -1246,10 +1246,13 @@ components:
       required:
         - passkeyOperation
         - session
+        - signedPasskeyData
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
         session:
+          type: string
+        signedPasskeyData:
           type: string
 
     connectAppendInitReq:
@@ -1846,6 +1849,8 @@ components:
         isNative:
           type: boolean
         webdriver:
+          type: boolean
+        privateMode:
           type: boolean
 
     clientCapabilities:

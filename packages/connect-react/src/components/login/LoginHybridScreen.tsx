@@ -8,6 +8,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginHybrid from './base/LoginHybrid';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
   const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
@@ -30,7 +31,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

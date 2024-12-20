@@ -4,6 +4,7 @@ import {
   PasskeyChallengeCancelledError,
   PasskeyLoginSource,
 } from '@corbado/web-core';
+import type { ConnectLoginFinishRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -27,6 +28,14 @@ interface Props {
   showFallback?: boolean;
   prefilledIdentifier?: string;
 }
+
+export const connectLoginFinishToComplete = (v: ConnectLoginFinishRsp): string => {
+  if (v.session.length > 0) {
+    return v.session;
+  }
+
+  return v.signedPasskeyData;
+};
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs } = useLoginProcess();
@@ -159,7 +168,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -199,7 +208,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       void getConnectService().recordEventLoginErrorUntyped();
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

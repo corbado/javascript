@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { CorbadoConnectLogin } from '@corbado/connect-react';
 import { useState } from 'react';
 import ConventionalLogin from '@/app/login/ConventionalLogin';
-import { postPasskeyLogin } from '@/app/login/actions';
+import { postPasskeyLogin, postPasskeyLoginNew } from '@/app/login/actions';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,11 +25,10 @@ export default function LoginPage() {
                 setConventionalLoginVisible(true);
                 console.log('onFallback', identifier);
               }}
-              onError={error => console.log('error', error)}
+              onError={(error: string) => console.log('error', error)}
               onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-              onComplete={async session => {
-                console.log(session);
-                await postPasskeyLogin(session);
+              onComplete={async (signedPasskeyData: string) => {
+                await postPasskeyLoginNew(signedPasskeyData);
                 router.push('/post-login');
               }}
               onSignupClick={() => router.push('/signup')}

@@ -240,6 +240,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'webdriver'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'privateMode'?: boolean;
 }
 /**
  * 
@@ -452,6 +458,12 @@ export interface ConnectLoginFinishRsp {
      * @memberof ConnectLoginFinishRsp
      */
     'session': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'signedPasskeyData': string;
 }
 /**
  * 

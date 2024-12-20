@@ -7,6 +7,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginOneTap from './base/LoginOneTap';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
@@ -41,7 +42,7 @@ export const LoginPasskeyReLoginScreen = () => {
     }
 
     try {
-      await config.onComplete(resFinish.val.session);
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

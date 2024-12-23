@@ -31,7 +31,7 @@ export default defineConfig({
     [
       '../../node_modules/playwright-slack-report/dist/src/SlackReporter.js',
       {
-        channels: ['corbado-javascript-tests'],
+        channels: ['corbado-tests'],
         sendResults: 'always',
         showInThread: true,
         meta: [

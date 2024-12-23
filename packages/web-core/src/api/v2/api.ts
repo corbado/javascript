@@ -240,6 +240,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'webdriver'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientInformation
+     */
+    'privateMode'?: boolean;
 }
 /**
  * 
@@ -400,6 +406,12 @@ export interface ConnectEventCreateReq {
      * @memberof ConnectEventCreateReq
      */
     'eventType': PasskeyEventType;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectEventCreateReq
+     */
+    'message'?: string;
     /**
      * 
      * @type {string}
@@ -1781,12 +1793,15 @@ export const PasskeyEventType = {
     LoginExplicitAbort: 'login-explicit-abort',
     LoginError: 'login-error',
     LoginErrorUntyped: 'login-error-untyped',
+    LoginErrorUnexpected: 'login-error-unexpected',
     LoginOneTapSwitch: 'login-one-tap-switch',
     UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
     UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
     AppendCredentialExists: 'append-credential-exists',
     AppendExplicitAbort: 'append-explicit-abort',
-    AppendError: 'append-error'
+    AppendError: 'append-error',
+    AppendErrorUnexpected: 'append-error-unexpected',
+    ManageErrorUnexpected: 'manage-error-unexpected'
 } as const;
 
 export type PasskeyEventType = typeof PasskeyEventType[keyof typeof PasskeyEventType];

@@ -168,7 +168,8 @@ const PasskeyListScreen = () => {
   };
 
   const handleSituation = (situationCode: PasskeyListSituationCode) => {
-    log.debug(`situation: ${situationCode}`);
+    const messageCode = `situation: ${situationCode}`;
+    log.debug(messageCode);
 
     const message = getPasskeyListErrorMessage(situationCode);
     switch (situationCode) {
@@ -188,6 +189,8 @@ const PasskeyListScreen = () => {
         if (message) {
           setErrorMessage(message);
         }
+
+        void getConnectService().recordEventManageErrorUnexpected(messageCode);
         break;
       case PasskeyListSituationCode.CtApiNotAvailablePreDelete:
       case PasskeyListSituationCode.CboApiNotAvailableDuringDelete:
@@ -195,6 +198,8 @@ const PasskeyListScreen = () => {
         if (message) {
           setErrorMessage(message);
         }
+
+        void getConnectService().recordEventManageErrorUnexpected(messageCode);
         break;
       case PasskeyListSituationCode.CtApiNotAvailablePreAuthenticator:
       case PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator:
@@ -205,6 +210,8 @@ const PasskeyListScreen = () => {
         if (message) {
           setErrorMessage(message);
         }
+
+        void getConnectService().recordEventManageErrorUnexpected(messageCode);
     }
   };
 

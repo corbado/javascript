@@ -13,8 +13,8 @@ export interface AppendProcessContextProps {
   currentScreenOptions: any;
   config: CorbadoConnectAppendConfig;
   navigateToScreen: (s: AppendScreenType, options?: any) => void;
-  handleErrorSoft: (situation: AppendSituationCode) => Promise<void>;
-  handleErrorHard: (situation: AppendSituationCode, explicit?: boolean) => Promise<void>;
+  handleErrorSoft: (situation: AppendSituationCode, expected: boolean) => Promise<void>;
+  handleErrorHard: (situation: AppendSituationCode, expected: boolean) => Promise<void>;
   handleCredentialExistsError: () => Promise<void>;
   handleSkip: (situation: AppendSituationCode, explicit?: boolean) => Promise<void>;
 }

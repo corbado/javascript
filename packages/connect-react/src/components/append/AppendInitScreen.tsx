@@ -165,12 +165,12 @@ const AppendInitScreen = () => {
       case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
-        void handleErrorHard(situationCode);
+        void handleErrorHard(situationCode, false);
 
         statefulLoader.current.finishWithError();
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode);
+        void handleErrorSoft(situationCode, true);
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:

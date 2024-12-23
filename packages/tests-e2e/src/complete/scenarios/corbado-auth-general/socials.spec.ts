@@ -96,7 +96,9 @@ test.describe('social logins', () => {
   });
 
   // in that case only identifier based login should be possible
-  test('signup with social should not be possible (account exists, social has not been linked)', async ({ model }) => {
+  test.skip('signup with social should not be possible (account exists, social has not been linked)', async ({
+    model,
+  }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';

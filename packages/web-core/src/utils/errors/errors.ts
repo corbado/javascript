@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import log from 'loglevel';
 
 import type { ErrorRsp } from '../../api/v1';
-import { RequestError } from '../../api/v2';
+import type { RequestError } from '../../api/v2';
 
 /** General Errors */
 export type GetProcessError = ProcessNotFound;

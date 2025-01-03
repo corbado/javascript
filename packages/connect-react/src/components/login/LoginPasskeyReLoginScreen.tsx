@@ -10,7 +10,7 @@ import LoginOneTap from './base/LoginOneTap';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 export const LoginPasskeyReLoginScreen = () => {
-  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
@@ -65,7 +65,7 @@ export const LoginPasskeyReLoginScreen = () => {
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);

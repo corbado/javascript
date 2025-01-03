@@ -10,7 +10,7 @@ import LoginErrorHard from './base/LoginErrorHard';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 const LoginErrorScreenHard = () => {
-  const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   const [hardErrorCount, setHardErrorCount] = useState(1);
@@ -59,14 +59,14 @@ const LoginErrorScreenHard = () => {
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);
         break;
       case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginError(messageCode);
 
         setLoading(false);
@@ -80,7 +80,7 @@ const LoginErrorScreenHard = () => {
         break;
       case LoginSituationCode.ExplicitFallbackByUser:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, null);
 
         void getConnectService().recordEventLoginExplicitAbort();
         break;

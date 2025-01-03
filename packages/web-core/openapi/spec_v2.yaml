@@ -1229,6 +1229,8 @@ components:
           type: string
         isCDA:
           type: boolean
+        error:
+          $ref: '#/components/schemas/requestError'
 
     connectLoginFinishReq:
       type: object

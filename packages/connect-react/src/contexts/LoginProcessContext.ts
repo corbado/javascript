@@ -12,6 +12,8 @@ export interface LoginProcessContextProps {
   currentScreenType: LoginScreenType;
   currentScreenOptions: any;
   config: CorbadoConnectLoginConfig;
+  fallback: (identifier: string, message: string | null) => void;
+  fallbackCustom: (identifier: string, code: string, payload: string) => void;
   navigateToScreen: (s: LoginScreenType, options?: any) => void;
   setCurrentIdentifier: (s: string) => void;
   currentIdentifier: string;
@@ -25,6 +27,8 @@ export const initialContext: LoginProcessContextProps = {
   config: {} as CorbadoConnectLoginConfig,
   navigateToScreen: missingImplementation,
   setCurrentIdentifier: missingImplementation,
+  fallback: missingImplementation,
+  fallbackCustom: missingImplementation,
   currentIdentifier: '',
   currentScreenOptions: undefined,
   flags: undefined,

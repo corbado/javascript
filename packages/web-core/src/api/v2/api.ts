@@ -598,6 +598,12 @@ export interface ConnectLoginStartRsp {
      * @memberof ConnectLoginStartRsp
      */
     'isCDA': boolean;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof ConnectLoginStartRsp
+     */
+    'error'?: RequestError;
 }
 /**
  * 

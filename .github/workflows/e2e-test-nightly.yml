@@ -64,12 +64,12 @@ jobs:
           cd packages/tests-e2e
           npx playwright install --with-deps
 
-      - name: Install and run E2E Test for react
+      - name: Run Complete tests for react
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
           export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.react.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.complete.ts
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
@@ -84,16 +84,16 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-react
+          name: playwright-report-complete-react
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
-      - name: Install and run E2E Test for web-js
+      - name: Run Complete tests for web-js
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
           export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.complete.ts
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
@@ -108,16 +108,16 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-web-js
+          name: playwright-report-complete-web-js
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
-      - name: Install and run E2E Test for web-js-script
+      - name: Run Complete tests for web-js-script
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
           export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js-script.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.ui.ts
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.complete.ts
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
@@ -132,6 +132,25 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-web-js-script
+          name: playwright-report-complete-web-js-script
+          path: packages/tests-e2e/playwright-report/
+          retention-days: 30
+
+      - name: Run Connect tests for react
+        run: |
+          cd packages/tests-e2e
+          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
+          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.connect-next.playground.corbado.io"
+          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.connect.ts
+        env:
+          PLAYWRIGHT_NUM_CORES: 4
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+          GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-connect-react
           path: packages/tests-e2e/playwright-report/
           retention-days: 30

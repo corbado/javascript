@@ -2,26 +2,19 @@ import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-import { operationTimeout, totalTimeout } from './src/utils/constants';
+import { operationTimeout, totalTimeout } from './src/connect/utils/Constants';
 
 if (process.env.CI) {
-  // I have no idea why process.env.PLAYWRIGHT_PROJECT_ID is set as the value in .env.local before
-  // this point. This environment variable is not set in the workflow file (e2e-test.yml), so the
-  // value should theoretically be undefined. For now the 'override' option fixes the issue.
-  dotenv.config({ path: path.resolve(__dirname, '.env.ci'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.connect.ci'), override: true });
 } else {
-  dotenv.config({ path: path.resolve(__dirname, '.env.local'), override: true });
+  dotenv.config({ path: path.resolve(__dirname, '.env.connect.local'), override: true });
 }
 
 export default defineConfig({
-  testDir: './src',
+  testDir: './src/connect',
   // fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 4,
-  // Using all cores increases flakiness due to slow browsers.
-  // Recommended # of workers = # of cores / 2, but leaving only 1 free
-  // core seems enough to prevent flakiness on our self-hosted runners.
-  // Ref: https://learn.microsoft.com/en-us/azure/playwright-testing/concept-determine-optimal-configuration#run-tests-locally
   workers: process.env.CI
     ? process.env.PLAYWRIGHT_NUM_CORES
       ? parseInt(process.env.PLAYWRIGHT_NUM_CORES, 10) - 1
@@ -53,21 +46,26 @@ export default defineConfig({
     actionTimeout: operationTimeout, // default: none
     navigationTimeout: operationTimeout, // default: none
     baseURL: process.env.PLAYWRIGHT_TEST_URL,
-    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
   },
   projects: [
     {
-      name: 'corbado-auth-general',
-      testMatch: ['ui/corbado-auth-general/*.ts'],
+      name: 'login-component',
+      testMatch: ['scenarios/login.spec.ts'],
     },
     {
-      name: 'corbado-auth-component-configs',
-      testMatch: ['ui/corbado-auth-component-configs/*.ts'],
+      name: 'append-component',
+      testMatch: ['scenarios/append.spec.ts'],
     },
     {
-      name: 'passkey-list-general',
-      testMatch: ['ui/passkey-list-general/*.ts'],
+      name: 'passkey-list-component',
+      testMatch: ['scenarios/passkey-list.spec.ts'],
+    },
+    {
+      name: 'misc',
+      testMatch: ['scenarios/misc.spec.ts'],
     },
   ],
 });

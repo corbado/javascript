@@ -4,7 +4,7 @@ import { CorbadoAuthModel } from '../models/CorbadoAuthModel';
 import { VirtualAuthenticator } from '../models/utils/VirtualAuthenticator';
 
 export const test = base.extend<{ model: CorbadoAuthModel }>({
-  model: async ({ page }, use, testInfo) => {
+  model: async ({ page }, use) => {
     const virtualAuthenticator = new VirtualAuthenticator();
     await virtualAuthenticator.initializeCDPSession(page);
 

@@ -49,10 +49,6 @@ export class SignupInitBlockModel {
     await elem.fill(value);
   }
 
-  fillFullName(value: string) {
-    return;
-  }
-
   submitPrimary() {
     return this.page.getByRole('button', { name: 'Continue', exact: true }).click();
   }

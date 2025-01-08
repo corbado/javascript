@@ -17,10 +17,6 @@ export class PasskeyAppendBlockModel {
     return this.page.getByRole('button', { name: 'Log in' }).click();
   }
 
-  fillFullName(value: string) {
-    return;
-  }
-
   async startPasskeyOperation(complete: boolean) {
     const operationTrigger = () => this.page.getByRole('button', { name: 'Create account' }).click();
     if (complete) {

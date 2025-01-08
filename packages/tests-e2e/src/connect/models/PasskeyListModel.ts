@@ -27,7 +27,9 @@ export class PasskeyListModel {
       await this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
     } else {
       await this.authenticator.startAndCancelPasskeyOperation(operationTrigger, () =>
-        expect(this.page.locator('.cb-notification-text')).toHaveText('You have cancelled setting up your passkey. Please try again.'),
+        expect(this.page.locator('.cb-notification-text')).toHaveText(
+          'You have cancelled setting up your passkey. Please try again.',
+        ),
       );
     }
   }

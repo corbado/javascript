@@ -61,7 +61,9 @@ export function setupUser(
   test: TestType<
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
-  >, invited = true, append = true,
+  >,
+  invited = true,
+  append = true,
 ) {
   test.beforeEach(async ({ model }) => {
     if (invited) {

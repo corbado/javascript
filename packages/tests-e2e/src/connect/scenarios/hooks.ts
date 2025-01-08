@@ -24,16 +24,16 @@ export function setupVirtualAuthenticator(
   });
 }
 
-// export function loadInvitationToken(
-//   test: TestType<
-//     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
-//     PlaywrightWorkerArgs & PlaywrightWorkerOptions
-//   >,
-// ) {
-//   test.beforeEach(async ({ model }) => {
-//     await model.loadInvitationToken();
-//   });
-// }
+export function loadInvitationToken(
+  test: TestType<
+    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+  >,
+) {
+  test.beforeEach(async ({ model }) => {
+    await model.loadInvitationToken();
+  });
+}
 
 export function loadSignup(
   test: TestType<

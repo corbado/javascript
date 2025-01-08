@@ -1,6 +1,6 @@
 import { test } from '../fixtures/BaseTest';
-import { password, ScreenNames } from '../utils/Constants';
-import { setupUser, setupVirtualAuthenticator } from './hooks';
+import { ErrorTexts, password, ScreenNames } from '../utils/Constants';
+import { loadInvitationToken, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('login component (without invitation token)', () => {
   setupUser(test, false);
@@ -41,7 +41,7 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.home.logout();
     await model.expectScreen(ScreenNames.InitLoginOneTap);
 
-    await model.login.submitPasskeyButton();
+    await model.login.submitPasskeyButton(true);
     await model.expectScreen(ScreenNames.Home);
   });
 
@@ -54,5 +54,34 @@ test.describe('login component (with invitation token, with passkeys)', () => {
 
     await model.login.submitEmail(model.email, true);
     await model.expectScreen(ScreenNames.Home);
+  });
+
+  test('attempt login with repeated failed passkey input', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLoginOneTap);
+
+    await model.login.submitPasskeyButton(false);
+    await model.login.repeatedlyFailPasskeyInput();
+  });
+});
+
+test.describe('login component (input validation)', () => {
+  setupVirtualAuthenticator(test);
+  loadInvitationToken(test);
+
+  test('attempt login with incomplete credentials', async ({ model }) => {
+    await model.loadLogin();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail('', false);
+    await model.expectError(ErrorTexts.EmptyEmail);
+  });
+
+  test('attempt login with unknown credentials', async ({ model }) => {
+    await model.loadLogin();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail('unknown-email@corbado.com', false);
+    await model.expectError(ErrorTexts.UnknownEmail);
   });
 });

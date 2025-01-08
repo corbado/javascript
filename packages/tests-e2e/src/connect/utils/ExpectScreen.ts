@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { ScreenNames } from './Constants';
+import { ErrorTexts, ScreenNames } from './Constants';
 
-export const expectScreen = async (page: Page, screenName: ScreenNames) => {
+export const expectScreen = async (page: Page, screenName: ScreenNames): Promise<void> => {
   switch (screenName) {
     case ScreenNames.InitSignup:
       await expect(page.locator('div.font-bold.text-xl')).toHaveText('Signup');
@@ -41,7 +41,23 @@ export const expectScreen = async (page: Page, screenName: ScreenNames) => {
       await expect(page.locator('.cb-connect-passkey-list')).toBeVisible();
       return;
 
+    case ScreenNames.PasskeyError1:
+      await expect(page.locator('.cb-connect-container').locator('.cb-login-header')).toContainText(
+        'Use your passkey to confirm it’s really you',
+      );
+      return;
+
+    case ScreenNames.PasskeyError2:
+      await expect(page.locator('.cb-connect-container').locator('.cb-login-header')).toContainText(
+        'Something went wrong!',
+      );
+      return;
+
     default:
       throw new Error('Invalid screen');
   }
+};
+
+export const expectError = (page: Page, message: ErrorTexts): Promise<void> => {
+  return expect(page.locator('.cb-notification-text')).toHaveText(message);
 };

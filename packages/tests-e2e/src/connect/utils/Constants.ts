@@ -7,6 +7,14 @@ export enum ScreenNames {
   PasskeyAppended,
   Home,
   PasskeyList,
+  PasskeyError1,
+  PasskeyError2,
+}
+
+export enum ErrorTexts {
+  EmptyEmail = 'Enter your email address.',
+  UnknownEmail = 'There is no account registered to that email address.',
+  CancelledPasskey = 'You have cancelled setting up your passkey. Please try again.',
 }
 
 export const phone = '+4915121609839';

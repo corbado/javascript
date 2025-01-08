@@ -64,7 +64,7 @@ jobs:
           cd packages/tests-e2e
           npx playwright install --with-deps
 
-      - name: Run Complete Tests for react
+      - name: Run Complete tests for react
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -88,7 +88,7 @@ jobs:
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
-      - name: Run Complete Tests for web-js
+      - name: Run Complete tests for web-js
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -112,7 +112,7 @@ jobs:
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
-      - name: Run Complete Tests for web-js-script
+      - name: Run Complete tests for web-js-script
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
@@ -136,7 +136,7 @@ jobs:
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
 
-      - name: Run Connect Tests for react
+      - name: Run Connect tests for react
         run: |
           cd packages/tests-e2e
           BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')

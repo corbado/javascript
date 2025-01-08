@@ -36,12 +36,8 @@ export class LoginModel {
     );
 
     const operationTrigger2 = () => this.page.getByRole('button', { name: 'Try again' }).click();
-    await this.authenticator.startAndCancelPasskeyOperation(operationTrigger2, () =>
-      this.page.waitForTimeout(100),
-    );
-    await this.authenticator.startAndCancelPasskeyOperation(operationTrigger2, () =>
-      this.page.waitForTimeout(100),
-    );
+    await this.authenticator.startAndCancelPasskeyOperation(operationTrigger2, () => this.page.waitForTimeout(100));
+    await this.authenticator.startAndCancelPasskeyOperation(operationTrigger2, () => this.page.waitForTimeout(100));
     await this.authenticator.startAndCancelPasskeyOperation(operationTrigger2, () =>
       expectScreen(this.page, ScreenNames.InitLoginFallback),
     );

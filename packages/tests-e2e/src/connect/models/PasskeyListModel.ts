@@ -22,14 +22,17 @@ export class PasskeyListModel {
   }
 
   appendPasskey(complete: boolean): Promise<void> {
-    const operationTrigger: () => Promise<void> = (): Promise<void> => this.page.getByRole('button', { name: 'Add a passkey' }).click();
+    const operationTrigger: () => Promise<void> = (): Promise<void> =>
+      this.page.getByRole('button', { name: 'Add a passkey' }).click();
     if (complete) {
       return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
     } else {
-      return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, (): Promise<void> =>
-        expect(this.page.locator('.cb-notification-text')).toHaveText(
-          'You have cancelled setting up your passkey. Please try again.',
-        ),
+      return this.authenticator.startAndCancelPasskeyOperation(
+        operationTrigger,
+        (): Promise<void> =>
+          expect(this.page.locator('.cb-notification-text')).toHaveText(
+            'You have cancelled setting up your passkey. Please try again.',
+          ),
       );
     }
   }

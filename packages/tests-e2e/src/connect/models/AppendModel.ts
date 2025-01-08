@@ -19,4 +19,8 @@ export class AppendModel {
   confirmAppended(): Promise<void> {
     return this.page.getByRole('button', { name: 'Continue' }).click();
   }
+
+  skipAppend(): Promise<void> {
+    return this.page.locator('.cb-append-skip').click();
+  }
 }

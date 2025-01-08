@@ -1,8 +1,10 @@
 export enum ScreenNames {
   InitSignup,
+  InitLogin,
+  InitLoginFallback,
+  InitLoginOneTap,
   PasskeyAppend,
   PasskeyAppended,
-  InitLogin,
   Home,
 }
 

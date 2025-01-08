@@ -24,6 +24,17 @@ export function setupVirtualAuthenticator(
   });
 }
 
+// export function loadInvitationToken(
+//   test: TestType<
+//     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+//     PlaywrightWorkerArgs & PlaywrightWorkerOptions
+//   >,
+// ) {
+//   test.beforeEach(async ({ model }) => {
+//     await model.loadInvitationToken();
+//   });
+// }
+
 export function loadSignup(
   test: TestType<
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
@@ -50,22 +61,19 @@ export function setupUser(
   test: TestType<
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
-  >,
+  >, invited = true, append = true,
 ) {
-  test.beforeEach(async ({ context, model }) => {
-    // setting webdriver as false still leads to fallback
-    // await context.addInitScript(() => {
-    //   Object.defineProperty(navigator, 'webdriver', {
-    //     get: () => false,
-    //   });
-    // });
+  test.beforeEach(async ({ model }) => {
+    if (invited) {
+      await model.loadInvitationToken();
+    }
     await model.loadSignup();
     await model.expectScreen(ScreenNames.InitSignup);
-    await model.createUser();
+    await model.createUser(invited, append);
     await model.expectScreen(ScreenNames.Home);
   });
 
-  test.afterEach(async ({ model }) => {
-    await model.deleteUser();
-  });
+  // test.afterEach(async ({ model }) => {
+  //   await model.deleteUser();
+  // });
 }

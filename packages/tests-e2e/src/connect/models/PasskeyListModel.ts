@@ -16,17 +16,17 @@ export class PasskeyListModel {
     return expect(this.page.locator('.cb-passkey-list-item')).toHaveCount(n);
   }
 
-  async deletePasskey(index: number) {
+  async deletePasskey(index: number): Promise<void> {
     await this.page.locator('.cb-passkey-list-item-delete-icon').nth(index).click();
     await this.page.getByRole('button', { name: 'Delete' }).click();
   }
 
-  async appendPasskey(complete: boolean) {
-    const operationTrigger = () => this.page.getByRole('button', { name: 'Add a passkey' }).click();
+  appendPasskey(complete: boolean): Promise<void> {
+    const operationTrigger: () => Promise<void> = (): Promise<void> => this.page.getByRole('button', { name: 'Add a passkey' }).click();
     if (complete) {
-      await this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
+      return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
     } else {
-      await this.authenticator.startAndCancelPasskeyOperation(operationTrigger, () =>
+      return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, (): Promise<void> =>
         expect(this.page.locator('.cb-notification-text')).toHaveText(
           'You have cancelled setting up your passkey. Please try again.',
         ),

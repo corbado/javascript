@@ -1,7 +1,7 @@
-import type { Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 
-import { ScreenNames } from '../utils/Constants';
-import { expectScreen } from '../utils/ExpectScreen';
+import { ErrorTexts, ScreenNames } from '../utils/Constants';
+import { expectScreen, expectError } from '../utils/ExpectScreen';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';
 import { HomeModel } from './HomeModel';
@@ -51,6 +51,10 @@ export class BaseModel {
 
   expectScreen(screenName: ScreenNames) {
     return expectScreen(this.page, screenName);
+  }
+
+  expectError(message: ErrorTexts) {
+    return expectError(this.page, message);
   }
 
   async createUser(invited: boolean, append: boolean) {

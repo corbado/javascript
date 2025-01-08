@@ -6,6 +6,7 @@ import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';
 import { HomeModel } from './HomeModel';
 import { LoginModel } from './LoginModel';
+import { PasskeyListModel } from './PasskeyListModel';
 import { SignupModel } from './SignupModel';
 
 export class BaseModel {
@@ -15,6 +16,7 @@ export class BaseModel {
   login: LoginModel;
   append: AppendModel;
   home: HomeModel;
+  passkeyList: PasskeyListModel;
   email = '';
 
   constructor(page: Page, authenticator: VirtualAuthenticator) {
@@ -24,6 +26,7 @@ export class BaseModel {
     this.login = new LoginModel(page, authenticator);
     this.append = new AppendModel(page, authenticator);
     this.home = new HomeModel(page);
+    this.passkeyList = new PasskeyListModel(page, authenticator);
   }
 
   addWebAuthn() {

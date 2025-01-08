@@ -7,7 +7,7 @@ import type {
 } from '@playwright/test';
 
 import type { BaseModel } from '../models/BaseModel';
-import { ScreenNames } from '../utils/Constants';
+import { password, ScreenNames } from '../utils/Constants';
 
 export function setupVirtualAuthenticator(
   test: TestType<
@@ -76,4 +76,36 @@ export function setupUser(
   // test.afterEach(async ({ model }) => {
   //   await model.deleteUser();
   // });
+}
+
+// assumes that setupUser(test, true, false) has been called right before
+export function loadPasskeyAppend(
+  test: TestType<
+    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+  >,
+) {
+  test.beforeEach(async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail(model.email, false);
+    await model.expectScreen(ScreenNames.InitLoginFallback);
+
+    await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.PasskeyAppend);
+  });
+}
+
+// assumes that setupUser(test, true, true) has been called right before
+export function loadPasskeyList(
+  test: TestType<
+    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+  >,
+) {
+  test.beforeEach(async ({ model }) => {
+    await model.home.gotoPasskeyList();
+    await model.expectScreen(ScreenNames.PasskeyList);
+  });
 }

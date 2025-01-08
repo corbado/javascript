@@ -37,6 +37,10 @@ export const expectScreen = async (page: Page, screenName: ScreenNames) => {
       await expect(page.locator('div.font-bold.text-xl')).toHaveText('Home');
       return;
 
+    case ScreenNames.PasskeyList:
+      await expect(page.locator('.cb-connect-passkey-list')).toBeVisible();
+      return;
+
     default:
       throw new Error('Invalid screen');
   }

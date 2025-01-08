@@ -6,6 +6,7 @@ export enum ScreenNames {
   PasskeyAppend,
   PasskeyAppended,
   Home,
+  PasskeyList,
 }
 
 export const phone = '+4915121609839';

@@ -26,10 +26,10 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
 
   const fallback = useCallback(
     (identifier: string, message: string | null) => {
-      if (!message || !config.onFallbackSilent) {
-        config.onFallback(identifier, message ?? '');
-      } else {
+      if (config.onFallbackSilent && !message) {
         config.onFallbackSilent(identifier);
+      } else {
+        config.onFallback(identifier, message ?? '');
       }
     },
     [config],

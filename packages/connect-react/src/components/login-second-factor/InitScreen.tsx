@@ -80,7 +80,7 @@ const InitScreen = () => {
         }
 
         if (resStart.val instanceof ConnectUserNotFound) {
-          return handleSituation(LoginSituationCode.UserNotFound);
+          return handleSituation(LoginSituationCode.PreAuthenticatorUserNotFound);
         }
 
         return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);

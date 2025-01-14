@@ -7,9 +7,10 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginOneTap from './base/LoginOneTap';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 export const LoginPasskeyReLoginScreen = () => {
-  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +42,7 @@ export const LoginPasskeyReLoginScreen = () => {
     }
 
     try {
-      await config.onComplete(resFinish.val.session);
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -64,7 +65,7 @@ export const LoginPasskeyReLoginScreen = () => {
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);

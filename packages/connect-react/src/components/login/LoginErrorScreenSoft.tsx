@@ -7,9 +7,10 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorSoft from './base/LoginErrorSoft';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 const LoginErrorScreenSoft = () => {
-  const { config, navigateToScreen, currentIdentifier, loadedMs } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +35,7 @@ const LoginErrorScreenSoft = () => {
     }
 
     try {
-      await config.onComplete(resFinish.val.session);
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
       setLoading(false);
     } catch {
       handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
@@ -52,7 +53,7 @@ const LoginErrorScreenSoft = () => {
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);
@@ -66,7 +67,7 @@ const LoginErrorScreenSoft = () => {
         break;
       case LoginSituationCode.ExplicitFallbackByUser:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, null);
 
         void getConnectService().recordEventLoginExplicitAbort();
         break;

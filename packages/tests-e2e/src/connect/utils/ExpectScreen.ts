@@ -1,7 +1,8 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { ErrorTexts, ScreenNames } from './Constants';
+import type { ErrorTexts } from './Constants';
+import { ScreenNames } from './Constants';
 
 export const expectScreen = async (page: Page, screenName: ScreenNames): Promise<void> => {
   switch (screenName) {

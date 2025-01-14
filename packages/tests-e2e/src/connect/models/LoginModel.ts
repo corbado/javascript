@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
-import { expectScreen } from '../utils/ExpectScreen';
 import { ScreenNames } from '../utils/Constants';
+import { expectScreen } from '../utils/ExpectScreen';
+import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
 export class LoginModel {
   page: Page;

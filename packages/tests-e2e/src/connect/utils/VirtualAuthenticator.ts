@@ -1,20 +1,17 @@
-import type { CDPSession, Page } from '@playwright/test';
+import type { CDPSession } from '@playwright/test';
 
+import type { CDPSessionManager } from './CDPSessionManager';
 import { operationTimeout } from './Constants';
 
 export class VirtualAuthenticator {
-  #cdpClient: CDPSession | null = null;
+  #cdpClient: CDPSession;
   #authenticatorId = '';
 
-  async initializeCDPSession(page: Page) {
-    this.#cdpClient = await page.context().newCDPSession(page);
+  constructor(cdpManager: CDPSessionManager) {
+    this.#cdpClient = cdpManager.getClient();
   }
 
   async addWebAuthn(passkeySupported = true) {
-    if (!this.#cdpClient) {
-      throw new Error('CDP client not initialized');
-    }
-
     await this.#cdpClient.send('WebAuthn.enable');
     const result = await this.#cdpClient.send('WebAuthn.addVirtualAuthenticator', {
       options: passkeySupported
@@ -34,59 +31,72 @@ export class VirtualAuthenticator {
     this.#authenticatorId = result.authenticatorId;
   }
 
-  async removeWebAuthn() {
-    if (!this.#cdpClient) {
-      throw new Error('CDP client not initialized');
-    }
-
-    await this.#cdpClient.send('WebAuthn.removeVirtualAuthenticator', {
+  removeWebAuthn() {
+    return this.#cdpClient.send('WebAuthn.removeVirtualAuthenticator', {
       authenticatorId: this.#authenticatorId,
     });
   }
 
   async startAndCompletePasskeyOperation(operationTrigger: () => Promise<void>) {
-    if (!this.#cdpClient) {
-      throw new Error('CDP client not initialized');
-    }
-
     const operationCompleted = new Promise<void>(resolve => {
       this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
       this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
 
     const wait = new Promise<void>(resolve => setTimeout(resolve, operationTimeout));
-    await this.#setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, true);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
 
     await operationTrigger();
 
     await Promise.race([operationCompleted, wait.then(() => Promise.reject('Passkey input timeout'))]);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
   }
 
   async startAndCancelPasskeyOperation(operationTrigger: () => Promise<void>, postOperationCheck: () => Promise<void>) {
-    if (!this.#cdpClient) {
-      throw new Error('CDP client not initialized');
-    }
-
-    await this.#setWebAuthnUserVerified(this.#cdpClient, this.#authenticatorId, false);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, true);
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, false);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
 
     await operationTrigger();
 
     await postOperationCheck();
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#cdpClient, this.#authenticatorId, false);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
   }
 
-  #setWebAuthnAutomaticPresenceSimulation(client: CDPSession, authenticatorId: string, automatic: boolean) {
-    return client.send('WebAuthn.setAutomaticPresenceSimulation', {
+  clearCredentials() {
+    return this.#cdpClient.send('WebAuthn.clearCredentials', {
+      authenticatorId: this.#authenticatorId,
+    });
+  }
+
+  async addDummyCredential() {
+    try {
+      await this.#cdpClient.send("WebAuthn.addCredential", {
+        authenticatorId: this.#authenticatorId,
+        credential: {
+          credentialId: 'WZuSfPDeCfXUMqO3vcVZ6ZYY0w2W4NpLcLzTjMl4qns=',
+          isResidentCredential: true,
+          rpId: 'connect-next.playground.corbado.io',
+          privateKey: 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgz/eSahk8R0fk3Jjpcbd1LPc2gGKyzEG23UFIbFTqSbyhRANCAAQ4a8dJ559cf0cZcg0U7k5oCofmtOzuqXDSwzP8LLhv0InronrySiaWAGuWFpVsbNyOnWSd6VZJU8wiFKSMiDWN',
+          userHandle: 'TDBlaFVpNnRNQg==',
+          signCount: 1,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
+  #setWebAuthnAutomaticPresenceSimulation(authenticatorId: string, automatic: boolean) {
+    return this.#cdpClient.send('WebAuthn.setAutomaticPresenceSimulation', {
       authenticatorId: authenticatorId,
       enabled: automatic,
     });
   }
 
-  #setWebAuthnUserVerified(client: CDPSession, authenticatorId: string, isUserVerified: boolean) {
-    return client.send('WebAuthn.setUserVerified', {
+  #setWebAuthnUserVerified(authenticatorId: string, isUserVerified: boolean) {
+    return this.#cdpClient.send('WebAuthn.setUserVerified', {
       authenticatorId,
       isUserVerified,
     });

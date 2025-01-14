@@ -54,11 +54,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     new StatefulLoader(
       () => setLoginInitState(LoginInitState.Loading),
       () => {
-        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        config.onLoaded?.('loading finished', isFallbackInitiallyTriggered);
         setLoginInitState(LoginInitState.Loaded);
       },
       () => {
-        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        config?.onLoaded?.('loading finished', isFallbackInitiallyTriggered);
         setLoginInitState(LoginInitState.Loaded);
       },
     ),

@@ -3,7 +3,7 @@ export type CorbadoConnectLoginConfig = {
   onFallbackSilent?(identifier: string): void;
   onFallbackCustom?(identifier: string, code: string, payload: string): void;
   onError?(error: string): void;
-  onLoaded(message: string, isFallBackTriggered: boolean): void;
+  onLoaded?(message: string, isFallBackTriggered: boolean): void;
   onComplete(signedPasskeyData: string): Promise<void>;
   onConditionalLoginStart?(ac: AbortController): void;
   onLoginStart?(): void;

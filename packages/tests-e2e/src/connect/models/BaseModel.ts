@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 
 import type { ErrorTexts } from '../utils/Constants';
 import { ScreenNames } from '../utils/Constants';
-import { expectError,expectScreen } from '../utils/ExpectScreen';
+import { expectError, expectScreen } from '../utils/ExpectScreen';
 import type { NetworkRequestBlocker } from '../utils/NetworkRequestBlocker';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';

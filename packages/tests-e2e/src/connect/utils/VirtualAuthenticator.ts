@@ -71,13 +71,14 @@ export class VirtualAuthenticator {
 
   async addDummyCredential() {
     try {
-      await this.#cdpClient.send("WebAuthn.addCredential", {
+      await this.#cdpClient.send('WebAuthn.addCredential', {
         authenticatorId: this.#authenticatorId,
         credential: {
           credentialId: 'WZuSfPDeCfXUMqO3vcVZ6ZYY0w2W4NpLcLzTjMl4qns=',
           isResidentCredential: true,
           rpId: 'connect-next.playground.corbado.io',
-          privateKey: 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgz/eSahk8R0fk3Jjpcbd1LPc2gGKyzEG23UFIbFTqSbyhRANCAAQ4a8dJ559cf0cZcg0U7k5oCofmtOzuqXDSwzP8LLhv0InronrySiaWAGuWFpVsbNyOnWSd6VZJU8wiFKSMiDWN',
+          privateKey:
+            'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgz/eSahk8R0fk3Jjpcbd1LPc2gGKyzEG23UFIbFTqSbyhRANCAAQ4a8dJ559cf0cZcg0U7k5oCofmtOzuqXDSwzP8LLhv0InronrySiaWAGuWFpVsbNyOnWSd6VZJU8wiFKSMiDWN',
           userHandle: 'TDBlaFVpNnRNQg==',
           signCount: 1,
         },

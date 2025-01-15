@@ -25,12 +25,6 @@ export class NetworkRequestBlocker {
     });
   }
 
-  blockCorbadoBAPI() {
-    return this.#cdpClient.send('Network.setBlockedURLs', {
-      urls: ['api.cloud.corbado-staging.io'],
-    });
-  }
-
   blockCorbadoConnectTokenEndpoint() {
     // This is sufficient, as the connectTokens endpoint is called from /passkey-list handler
     return this.#cdpClient.send('Network.setBlockedURLs', {

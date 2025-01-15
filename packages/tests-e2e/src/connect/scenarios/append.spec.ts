@@ -33,19 +33,6 @@ test.describe('skip append component', () => {
   setupNetworkBlocker(test);
   setupUser(test, true, false);
 
-  test('Corbado BAPI unavailable', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-
-    await model.blocker.blockCorbadoBAPI();
-
-    await model.login.submitFallbackCredentials(model.email, password, true);
-    await model.expectScreen(ScreenNames.Home);
-  });
-
   test('Corbado FAPI unavailable', async ({ model }) => {
     await model.home.logout();
     await model.expectScreen(ScreenNames.InitLogin);

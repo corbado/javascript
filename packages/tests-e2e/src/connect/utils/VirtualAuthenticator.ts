@@ -44,10 +44,9 @@ export class VirtualAuthenticator {
     let postOperationPromise: Promise<void>;
     if (postOperationCheck === null) {
       postOperationPromise = new Promise<void>(resolve => {
-          console.log('listening');
-          this.#cdpClient?.on('WebAuthn.credentialAdded', () => { console.log('added'); resolve(); });
-          this.#cdpClient?.on('WebAuthn.credentialAsserted', () => { console.log('asserted'); resolve(); });
-        });
+        this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
+        this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
+      });
     } else {
       postOperationPromise = postOperationCheck();
     }

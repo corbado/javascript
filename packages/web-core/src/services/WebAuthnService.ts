@@ -226,4 +226,23 @@ export class WebAuthnService {
     const typed: CredentialRequestOptionsJSON = JSON.parse(assertionOptions);
     return typed.publicKey?.challenge;
   }
+
+  static async signalAllAcceptedCredentials(rpId: string, userId: string, credentialIds: string[]): Promise<void> {
+    // @ts-ignore
+    if (!window.PublicKeyCredential || !window.PublicKeyCredential.signalAllAcceptedCredentials) {
+      return undefined;
+    }
+
+    try {
+      // @ts-ignore
+      await PublicKeyCredential.signalAllAcceptedCredentials({
+        rpId: rpId,
+        userId: userId,
+        allAcceptedCredentialIds: credentialIds,
+      });
+    } catch (e) {
+      log.debug('Error calling signalAllAcceptedCredentials', e);
+      return;
+    }
+  }
 }

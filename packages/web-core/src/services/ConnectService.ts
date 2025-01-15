@@ -502,7 +502,10 @@ export class ConnectService {
     return Ok(manageData);
   }
 
-  async manageList(passkeyListToken: string): Promise<Result<ConnectManageListRsp, CorbadoError>> {
+  async manageList(
+    passkeyListToken: string,
+    triggerSignalAllAccepted: boolean,
+  ): Promise<Result<ConnectManageListRsp, CorbadoError>> {
     const existingProcess = await this.#getExistingProcess(() => this.manageInit(new AbortController()));
     if (!existingProcess) {
       return Err(CorbadoError.missingInit());
@@ -513,9 +516,18 @@ export class ConnectService {
     };
 
     const out = await this.wrapWithErr(() => this.#connectApi.connectManageList(req));
+    if (out.err) {
+      return out;
+    }
+
     // self-healing mechanism: if a user has no passkeys, we clear the last login
-    if (out.ok && out.val.passkeys.length === 0) {
+    if (out.val.passkeys.length === 0) {
       this.clearLastLogin();
+    }
+
+    if (triggerSignalAllAccepted) {
+      const credentialIDs = out.val.passkeys.map(pk => pk.credentialID);
+      await WebAuthnService.signalAllAcceptedCredentials(out.val.rpID, out.val.userID, credentialIDs);
     }
 
     return out;

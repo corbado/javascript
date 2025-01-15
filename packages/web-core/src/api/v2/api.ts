@@ -730,6 +730,18 @@ export interface ConnectManageListRsp {
      * @memberof ConnectManageListRsp
      */
     'passkeys': Array<Passkey>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageListRsp
+     */
+    'rpID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageListRsp
+     */
+    'userID': string;
 }
 /**
  * 

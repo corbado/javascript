@@ -11,6 +11,7 @@ import { Err, Ok } from 'ts-results';
 
 import type { ClientInformation, JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
+import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
 
 const clientHandleKey = 'cbo_client_handle';
 
@@ -214,5 +215,15 @@ export class WebAuthnService {
       log.debug('Error using getClientCapabilities: ', e);
       return;
     }
+  }
+
+  static challengeFromAttestationOptions(attestationOptions: string): string {
+    const typed: CredentialCreationOptionsJSON = JSON.parse(attestationOptions);
+    return typed.publicKey.challenge;
+  }
+
+  static challengeFromAssertionOptions(assertionOptions: string): string | undefined {
+    const typed: CredentialRequestOptionsJSON = JSON.parse(assertionOptions);
+    return typed.publicKey?.challenge;
   }
 }

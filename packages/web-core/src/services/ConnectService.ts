@@ -547,8 +547,13 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.LoginError, messageCode);
   }
 
-  recordEventLoginExplicitAbort() {
-    return this.#recordEvent(PasskeyEventType.LoginExplicitAbort);
+  recordEventLoginExplicitAbort(assertionOptions?: string) {
+    let challenge;
+    if (assertionOptions) {
+      challenge = WebAuthnService.challengeFromAssertionOptions(assertionOptions);
+    }
+
+    return this.#recordEvent(PasskeyEventType.LoginExplicitAbort, undefined, challenge);
   }
 
   recordEventLoginOneTapSwitch() {
@@ -587,12 +592,17 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.ManageErrorUnexpected, messageCode);
   }
 
-  recordEventAppendExplicitAbort() {
-    return this.#recordEvent(PasskeyEventType.AppendExplicitAbort);
+  recordEventAppendExplicitAbort(attestationOptions?: string) {
+    let challenge;
+    if (attestationOptions) {
+      challenge = WebAuthnService.challengeFromAttestationOptions(attestationOptions);
+    }
+
+    return this.#recordEvent(PasskeyEventType.AppendExplicitAbort, undefined, challenge);
   }
 
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
-  #recordEvent(eventType: PasskeyEventType, message?: string) {
+  #recordEvent(eventType: PasskeyEventType, message?: string, challenge?: string) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (!existingProcess) {
       log.warn('No process found to record event.');
@@ -603,6 +613,7 @@ export class ConnectService {
     const req: ConnectEventCreateReq = {
       eventType,
       message,
+      challenge,
     };
 
     return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));

@@ -13,6 +13,8 @@ const LoginErrorScreenSoft = () => {
   const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
+  // only for logging purposes
+  const [assertionOptions, setAssertionOptions] = useState<string | undefined>();
 
   const handleSubmit = async () => {
     if (loading) {
@@ -24,6 +26,8 @@ const LoginErrorScreenSoft = () => {
     if (resStart.err) {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
+
+    setAssertionOptions(resStart.val.assertionOptions);
 
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
@@ -69,7 +73,7 @@ const LoginErrorScreenSoft = () => {
         navigateToScreen(LoginScreenType.Invisible);
         fallback(identifier, null);
 
-        void getConnectService().recordEventLoginExplicitAbort();
+        void getConnectService().recordEventLoginExplicitAbort(assertionOptions);
         break;
     }
   };

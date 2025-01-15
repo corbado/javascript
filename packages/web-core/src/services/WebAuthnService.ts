@@ -3,6 +3,7 @@
 import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
 import { create, get } from '@corbado/webauthn-json';
+import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
@@ -11,7 +12,6 @@ import { Err, Ok } from 'ts-results';
 
 import type { ClientInformation, JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
-import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
 
 const clientHandleKey = 'cbo_client_handle';
 

@@ -22,7 +22,7 @@ test.describe('passkey-list component', () => {
     await model.passkeyList.expectPasskeys(0);
   });
 
-  test.skip('Connect Token endpoint unavailable during passkey creation', async ({ model }) => {
+  test('Connect Token endpoint unavailable during passkey creation', async ({ model }) => {
     await model.passkeyList.expectPasskeys(0);
 
     await model.blocker.blockCorbadoConnectTokenEndpoint();
@@ -56,7 +56,7 @@ test.describe('passkey-list component', () => {
     await model.passkeyList.expectPasskeys(1);
   });
 
-  test.skip('Connect Token endpoint unavailable during passkey deletion', async ({ model }) => {
+  test('Connect Token endpoint unavailable during passkey deletion', async ({ model }) => {
     await model.passkeyList.expectPasskeys(0);
     await model.passkeyList.createPasskey(true);
     await model.passkeyList.expectPasskeys(1);
@@ -86,7 +86,7 @@ test.describe('skip passkey-list component', () => {
   setupNetworkBlocker(test);
   setupUser(test, true, true);
 
-  test.skip('Connect Token endpoint unavailable', async ({ model }) => {
+  test('Connect Token endpoint unavailable', async ({ model }) => {
     await model.blocker.blockCorbadoConnectTokenEndpoint();
 
     await model.home.gotoPasskeyList();

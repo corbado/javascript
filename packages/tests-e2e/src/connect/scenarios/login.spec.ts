@@ -38,14 +38,6 @@ test.describe('login component (with invitation token, with passkeys)', () => {
   setupNetworkBlocker(test);
   setupUser(test, true, true);
 
-  test('successful login with passkey (one-tap)', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.login.submitPasskeyButton(true);
-    await model.expectScreen(ScreenNames.Home);
-  });
-
   test('successful login with passkey', async ({ model }) => {
     await model.home.logout();
     await model.expectScreen(ScreenNames.InitLoginOneTap);
@@ -54,6 +46,25 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.expectScreen(ScreenNames.InitLogin);
 
     await model.login.submitEmail(model.email, true);
+    await model.expectScreen(ScreenNames.Home);
+  });
+
+  test('successful login with passkey (conditional UI)', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLoginOneTap);
+
+    await model.login.submitConditionalUI(async () => {
+      await model.login.removePasskeyButton();
+      await model.expectScreen(ScreenNames.InitLogin);
+    });
+    await model.expectScreen(ScreenNames.Home);
+  });
+
+  test('successful login with passkey (one-tap)', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLoginOneTap);
+
+    await model.login.submitPasskeyButton(true);
     await model.expectScreen(ScreenNames.Home);
   });
 

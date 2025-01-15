@@ -30,4 +30,10 @@ export class NetworkRequestBlocker {
       urls: ['api.cloud.corbado-staging.io'],
     });
   }
+
+  blockCorbadoConnectTokenEndpoint() {
+    return this.#cdpClient.send('Network.setBlockedURLs', {
+      urls: ['api.cloud.corbado-staging.io/v2/connectTokens'],
+    });
+  }
 }

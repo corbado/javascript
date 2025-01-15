@@ -62,4 +62,8 @@ export class LoginModel {
     await this.page.getByPlaceholder('Password').fill(password);
     await this.page.getByRole('button', { name: 'Login' }).click();
   }
+
+  submitConditionalUI(operationTrigger: () => Promise<void>) {
+    return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
+  }
 }

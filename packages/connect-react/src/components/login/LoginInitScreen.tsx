@@ -211,7 +211,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     if (res.err) {
       setIdentifierBasedLoading(false);
       if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, resStart.val.assertionOptions);
       }
 
       return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
@@ -265,13 +265,15 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
         setIdentifierBasedLoading(false);
         break;
-      case LoginSituationCode.ClientPasskeyOperationCancelled:
-        navigateToScreen(LoginScreenType.ErrorSoft);
+      case LoginSituationCode.ClientPasskeyOperationCancelled: {
+        const assertionOptions = data as string;
+        navigateToScreen(LoginScreenType.ErrorSoft, { previousAssertionOptions: assertionOptions });
         void getConnectService().recordEventLoginError(messageCode);
         config.onError?.(situationCode.toString());
 
         setIdentifierBasedLoading(false);
         break;
+      }
       case LoginSituationCode.PreAuthenticatorUserNotFound:
         setError(message ?? '');
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);

@@ -9,13 +9,17 @@ import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations
 import LoginErrorHard from './base/LoginErrorHard';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
-const LoginErrorScreenHard = () => {
+type Props = {
+  previousAssertionOptions: string;
+};
+
+const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
   const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   const [hardErrorCount, setHardErrorCount] = useState(1);
   // only for logging purposes
-  const [assertionOptions, setAssertionOptions] = useState<string | undefined>();
+  const [assertionOptions, setAssertionOptions] = useState<string | undefined>(previousAssertionOptions);
 
   const handleSubmit = async () => {
     if (loading) {

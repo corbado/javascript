@@ -19,9 +19,9 @@ const CorbadoConnectLoginContainer = () => {
       case LoginScreenType.Init:
         return <LoginInitScreen {...currentScreenOptions} />;
       case LoginScreenType.ErrorSoft:
-        return <LoginErrorScreenSoft />;
+        return <LoginErrorScreenSoft {...currentScreenOptions} />;
       case LoginScreenType.ErrorHard:
-        return <LoginErrorScreenHard />;
+        return <LoginErrorScreenHard {...currentScreenOptions} />;
       case LoginScreenType.PasskeyReLogin:
         return <LoginPasskeyReLoginScreen />;
       case LoginScreenType.LoginHybridScreen:

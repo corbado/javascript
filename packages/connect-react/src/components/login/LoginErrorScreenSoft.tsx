@@ -9,12 +9,15 @@ import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations
 import LoginErrorSoft from './base/LoginErrorSoft';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
-const LoginErrorScreenSoft = () => {
+type Props = {
+  previousAssertionOptions: string;
+};
+
+const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
   const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   // only for logging purposes
-  const [assertionOptions, setAssertionOptions] = useState<string | undefined>();
 
   const handleSubmit = async () => {
     if (loading) {
@@ -27,12 +30,10 @@ const LoginErrorScreenSoft = () => {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
-    setAssertionOptions(resStart.val.assertionOptions);
-
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
       if (resFinish.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, resStart.val.assertionOptions);
       }
 
       return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
@@ -46,7 +47,7 @@ const LoginErrorScreenSoft = () => {
     }
   };
 
-  const handleSituation = (situationCode: LoginSituationCode) => {
+  const handleSituation = (situationCode: LoginSituationCode, data?: unknown) => {
     const messageCode = `situation: ${situationCode}`;
     log.debug(messageCode);
 
@@ -62,19 +63,22 @@ const LoginErrorScreenSoft = () => {
 
         setLoading(false);
         break;
-      case LoginSituationCode.ClientPasskeyOperationCancelled:
-        navigateToScreen(LoginScreenType.ErrorHard);
+      case LoginSituationCode.ClientPasskeyOperationCancelled: {
+        const assertionOptions = data as string;
+        navigateToScreen(LoginScreenType.ErrorHard, { previousAssertionOptions: assertionOptions });
         config.onError?.(situationCode.toString());
         void getConnectService().recordEventLoginError(messageCode);
 
         setLoading(false);
         break;
-      case LoginSituationCode.ExplicitFallbackByUser:
+      }
+      case LoginSituationCode.ExplicitFallbackByUser: {
         navigateToScreen(LoginScreenType.Invisible);
         fallback(identifier, null);
 
-        void getConnectService().recordEventLoginExplicitAbort(assertionOptions);
+        void getConnectService().recordEventLoginExplicitAbort(previousAssertionOptions);
         break;
+      }
     }
   };
 

@@ -4,11 +4,23 @@ import { cookies } from 'next/headers';
 import { generateRandomString } from '@/utils/random';
 import {
   AdminCreateUserCommand,
+  AdminInitiateAuthCommand,
   AdminSetUserPasswordCommand,
+  AssociateSoftwareTokenCommand,
   CognitoIdentityProviderClient,
+  VerifySoftwareTokenCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
+import { TOTP } from 'totp-generator';
+import CryptoJS from 'crypto-js';
 
-export async function createAccount(email: string, phone: string, password: string) {
+const cognitoUserPoolId = process.env.AWS_COGNITO_USER_POOL_ID!;
+const cognitoClientId = process.env.AWS_COGNITO_CLIENT_ID!;
+const cognitoClientSecret = process.env.AWS_COGNITO_CLIENT_SECRET!;
+const awsRegion = process.env.AWS_REGION!;
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID!;
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY!;
+
+export const createAccount = async (email: string, phone: string, password: string) => {
   // of course this is not secure, but it's just a demo ;)
 
   const randomUsername = generateRandomString(10);
@@ -18,15 +30,15 @@ export async function createAccount(email: string, phone: string, password: stri
 
   // create client that loads profile from ~/.aws/credentials or environment variables
   const client = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION!,
+    region: awsRegion,
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      accessKeyId: awsAccessKeyId,
+      secretAccessKey: awsSecretAccessKey,
     },
   });
 
   const command = new AdminCreateUserCommand({
-    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
+    UserPoolId: cognitoUserPoolId,
     Username: randomUsername,
     ForceAliasCreation: true,
     MessageAction: 'SUPPRESS',
@@ -49,7 +61,7 @@ export async function createAccount(email: string, phone: string, password: stri
   await client.send(command);
 
   const passwordCommand = new AdminSetUserPasswordCommand({
-    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
+    UserPoolId: cognitoUserPoolId,
     Username: randomUsername,
     Password: password,
     Permanent: true,
@@ -57,5 +69,42 @@ export async function createAccount(email: string, phone: string, password: stri
 
   await client.send(passwordCommand);
 
+  const initiateAuthCommand = new AdminInitiateAuthCommand({
+    AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
+    ClientId: cognitoClientId,
+    UserPoolId: cognitoUserPoolId,
+    AuthParameters: {
+      USERNAME: randomUsername,
+      PASSWORD: password,
+      SECRET_HASH: await createSecretHash(randomUsername, cognitoClientId, cognitoClientSecret),
+    },
+  });
+
+  const initiateAuthRes = await client.send(initiateAuthCommand);
+
+  const associateSoftwareTokenCommand = new AssociateSoftwareTokenCommand({
+    Session: initiateAuthRes.Session,
+    AccessToken: initiateAuthRes.AuthenticationResult?.AccessToken,
+  });
+
+  const associateSoftwareTokenRes = await client.send(associateSoftwareTokenCommand);
+
+  cookies().set('secretCode', associateSoftwareTokenRes.SecretCode!);
+
+  const { otp } = TOTP.generate(associateSoftwareTokenRes.SecretCode!);
+  const verifySoftwareTokenCommand = new VerifySoftwareTokenCommand({
+    Session: initiateAuthRes.Session,
+    AccessToken: initiateAuthRes.AuthenticationResult?.AccessToken,
+    UserCode: otp,
+  });
+
+  const verifySoftwareTokenRes = await client.send(verifySoftwareTokenCommand);
+  console.log(verifySoftwareTokenRes);
+
   return;
-}
+};
+
+const createSecretHash = async (username: string, clientId: string, clientSecret: string) => {
+  const hmac = CryptoJS.HmacSHA256(username + clientId, clientSecret);
+  return hmac.toString(CryptoJS.enc.Base64);
+};

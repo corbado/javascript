@@ -5,11 +5,12 @@ import { startConventionalLogin } from './actions';
 
 export type Props = {
   initialEmail: string;
+  initialError: string;
 };
 
-export default function ConventionalLogin({ initialEmail }: Props) {
+export default function ConventionalLogin({ initialEmail, initialError }: Props) {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError);
   const [email, setEmail] = useState(initialEmail);
   const router = useRouter();
 

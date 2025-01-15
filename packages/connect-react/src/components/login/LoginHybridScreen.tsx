@@ -8,9 +8,10 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginHybrid from './base/LoginHybrid';
+import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
-  const { config, navigateToScreen, currentIdentifier } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, fallback } = useLoginProcess();
   const [loading, setLoading] = useState(false);
   const { getConnectService } = useShared();
 
@@ -30,7 +31,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -47,7 +48,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setLoading(false);
@@ -61,7 +62,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
         break;
       case LoginSituationCode.ExplicitFallbackByUser:
         navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        fallback(identifier, null);
 
         void getConnectService().recordEventLoginExplicitAbort();
         break;

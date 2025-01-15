@@ -1229,6 +1229,8 @@ components:
           type: string
         isCDA:
           type: boolean
+        error:
+          $ref: '#/components/schemas/requestError'
 
     connectLoginFinishReq:
       type: object
@@ -1246,10 +1248,13 @@ components:
       required:
         - passkeyOperation
         - session
+        - signedPasskeyData
       properties:
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'
         session:
+          type: string
+        signedPasskeyData:
           type: string
 
     connectAppendInitReq:

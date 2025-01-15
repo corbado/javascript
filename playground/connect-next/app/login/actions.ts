@@ -5,7 +5,6 @@ import {
   AdminGetUserCommand,
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
-  RespondToAuthChallengeCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
@@ -47,41 +46,54 @@ const verifyToken = async (token: string): Promise<DecodedToken> => {
 // Then we extract the cognitoID and retrieve the user's email from the user pool
 // Both values will then be set as a cookie
 export async function postPasskeyLogin(session: string) {
-  // validate session
-  try {
-    const tokenWrapper = JSON.parse(session) as TokenWrapper;
-    const decoded = await verifyToken(tokenWrapper.AccessToken);
-    const username = decoded.username;
+  const tokenWrapper = JSON.parse(session) as TokenWrapper;
+  const decoded = await verifyToken(tokenWrapper.AccessToken);
+  const username = decoded.username;
 
-    // create client that loads profile from ~/.aws/credentials or environment variables
-    const client = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      },
-    });
+  // create client that loads profile from ~/.aws/credentials or environment variables
+  const client = new CognitoIdentityProviderClient({
+    region: process.env.AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    },
+  });
 
-    const command = new AdminGetUserCommand({
-      UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
-      Username: username,
-    });
+  const command = new AdminGetUserCommand({
+    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
+    Username: username,
+  });
 
-    const response = await client.send(command);
+  const response = await client.send(command);
 
-    const email = response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
-    console.log(email);
-
-    if (email) {
-      cookies().set('displayName', email);
-      cookies().set('identifier', username);
-    }
-
-    return;
-  } catch (err) {
-    console.error('Token is invalid:', err);
-    return;
+  const email = response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
+  if (email) {
+    cookies().set('displayName', email);
+    cookies().set('identifier', username);
   }
+
+  return;
+}
+
+export async function postPasskeyLoginNew(signedPasskeyData: string) {
+  const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/passkey/postLogin`;
+  const body = JSON.stringify({
+    signedPasskeyData: signedPasskeyData,
+  });
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-cache',
+    body: body,
+  });
+
+  const out = await response.json();
+
+  await postPasskeyLogin(out.session);
 }
 
 function createSecretHash(username: string, clientId: string, clientSecret: string) {

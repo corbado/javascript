@@ -38,7 +38,6 @@ export async function getAppendToken() {
   });
 
   const out = await response.json();
-  console.log(out);
 
   return out.secret;
 }

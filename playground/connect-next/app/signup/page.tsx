@@ -1,4 +1,5 @@
 'use client';
+
 export const runtime = 'edge';
 
 import { useState } from 'react';
@@ -11,6 +12,10 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+
+  const signUp = async (email: string, phone: string, password: string) => {
+    await createAccount(email, phone, password);
+  };
 
   return (
     <div className='w-full flex justify-center'>
@@ -59,7 +64,7 @@ export default function SignupPage() {
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
               onClick={async () => {
-                await createAccount(email, phone, password);
+                await signUp(email, phone, password);
                 router.push('/post-login');
               }}
             >

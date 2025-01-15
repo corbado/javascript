@@ -1,9 +1,12 @@
 import {
   ConnectConditionalUIPasskeyDeleted,
+  ConnectCustomError,
+  ConnectExistingPasskeysNotAvailable,
   ConnectUserNotFound,
   PasskeyChallengeCancelledError,
   PasskeyLoginSource,
 } from '@corbado/web-core';
+import type { ConnectLoginFinishRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -12,6 +15,7 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
+import type { PreAuthenticatorCustomErrorData } from '../../types/situations';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import LoginInitLoaded from './base/LoginInitLoaded';
@@ -28,8 +32,17 @@ interface Props {
   prefilledIdentifier?: string;
 }
 
+export const connectLoginFinishToComplete = (v: ConnectLoginFinishRsp): string => {
+  if (v.session.length > 0) {
+    return v.session;
+  }
+
+  return v.signedPasskeyData;
+};
+
 const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs, fallback, fallbackCustom } =
+    useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
   const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
@@ -41,11 +54,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     new StatefulLoader(
       () => setLoginInitState(LoginInitState.Loading),
       () => {
-        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        config.onLoaded?.('loading finished', isFallbackInitiallyTriggered);
         setLoginInitState(LoginInitState.Loaded);
       },
       () => {
-        config.onLoaded('loading finished', isFallbackInitiallyTriggered);
+        config?.onLoaded?.('loading finished', isFallbackInitiallyTriggered);
         setLoginInitState(LoginInitState.Loaded);
       },
     ),
@@ -159,7 +172,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -177,7 +190,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
     if (resStart.err) {
       if (resStart.val instanceof ConnectUserNotFound) {
-        return handleSituation(LoginSituationCode.UserNotFound);
+        return handleSituation(LoginSituationCode.PreAuthenticatorUserNotFound);
+      }
+      if (resStart.val instanceof ConnectCustomError) {
+        return handleSituation(LoginSituationCode.PreAuthenticatorCustomError, resStart.val);
+      }
+      if (resStart.val instanceof ConnectExistingPasskeysNotAvailable) {
+        return handleSituation(LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable);
       }
 
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
@@ -199,20 +218,25 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(res.val.session);
+      await config.onComplete(connectLoginFinishToComplete(res.val));
     } catch {
       void getConnectService().recordEventLoginErrorUntyped();
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
   }, [getConnectService, config, loadedMs, identifier]);
 
-  const fallback = (identifier: string, message: string | null) => {
+  const automaticFallback = (identifier: string, message: string | null) => {
     navigateToScreen(LoginScreenType.Invisible);
-    config.onFallback(identifier, message);
     setIsFallbackInitiallyTriggered(true);
+    fallback(identifier, message);
   };
 
-  const handleSituation = (situationCode: LoginSituationCode) => {
+  const explicitFallback = () => {
+    navigateToScreen(LoginScreenType.Invisible);
+    fallback(identifier, null);
+  };
+
+  const handleSituation = (situationCode: LoginSituationCode, data?: unknown) => {
     const messageCode = `situation: ${situationCode}`;
     log.debug(messageCode);
 
@@ -220,13 +244,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     switch (situationCode) {
       case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
-        fallback(identifier, message);
+        automaticFallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         statefulLoader.current.finish();
         break;
       case LoginSituationCode.DeniedByPartialRollout:
-        fallback(identifier, message);
+        automaticFallback(identifier, message);
 
         statefulLoader.current.finish();
         break;
@@ -235,7 +259,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       case LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator:
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
-        fallback(identifier, message);
+      case LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable:
+        automaticFallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setIdentifierBasedLoading(false);
@@ -247,18 +272,27 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
         setIdentifierBasedLoading(false);
         break;
-      case LoginSituationCode.UserNotFound:
+      case LoginSituationCode.PreAuthenticatorUserNotFound:
         setError(message ?? '');
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 
         setIdentifierBasedLoading(false);
         break;
       case LoginSituationCode.ExplicitFallbackByUser:
-        navigateToScreen(LoginScreenType.Invisible);
-        config.onFallback(identifier, message);
+        explicitFallback();
 
         void getConnectService().recordEventLoginExplicitAbort();
         break;
+      case LoginSituationCode.PreAuthenticatorCustomError: {
+        navigateToScreen(LoginScreenType.Invisible);
+        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
+        if (!data) {
+          return fallback(identifier, null);
+        }
+
+        const typed = data as PreAuthenticatorCustomErrorData;
+        fallbackCustom(identifier, typed.code, typed.message);
+      }
     }
   };
 

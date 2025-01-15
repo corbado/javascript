@@ -24,6 +24,28 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
     setCurrentScreenOptions(options);
   }, []);
 
+  const fallback = useCallback(
+    (identifier: string, message: string | null) => {
+      if (config.onFallbackSilent && !message) {
+        config.onFallbackSilent(identifier);
+      } else {
+        config.onFallback(identifier, message ?? '');
+      }
+    },
+    [config],
+  );
+
+  const fallbackCustom = useCallback(
+    (identifier: string, code: string, payload: string) => {
+      if (!config.onFallbackCustom) {
+        config.onFallback(identifier, code);
+      } else {
+        config.onFallbackCustom(identifier, code, payload);
+      }
+    },
+    [config],
+  );
+
   const contextValue = useMemo<LoginProcessContextProps>(
     () => ({
       currentScreenType,
@@ -35,6 +57,8 @@ export const LoginProcessProvider: FC<PropsWithChildren<Props>> = ({ children, i
       setFlags,
       currentScreenOptions,
       loadedMs,
+      fallback,
+      fallbackCustom,
     }),
     [currentScreenType, navigateToScreen, config, currentIdentifier, currentScreenOptions, flags],
   );

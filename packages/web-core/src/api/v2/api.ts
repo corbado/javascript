@@ -458,6 +458,12 @@ export interface ConnectLoginFinishRsp {
      * @memberof ConnectLoginFinishRsp
      */
     'session': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'signedPasskeyData': string;
 }
 /**
  * 
@@ -592,6 +598,12 @@ export interface ConnectLoginStartRsp {
      * @memberof ConnectLoginStartRsp
      */
     'isCDA': boolean;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof ConnectLoginStartRsp
+     */
+    'error'?: RequestError;
 }
 /**
  * 

@@ -61,7 +61,7 @@ export const expectScreen = async (page: Page, screenName: ScreenNames): Promise
 
 export const expectError = (page: Page, message: ErrorTexts): Promise<void> => {
   // This error message isn't a part of cb-container, so it doesn't come as cb-notification-text.
-  if (message === ErrorTexts.DeletedPasskeyUsed) {
+  if (message === ErrorTexts.DeletedPasskeyUsed || message === ErrorTexts.PasskeySignatureValidationFail) {
     return expect(page.getByText(message)).toBeVisible();
   }
   return expect(page.locator('.cb-notification-text')).toHaveText(message);

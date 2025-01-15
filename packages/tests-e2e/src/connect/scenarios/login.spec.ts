@@ -98,17 +98,18 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.expectScreen(ScreenNames.InitLoginFallback);
   });
 
-  test.skip('passkey signature validation fails', async ({ model }) => {
+  test('passkey signature validation fails', async ({ model }) => {
     await model.home.logout();
     await model.expectScreen(ScreenNames.InitLoginOneTap);
 
     await model.authenticator.clearCredentials();
     await model.authenticator.addDummyCredential();
-    await model.login.removePasskeyButton();
-    await model.expectScreen(ScreenNames.InitLogin);
 
-    await model.login.submitEmail(model.email, true);
+    await model.login.submitConditionalUI(async () => {
+      await model.login.removePasskeyButton();
+    });
     await model.expectScreen(ScreenNames.InitLoginFallback);
+    await model.expectError(ErrorTexts.PasskeySignatureValidationFail);
   });
 
   test('attempt login with server-side deleted passkey', async ({ model }) => {

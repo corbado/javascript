@@ -55,7 +55,6 @@ test.describe('login component (with invitation token, with passkeys)', () => {
 
     await model.login.submitConditionalUI(async () => {
       await model.login.removePasskeyButton();
-      await model.expectScreen(ScreenNames.InitLogin);
     });
     await model.expectScreen(ScreenNames.Home);
   });
@@ -123,11 +122,11 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.loadHome();
     await model.expectScreen(ScreenNames.Home);
 
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, false);
+    await model.login.submitConditionalUI(async () => {
+      await model.home.logout();
+    });
     await model.expectScreen(ScreenNames.InitLoginFallback);
+    await model.expectError(ErrorTexts.DeletedPasskeyUsed);
   });
 });
 

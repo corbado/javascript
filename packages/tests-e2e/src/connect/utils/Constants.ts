@@ -18,6 +18,7 @@ export enum ErrorTexts {
   PasskeyFetchFail = 'Unable to access passkeys. Check your connection and try again.',
   PasskeyCreateFail = 'Passkey creation failed. Please try again later.',
   PasskeyDeleteFail = 'Passkey deletion failed. Please try again later.',
+  DeletedPasskeyUsed = 'You previously deleted this passkey. Use your password to log in instead.',
 }
 
 export const phone = '+4915121609839';

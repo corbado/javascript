@@ -33,7 +33,7 @@ export class NetworkRequestBlocker {
 
   blockCorbadoBAPI() {
     return this.#cdpClient.send('Network.setBlockedURLs', {
-      urls: ['api.vr.corbado-staging.io'],
+      urls: ['api.cloud.corbado-staging.io'],
     });
   }
 

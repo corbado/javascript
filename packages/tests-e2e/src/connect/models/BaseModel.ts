@@ -63,7 +63,7 @@ export class BaseModel {
     if (invited) {
       await this.expectScreen(ScreenNames.PasskeyAppend);
       if (append) {
-        await this.append.appendPasskey();
+        await this.append.appendPasskey(true);
         await this.expectScreen(ScreenNames.PasskeyAppended);
         await this.append.confirmAppended();
       } else {

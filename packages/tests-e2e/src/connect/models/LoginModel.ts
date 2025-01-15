@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
-import { expectScreen } from '../utils/ExpectScreen';
 import { ScreenNames } from '../utils/Constants';
+import { expectScreen } from '../utils/ExpectScreen';
+import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
 export class LoginModel {
   page: Page;
@@ -61,5 +61,9 @@ export class LoginModel {
     }
     await this.page.getByPlaceholder('Password').fill(password);
     await this.page.getByRole('button', { name: 'Login' }).click();
+  }
+
+  submitConditionalUI(operationTrigger: () => Promise<void>) {
+    return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
   }
 }

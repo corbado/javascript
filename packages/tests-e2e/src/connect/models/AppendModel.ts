@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 
+import { ErrorTexts } from '../utils/Constants';
+import { expectError } from '../utils/ExpectScreen';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
 export class AppendModel {
@@ -11,16 +13,22 @@ export class AppendModel {
     this.authenticator = authenticator;
   }
 
-  async appendPasskey(): Promise<void> {
+  appendPasskey(complete: boolean) {
     const operationTrigger = () => this.page.getByRole('button', { name: 'Continue' }).click();
-    await this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
+    if (complete) {
+      return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
+    } else {
+      return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, () =>
+        expectError(this.page, ErrorTexts.CancelledPasskey),
+      );
+    }
   }
 
-  confirmAppended(): Promise<void> {
+  confirmAppended() {
     return this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
-  skipAppend(): Promise<void> {
+  skipAppend() {
     return this.page.locator('.cb-append-skip').click();
   }
 }

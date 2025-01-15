@@ -1,7 +1,9 @@
-import { Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
-import { ErrorTexts, ScreenNames } from '../utils/Constants';
-import { expectScreen, expectError } from '../utils/ExpectScreen';
+import type { ErrorTexts } from '../utils/Constants';
+import { ScreenNames } from '../utils/Constants';
+import { expectError, expectScreen } from '../utils/ExpectScreen';
+import type { NetworkRequestBlocker } from '../utils/NetworkRequestBlocker';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';
 import { HomeModel } from './HomeModel';
@@ -12,6 +14,7 @@ import { SignupModel } from './SignupModel';
 export class BaseModel {
   page: Page;
   authenticator: VirtualAuthenticator;
+  blocker: NetworkRequestBlocker;
   signup: SignupModel;
   login: LoginModel;
   append: AppendModel;
@@ -19,22 +22,15 @@ export class BaseModel {
   passkeyList: PasskeyListModel;
   email = '';
 
-  constructor(page: Page, authenticator: VirtualAuthenticator) {
+  constructor(page: Page, authenticator: VirtualAuthenticator, blocker: NetworkRequestBlocker) {
     this.page = page;
     this.authenticator = authenticator;
+    this.blocker = blocker;
     this.signup = new SignupModel(page);
     this.login = new LoginModel(page, authenticator);
     this.append = new AppendModel(page, authenticator);
     this.home = new HomeModel(page);
     this.passkeyList = new PasskeyListModel(page, authenticator);
-  }
-
-  addWebAuthn() {
-    return this.authenticator.addWebAuthn();
-  }
-
-  removeWebAuthn() {
-    return this.authenticator.removeWebAuthn();
   }
 
   loadInvitationToken() {
@@ -47,6 +43,10 @@ export class BaseModel {
 
   loadLogin() {
     return this.page.goto('/login');
+  }
+
+  loadHome() {
+    return this.page.goto('/home');
   }
 
   expectScreen(screenName: ScreenNames) {
@@ -63,7 +63,7 @@ export class BaseModel {
     if (invited) {
       await this.expectScreen(ScreenNames.PasskeyAppend);
       if (append) {
-        await this.append.appendPasskey();
+        await this.append.appendPasskey(true);
         await this.expectScreen(ScreenNames.PasskeyAppended);
         await this.append.confirmAppended();
       } else {
@@ -90,4 +90,9 @@ export class BaseModel {
   //
   //   expect(response.ok).toBeTruthy();
   // }
+
+  async clearLocalStorageAndCookies() {
+    await this.page.evaluate(() => localStorage.clear());
+    await this.page.context().clearCookies();
+  }
 }

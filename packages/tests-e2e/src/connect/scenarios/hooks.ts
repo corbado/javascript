@@ -16,11 +16,22 @@ export function setupVirtualAuthenticator(
   >,
 ) {
   test.beforeEach(async ({ model }) => {
-    await model.addWebAuthn();
+    await model.authenticator.addWebAuthn();
   });
 
   test.afterEach(async ({ model }) => {
-    await model.removeWebAuthn();
+    await model.authenticator.removeWebAuthn();
+  });
+}
+
+export function setupNetworkBlocker(
+  test: TestType<
+    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+  >,
+) {
+  test.beforeEach(async ({ model }) => {
+    await model.blocker.enableBlocking();
   });
 }
 

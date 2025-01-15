@@ -13,12 +13,6 @@ export class NetworkRequestBlocker {
     return this.#cdpClient.send('Network.enable');
   }
 
-  blockCorbadoCDN() {
-    return this.#cdpClient.send('Network.setBlockedURLs', {
-      urls: ['cdn.vr.corbado-staging.io/*'],
-    });
-  }
-
   blockCorbadoFAPI() {
     return this.#cdpClient.send('Network.setBlockedURLs', {
       urls: ['*.frontendapi.cloud.corbado-staging.io/v2/connect'],
@@ -34,12 +28,6 @@ export class NetworkRequestBlocker {
   blockCorbadoBAPI() {
     return this.#cdpClient.send('Network.setBlockedURLs', {
       urls: ['api.cloud.corbado-staging.io'],
-    });
-  }
-
-  blockCorbadoConnectTokenEndpoint() {
-    return this.#cdpClient.send('Network.setBlockedURLs', {
-      urls: ['vrdemo.vr.corbado-staging.io/corbadoTokens'],
     });
   }
 }

@@ -4,6 +4,7 @@ import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenti
 
 test.describe('append component', () => {
   setupVirtualAuthenticator(test);
+  setupNetworkBlocker(test);
   setupUser(test, true, false);
   loadPasskeyAppend(test);
 
@@ -17,6 +18,13 @@ test.describe('append component', () => {
 
   test('failed passkey append on login', async ({ model }) => {
     await model.append.appendPasskey(false);
+  });
+
+  test('Corbado FAPI unavailable after authentication', async ({ model }) => {
+    await model.blocker.blockCorbadoFAPIFinishEndpoint();
+
+    await model.append.appendPasskey(true);
+    await model.expectScreen(ScreenNames.Home);
   });
 });
 
@@ -33,6 +41,19 @@ test.describe('skip append component', () => {
     await model.expectScreen(ScreenNames.InitLoginFallback);
 
     await model.blocker.blockCorbadoBAPI();
+
+    await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.Home);
+  });
+
+  test('Corbado FAPI unavailable', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail(model.email, false);
+    await model.expectScreen(ScreenNames.InitLoginFallback);
+
+    await model.blocker.blockCorbadoFAPI();
 
     await model.login.submitFallbackCredentials(model.email, password, true);
     await model.expectScreen(ScreenNames.Home);

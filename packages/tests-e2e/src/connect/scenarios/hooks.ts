@@ -7,7 +7,7 @@ import type {
 } from '@playwright/test';
 
 import type { BaseModel } from '../models/BaseModel';
-import { password, ScreenNames } from '../utils/Constants';
+import { password, ScreenNames, WebhookTypes } from '../utils/Constants';
 
 export function setupVirtualAuthenticator(
   test: TestType<
@@ -35,6 +35,22 @@ export function setupNetworkBlocker(
   });
 }
 
+export function setupWebhooks(
+  test: TestType<
+    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
+    PlaywrightWorkerArgs & PlaywrightWorkerOptions
+  >,
+  webhookTypes: WebhookTypes[],
+) {
+  test.beforeEach(async ({ model }) => {
+    await model.webhook.createWebhookEndpoint(webhookTypes);
+  });
+
+  test.afterEach(async ({ model }) => {
+    await model.webhook.deleteWebhookEndpoint();
+  });
+}
+
 export function loadInvitationToken(
   test: TestType<
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
@@ -43,28 +59,6 @@ export function loadInvitationToken(
 ) {
   test.beforeEach(async ({ model }) => {
     await model.loadInvitationToken();
-  });
-}
-
-export function loadSignup(
-  test: TestType<
-    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
-    PlaywrightWorkerArgs & PlaywrightWorkerOptions
-  >,
-) {
-  test.beforeEach(async ({ model }) => {
-    await model.loadSignup();
-  });
-}
-
-export function loadLogin(
-  test: TestType<
-    PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
-    PlaywrightWorkerArgs & PlaywrightWorkerOptions
-  >,
-) {
-  test.beforeEach(async ({ model }) => {
-    await model.loadLogin();
   });
 }
 
@@ -85,10 +79,6 @@ export function setupUser(
     await model.createUser(invited, append);
     await model.expectScreen(ScreenNames.Home);
   });
-
-  // test.afterEach(async ({ model }) => {
-  //   await model.deleteUser();
-  // });
 }
 
 // assumes that setupUser(test, true, false) has been called right before

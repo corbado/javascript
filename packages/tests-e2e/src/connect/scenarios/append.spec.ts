@@ -1,6 +1,6 @@
 import { test } from '../fixtures/BaseTest';
-import { password, ScreenNames } from '../utils/Constants';
-import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
+import { password, ScreenNames, WebhookTypes } from '../utils/Constants';
+import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
 
 test.describe('append component', () => {
   setupVirtualAuthenticator(test);
@@ -25,6 +25,24 @@ test.describe('append component', () => {
 
     await model.append.appendPasskey(true);
     await model.expectScreen(ScreenNames.Home);
+  });
+});
+
+test.describe('append component (webhook)', () => {
+  setupVirtualAuthenticator(test);
+  setupNetworkBlocker(test);
+  setupUser(test, true, false);
+  loadPasskeyAppend(test);
+  setupWebhooks(test, [WebhookTypes.Create]);
+
+  test('successful passkey append on login (+ webhook)', async ({ model }) => {
+    await model.append.appendPasskey(true);
+    await model.expectScreen(ScreenNames.PasskeyAppended);
+
+    await model.append.confirmAppended();
+    await model.expectScreen(ScreenNames.Home);
+
+    model.webhook.expectWebhookRequest(WebhookTypes.Create);
   });
 });
 

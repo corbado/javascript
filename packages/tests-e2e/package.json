@@ -24,6 +24,7 @@
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "@types/node": "^20.10.5",
+    "ngrok": "^5.0.0-beta.2",
     "playwright-slack-report": "^1.1.72"
   },
   "dependencies": {

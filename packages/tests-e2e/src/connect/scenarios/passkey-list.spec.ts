@@ -1,6 +1,6 @@
 import { expect, test } from '../fixtures/BaseTest';
-import { ErrorTexts, ScreenNames } from '../utils/Constants';
-import { loadPasskeyList, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
+import { ErrorTexts, ScreenNames, WebhookTypes } from '../utils/Constants';
+import { loadPasskeyList, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
 
 test.describe('passkey-list component', () => {
   setupVirtualAuthenticator(test);
@@ -78,6 +78,25 @@ test.describe('passkey-list component', () => {
     await model.passkeyList.deletePasskey(0);
     await model.expectError(ErrorTexts.PasskeyDeleteFail);
     await model.passkeyList.expectPasskeys(1);
+  });
+});
+
+test.describe('passkey-list component (webhook)', () => {
+  setupVirtualAuthenticator(test);
+  setupNetworkBlocker(test);
+  setupUser(test, true, false);
+  loadPasskeyList(test);
+  setupWebhooks(test, [WebhookTypes.Create, WebhookTypes.Delete]);
+
+  test('list, delete, create passkey (+ webhook)', async ({ model }) => {
+    await model.passkeyList.expectPasskeys(0);
+    await model.passkeyList.createPasskey(true);
+    await model.passkeyList.expectPasskeys(1);
+    model.webhook.expectWebhookRequest(WebhookTypes.Create);
+
+    await model.passkeyList.deletePasskey(0);
+    await model.passkeyList.expectPasskeys(0);
+    model.webhook.expectWebhookRequest(WebhookTypes.Delete);
   });
 });
 

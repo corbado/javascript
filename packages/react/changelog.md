@@ -1,3 +1,7 @@
+## 2.19.0
+
+- Add `initialAutoFocus` prop to `CorbadoAuth` component to disable automatic focus of input fields in signup-init and login-init blocks.
+
 ## 2.16.1
 
 ### Patch changes

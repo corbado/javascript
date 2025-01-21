@@ -22,6 +22,12 @@ export enum ErrorTexts {
   PasskeySignatureValidationFail = "We couldn't log you in with your passkey due to a system error. Use your password to log in instead.",
 }
 
+export enum WebhookTypes {
+  Login = 'passkey-login.completed',
+  Create = 'passkey.created',
+  Delete = 'passkey.deleted',
+}
+
 export const phone = '+4915121609839';
 export const password = 'asdfasdf';
 

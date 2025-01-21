@@ -10,6 +10,7 @@ import { HomeModel } from './HomeModel';
 import { LoginModel } from './LoginModel';
 import { PasskeyListModel } from './PasskeyListModel';
 import { SignupModel } from './SignupModel';
+import { WebhookModel } from './WebhookModel';
 
 export class BaseModel {
   page: Page;
@@ -20,6 +21,7 @@ export class BaseModel {
   append: AppendModel;
   home: HomeModel;
   passkeyList: PasskeyListModel;
+  webhook: WebhookModel;
   email = '';
 
   constructor(page: Page, authenticator: VirtualAuthenticator, blocker: NetworkRequestBlocker) {
@@ -31,6 +33,7 @@ export class BaseModel {
     this.append = new AppendModel(page, authenticator);
     this.home = new HomeModel(page);
     this.passkeyList = new PasskeyListModel(page, authenticator);
+    this.webhook = new WebhookModel(page);
   }
 
   loadInvitationToken() {
@@ -71,25 +74,6 @@ export class BaseModel {
       }
     }
   }
-
-  // async deleteUser() {
-  //   const cookies = await this.page.context().cookies();
-  //   const longSessionCookie = cookies.find(cookie => cookie.name === 'cbo_long_session');
-  //   const longSessionCookieValue = longSessionCookie?.value;
-  //
-  //   expect(longSessionCookieValue).toBeDefined();
-  //   expect(process.env.FRONTEND_API_URL).toBeDefined();
-  //
-  //   const response = await fetch(`${process.env.FRONTEND_API_URL}/v2/me`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Cookie: `cbo_long_session=${longSessionCookieValue}`,
-  //     },
-  //   });
-  //
-  //   expect(response.ok).toBeTruthy();
-  // }
 
   async clearLocalStorageAndCookies() {
     await this.page.evaluate(() => localStorage.clear());

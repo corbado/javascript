@@ -81,14 +81,14 @@ export const AuthFlow: FC<Props> = ({ initialAutoFocus }) => {
         return (
           <LoginInit
             block={currentScreen.block as LoginInitBlock}
-            autoFocus={initialAutoFocus}
+            initialAutoFocus={initialAutoFocus}
           />
         );
       case BlockTypes.SignupInit:
         return (
           <SignupInit
             block={currentScreen.block as SignupInitBlock}
-            autoFocus={initialAutoFocus}
+            initialAutoFocus={initialAutoFocus}
           />
         );
       case BlockTypes.EmailVerify:

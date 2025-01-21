@@ -6,7 +6,12 @@ import React from 'react';
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn, handleNavigationEvents, initialBlock, initialAutoFocus = true }) => {
+const CorbadoAuth: FC<CorbadoAuthConfig> = ({
+  onLoggedIn,
+  handleNavigationEvents,
+  initialBlock,
+  initialAutoFocus = true,
+}) => {
   return (
     <FlowHandlerProvider
       onLoggedIn={onLoggedIn}

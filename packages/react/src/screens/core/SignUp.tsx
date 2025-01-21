@@ -6,7 +6,12 @@ import React from 'react';
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const SignUp: FC<CorbadoSignUpConfig> = ({ handleNavigationEvents, onSignedUp, navigateToLogin, initialAutoFocus = true }) => {
+const SignUp: FC<CorbadoSignUpConfig> = ({
+  handleNavigationEvents,
+  onSignedUp,
+  navigateToLogin,
+  initialAutoFocus = true,
+}) => {
   return (
     <FlowHandlerProvider
       handleNavigationEvents={handleNavigationEvents}

@@ -14,7 +14,13 @@ export interface LoginFormProps {
   initialAutoFocus: boolean;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInProgress, setLoading, initialAutoFocus }) => {
+export const LoginForm: FC<LoginFormProps> = ({
+  block,
+  loading,
+  socialLoadingInProgress,
+  setLoading,
+  initialAutoFocus,
+}) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
 
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);

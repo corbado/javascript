@@ -40,7 +40,11 @@ import ErrorPopup from '../ui/errors/ErrorPopup';
 import { FreemiumBadge } from '../ui/FreemiumBadge';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 
-export const AuthFlow: FC = () => {
+type Props = {
+  initialAutoFocus: boolean;
+};
+
+export const AuthFlow: FC<Props> = ({ initialAutoFocus }) => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
   const [loading, setLoading] = useState(false);
@@ -74,9 +78,19 @@ export const AuthFlow: FC = () => {
 
     switch (currentScreen.block.type) {
       case BlockTypes.LoginInit:
-        return <LoginInit block={currentScreen.block as LoginInitBlock} />;
+        return (
+          <LoginInit
+            block={currentScreen.block as LoginInitBlock}
+            initialAutoFocus={initialAutoFocus}
+          />
+        );
       case BlockTypes.SignupInit:
-        return <SignupInit block={currentScreen.block as SignupInitBlock} />;
+        return (
+          <SignupInit
+            block={currentScreen.block as SignupInitBlock}
+            initialAutoFocus={initialAutoFocus}
+          />
+        );
       case BlockTypes.EmailVerify:
         switch (currentScreen.screen) {
           case ScreenNames.EmailLinkSent:

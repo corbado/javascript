@@ -1,8 +1,7 @@
 import type { LoginIdentifiers, SignupInitBlock } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { FormEvent, MutableRefObject } from 'react';
-import { useEffect } from 'react';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -14,7 +13,7 @@ import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { Text } from '../../../components/ui/typography/Text';
 
-export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
+export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -82,7 +81,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
         ref.current.value = value || '';
       }
 
-      if (!hasFocusField.current) {
+      if (!hasFocusField.current && initialAutoFocus) {
         ref.current.focus();
         hasFocusField.current = true;
       }
@@ -98,7 +97,7 @@ export const SignupInit = ({ block }: { block: SignupInitBlock }) => {
   const userName = block.data.userName;
   const email = block.data.email;
   const phone = block.data.phone;
-  const foucsPhoneField = !!(phone && !email && !userName && !fullName);
+  const foucsPhoneField = !!(phone && !email && !userName && !fullName) && initialAutoFocus;
 
   if (foucsPhoneField) {
     hasFocusField.current = true;

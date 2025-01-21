@@ -11,9 +11,16 @@ export interface LoginFormProps {
   socialLoadingInProgress: boolean | undefined;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  initialAutoFocus: boolean;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInProgress, setLoading }) => {
+export const LoginForm: FC<LoginFormProps> = ({
+  block,
+  loading,
+  socialLoadingInProgress,
+  setLoading,
+  initialAutoFocus,
+}) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
 
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);
@@ -33,10 +40,13 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
 
     setTextField({ value: block.data.loginIdentifier, translatedError: block.data.loginIdentifierError });
 
-    if (textFieldRef.current) {
-      textFieldRef.current.focus();
-      textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
+    if (!textFieldRef.current) {
+      return;
     }
+    if (initialAutoFocus) {
+      textFieldRef.current.focus();
+    }
+    textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
   }, [block]);
 
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
@@ -73,7 +83,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
           initialCountry='US'
           initialPhoneNumber={textField?.value}
           errorMessage={textField?.translatedError}
-          autoFocus={true}
+          autoFocus={initialAutoFocus}
           onChange={setPhoneInput}
         />
       );
@@ -94,7 +104,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
           name='username'
           type='username'
           autoComplete='username webauthn'
-          autoFocus={true}
+          autoFocus={initialAutoFocus}
           {...commonProps}
         />
       );
@@ -108,7 +118,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
         name='email'
         type='email'
         autoComplete='username webauthn'
-        autoFocus={true}
+        autoFocus={initialAutoFocus}
         {...commonProps}
       />
     );

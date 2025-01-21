@@ -6,7 +6,12 @@ import React from 'react';
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const SignUp: FC<CorbadoSignUpConfig> = ({ handleNavigationEvents, onSignedUp, navigateToLogin }) => {
+const SignUp: FC<CorbadoSignUpConfig> = ({
+  handleNavigationEvents,
+  onSignedUp,
+  navigateToLogin,
+  initialAutoFocus = true,
+}) => {
   return (
     <FlowHandlerProvider
       handleNavigationEvents={handleNavigationEvents}
@@ -14,7 +19,7 @@ const SignUp: FC<CorbadoSignUpConfig> = ({ handleNavigationEvents, onSignedUp, n
       onChangeFlow={navigateToLogin}
       initialFlowType={AuthType.SignUp}
     >
-      <AuthFlow />
+      <AuthFlow initialAutoFocus={initialAutoFocus} />
     </FlowHandlerProvider>
   );
 };

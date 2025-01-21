@@ -14,10 +14,7 @@ const AuthPage = () => {
     <>
       <Header />
       <div className='component'>
-        <CorbadoAuth
-          onLoggedIn={onLoggedIn}
-          autoFocus={false}
-        />
+        <CorbadoAuth onLoggedIn={onLoggedIn} />
       </div>
     </>
   );

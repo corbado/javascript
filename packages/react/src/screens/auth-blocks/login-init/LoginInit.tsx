@@ -8,7 +8,7 @@ import { Header, SecondaryButton, SocialLoginButtons, SubHeader, Text } from '..
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
 
-export const LoginInit = ({ block, autoFocus }: { block: LoginInitBlock; autoFocus: boolean }) => {
+export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
@@ -105,7 +105,7 @@ export const LoginInit = ({ block, autoFocus }: { block: LoginInitBlock; autoFoc
           loading={loading}
           socialLoadingInProgress={socialLoadingInProgress}
           setLoading={setLoading}
-          autoFocus={autoFocus}
+          initialAutoFocus={initialAutoFocus}
         />
       )}
       <SocialLoginButtons

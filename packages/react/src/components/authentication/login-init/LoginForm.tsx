@@ -11,10 +11,10 @@ export interface LoginFormProps {
   socialLoadingInProgress: boolean | undefined;
   loading: boolean;
   setLoading: (loading: boolean) => void;
-  autoFocus: boolean;
+  initialAutoFocus: boolean;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInProgress, setLoading, autoFocus }) => {
+export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInProgress, setLoading, initialAutoFocus }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
 
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);
@@ -37,7 +37,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
     if (!textFieldRef.current) {
       return;
     }
-    if (autoFocus) {
+    if (initialAutoFocus) {
       textFieldRef.current.focus();
     }
     textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
@@ -77,7 +77,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
           initialCountry='US'
           initialPhoneNumber={textField?.value}
           errorMessage={textField?.translatedError}
-          autoFocus={autoFocus}
+          autoFocus={initialAutoFocus}
           onChange={setPhoneInput}
         />
       );
@@ -98,7 +98,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
           name='username'
           type='username'
           autoComplete='username webauthn'
-          autoFocus={autoFocus}
+          autoFocus={initialAutoFocus}
           {...commonProps}
         />
       );
@@ -112,7 +112,7 @@ export const LoginForm: FC<LoginFormProps> = ({ block, loading, socialLoadingInP
         name='email'
         type='email'
         autoComplete='username webauthn'
-        autoFocus={autoFocus}
+        autoFocus={initialAutoFocus}
         {...commonProps}
       />
     );

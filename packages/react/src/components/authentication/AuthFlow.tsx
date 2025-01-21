@@ -41,10 +41,10 @@ import { FreemiumBadge } from '../ui/FreemiumBadge';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 
 type Props = {
-  autoFocus: boolean;
+  initialAutoFocus: boolean;
 };
 
-export const AuthFlow: FC<Props> = ({ autoFocus }) => {
+export const AuthFlow: FC<Props> = ({ initialAutoFocus }) => {
   const { isDevMode, customerSupportEmail } = useErrorHandling();
   const { currentScreen, initState } = useFlowHandler();
   const [loading, setLoading] = useState(false);
@@ -81,14 +81,14 @@ export const AuthFlow: FC<Props> = ({ autoFocus }) => {
         return (
           <LoginInit
             block={currentScreen.block as LoginInitBlock}
-            autoFocus={autoFocus}
+            autoFocus={initialAutoFocus}
           />
         );
       case BlockTypes.SignupInit:
         return (
           <SignupInit
             block={currentScreen.block as SignupInitBlock}
-            autoFocus={autoFocus}
+            autoFocus={initialAutoFocus}
           />
         );
       case BlockTypes.EmailVerify:

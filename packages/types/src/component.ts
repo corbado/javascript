@@ -33,7 +33,7 @@ export interface CorbadoAuthConfig {
   onLoggedIn: () => void;
   handleNavigationEvents?: boolean;
   initialBlock?: 'signup-init' | 'login-init';
-  autoFocus?: boolean;
+  initialAutoFocus?: boolean;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface CorbadoSignUpConfig {
   onSignedUp: () => void;
   navigateToLogin?: () => void;
   handleNavigationEvents?: boolean;
-  autoFocus?: boolean;
+  initialAutoFocus?: boolean;
 }
 
 /**
@@ -61,5 +61,5 @@ export interface CorbadoLoginConfig {
   onLoggedIn: () => void;
   navigateToSignUp?: () => void;
   handleNavigationEvents?: boolean;
-  autoFocus?: boolean;
+  initialAutoFocus?: boolean;
 }

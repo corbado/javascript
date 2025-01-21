@@ -6,14 +6,14 @@ import React from 'react';
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
 
-const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn, handleNavigationEvents, initialBlock, autoFocus = true }) => {
+const CorbadoAuth: FC<CorbadoAuthConfig> = ({ onLoggedIn, handleNavigationEvents, initialBlock, initialAutoFocus = true }) => {
   return (
     <FlowHandlerProvider
       onLoggedIn={onLoggedIn}
       handleNavigationEvents={handleNavigationEvents}
       initialBlock={initialBlock as BlockTypes}
     >
-      <AuthFlow autoFocus={autoFocus} />
+      <AuthFlow initialAutoFocus={initialAutoFocus} />
     </FlowHandlerProvider>
   );
 };

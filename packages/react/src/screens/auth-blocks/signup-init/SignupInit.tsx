@@ -13,7 +13,7 @@ import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { Text } from '../../../components/ui/typography/Text';
 
-export const SignupInit = ({ block, autoFocus }: { block: SignupInitBlock; autoFocus: boolean }) => {
+export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,7 +81,7 @@ export const SignupInit = ({ block, autoFocus }: { block: SignupInitBlock; autoF
         ref.current.value = value || '';
       }
 
-      if (!hasFocusField.current && autoFocus) {
+      if (!hasFocusField.current && initialAutoFocus) {
         ref.current.focus();
         hasFocusField.current = true;
       }
@@ -97,7 +97,7 @@ export const SignupInit = ({ block, autoFocus }: { block: SignupInitBlock; autoF
   const userName = block.data.userName;
   const email = block.data.email;
   const phone = block.data.phone;
-  const foucsPhoneField = !!(phone && !email && !userName && !fullName) && autoFocus;
+  const foucsPhoneField = !!(phone && !email && !userName && !fullName) && initialAutoFocus;
 
   if (foucsPhoneField) {
     hasFocusField.current = true;

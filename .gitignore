@@ -29,4 +29,4 @@ packages/tests-e2e/.env.connect.local
 .vercel
 
 # scripts
-scripts/release_connect_web_js.sh
+scripts/*.sh

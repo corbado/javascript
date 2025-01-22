@@ -63,7 +63,10 @@ export class StorageModel {
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.loginData.expiresAt = newLifetime;
-    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), { k: key, p: cboConnectProcess });
+    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), {
+      k: key,
+      p: cboConnectProcess,
+    });
   }
 
   async getAppendLifetime(): Promise<number> {
@@ -84,7 +87,10 @@ export class StorageModel {
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.appendData.expiresAt = newLifetime;
-    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), { k: key, p: cboConnectProcess });
+    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), {
+      k: key,
+      p: cboConnectProcess,
+    });
   }
 
   async getManageLifetime(): Promise<number> {
@@ -105,7 +111,10 @@ export class StorageModel {
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.manageData.expiresAt = newLifetime;
-    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), { k: key, p: cboConnectProcess });
+    await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), {
+      k: key,
+      p: cboConnectProcess,
+    });
   }
 
   async checkLoginDataDeleted() {

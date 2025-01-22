@@ -1403,11 +1403,17 @@ components:
       type: object
       required:
         - passkeys
+        - rpID
+        - userID
       properties:
         passkeys:
           type: array
           items:
             $ref: '#/components/schemas/passkey'
+        rpID:
+          type: string
+        userID:
+          type: string
 
     connectManageDeleteRsp:
       type: object

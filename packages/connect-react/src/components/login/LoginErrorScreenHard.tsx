@@ -9,11 +9,17 @@ import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations
 import LoginErrorHard from './base/LoginErrorHard';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
-const LoginErrorScreenHard = () => {
+type Props = {
+  previousAssertionOptions: string;
+};
+
+const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
   const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   const [hardErrorCount, setHardErrorCount] = useState(1);
+  // only for logging purposes
+  const [assertionOptions, setAssertionOptions] = useState<string | undefined>(previousAssertionOptions);
 
   const handleSubmit = async () => {
     if (loading) {
@@ -25,6 +31,8 @@ const LoginErrorScreenHard = () => {
     if (resStart.err) {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
+
+    setAssertionOptions(resStart.val.assertionOptions);
 
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
@@ -82,7 +90,7 @@ const LoginErrorScreenHard = () => {
         navigateToScreen(LoginScreenType.Invisible);
         fallback(identifier, null);
 
-        void getConnectService().recordEventLoginExplicitAbort();
+        void getConnectService().recordEventLoginExplicitAbort(assertionOptions);
         break;
     }
   };

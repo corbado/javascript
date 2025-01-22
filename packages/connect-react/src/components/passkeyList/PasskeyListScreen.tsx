@@ -97,7 +97,7 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete);
     }
 
-    await getPasskeyList(config);
+    await getPasskeyList(config, true);
     hide();
   };
 
@@ -146,7 +146,7 @@ const PasskeyListScreen = () => {
   const fetchListToken = async (config: CorbadoConnectPasskeyListConfig) =>
     await config.connectTokenProvider(ConnectTokenType.PasskeyList);
 
-  const getPasskeyList = async (config: CorbadoConnectPasskeyListConfig) => {
+  const getPasskeyList = async (config: CorbadoConnectPasskeyListConfig, triggerSignalAllAccepted = false) => {
     let listTokenRes = passkeyListToken;
     if (!listTokenRes) {
       try {
@@ -156,7 +156,7 @@ const PasskeyListScreen = () => {
       }
     }
 
-    const passkeyList = await getConnectService().manageList(listTokenRes);
+    const passkeyList = await getConnectService().manageList(listTokenRes, triggerSignalAllAccepted);
     if (passkeyList.err) {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
     }

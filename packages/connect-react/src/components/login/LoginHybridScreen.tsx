@@ -64,7 +64,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
         navigateToScreen(LoginScreenType.Invisible);
         fallback(identifier, null);
 
-        void getConnectService().recordEventLoginExplicitAbort();
+        void getConnectService().recordEventLoginExplicitAbort(resStart.assertionOptions);
         break;
     }
   };

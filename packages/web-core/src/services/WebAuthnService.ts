@@ -3,6 +3,7 @@
 import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
 import { create, get } from '@corbado/webauthn-json';
+import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
@@ -212,6 +213,35 @@ export class WebAuthnService {
       return await window.PublicKeyCredential.getClientCapabilities();
     } catch (e) {
       log.debug('Error using getClientCapabilities: ', e);
+      return;
+    }
+  }
+
+  static challengeFromAttestationOptions(attestationOptions: string): string {
+    const typed: CredentialCreationOptionsJSON = JSON.parse(attestationOptions);
+    return typed.publicKey.challenge;
+  }
+
+  static challengeFromAssertionOptions(assertionOptions: string): string | undefined {
+    const typed: CredentialRequestOptionsJSON = JSON.parse(assertionOptions);
+    return typed.publicKey?.challenge;
+  }
+
+  static async signalAllAcceptedCredentials(rpId: string, userId: string, credentialIds: string[]): Promise<void> {
+    // @ts-ignore
+    if (!window.PublicKeyCredential || !window.PublicKeyCredential.signalAllAcceptedCredentials) {
+      return undefined;
+    }
+
+    try {
+      // @ts-ignore
+      await PublicKeyCredential.signalAllAcceptedCredentials({
+        rpId: rpId,
+        userId: userId,
+        allAcceptedCredentialIds: credentialIds,
+      });
+    } catch (e) {
+      log.debug('Error calling signalAllAcceptedCredentials', e);
       return;
     }
   }

@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 import { test } from '../fixtures/BaseTest';
 import { ErrorTexts, password, ScreenNames, WebhookTypes } from '../utils/Constants';
 import { loadInvitationToken, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
@@ -80,8 +82,8 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.expectScreen(ScreenNames.InitLoginOneTap);
 
     await model.authenticator.clearCredentials();
-    await model.clearLocalStorageAndCookies();
-    await model.loadInvitationToken();
+    await model.storage.clearLocalStorageAndCookies();
+    await model.storage.loadInvitationToken();
     await model.expectScreen(ScreenNames.InitLogin);
 
     await model.login.submitEmail(model.email, false);
@@ -129,6 +131,19 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.expectScreen(ScreenNames.InitLoginFallback);
     await model.expectError(ErrorTexts.DeletedPasskeyUsed);
   });
+
+  // TODO: unskip when loginData reset feature is fixed
+  test.skip('successful login deletes loginData', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLoginOneTap);
+
+    await model.login.removePasskeyButton();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail(model.email, true);
+    await model.expectScreen(ScreenNames.Home);
+    await model.storage.checkLoginDataDeleted();
+  });
 });
 
 test.describe('login component (without user)', () => {
@@ -155,6 +170,29 @@ test.describe('login component (without user)', () => {
   test('Corbado FAPI unavailable', async ({ model }) => {
     await model.blocker.blockCorbadoFAPI();
 
+    await model.loadLogin();
+    // It seems that the InitLogin page is now cached so that email needs to be submitted before reaching the InitLoginFallback screen.
+    await model.login.submitEmail('dummy-email@corbado.com', false);
+    await model.expectScreen(ScreenNames.InitLoginFallback);
+  });
+
+  test('invitation token and process id persists after page refresh', async ({ model }) => {
+    await model.expectScreen(ScreenNames.InitLogin);
+    await model.storage.checkInvitationToken();
+    const processId = await model.storage.getProcessID();
+
+    await model.loadLogin();
+    await model.expectScreen(ScreenNames.InitLogin);
+    await model.storage.checkInvitationToken();
+    await model.storage.checkProcessID(processId);
+  });
+
+  test('expired login lifetime leads to fallback screen', async ({ model }) => {
+    await model.expectScreen(ScreenNames.InitLogin);
+    expect(await model.storage.getLoginLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
+
+    await model.storage.setLoginLifetime(Math.floor(Date.now() / 1000) - 1);
+    await model.storage.deleteInvitationToken();
     await model.loadLogin();
     await model.expectScreen(ScreenNames.InitLoginFallback);
   });

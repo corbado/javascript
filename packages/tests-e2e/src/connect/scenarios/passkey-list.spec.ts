@@ -120,4 +120,21 @@ test.describe('skip passkey-list component', () => {
     await model.expectScreen(ScreenNames.PasskeyList);
     await model.expectError(ErrorTexts.PasskeyFetchFail);
   });
+
+  test('expired manage lifetime leads to skipped passkey-list screen', async ({ model }) => {
+    await model.home.gotoPasskeyList();
+    await model.expectScreen(ScreenNames.PasskeyList);
+    await model.passkeyList.expectPasskeys(1);
+    await model.loadHome();
+    await model.expectScreen(ScreenNames.Home);
+    expect(await model.storage.getManageLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
+
+    await model.storage.setManageLifetime(Math.floor(Date.now() / 1000) - 1);
+    await model.storage.deleteInvitationToken();
+
+    await model.home.gotoPasskeyList();
+    await model.expectScreen(ScreenNames.PasskeyList);
+    await model.passkeyList.expectPasskeys(1);
+    await model.passkeyList.checkCreatePasskeyDisabled();
+  });
 });

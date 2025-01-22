@@ -38,6 +38,10 @@ export class PasskeyListModel {
     }
   }
 
+  checkCreatePasskeyDisabled() {
+    return expect(this.page.getByRole('button', { name: 'Add a passkey' })).not.toBeVisible();
+  }
+
   confirmModal() {
     return this.page.getByRole('button', { name: 'Okay' }).click();
   }

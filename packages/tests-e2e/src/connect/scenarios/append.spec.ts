@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 import { test } from '../fixtures/BaseTest';
 import { password, ScreenNames, WebhookTypes } from '../utils/Constants';
 import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
@@ -60,6 +62,20 @@ test.describe('skip append component', () => {
 
     await model.blocker.blockCorbadoFAPI();
 
+    await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.Home);
+  });
+
+  test('expired append lifetime leads to skipped append screen', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail(model.email, false);
+    await model.expectScreen(ScreenNames.InitLoginFallback);
+    expect(await model.storage.getAppendLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
+
+    await model.storage.setAppendLifetime(Math.floor(Date.now() / 1000) - 1);
+    await model.storage.deleteInvitationToken();
     await model.login.submitFallbackCredentials(model.email, password, true);
     await model.expectScreen(ScreenNames.Home);
   });

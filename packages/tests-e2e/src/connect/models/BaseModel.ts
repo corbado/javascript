@@ -10,6 +10,7 @@ import { HomeModel } from './HomeModel';
 import { LoginModel } from './LoginModel';
 import { PasskeyListModel } from './PasskeyListModel';
 import { SignupModel } from './SignupModel';
+import { StorageModel } from './StorageModel';
 import { WebhookModel } from './WebhookModel';
 
 export class BaseModel {
@@ -22,6 +23,7 @@ export class BaseModel {
   home: HomeModel;
   passkeyList: PasskeyListModel;
   webhook: WebhookModel;
+  storage: StorageModel;
   email = '';
 
   constructor(page: Page, authenticator: VirtualAuthenticator, blocker: NetworkRequestBlocker) {
@@ -34,10 +36,7 @@ export class BaseModel {
     this.home = new HomeModel(page);
     this.passkeyList = new PasskeyListModel(page, authenticator);
     this.webhook = new WebhookModel(page);
-  }
-
-  loadInvitationToken() {
-    return this.page.goto('/login?invitationToken=inv-token-correct');
+    this.storage = new StorageModel(page);
   }
 
   loadSignup() {
@@ -73,10 +72,5 @@ export class BaseModel {
         await this.append.skipAppend();
       }
     }
-  }
-
-  async clearLocalStorageAndCookies() {
-    await this.page.evaluate(() => localStorage.clear());
-    await this.page.context().clearCookies();
   }
 }

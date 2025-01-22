@@ -7,7 +7,8 @@ import type {
 } from '@playwright/test';
 
 import type { BaseModel } from '../models/BaseModel';
-import { password, ScreenNames, WebhookTypes } from '../utils/Constants';
+import type { WebhookTypes } from '../utils/Constants';
+import { password, ScreenNames } from '../utils/Constants';
 
 export function setupVirtualAuthenticator(
   test: TestType<
@@ -58,7 +59,7 @@ export function loadInvitationToken(
   >,
 ) {
   test.beforeEach(async ({ model }) => {
-    await model.loadInvitationToken();
+    await model.storage.loadInvitationToken();
   });
 }
 
@@ -72,7 +73,7 @@ export function setupUser(
 ) {
   test.beforeEach(async ({ model }) => {
     if (invited) {
-      await model.loadInvitationToken();
+      await model.storage.loadInvitationToken();
     }
     await model.loadSignup();
     await model.expectScreen(ScreenNames.InitSignup);

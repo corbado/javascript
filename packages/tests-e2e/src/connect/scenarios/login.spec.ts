@@ -131,6 +131,19 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.expectScreen(ScreenNames.InitLoginFallback);
     await model.expectError(ErrorTexts.DeletedPasskeyUsed);
   });
+
+  // TODO: unskip when loginData reset feature is fixed
+  test.skip('successful login deletes loginData', async ({ model }) => {
+    await model.home.logout();
+    await model.expectScreen(ScreenNames.InitLoginOneTap);
+
+    await model.login.removePasskeyButton();
+    await model.expectScreen(ScreenNames.InitLogin);
+
+    await model.login.submitEmail(model.email, true);
+    await model.expectScreen(ScreenNames.Home);
+    await model.storage.checkLoginDataDeleted();
+  });
 });
 
 test.describe('login component (without user)', () => {

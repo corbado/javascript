@@ -94,7 +94,6 @@ export class StorageModel {
       throw new Error('cbo_connect_process not found in local storage');
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
-  console.log(cboConnectProcess);
     return cboConnectProcess.manageData.expiresAt;
   }
 
@@ -107,6 +106,16 @@ export class StorageModel {
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.manageData.expiresAt = newLifetime;
     await this.page.evaluate(({ k, p }) => localStorage.setItem(k, JSON.stringify(p)), { k: key, p: cboConnectProcess });
+  }
+
+  async checkLoginDataDeleted() {
+    const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
+    const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
+    if (!cboConnectProcessRaw) {
+      throw new Error('cbo_connect_process not found in local storage');
+    }
+    const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
+    expect(cboConnectProcess.loginData).toBeNull();
   }
 
   async clearLocalStorageAndCookies() {

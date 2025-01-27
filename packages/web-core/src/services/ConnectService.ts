@@ -45,7 +45,7 @@ export class ConnectService {
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
-    this.#timeout = 10 * 1000;
+    this.#timeout = 5 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
@@ -153,6 +153,10 @@ export class ConnectService {
     const existingProcessFromOtherLoginInit = ConnectProcess.loadFromStorage(this.#projectId);
     const maybeExistingLoginDataFromOtherLoginInit = existingProcessFromOtherLoginInit?.getValidLoginData();
     if (maybeExistingLoginDataFromOtherLoginInit) {
+      if (res.val.token !== existingProcessFromOtherLoginInit?.id) {
+        await this.#connectApi.connectProcessClear({ processId: res.val.token });
+      }
+
       log.debug('process exists (after login init attempt');
       this.#setApisV2(existingProcessFromOtherLoginInit);
 

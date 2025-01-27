@@ -746,6 +746,32 @@ export interface ConnectManageListRsp {
 /**
  * 
  * @export
+ * @interface ConnectProcessClearReq
+ */
+export interface ConnectProcessClearReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectProcessClearReq
+     */
+    'processId': string;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectProcessClearRsp
+ */
+export interface ConnectProcessClearRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectProcessClearRsp
+     */
+    'processId': string;
+}
+/**
+ * 
+ * @export
  * @interface ContinueOnOtherDevice
  */
 export interface ContinueOnOtherDevice {
@@ -4373,6 +4399,48 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Remove process state for a connect process.
+         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectProcessClear: async (connectProcessClearReq: ConnectProcessClearReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectProcessClearReq' is not null or undefined
+            assertParamExists('connectProcessClear', 'connectProcessClearReq', connectProcessClearReq)
+            const localVarPath = `/v2/connect/process/clear`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectProcessClearReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4483,6 +4551,16 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.connectManageList(connectManageListReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Remove process state for a connect process.
+         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectProcessClear(connectProcessClearReq: ConnectProcessClearReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectProcessClearRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectProcessClear(connectProcessClearReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -4582,6 +4660,15 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
          */
         connectManageList(connectManageListReq: ConnectManageListReq, options?: any): AxiosPromise<ConnectManageListRsp> {
             return localVarFp.connectManageList(connectManageListReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Remove process state for a connect process.
+         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectProcessClear(connectProcessClearReq: ConnectProcessClearReq, options?: any): AxiosPromise<ConnectProcessClearRsp> {
+            return localVarFp.connectProcessClear(connectProcessClearReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4701,6 +4788,17 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectManageList(connectManageListReq: ConnectManageListReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectManageList(connectManageListReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Remove process state for a connect process.
+     * @param {ConnectProcessClearReq} connectProcessClearReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectProcessClear(connectProcessClearReq: ConnectProcessClearReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectProcessClear(connectProcessClearReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

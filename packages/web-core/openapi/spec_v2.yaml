@@ -827,6 +827,28 @@ paths:
         '204':
           description: tbd
 
+  /v2/connect/process/clear:
+    post:
+      description: Remove process state for a connect process.
+      operationId: ConnectProcessClear
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/connectProcessClearReq'
+      responses:
+        '200':
+          description: Contains information about the process state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connectProcessClearRsp'
+        '404':
+          description: No process was found for the token
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -1485,6 +1507,22 @@ components:
           description: "Status"
         aaguidDetails:
           $ref: '#/components/schemas/aaguidDetails'
+
+    connectProcessClearReq:
+      type: object
+      required:
+        - processId
+      properties:
+        processId:
+          type: string
+
+    connectProcessClearRsp:
+      type: object
+      required:
+        - processId
+      properties:
+        processId:
+          type: string
 
     aaguidDetails:
       type: object

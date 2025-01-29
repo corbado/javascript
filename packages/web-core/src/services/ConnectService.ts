@@ -45,7 +45,7 @@ export class ConnectService {
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
     this.#projectId = projectId;
-    this.#timeout = 5 * 1000;
+    this.#timeout = 10 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
@@ -143,7 +143,7 @@ export class ConnectService {
 
     const { req, flags } = await this.#getInitReq();
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginInit(req, { signal: abortController.signal }),
+      this.#connectApi.connectLoginInit(req, { signal: abortController.signal, timeout: 5 * 1000 }),
     );
 
     if (res.err) {

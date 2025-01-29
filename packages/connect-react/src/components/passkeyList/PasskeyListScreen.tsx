@@ -12,6 +12,7 @@ import { ConnectTokenType } from '../../types/tokens';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AlreadyExistingModal from './AlreadyExistingModal';
 import DeleteModal from './DeleteModal';
+import PasskeyAppendNotSupportedLightModal from './PasskeyAppendNotSupportedLightModal';
 import PasskeyAppendNotSupportedModal from './PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './PasskeyList';
 
@@ -122,6 +123,10 @@ const PasskeyListScreen = () => {
     }
 
     if (!startAppendRes.val.attestationOptions) {
+      if (startAppendRes.val.isRestrictedBrowser) {
+        return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupportedLight);
+      }
+
       return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 
@@ -177,6 +182,10 @@ const PasskeyListScreen = () => {
         setAppendLoading(false);
         void getConnectService().recordEventAppendCredentialExistsError();
         show(<AlreadyExistingModal hide={hide} />);
+        break;
+      case PasskeyListSituationCode.CboApiPasskeysNotSupportedLight:
+        setAppendLoading(false);
+        show(<PasskeyAppendNotSupportedLightModal hide={hide} />);
         break;
       case PasskeyListSituationCode.CboApiPasskeysNotSupported:
         setAppendLoading(false);

@@ -14,6 +14,7 @@ import LoginInitLoading from './login/base/LoginInitLoading';
 import LoginOneTap from './login/base/LoginOneTap';
 import AlreadyExistingModal from './passkeyList/AlreadyExistingModal';
 import DeleteModal from './passkeyList/DeleteModal';
+import PasskeyAppendNotSupportedLightModal from './passkeyList/PasskeyAppendNotSupportedLightModal';
 import PasskeyAppendNotSupportedModal from './passkeyList/PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './passkeyList/PasskeyList';
 
@@ -194,6 +195,12 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
       description:
         'This modal is shown to the user when they try to append a passkey but the operation is not supported by their device (e.g. because it is too old).',
       reactElement: <PasskeyAppendNotSupportedModal hide={() => console.log('hide')} />,
+    },
+    {
+      headline: 'Passkey append not supported light modal',
+      description:
+        'This modal is shown to the user when they try to append a passkey but the operation is not supported by their current browser (another browser on the same device might support it though).',
+      reactElement: <PasskeyAppendNotSupportedLightModal hide={() => console.log('hide')} />,
     },
   ];
 

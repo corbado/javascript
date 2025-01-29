@@ -153,7 +153,7 @@ export class CorbadoError extends Error {
   }
 
   static noPasskeyAvailable(): CorbadoError {
-    return new NoPasskeyAvailableError();
+    return new ConnectNoPasskeyAvailableError();
   }
 
   static onlyHybridPasskeyAvailable(): CorbadoError {
@@ -239,7 +239,7 @@ export class UnknownUserError extends RecoverableError {
   }
 }
 
-export class NoPasskeyAvailableError extends RecoverableError {
+export class ConnectNoPasskeyAvailableError extends RecoverableError {
   constructor() {
     super('No passkey available');
     this.name = 'errors.noPasskeyAvailable';

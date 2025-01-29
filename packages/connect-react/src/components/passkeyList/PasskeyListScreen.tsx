@@ -12,9 +12,9 @@ import { ConnectTokenType } from '../../types/tokens';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AlreadyExistingModal from './AlreadyExistingModal';
 import DeleteModal from './DeleteModal';
+import PasskeyAppendNotSupportedLightModal from './PasskeyAppendNotSupportedLightModal';
 import PasskeyAppendNotSupportedModal from './PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './PasskeyList';
-import PasskeyAppendNotSupportedLightModal from './PasskeyAppendNotSupportedLightModal';
 
 const PasskeyListScreen = () => {
   const { config } = useManageProcess();

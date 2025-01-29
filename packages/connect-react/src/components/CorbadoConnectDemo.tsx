@@ -14,9 +14,9 @@ import LoginInitLoading from './login/base/LoginInitLoading';
 import LoginOneTap from './login/base/LoginOneTap';
 import AlreadyExistingModal from './passkeyList/AlreadyExistingModal';
 import DeleteModal from './passkeyList/DeleteModal';
+import PasskeyAppendNotSupportedLightModal from './passkeyList/PasskeyAppendNotSupportedLightModal';
 import PasskeyAppendNotSupportedModal from './passkeyList/PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './passkeyList/PasskeyList';
-import PasskeyAppendNotSupportedLightModal from './passkeyList/PasskeyAppendNotSupportedLightModal';
 
 const getListOfPasskeys = () => {
   const out: Passkey[] = [

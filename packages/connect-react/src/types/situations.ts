@@ -13,6 +13,7 @@ export enum LoginSituationCode {
   DeniedByPartialRollout,
   PreAuthenticatorCustomError,
   PreAuthenticatorExistingPasskeysNotAvailable,
+  PreAuthenticatorNoPasskeyAvailable,
 }
 
 export enum AppendSituationCode {
@@ -37,6 +38,7 @@ export enum PasskeyListSituationCode {
   CboApiNotAvailablePostAuthenticator,
   ClientPasskeyOperationCancelled,
   ClientExcludeCredentialsMatch,
+  CboApiPasskeysNotSupportedLight,
 }
 
 export type PreAuthenticatorCustomErrorData = {

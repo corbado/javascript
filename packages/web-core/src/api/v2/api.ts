@@ -384,6 +384,12 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'variant': ConnectAppendStartRspVariantEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectAppendStartRsp
+     */
+    'isRestrictedBrowser': boolean;
 }
 
 export const ConnectAppendStartRspVariantEnum = {

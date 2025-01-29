@@ -1337,6 +1337,7 @@ components:
       required:
         - attestationOptions
         - variant
+        - isRestrictedBrowser
       properties:
         attestationOptions:
           type: string
@@ -1346,6 +1347,8 @@ components:
             - default
             - after-hybrid
             - after-error
+        isRestrictedBrowser:
+          type: boolean
 
     connectAppendFinishReq:
       type: object

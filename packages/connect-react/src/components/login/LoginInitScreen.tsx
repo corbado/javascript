@@ -2,6 +2,7 @@ import {
   ConnectConditionalUIPasskeyDeleted,
   ConnectCustomError,
   ConnectExistingPasskeysNotAvailable,
+  ConnectNoPasskeyAvailableError,
   ConnectUserNotFound,
   PasskeyChallengeCancelledError,
   PasskeyLoginSource,
@@ -198,6 +199,9 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       if (resStart.val instanceof ConnectExistingPasskeysNotAvailable) {
         return handleSituation(LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable);
       }
+      if (resStart.val instanceof ConnectNoPasskeyAvailableError) {
+        return handleSituation(LoginSituationCode.PreAuthenticatorNoPasskeyAvailable);
+      }
 
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
@@ -250,6 +254,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         statefulLoader.current.finish();
         break;
       case LoginSituationCode.DeniedByPartialRollout:
+      case LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable:
+      case LoginSituationCode.PreAuthenticatorNoPasskeyAvailable:
         automaticFallback(identifier, message);
 
         statefulLoader.current.finish();
@@ -259,7 +265,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       case LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator:
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
-      case LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable:
         automaticFallback(identifier, message);
         void getConnectService().recordEventLoginErrorUnexpected(messageCode);
 

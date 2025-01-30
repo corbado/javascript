@@ -575,6 +575,12 @@ export interface ConnectLoginStartReq {
      * @memberof ConnectLoginStartReq
      */
     'loginConnectToken'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectLoginStartReq
+     */
+    'identifierHintAvailable'?: boolean;
 }
 
 export const ConnectLoginStartReqSourceEnum = {

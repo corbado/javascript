@@ -230,6 +230,11 @@ export class ConnectService {
       return Err(CorbadoError.missingInit());
     }
 
+    let identifierHintAvailable = false;
+    if (localStorage.getItem('vicroads_login_user_email_personal')) {
+      identifierHintAvailable = true;
+    }
+
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginStart(
         {
@@ -237,6 +242,7 @@ export class ConnectService {
           source: source as ConnectLoginStartReqSourceEnum,
           loadedMs,
           loginConnectToken: connectToken,
+          identifierHintAvailable: identifierHintAvailable,
         },
         { signal: ac?.signal },
       ),

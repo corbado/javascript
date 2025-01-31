@@ -19,22 +19,22 @@ export class Corbado {
    * @deprecated Use sessionToken() instead
    */
   get shortSession() {
-    return this.#getCorbadoAppState().shortSession;
+    return this.#getCorbadoAppState().sessionToken;
   }
 
   get sessionToken() {
-    return this.#getCorbadoAppState().shortSession;
+    return this.#getCorbadoAppState().sessionToken;
   }
 
   /**
    * @deprecated Use sessionTokenChanges() instead
    */
   get shortSessionChanges() {
-    return this.#getCorbadoAppState().shortSessionChanges;
+    return this.#getCorbadoAppState().sessionTokenChanges;
   }
 
   get sessionTokenChanges() {
-    return this.#getCorbadoAppState().shortSessionChanges;
+    return this.#getCorbadoAppState().sessionTokenChanges;
   }
 
   get userChanges() {

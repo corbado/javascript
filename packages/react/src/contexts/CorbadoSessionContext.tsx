@@ -10,11 +10,6 @@ const missingImplementation = (): never => {
 export interface CorbadoSessionContextProps {
   corbadoApp: CorbadoApp | undefined;
 
-  /**
-   * @deprecated Use sessionToken instead
-   */
-  shortSession: string | undefined;
-
   sessionToken: string | undefined;
   loading: boolean;
   isAuthenticated: boolean;
@@ -29,7 +24,6 @@ export interface CorbadoSessionContextProps {
 
 export const initialContext: CorbadoSessionContextProps = {
   corbadoApp: undefined,
-  shortSession: undefined,
   sessionToken: undefined,
   loading: true,
   isAuthenticated: false,

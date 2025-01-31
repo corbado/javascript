@@ -232,9 +232,9 @@ export class SessionService {
   }
 
   /** Method to set Session
-   * It sets the short term session token, long term session token, and username for the Corbado Application.
-   * @param sessionToken The short term session token to be set.
-   * @param refreshToken The long term session token to be set.
+   * It sets the session-token, refresh-token, and username for the Corbado Application.
+   * @param sessionToken The session-token to be set.
+   * @param refreshToken The refresh-token to be set.
    */
   setSession(sessionToken: string, refreshToken: string | undefined) {
     const sessionTokenModel = new SessionToken(sessionToken);
@@ -307,7 +307,7 @@ export class SessionService {
 
   /**
    * Method to delete Session.
-   * It deletes the short term session token, long term session token, and username for the Corbado Application.
+   * It deletes the session-token, refresh-token and username for the Corbado Application.
    */
   clear() {
     this.#deleteSessionToken();
@@ -436,12 +436,12 @@ export class SessionService {
         return;
       }
 
-      if (!response.data.shortSession) {
+      if (!response.data.sessionToken) {
         log.warn('refresh error, missing session-token');
         return;
       }
 
-      this.setSession(response.data.shortSession, undefined);
+      this.setSession(response.data.sessionToken, undefined);
     } catch (e) {
       // if it's a network error, we should do a retry
       // for all other errors, we should log out the user

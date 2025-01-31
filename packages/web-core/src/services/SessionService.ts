@@ -54,8 +54,8 @@ export class SessionService {
   readonly #frontendApiUrlSuffix: string;
   #sessionConfig: SessionConfigRsp | undefined;
 
-  #shortSession: ShortSession | undefined;
-  #longSession: string | undefined;
+  #sessionToken: ShortSession | undefined;
+  #refreshToken: string | undefined;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
   #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
@@ -66,7 +66,7 @@ export class SessionService {
     this.#projectId = projectId;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
-    this.#longSession = undefined;
+    this.#refreshToken = undefined;
     this.#isPreviewMode = isPreviewMode;
   }
 
@@ -84,18 +84,18 @@ export class SessionService {
     }
 
     this.#sessionConfig = sessionConfig.val;
-    this.#longSession = SessionService.#getLongSessionToken();
-    this.#shortSession = SessionService.#getShortTermSessionToken();
+    this.#refreshToken = SessionService.#getRefreshToken();
+    this.#sessionToken = SessionService.#getSessionToken();
 
     // if the session is valid, we emit it
-    if (this.#shortSession && this.#shortSession.isValidForXMoreSeconds(0)) {
-      log.debug('emit shortsession', this.#shortSession);
-      this.#onShortSessionChange(this.#shortSession);
+    if (this.#sessionToken && this.#sessionToken.isValidForXMoreSeconds(0)) {
+      log.debug('emit shortsession', this.#sessionToken);
+      this.#onSessionTokenChange(this.#sessionToken);
     } else {
       await this.#handleRefreshRequest();
     }
 
-    this.#setApisV2(this.#longSession);
+    this.#setApisV2(this.#refreshToken);
 
     // init scheduled session refresh
     this.#refreshIntervalId = setInterval(() => {
@@ -114,7 +114,7 @@ export class SessionService {
    * @returns The short term session token or null if it's not set.
    */
   public get shortSession() {
-    return this.#shortSession;
+    return this.#sessionToken;
   }
 
   /**
@@ -122,11 +122,11 @@ export class SessionService {
    * @returns The username or null if it's not set.
    */
   public getUser(): SessionUser | undefined {
-    if (!this.#shortSession) {
+    if (!this.#sessionToken) {
       return;
     }
 
-    const sessionParts = this.#shortSession.value.split('.');
+    const sessionParts = this.#sessionToken.value.split('.');
 
     return JSON.parse(base64decode(sessionParts[1]));
   }
@@ -212,18 +212,19 @@ export class SessionService {
     });
 
     this.clear();
-    this.#onShortSessionChange(undefined);
+    this.#onSessionTokenChange(undefined);
   }
 
-  #onShortSessionChange(shortSession: ShortSession | undefined) {
+  #onSessionTokenChange(sessionToken: ShortSession | undefined) {
     const user = this.getUser();
 
-    if (user && shortSession) {
-      this.#shortSessionChanges.next(shortSession.value);
+    if (user && sessionToken) {
+      this.#shortSessionChanges.next(sessionToken.value);
       this.#updateAuthState(AuthState.LoggedIn);
       this.#updateUser(user);
     } else {
-      console.log('user is logged out', user, shortSession);
+      log.debug('user is logged out', user, sessionToken);
+
       this.#shortSessionChanges.next(undefined);
       this.#updateAuthState(AuthState.LoggedOut);
       this.#updateUser(undefined);
@@ -232,17 +233,17 @@ export class SessionService {
 
   /** Method to set Session
    * It sets the short term session token, long term session token, and username for the Corbado Application.
-   * @param shortSessionValue The short term session token to be set.
-   * @param longSession The long term session token to be set.
+   * @param sessionToken The short term session token to be set.
+   * @param refreshToken The long term session token to be set.
    */
-  setSession(shortSessionValue: string, longSession: string | undefined) {
-    const shortSession = new ShortSession(shortSessionValue);
+  setSession(sessionToken: string, refreshToken: string | undefined) {
+    const sessionTokenModel = new ShortSession(sessionToken);
 
-    this.#setShortTermSessionToken(shortSession);
-    this.#setApisV2(longSession ?? '');
+    this.#setSessionToken(sessionTokenModel);
+    this.#setApisV2(refreshToken ?? '');
 
-    this.#onShortSessionChange(shortSession);
-    this.#setLongSessionToken(longSession);
+    this.#onSessionTokenChange(sessionTokenModel);
+    this.#setRefreshToken(refreshToken);
   }
 
   #setApisV2(longSession: string): void {
@@ -309,8 +310,8 @@ export class SessionService {
    * It deletes the short term session token, long term session token, and username for the Corbado Application.
    */
   clear() {
-    this.#deleteShortTermSessionToken();
-    this.#deleteLongSessionToken();
+    this.#deleteSessionToken();
+    this.#deleteRefreshToken();
 
     if (this.#refreshIntervalId) {
       clearInterval(this.#refreshIntervalId);
@@ -318,9 +319,9 @@ export class SessionService {
   }
 
   /**
-   * Gets the short term session token.
+   * Gets the session-token.
    */
-  static #getShortTermSessionToken(): ShortSession | undefined {
+  static #getSessionToken(): ShortSession | undefined {
     const sessionToken = this.#getCookieValue(sessionTokenKey);
     if (sessionToken) {
       return new ShortSession(sessionToken);
@@ -340,38 +341,40 @@ export class SessionService {
   }
 
   /**
-   * Deletes the long term session token cookie for dev environment in localStorage.
+   * Deletes the refresh-token.
+   * @todo Explain above (at property?) why this is needed. (Safari, Third-party cookies etc.)
    */
-  #deleteLongSessionToken(): void {
+  #deleteRefreshToken(): void {
     localStorage.removeItem(refreshTokenKey);
-    this.#longSession = '';
+    this.#refreshToken = '';
   }
 
   /**
-   * Gets the long term session token.
+   * Gets the refresh-token.
+   * @todo Explain above (at property?) why this is needed. (Safari, Third-party cookies etc.)
    */
-  static #getLongSessionToken() {
+  static #getRefreshToken() {
     return (localStorage.getItem(refreshTokenKey) as string) ?? '';
   }
 
   /**
-   * Sets a short term session token.
+   * Sets the session-token.
    * @param value
    */
-  #setShortTermSessionToken(value: ShortSession): void {
-    this.#shortSession = value;
+  #setSessionToken(value: ShortSession): void {
+    this.#sessionToken = value;
 
-    const cookieConfig = this.#getShortSessionCookieConfig();
+    const cookieConfig = this.#getSessionTokenCookieConfig();
     document.cookie = this.#getSessionTokenCookieString(cookieConfig, value);
   }
 
   /**
-   * Deletes the short term session token.
+   * Deletes the session-token.
    */
-  #deleteShortTermSessionToken(): void {
-    this.#shortSession = undefined;
+  #deleteSessionToken(): void {
+    this.#sessionToken = undefined;
 
-    const cookieConfig = this.#getShortSessionCookieConfig();
+    const cookieConfig = this.#getSessionTokenCookieConfig();
     document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
   }
 
@@ -389,28 +392,27 @@ export class SessionService {
   }
 
   /**
-   * Sets a long term session token for dev environment in localStorage.
-   * For production, it sets a cookie.
+   * Sets the refresh-token.
    */
-  #setLongSessionToken(longSessionToken: string | undefined): void {
-    if (!longSessionToken) {
+  #setRefreshToken(refreshToken: string | undefined): void {
+    if (!refreshToken) {
       return;
     }
 
-    localStorage.setItem(refreshTokenKey, longSessionToken);
-    this.#longSession = longSessionToken;
+    localStorage.setItem(refreshTokenKey, refreshToken);
+    this.#refreshToken = refreshToken;
   }
 
   async #handleRefreshRequest() {
-    // no shortSession => user is not logged in => nothing to refresh
-    if (!this.#shortSession) {
+    // no session-token => user is not logged in => nothing to refresh
+    if (!this.#sessionToken) {
       log.debug('session refresh: no refresh, user not logged in');
 
       return;
     }
 
     // refresh, token too old
-    if (!this.#shortSession.isValidForXMoreSeconds(sessionTokenRefreshBeforeExpirationSeconds)) {
+    if (!this.#sessionToken.isValidForXMoreSeconds(sessionTokenRefreshBeforeExpirationSeconds)) {
       await this.#refresh();
     }
 
@@ -425,7 +427,7 @@ export class SessionService {
     try {
       const options: AxiosRequestConfig = {
         headers: {
-          Authorization: `Bearer ${this.#longSession}`,
+          Authorization: `Bearer ${this.#refreshToken}`,
         },
       };
       const response = await this.#usersApi.currentUserSessionRefresh(options);
@@ -497,7 +499,7 @@ export class SessionService {
     return this.#sessionConfig;
   };
 
-  #getShortSessionCookieConfig = (): ShortSessionCookieConfig => {
+  #getSessionTokenCookieConfig = (): ShortSessionCookieConfig => {
     const cfg = this.#getSessionConfig().shortSessionCookieConfig;
     if (!cfg) {
       throw CorbadoError.invalidConfig();

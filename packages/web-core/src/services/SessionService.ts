@@ -28,14 +28,13 @@ import {
 } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
 
-const shortSessionKey = 'cbo_short_session';
 const sessionTokenKey = 'cbo_session_token';
-const longSessionKey = 'cbo_long_session';
+const refreshTokenKey = 'cbo_refresh_token';
 
-// controls how long before the shortSession expires we should refresh it
-const shortSessionRefreshBeforeExpirationSeconds = 60;
-// controls how often we check if we need to refresh the session
-const shortSessionRefreshIntervalMs = 10_000;
+// controls how long before the session-token expires we should refresh it
+const sessionTokenRefreshBeforeExpirationSeconds = 60;
+// controls how often we check if we need to refresh the session-token
+const sessionTokenRefreshIntervalMs = 10_000;
 
 const packageVersion = '0.0.0';
 
@@ -50,7 +49,6 @@ export class SessionService {
   #usersApi: UsersApi = new UsersApi();
   #webAuthnService: WebAuthnService;
 
-  readonly #setShortSessionCookie: boolean;
   readonly #isPreviewMode: boolean;
   readonly #projectId: string;
   readonly #frontendApiUrlSuffix: string;
@@ -64,12 +62,11 @@ export class SessionService {
   #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
-  constructor(projectId: string, setShortSessionCookie: boolean, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
+  constructor(projectId: string, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#longSession = undefined;
-    this.#setShortSessionCookie = setShortSessionCookie;
     this.#isPreviewMode = isPreviewMode;
   }
 
@@ -103,7 +100,7 @@ export class SessionService {
     // init scheduled session refresh
     this.#refreshIntervalId = setInterval(() => {
       void this.#handleRefreshRequest();
-    }, shortSessionRefreshIntervalMs);
+    }, sessionTokenRefreshIntervalMs);
 
     document.addEventListener('visibilitychange', () => {
       this.#handleVisibilityChange();
@@ -324,21 +321,9 @@ export class SessionService {
    * Gets the short term session token.
    */
   static #getShortTermSessionToken(): ShortSession | undefined {
-    const localStorageValue = localStorage.getItem(shortSessionKey);
-    if (localStorageValue) {
-      return new ShortSession(localStorageValue);
-    }
-
-    // Get new session-token
     const sessionToken = this.#getCookieValue(sessionTokenKey);
     if (sessionToken) {
       return new ShortSession(sessionToken);
-    }
-
-    // Fallback for deprecated short-term session
-    const shortSession = this.#getCookieValue(shortSessionKey);
-    if (shortSession) {
-      return new ShortSession(shortSession);
     }
 
     return undefined;
@@ -358,7 +343,7 @@ export class SessionService {
    * Deletes the long term session token cookie for dev environment in localStorage.
    */
   #deleteLongSessionToken(): void {
-    localStorage.removeItem(longSessionKey);
+    localStorage.removeItem(refreshTokenKey);
     this.#longSession = '';
   }
 
@@ -366,7 +351,7 @@ export class SessionService {
    * Gets the long term session token.
    */
   static #getLongSessionToken() {
-    return (localStorage.getItem(longSessionKey) as string) ?? '';
+    return (localStorage.getItem(refreshTokenKey) as string) ?? '';
   }
 
   /**
@@ -374,37 +359,20 @@ export class SessionService {
    * @param value
    */
   #setShortTermSessionToken(value: ShortSession): void {
-    localStorage.setItem(shortSessionKey, value.toString());
     this.#shortSession = value;
 
-    if (this.#setShortSessionCookie) {
-      const cookieConfig = this.#getShortSessionCookieConfig();
-
-      document.cookie = this.#getShortSessionCookieString(cookieConfig, value);
-      document.cookie = this.#getSessionTokenCookieString(cookieConfig, value);
-    }
+    const cookieConfig = this.#getShortSessionCookieConfig();
+    document.cookie = this.#getSessionTokenCookieString(cookieConfig, value);
   }
 
   /**
    * Deletes the short term session token.
    */
   #deleteShortTermSessionToken(): void {
-    localStorage.removeItem(shortSessionKey);
     this.#shortSession = undefined;
 
-    if (this.#setShortSessionCookie) {
-      const cookieConfig = this.#getShortSessionCookieConfig();
-
-      document.cookie = this.#getDeleteShortSessionCookieString(cookieConfig);
-      document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
-    }
-  }
-
-  #getShortSessionCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
-    const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
-    return `${shortSessionKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
-      config.sameSite
-    }; path=${config.path}; expires=${expires}`;
+    const cookieConfig = this.#getShortSessionCookieConfig();
+    document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
   }
 
   #getSessionTokenCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
@@ -412,12 +380,6 @@ export class SessionService {
     return `${sessionTokenKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
     }; path=${config.path}; expires=${expires}`;
-  }
-
-  #getDeleteShortSessionCookieString(config: ShortSessionCookieConfig) {
-    return `${shortSessionKey}=; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
-      config.sameSite
-    }; path=${config.path}; expires=${new Date().toUTCString()}`;
   }
 
   #getDeleteSessionTokenCookieString(config: ShortSessionCookieConfig) {
@@ -435,7 +397,7 @@ export class SessionService {
       return;
     }
 
-    localStorage.setItem(longSessionKey, longSessionToken);
+    localStorage.setItem(refreshTokenKey, longSessionToken);
     this.#longSession = longSessionToken;
   }
 
@@ -448,7 +410,7 @@ export class SessionService {
     }
 
     // refresh, token too old
-    if (!this.#shortSession.isValidForXMoreSeconds(shortSessionRefreshBeforeExpirationSeconds)) {
+    if (!this.#shortSession.isValidForXMoreSeconds(sessionTokenRefreshBeforeExpirationSeconds)) {
       await this.#refresh();
     }
 

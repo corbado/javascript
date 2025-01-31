@@ -2,14 +2,14 @@ import type { AuthenticationRsp } from '../api/v1';
 import { SessionToken } from './sessionToken';
 
 export class AuthenticationResponse {
-  shortSession: SessionToken;
+  sessionToken: SessionToken;
   redirectURL: string;
-  longSession?: string;
+  refreshToken?: string;
 
-  constructor(shortSession: SessionToken, redirectURL: string, longSession?: string) {
-    this.shortSession = shortSession;
+  constructor(sessionToken: SessionToken, redirectURL: string, refreshToken?: string) {
+    this.sessionToken = sessionToken;
     this.redirectURL = redirectURL;
-    this.longSession = longSession;
+    this.refreshToken = refreshToken;
   }
 
   static fromApiAuthenticationRsp(value: AuthenticationRsp): AuthenticationResponse {

@@ -6,9 +6,9 @@ import Image from 'next/image';
 
 export default async function RightIntroSection() {
   const cookieStore = cookies();
-  const sessionCookie = cookieStore.get('cbo_short_session');
-  const shortSession = sessionCookie?.value;
-  const isSessionValid = await validateSession(shortSession);
+  const sessionTokenCookie = cookieStore.get('cbo_session_token');
+  const sessionToken = sessionTokenCookie?.value;
+  const isSessionValid = await validateSession(sessionToken);
 
   if (isSessionValid) {
     return (

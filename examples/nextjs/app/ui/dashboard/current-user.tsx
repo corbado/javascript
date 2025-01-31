@@ -4,9 +4,9 @@ import createNodeSDK from '@/app/utils/createNodeSDK';
 
 export default async function CurrentUser() {
   const cookieStore = cookies();
-  const session = cookieStore.get('cbo_short_session');
+  const sessionTokenCookie = cookieStore.get('cbo_session_token');
   const sdk = createNodeSDK();
-  const currentSessionUser = await sdk.sessions().getCurrentUser(session?.value ?? '');
+  const currentSessionUser = await sdk.sessions().getCurrentUser(sessionTokenCookie?.value ?? '');
   const userResp = await sdk.users().get(currentSessionUser?.getID() ?? '');
   const user = userResp.data;
   const activeEmail = user.emails.find(email => email.status === 'active');

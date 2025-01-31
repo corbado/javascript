@@ -3,16 +3,16 @@ import { cookies } from 'next/headers';
 
 export default function SessionDetails() {
   const cookieStore = cookies();
-  const session = cookieStore.get('cbo_short_session');
+  const sessionTokenCookie = cookieStore.get('cbo_session_token');
 
-  const decodedShortSession = jwtDecode(session?.value ?? '');
-  const serializedDecodedShortSession = JSON.stringify(decodedShortSession, null, 2);
+  const decodedSessionToken = jwtDecode(sessionTokenCookie?.value ?? '');
+  const serializedDecodedSessionToken = JSON.stringify(decodedSessionToken, null, 2);
 
   return (
     <>
       <div className='mb-3 mt-3'>
-        <p>This is your shortSession:</p>
-        <pre>{serializedDecodedShortSession}</pre>
+        <p>This is your sessionToken:</p>
+        <pre>{serializedDecodedSessionToken}</pre>
       </div>
     </>
   );

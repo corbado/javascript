@@ -46,7 +46,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
       setIsAuthenticated(!!value);
     });
 
-    const shortSessionSub = corbadoApp.sessionService.shortSessionChanges.subscribe((value: string | undefined) => {
+    const shortSessionSub = corbadoApp.sessionService.sessionTokenChanges.subscribe((value: string | undefined) => {
       setShortSession(value);
     });
 

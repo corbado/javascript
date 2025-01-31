@@ -15,7 +15,7 @@ export class CorbadoAppState {
   constructor(corbadoAppProps: CorbadoConfig) {
     const corbadoApp = new CorbadoApp(corbadoAppProps);
 
-    corbadoApp.sessionService.shortSessionChanges.subscribe(value => {
+    corbadoApp.sessionService.sessionTokenChanges.subscribe(value => {
       this.#shortSession = value;
     });
 
@@ -54,7 +54,7 @@ export class CorbadoAppState {
   }
 
   get shortSessionChanges() {
-    return this.#corbadoApp.sessionService.shortSessionChanges;
+    return this.#corbadoApp.sessionService.sessionTokenChanges;
   }
 
   get isAuthenticated() {

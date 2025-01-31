@@ -16,7 +16,7 @@ import { Err, Ok, Result } from 'ts-results';
 import { Configuration } from '../api/v1';
 import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
 import { ConfigsApi, UsersApi } from '../api/v2';
-import { ShortSession } from '../models/session';
+import { SessionToken } from '../models/sessionToken';
 import {
   AuthState,
   base64decode,
@@ -39,11 +39,11 @@ const sessionTokenRefreshIntervalMs = 10_000;
 const packageVersion = '0.0.0';
 
 /**
- * The SessionService manages user sessions for the Corbado Application, handling shortSession and longSession.
+ * The SessionService manages user sessions for the Corbado Application, handling session-token and refresh-token.
  * It offers methods to set, delete, and retrieve these tokens and the username,
  * as well as a method to fetch the full user object from the Corbado API.
  *
- * The longSession should not be exposed from this service as it is only used for session refresh.
+ * The refresh-token should not be exposed from this service as it is only used for session refresh.
  */
 export class SessionService {
   #usersApi: UsersApi = new UsersApi();
@@ -54,12 +54,12 @@ export class SessionService {
   readonly #frontendApiUrlSuffix: string;
   #sessionConfig: SessionConfigRsp | undefined;
 
-  #sessionToken: ShortSession | undefined;
+  #sessionToken: SessionToken | undefined;
   #refreshToken: string | undefined;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 
   #userChanges: BehaviorSubject<SessionUser | undefined> = new BehaviorSubject<SessionUser | undefined>(undefined);
-  #shortSessionChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  #sessionTokenChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
   constructor(projectId: string, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
@@ -71,7 +71,7 @@ export class SessionService {
   }
 
   /**
-   * Initializes the SessionService by registering a callback that is called when the shortSession changes.
+   * Initializes the SessionService by registering a callback that is called when the session-token changes.
    */
   async init(): Promise<CorbadoError | null> {
     const sessionConfig = await this.#loadSessionConfig();
@@ -89,7 +89,7 @@ export class SessionService {
 
     // if the session is valid, we emit it
     if (this.#sessionToken && this.#sessionToken.isValidForXMoreSeconds(0)) {
-      log.debug('emit shortsession', this.#sessionToken);
+      log.debug('emit session-token', this.#sessionToken);
       this.#onSessionTokenChange(this.#sessionToken);
     } else {
       await this.#handleRefreshRequest();
@@ -110,10 +110,10 @@ export class SessionService {
   }
 
   /**
-   * Getter method for retrieving the short term session token.
-   * @returns The short term session token or null if it's not set.
+   * Getter method for retrieving the session-token.
+   * @returns The session-token or null if it's not set.
    */
-  public get shortSession() {
+  public get sessionToken() {
     return this.#sessionToken;
   }
 
@@ -139,10 +139,10 @@ export class SessionService {
   }
 
   /**
-   * Exposes changes to the shortSession
+   * Exposes changes to the session-token.
    */
-  get shortSessionChanges(): BehaviorSubject<string | undefined> {
-    return this.#shortSessionChanges;
+  get sessionTokenChanges(): BehaviorSubject<string | undefined> {
+    return this.#sessionTokenChanges;
   }
 
   /**
@@ -215,17 +215,17 @@ export class SessionService {
     this.#onSessionTokenChange(undefined);
   }
 
-  #onSessionTokenChange(sessionToken: ShortSession | undefined) {
+  #onSessionTokenChange(sessionToken: SessionToken | undefined) {
     const user = this.getUser();
 
     if (user && sessionToken) {
-      this.#shortSessionChanges.next(sessionToken.value);
+      this.#sessionTokenChanges.next(sessionToken.value);
       this.#updateAuthState(AuthState.LoggedIn);
       this.#updateUser(user);
     } else {
       log.debug('user is logged out', user, sessionToken);
 
-      this.#shortSessionChanges.next(undefined);
+      this.#sessionTokenChanges.next(undefined);
       this.#updateAuthState(AuthState.LoggedOut);
       this.#updateUser(undefined);
     }
@@ -237,7 +237,7 @@ export class SessionService {
    * @param refreshToken The long term session token to be set.
    */
   setSession(sessionToken: string, refreshToken: string | undefined) {
-    const sessionTokenModel = new ShortSession(sessionToken);
+    const sessionTokenModel = new SessionToken(sessionToken);
 
     this.#setSessionToken(sessionTokenModel);
     this.#setApisV2(refreshToken ?? '');
@@ -321,10 +321,10 @@ export class SessionService {
   /**
    * Gets the session-token.
    */
-  static #getSessionToken(): ShortSession | undefined {
+  static #getSessionToken(): SessionToken | undefined {
     const sessionToken = this.#getCookieValue(sessionTokenKey);
     if (sessionToken) {
-      return new ShortSession(sessionToken);
+      return new SessionToken(sessionToken);
     }
 
     return undefined;
@@ -361,7 +361,7 @@ export class SessionService {
    * Sets the session-token.
    * @param value
    */
-  #setSessionToken(value: ShortSession): void {
+  #setSessionToken(value: SessionToken): void {
     this.#sessionToken = value;
 
     const cookieConfig = this.#getSessionTokenCookieConfig();
@@ -378,7 +378,7 @@ export class SessionService {
     document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
   }
 
-  #getSessionTokenCookieString(config: ShortSessionCookieConfig, value: ShortSession): string {
+  #getSessionTokenCookieString(config: ShortSessionCookieConfig, value: SessionToken): string {
     const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
     return `${sessionTokenKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
@@ -437,7 +437,7 @@ export class SessionService {
       }
 
       if (!response.data.shortSession) {
-        log.warn('refresh error, missing short session');
+        log.warn('refresh error, missing session-token');
         return;
       }
 

@@ -1,6 +1,8 @@
 import type { AuthenticationRsp } from '../api/v1';
 import { SessionToken } from './sessionToken';
 
+// @todo MK can we remove this file?
+
 export class AuthenticationResponse {
   sessionToken: SessionToken;
   redirectURL: string;

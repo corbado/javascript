@@ -353,8 +353,7 @@ export class SessionService {
   }
 
   /**
-   * Deletes the refresh-token.
-   * @todo Explain above (at property?) why this is needed. (Safari, Third-party cookies etc.)
+   * Deletes the refresh-token (see property for more details why this exists).
    */
   #deleteRefreshToken(): void {
     localStorage.removeItem(refreshTokenKey);
@@ -362,8 +361,7 @@ export class SessionService {
   }
 
   /**
-   * Gets the refresh-token.
-   * @todo Explain above (at property?) why this is needed. (Safari, Third-party cookies etc.)
+   * Gets the refresh-token (see property for more details why this exists).
    */
   static #getRefreshToken() {
     return (localStorage.getItem(refreshTokenKey) as string) ?? '';
@@ -404,7 +402,7 @@ export class SessionService {
   }
 
   /**
-   * Sets the refresh-token.
+   * Sets the refresh-token (see property for more details why this exists).
    */
   #setRefreshToken(refreshToken: string | undefined): void {
     if (!refreshToken) {

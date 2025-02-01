@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Err, Ok, Result } from 'ts-results';
 
 import { Configuration } from '../api/v1';
-import type { SessionConfigRsp, ShortSessionCookieConfig } from '../api/v2';
+import type { SessionConfigRsp, SessionTokenCookieConfig } from '../api/v2';
 import { ConfigsApi, UsersApi } from '../api/v2';
 import { SessionToken } from '../models/sessionToken';
 import {
@@ -378,14 +378,14 @@ export class SessionService {
     document.cookie = this.#getDeleteSessionTokenCookieString(cookieConfig);
   }
 
-  #getSessionTokenCookieString(config: ShortSessionCookieConfig, value: SessionToken): string {
+  #getSessionTokenCookieString(config: SessionTokenCookieConfig, value: SessionToken): string {
     const expires = new Date(Date.now() + config.lifetimeSeconds * 1000).toUTCString();
     return `${sessionTokenKey}=${value}; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
     }; path=${config.path}; expires=${expires}`;
   }
 
-  #getDeleteSessionTokenCookieString(config: ShortSessionCookieConfig) {
+  #getDeleteSessionTokenCookieString(config: SessionTokenCookieConfig) {
     return `${sessionTokenKey}=; domain=${config.domain}; ${config.secure ? 'secure; ' : ''}sameSite=${
       config.sameSite
     }; path=${config.path}; expires=${new Date().toUTCString()}`;
@@ -499,8 +499,8 @@ export class SessionService {
     return this.#sessionConfig;
   };
 
-  #getSessionTokenCookieConfig = (): ShortSessionCookieConfig => {
-    const cfg = this.#getSessionConfig().shortSessionCookieConfig;
+  #getSessionTokenCookieConfig = (): SessionTokenCookieConfig => {
+    const cfg = this.#getSessionConfig().sessionTokenCookieConfig;
     if (!cfg) {
       throw CorbadoError.invalidConfig();
     }

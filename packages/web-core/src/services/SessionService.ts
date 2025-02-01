@@ -51,7 +51,7 @@ export class SessionService {
 
   readonly #isPreviewMode: boolean;
   readonly #projectId: string;
-  readonly #frontendApiUrlSuffix: string;
+  readonly #frontendApi: string;
   #sessionConfig: SessionConfigRsp | undefined;
 
   #sessionToken: SessionToken | undefined;
@@ -74,9 +74,9 @@ export class SessionService {
   #sessionTokenChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
-  constructor(projectId: string, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
+  constructor(projectId: string, frontendApi: string, isPreviewMode: boolean) {
     this.#projectId = projectId;
-    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
+    this.#frontendApi = frontendApi;
     this.#webAuthnService = new WebAuthnService();
     this.#refreshToken = undefined;
     this.#isPreviewMode = isPreviewMode;
@@ -533,7 +533,7 @@ export class SessionService {
   };
 
   #getDefaultFrontendApiUrl() {
-    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+    return `https://${this.#projectId}.${this.#frontendApi}`;
   }
 
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {

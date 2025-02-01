@@ -6,10 +6,8 @@ export interface Paging {
 
 export interface CorbadoAppParams {
   projectId: string;
+  frontendApi: string;
   apiTimeout?: number;
-  // deprecated (no longer needed, Corbado backend sets this value automatically)
-  frontendApiUrl?: string;
-  frontendApiUrlSuffix?: string;
   isDevMode?: boolean;
   isPreviewMode?: boolean;
 }

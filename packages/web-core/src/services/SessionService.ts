@@ -52,8 +52,8 @@ export class SessionService {
   readonly #isPreviewMode: boolean;
   readonly #projectId: string;
   readonly #frontendApi: string;
-  #sessionConfig: SessionConfigRsp | undefined;
 
+  #sessionConfig: SessionConfigRsp | undefined;
   #sessionToken: SessionToken | undefined;
 
   /**
@@ -259,18 +259,13 @@ export class SessionService {
   }
 
   #setApisV2(longSession: string): void {
-    let frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
-    if (!frontendApiUrl || frontendApiUrl.length === 0) {
-      frontendApiUrl = this.#getDefaultFrontendApiUrl();
-    }
-
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: frontendApiUrl,
+      basePath: this.#frontendApi,
     });
     const axiosInstance = this.#createAxiosInstanceV2(longSession);
 
-    this.#usersApi = new UsersApi(config, frontendApiUrl, axiosInstance);
+    this.#usersApi = new UsersApi(config, this.#frontendApi, axiosInstance);
   }
 
   // usually sessionService needs a longSession for all it's requests
@@ -524,17 +519,13 @@ export class SessionService {
     });
 
     const axiosInstance = this.#createAxiosInstanceV2();
-    const configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
+    const configsApi = new ConfigsApi(config, this.#frontendApi, axiosInstance);
 
     return Result.wrapAsync(async () => {
       const r = await configsApi.getSessionConfig();
       return r.data;
     });
   };
-
-  #getDefaultFrontendApiUrl() {
-    return `https://${this.#projectId}.${this.#frontendApi}`;
-  }
 
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
     try {

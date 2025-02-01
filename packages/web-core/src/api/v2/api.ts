@@ -2184,8 +2184,15 @@ export interface SessionConfigRsp {
      * 
      * @type {ShortSessionCookieConfig}
      * @memberof SessionConfigRsp
+     * @deprecated
      */
     'shortSessionCookieConfig'?: ShortSessionCookieConfig;
+    /**
+     * 
+     * @type {SessionTokenCookieConfig}
+     * @memberof SessionConfigRsp
+     */
+    'sessionTokenCookieConfig'?: SessionTokenCookieConfig;
     /**
      * 
      * @type {string}
@@ -2193,6 +2200,52 @@ export interface SessionConfigRsp {
      */
     'frontendApiUrl'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface SessionTokenCookieConfig
+ */
+export interface SessionTokenCookieConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'domain': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SessionTokenCookieConfig
+     */
+    'secure': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'sameSite': SessionTokenCookieConfigSameSiteEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'path': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SessionTokenCookieConfig
+     */
+    'lifetimeSeconds': number;
+}
+
+export const SessionTokenCookieConfigSameSiteEnum = {
+    Lax: 'lax',
+    Strict: 'strict',
+    None: 'none'
+} as const;
+
+export type SessionTokenCookieConfigSameSiteEnum = typeof SessionTokenCookieConfigSameSiteEnum[keyof typeof SessionTokenCookieConfigSameSiteEnum];
+
 /**
  * 
  * @export

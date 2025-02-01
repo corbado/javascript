@@ -1137,6 +1137,8 @@ components:
           type: boolean
         shortSessionCookieConfig:
           $ref: '#/components/schemas/shortSessionCookieConfig'
+        sessionTokenCookieConfig:
+          $ref: '#/components/schemas/sessionTokenCookieConfig'
         frontendApiUrl:
           type: string
 
@@ -1596,6 +1598,28 @@ components:
           type: boolean
 
     shortSessionCookieConfig:
+      type: object
+      deprecated: true
+      required:
+        - domain
+        - secure
+        - sameSite
+        - path
+        - lifetimeSeconds
+      properties:
+        domain:
+          type: string
+        secure:
+          type: boolean
+        sameSite:
+          type: string
+          enum: [ 'lax', 'strict', 'none' ]
+        path:
+          type: string
+        lifetimeSeconds:
+          type: integer
+
+    sessionTokenCookieConfig:
       type: object
       required:
         - domain

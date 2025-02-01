@@ -55,6 +55,18 @@ export class SessionService {
   #sessionConfig: SessionConfigRsp | undefined;
 
   #sessionToken: SessionToken | undefined;
+
+  /**
+   * The refresh-token is returned in the response payload from the Frontend API if the project
+   * environment is set to 'dev' and set in this property. If the project environment is not set
+   * to 'dev' the refresh-token will be set as a cookie from the Frontend API (not part of the
+   * response payload and you can not access it from JavaScript because it is a HTTP only cookie).
+   * This is needed because Safari does not allow third-party cookies and for local development
+   * you will most likely run your project on a different origin than the Frontend API
+   * (e.g. http://localhost:3000 vs. https://pro-xxx.cloud.frontendapi.corbado.io). On production,
+   * this is "fixed" by setting a CNAME on the Frontend API to align the origins (e.g.
+   * https://www.example.com and https://auth.example.com).
+   */
   #refreshToken: string | undefined;
   #refreshIntervalId: NodeJS.Timeout | undefined;
 

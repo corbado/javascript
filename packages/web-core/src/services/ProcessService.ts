@@ -48,16 +48,15 @@ export class ProcessService {
   #authApi: AuthApi = new AuthApi();
   #webAuthnService: WebAuthnService;
 
-  // Private fields for project ID and default timeout for API calls.
-  #projectId: string;
-  #timeout: number;
+  readonly #projectId: string;
+  readonly #frontendApi: string;
+  readonly #timeout: number;
   readonly #isPreviewMode: boolean;
-  readonly #frontendApiUrlSuffix: string;
 
-  constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
+  constructor(projectId: string, frontendApi: string, timeout: number = 30 * 1000, isPreviewMode: boolean) {
     this.#projectId = projectId;
+    this.#frontendApi = frontendApi;
     this.#timeout = timeout;
-    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
     this.#isPreviewMode = isPreviewMode;
 
@@ -209,18 +208,13 @@ export class ProcessService {
   }
 
   #setApisV2(process?: AuthProcess): void {
-    let frontendApiUrl = this.#getDefaultFrontendApiUrl();
-    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
-      frontendApiUrl = process.frontendApiUrl;
-    }
-
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: frontendApiUrl,
+      basePath: this.#frontendApi,
     });
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
-    this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
+    this.#authApi = new AuthApi(config, this.#frontendApi, axiosInstance);
   }
 
   async #initAuthProcess(
@@ -616,10 +610,6 @@ export class ProcessService {
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();
-  }
-
-  #getDefaultFrontendApiUrl() {
-    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
 
   #buildCorbadoFlags = (): string => {

@@ -26,16 +26,16 @@ export class CorbadoApp {
   constructor(corbadoParams: CorbadoAppParams) {
     const {
       projectId,
+      frontendApi,
       apiTimeout = defaultTimeout,
-      frontendApiUrlSuffix = 'frontendapi.corbado.io',
       isPreviewMode = false,
     } = corbadoParams;
     this.#projectId = projectId;
-    this.#authProcessService = new ProcessService(this.#projectId, apiTimeout, isPreviewMode, frontendApiUrlSuffix);
+    this.#authProcessService = new ProcessService(this.#projectId, apiTimeout, isPreviewMode, frontendApi);
     this.#sessionService = new SessionService(
       this.#projectId,
-      isPreviewMode,
-      frontendApiUrlSuffix,
+      frontendApi,
+      isPreviewMode
     );
   }
 

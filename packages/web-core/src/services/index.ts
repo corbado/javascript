@@ -61,6 +61,8 @@ export class CorbadoApp {
 
     const validationError = this.#validateFrontendApi(this.#frontendApi);
     if (validationError !== '') {
+      // @todo This exception is not shown in browser console
+      console.log(validationError);
       return Err(new NonRecoverableError(validationError));
     }
 
@@ -79,7 +81,7 @@ export class CorbadoApp {
   }
 
   #validateFrontendApi(frontendApi: string): string {
-    if (!frontendApi || frontendApi.trim() === "") {
+    if (!frontendApi || frontendApi.trim() === '') {
       return 'String must not be empty';
     }
 
@@ -90,8 +92,8 @@ export class CorbadoApp {
       return `Failed to parse URL: ${err.message}`;
     }
 
-    if (url.protocol !== "https:") {
-      const protocol = url.protocol.replace(":", "");
+    if (url.protocol !== 'https:') {
+      const protocol = url.protocol.replace(':', '');
 
       return `Scheme needs to be 'https' in given value '${frontendApi}' (scheme: '${protocol}')`;
     }
@@ -108,15 +110,21 @@ export class CorbadoApp {
       return `Password must be empty in given value '${frontendApi}' (password: '${url.password}')`;
     }
 
-    if (url.pathname !== "") {
+    // We need to check for the trailing slash manually because URL class adds one by default if is
+    // not there (see next pathname validation).
+    if  (frontendApi[frontendApi.length - 1] === '/') {
+      return `Trailing slash is not allowed in given value '${frontendApi}'`;
+    }
+
+    if (url.pathname !== '' && url.pathname !== '/') {
       return `Path must be empty in given value '${frontendApi}' (path: '${url.pathname}')`;
     }
 
-    if (url.hash !== "") {
+    if (url.hash !== '') {
       return `Fragment must be empty in given value '${frontendApi}' (fragment: '${url.hash}')`;
     }
 
-    if (url.search !== "") {
+    if (url.search !== '') {
       return `Querystring must be empty in given value '${frontendApi}' (querystring: '${url.search}')`;
     }
 

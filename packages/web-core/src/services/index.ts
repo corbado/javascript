@@ -56,14 +56,16 @@ export class CorbadoApp {
    */
   async init(): Promise<Result<void, CorbadoError>> {
     if (!this.#validateProjectId(this.#projectId)) {
-      return Err(new NonRecoverableError('Invalid project ID'));
+      throw new Error(`Invalid project ID '${this.#projectId}'`);
+      // @todo Fix this
+      //return Err(new NonRecoverableError(`Invalid project ID '${this.#projectId}'`));
     }
 
     const validationError = this.#validateFrontendApi(this.#frontendApi);
     if (validationError !== '') {
-      // @todo This exception is not shown in browser console
-      console.log(validationError);
-      return Err(new NonRecoverableError(validationError));
+      throw new Error(validationError);
+      // @todo Fix this
+      //return Err(new NonRecoverableError(validationError));
     }
 
     await this.#sessionService.init();

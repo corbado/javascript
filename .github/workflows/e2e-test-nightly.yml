@@ -80,9 +80,9 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report-complete-react
           path: packages/tests-e2e/playwright-report/
@@ -104,9 +104,9 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report-complete-web-js
           path: packages/tests-e2e/playwright-report/
@@ -128,9 +128,9 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report-complete-web-js-script
           path: packages/tests-e2e/playwright-report/
@@ -150,9 +150,9 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report-connect-react
           path: packages/tests-e2e/playwright-report/

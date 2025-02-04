@@ -50,6 +50,8 @@ jobs:
         run: |
           cd packages/tests-e2e
           npm install
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
 
       - uses: actions/cache@v3
         id: playwright-cache

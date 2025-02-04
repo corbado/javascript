@@ -96,7 +96,6 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           cd packages/tests-e2e
-          cat test-results/results.xml
           TESTS=$(xmllint --xpath 'string(/testsuites/@tests)' test-results/results.xml)
           FAILURES=$(xmllint --xpath 'string(/testsuites/@failures)' test-results/results.xml)
           SKIPPED=$(xmllint --xpath 'string(/testsuites/@skipped)' test-results/results.xml)

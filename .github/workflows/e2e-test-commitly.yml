@@ -95,6 +95,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
+          cd packages/tests-e2e
           cat test-results/results.xml
           TESTS=$(xmllint --xpath 'string(/testsuites/@tests)' test-results/results.xml)
           FAILURES=$(xmllint --xpath 'string(/testsuites/@failures)' test-results/results.xml)

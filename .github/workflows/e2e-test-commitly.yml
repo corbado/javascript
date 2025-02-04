@@ -108,7 +108,7 @@ jobs:
           SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED"
           TIMESTAMP=$(date +%s000)
           LOG_STREAM_NAME="complete-$TIMESTAMP"
-          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "&LOG_STREAM_NAME"
+          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME"
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
 

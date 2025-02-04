@@ -44,6 +44,7 @@ export default defineConfig({
       },
     ],
     ['html'],
+    ['junit', { outputFile: 'test-results/results.xml' }],
   ],
   timeout: totalTimeout, // default: 30000ms
   expect: {

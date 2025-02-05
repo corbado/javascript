@@ -67,6 +67,12 @@ jobs:
           cd packages/tests-e2e
           npx playwright install --with-deps
 
+      - name: Create a log stream on AWS CloudWatch
+        run: |
+          TIMESTAMP=$(date +%s000)
+          echo "LOG_STREAM_NAME=javascript-$TIMESTAMP" >> $GITHUB_ENV
+          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "javascript-$TIMESTAMP"
+
       - name: Run Complete tests for react
         run: |
           cd packages/tests-e2e
@@ -107,8 +113,6 @@ jobs:
           FAILED=$((FAILURES + ERRORS))
           SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED"
           TIMESTAMP=$(date +%s000)
-          LOG_STREAM_NAME="complete-$TIMESTAMP"
-          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME"
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
 
@@ -133,3 +137,22 @@ jobs:
           name: playwright-report-connect-react
           path: packages/tests-e2e/playwright-report/
           retention-days: 30
+
+      - name: Send logs to AWS CloudWatch
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          cd packages/tests-e2e
+          TESTS=$(xmllint --xpath 'string(/testsuites/@tests)' test-results/results.xml)
+          FAILURES=$(xmllint --xpath 'string(/testsuites/@failures)' test-results/results.xml)
+          SKIPPED=$(xmllint --xpath 'string(/testsuites/@skipped)' test-results/results.xml)
+          ERRORS=$(xmllint --xpath 'string(/testsuites/@errors)' test-results/results.xml)
+          TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
+          PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
+          FAILED=$((FAILURES + ERRORS))
+          SUMMARY="[Test Result] application=connect platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          TIMESTAMP=$(date +%s000)
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
+          aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

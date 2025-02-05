@@ -1,18 +1,109 @@
-name: Nightly End-to-End testing check for Playground Apps
+name: Deploy Playground Apps to Vercel and Test on React
 env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '10 5 * * *'  #  6:10 AM CET / 7:10 AM CEST
-    - cron: '50 11 * * *' # 12:50 PM CET / 1:50 PM CEST
-    - cron: '30 18 * * *' #  7:30 PM CET / 8:30 PM CEST
+  pull_request:
+  push:
+    branches:
+      - develop
 
 jobs:
-  prepare:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ~/.npm
+            ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}-force-1
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: Install Dependencies
+        run: |
+          npm i
+          npm install lerna
+          npm install vercel@33.2.0
+          npm list
+
+      - name: Check ESLint Errors
+        run: npm run lint
+
+      - name: Check Prettier Formatting
+        run: npm run prettier:check
+
+      - name: Build SDKs
+        run: |
+          npm run build
+          npm run build:bundler:local
+
+      - name: Normalize branch name
+        run: |
+          echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Deploy react playground to Vercel
+        run: |
+          npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_PLAYGROUND }}
+
+      - name: Deploy connect next playground to Vercel
+        run: |
+          npx vercel link --yes --project connect-next-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-next.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
+
+      - name: Deploy web-js playground to Vercel
+        run: |
+          npx vercel link --yes --project web-js-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_PLAYGROUND }}
+
+      - name: Deploy web-js-script playground to Vercel
+        run: |
+          npx vercel link --yes --project web-js-script-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js-script.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_SCRIPT_PLAYGROUND }}
+
+  test:
     timeout-minutes: 60
     runs-on: ubuntu-20.04
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -91,7 +182,7 @@ jobs:
           PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-          GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
+          GITHUB_BRANCH_NAME: ${{ github.ref_name }}
         continue-on-error: true
 
       - uses: actions/upload-artifact@v4
@@ -114,93 +205,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
-          TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
-          aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
-
-      - name: Run Complete tests for web-js
-        run: |
-          cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.complete.ts
-        env:
-          PLAYWRIGHT_NUM_CORES: 4
-          PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_LINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED }}
-          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-          GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
-        continue-on-error: true
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-complete-web-js
-          path: packages/tests-e2e/playwright-report/
-          retention-days: 30
-
-      - name: Send logs to AWS CloudWatch
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          cd packages/tests-e2e
-          TESTS=$(xmllint --xpath 'string(/testsuites/@tests)' test-results/results.xml)
-          FAILURES=$(xmllint --xpath 'string(/testsuites/@failures)' test-results/results.xml)
-          SKIPPED=$(xmllint --xpath 'string(/testsuites/@skipped)' test-results/results.xml)
-          ERRORS=$(xmllint --xpath 'string(/testsuites/@errors)' test-results/results.xml)
-          TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
-          PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
-          FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=web-js run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
-          TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
-          aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
-
-      - name: Run Complete tests for web-js-script
-        run: |
-          cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js-script.playground.corbado.io"
-          PLAYWRIGHT_TEST_URL=$PLAYWRIGHT_TEST_URL npx playwright test --config=playwright.config.complete.ts
-        env:
-          PLAYWRIGHT_NUM_CORES: 4
-          PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_LINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED }}
-          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-          GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
-        continue-on-error: true
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-complete-web-js-script
-          path: packages/tests-e2e/playwright-report/
-          retention-days: 30
-
-      - name: Send logs to AWS CloudWatch
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          cd packages/tests-e2e
-          TESTS=$(xmllint --xpath 'string(/testsuites/@tests)' test-results/results.xml)
-          FAILURES=$(xmllint --xpath 'string(/testsuites/@failures)' test-results/results.xml)
-          SKIPPED=$(xmllint --xpath 'string(/testsuites/@skipped)' test-results/results.xml)
-          ERRORS=$(xmllint --xpath 'string(/testsuites/@errors)' test-results/results.xml)
-          TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
-          PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
-          FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=web-js-script run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
@@ -241,7 +246,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=connect platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=connect platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

@@ -210,11 +210,23 @@ export class ProcessService {
   #setApisV2(process?: AuthProcess): void {
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#frontendApi,
+      basePath: this.#getBasePath(process),
     });
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
     this.#authApi = new AuthApi(config, this.#frontendApi, axiosInstance);
+  }
+
+  #getBasePath(process?: AuthProcess): string {
+    if (this.#frontendApi && this.#frontendApi.length > 0) {
+      return this.#frontendApi;
+    }
+
+    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
+      return process.frontendApiUrl
+    }
+
+    return `https://${this.#projectId}.frontendapi.cloud.corbado.io`;
   }
 
   async #initAuthProcess(

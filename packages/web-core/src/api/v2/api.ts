@@ -445,6 +445,12 @@ export interface ConnectLoginFinishReq {
      * @memberof ConnectLoginFinishReq
      */
     'assertionResponse': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectLoginFinishReq
+     */
+    'loadedMs'?: number;
 }
 /**
  * 
@@ -855,17 +861,31 @@ export interface GeneralBlockCompleted {
      */
     'blockType': string;
     /**
-     * Only given when project environment is dev
+     * This is only set if the project environment is set to \'dev\'. If set the UI components will set the longSession in local storage because the cookie dropping will not work in Safari for example (\"third-party cookie\").
+     * @type {string}
+     * @memberof GeneralBlockCompleted
+     * @deprecated
+     */
+    'longSession'?: string;
+    /**
+     * This is only set if the project environment is set to \'dev\'. If set the UI components will set the longSession in local storage because the cookie dropping will not work in Safari for example (\"third-party cookie\").
      * @type {string}
      * @memberof GeneralBlockCompleted
      */
-    'longSession'?: string;
+    'refreshToken'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneralBlockCompleted
+     * @deprecated
+     */
+    'shortSession': string;
     /**
      * 
      * @type {string}
      * @memberof GeneralBlockCompleted
      */
-    'shortSession': string;
+    'sessionToken': string;
     /**
      * 
      * @type {PasskeyOperation}
@@ -1644,8 +1664,15 @@ export interface MeRefreshRsp {
      * 
      * @type {string}
      * @memberof MeRefreshRsp
+     * @deprecated
      */
     'shortSession': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeRefreshRsp
+     */
+    'sessionToken': string;
 }
 /**
  * 
@@ -2163,8 +2190,15 @@ export interface SessionConfigRsp {
      * 
      * @type {ShortSessionCookieConfig}
      * @memberof SessionConfigRsp
+     * @deprecated
      */
     'shortSessionCookieConfig'?: ShortSessionCookieConfig;
+    /**
+     * 
+     * @type {SessionTokenCookieConfig}
+     * @memberof SessionConfigRsp
+     */
+    'sessionTokenCookieConfig'?: SessionTokenCookieConfig;
     /**
      * 
      * @type {string}
@@ -2172,6 +2206,52 @@ export interface SessionConfigRsp {
      */
     'frontendApiUrl'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface SessionTokenCookieConfig
+ */
+export interface SessionTokenCookieConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'domain': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SessionTokenCookieConfig
+     */
+    'secure': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'sameSite': SessionTokenCookieConfigSameSiteEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof SessionTokenCookieConfig
+     */
+    'path': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SessionTokenCookieConfig
+     */
+    'lifetimeSeconds': number;
+}
+
+export const SessionTokenCookieConfigSameSiteEnum = {
+    Lax: 'lax',
+    Strict: 'strict',
+    None: 'none'
+} as const;
+
+export type SessionTokenCookieConfigSameSiteEnum = typeof SessionTokenCookieConfigSameSiteEnum[keyof typeof SessionTokenCookieConfigSameSiteEnum];
+
 /**
  * 
  * @export

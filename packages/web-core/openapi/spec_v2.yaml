@@ -1137,6 +1137,8 @@ components:
           type: boolean
         shortSessionCookieConfig:
           $ref: '#/components/schemas/shortSessionCookieConfig'
+        sessionTokenCookieConfig:
+          $ref: '#/components/schemas/sessionTokenCookieConfig'
         frontendApiUrl:
           type: string
 
@@ -1170,8 +1172,12 @@ components:
       type: object
       required:
         - shortSession
+        - sessionToken
       properties:
         shortSession:
+          type: string
+          deprecated: true
+        sessionToken:
           type: string
 
     mePasskeyDeleteRsp:
@@ -1266,6 +1272,9 @@ components:
           type: boolean
         assertionResponse:
           type: string
+        loadedMs:
+          type: integer
+          format: int64
 
     connectLoginFinishRsp:
       type: object
@@ -1593,6 +1602,28 @@ components:
 
     shortSessionCookieConfig:
       type: object
+      deprecated: true
+      required:
+        - domain
+        - secure
+        - sameSite
+        - path
+        - lifetimeSeconds
+      properties:
+        domain:
+          type: string
+        secure:
+          type: boolean
+        sameSite:
+          type: string
+          enum: [ 'lax', 'strict', 'none' ]
+        path:
+          type: string
+        lifetimeSeconds:
+          type: integer
+
+    sessionTokenCookieConfig:
+      type: object
       required:
         - domain
         - secure
@@ -1820,13 +1851,21 @@ components:
       required:
         - blockType
         - shortSession
+        - sessionToken
       properties:
         blockType:
           type: string
         longSession:
           type: string
-          description: Only given when project environment is dev
+          deprecated: true
+          description: This is only set if the project environment is set to 'dev'. If set the UI components will set the longSession in local storage because the cookie dropping will not work in Safari for example ("third-party cookie").
+        refreshToken:
+          type: string
+          description: This is only set if the project environment is set to 'dev'. If set the UI components will set the longSession in local storage because the cookie dropping will not work in Safari for example ("third-party cookie").
         shortSession:
+          type: string
+          deprecated: true
+        sessionToken:
           type: string
         passkeyOperation:
           $ref: '#/components/schemas/passkeyOperation'

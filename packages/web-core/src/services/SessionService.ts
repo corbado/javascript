@@ -269,7 +269,7 @@ export class SessionService {
   }
 
   #getBasePath(): string {
-    if (this.#frontendApi && this.#frontendApi.length > 0) {
+    if (this.#frontendApi.length > 0) {
       return this.#frontendApi;
     }
 

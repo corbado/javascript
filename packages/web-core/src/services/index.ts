@@ -1,9 +1,9 @@
 import type { CorbadoAppParams } from '@corbado/types';
 import type { Result } from 'ts-results';
-import { Err, Ok } from 'ts-results';
+import { Ok } from 'ts-results';
 
 import type { CorbadoError } from '../utils';
-import { defaultTimeout, NonRecoverableError } from '../utils';
+import { defaultTimeout } from '../utils';
 import { ProcessService } from './ProcessService';
 import { SessionService } from './SessionService';
 
@@ -25,21 +25,12 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: CorbadoAppParams) {
-    const {
-      projectId,
-      frontendApi,
-      apiTimeout = defaultTimeout,
-      isPreviewMode = false,
-    } = corbadoParams;
+    const { projectId, frontendApi, apiTimeout = defaultTimeout, isPreviewMode = false } = corbadoParams;
 
     this.#projectId = projectId;
     this.#frontendApi = frontendApi;
     this.#authProcessService = new ProcessService(this.#projectId, frontendApi, apiTimeout, isPreviewMode);
-    this.#sessionService = new SessionService(
-      this.#projectId,
-      frontendApi,
-      isPreviewMode
-    );
+    this.#sessionService = new SessionService(this.#projectId, frontendApi, isPreviewMode);
   }
 
   get authProcessService() {
@@ -114,7 +105,7 @@ export class CorbadoApp {
 
     // We need to check for the trailing slash manually because URL class adds one by default if is
     // not there (see next pathname validation).
-    if  (frontendApi[frontendApi.length - 1] === '/') {
+    if (frontendApi[frontendApi.length - 1] === '/') {
       return `Trailing slash is not allowed in given value '${frontendApi}'`;
     }
 

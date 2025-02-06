@@ -225,8 +225,8 @@ export class ConnectService {
     connectToken?: string,
     ac?: AbortController,
   ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
-    const existingProcess = await this.#getExistingProcess(() => this.loginInit(ac ?? new AbortController()));
-    if (!existingProcess) {
+    const existingProcess = await this.loginInit(ac ?? new AbortController());
+    if (existingProcess.err) {
       return Err(CorbadoError.missingInit());
     }
 
@@ -279,6 +279,7 @@ export class ConnectService {
     preWebAuthn: (ac: AbortController) => void,
     postWebAuthn: () => void,
     onLoginEnd: () => void,
+    loadedMs: number,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
@@ -297,7 +298,7 @@ export class ConnectService {
     }
 
     postWebAuthn();
-    const loginFinishResp = await this.#loginFinish(res.val, true);
+    const loginFinishResp = await this.#loginFinish(res.val, true, loadedMs);
     onLoginEnd();
 
     return loginFinishResp;
@@ -432,6 +433,7 @@ export class ConnectService {
   async #loginFinish(
     assertionResponse: string,
     isConditionalUI: boolean,
+    loadedMs?: number,
   ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
     const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
@@ -439,7 +441,7 @@ export class ConnectService {
     }
 
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI }, { timeout: 15 * 1000 }),
+      this.#connectApi.connectLoginFinish({ assertionResponse, isConditionalUI, loadedMs }, { timeout: 15 * 1000 }),
     );
 
     if (isConditionalUI) {

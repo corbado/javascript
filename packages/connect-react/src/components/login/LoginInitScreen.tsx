@@ -151,6 +151,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       () => {
         return;
       },
+      loadedMs,
     );
 
     if (res.err) {

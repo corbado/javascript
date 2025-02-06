@@ -258,19 +258,19 @@ export class SessionService {
     this.#setRefreshToken(refreshToken);
   }
 
-  #setApisV2(longSession: string): void {
+  #setApisV2(refreshToken: string): void {
     const config = new Configuration({
       apiKey: this.#projectId,
       basePath: this.#frontendApi,
     });
-    const axiosInstance = this.#createAxiosInstanceV2(longSession);
+    const axiosInstance = this.#createAxiosInstanceV2(refreshToken);
 
     this.#usersApi = new UsersApi(config, this.#frontendApi, axiosInstance);
   }
 
-  // usually sessionService needs a longSession for all it's requests
+  // usually sessionService needs a refresh-token for all it's requests
   // just the initial request to fetch the sessionConfig doesn't need it
-  #createAxiosInstanceV2(longSession?: string): AxiosInstance {
+  #createAxiosInstanceV2(refreshToken?: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -288,10 +288,10 @@ export class SessionService {
     headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
 
     let axiosInstance: AxiosInstance;
-    if (longSession) {
+    if (refreshToken) {
       axiosInstance = axios.create({
         withCredentials: true,
-        headers: { ...headers, Authorization: `Bearer ${longSession}` },
+        headers: { ...headers, Authorization: `Bearer ${refreshToken}` },
       });
     } else {
       axiosInstance = axios.create({

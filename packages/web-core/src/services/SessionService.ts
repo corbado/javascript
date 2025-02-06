@@ -261,11 +261,24 @@ export class SessionService {
   #setApisV2(refreshToken: string): void {
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#frontendApi,
+      basePath: this.#getBasePath(),
     });
     const axiosInstance = this.#createAxiosInstanceV2(refreshToken);
 
     this.#usersApi = new UsersApi(config, this.#frontendApi, axiosInstance);
+  }
+
+  #getBasePath(): string {
+    if (this.#frontendApi && this.#frontendApi.length > 0) {
+      return this.#frontendApi;
+    }
+
+    const frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
+    if (frontendApiUrl && frontendApiUrl.length > 0) {
+      return frontendApiUrl
+    }
+
+    return `https://${this.#projectId}.frontendapi.cloud.corbado.io`;
   }
 
   // usually sessionService needs a refresh-token for all it's requests

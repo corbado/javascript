@@ -6,8 +6,8 @@ export interface Paging {
 
 export interface CorbadoAppParams {
   projectId: string;
-  frontendApi?: string;
   apiTimeout?: number;
+  frontendApiUrlSuffix?: string;
   isDevMode?: boolean;
   isPreviewMode?: boolean;
 }

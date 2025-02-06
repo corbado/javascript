@@ -49,9 +49,9 @@ export class SessionService {
   #usersApi: UsersApi = new UsersApi();
   #webAuthnService: WebAuthnService;
 
-  readonly #isPreviewMode: boolean;
   readonly #projectId: string;
-  readonly #frontendApi: string;
+  readonly #isPreviewMode: boolean;
+  readonly #frontendApiUrlSuffix: string;
 
   #sessionConfig: SessionConfigRsp | undefined;
   #sessionToken: SessionToken | undefined;
@@ -74,12 +74,13 @@ export class SessionService {
   #sessionTokenChanges: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   #authStateChanges: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(AuthState.LoggedOut);
 
-  constructor(projectId: string, frontendApi: string, isPreviewMode: boolean) {
+  constructor(projectId: string, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
-    this.#frontendApi = frontendApi;
+    this.#isPreviewMode = isPreviewMode;
+    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
+
     this.#webAuthnService = new WebAuthnService();
     this.#refreshToken = undefined;
-    this.#isPreviewMode = isPreviewMode;
   }
 
   /**
@@ -259,26 +260,18 @@ export class SessionService {
   }
 
   #setApisV2(refreshToken: string): void {
+    let frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
+    if (!frontendApiUrl || frontendApiUrl.length === 0) {
+      frontendApiUrl = this.#getDefaultFrontendApiUrl();
+    }
+
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#getBasePath(),
+      basePath: frontendApiUrl,
     });
     const axiosInstance = this.#createAxiosInstanceV2(refreshToken);
 
-    this.#usersApi = new UsersApi(config, this.#frontendApi, axiosInstance);
-  }
-
-  #getBasePath(): string {
-    if (this.#frontendApi.length > 0) {
-      return this.#frontendApi;
-    }
-
-    const frontendApiUrl = this.#getSessionConfig().frontendApiUrl;
-    if (frontendApiUrl && frontendApiUrl.length > 0) {
-      return frontendApiUrl
-    }
-
-    return `https://${this.#projectId}.frontendapi.cloud.corbado.io`;
+    this.#usersApi = new UsersApi(config, frontendApiUrl, axiosInstance);
   }
 
   // usually sessionService needs a refresh-token for all it's requests
@@ -532,13 +525,17 @@ export class SessionService {
     });
 
     const axiosInstance = this.#createAxiosInstanceV2();
-    const configsApi = new ConfigsApi(config, this.#frontendApi, axiosInstance);
+    const configsApi = new ConfigsApi(config, this.#getDefaultFrontendApiUrl(), axiosInstance);
 
     return Result.wrapAsync(async () => {
       const r = await configsApi.getSessionConfig();
       return r.data;
     });
   };
+
+  #getDefaultFrontendApiUrl() {
+    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
+  }
 
   async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
     try {

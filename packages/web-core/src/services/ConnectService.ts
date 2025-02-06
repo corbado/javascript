@@ -225,8 +225,8 @@ export class ConnectService {
     connectToken?: string,
     ac?: AbortController,
   ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
-    const existingProcess = await this.#getExistingProcess(() => this.loginInit(ac ?? new AbortController()));
-    if (!existingProcess) {
+    const existingProcess = await this.loginInit(ac ?? new AbortController());
+    if (existingProcess.err) {
       return Err(CorbadoError.missingInit());
     }
 

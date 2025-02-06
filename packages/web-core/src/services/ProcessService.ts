@@ -49,16 +49,16 @@ export class ProcessService {
   #webAuthnService: WebAuthnService;
 
   readonly #projectId: string;
-  readonly #frontendApi: string;
   readonly #timeout: number;
   readonly #isPreviewMode: boolean;
+  readonly #frontendApiUrlSuffix: string;
 
-  constructor(projectId: string, frontendApi: string, timeout: number = 30 * 1000, isPreviewMode: boolean) {
+  constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
-    this.#frontendApi = frontendApi;
     this.#timeout = timeout;
-    this.#webAuthnService = new WebAuthnService();
     this.#isPreviewMode = isPreviewMode;
+    this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
+    this.#webAuthnService = new WebAuthnService();
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -208,25 +208,18 @@ export class ProcessService {
   }
 
   #setApisV2(process?: AuthProcess): void {
+    let frontendApiUrl = this.#getDefaultFrontendApiUrl();
+    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
+      frontendApiUrl = process.frontendApiUrl;
+    }
+
     const config = new Configuration({
       apiKey: this.#projectId,
-      basePath: this.#getBasePath(process),
+      basePath: frontendApiUrl,
     });
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
 
-    this.#authApi = new AuthApi(config, this.#frontendApi, axiosInstance);
-  }
-
-  #getBasePath(process?: AuthProcess): string {
-    if (this.#frontendApi.length > 0) {
-      return this.#frontendApi;
-    }
-
-    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
-      return process.frontendApiUrl
-    }
-
-    return `https://${this.#projectId}.frontendapi.cloud.corbado.io`;
+    this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
   }
 
   async #initAuthProcess(
@@ -622,6 +615,10 @@ export class ProcessService {
 
   dispose() {
     this.#webAuthnService.abortOngoingOperation();
+  }
+
+  #getDefaultFrontendApiUrl() {
+    return `https://${this.#projectId}.${this.#frontendApiUrlSuffix}`;
   }
 
   #buildCorbadoFlags = (): string => {

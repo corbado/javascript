@@ -1,5 +1,5 @@
 import Corbado from '@corbado/web-js';
-import { CORBADO_PROJECT_ID, CORBADO_FRONTEND_API } from './environment';
+import {CORBADO_PROJECT_ID, CORBADO_FRONTEND_API, CORBADO_FRONTEND_API_URL_SUFFIX} from './environment';
 
 let loaded = false;
 
@@ -13,7 +13,7 @@ async function loadPage() {
     loaded = true;
     await Corbado.load({
       projectId: projectId,
-      frontendApi: CORBADO_FRONTEND_API,
+      frontendApiUrlSuffix: CORBADO_FRONTEND_API_URL_SUFFIX,
       darkMode: 'auto',
     });
   }

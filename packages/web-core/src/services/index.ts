@@ -46,17 +46,15 @@ export class CorbadoApp {
    * It fetches the project configuration and initializes the services.
    */
   async init(): Promise<Result<void, CorbadoError>> {
+    // This can be improved by using the Err() type. Then we need to decide how to present the
+    // error (print it to the browser console, render it in the component, do both etc.)
     if (!this.#validateProjectId(this.#projectId)) {
       throw new Error(`Invalid project ID '${this.#projectId}'`);
-      // @todo Fix this
-      //return Err(new NonRecoverableError(`Invalid project ID '${this.#projectId}'`));
     }
 
     const validationError = this.#validateFrontendApi(this.#frontendApi);
     if (validationError !== '') {
       throw new Error(validationError);
-      // @todo Fix this
-      //return Err(new NonRecoverableError(validationError));
     }
 
     await this.#sessionService.init();

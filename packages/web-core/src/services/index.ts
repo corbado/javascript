@@ -24,7 +24,12 @@ export class CorbadoApp {
    * The constructor initializes the services and sets up the application.
    */
   constructor(corbadoParams: CorbadoAppParams) {
-    const { projectId, apiTimeout = defaultTimeout, frontendApiUrlSuffix = 'frontendapi.cloud.corbado.io', isPreviewMode = false } = corbadoParams;
+    const {
+      projectId,
+      apiTimeout = defaultTimeout,
+      frontendApiUrlSuffix = 'frontendapi.cloud.corbado.io',
+      isPreviewMode = false,
+    } = corbadoParams;
 
     this.#projectId = projectId;
     this.#authProcessService = new ProcessService(this.#projectId, apiTimeout, isPreviewMode, frontendApiUrlSuffix);

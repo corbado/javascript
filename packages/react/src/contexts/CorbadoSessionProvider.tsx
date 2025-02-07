@@ -22,7 +22,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<SessionUser | undefined>();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [shortSession, setShortSession] = useState<string | undefined>();
+  const [sessionToken, setSessionToken] = useState<string | undefined>();
 
   const init = async () => {
     setLoading(true);
@@ -46,14 +46,14 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
       setIsAuthenticated(!!value);
     });
 
-    const shortSessionSub = corbadoApp.sessionService.shortSessionChanges.subscribe((value: string | undefined) => {
-      setShortSession(value);
+    const sessionTokenSub = corbadoApp.sessionService.sessionTokenChanges.subscribe((value: string | undefined) => {
+      setSessionToken(value);
     });
 
     return () => {
       userSub.unsubscribe();
       authStateSub.unsubscribe();
-      shortSessionSub.unsubscribe();
+      sessionTokenSub.unsubscribe();
     };
   }, []);
 
@@ -86,13 +86,10 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
     [corbadoApp],
   );
 
-  const sessionToken = shortSession;
-
   return (
     <CorbadoSessionContext.Provider
       value={{
         corbadoApp,
-        shortSession,
         sessionToken,
         loading,
         user,

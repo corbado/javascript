@@ -2,7 +2,7 @@ import type { SessionUser } from '@corbado/types';
 
 import { base64decode } from '../utils';
 
-export class ShortSession {
+export class SessionToken {
   readonly #value: string;
   readonly #user: SessionUser;
 

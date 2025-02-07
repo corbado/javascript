@@ -15,7 +15,6 @@ async function loadPage() {
       projectId: projectId,
       frontendApiUrlSuffix: CORBADO_FRONTEND_API_URL_SUFFIX,
       darkMode: 'auto',
-      setShortSessionCookie: true,
     });
   }
 

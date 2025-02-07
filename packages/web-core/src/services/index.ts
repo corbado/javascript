@@ -1,9 +1,9 @@
 import type { CorbadoAppParams } from '@corbado/types';
 import type { Result } from 'ts-results';
-import { Err, Ok } from 'ts-results';
+import { Ok } from 'ts-results';
 
 import type { CorbadoError } from '../utils';
-import { defaultTimeout, NonRecoverableError } from '../utils';
+import { defaultTimeout } from '../utils';
 import { ProcessService } from './ProcessService';
 import { SessionService } from './SessionService';
 
@@ -28,17 +28,12 @@ export class CorbadoApp {
       projectId,
       apiTimeout = defaultTimeout,
       frontendApiUrlSuffix = 'frontendapi.corbado.io',
-      setShortSessionCookie = true,
       isPreviewMode = false,
     } = corbadoParams;
+
     this.#projectId = projectId;
     this.#authProcessService = new ProcessService(this.#projectId, apiTimeout, isPreviewMode, frontendApiUrlSuffix);
-    this.#sessionService = new SessionService(
-      this.#projectId,
-      setShortSessionCookie,
-      isPreviewMode,
-      frontendApiUrlSuffix,
-    );
+    this.#sessionService = new SessionService(this.#projectId, isPreviewMode, frontendApiUrlSuffix);
   }
 
   get authProcessService() {
@@ -54,8 +49,10 @@ export class CorbadoApp {
    * It fetches the project configuration and initializes the services.
    */
   async init(): Promise<Result<void, CorbadoError>> {
+    // This can be improved by using the Err() type. Then we need to decide how to present the
+    // error (print it to the browser console, render it in the component, do both etc.)
     if (!this.#validateProjectId(this.#projectId)) {
-      return Err(new NonRecoverableError('Invalid project ID'));
+      throw new Error(`Invalid project ID '${this.#projectId}'`);
     }
 
     await this.#sessionService.init();

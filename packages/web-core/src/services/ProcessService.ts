@@ -48,18 +48,17 @@ export class ProcessService {
   #authApi: AuthApi = new AuthApi();
   #webAuthnService: WebAuthnService;
 
-  // Private fields for project ID and default timeout for API calls.
-  #projectId: string;
-  #timeout: number;
+  readonly #projectId: string;
+  readonly #timeout: number;
   readonly #isPreviewMode: boolean;
   readonly #frontendApiUrlSuffix: string;
 
   constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
     this.#projectId = projectId;
     this.#timeout = timeout;
+    this.#isPreviewMode = isPreviewMode;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
-    this.#isPreviewMode = isPreviewMode;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.

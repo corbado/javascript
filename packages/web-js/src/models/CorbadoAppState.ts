@@ -7,7 +7,7 @@ import type { CorbadoConfig } from '../types/core';
 export class CorbadoAppState {
   #corbadoApp: CorbadoApp;
   #corbadoAppProps: CorbadoConfig;
-  #shortSession?: string;
+  #sessionToken?: string;
   #isAuthenticated?: boolean;
   #user?: SessionUser;
   #globalError?: NonRecoverableError;
@@ -15,8 +15,8 @@ export class CorbadoAppState {
   constructor(corbadoAppProps: CorbadoConfig) {
     const corbadoApp = new CorbadoApp(corbadoAppProps);
 
-    corbadoApp.sessionService.shortSessionChanges.subscribe(value => {
-      this.#shortSession = value;
+    corbadoApp.sessionService.sessionTokenChanges.subscribe(value => {
+      this.#sessionToken = value;
     });
 
     corbadoApp.sessionService.userChanges.subscribe(value => {
@@ -49,12 +49,12 @@ export class CorbadoAppState {
     return this.#corbadoAppProps;
   }
 
-  get shortSession() {
-    return this.#shortSession;
+  get sessionToken() {
+    return this.#sessionToken;
   }
 
-  get shortSessionChanges() {
-    return this.#corbadoApp.sessionService.shortSessionChanges;
+  get sessionTokenChanges() {
+    return this.#corbadoApp.sessionService.sessionTokenChanges;
   }
 
   get isAuthenticated() {

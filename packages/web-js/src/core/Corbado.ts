@@ -15,26 +15,12 @@ export class Corbado {
     return this.#getCorbadoAppState().user;
   }
 
-  /**
-   * @deprecated Use sessionToken() instead
-   */
-  get shortSession() {
-    return this.#getCorbadoAppState().shortSession;
-  }
-
   get sessionToken() {
-    return this.#getCorbadoAppState().shortSession;
-  }
-
-  /**
-   * @deprecated Use sessionTokenChanges() instead
-   */
-  get shortSessionChanges() {
-    return this.#getCorbadoAppState().shortSessionChanges;
+    return this.#getCorbadoAppState().sessionToken;
   }
 
   get sessionTokenChanges() {
-    return this.#getCorbadoAppState().shortSessionChanges;
+    return this.#getCorbadoAppState().sessionTokenChanges;
   }
 
   get userChanges() {

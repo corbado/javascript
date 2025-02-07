@@ -15,9 +15,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const cookie = request.cookies.get('cbo_short_session');
-  const shortSession = cookie?.value;
-  const isSessionValid = await validateSession(shortSession);
+  const cookie = request.cookies.get('cbo_session_token');
+  const sessionToken = cookie?.value;
+  const isSessionValid = await validateSession(sessionToken);
 
   if (isSessionValid && routes.authPaths.includes(url.pathname)) {
     url.pathname = '/dashboard';

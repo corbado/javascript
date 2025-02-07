@@ -1,18 +1,18 @@
 import { jwtDecode } from 'jwt-decode';
 import createNodeSDK from './createNodeSDK';
 
-export default async function validateSession(shortSession: string | undefined) {
-  if (!shortSession) {
+export default async function validateSession(sessionToken: string | undefined) {
+  if (!sessionToken) {
     return false;
   }
 
   const sdk = createNodeSDK();
-  const verifiedSession = await sdk.sessions().validateShortSessionValue(shortSession);
+  const verifiedSession = await sdk.sessions().validateShortSessionValue(sessionToken);
 
   if (!verifiedSession.isAuthenticated()) {
     return false;
   }
 
-  const decodedShortSession = jwtDecode(shortSession);
-  return !!decodedShortSession.exp && decodedShortSession.exp > Date.now() / 1000;
+  const decodedSessionToken = jwtDecode(sessionToken);
+  return !!decodedSessionToken.exp && decodedSessionToken.exp > Date.now() / 1000;
 }

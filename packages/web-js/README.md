@@ -187,7 +187,7 @@ For more detailed information and advanced configuration options, please visit o
 
 ## 🚢 Release Notes
 
-Find out what we've shipped! Check out the changelog files [here](./changelog.md)
+Find out what we've shipped! Check out the changelog files [here](https://github.com/corbado/javascript/blob/develop/packages/web-js/changelog.md)
 
 ---
 

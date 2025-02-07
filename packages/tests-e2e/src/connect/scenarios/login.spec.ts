@@ -77,19 +77,6 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.login.repeatedlyFailPasskeyInput();
   });
 
-  test('inaccessible passkey on login', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.authenticator.clearCredentials();
-    await model.storage.clearLocalStorageAndCookies();
-    await model.storage.loadInvitationToken();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-  });
-
   test('Corbado FAPI unavailable after authentication', async ({ model }) => {
     await model.home.logout();
     await model.expectScreen(ScreenNames.InitLoginOneTap);

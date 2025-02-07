@@ -27,7 +27,7 @@ export class CorbadoApp {
     const {
       projectId,
       apiTimeout = defaultTimeout,
-      frontendApiUrlSuffix = 'frontendapi.cloud.corbado.io',
+      frontendApiUrlSuffix = 'frontendapi.corbado.io',
       isPreviewMode = false,
     } = corbadoParams;
 

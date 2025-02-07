@@ -1,6 +1,6 @@
 {
   "name": "@corbado/connect-web-js",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "This package provides a set of components to integrate passkeys into an existing authentication system",
   "author": "Martin Kellner <martin.kellner@corbado.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -34,12 +34,12 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/connect-react": "^0.9.1",
+    "@corbado/connect-react": "^0.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@corbado/types": "^3.0.0-alpha.0",
+    "@corbado/types": "^3.0.0",
     "@types/react": "^18.2.0",
     "typescript": "^5.2.2"
   },

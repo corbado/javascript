@@ -1,3 +1,13 @@
+## 3.0.0
+
+### Major changes
+
+- The deprecated `setShortSessionCookie` prop to `CorbadoAuth` has been removed (option to configure if the old short-term session value should be stored as a cookie)
+- The deprecated `cbo_short_session` cookie has been removed. Migration guide:
+  - Use `cbo_session_token` cookie instead (if your frontend or backend relies on the `cbo_short_session` cookie)
+- The local-storage entries with keys `cbo_session_token` and `cbo_short_session` are not written anymore. Migration guide:
+  - Use `cbo_session_token` cookie to retrieve the session-token (if your frontend relies on local-storage entries)
+
 ## 2.19.0
 
 - Add `initialAutoFocus` prop to `CorbadoAuth` component to disable automatic focus of input fields in signup-init and login-init blocks.

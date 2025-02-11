@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type { SocialProviderType } from '../../utils/constants';
-import { repeatSocialLogin, socialLoginDeprecated } from './socialLogin';
 import { socialLogin } from '../../utils/externalauth';
 
 export class LoginInitBlockModel {
@@ -42,14 +41,6 @@ export class LoginInitBlockModel {
 
   async submitSocialGoogle(email: string, password: string, secret: string) {
     await socialLogin(this.page, email, password, secret);
-  }
-
-  async submitSocialMicrosoft(email: string, password: string) {
-    await socialLoginDeprecated(this.page, email, password);
-  }
-
-  async resubmitSocialMicrosoft() {
-    await repeatSocialLogin(this.page);
   }
 
   submitPasskeyButton() {

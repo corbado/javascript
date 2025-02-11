@@ -26,7 +26,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=0 passed=0 failed=0 link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"application\":\"complete\",\"platform\":\"react\",\"run_type\":\"commitly\",\"execution_time\":0,\"passed\":0,\"failed\":0,\"link\":\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\"}]"
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"{\\\"application\\\":\\\"complete\\\",\\\"platform\\\":\\\"react\\\",\\\"run_type\\\":\\\"commitly\\\",\\\"execution_time\\\":0,\\\"passed\\\":0,\\\"failed\\\":0,\\\"link\\\":\\\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\\\"}\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

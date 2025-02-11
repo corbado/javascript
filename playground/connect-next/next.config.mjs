@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const cspHeader = `
-    script-src 'self';
+    script-src 'self' 'unsafe-inline';
 `;
 
 const nextConfig = {

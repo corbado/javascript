@@ -35,5 +35,5 @@ jobs:
                       --argjson passed 0 \
                       --argjson failed 0 \
                       --arg link "https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}" \
-                      '[{timestamp: ($ts|tonumber), message: {application: $app, platform: $platform, run_type: $run_type, execution_time: $exec_time, passed: $passed, failed: $failed, link: $link}}]')
+                      '[{timestamp: ($ts|tonumber), message: ({application: $app, platform: $platform, run_type: $run_type, execution_time: $exec_time, passed: $passed, failed: $failed, link: $link} | tojson)}]')
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

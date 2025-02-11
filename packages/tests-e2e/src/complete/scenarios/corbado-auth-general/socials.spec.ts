@@ -6,6 +6,7 @@ import {
   ScreenNames,
   socialOperationTimeout,
   SocialProviderType,
+  socialTotalTimeout,
 } from '../../utils/constants';
 import {
   createProjectNew,
@@ -19,6 +20,7 @@ test.describe('social logins', () => {
   let projectId: string;
 
   // Microsoft social login requires longer timeout
+  test.describe.configure({ timeout: socialTotalTimeout });
   test.use({
     actionTimeout: socialOperationTimeout,
     navigationTimeout: socialOperationTimeout,
@@ -69,20 +71,22 @@ test.describe('social logins', () => {
   test('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
 
-    await model.signupInit.submitSocialMicrosoft(email, password);
-    await model.expectScreen(ScreenNames.PasskeyAppend1);
+    await model.signupInit.submitSocialGoogle(email, password, secret);
+    await model.expectScreen(ScreenNames.PasskeyAppend2);
   });
 
   test.skip('signup with social should be possible (account exists, social has been linked)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
 
-    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.signupInit.submitSocialGoogle(email, password, secret);
     await model.expectScreen(ScreenNames.PasskeyAppend1);
     await model.passkeyAppend.startPasskeyOperation(true);
     await model.expectScreen(ScreenNames.End);
@@ -90,7 +94,7 @@ test.describe('social logins', () => {
 
     await model.load(projectId, true, 'signup-init');
 
-    await model.signupInit.resubmitSocialMicrosoft();
+    await model.signupInit.resubmitSocialGoogle();
     // TODO: should successfully log in, but gets redirected to login-init instead.
     await model.expectScreen(ScreenNames.End);
   });
@@ -101,8 +105,9 @@ test.describe('social logins', () => {
   }) => {
     await model.load(projectId, true, 'signup-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
 
     await model.signupInit.fillEmail(email);
     await model.signupInit.submitPrimary();
@@ -112,7 +117,7 @@ test.describe('social logins', () => {
 
     await model.load(projectId, true, 'signup-init');
 
-    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.signupInit.submitSocialGoogle(email, password, secret);
     await model.expectScreen(ScreenNames.InitLogin);
   });
 
@@ -120,28 +125,30 @@ test.describe('social logins', () => {
     // redirects to passkey append screen
     await model.load(projectId, true, 'login-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
-    await model.loginInit.submitSocialMicrosoft(email, password);
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
+    await model.loginInit.submitSocialGoogle(email, password, secret);
 
-    await model.expectScreen(ScreenNames.PasskeyAppend1);
+    await model.expectScreen(ScreenNames.PasskeyAppend2);
   });
 
   test('login with social should be possible (account exists, social has been linked)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
 
-    await model.signupInit.submitSocialMicrosoft(email, password);
-    await model.expectScreen(ScreenNames.PasskeyAppend1);
-    await model.passkeyAppend.startPasskeyOperation(true);
+    await model.signupInit.submitSocialGoogle(email, password, secret);
+    await model.expectScreen(ScreenNames.PasskeyAppend2);
+    await model.passkeyAppend.startPasskeyOperation2(true);
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
     await model.load(projectId, true, 'login-init');
 
-    await model.signupInit.resubmitSocialMicrosoft();
+    await model.signupInit.resubmitSocialGoogle();
     await model.expectScreen(ScreenNames.End);
   });
 
@@ -151,8 +158,9 @@ test.describe('social logins', () => {
   }) => {
     await model.load(projectId, true, 'signup-init');
 
-    const email = process.env.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED ?? '';
-    const password = process.env.PLAYWRIGHT_MICROSOFT_PASSWORD ?? '';
+    const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
+    const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
+    const secret = process.env.PLAYWRIGHT_GOOGLE_TOTP_SECRET ?? '';
 
     await model.signupInit.fillEmail(email);
     await model.signupInit.submitPrimary();
@@ -162,7 +170,7 @@ test.describe('social logins', () => {
 
     await model.load(projectId, true, 'login-init');
 
-    await model.signupInit.submitSocialMicrosoft(email, password);
+    await model.signupInit.submitSocialGoogle(email, password, secret);
     // TODO: should redirect to login-init screen, but gets successfully logged in insteaad.
     await model.expectScreen(ScreenNames.InitLogin);
   });

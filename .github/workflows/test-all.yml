@@ -90,10 +90,9 @@ jobs:
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_LINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED }}
-          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
+          PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
@@ -119,7 +118,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=complete platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
@@ -138,10 +137,9 @@ jobs:
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_LINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED }}
-          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
+          PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
@@ -167,7 +165,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=web-js run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=complete platform=web-js run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
@@ -186,10 +184,9 @@ jobs:
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-          PLAYWRIGHT_MICROSOFT_EMAIL: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_LINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_LINKED }}
-          PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED: ${{ secrets.PLAYWRIGHT_MICROSOFT_EMAIL_UNLINKED }}
-          PLAYWRIGHT_MICROSOFT_PASSWORD: ${{ secrets.PLAYWRIGHT_MICROSOFT_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
+          PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
+          PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
           GITHUB_BRANCH_NAME: ${{ env.BRANCH_NAME_RAW }}
@@ -215,7 +212,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=web-js-script run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=complete platform=web-js-script run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
@@ -261,7 +258,7 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=connect platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED"
+          SUMMARY="[Test Result] application=connect platform=react run_type=nightly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
           LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

@@ -1,0 +1,32 @@
+name: Test CloudWatch Logging
+
+on:
+  push:
+    branches:
+      - grafana
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create a log stream on AWS CloudWatch
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          TIMESTAMP=$(date +%s000)
+          echo "LOG_STREAM_NAME=javascript-$TIMESTAMP" >> $GITHUB_ENV
+          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "javascript-$TIMESTAMP"
+
+      - name: Send logs to AWS CloudWatch
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=0 passed=0 failed=0 link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
+          TIMESTAMP=$(date +%s000)
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"application\":\"complete\",\"platform\":\"react\",\"run_type\":\"commitly\",\"execution_time\":0,\"passed\":0,\"failed\":0,\"link\":\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\"}]"
+          aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

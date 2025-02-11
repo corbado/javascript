@@ -27,13 +27,5 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON=$(jq -n --arg ts "$TIMESTAMP" \
-                      --arg app "complete" \
-                      --arg platform "react" \
-                      --arg run_type "commitly" \
-                      --argjson exec_time 0 \
-                      --argjson passed 0 \
-                      --argjson failed 0 \
-                      --arg link "https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}" \
-                      '[{timestamp: ($ts|tonumber), message: {application: $app, platform: $platform, run_type: $run_type, execution_time: $exec_time, passed: $passed, failed: $failed, link: $link}}]')
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"{\\\"application\\\":\\\"complete\\\",\\\"platform\\\":\\\"react\\\",\\\"run_type\\\":\\\"commitly\\\",\\\"execution_time\\\":0,\\\"passed\\\":0,\\\"failed\\\":0,\\\"link\\\":\\\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\\\"}\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"

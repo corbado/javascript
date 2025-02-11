@@ -5,7 +5,8 @@ import {
   IdentifierVerification,
   ScreenNames,
   socialOperationTimeout,
-  SocialProviderType, socialTotalTimeout,
+  SocialProviderType,
+  socialTotalTimeout,
 } from '../../utils/constants';
 import {
   createProjectNew,

@@ -5,7 +5,7 @@ import {
   IdentifierVerification,
   ScreenNames,
   socialOperationTimeout,
-  SocialProviderType,
+  SocialProviderType, socialTotalTimeout,
 } from '../../utils/constants';
 import {
   createProjectNew,
@@ -19,6 +19,7 @@ test.describe('social logins', () => {
   let projectId: string;
 
   // Microsoft social login requires longer timeout
+  test.describe.configure({ timeout: socialTotalTimeout });
   test.use({
     actionTimeout: socialOperationTimeout,
     navigationTimeout: socialOperationTimeout,

@@ -2,7 +2,7 @@
 
 const cspHeader = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
-`
+`;
 
 const nextConfig = {
   eslint: {
@@ -19,7 +19,7 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
 };
 

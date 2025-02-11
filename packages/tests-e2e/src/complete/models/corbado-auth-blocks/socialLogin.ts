@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-export const socialLogin = async (page: Page, email: string, password: string) => {
+export const socialLoginDeprecated = async (page: Page, email: string, password: string) => {
   await page.getByTitle(`Continue with Microsoft`).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sign in');
 

@@ -28,6 +28,17 @@ export class PasskeyAppendBlockModel {
     }
   }
 
+  async startPasskeyOperation2(complete: boolean) {
+    const operationTrigger = () => this.page.getByRole('button', { name: 'Create passkey' }).click();
+    if (complete) {
+      await this.virtualAuthenticator.startAndCompletePasskeyOperation(operationTrigger);
+    } else {
+      await this.virtualAuthenticator.startAndCancelPasskeyOperation(operationTrigger, () =>
+        expectScreen(this.page, ScreenNames.PasskeyError),
+      );
+    }
+  }
+
   async retryPasskeyOperation(complete: boolean) {
     const operationTrigger = () => this.page.getByRole('button', { name: 'Try again' }).click();
     if (complete) {

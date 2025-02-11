@@ -2,8 +2,8 @@ import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type { SocialProviderType } from '../../utils/constants';
+import { repeatSocialLogin, socialLogin } from '../../utils/externalauth';
 import { getRandomIntegerN } from '../../utils/random';
-import { repeatSocialLogin, socialLogin } from './socialLogin';
 
 export class SignupInitBlockModel {
   page: Page;
@@ -53,13 +53,21 @@ export class SignupInitBlockModel {
     return this.page.getByRole('button', { name: 'Continue', exact: true }).click();
   }
 
-  async submitSocialMicrosoft(email: string, password: string) {
-    await socialLogin(this.page, email, password);
+  async submitSocialGoogle(email: string, password: string, secret: string) {
+    await socialLogin(this.page, email, password, secret);
   }
 
-  async resubmitSocialMicrosoft() {
+  async resubmitSocialGoogle() {
     await repeatSocialLogin(this.page);
   }
+
+  // async submitSocialMicrosoft(email: string, password: string) {
+  //   await socialLoginDeprecated(this.page, email, password);
+  // }
+  //
+  // async resubmitSocialMicrosoft() {
+  //   await repeatSocialLogin(this.page);
+  // }
 
   expectErrorMissingUsername(): Promise<void> {
     return this.#expectError('Please enter a username.');

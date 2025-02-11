@@ -210,9 +210,8 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=complete platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"{\\\"application\\\":\\\"complete\\\",\\\"platform\\\":\\\"react\\\",\\\"run_type\\\":\\\"commitly\\\",\\\"execution_time\\\":$TIME,\\\"passed\\\":$PASSED,\\\"failed\\\":$FAILED,\\\"link\\\":\\\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\\\"}\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
 
       - name: Run Connect tests for react
@@ -256,9 +255,8 @@ jobs:
           TIME=$(xmllint --xpath 'string(/testsuites/@time)' test-results/results.xml)
           PASSED=$((TESTS - FAILURES - ERRORS - SKIPPED))
           FAILED=$((FAILURES + ERRORS))
-          SUMMARY="[Test Result] application=connect platform=react run_type=commitly execution_time=$TIME passed=$PASSED failed=$FAILED link=https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}"
           TIMESTAMP=$(date +%s000)
-          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"$SUMMARY\"}]"
+          LOG_EVENT_JSON="[{\"timestamp\":$TIMESTAMP,\"message\":\"{\\\"application\\\":\\\"connect\\\",\\\"platform\\\":\\\"react\\\",\\\"run_type\\\":\\\"commitly\\\",\\\"execution_time\\\":$TIME,\\\"passed\\\":$PASSED,\\\"failed\\\":$FAILED,\\\"link\\\":\\\"https://github.com/corbado/javascript/actions/runs/${GITHUB_RUN_ID}\\\"}\"}]"
           aws logs put-log-events --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME" --log-events "$LOG_EVENT_JSON"
 
       - name: Aggregate results

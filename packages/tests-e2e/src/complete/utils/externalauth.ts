@@ -51,15 +51,22 @@ const generateNextTOTP = async (previousTOTP: string, secret: string) => {
 };
 
 const generateTOTP = (secret: string) => {
-  console.log("Secret:", secret);
+  console.log('Secret:', secret);
   const result = generateToken(secret);
-  console.log("Result from generateToken:", result);
+  console.log('Result from generateToken:', result);
   expect(result).not.toBeNull();
 
   return result!.token;
 };
 
-export const getEmailOtpCode = async (page: Page, projectName = 'Corbado', loggedIn = false, gmail: string, password: string, secret: string) => {
+export const getEmailOtpCode = async (
+  page: Page,
+  projectName = 'Corbado',
+  loggedIn = false,
+  gmail: string,
+  password: string,
+  secret: string,
+) => {
   if (loggedIn) {
     // Wait for OTP code to arrive
     await page.waitForTimeout(7000);
@@ -78,7 +85,7 @@ export const getEmailOtpCode = async (page: Page, projectName = 'Corbado', logge
   await gmailPage.close();
 
   return emailTitle.split(' ')[0];
-}
+};
 
 export const socialLogin = async (page: Page, gmail: string, password: string, secret: string) => {
   const gmailPage = await page.context().newPage();
@@ -104,4 +111,4 @@ export const repeatSocialLogin = async (page: Page) => {
   await expect(page.getByRole('heading')).toHaveText('corbado-staging.io wants to access your Google Account');
 
   await page.getByRole('button', { name: 'Allow' }).click();
-}
+};

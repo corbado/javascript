@@ -28,7 +28,6 @@ test.describe('tests that focus on these identifiers: email (verification at sig
   });
 
   test('signup with passkey (happy path)', async ({ model }) => {
-    expect(2).toBe(3);
     await model.load(projectId, true, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();

@@ -21,21 +21,21 @@ export default defineConfig({
       : undefined
     : undefined,
   reporter: [
-    [
-      '../../node_modules/playwright-slack-report/dist/src/SlackReporter.js',
-      {
-        channels: ['corbado-tests'],
-        sendResults: 'always',
-        showInThread: true,
-        meta: [
-          {
-            key: 'Test Run Info',
-            value: `https://github.com/corbado/javascript/actions/runs/${process.env.GITHUB_RUN_ID}`,
-          },
-          { key: 'branch', value: `${process.env.GITHUB_BRANCH_NAME}` },
-        ],
-      },
-    ],
+    // [
+    //   '../../node_modules/playwright-slack-report/dist/src/SlackReporter.js',
+    //   {
+    //     channels: ['corbado-tests'],
+    //     sendResults: 'always',
+    //     showInThread: true,
+    //     meta: [
+    //       {
+    //         key: 'Test Run Info',
+    //         value: `https://github.com/corbado/javascript/actions/runs/${process.env.GITHUB_RUN_ID}`,
+    //       },
+    //       { key: 'branch', value: `${process.env.GITHUB_BRANCH_NAME}` },
+    //     ],
+    //   },
+    // ],
     ['html'],
     ['junit', { outputFile: 'test-results/results.xml' }],
   ],

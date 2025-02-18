@@ -24,32 +24,32 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 
 /**
- * 
+ *
  * @export
  * @interface AaguidDetails
  */
 export interface AaguidDetails {
     /**
-     * 
+     *
      * @type {string}
      * @memberof AaguidDetails
      */
     'name': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof AaguidDetails
      */
     'iconLight': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof AaguidDetails
      */
     'iconDark': string;
 }
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -63,43 +63,43 @@ export type AuthType = typeof AuthType[keyof typeof AuthType];
 
 
 /**
- * 
+ *
  * @export
  * @interface BlockBody
  */
 export interface BlockBody {
     /**
-     * 
+     *
      * @type {BlockType}
      * @memberof BlockBody
      */
     'block': BlockType;
     /**
-     * 
+     *
      * @type {AuthType}
      * @memberof BlockBody
      */
     'authType': AuthType;
     /**
-     * 
+     *
      * @type {BlockBodyData}
      * @memberof BlockBody
      */
     'data': BlockBodyData;
     /**
-     * 
+     *
      * @type {Array<BlockBody>}
      * @memberof BlockBody
      */
     'alternatives'?: Array<BlockBody>;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof BlockBody
      */
     'error'?: RequestError;
     /**
-     * 
+     *
      * @type {ContinueOnOtherDevice}
      * @memberof BlockBody
      */
@@ -114,7 +114,7 @@ export interface BlockBody {
 export type BlockBodyData = GeneralBlockCompleted | GeneralBlockLoginInit | GeneralBlockPasskeyAppend | GeneralBlockPasskeyAppended | GeneralBlockPasskeyVerify | GeneralBlockPostSignupEmailVerify | GeneralBlockSignupInit | GeneralBlockVerifyIdentifier;
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -138,62 +138,62 @@ export type BlockType = typeof BlockType[keyof typeof BlockType];
 
 
 /**
- * 
+ *
  * @export
  * @interface ClientCapabilities
  */
 export interface ClientCapabilities {
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientCapabilities
      */
     'conditionalCreate'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientCapabilities
      */
     'conditionalMediation'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientCapabilities
      */
     'hybridTransport'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientCapabilities
      */
     'passkeyPlatformAuthenticator'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientCapabilities
      */
     'userVerifyingPlatformAuthenticator'?: boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface ClientInformation
  */
 export interface ClientInformation {
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'bluetoothAvailable'?: boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ClientInformation
      */
     'clientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ClientInformation
      */
@@ -205,187 +205,187 @@ export interface ClientInformation {
      */
     'canUsePasskeys'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'isUserVerifyingPlatformAuthenticatorAvailable'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'isConditionalMediationAvailable'?: boolean;
     /**
-     * 
+     *
      * @type {ClientCapabilities}
      * @memberof ClientInformation
      */
     'clientCapabilities'?: ClientCapabilities;
     /**
-     * 
+     *
      * @type {JavaScriptHighEntropy}
      * @memberof ClientInformation
      */
     'javaScriptHighEntropy'?: JavaScriptHighEntropy;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'isNative'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'webdriver'?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ClientInformation
      */
     'privateMode'?: boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendFinishReq
  */
 export interface ConnectAppendFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendFinishReq
      */
     'attestationResponse': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendFinishRsp
  */
 export interface ConnectAppendFinishRsp {
     /**
-     * 
+     *
      * @type {PasskeyOperation}
      * @memberof ConnectAppendFinishRsp
      */
     'passkeyOperation': PasskeyOperation;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendInitReq
  */
 export interface ConnectAppendInitReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof ConnectAppendInitReq
      */
     'clientInformation': ClientInformation;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectAppendInitReq
      */
     'flags': { [key: string]: string; };
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendInitReq
      */
     'invitationToken'?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendInitRsp
  */
 export interface ConnectAppendInitRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendInitRsp
      */
     'processID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendInitRsp
      */
     'newClientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectAppendInitRsp
      */
     'expiresAt': number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendInitRsp
      */
     'frontendApiUrl': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectAppendInitRsp
      */
     'appendAllowed': boolean;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectAppendInitRsp
      */
     'flags': { [key: string]: string; };
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendStartReq
  */
 export interface ConnectAppendStartReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendStartReq
      */
     'appendTokenValue': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectAppendStartReq
      */
     'forcePasskeyAppend'?: boolean;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectAppendStartReq
      */
     'loadedMs': number;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectAppendStartRsp
  */
 export interface ConnectAppendStartRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendStartRsp
      */
     'attestationOptions': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectAppendStartRsp
      */
     'variant': ConnectAppendStartRspVariantEnum;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectAppendStartRsp
      */
@@ -401,25 +401,25 @@ export const ConnectAppendStartRspVariantEnum = {
 export type ConnectAppendStartRspVariantEnum = typeof ConnectAppendStartRspVariantEnum[keyof typeof ConnectAppendStartRspVariantEnum];
 
 /**
- * 
+ *
  * @export
  * @interface ConnectEventCreateReq
  */
 export interface ConnectEventCreateReq {
     /**
-     * 
+     *
      * @type {PasskeyEventType}
      * @memberof ConnectEventCreateReq
      */
     'eventType': PasskeyEventType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectEventCreateReq
      */
     'message'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectEventCreateReq
      */
@@ -428,161 +428,161 @@ export interface ConnectEventCreateReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginFinishReq
  */
 export interface ConnectLoginFinishReq {
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectLoginFinishReq
      */
     'isConditionalUI': boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginFinishReq
      */
     'assertionResponse': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectLoginFinishReq
      */
     'loadedMs'?: number;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginFinishRsp
  */
 export interface ConnectLoginFinishRsp {
     /**
-     * 
+     *
      * @type {PasskeyOperation}
      * @memberof ConnectLoginFinishRsp
      */
     'passkeyOperation': PasskeyOperation;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginFinishRsp
      */
     'session': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginFinishRsp
      */
     'signedPasskeyData': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginInitReq
  */
 export interface ConnectLoginInitReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof ConnectLoginInitReq
      */
     'clientInformation': ClientInformation;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectLoginInitReq
      */
     'flags': { [key: string]: string; };
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginInitReq
      */
     'invitationToken'?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginInitRsp
  */
 export interface ConnectLoginInitRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginInitRsp
      */
     'token': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginInitRsp
      */
     'newClientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectLoginInitRsp
      */
     'expiresAt': number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginInitRsp
      */
     'frontendApiUrl': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectLoginInitRsp
      */
     'loginAllowed': boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginInitRsp
      */
     'conditionalUIChallenge'?: string;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectLoginInitRsp
      */
     'flags': { [key: string]: string; };
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginStartReq
  */
 export interface ConnectLoginStartReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginStartReq
      */
     'identifier': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginStartReq
      */
     'source': ConnectLoginStartReqSourceEnum;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectLoginStartReq
      */
     'loadedMs': number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginStartReq
      */
     'loginConnectToken'?: string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectLoginStartReq
      */
@@ -599,202 +599,202 @@ export const ConnectLoginStartReqSourceEnum = {
 export type ConnectLoginStartReqSourceEnum = typeof ConnectLoginStartReqSourceEnum[keyof typeof ConnectLoginStartReqSourceEnum];
 
 /**
- * 
+ *
  * @export
  * @interface ConnectLoginStartRsp
  */
 export interface ConnectLoginStartRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectLoginStartRsp
      */
     'assertionOptions': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectLoginStartRsp
      */
     'isCDA': boolean;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof ConnectLoginStartRsp
      */
     'error'?: RequestError;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageDeleteReq
  */
 export interface ConnectManageDeleteReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageDeleteReq
      */
     'connectToken': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageDeleteReq
      */
     'credentialID': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageDeleteRsp
  */
 export interface ConnectManageDeleteRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageDeleteRsp
      */
     'credentialID': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageInitReq
  */
 export interface ConnectManageInitReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof ConnectManageInitReq
      */
     'clientInformation': ClientInformation;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectManageInitReq
      */
     'flags': { [key: string]: string; };
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageInitReq
      */
     'invitationToken'?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageInitRsp
  */
 export interface ConnectManageInitRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageInitRsp
      */
     'processID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageInitRsp
      */
     'newClientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ConnectManageInitRsp
      */
     'expiresAt': number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageInitRsp
      */
     'frontendApiUrl': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ConnectManageInitRsp
      */
     'manageAllowed': boolean;
     /**
-     * 
+     *
      * @type {{ [key: string]: string; }}
      * @memberof ConnectManageInitRsp
      */
     'flags': { [key: string]: string; };
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageListReq
  */
 export interface ConnectManageListReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageListReq
      */
     'connectToken': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectManageListRsp
  */
 export interface ConnectManageListRsp {
     /**
-     * 
+     *
      * @type {Array<Passkey>}
      * @memberof ConnectManageListRsp
      */
     'passkeys': Array<Passkey>;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageListRsp
      */
     'rpID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectManageListRsp
      */
     'userID': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectProcessClearReq
  */
 export interface ConnectProcessClearReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectProcessClearReq
      */
     'processId': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ConnectProcessClearRsp
  */
 export interface ConnectProcessClearRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ConnectProcessClearRsp
      */
     'processId': string;
 }
 /**
- * 
+ *
  * @export
  * @interface ContinueOnOtherDevice
  */
 export interface ContinueOnOtherDevice {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContinueOnOtherDevice
      */
@@ -809,19 +809,19 @@ export const ContinueOnOtherDeviceReasonEnum = {
 export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReasonEnum[keyof typeof ContinueOnOtherDeviceReasonEnum];
 
 /**
- * 
+ *
  * @export
  * @interface EventCreateReq
  */
 export interface EventCreateReq {
     /**
-     * 
+     *
      * @type {PasskeyEventType}
      * @memberof EventCreateReq
      */
     'eventType': PasskeyEventType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof EventCreateReq
      */
@@ -830,32 +830,32 @@ export interface EventCreateReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface FullNameWithError
  */
 export interface FullNameWithError {
     /**
-     * 
+     *
      * @type {string}
      * @memberof FullNameWithError
      */
     'fullName': string;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof FullNameWithError
      */
     'error'?: RequestError;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockCompleted
  */
 export interface GeneralBlockCompleted {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockCompleted
      */
@@ -874,136 +874,136 @@ export interface GeneralBlockCompleted {
      */
     'refreshToken'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockCompleted
      * @deprecated
      */
     'shortSession': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockCompleted
      */
     'sessionToken': string;
     /**
-     * 
+     *
      * @type {PasskeyOperation}
      * @memberof GeneralBlockCompleted
      */
     'passkeyOperation'?: PasskeyOperation;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockLoginInit
  */
 export interface GeneralBlockLoginInit {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockLoginInit
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockLoginInit
      */
     'conditionalUIChallenge'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockLoginInit
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockLoginInit
      */
     'isPhone': boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockLoginInit
      */
     'isPhoneAvailable': boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockLoginInit
      */
     'isEmailAvailable': boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockLoginInit
      */
     'isUsernameAvailable': boolean;
     /**
-     * 
+     *
      * @type {SocialData}
      * @memberof GeneralBlockLoginInit
      */
     'socialData': SocialData;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof GeneralBlockLoginInit
      */
     'fieldError'?: RequestError;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof GeneralBlockLoginInit
      */
     'error'?: RequestError;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockPasskeyAppend
  */
 export interface GeneralBlockPasskeyAppend {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
     'challenge': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof GeneralBlockPasskeyAppend
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockPasskeyAppend
      */
     'autoSubmit': boolean;
     /**
-     * 
+     *
      * @type {PasskeyIconSet}
      * @memberof GeneralBlockPasskeyAppend
      */
     'passkeyIconSet': PasskeyIconSet;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyAppend
      */
@@ -1019,44 +1019,44 @@ export const GeneralBlockPasskeyAppendVariantEnum = {
 export type GeneralBlockPasskeyAppendVariantEnum = typeof GeneralBlockPasskeyAppendVariantEnum[keyof typeof GeneralBlockPasskeyAppendVariantEnum];
 
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockPasskeyAppended
  */
 export interface GeneralBlockPasskeyAppended {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyAppended
      */
     'blockType': string;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockPasskeyVerify
  */
 export interface GeneralBlockPasskeyVerify {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyVerify
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyVerify
      */
     'challenge': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyVerify
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPasskeyVerify
      */
@@ -1070,105 +1070,105 @@ export const GeneralBlockPasskeyVerifyLoginHintEnum = {
 export type GeneralBlockPasskeyVerifyLoginHintEnum = typeof GeneralBlockPasskeyVerifyLoginHintEnum[keyof typeof GeneralBlockPasskeyVerifyLoginHintEnum];
 
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockPostSignupEmailVerify
  */
 export interface GeneralBlockPostSignupEmailVerify {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockPostSignupEmailVerify
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof GeneralBlockPostSignupEmailVerify
      */
     'error'?: RequestError;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockSignupInit
  */
 export interface GeneralBlockSignupInit {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockSignupInit
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {Array<LoginIdentifierWithError>}
      * @memberof GeneralBlockSignupInit
      */
     'identifiers': Array<LoginIdentifierWithError>;
     /**
-     * 
+     *
      * @type {FullNameWithError}
      * @memberof GeneralBlockSignupInit
      */
     'fullName'?: FullNameWithError;
     /**
-     * 
+     *
      * @type {SocialData}
      * @memberof GeneralBlockSignupInit
      */
     'socialData'?: SocialData;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof GeneralBlockSignupInit
      */
     'error'?: RequestError;
 }
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockVerifyIdentifier
  */
 export interface GeneralBlockVerifyIdentifier {
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'blockType': string;
     /**
-     * 
+     *
      * @type {VerificationMethod}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'verificationMethod': VerificationMethod;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'identifier': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'retryNotBefore'?: number;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'error'?: RequestError;
     /**
-     * 
+     *
      * @type {Array<GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner>}
      * @memberof GeneralBlockVerifyIdentifier
      */
     'alternativeVerificationMethods': Array<GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner>;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof GeneralBlockVerifyIdentifier
      */
@@ -1177,19 +1177,19 @@ export interface GeneralBlockVerifyIdentifier {
 
 
 /**
- * 
+ *
  * @export
  * @interface GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner
  */
 export interface GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner {
     /**
-     * 
+     *
      * @type {VerificationMethod}
      * @memberof GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner
      */
     'verificationMethod': VerificationMethod;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner
      */
@@ -1198,7 +1198,7 @@ export interface GeneralBlockVerifyIdentifierAlternativeVerificationMethodsInner
 
 
 /**
- * 
+ *
  * @export
  * @interface GenericRsp
  */
@@ -1210,13 +1210,13 @@ export interface GenericRsp {
      */
     'httpStatusCode': number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof GenericRsp
      */
     'message': string;
     /**
-     * 
+     *
      * @type {RequestData}
      * @memberof GenericRsp
      */
@@ -1229,31 +1229,31 @@ export interface GenericRsp {
     'runtime': number;
 }
 /**
- * 
+ *
  * @export
  * @interface Identifier
  */
 export interface Identifier {
     /**
-     * 
+     *
      * @type {string}
      * @memberof Identifier
      */
     'id': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Identifier
      */
     'value': string;
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof Identifier
      */
     'type': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Identifier
      */
@@ -1262,19 +1262,19 @@ export interface Identifier {
 
 
 /**
- * 
+ *
  * @export
  * @interface IdentifierUpdateReq
  */
 export interface IdentifierUpdateReq {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof IdentifierUpdateReq
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof IdentifierUpdateReq
      */
@@ -1283,31 +1283,31 @@ export interface IdentifierUpdateReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface IdentifierVerifyFinishReq
  */
 export interface IdentifierVerifyFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof IdentifierVerifyFinishReq
      */
     'code': string;
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof IdentifierVerifyFinishReq
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {VerificationMethod}
      * @memberof IdentifierVerifyFinishReq
      */
     'verificationType': VerificationMethod;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof IdentifierVerifyFinishReq
      */
@@ -1322,13 +1322,13 @@ export interface IdentifierVerifyFinishReq {
  */
 export interface IdentifierVerifyStartReq {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof IdentifierVerifyStartReq
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {VerificationMethod}
      * @memberof IdentifierVerifyStartReq
      */
@@ -1337,44 +1337,44 @@ export interface IdentifierVerifyStartReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface JavaScriptHighEntropy
  */
 export interface JavaScriptHighEntropy {
     /**
-     * 
+     *
      * @type {string}
      * @memberof JavaScriptHighEntropy
      */
     'platform': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof JavaScriptHighEntropy
      */
     'platformVersion': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof JavaScriptHighEntropy
      */
     'mobile': boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface LoginIdentifier
  */
 export interface LoginIdentifier {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof LoginIdentifier
      */
     'type': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof LoginIdentifier
      */
@@ -1383,13 +1383,13 @@ export interface LoginIdentifier {
 
 
 /**
- * 
+ *
  * @export
  * @interface LoginIdentifierConfig
  */
 export interface LoginIdentifierConfig {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof LoginIdentifierConfig
      */
@@ -1398,7 +1398,7 @@ export interface LoginIdentifierConfig {
 
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -1413,25 +1413,25 @@ export type LoginIdentifierType = typeof LoginIdentifierType[keyof typeof LoginI
 
 
 /**
- * 
+ *
  * @export
  * @interface LoginIdentifierWithError
  */
 export interface LoginIdentifierWithError {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof LoginIdentifierWithError
      */
     'type': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof LoginIdentifierWithError
      */
     'identifier': string;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof LoginIdentifierWithError
      */
@@ -1446,32 +1446,32 @@ export interface LoginIdentifierWithError {
  */
 export interface LoginInitReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof LoginInitReq
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof LoginInitReq
      */
     'isPhone': boolean;
 }
 /**
- * 
+ *
  * @export
  * @interface MeIdentifierCreateReq
  */
 export interface MeIdentifierCreateReq {
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof MeIdentifierCreateReq
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierCreateReq
      */
@@ -1480,38 +1480,38 @@ export interface MeIdentifierCreateReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface MeIdentifierDeleteReq
  */
 export interface MeIdentifierDeleteReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierDeleteReq
      */
     'identifierID': string;
 }
 /**
- * 
+ *
  * @export
  * @interface MeIdentifierUpdateReq
  */
 export interface MeIdentifierUpdateReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierUpdateReq
      */
     'identifierID': string;
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof MeIdentifierUpdateReq
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierUpdateReq
      */
@@ -1520,19 +1520,19 @@ export interface MeIdentifierUpdateReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface MeIdentifierVerifyFinishReq
  */
 export interface MeIdentifierVerifyFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierVerifyFinishReq
      */
     'identifierID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierVerifyFinishReq
      */
@@ -1545,102 +1545,102 @@ export interface MeIdentifierVerifyFinishReq {
  */
 export interface MeIdentifierVerifyStartReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeIdentifierVerifyStartReq
      */
     'identifierID': string;
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof MeIdentifierVerifyStartReq
      */
     'clientInformation': ClientInformation;
 }
 /**
- * 
+ *
  * @export
  * @interface MePasskeyDeleteRsp
  */
 export interface MePasskeyDeleteRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MePasskeyDeleteRsp
      */
     'id': string;
 }
 /**
- * 
+ *
  * @export
  * @interface MePasskeyRsp
  */
 export interface MePasskeyRsp {
     /**
-     * 
+     *
      * @type {Array<Passkey>}
      * @memberof MePasskeyRsp
      */
     'passkeys': Array<Passkey>;
     /**
-     * 
+     *
      * @type {Paging}
      * @memberof MePasskeyRsp
      */
     'paging': Paging;
 }
 /**
- * 
+ *
  * @export
  * @interface MePasskeysAppendFinishReq
  */
 export interface MePasskeysAppendFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MePasskeysAppendFinishReq
      */
     'attestationResponse': string;
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof MePasskeysAppendFinishReq
      */
     'clientInformation': ClientInformation;
 }
 /**
- * 
+ *
  * @export
  * @interface MePasskeysAppendStartReq
  */
 export interface MePasskeysAppendStartReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof MePasskeysAppendStartReq
      */
     'clientInformation': ClientInformation;
 }
 /**
- * 
+ *
  * @export
  * @interface MePasskeysAppendStartRsp
  */
 export interface MePasskeysAppendStartRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MePasskeysAppendStartRsp
      */
     'newClientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MePasskeysAppendStartRsp
      */
     'appendNotAllowedReason'?: MePasskeysAppendStartRspAppendNotAllowedReasonEnum;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MePasskeysAppendStartRsp
      */
@@ -1655,71 +1655,71 @@ export const MePasskeysAppendStartRspAppendNotAllowedReasonEnum = {
 export type MePasskeysAppendStartRspAppendNotAllowedReasonEnum = typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum[keyof typeof MePasskeysAppendStartRspAppendNotAllowedReasonEnum];
 
 /**
- * 
+ *
  * @export
  * @interface MeRefreshRsp
  */
 export interface MeRefreshRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeRefreshRsp
      * @deprecated
      */
     'shortSession': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeRefreshRsp
      */
     'sessionToken': string;
 }
 /**
- * 
+ *
  * @export
  * @interface MeRsp
  */
 export interface MeRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeRsp
      */
     'id': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeRsp
      */
     'fullName': string;
     /**
-     * 
+     *
      * @type {Array<Identifier>}
      * @memberof MeRsp
      */
     'identifiers': Array<Identifier>;
     /**
-     * 
+     *
      * @type {Array<SocialAccount>}
      * @memberof MeRsp
      */
     'socialAccounts': Array<SocialAccount>;
 }
 /**
- * 
+ *
  * @export
  * @interface MeUpdateReq
  */
 export interface MeUpdateReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof MeUpdateReq
      */
     'fullName': string;
 }
 /**
- * 
+ *
  * @export
  * @interface Paging
  */
@@ -1744,61 +1744,61 @@ export interface Paging {
     'totalItems': number;
 }
 /**
- * 
+ *
  * @export
  * @interface Passkey
  */
 export interface Passkey {
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
     'id': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
     'credentialID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
     'attestationType': string;
     /**
-     * 
+     *
      * @type {Array<string>}
      * @memberof Passkey
      */
     'transport': Array<PasskeyTransportEnum>;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof Passkey
      */
     'backupEligible': boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof Passkey
      */
     'backupState': boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
     'authenticatorAAGUID': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
     'sourceOS': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Passkey
      */
@@ -1822,7 +1822,7 @@ export interface Passkey {
      */
     'status': PasskeyStatusEnum;
     /**
-     * 
+     *
      * @type {AaguidDetails}
      * @memberof Passkey
      */
@@ -1853,27 +1853,27 @@ export type PasskeyStatusEnum = typeof PasskeyStatusEnum[keyof typeof PasskeySta
  */
 export interface PasskeyAppendFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyAppendFinishReq
      */
     'signedChallenge': string;
 }
 /**
- * 
+ *
  * @export
  * @interface PasskeyAppendStartReq
  */
 export interface PasskeyAppendStartReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof PasskeyAppendStartReq
      */
     'clientInformation'?: ClientInformation;
 }
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -1888,6 +1888,7 @@ export const PasskeyEventType = {
     UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
     AppendCredentialExists: 'append-credential-exists',
     AppendExplicitAbort: 'append-explicit-abort',
+    AppendLearnMore: 'learn-more',
     AppendError: 'append-error',
     AppendErrorUnexpected: 'append-error-unexpected',
     ManageErrorUnexpected: 'manage-error-unexpected'
@@ -1897,7 +1898,7 @@ export type PasskeyEventType = typeof PasskeyEventType[keyof typeof PasskeyEvent
 
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -1919,20 +1920,20 @@ export type PasskeyIconSet = typeof PasskeyIconSet[keyof typeof PasskeyIconSet];
  */
 export interface PasskeyLoginFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyLoginFinishReq
      */
     'signedChallenge': string;
 }
 /**
- * 
+ *
  * @export
  * @interface PasskeyLoginStartReq
  */
 export interface PasskeyLoginStartReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof PasskeyLoginStartReq
      */
@@ -1945,44 +1946,44 @@ export interface PasskeyLoginStartReq {
  */
 export interface PasskeyMediationFinishReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyMediationFinishReq
      */
     'signedChallenge': string;
 }
 /**
- * 
+ *
  * @export
  * @interface PasskeyOperation
  */
 export interface PasskeyOperation {
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyOperation
      */
     'operationType': PasskeyOperationOperationTypeEnum;
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyOperation
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {LoginIdentifierType}
      * @memberof PasskeyOperation
      */
     'identifierType': LoginIdentifierType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof PasskeyOperation
      */
     'ceremonyType': PasskeyOperationCeremonyTypeEnum;
     /**
-     * 
+     *
      * @type {AaguidDetails}
      * @memberof PasskeyOperation
      */
@@ -2004,25 +2005,25 @@ export const PasskeyOperationCeremonyTypeEnum = {
 export type PasskeyOperationCeremonyTypeEnum = typeof PasskeyOperationCeremonyTypeEnum[keyof typeof PasskeyOperationCeremonyTypeEnum];
 
 /**
- * 
+ *
  * @export
  * @interface ProcessCommon
  */
 export interface ProcessCommon {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ProcessCommon
      */
     'appName': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ProcessCommon
      */
     'frontendApiUrl': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ProcessCommon
      */
@@ -2035,13 +2036,13 @@ export interface ProcessCommon {
  */
 export interface ProcessInitReq {
     /**
-     * 
+     *
      * @type {ClientInformation}
      * @memberof ProcessInitReq
      */
     'clientInformation': ClientInformation;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ProcessInitReq
      */
@@ -2053,7 +2054,7 @@ export interface ProcessInitReq {
      */
     'optOutOfPasskeyAppendAfterHybrid'?: boolean;
     /**
-     * 
+     *
      * @type {BlockType}
      * @memberof ProcessInitReq
      */
@@ -2068,69 +2069,69 @@ export interface ProcessInitReq {
  */
 export interface ProcessInitRsp {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ProcessInitRsp
      */
     'newClientEnvHandle'?: string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ProcessInitRsp
      */
     'token': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ProcessInitRsp
      */
     'expiresAt': number;
     /**
-     * 
+     *
      * @type {ProcessResponse}
      * @memberof ProcessInitRsp
      */
     'processResponse': ProcessResponse;
 }
 /**
- * 
+ *
  * @export
  * @interface ProcessResponse
  */
 export interface ProcessResponse {
     /**
-     * 
+     *
      * @type {BlockBody}
      * @memberof ProcessResponse
      */
     'blockBody': BlockBody;
     /**
-     * 
+     *
      * @type {ProcessCommon}
      * @memberof ProcessResponse
      */
     'common': ProcessCommon;
     /**
-     * 
+     *
      * @type {ProcessStaticInfo}
      * @memberof ProcessResponse
      */
     'newProcess'?: ProcessStaticInfo;
 }
 /**
- * 
+ *
  * @export
  * @interface ProcessStaticInfo
  */
 export interface ProcessStaticInfo {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ProcessStaticInfo
      */
     'token': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ProcessStaticInfo
      */
@@ -2156,88 +2157,88 @@ export interface RequestData {
     'link': string;
 }
 /**
- * 
+ *
  * @export
  * @interface RequestError
  */
 export interface RequestError {
     /**
-     * 
+     *
      * @type {string}
      * @memberof RequestError
      */
     'code': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof RequestError
      */
     'message': string;
 }
 /**
- * 
+ *
  * @export
  * @interface SessionConfigRsp
  */
 export interface SessionConfigRsp {
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof SessionConfigRsp
      */
     'useSessionManagement': boolean;
     /**
-     * 
+     *
      * @type {ShortSessionCookieConfig}
      * @memberof SessionConfigRsp
      * @deprecated
      */
     'shortSessionCookieConfig'?: ShortSessionCookieConfig;
     /**
-     * 
+     *
      * @type {SessionTokenCookieConfig}
      * @memberof SessionConfigRsp
      */
     'sessionTokenCookieConfig'?: SessionTokenCookieConfig;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SessionConfigRsp
      */
     'frontendApiUrl'?: string;
 }
 /**
- * 
+ *
  * @export
  * @interface SessionTokenCookieConfig
  */
 export interface SessionTokenCookieConfig {
     /**
-     * 
+     *
      * @type {string}
      * @memberof SessionTokenCookieConfig
      */
     'domain': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof SessionTokenCookieConfig
      */
     'secure': boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SessionTokenCookieConfig
      */
     'sameSite': SessionTokenCookieConfigSameSiteEnum;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SessionTokenCookieConfig
      */
     'path': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof SessionTokenCookieConfig
      */
@@ -2253,37 +2254,37 @@ export const SessionTokenCookieConfigSameSiteEnum = {
 export type SessionTokenCookieConfigSameSiteEnum = typeof SessionTokenCookieConfigSameSiteEnum[keyof typeof SessionTokenCookieConfigSameSiteEnum];
 
 /**
- * 
+ *
  * @export
  * @interface ShortSessionCookieConfig
  */
 export interface ShortSessionCookieConfig {
     /**
-     * 
+     *
      * @type {string}
      * @memberof ShortSessionCookieConfig
      */
     'domain': string;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ShortSessionCookieConfig
      */
     'secure': boolean;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ShortSessionCookieConfig
      */
     'sameSite': ShortSessionCookieConfigSameSiteEnum;
     /**
-     * 
+     *
      * @type {string}
      * @memberof ShortSessionCookieConfig
      */
     'path': string;
     /**
-     * 
+     *
      * @type {number}
      * @memberof ShortSessionCookieConfig
      */
@@ -2305,44 +2306,44 @@ export type ShortSessionCookieConfigSameSiteEnum = typeof ShortSessionCookieConf
  */
 export interface SignupInitReq {
     /**
-     * 
+     *
      * @type {string}
      * @memberof SignupInitReq
      */
     'fullName'?: string;
     /**
-     * 
+     *
      * @type {Array<LoginIdentifier>}
      * @memberof SignupInitReq
      */
     'identifiers': Array<LoginIdentifier>;
 }
 /**
- * 
+ *
  * @export
  * @interface SocialAccount
  */
 export interface SocialAccount {
     /**
-     * 
+     *
      * @type {SocialProviderType}
      * @memberof SocialAccount
      */
     'providerType': SocialProviderType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialAccount
      */
     'identifierValue': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialAccount
      */
     'avatarUrl': string;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialAccount
      */
@@ -2351,31 +2352,31 @@ export interface SocialAccount {
 
 
 /**
- * 
+ *
  * @export
  * @interface SocialData
  */
 export interface SocialData {
     /**
-     * 
+     *
      * @type {Array<SocialProviderType>}
      * @memberof SocialData
      */
     'providers': Array<SocialProviderType>;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialData
      */
     'status': SocialDataStatusEnum;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialData
      */
     'oauthUrl'?: string;
     /**
-     * 
+     *
      * @type {RequestError}
      * @memberof SocialData
      */
@@ -2391,7 +2392,7 @@ export const SocialDataStatusEnum = {
 export type SocialDataStatusEnum = typeof SocialDataStatusEnum[keyof typeof SocialDataStatusEnum];
 
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -2406,25 +2407,25 @@ export type SocialProviderType = typeof SocialProviderType[keyof typeof SocialPr
 
 
 /**
- * 
+ *
  * @export
  * @interface SocialVerifyStartReq
  */
 export interface SocialVerifyStartReq {
     /**
-     * 
+     *
      * @type {SocialProviderType}
      * @memberof SocialVerifyStartReq
      */
     'providerType': SocialProviderType;
     /**
-     * 
+     *
      * @type {string}
      * @memberof SocialVerifyStartReq
      */
     'redirectUrl': string;
     /**
-     * 
+     *
      * @type {AuthType}
      * @memberof SocialVerifyStartReq
      */
@@ -2433,26 +2434,26 @@ export interface SocialVerifyStartReq {
 
 
 /**
- * 
+ *
  * @export
  * @interface UserDetailsConfigRsp
  */
 export interface UserDetailsConfigRsp {
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof UserDetailsConfigRsp
      */
     'fullNameRequired': boolean;
     /**
-     * 
+     *
      * @type {Array<LoginIdentifierConfig>}
      * @memberof UserDetailsConfigRsp
      */
     'identifiers': Array<LoginIdentifierConfig>;
 }
 /**
- * 
+ *
  * @export
  * @enum {string}
  */
@@ -2499,7 +2500,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2511,7 +2512,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * Creates a new user generated complete event.
-         * @param {EventCreateReq} eventCreateReq 
+         * @param {EventCreateReq} eventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2538,7 +2539,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2553,7 +2554,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {IdentifierUpdateReq} identifierUpdateReq 
+         * @param {IdentifierUpdateReq} identifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2580,7 +2581,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2595,7 +2596,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
+         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2622,7 +2623,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2637,7 +2638,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
+         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2664,7 +2665,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2703,7 +2704,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2715,7 +2716,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {LoginInitReq} loginInitReq 
+         * @param {LoginInitReq} loginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2742,7 +2743,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2757,7 +2758,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2784,7 +2785,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2799,7 +2800,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2826,7 +2827,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2841,7 +2842,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2868,7 +2869,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2883,7 +2884,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2910,7 +2911,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2925,7 +2926,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
+         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2952,7 +2953,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2991,7 +2992,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3003,7 +3004,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {BlockType} [preferredBlock] 
+         * @param {BlockType} [preferredBlock]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3032,7 +3033,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             }
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3044,7 +3045,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {ProcessInitReq} processInitReq 
+         * @param {ProcessInitReq} processInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3071,7 +3072,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -3110,7 +3111,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3122,7 +3123,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {SignupInitReq} signupInitReq 
+         * @param {SignupInitReq} signupInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3149,7 +3150,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -3188,7 +3189,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3200,7 +3201,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {object} body 
+         * @param {object} body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3227,7 +3228,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -3242,7 +3243,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * tbd
-         * @param {SocialVerifyStartReq} socialVerifyStartReq 
+         * @param {SocialVerifyStartReq} socialVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3269,7 +3270,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -3303,7 +3304,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates a new user generated complete event.
-         * @param {EventCreateReq} eventCreateReq 
+         * @param {EventCreateReq} eventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3313,7 +3314,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {IdentifierUpdateReq} identifierUpdateReq 
+         * @param {IdentifierUpdateReq} identifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3323,7 +3324,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
+         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3333,7 +3334,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
+         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3352,7 +3353,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {LoginInitReq} loginInitReq 
+         * @param {LoginInitReq} loginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3362,7 +3363,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3372,7 +3373,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3382,7 +3383,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3392,7 +3393,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3402,7 +3403,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
+         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3421,7 +3422,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {BlockType} [preferredBlock] 
+         * @param {BlockType} [preferredBlock]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3431,7 +3432,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {ProcessInitReq} processInitReq 
+         * @param {ProcessInitReq} processInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3450,7 +3451,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {SignupInitReq} signupInitReq 
+         * @param {SignupInitReq} signupInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3469,7 +3470,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {object} body 
+         * @param {object} body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3479,7 +3480,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * tbd
-         * @param {SocialVerifyStartReq} socialVerifyStartReq 
+         * @param {SocialVerifyStartReq} socialVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3507,7 +3508,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * Creates a new user generated complete event.
-         * @param {EventCreateReq} eventCreateReq 
+         * @param {EventCreateReq} eventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3516,7 +3517,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {IdentifierUpdateReq} identifierUpdateReq 
+         * @param {IdentifierUpdateReq} identifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3525,7 +3526,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
+         * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3534,7 +3535,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
+         * @param {IdentifierVerifyStartReq} identifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3551,7 +3552,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {LoginInitReq} loginInitReq 
+         * @param {LoginInitReq} loginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3560,7 +3561,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+         * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3569,7 +3570,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+         * @param {PasskeyAppendStartReq} passkeyAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3578,7 +3579,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+         * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3587,7 +3588,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+         * @param {PasskeyLoginStartReq} passkeyLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3596,7 +3597,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
+         * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3613,7 +3614,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {BlockType} [preferredBlock] 
+         * @param {BlockType} [preferredBlock]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3622,7 +3623,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {ProcessInitReq} processInitReq 
+         * @param {ProcessInitReq} processInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3639,7 +3640,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {SignupInitReq} signupInitReq 
+         * @param {SignupInitReq} signupInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3656,7 +3657,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {object} body 
+         * @param {object} body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3665,7 +3666,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * tbd
-         * @param {SocialVerifyStartReq} socialVerifyStartReq 
+         * @param {SocialVerifyStartReq} socialVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3694,7 +3695,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * Creates a new user generated complete event.
-     * @param {EventCreateReq} eventCreateReq 
+     * @param {EventCreateReq} eventCreateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3705,7 +3706,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {IdentifierUpdateReq} identifierUpdateReq 
+     * @param {IdentifierUpdateReq} identifierUpdateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3716,7 +3717,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
+     * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3727,7 +3728,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
+     * @param {IdentifierVerifyStartReq} identifierVerifyStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3748,7 +3749,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {LoginInitReq} loginInitReq 
+     * @param {LoginInitReq} loginInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3759,7 +3760,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
+     * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3770,7 +3771,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
+     * @param {PasskeyAppendStartReq} passkeyAppendStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3781,7 +3782,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
+     * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3792,7 +3793,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
+     * @param {PasskeyLoginStartReq} passkeyLoginStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3803,7 +3804,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
+     * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3824,7 +3825,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {BlockType} [preferredBlock] 
+     * @param {BlockType} [preferredBlock]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3835,7 +3836,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {ProcessInitReq} processInitReq 
+     * @param {ProcessInitReq} processInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3856,7 +3857,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {SignupInitReq} signupInitReq 
+     * @param {SignupInitReq} signupInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3877,7 +3878,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {object} body 
+     * @param {object} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3888,7 +3889,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * tbd
-     * @param {SocialVerifyStartReq} socialVerifyStartReq 
+     * @param {SocialVerifyStartReq} socialVerifyStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3932,7 +3933,7 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3968,7 +3969,7 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4073,7 +4074,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
     return {
         /**
          * Finishes an initialized connect passkey append process.
-         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4100,7 +4101,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4115,7 +4116,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Initializes a connect process for passkey append.
-         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {ConnectAppendInitReq} connectAppendInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4142,7 +4143,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4157,7 +4158,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Starts an initialized connect passkey append process.
-         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {ConnectAppendStartReq} connectAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4184,7 +4185,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4199,7 +4200,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Creates a new user generated connect event.
-         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {ConnectEventCreateReq} connectEventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4226,7 +4227,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4241,7 +4242,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Finishes an initialized connect login process.
-         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4268,7 +4269,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4283,7 +4284,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Initializes a connect process for login.
-         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {ConnectLoginInitReq} connectLoginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4310,7 +4311,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4325,7 +4326,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Starts an initialized connect login process.
-         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {ConnectLoginStartReq} connectLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4352,7 +4353,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4367,7 +4368,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Deletes a passkey for a user identified by a connect token
-         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4394,7 +4395,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4409,7 +4410,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Initializes a connect process for passkey management.
-         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {ConnectManageInitReq} connectManageInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4436,7 +4437,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4451,7 +4452,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Lists all passkeys for a user identifier by a connect token.
-         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {ConnectManageListReq} connectManageListReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4478,7 +4479,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4493,7 +4494,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * Remove process state for a connect process.
-         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {ConnectProcessClearReq} connectProcessClearReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4520,7 +4521,7 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -4545,7 +4546,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Finishes an initialized connect passkey append process.
-         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4555,7 +4556,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Initializes a connect process for passkey append.
-         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {ConnectAppendInitReq} connectAppendInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4565,7 +4566,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Starts an initialized connect passkey append process.
-         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {ConnectAppendStartReq} connectAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4575,7 +4576,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates a new user generated connect event.
-         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {ConnectEventCreateReq} connectEventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4585,7 +4586,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Finishes an initialized connect login process.
-         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4595,7 +4596,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Initializes a connect process for login.
-         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {ConnectLoginInitReq} connectLoginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4605,7 +4606,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Starts an initialized connect login process.
-         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {ConnectLoginStartReq} connectLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4615,7 +4616,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes a passkey for a user identified by a connect token
-         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4625,7 +4626,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Initializes a connect process for passkey management.
-         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {ConnectManageInitReq} connectManageInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4635,7 +4636,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Lists all passkeys for a user identifier by a connect token.
-         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {ConnectManageListReq} connectManageListReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4645,7 +4646,7 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
         },
         /**
          * Remove process state for a connect process.
-         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {ConnectProcessClearReq} connectProcessClearReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4665,7 +4666,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
     return {
         /**
          * Finishes an initialized connect passkey append process.
-         * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+         * @param {ConnectAppendFinishReq} connectAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4674,7 +4675,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Initializes a connect process for passkey append.
-         * @param {ConnectAppendInitReq} connectAppendInitReq 
+         * @param {ConnectAppendInitReq} connectAppendInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4683,7 +4684,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Starts an initialized connect passkey append process.
-         * @param {ConnectAppendStartReq} connectAppendStartReq 
+         * @param {ConnectAppendStartReq} connectAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4692,7 +4693,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Creates a new user generated connect event.
-         * @param {ConnectEventCreateReq} connectEventCreateReq 
+         * @param {ConnectEventCreateReq} connectEventCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4701,7 +4702,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Finishes an initialized connect login process.
-         * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+         * @param {ConnectLoginFinishReq} connectLoginFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4710,7 +4711,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Initializes a connect process for login.
-         * @param {ConnectLoginInitReq} connectLoginInitReq 
+         * @param {ConnectLoginInitReq} connectLoginInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4719,7 +4720,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Starts an initialized connect login process.
-         * @param {ConnectLoginStartReq} connectLoginStartReq 
+         * @param {ConnectLoginStartReq} connectLoginStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4728,7 +4729,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Deletes a passkey for a user identified by a connect token
-         * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+         * @param {ConnectManageDeleteReq} connectManageDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4737,7 +4738,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Initializes a connect process for passkey management.
-         * @param {ConnectManageInitReq} connectManageInitReq 
+         * @param {ConnectManageInitReq} connectManageInitReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4746,7 +4747,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Lists all passkeys for a user identifier by a connect token.
-         * @param {ConnectManageListReq} connectManageListReq 
+         * @param {ConnectManageListReq} connectManageListReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4755,7 +4756,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
         },
         /**
          * Remove process state for a connect process.
-         * @param {ConnectProcessClearReq} connectProcessClearReq 
+         * @param {ConnectProcessClearReq} connectProcessClearReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4774,7 +4775,7 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
 export class CorbadoConnectApi extends BaseAPI {
     /**
      * Finishes an initialized connect passkey append process.
-     * @param {ConnectAppendFinishReq} connectAppendFinishReq 
+     * @param {ConnectAppendFinishReq} connectAppendFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4785,7 +4786,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Initializes a connect process for passkey append.
-     * @param {ConnectAppendInitReq} connectAppendInitReq 
+     * @param {ConnectAppendInitReq} connectAppendInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4796,7 +4797,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Starts an initialized connect passkey append process.
-     * @param {ConnectAppendStartReq} connectAppendStartReq 
+     * @param {ConnectAppendStartReq} connectAppendStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4807,7 +4808,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Creates a new user generated connect event.
-     * @param {ConnectEventCreateReq} connectEventCreateReq 
+     * @param {ConnectEventCreateReq} connectEventCreateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4818,7 +4819,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Finishes an initialized connect login process.
-     * @param {ConnectLoginFinishReq} connectLoginFinishReq 
+     * @param {ConnectLoginFinishReq} connectLoginFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4829,7 +4830,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Initializes a connect process for login.
-     * @param {ConnectLoginInitReq} connectLoginInitReq 
+     * @param {ConnectLoginInitReq} connectLoginInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4840,7 +4841,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Starts an initialized connect login process.
-     * @param {ConnectLoginStartReq} connectLoginStartReq 
+     * @param {ConnectLoginStartReq} connectLoginStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4851,7 +4852,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Deletes a passkey for a user identified by a connect token
-     * @param {ConnectManageDeleteReq} connectManageDeleteReq 
+     * @param {ConnectManageDeleteReq} connectManageDeleteReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4862,7 +4863,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Initializes a connect process for passkey management.
-     * @param {ConnectManageInitReq} connectManageInitReq 
+     * @param {ConnectManageInitReq} connectManageInitReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4873,7 +4874,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Lists all passkeys for a user identifier by a connect token.
-     * @param {ConnectManageListReq} connectManageListReq 
+     * @param {ConnectManageListReq} connectManageListReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4884,7 +4885,7 @@ export class CorbadoConnectApi extends BaseAPI {
 
     /**
      * Remove process state for a connect process.
-     * @param {ConnectProcessClearReq} connectProcessClearReq 
+     * @param {ConnectProcessClearReq} connectProcessClearReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorbadoConnectApi
@@ -4928,7 +4929,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4964,7 +4965,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4976,7 +4977,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
+         * @param {MeIdentifierCreateReq} meIdentifierCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5003,7 +5004,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5018,7 +5019,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
+         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5045,7 +5046,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5060,7 +5061,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
+         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5087,7 +5088,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5102,7 +5103,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Verifies challenge
-         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5129,7 +5130,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5144,7 +5145,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Creates challenge (only email otp and phone otp supported for now)
-         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5171,7 +5172,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5186,7 +5187,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Finishes passkey append for current user
-         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5213,7 +5214,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5228,7 +5229,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Starts passkey append for current user
-         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5255,7 +5256,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5298,7 +5299,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5334,7 +5335,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5370,7 +5371,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5406,7 +5407,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5418,7 +5419,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
+         * @param {MeUpdateReq} meUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5445,7 +5446,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
 
 
-    
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -5488,7 +5489,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
+         * @param {MeIdentifierCreateReq} meIdentifierCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5498,7 +5499,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
+         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5508,7 +5509,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
+         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5518,7 +5519,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Verifies challenge
-         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5528,7 +5529,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates challenge (only email otp and phone otp supported for now)
-         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5538,7 +5539,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Finishes passkey append for current user
-         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5548,7 +5549,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Starts passkey append for current user
-         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5595,7 +5596,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
+         * @param {MeUpdateReq} meUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5631,7 +5632,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Creates an identifier
-         * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
+         * @param {MeIdentifierCreateReq} meIdentifierCreateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5640,7 +5641,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Deletes an identifier
-         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
+         * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5649,7 +5650,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Modifies an identifier (only permitted for username; identifierID will change)
-         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
+         * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5658,7 +5659,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Verifies challenge
-         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+         * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5667,7 +5668,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Creates challenge (only email otp and phone otp supported for now)
-         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+         * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5676,7 +5677,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Finishes passkey append for current user
-         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
+         * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5685,7 +5686,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Starts passkey append for current user
-         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+         * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5727,7 +5728,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Updates current user
-         * @param {MeUpdateReq} meUpdateReq 
+         * @param {MeUpdateReq} meUpdateReq
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5766,7 +5767,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Creates an identifier
-     * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
+     * @param {MeIdentifierCreateReq} meIdentifierCreateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5777,7 +5778,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Deletes an identifier
-     * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
+     * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5788,7 +5789,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Modifies an identifier (only permitted for username; identifierID will change)
-     * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
+     * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5799,7 +5800,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Verifies challenge
-     * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
+     * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5810,7 +5811,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Creates challenge (only email otp and phone otp supported for now)
-     * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
+     * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5821,7 +5822,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Finishes passkey append for current user
-     * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
+     * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5832,7 +5833,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Starts passkey append for current user
-     * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
+     * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5884,7 +5885,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * Updates current user
-     * @param {MeUpdateReq} meUpdateReq 
+     * @param {MeUpdateReq} meUpdateReq
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi

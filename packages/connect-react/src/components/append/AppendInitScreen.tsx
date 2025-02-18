@@ -19,8 +19,15 @@ export enum AppendInitState {
 }
 
 const AppendInitScreen = () => {
-  const { config, navigateToScreen, handleErrorHard, handleErrorSoft, handleSkip, handleCredentialExistsError } =
-    useAppendProcess();
+  const {
+    config,
+    navigateToScreen,
+    handleErrorHard,
+    handleErrorSoft,
+    handleSkip,
+    handleCredentialExistsError,
+    onReadMoreClick,
+  } = useAppendProcess();
   const { getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -213,7 +220,10 @@ const AppendInitScreen = () => {
         <AppendInitLoaded2
           errorMessage={errorMessage}
           appendLoading={appendLoading}
-          handleShowBenefits={() => setAppendInitState(AppendInitState.ShowBenefits)}
+          handleShowBenefits={() => {
+            void onReadMoreClick();
+            setAppendInitState(AppendInitState.ShowBenefits);
+          }}
           handleSubmit={() => void handleSubmit()}
           handleSkip={() => onSkip()}
         />

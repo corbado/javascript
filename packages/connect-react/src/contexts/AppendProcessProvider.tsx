@@ -64,6 +64,13 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
     [getConnectService, config],
   );
 
+  const onReadMoreClick = useCallback(
+    async () => {
+        await getConnectService().recordEventAppendLearnMore();
+    },
+    [getConnectService, config],
+  );
+
   const handleCredentialExistsError = useCallback(async () => {
     log.debug('error (credential-exists)');
 
@@ -81,6 +88,7 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
       handleErrorHard,
       handleCredentialExistsError,
       handleSkip,
+      onReadMoreClick,
     }),
     [currentScreenType, navigateToScreen, config],
   );

@@ -17,6 +17,7 @@ export interface AppendProcessContextProps {
   handleErrorHard: (situation: AppendSituationCode, expected: boolean) => Promise<void>;
   handleCredentialExistsError: () => Promise<void>;
   handleSkip: (situation: AppendSituationCode, explicit?: boolean) => Promise<void>;
+  onReadMoreClick: () => Promise<void>;
 }
 
 export const initialContext: AppendProcessContextProps = {
@@ -28,6 +29,7 @@ export const initialContext: AppendProcessContextProps = {
   handleErrorHard: missingImplementation,
   handleCredentialExistsError: missingImplementation,
   handleSkip: missingImplementation,
+  onReadMoreClick: missingImplementation,
 };
 
 const AppendProcessContext = createContext<AppendProcessContextProps>(initialContext);

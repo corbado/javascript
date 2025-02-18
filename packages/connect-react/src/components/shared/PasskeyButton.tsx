@@ -25,7 +25,7 @@ export const PasskeyButton = ({ identifier, isLoading, onClick }: Props) => {
       onClick={(e: FormEvent) => {
         e.preventDefault();
 
-        if(isLoading){
+        if (isLoading) {
           return;
         }
 

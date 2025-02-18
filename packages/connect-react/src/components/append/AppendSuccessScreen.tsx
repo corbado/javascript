@@ -34,12 +34,13 @@ const AppendSuccessScreen = ({ aaguidName }: Props) => {
         <PrimaryButton
           className='cb-append-success-cta-continue'
           onClick={() => {
-            if(submitting){
+            if (submitting) {
               return;
             }
 
             setSubmitting(true);
-            void config.onComplete('complete')}}
+            void config.onComplete('complete');
+          }}
         >
           Continue
         </PrimaryButton>

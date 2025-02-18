@@ -192,17 +192,14 @@ const AppendInitScreen = () => {
     }
   };
 
-  const onSkip = useCallback(
-    () => {
-      if (skipping || appendLoading) {
-        return;
-      }
+  const onSkip = useCallback(() => {
+    if (skipping || appendLoading) {
+      return;
+    }
 
-      setSkipping(true);
-      void handleSituation(AppendSituationCode.ExplicitSkipByUser);
-    },
-    [skipping, appendLoading],
-  );
+    setSkipping(true);
+    void handleSituation(AppendSituationCode.ExplicitSkipByUser);
+  }, [skipping, appendLoading]);
 
   switch (appendInitState) {
     case AppendInitState.SilentLoading:

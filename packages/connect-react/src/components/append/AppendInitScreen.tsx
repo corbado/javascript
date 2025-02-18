@@ -156,7 +156,7 @@ const AppendInitScreen = () => {
       aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
       aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
     });
-  }, [attestationOptions, config, getConnectService]);
+  }, [attestationOptions, config, getConnectService, appendLoading, skipping]);
 
   const handleSituation = async (situationCode: AppendSituationCode) => {
     log.debug(`situation: ${situationCode}`);

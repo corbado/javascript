@@ -1724,7 +1724,7 @@ components:
 
     passkeyEventType:
       type: string
-      enum: [ login-explicit-abort, login-error, login-error-untyped, login-error-unexpected, login-one-tap-switch, user-append-after-cross-platform-blacklisted, user-append-after-login-error-blacklisted, append-credential-exists, append-explicit-abort, append-error, append-error-unexpected, manage-error-unexpected ]
+      enum: [ login-explicit-abort, login-error, login-error-untyped, login-error-unexpected, login-one-tap-switch, user-append-after-cross-platform-blacklisted, user-append-after-login-error-blacklisted, append-credential-exists, append-explicit-abort, append-error, append-error-unexpected, manage-error-unexpected, append-learn-more ]
 
     blockType:
       type: string

@@ -33,6 +33,7 @@ const AppendSuccessScreen = ({ aaguidName }: Props) => {
       <div className='cb-append-success-cta'>
         <PrimaryButton
           className='cb-append-success-cta-continue'
+          isLoading={submitting}
           onClick={() => {
             if (submitting) {
               return;

@@ -1890,7 +1890,8 @@ export const PasskeyEventType = {
     AppendExplicitAbort: 'append-explicit-abort',
     AppendError: 'append-error',
     AppendErrorUnexpected: 'append-error-unexpected',
-    ManageErrorUnexpected: 'manage-error-unexpected'
+    ManageErrorUnexpected: 'manage-error-unexpected',
+    AppendLearnMore: 'append-learn-more'
 } as const;
 
 export type PasskeyEventType = typeof PasskeyEventType[keyof typeof PasskeyEventType];

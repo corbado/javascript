@@ -625,6 +625,10 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.AppendExplicitAbort, undefined, challenge);
   }
 
+  recordEventAppendLearnMore() {
+    return this.#recordEvent(PasskeyEventType.AppendLearnMore);
+  }
+
   // This function can be used to catch events that would usually not create backend interaction (e.g. when a passkey ceremony is canceled)
   #recordEvent(eventType: PasskeyEventType, message?: string, challenge?: string) {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);

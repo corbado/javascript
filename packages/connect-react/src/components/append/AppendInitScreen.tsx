@@ -19,13 +19,21 @@ export enum AppendInitState {
 }
 
 const AppendInitScreen = () => {
-  const { config, navigateToScreen, handleErrorHard, handleErrorSoft, handleSkip, handleCredentialExistsError } =
-    useAppendProcess();
+  const {
+    config,
+    navigateToScreen,
+    handleErrorHard,
+    handleErrorSoft,
+    handleSkip,
+    handleCredentialExistsError,
+    onReadMoreClick,
+  } = useAppendProcess();
   const { getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [appendLoading, setAppendLoading] = useState(false);
   const [appendInitState, setAppendInitState] = useState(AppendInitState.SilentLoading);
+  const [skipping, setSkipping] = useState(false);
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setAppendInitState(AppendInitState.Loading),
@@ -130,6 +138,10 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    if (appendLoading || skipping) {
+      return;
+    }
+
     setAppendLoading(true);
     setErrorMessage(undefined);
 
@@ -151,7 +163,7 @@ const AppendInitScreen = () => {
       aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
       aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
     });
-  }, [attestationOptions, config, getConnectService]);
+  }, [attestationOptions, config, getConnectService, appendLoading, skipping]);
 
   const handleSituation = async (situationCode: AppendSituationCode) => {
     log.debug(`situation: ${situationCode}`);
@@ -187,6 +199,15 @@ const AppendInitScreen = () => {
     }
   };
 
+  const onSkip = useCallback(() => {
+    if (skipping || appendLoading) {
+      return;
+    }
+
+    setSkipping(true);
+    void handleSituation(AppendSituationCode.ExplicitSkipByUser);
+  }, [skipping, appendLoading]);
+
   switch (appendInitState) {
     case AppendInitState.SilentLoading:
       return <></>;
@@ -199,9 +220,12 @@ const AppendInitScreen = () => {
         <AppendInitLoaded2
           errorMessage={errorMessage}
           appendLoading={appendLoading}
-          handleShowBenefits={() => setAppendInitState(AppendInitState.ShowBenefits)}
+          handleShowBenefits={() => {
+            void onReadMoreClick();
+            setAppendInitState(AppendInitState.ShowBenefits);
+          }}
           handleSubmit={() => void handleSubmit()}
-          handleSkip={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
+          handleSkip={() => onSkip()}
         />
       );
   }

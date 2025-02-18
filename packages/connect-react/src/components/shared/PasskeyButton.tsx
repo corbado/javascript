@@ -24,6 +24,11 @@ export const PasskeyButton = ({ identifier, isLoading, onClick }: Props) => {
       className='cb-passkey-button'
       onClick={(e: FormEvent) => {
         e.preventDefault();
+
+        if (isLoading) {
+          return;
+        }
+
         onClick();
       }}
     >

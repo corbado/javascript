@@ -12,6 +12,8 @@ type Props = {
 const AppendSuccessScreen = ({ aaguidName }: Props) => {
   const { config } = useAppendProcess();
 
+  const [completing, setCompleting] = React.useState(false);
+
   let passkeyStoredTxt = <>Your passkey has been stored.</>;
   if (aaguidName) {
     passkeyStoredTxt = <>Your passkey is stored in {aaguidName}.</>;
@@ -31,7 +33,15 @@ const AppendSuccessScreen = ({ aaguidName }: Props) => {
       <div className='cb-append-success-cta'>
         <PrimaryButton
           className='cb-append-success-cta-continue'
-          onClick={() => void config.onComplete('complete')}
+          isLoading={completing}
+          onClick={() => {
+            if (completing) {
+              return;
+            }
+
+            setCompleting(true);
+            void config.onComplete('complete');
+          }}
         >
           Continue
         </PrimaryButton>

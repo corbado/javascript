@@ -26,6 +26,7 @@ const AppendInitScreen = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [appendLoading, setAppendLoading] = useState(false);
   const [appendInitState, setAppendInitState] = useState(AppendInitState.SilentLoading);
+  const [skipping, setSkipping] = useState(false);
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setAppendInitState(AppendInitState.Loading),
@@ -130,6 +131,10 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    if (appendLoading || skipping) {
+      return;
+    }
+
     setAppendLoading(true);
     setErrorMessage(undefined);
 
@@ -187,6 +192,18 @@ const AppendInitScreen = () => {
     }
   };
 
+  const onSkip = useCallback(
+    () => {
+      if (skipping || appendLoading) {
+        return;
+      }
+
+      setSkipping(true);
+      void handleSituation(AppendSituationCode.ExplicitSkipByUser);
+    },
+    [skipping, appendLoading],
+  );
+
   switch (appendInitState) {
     case AppendInitState.SilentLoading:
       return <></>;
@@ -201,7 +218,7 @@ const AppendInitScreen = () => {
           appendLoading={appendLoading}
           handleShowBenefits={() => setAppendInitState(AppendInitState.ShowBenefits)}
           handleSubmit={() => void handleSubmit()}
-          handleSkip={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
+          handleSkip={() => onSkip()}
         />
       );
   }

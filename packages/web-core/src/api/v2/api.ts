@@ -476,6 +476,12 @@ export interface ConnectLoginFinishRsp {
      * @memberof ConnectLoginFinishRsp
      */
     'signedPasskeyData': string;
+    /**
+     * 
+     * @type {FallbackOperationError}
+     * @memberof ConnectLoginFinishRsp
+     */
+    'fallbackOperationError'?: FallbackOperationError;
 }
 /**
  * 
@@ -618,10 +624,10 @@ export interface ConnectLoginStartRsp {
     'isCDA': boolean;
     /**
      * 
-     * @type {RequestError}
+     * @type {FallbackOperationError}
      * @memberof ConnectLoginStartRsp
      */
-    'error'?: RequestError;
+    'fallbackOperationError': FallbackOperationError;
 }
 /**
  * 
@@ -829,6 +835,31 @@ export interface EventCreateReq {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface FallbackOperationError
+ */
+export interface FallbackOperationError {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FallbackOperationError
+     */
+    'initFallback': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof FallbackOperationError
+     */
+    'identifier'?: string;
+    /**
+     * 
+     * @type {RequestError}
+     * @memberof FallbackOperationError
+     */
+    'error'?: RequestError;
+}
 /**
  * 
  * @export

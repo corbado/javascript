@@ -1,4 +1,4 @@
-import { ConnectUserNotFound, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useEffect, useRef, useState } from 'react';
@@ -77,10 +77,6 @@ const InitScreen = () => {
       if (resStart.err) {
         if (resStart.val.ignore) {
           return;
-        }
-
-        if (resStart.val instanceof ConnectUserNotFound) {
-          return handleSituation(LoginSituationCode.PreAuthenticatorUserNotFound);
         }
 
         return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);

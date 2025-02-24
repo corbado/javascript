@@ -252,14 +252,8 @@ export class ConnectService {
       return res;
     }
 
-    if (res.val.error) {
-      this.clearLastLogin();
-      return Err(CorbadoError.fromConnectErrorResponse(res.val.error));
-    }
-
     if (!res.val.assertionOptions) {
       this.clearLastLogin();
-      return Err(CorbadoError.noPasskeyAvailable());
     }
 
     return res;

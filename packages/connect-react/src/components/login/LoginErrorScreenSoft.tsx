@@ -7,6 +7,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorSoft from './base/LoginErrorSoft';
+import type { CboApiFallbackOperationError } from './LoginInitScreen';
 import { connectLoginFinishToComplete } from './LoginInitScreen';
 
 type Props = {
@@ -28,6 +29,16 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
     const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.ErrorSoft, loadedMs);
     if (resStart.err) {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+    }
+
+    if (resStart.val.assertionOptions.length === 0) {
+      const data: CboApiFallbackOperationError = {
+        initFallback: resStart.val.fallbackOperationError.initFallback,
+        identifierFallback: resStart.val.fallbackOperationError.identifier ?? '',
+        message: resStart.val.fallbackOperationError.error?.message ?? null,
+      };
+
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
     }
 
     const resFinish = await getConnectService().loginContinue(resStart.val);
@@ -55,6 +66,7 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
     const message = getLoginErrorMessage(situationCode);
 
     switch (situationCode) {
+      case LoginSituationCode.CboApiNotAvailablePreAuthenticator:
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
         navigateToScreen(LoginScreenType.Invisible);
@@ -77,6 +89,17 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
         fallback(identifier, null);
 
         void getConnectService().recordEventLoginExplicitAbort(previousAssertionOptions);
+        break;
+      }
+      case LoginSituationCode.CboApiFallbackOperationError: {
+        const { initFallback, identifierFallback, message } = data as CboApiFallbackOperationError;
+        if (initFallback) {
+          navigateToScreen(LoginScreenType.Invisible);
+          fallback(identifierFallback, message);
+        }
+        void getConnectService().recordEventLoginError(messageCode);
+
+        setLoading(false);
         break;
       }
     }

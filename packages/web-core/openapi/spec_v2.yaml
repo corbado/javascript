@@ -1254,13 +1254,14 @@ components:
       required:
         - assertionOptions
         - isCDA
+        - fallbackOperationError
       properties:
         assertionOptions:
           type: string
         isCDA:
           type: boolean
-        error:
-          $ref: '#/components/schemas/requestError'
+        fallbackOperationError:
+          $ref: '#/components/schemas/fallbackOperationError'
 
     connectLoginFinishReq:
       type: object
@@ -1289,6 +1290,8 @@ components:
           type: string
         signedPasskeyData:
           type: string
+        fallbackOperationError:
+          $ref: '#/components/schemas/fallbackOperationError'
 
     connectAppendInitReq:
       type: object
@@ -2092,6 +2095,18 @@ components:
           type: string
         message:
           type: string
+
+    fallbackOperationError:
+      type: object
+      required:
+        - initFallback
+      properties:
+        initFallback:
+          type: boolean
+        identifier:
+          type: string
+        error:
+          $ref: '#/components/schemas/requestError'
 
   responses:
     '200':

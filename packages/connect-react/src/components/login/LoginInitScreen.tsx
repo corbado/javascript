@@ -287,7 +287,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
           return automaticFallback(typed.identifierFallback, typed.message);
         }
 
-        setError(message ?? '');
+        setError(typed.message ?? '');
         setIdentifierBasedLoading(false);
         break;
       }

@@ -566,7 +566,7 @@ export class ProcessService {
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
     if (signedChallenge.err) {
-      if (!(signedChallenge.val.ignore && signedChallenge.val instanceof PasskeyChallengeCancelledError)) {
+      if (!signedChallenge.val.ignore && !(signedChallenge.val instanceof PasskeyChallengeCancelledError)) {
         await this.recordEventLoginError(challenge);
       }
 

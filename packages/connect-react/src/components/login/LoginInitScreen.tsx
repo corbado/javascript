@@ -1,12 +1,4 @@
-import {
-  ConnectConditionalUIPasskeyDeleted,
-  ConnectCustomError,
-  ConnectExistingPasskeysNotAvailable,
-  ConnectNoPasskeyAvailableError,
-  ConnectUserNotFound,
-  PasskeyChallengeCancelledError,
-  PasskeyLoginSource,
-} from '@corbado/web-core';
+import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import type { ConnectLoginFinishRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import type { FC } from 'react';
@@ -16,11 +8,16 @@ import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
-import type { PreAuthenticatorCustomErrorData } from '../../types/situations';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import LoginInitLoaded from './base/LoginInitLoaded';
 import LoginInitLoading from './base/LoginInitLoading';
+
+export type CboApiFallbackOperationError = {
+  initFallback: boolean;
+  identifierFallback: string;
+  message: string | null;
+};
 
 export enum LoginInitState {
   SilentLoading,
@@ -42,8 +39,7 @@ export const connectLoginFinishToComplete = (v: ConnectLoginFinishRsp): string =
 };
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
-  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs, fallback, fallbackCustom } =
-    useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, setFlags, flags, loadedMs, fallback } = useLoginProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [cuiBasedLoading, setCuiBasedLoading] = useState(false);
   const [identifierBasedLoading, setIdentifierBasedLoading] = useState(false);
@@ -160,17 +156,22 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled);
       }
 
-      // if a passkey has been deleted, CUI will fail => fallback with message
-      if (res.val instanceof ConnectConditionalUIPasskeyDeleted) {
-        return handleSituation(LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator);
-      }
-
       // cuiStarted === true indicates that user has passed the authenticator
       if (cuiStarted) {
         return handleSituation(LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator);
       }
 
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator);
+    }
+
+    if (res.val.fallbackOperationError) {
+      const data: CboApiFallbackOperationError = {
+        initFallback: res.val.fallbackOperationError.initFallback,
+        identifierFallback: res.val.fallbackOperationError.identifier ?? '',
+        message: res.val.fallbackOperationError.error?.message ?? null,
+      };
+
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
     }
 
     try {
@@ -191,25 +192,22 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
     if (resStart.err) {
-      if (resStart.val instanceof ConnectUserNotFound) {
-        return handleSituation(LoginSituationCode.PreAuthenticatorUserNotFound);
-      }
-      if (resStart.val instanceof ConnectCustomError) {
-        return handleSituation(LoginSituationCode.PreAuthenticatorCustomError, resStart.val);
-      }
-      if (resStart.val instanceof ConnectExistingPasskeysNotAvailable) {
-        return handleSituation(LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable);
-      }
-      if (resStart.val instanceof ConnectNoPasskeyAvailableError) {
-        return handleSituation(LoginSituationCode.PreAuthenticatorNoPasskeyAvailable);
-      }
-
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
     }
 
     if (resStart.val.isCDA) {
       navigateToScreen(LoginScreenType.LoginHybridScreen, resStart.val);
       return;
+    }
+
+    if (resStart.val.assertionOptions.length === 0) {
+      const data: CboApiFallbackOperationError = {
+        initFallback: resStart.val.fallbackOperationError.initFallback,
+        identifierFallback: resStart.val.fallbackOperationError.identifier ?? '',
+        message: resStart.val.fallbackOperationError.error?.message ?? null,
+      };
+
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
     }
 
     const res = await getConnectService().loginContinue(resStart.val);
@@ -255,13 +253,10 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         statefulLoader.current.finish();
         break;
       case LoginSituationCode.DeniedByPartialRollout:
-      case LoginSituationCode.PreAuthenticatorExistingPasskeysNotAvailable:
-      case LoginSituationCode.PreAuthenticatorNoPasskeyAvailable:
         automaticFallback(identifier, message);
 
         statefulLoader.current.finish();
         break;
-      case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator:
       case LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator:
       case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
@@ -280,26 +275,22 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         setIdentifierBasedLoading(false);
         break;
       }
-      case LoginSituationCode.PreAuthenticatorUserNotFound:
-        setError(message ?? '');
-        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
-
-        setIdentifierBasedLoading(false);
-        break;
       case LoginSituationCode.ExplicitFallbackByUser:
         explicitFallback();
 
         void getConnectService().recordEventLoginExplicitAbort();
         break;
-      case LoginSituationCode.PreAuthenticatorCustomError: {
-        navigateToScreen(LoginScreenType.Invisible);
-        void getConnectService().recordEventLoginErrorUnexpected(messageCode);
-        if (!data) {
-          return fallback(identifier, null);
+      case LoginSituationCode.CboApiFallbackOperationError: {
+        const typed = data as CboApiFallbackOperationError;
+
+        if (typed.initFallback) {
+          return automaticFallback(typed.identifierFallback, typed.message);
         }
 
-        const typed = data as PreAuthenticatorCustomErrorData;
-        fallbackCustom(identifier, typed.code, typed.message);
+        setError(typed.message ?? '');
+        setCuiBasedLoading(false);
+        setIdentifierBasedLoading(false);
+        break;
       }
     }
   };

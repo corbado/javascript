@@ -14,6 +14,7 @@ export enum LoginSituationCode {
   PreAuthenticatorCustomError,
   PreAuthenticatorExistingPasskeysNotAvailable,
   PreAuthenticatorNoPasskeyAvailable,
+  CboApiFallbackOperationError,
 }
 
 export enum AppendSituationCode {
@@ -41,11 +42,6 @@ export enum PasskeyListSituationCode {
   CboApiPasskeysNotSupportedLight,
 }
 
-export type PreAuthenticatorCustomErrorData = {
-  code: string;
-  message: string;
-};
-
 export const getLoginErrorMessage = (code: LoginSituationCode): string | null => {
   switch (code) {
     case LoginSituationCode.CboApiNotAvailablePostAuthenticator:
@@ -53,12 +49,6 @@ export const getLoginErrorMessage = (code: LoginSituationCode): string | null =>
     case LoginSituationCode.CtApiNotAvailablePostAuthenticator:
     case LoginSituationCode.ClientPasskeyOperationCancelledTooManyTimes:
       return "We couldn't log you in with your passkey due to a system error. Use your password to log in instead.";
-
-    case LoginSituationCode.PasskeyNotAvailablePostConditionalAuthenticator:
-      return 'You previously deleted this passkey. Use your password to log in instead.';
-
-    case LoginSituationCode.PreAuthenticatorUserNotFound:
-      return 'There is no account registered to that email address.';
 
     default:
       return null;

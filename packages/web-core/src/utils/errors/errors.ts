@@ -2,7 +2,6 @@ import type { AxiosError } from 'axios';
 import log from 'loglevel';
 
 import type { ErrorRsp } from '../../api/v1';
-import type { RequestError } from '../../api/v2';
 
 /** General Errors */
 export type GetProcessError = ProcessNotFound;
@@ -84,17 +83,6 @@ export class CorbadoError extends Error {
     return NonRecoverableError.unhandledBackendError(errorResp.type);
   }
 
-  static fromConnectErrorResponse(error: RequestError): RecoverableError {
-    switch (error.code) {
-      case 'user_not_found':
-        return new ConnectUserNotFound();
-      case 'existing_passkeys_not_available':
-        return new ConnectExistingPasskeysNotAvailable();
-      default:
-        return new ConnectCustomError(error.code, error.message);
-    }
-  }
-
   static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
     log.debug('axios error', error);
 
@@ -108,15 +96,6 @@ export class CorbadoError extends Error {
 
     if (!error.response || !error.response.data) {
       return NonRecoverableError.unhandledBackendError('no_data_in_response');
-    }
-
-    const url = error.config?.url;
-    if (error.response.status === 404 && url) {
-      if (url.endsWith('/connect/login/finish')) {
-        return new ConnectConditionalUIPasskeyDeleted();
-      }
-
-      return new ConnectUserNotFound();
     }
 
     const errorRespRaw = error.response.data as ErrorRsp;

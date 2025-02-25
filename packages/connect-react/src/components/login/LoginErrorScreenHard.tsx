@@ -7,7 +7,7 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorHard from './base/LoginErrorHard';
-import { connectLoginFinishToComplete } from './LoginInitScreen';
+import { type CboApiFallbackOperationError, connectLoginFinishToComplete } from './LoginInitScreen';
 
 type Props = {
   previousAssertionOptions: string;
@@ -30,6 +30,16 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
     const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.ErrorHard, loadedMs);
     if (resStart.err) {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+    }
+
+    if (resStart.val.assertionOptions.length === 0) {
+      const data: CboApiFallbackOperationError = {
+        initFallback: resStart.val.fallbackOperationError.initFallback,
+        identifierFallback: resStart.val.fallbackOperationError.identifier ?? '',
+        message: resStart.val.fallbackOperationError.error?.message ?? null,
+      };
+
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
     }
 
     setAssertionOptions(resStart.val.assertionOptions);
@@ -56,7 +66,7 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
     }
   };
 
-  const handleSituation = (situationCode: LoginSituationCode) => {
+  const handleSituation = (situationCode: LoginSituationCode, data?: unknown) => {
     const messageCode = `situation: ${situationCode}`;
     log.debug(messageCode);
 
@@ -92,6 +102,17 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
 
         void getConnectService().recordEventLoginExplicitAbort(assertionOptions);
         break;
+      case LoginSituationCode.CboApiFallbackOperationError: {
+        const { initFallback, identifierFallback, message } = data as CboApiFallbackOperationError;
+        if (initFallback) {
+          navigateToScreen(LoginScreenType.Invisible);
+          fallback(identifierFallback, message);
+        }
+        void getConnectService().recordEventLoginError(messageCode);
+
+        setLoading(false);
+        break;
+      }
     }
   };
 

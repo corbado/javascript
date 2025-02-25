@@ -288,6 +288,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         }
 
         setError(typed.message ?? '');
+        setCuiBasedLoading(false);
         setIdentifierBasedLoading(false);
         break;
       }

@@ -27,6 +27,7 @@ const AppendInitScreen = () => {
     handleSkip,
     handleCredentialExistsError,
     onReadMoreClick,
+    flags,
   } = useAppendProcess();
   const { getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
@@ -34,6 +35,7 @@ const AppendInitScreen = () => {
   const [appendLoading, setAppendLoading] = useState(false);
   const [appendInitState, setAppendInitState] = useState(AppendInitState.SilentLoading);
   const [skipping, setSkipping] = useState(false);
+  const [initiatedByAutomaticAppend, setInitiatedByAutomaticAppend] = useState(false);
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setAppendInitState(AppendInitState.Loading),
@@ -123,6 +125,11 @@ const AppendInitScreen = () => {
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
       statefulLoader.current.finish();
+
+      if (flags?.hasSupportForAutomaticAppend()) {
+        setInitiatedByAutomaticAppend(true);
+        await handleSubmit();
+      }
     };
 
     log.debug('init AppendInitScreen');
@@ -182,7 +189,7 @@ const AppendInitScreen = () => {
         statefulLoader.current.finishWithError();
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode, true);
+        void handleErrorSoft(situationCode, true, !initiatedByAutomaticAppend);
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:

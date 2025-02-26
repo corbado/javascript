@@ -1,4 +1,5 @@
 const keyConditionalUI = 'conditional-ui-allowed';
+const keyAutoAppend = 'automatic-append';
 
 export class Flags {
   readonly items: Record<string, string>;
@@ -15,5 +16,9 @@ export class Flags {
 
   hasSupportForConditionalUI(): boolean {
     return this.items[keyConditionalUI] === 'true';
+  }
+
+  hasSupportForAutomaticAppend(): boolean {
+    return this.items[keyAutoAppend] === 'true';
   }
 }

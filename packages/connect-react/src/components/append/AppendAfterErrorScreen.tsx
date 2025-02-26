@@ -1,21 +1,19 @@
 import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
-import { PasskeyIssueIcon } from '../shared/icons/PasskeyIssueIcon';
-import { LinkButton } from '../shared/LinkButton';
-import { Notification } from '../shared/Notification';
-import { PrimaryButton } from '../shared/PrimaryButton';
+import AppendAfterError from './append-init/AppendAfterError';
 
 const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
   const { navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip } =
     useAppendProcess();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [skipping, setSkipping] = useState(false);
   const { getConnectService } = useShared();
 
   const onSubmitClick = async () => {
@@ -57,7 +55,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
         void handleErrorHard(situationCode, false);
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode, true);
+        void handleErrorSoft(situationCode, true, true);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
         void handleCredentialExistsError();
@@ -68,36 +66,22 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     }
   };
 
+  const onSkip = useCallback(() => {
+    if (skipping || loading) {
+      return;
+    }
+
+    setSkipping(true);
+    void handleSituation(AppendSituationCode.ExplicitSkipByUser);
+  }, [skipping, loading]);
+
   return (
-    <div className='cb-append-after-error-container cb-connect-append-border'>
-      <div className='cb-h2'>Issues using passkeys?</div>
-      {errorMessage ? (
-        <Notification
-          className='cb-error-notification'
-          message={errorMessage}
-        />
-      ) : null}
-      <div className='cb-append-after-error-icons'>
-        <PasskeyIssueIcon className='cb-append-after-error-icon' />
-      </div>
-      <div className='cb-p'>We detected you had an issue using your passkey.</div>
-      <div className='cb-p'>Try adding another passkey to resolve the problem.</div>
-      <div className='cb-append-after-error-cta'>
-        <PrimaryButton
-          isLoading={loading}
-          onClick={() => void onSubmitClick()}
-          className='cb-append-after-error-button'
-        >
-          Add passkey
-        </PrimaryButton>
-        <LinkButton
-          onClick={() => void handleSituation(AppendSituationCode.ExplicitSkipByUser)}
-          className='cb-append-after-error-fallback'
-        >
-          Skip
-        </LinkButton>
-      </div>
-    </div>
+    <AppendAfterError
+      appendLoading={loading}
+      errorMessage={errorMessage}
+      handleSubmit={() => void onSubmitClick()}
+      handleSkip={onSkip}
+    />
   );
 };
 

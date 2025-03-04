@@ -30,7 +30,6 @@ export default function ConventionalLogin({ initialEmail, initialError }: Props)
     } else {
       router.push('/post-login');
     }
-
   };
 
   return (

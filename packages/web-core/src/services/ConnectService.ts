@@ -561,6 +561,21 @@ export class ConnectService {
     invitation.persistToStorage();
   }
 
+  handleNa() {
+    const storedNa = localStorage.getItem('na_ipr');
+    if (storedNa) {
+      const parsed = parseInt(storedNa);
+      if (Date.now() < parsed + 1000 * 60) {
+        return;
+      }
+
+      localStorage.removeItem('na_ipr');
+    }
+
+    localStorage.setItem('na_ipr', Date.now().toString());
+    location.reload();
+  }
+
   recordEventLoginError(messageCode: string) {
     return this.#recordEvent(PasskeyEventType.LoginError, messageCode);
   }

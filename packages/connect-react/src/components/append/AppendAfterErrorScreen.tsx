@@ -37,7 +37,10 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     }
 
     setLoading(false);
-    navigateToScreen(AppendScreenType.Success);
+    navigateToScreen(AppendScreenType.Success, {
+      aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
+      aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
+    });
   };
 
   const handleSituation = (situationCode: AppendSituationCode) => {

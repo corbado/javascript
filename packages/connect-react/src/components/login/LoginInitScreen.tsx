@@ -90,6 +90,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         getConnectService().setInvitation(invitationToken);
       }
 
+      const na = url.searchParams.get('not_authenticated');
+      if (na === '1') {
+        getConnectService().handleNa();
+      }
+
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
         if (res.val.ignore) {

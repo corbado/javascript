@@ -9,6 +9,7 @@ export enum ScreenNames {
   PasskeyList,
   PasskeyError1,
   PasskeyError2,
+  MFA,
 }
 
 export enum ErrorTexts {

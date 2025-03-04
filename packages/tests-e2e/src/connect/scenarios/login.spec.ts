@@ -12,6 +12,10 @@ test.describe('login component (without invitation token)', () => {
     await model.expectScreen(ScreenNames.InitLoginFallback);
 
     await model.login.submitFallbackCredentials(model.email, password);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
     await model.expectScreen(ScreenNames.Home);
   });
 });
@@ -28,6 +32,10 @@ test.describe('login component (with invitation token, without passkeys)', () =>
     await model.expectScreen(ScreenNames.InitLoginFallback);
 
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
     await model.expectScreen(ScreenNames.PasskeyAppend);
 
     await model.append.skipAppend();

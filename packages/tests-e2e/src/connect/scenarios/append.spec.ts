@@ -63,6 +63,11 @@ test.describe('skip append component', () => {
     await model.blocker.blockCorbadoFAPI();
 
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
+
     await model.expectScreen(ScreenNames.Home);
   });
 
@@ -77,6 +82,10 @@ test.describe('skip append component', () => {
     await model.storage.setAppendLifetime(Math.floor(Date.now() / 1000) - 1);
     await model.storage.deleteInvitationToken();
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
     await model.expectScreen(ScreenNames.Home);
   });
 });

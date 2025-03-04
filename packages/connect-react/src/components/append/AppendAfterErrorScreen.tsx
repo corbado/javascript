@@ -55,6 +55,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
         void handleErrorHard(situationCode, false);
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
+        setLoading(false);
         void handleErrorSoft(situationCode, true, true);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:

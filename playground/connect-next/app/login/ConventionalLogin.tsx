@@ -17,6 +17,7 @@ export default function ConventionalLogin({ initialEmail, initialError }: Props)
   const onSubmit = async () => {
     setError('');
     const res = await startConventionalLogin(email, password);
+    console.log(res);
 
     if (!res.success) {
       setError(res.message ?? 'An unknown error occurred. Please try again later.');
@@ -24,7 +25,12 @@ export default function ConventionalLogin({ initialEmail, initialError }: Props)
       return;
     }
 
-    router.push('/post-login');
+    if (res.screen === 'MFA_SOFTWARE_TOKEN') {
+      router.push('/mfa-software-token');
+    } else {
+      router.push('/post-login');
+    }
+
   };
 
   return (

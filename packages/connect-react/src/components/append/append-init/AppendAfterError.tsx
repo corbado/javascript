@@ -16,8 +16,8 @@ const AppendAfterError = ({ errorMessage, appendLoading, handleSubmit, handleSki
   return (
     <div className='cb-append-after-error-container cb-connect-append-border'>
       <div className='cb-append-header'>
-        <h2 className='cb-h2 cb-bold'>Simplify Your Login</h2>
-        <div className='cb-h3'>Create a passkey</div>
+        <h2 className='cb-h2 cb-bold'>Create a passkey</h2>
+        <div className='cb-h3'>on this device</div>
       </div>
       {errorMessage ? (
         <Notification

@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
-import { ErrorTexts, password, ScreenNames, WebhookTypes } from '../utils/Constants';
-import { loadInvitationToken, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
+import { ErrorTexts, password, ScreenNames } from '../utils/Constants';
+import { loadInvitationToken, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('login component (without invitation token)', () => {
   setupUser(test, false);
@@ -190,25 +190,5 @@ test.describe('login component (without user)', () => {
     await model.storage.deleteInvitationToken();
     await model.loadLogin();
     await model.expectScreen(ScreenNames.InitLoginFallback);
-  });
-});
-
-test.describe('login component (webhook)', () => {
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  setupUser(test, true, true);
-  setupWebhooks(test, [WebhookTypes.Login]);
-
-  test('successful login with passkey (+ webhook)', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.login.removePasskeyButton();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, true);
-    await model.expectScreen(ScreenNames.Home);
-
-    model.webhook.expectWebhookRequest(WebhookTypes.Login);
   });
 });

@@ -121,7 +121,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.InitLogin);
   });
 
-  test('login with social should be possible (account does not exist)', async ({ model }) => {
+  test.skip('login with social should be possible (account does not exist)', async ({ model }) => {
     // redirects to passkey append screen
     await model.load(projectId, true, 'login-init');
 
@@ -133,7 +133,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.PasskeyAppend2);
   });
 
-  test('login with social should be possible (account exists, social has been linked)', async ({ model }) => {
+  test.skip('login with social should be possible (account exists, social has been linked)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';

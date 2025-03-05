@@ -21,6 +21,9 @@ test.describe('social logins', () => {
 
   // Microsoft social login requires longer timeout
   test.describe.configure({ timeout: socialTotalTimeout });
+  test.expect({
+    timeout: socialTotalTimeout,
+  });
   test.use({
     actionTimeout: socialOperationTimeout,
     navigationTimeout: socialOperationTimeout,

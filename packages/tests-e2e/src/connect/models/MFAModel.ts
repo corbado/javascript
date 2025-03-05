@@ -15,7 +15,7 @@ export class MFAModel {
   }
 
   async autofillTOTP() {
-    await this.page.waitForTimeout(30000 - (Date.now() - this.timestamp));
+    await this.page.waitForTimeout(31000 - (Date.now() - this.timestamp));
     await this.page.getByRole('button', { name: 'Autofill TOTP' }).click();
     await expect(this.page.getByPlaceholder('TOTP')).toHaveValue(/.+/);
     this.registerTokenUsed();

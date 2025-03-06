@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
+import { Flags } from '../../types/flags';
 import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
 import { StatefulLoader } from '../../utils/statefulLoader';
@@ -27,8 +28,9 @@ const AppendInitScreen = () => {
     handleSkip,
     handleCredentialExistsError,
     onReadMoreClick,
+    setFlags,
   } = useAppendProcess();
-  const { getConnectService } = useShared();
+  const { sharedConfig, getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [appendLoading, setAppendLoading] = useState(false);
@@ -85,6 +87,13 @@ const AppendInitScreen = () => {
         return handleSituation(AppendSituationCode.CboApiNotAvailablePreAuthenticator);
       }
 
+      // we load flags from backend first, then we override them with the ones that are specified in the component's config
+      const flags = new Flags(res.val.flags);
+      if (sharedConfig.flags) {
+        flags.addFlags(sharedConfig.flags);
+      }
+      setFlags(flags);
+
       if (!res.val.appendAllowed) {
         return handleSituation(AppendSituationCode.DeniedByPartialRollout);
       }
@@ -123,6 +132,10 @@ const AppendInitScreen = () => {
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
       statefulLoader.current.finish();
+
+      if (flags?.hasSupportForAutomaticAppend()) {
+        await handleSubmit(startAppendRes.val.attestationOptions, false);
+      }
     };
 
     log.debug('init AppendInitScreen');
@@ -137,33 +150,41 @@ const AppendInitScreen = () => {
     };
   }, []);
 
-  const handleSubmit = useCallback(async () => {
-    if (appendLoading || skipping) {
-      return;
-    }
-
-    setAppendLoading(true);
-    setErrorMessage(undefined);
-
-    const res = await getConnectService().completeAppend(attestationOptions);
-    if (res.err) {
-      if (res.val instanceof ExcludeCredentialsMatchError) {
-        return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
+  const handleSubmit = useCallback(
+    async (attestationOptions: string, showErrorIfCancelled: boolean) => {
+      console.log('handleSubmit', attestationOptions);
+      if (appendLoading || skipping) {
+        return;
       }
 
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
+      setAppendLoading(true);
+      setErrorMessage(undefined);
+
+      const res = await getConnectService().completeAppend(attestationOptions);
+      if (res.err) {
+        if (res.val instanceof ExcludeCredentialsMatchError) {
+          return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
+        }
+
+        if (res.val instanceof PasskeyChallengeCancelledError) {
+          if (showErrorIfCancelled) {
+            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
+          } else {
+            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelledSilent);
+          }
+        }
+
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
       }
 
-      return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
-    }
-
-    setAppendLoading(false);
-    navigateToScreen(AppendScreenType.Success, {
-      aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
-      aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
-    });
-  }, [attestationOptions, config, getConnectService, appendLoading, skipping]);
+      setAppendLoading(false);
+      navigateToScreen(AppendScreenType.Success, {
+        aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
+        aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
+      });
+    },
+    [config, getConnectService, appendLoading, skipping],
+  );
 
   const handleSituation = async (situationCode: AppendSituationCode) => {
     log.debug(`situation: ${situationCode}`);
@@ -182,7 +203,11 @@ const AppendInitScreen = () => {
         statefulLoader.current.finishWithError();
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode, true);
+        void handleErrorSoft(situationCode, true, true);
+        setAppendLoading(false);
+        break;
+      case AppendSituationCode.ClientPasskeyOperationCancelledSilent:
+        void handleErrorSoft(situationCode, true, false);
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
@@ -224,7 +249,7 @@ const AppendInitScreen = () => {
             void onReadMoreClick();
             setAppendInitState(AppendInitState.ShowBenefits);
           }}
-          handleSubmit={() => void handleSubmit()}
+          handleSubmit={() => void handleSubmit(attestationOptions, true)}
           handleSkip={() => onSkip()}
         />
       );

@@ -97,6 +97,10 @@ export function loadPasskeyAppend(
     await model.expectScreen(ScreenNames.InitLoginFallback);
 
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
     await model.expectScreen(ScreenNames.PasskeyAppend);
   });
 }

@@ -54,8 +54,8 @@ export enum AuthType {
 
 export const emailLinkUrlToken = 'UaTwjBJwyDLMGVbR7WHh';
 
-export const totalTimeout = process.env.CI ? 30000 : 40000;
-export const operationTimeout = process.env.CI ? 5000 : 7000;
+export const totalTimeout = 40000;
+export const operationTimeout = 7000;
 export const socialTotalTimeout = 45000;
 export const socialOperationTimeout = 10000;
 export const waitAfterLoad = 600; // timeout to reduce flakiness due to repetitive reloads

@@ -3,6 +3,7 @@ import type { Passkey } from '@corbado/web-core';
 import type { FC } from 'react';
 import React from 'react';
 
+import AppendAfterError from './append/append-init/AppendAfterError';
 import AppendInitLoaded2 from './append/append-init/AppendInitLoaded2';
 import AppendInitLoading from './append/append-init/AppendInitLoading';
 import AppendSuccessScreen from './append/AppendSuccessScreen';
@@ -244,6 +245,18 @@ const CorbadoConnectDemo: FC<CorbadoConnectDemoConfig> = _ => {
         <AppendSuccessScreen
           aaguidName='iCloud Keychain'
           aaguidIcon='https://cdn.cloud.corbado.io/aaguidIcons/fbfc3007-154e-4ecc-8c0b-6e020557d7bd/light.svg'
+        />
+      ),
+    },
+    {
+      headline: 'Append screen after error',
+      description: 'This screen is shown to the user after having issues with passkeys.',
+      reactElement: (
+        <AppendAfterError
+          errorMessage={''}
+          appendLoading={false}
+          handleSubmit={() => console.log('Submit')}
+          handleSkip={() => console.log('Skip')}
         />
       ),
     },

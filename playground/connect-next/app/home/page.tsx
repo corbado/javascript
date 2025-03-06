@@ -1,39 +1,8 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { createAccount } from '@/app/signup/actions';
+import { cookies } from 'next/headers';
+import Home from '@/app/home/client';
 
 export default function Page() {
-  const router = useRouter();
+  const maybeSecretCode = cookies().get('secretCode');
 
-  return (
-    <>
-      <div className='w-full flex justify-center'>
-        <div className='w-96 my-4 mx-4'>
-          <div className='mb-2 flex flex-col justify-between'>
-            <div className='font-bold text-xl'>Home</div>
-            <div>
-              <p>Great, you are logged in.</p>
-              <button
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-4 rounded w-full'
-                onClick={async () => {
-                  router.push(`/passkey-list`);
-                }}
-              >
-                Passkey List
-              </button>
-              <button
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-4 rounded w-full'
-                onClick={async () => {
-                  window.location.replace(`/login`);
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  return <Home maybeSecretCode={maybeSecretCode?.value} />;
 }

@@ -8,6 +8,7 @@ import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { AppendModel } from './AppendModel';
 import { HomeModel } from './HomeModel';
 import { LoginModel } from './LoginModel';
+import { MFAModel } from './MFAModel';
 import { PasskeyListModel } from './PasskeyListModel';
 import { SignupModel } from './SignupModel';
 import { StorageModel } from './StorageModel';
@@ -24,6 +25,7 @@ export class BaseModel {
   passkeyList: PasskeyListModel;
   webhook: WebhookModel;
   storage: StorageModel;
+  mfa: MFAModel;
   email = '';
 
   constructor(page: Page, authenticator: VirtualAuthenticator, blocker: NetworkRequestBlocker) {
@@ -37,6 +39,7 @@ export class BaseModel {
     this.passkeyList = new PasskeyListModel(page, authenticator);
     this.webhook = new WebhookModel(page);
     this.storage = new StorageModel(page);
+    this.mfa = new MFAModel(page);
   }
 
   loadSignup() {
@@ -62,6 +65,7 @@ export class BaseModel {
   async createUser(invited: boolean, append: boolean) {
     this.email = await this.signup.autofillCredentials();
     await this.signup.submit();
+    this.mfa.registerTokenUsed();
     if (invited) {
       await this.expectScreen(ScreenNames.PasskeyAppend);
       if (append) {

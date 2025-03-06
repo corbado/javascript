@@ -4,6 +4,7 @@ import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import useShared from '../hooks/useShared';
+import type { Flags } from '../types/flags';
 import type { AppendScreenType } from '../types/screenTypes';
 import type { AppendSituationCode } from '../types/situations';
 import type { AppendProcessContextProps } from './AppendProcessContext';
@@ -18,6 +19,7 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   const [currentScreenType, setCurrentScreenType] = useState<AppendScreenType>(initialScreenType);
   const [currentScreenOptions, setCurrentScreenOptions] = useState<any>();
   const { getConnectService } = useShared();
+  const [flags, setFlags] = useState<Flags | undefined>();
 
   const navigateToScreen = useCallback((screenType: AppendScreenType, options?: any) => {
     setCurrentScreenType(screenType);
@@ -25,14 +27,16 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   }, []);
 
   const handleErrorSoft = useCallback(
-    async (situationCode: AppendSituationCode, expected: boolean) => {
+    async (situationCode: AppendSituationCode, expected: boolean, showError: boolean) => {
       if (expected) {
         await getConnectService().recordEventAppendError();
       } else {
         await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode}`);
       }
 
-      config.onError?.(situationCode.toString());
+      if (showError) {
+        config.onError?.(situationCode.toString());
+      }
     },
     [getConnectService, config],
   );
@@ -86,8 +90,10 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
       handleCredentialExistsError,
       handleSkip,
       onReadMoreClick,
+      flags,
+      setFlags,
     }),
-    [currentScreenType, navigateToScreen, config],
+    [currentScreenType, navigateToScreen, config, flags],
   );
 
   return <AppendProcessContext.Provider value={contextValue}>{children}</AppendProcessContext.Provider>;

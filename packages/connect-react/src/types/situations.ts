@@ -26,6 +26,7 @@ export enum AppendSituationCode {
   DeniedByPartialRollout,
   DeniedByPasskeyIntel,
   ExplicitSkipByUser,
+  ClientPasskeyOperationCancelledSilent,
 }
 
 export enum PasskeyListSituationCode {

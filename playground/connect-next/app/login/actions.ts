@@ -6,41 +6,8 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import jwt from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
 import crypto from 'crypto';
-
-const jwksUrl = `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_COGNITO_USER_POOL_ID}/.well-known/jwks.json`;
-const client = jwksClient({ jwksUri: jwksUrl });
-
-type DecodedToken = {
-  username: string;
-};
-
-type TokenWrapper = {
-  AccessToken: string;
-};
-
-const getKey = (header: jwt.JwtHeader, callback: jwt.SigningKeyCallback) => {
-  client.getSigningKey(header.kid, (err, key) => {
-    const signingKey = key?.getPublicKey();
-    callback(err, signingKey);
-  });
-};
-
-const verifyToken = async (token: string): Promise<DecodedToken> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, decoded) => {
-      if (err) {
-        return reject(err);
-      }
-
-      const typed = decoded as DecodedToken;
-
-      resolve(typed);
-    });
-  });
-};
+import { TokenWrapper, verifyToken } from '@/app/utils';
 
 // Here we validate the JWT token (validation is too simple, don't use this in production)
 // Then we extract the cognitoID and retrieve the user's email from the user pool
@@ -92,6 +59,7 @@ export async function postPasskeyLoginNew(signedPasskeyData: string) {
   });
 
   const out = await response.json();
+  console.log(out);
 
   await postPasskeyLogin(out.session);
 }
@@ -108,6 +76,8 @@ export async function startConventionalLogin(email: string, password: string) {
     if (!email || !password) {
       throw new Error('Email and password are required.');
     }
+
+    cookies().set('displayName', email);
 
     const client = new CognitoIdentityProviderClient({
       region: process.env.AWS_REGION!,
@@ -132,20 +102,27 @@ export async function startConventionalLogin(email: string, password: string) {
     });
 
     const response = await client.send(command);
+    console.log(response);
 
-    if (!response.AuthenticationResult?.AccessToken) {
-      throw new Error('Authentication failed. Please check your credentials and try again.');
+    if (response.AuthenticationResult?.AccessToken) {
+      // no MFA has been set up yet
+
+      const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
+      const username = decoded.username;
+      if (email) {
+        cookies().set('identifier', username);
+      }
+
+      return { success: true };
     }
 
-    const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
-    const username = decoded.username;
+    if (response.Session && response.ChallengeName === 'SOFTWARE_TOKEN_MFA') {
+      cookies().set('mfa_session', response.Session);
 
-    if (email) {
-      cookies().set('displayName', email);
-      cookies().set('identifier', username);
+      return { success: true, screen: 'MFA_SOFTWARE_TOKEN' };
     }
 
-    return { success: true };
+    return { success: false, message: 'An error occurred. Please try again later.' };
   } catch (err) {
     if (err instanceof Error) {
       if (err.name === 'NotAuthorizedException') return { success: false, message: 'Incorrect username or password.' };

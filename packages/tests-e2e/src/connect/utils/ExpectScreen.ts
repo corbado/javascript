@@ -54,6 +54,10 @@ export const expectScreen = async (page: Page, screenName: ScreenNames): Promise
       );
       return;
 
+    case ScreenNames.MFA:
+      await expect(page.locator('div.font-bold.text-xl')).toHaveText('MFA');
+      return;
+
     default:
       throw new Error('Invalid screen');
   }

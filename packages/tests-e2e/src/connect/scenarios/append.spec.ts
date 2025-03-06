@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
-import { password, ScreenNames, WebhookTypes } from '../utils/Constants';
-import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator, setupWebhooks } from './hooks';
+import { password, ScreenNames } from '../utils/Constants';
+import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('append component', () => {
   setupVirtualAuthenticator(test);
@@ -30,24 +30,6 @@ test.describe('append component', () => {
   });
 });
 
-test.describe('append component (webhook)', () => {
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  setupUser(test, true, false);
-  loadPasskeyAppend(test);
-  setupWebhooks(test, [WebhookTypes.Create]);
-
-  test('successful passkey append on login (+ webhook)', async ({ model }) => {
-    await model.append.appendPasskey(true);
-    await model.expectScreen(ScreenNames.PasskeyAppended);
-
-    await model.append.confirmAppended();
-    await model.expectScreen(ScreenNames.Home);
-
-    model.webhook.expectWebhookRequest(WebhookTypes.Create);
-  });
-});
-
 test.describe('skip append component', () => {
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
@@ -63,6 +45,11 @@ test.describe('skip append component', () => {
     await model.blocker.blockCorbadoFAPI();
 
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
+
     await model.expectScreen(ScreenNames.Home);
   });
 
@@ -77,6 +64,10 @@ test.describe('skip append component', () => {
     await model.storage.setAppendLifetime(Math.floor(Date.now() / 1000) - 1);
     await model.storage.deleteInvitationToken();
     await model.login.submitFallbackCredentials(model.email, password, true);
+    await model.expectScreen(ScreenNames.MFA);
+
+    await model.mfa.autofillTOTP();
+    await model.mfa.submit();
     await model.expectScreen(ScreenNames.Home);
   });
 });

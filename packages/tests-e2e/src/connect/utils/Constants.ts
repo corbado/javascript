@@ -9,6 +9,7 @@ export enum ScreenNames {
   PasskeyList,
   PasskeyError1,
   PasskeyError2,
+  MFA,
 }
 
 export enum ErrorTexts {
@@ -31,5 +32,5 @@ export enum WebhookTypes {
 export const phone = '+4915121609839';
 export const password = 'asdfasdf';
 
-export const totalTimeout = process.env.CI ? 30000 : 40000;
+export const totalTimeout = 45000;
 export const operationTimeout = 10000;

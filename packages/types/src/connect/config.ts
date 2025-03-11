@@ -35,11 +35,8 @@ export enum ConnectTokenType {
   PasskeyDelete = 'passkey-delete',
 }
 
-export type PasskeyListStatus = 'append-complete' | 'delete-complete';
-
 export type CorbadoConnectPasskeyListConfig = {
   connectTokenProvider: (type: ConnectTokenType) => Promise<string>;
-  onComplete(status: PasskeyListStatus, clientState: string): Promise<void>;
 };
 
 export type CorbadoConnectConfig = {

@@ -1,9 +1,9 @@
 import React from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
+import useShared from '../../hooks/useShared';
 import { PasskeySuccessIcon } from '../shared/icons/PasskeySuccessIcon';
 import { PrimaryButton } from '../shared/PrimaryButton';
-import useShared from '../../hooks/useShared';
 
 type Props = {
   aaguidName?: string;

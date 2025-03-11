@@ -38,8 +38,8 @@ import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
 import { CorbadoError, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
-import { WebAuthnService } from './WebAuthnService';
 import { ClientStateService } from './ClientStateService';
+import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';

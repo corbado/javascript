@@ -26,8 +26,8 @@ import {
   PasskeysNotSupported,
   SessionManagementNotEnabled,
 } from '../utils';
-import { WebAuthnService } from './WebAuthnService';
 import { ClientStateService } from './ClientStateService';
+import { WebAuthnService } from './WebAuthnService';
 
 const sessionTokenKey = 'cbo_session_token';
 const refreshTokenKey = 'cbo_refresh_token';

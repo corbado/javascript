@@ -27,6 +27,7 @@ import {
   SessionManagementNotEnabled,
 } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
+import { ClientStateService } from './ClientStateService';
 
 const sessionTokenKey = 'cbo_session_token';
 const refreshTokenKey = 'cbo_refresh_token';
@@ -174,13 +175,14 @@ export class SessionService {
   }
 
   async appendPasskey(): Promise<Result<void, CorbadoError | undefined>> {
-    const clientInformation = await this.#webAuthnService.getClientInformation();
+    const maybeClientHandle = ClientStateService.getClientEnvHandle(this.#projectId);
+    const clientInformation = await this.#webAuthnService.getClientInformation(maybeClientHandle);
     const respStart = await this.#usersApi.currentUserPasskeyAppendStart({
       clientInformation: clientInformation,
     });
 
     if (respStart.data.newClientEnvHandle) {
-      WebAuthnService.setClientHandle(respStart.data.newClientEnvHandle);
+      ClientStateService.setClientEnvHandle(this.#projectId, respStart.data.newClientEnvHandle);
     }
 
     if (respStart.data.appendNotAllowedReason) {

@@ -24,11 +24,12 @@ import type {
 import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectInvitation } from '../models/connect/connectInvitation';
-import { ConnectLastLogin } from '../models/connect/connectLastLogin';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import type { PasskeyLoginSource } from '../utils';
 import { CorbadoError } from '../utils';
+import type { LastLogin } from './ClientStateService';
+import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -165,7 +166,7 @@ export class ConnectService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
+      ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -322,7 +323,7 @@ export class ConnectService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
+      ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -413,8 +414,8 @@ export class ConnectService {
       this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
     );
     if (finishRes.ok) {
-      const latestLogin = new ConnectLastLogin(finishRes.val.passkeyOperation);
-      latestLogin.persistToStorage(this.#projectId);
+      const latestLogin = finishRes.val.passkeyOperation as LastLogin;
+      ClientStateService.setLastLogin(this.#projectId, latestLogin);
     }
 
     return finishRes;
@@ -443,8 +444,8 @@ export class ConnectService {
     }
 
     if (res.ok) {
-      const latestLogin = new ConnectLastLogin(res.val.passkeyOperation);
-      latestLogin.persistToStorage(this.#projectId);
+      const latestLogin = res.val.passkeyOperation as LastLogin;
+      ClientStateService.setLastLogin(this.#projectId, latestLogin);
     }
 
     return res;
@@ -474,7 +475,7 @@ export class ConnectService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
+      ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
     }
 
     flags.addItemsObject(res.val.flags);
@@ -661,11 +662,23 @@ export class ConnectService {
   }
 
   getLastLogin() {
-    return ConnectLastLogin.loadFromStorage(this.#projectId);
+    return ClientStateService.getLastLogin(this.#projectId);
   }
 
   clearLastLogin() {
-    ConnectLastLogin.clearStorage(this.#projectId);
+    ClientStateService.clearLastLogin(this.#projectId);
+  }
+
+  enrichClientState(encoded?: string) {
+    if (!encoded) {
+      return;
+    }
+
+    ClientStateService.enrichFromURL(this.#projectId, encoded);
+  }
+
+  encodeClientState(): string {
+    return ClientStateService.encodeToURL(this.#projectId);
   }
 
   async #getInitReq<T extends ConnectAppendInitReq | ConnectLoginInitReq | ConnectManageInitReq>(): Promise<{
@@ -683,7 +696,8 @@ export class ConnectService {
     }
 
     const flags = ConnectFlags.loadFromStorage(this.#projectId);
-    const clientInformation = await this.#webAuthnService.getClientInformation();
+    const maybeClientHandle = ClientStateService.getClientEnvHandle(this.#projectId);
+    const clientInformation = await this.#webAuthnService.getClientInformation(maybeClientHandle);
     const invitationToken = ConnectInvitation.loadFromStorage()?.token;
 
     const req = {

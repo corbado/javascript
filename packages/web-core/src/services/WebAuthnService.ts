@@ -13,8 +13,6 @@ import { Err, Ok } from 'ts-results';
 import type { ClientInformation, JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
 
-const clientHandleKey = 'cbo_client_handle';
-
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
  * Currently, this includes the creation of passkeys and the login with existing passkeys.
@@ -74,12 +72,11 @@ export class WebAuthnService {
     }
   }
 
-  async getClientInformation(): Promise<ClientInformation> {
+  async getClientInformation(maybeClientHandle: string | undefined): Promise<ClientInformation> {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const isUserVerifyingPlatformAuthenticatorAvailable = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
-    const maybeClientHandle = WebAuthnService.getClientHandle();
 
     // iOS & macOS Only so far
     const clientCapabilities = await WebAuthnService.getClientCapabilities();
@@ -98,7 +95,7 @@ export class WebAuthnService {
       bluetoothAvailable: bluetoothAvailable,
       isUserVerifyingPlatformAuthenticatorAvailable: isUserVerifyingPlatformAuthenticatorAvailable,
       isConditionalMediationAvailable: canUseConditionalUI,
-      clientEnvHandle: maybeClientHandle ?? undefined,
+      clientEnvHandle: maybeClientHandle,
       visitorId: currentVisitorId,
       javaScriptHighEntropy: javaScriptHighEntropy,
       clientCapabilities,
@@ -160,10 +157,6 @@ export class WebAuthnService {
     }
   }
 
-  static getClientHandle(): string | null {
-    return localStorage.getItem(clientHandleKey);
-  }
-
   static async getHighEntropyValues(): Promise<JavaScriptHighEntropy | undefined> {
     try {
       if (!navigator.userAgentData) {
@@ -187,10 +180,6 @@ export class WebAuthnService {
     } catch (e) {
       return;
     }
-  }
-
-  static setClientHandle(clientHandle: string) {
-    localStorage.setItem(clientHandleKey, clientHandle);
   }
 
   public abortOngoingOperation(): AbortController {

@@ -39,6 +39,7 @@ import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
 import { CorbadoError, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
 import { WebAuthnService } from './WebAuthnService';
+import { ClientStateService } from './ClientStateService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 const passkeyAppendShownKey = 'cbo_passkey_append_shown';
@@ -239,7 +240,7 @@ export class ProcessService {
 
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
-      WebAuthnService.setClientHandle(res.val.newClientEnvHandle);
+      ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
     }
 
     return res;
@@ -263,8 +264,9 @@ export class ProcessService {
     passkeyAppendShown: number | null,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessInitRsp, CorbadoError>> {
+    const maybeClientHandle = ClientStateService.getClientEnvHandle(this.#projectId);
     const req: ProcessInitReq = {
-      clientInformation: await this.#webAuthnService.getClientInformation(),
+      clientInformation: await this.#webAuthnService.getClientInformation(maybeClientHandle),
       passkeyAppendShown: passkeyAppendShown ?? undefined,
       preferredBlock: frontendPreferredBlockType,
       optOutOfPasskeyAppendAfterHybrid: localStorage.getItem(skipPasskeyAppendAfterHybridKey) === 'true',

@@ -13,6 +13,7 @@ import { TokenWrapper, verifyToken } from '@/app/utils';
 // Then we extract the cognitoID and retrieve the user's email from the user pool
 // Both values will then be set as a cookie
 export async function postPasskeyLogin(session: string) {
+  console.log('postPasskeyLogin', session);
   const tokenWrapper = JSON.parse(session) as TokenWrapper;
   const decoded = await verifyToken(tokenWrapper.AccessToken);
   const username = decoded.username;
@@ -42,7 +43,7 @@ export async function postPasskeyLogin(session: string) {
   return;
 }
 
-export async function postPasskeyLoginNew(signedPasskeyData: string) {
+export async function postPasskeyLoginNew(signedPasskeyData: string, clientState: string) {
   const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/passkey/postLogin`;
   const body = JSON.stringify({
     signedPasskeyData: signedPasskeyData,
@@ -59,9 +60,11 @@ export async function postPasskeyLoginNew(signedPasskeyData: string) {
   });
 
   const out = await response.json();
-  console.log(out);
 
   await postPasskeyLogin(out.session);
+
+  // update client side state
+  cookies().set({ name: 'cbo_client_state', value: clientState, httpOnly: true });
 }
 
 function createSecretHash(username: string, clientId: string, clientSecret: string) {

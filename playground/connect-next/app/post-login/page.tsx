@@ -1,4 +1,6 @@
 'use client';
+import { postPasskeyAppend } from '@/app/post-login/actions';
+
 export const runtime = 'edge';
 
 import { CorbadoConnectAppend } from '@corbado/connect-react';
@@ -20,7 +22,11 @@ export default function PostLoginPage() {
 
               return t;
             }}
-            onComplete={async () => router.push('/home')}
+            onComplete={async (_, clientSideState: string) => {
+              console.log('onComplete', clientSideState);
+              await postPasskeyAppend('', clientSideState);
+              router.push('/home');
+            }}
           />
         </div>
       </div>

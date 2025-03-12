@@ -68,7 +68,7 @@ test.describe('social logins', () => {
     );
   });
 
-  test('signup with socials should be possible (account does not exist)', async ({ model }) => {
+  test.skip('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';

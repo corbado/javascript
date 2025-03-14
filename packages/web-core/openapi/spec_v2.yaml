@@ -1248,6 +1248,8 @@ components:
           type: string
         identifierHintAvailable:
           type: boolean
+        oneTapMeta:
+          $ref: '#/components/schemas/clientStateMeta'
 
     connectLoginStartRsp:
       type: object
@@ -1352,6 +1354,7 @@ components:
         - attestationOptions
         - variant
         - isRestrictedBrowser
+        - autoAppend
       properties:
         attestationOptions:
           type: string
@@ -1362,6 +1365,8 @@ components:
             - after-hybrid
             - after-error
         isRestrictedBrowser:
+          type: boolean
+        autoAppend:
           type: boolean
 
     connectAppendFinishReq:
@@ -1945,6 +1950,20 @@ components:
           type: boolean
         privateMode:
           type: boolean
+        clientEnvHandleMeta:
+          $ref: '#/components/schemas/clientStateMeta'
+
+    clientStateMeta:
+      type: object
+      required:
+        - ts
+        - source
+      properties:
+        ts:
+          type: integer
+        source:
+          type: string
+          enum: [ 'ls', 'url' ]
 
     clientCapabilities:
       type: object

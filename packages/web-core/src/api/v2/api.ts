@@ -246,7 +246,40 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'privateMode'?: boolean;
+    /**
+     * 
+     * @type {ClientStateMeta}
+     * @memberof ClientInformation
+     */
+    'clientEnvHandleMeta'?: ClientStateMeta;
 }
+/**
+ * 
+ * @export
+ * @interface ClientStateMeta
+ */
+export interface ClientStateMeta {
+    /**
+     * 
+     * @type {number}
+     * @memberof ClientStateMeta
+     */
+    'ts': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ClientStateMeta
+     */
+    'source': ClientStateMetaSourceEnum;
+}
+
+export const ClientStateMetaSourceEnum = {
+    Ls: 'ls',
+    Url: 'url'
+} as const;
+
+export type ClientStateMetaSourceEnum = typeof ClientStateMetaSourceEnum[keyof typeof ClientStateMetaSourceEnum];
+
 /**
  * 
  * @export
@@ -390,6 +423,12 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'isRestrictedBrowser': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectAppendStartRsp
+     */
+    'autoAppend': boolean;
 }
 
 export const ConnectAppendStartRspVariantEnum = {
@@ -593,6 +632,12 @@ export interface ConnectLoginStartReq {
      * @memberof ConnectLoginStartReq
      */
     'identifierHintAvailable'?: boolean;
+    /**
+     * 
+     * @type {ClientStateMeta}
+     * @memberof ConnectLoginStartReq
+     */
+    'oneTapMeta'?: ClientStateMeta;
 }
 
 export const ConnectLoginStartReqSourceEnum = {

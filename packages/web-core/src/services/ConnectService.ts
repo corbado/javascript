@@ -7,6 +7,7 @@ import { Err, Ok } from 'ts-results';
 
 import { Configuration } from '../api/v1';
 import type {
+  ClientStateMeta,
   ConnectAppendFinishRsp,
   ConnectAppendInitReq,
   ConnectAppendStartRsp,
@@ -236,6 +237,15 @@ export class ConnectService {
       identifierHintAvailable = true;
     }
 
+    let oneTapMeta: ClientStateMeta | undefined;
+    const lastLogin = ClientStateService.getLastLogin(this.#projectId);
+    if (lastLogin) {
+      oneTapMeta = {
+        source: ClientStateService.parseClientStateSource(lastLogin.source),
+        ts: lastLogin.ts,
+      };
+    }
+
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectLoginStart(
         {
@@ -244,6 +254,7 @@ export class ConnectService {
           loadedMs,
           loginConnectToken: connectToken,
           identifierHintAvailable: identifierHintAvailable,
+          oneTapMeta: oneTapMeta,
         },
         { signal: ac?.signal },
       ),
@@ -662,7 +673,7 @@ export class ConnectService {
   }
 
   getLastLogin() {
-    return ClientStateService.getLastLogin(this.#projectId);
+    return ClientStateService.getLastLogin(this.#projectId)?.data;
   }
 
   clearLastLogin() {

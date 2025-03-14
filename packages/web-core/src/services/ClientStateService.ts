@@ -1,12 +1,13 @@
 import type { LoginIdentifierType, PasskeyCeremonyType } from '@corbado/types';
 
+import type { ClientStateMeta } from '../api/v2';
 import { base64decode, base64encode } from '../utils';
 
 const getStorageKeyClientHandle = (projectId: string) => `cbo_client_handle-${projectId}`;
 const getStorageKeyClientHandleCompat = () => `cbo_client_handle`;
 const getStorageKeyLastLogin = (projectId: string) => `cbo_connect_last_login-${projectId}`;
 
-enum Source {
+export enum Source {
   LocalStorage = 'LocalStorage',
   URL = 'URL',
 }
@@ -23,7 +24,7 @@ export type LastLogin = {
   operationType: string;
 };
 
-type ClientStateEntry<T> = {
+export type ClientStateEntry<T> = {
   data: T;
   source: Source;
   ts: number;
@@ -59,18 +60,19 @@ export class ClientStateService {
     return base64encode(JSON.stringify(data));
   }
 
-  static getLastLogin(projectId: string): LastLogin | undefined {
+  static getLastLogin(projectId: string): ClientStateEntry<LastLogin> | undefined {
     const entry = this.#getEntry<LastLogin>(getStorageKeyLastLogin(projectId));
     if (entry) {
-      return entry.data;
+      return entry;
     }
 
-    const serialized = localStorage.getItem(getStorageKeyLastLogin(projectId));
-    if (!serialized) {
-      return undefined;
+    const compatValue = localStorage.getItem(getStorageKeyLastLogin(projectId));
+    if (compatValue) {
+      this.setLastLogin(projectId, JSON.parse(compatValue) as LastLogin);
+      return this.#getEntry<LastLogin>(getStorageKeyLastLogin(projectId));
     }
 
-    return JSON.parse(serialized) as LastLogin;
+    return;
   }
 
   static setLastLogin(projectId: string, lastLogin: LastLogin): void {
@@ -87,17 +89,17 @@ export class ClientStateService {
     this.#setLastLogin(projectId, null, Source.LocalStorage, Date.now());
   }
 
-  static getClientEnvHandle(projectId: string): string | undefined {
+  static getClientEnvHandle(projectId: string): ClientStateEntry<string> | undefined {
     const entry = this.#getEntry<string>(getStorageKeyClientHandle(projectId));
 
     if (entry) {
-      return entry.data;
+      return entry;
     }
 
-    const compatEntry = this.#getEntry<string>(getStorageKeyClientHandleCompat());
-    if (compatEntry) {
-      this.#setClientEnvHandle(projectId, compatEntry.data, Source.LocalStorage, compatEntry.ts);
-      return compatEntry.data;
+    const compatValue = localStorage.getItem(getStorageKeyClientHandleCompat());
+    if (compatValue) {
+      this.setClientEnvHandle(projectId, compatValue);
+      return this.#getEntry<string>(getStorageKeyClientHandle(projectId));
     }
 
     return;
@@ -123,6 +125,17 @@ export class ClientStateService {
       return JSON.parse(serialized) as ClientStateEntry<T>;
     } catch {
       return;
+    }
+  }
+
+  static parseClientStateSource(source: Source): ClientStateMeta['source'] {
+    switch (source) {
+      case Source.LocalStorage:
+        return 'ls';
+      case Source.URL:
+        return 'url';
+      default:
+        return 'ls';
     }
   }
 }

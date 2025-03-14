@@ -133,7 +133,7 @@ const AppendInitScreen = () => {
       setAttestationOptions(startAppendRes.val.attestationOptions);
       statefulLoader.current.finish();
 
-      if (flags?.hasSupportForAutomaticAppend()) {
+      if (startAppendRes.val.autoAppend) {
         await handleSubmit(startAppendRes.val.attestationOptions, false);
       }
     };

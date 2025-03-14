@@ -4,11 +4,12 @@ export type CorbadoConnectLoginConfig = {
   onFallbackCustom?(identifier: string, code: string, payload: string): void;
   onError?(error: string): void;
   onLoaded?(message: string, isFallBackTriggered: boolean): void;
-  onComplete(signedPasskeyData: string): Promise<void>;
+  onComplete(signedPasskeyData: string, clientState: string): Promise<void>;
   onConditionalLoginStart?(ac: AbortController): void;
   onLoginStart?(): void;
   onHelpClick?(): void;
   onSignupClick?(): void;
+  clientState?: string;
 };
 
 export type CorbadoConnectLoginSecondFactorConfig = {
@@ -23,7 +24,7 @@ export type CorbadoConnectAppendConfig = {
   appendTokenProvider(): Promise<string>;
   onError?(error: string): void;
   onSkip(status: AppendStatus): Promise<void>;
-  onComplete(status: AppendStatus): Promise<void>;
+  onComplete(status: AppendStatus, clientState: string): Promise<void>;
 };
 
 export type AppendStatus = 'skip-implicit' | 'skip-explicit' | 'complete' | 'complete-noop';

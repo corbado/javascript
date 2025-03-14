@@ -10,10 +10,10 @@ import log from 'loglevel';
 import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
-import type { ClientInformation, JavaScriptHighEntropy } from '../api/v2';
+import type { ClientInformation, ClientStateMeta, JavaScriptHighEntropy } from '../api/v2';
 import { CorbadoError } from '../utils';
-
-const clientHandleKey = 'cbo_client_handle';
+import type { ClientStateEntry } from './ClientStateService';
+import { ClientStateService } from './ClientStateService';
 
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
@@ -74,12 +74,11 @@ export class WebAuthnService {
     }
   }
 
-  async getClientInformation(): Promise<ClientInformation> {
+  async getClientInformation(maybeClientHandle: ClientStateEntry<string> | undefined): Promise<ClientInformation> {
     const bluetoothAvailable = await WebAuthnService.canUseBluetooth();
     const isUserVerifyingPlatformAuthenticatorAvailable = await WebAuthnService.doesBrowserSupportPasskeys();
     const javaScriptHighEntropy = await WebAuthnService.getHighEntropyValues();
     const canUseConditionalUI = await WebAuthnService.doesBrowserSupportConditionalUI();
-    const maybeClientHandle = WebAuthnService.getClientHandle();
 
     // iOS & macOS Only so far
     const clientCapabilities = await WebAuthnService.getClientCapabilities();
@@ -94,16 +93,25 @@ export class WebAuthnService {
       this.#visitorId = visitorId;
     }
 
+    let clientEnvHandleMeta: ClientStateMeta | undefined = undefined;
+    if (maybeClientHandle) {
+      clientEnvHandleMeta = {
+        source: ClientStateService.parseClientStateSource(maybeClientHandle.source),
+        ts: maybeClientHandle.ts,
+      };
+    }
+
     return {
       bluetoothAvailable: bluetoothAvailable,
       isUserVerifyingPlatformAuthenticatorAvailable: isUserVerifyingPlatformAuthenticatorAvailable,
       isConditionalMediationAvailable: canUseConditionalUI,
-      clientEnvHandle: maybeClientHandle ?? undefined,
+      clientEnvHandle: maybeClientHandle?.data,
       visitorId: currentVisitorId,
       javaScriptHighEntropy: javaScriptHighEntropy,
       clientCapabilities,
       webdriver: WebAuthnService.getWebdriver(),
       privateMode: await WebAuthnService.isPrivateMode(),
+      clientEnvHandleMeta: clientEnvHandleMeta,
     };
   }
 
@@ -160,10 +168,6 @@ export class WebAuthnService {
     }
   }
 
-  static getClientHandle(): string | null {
-    return localStorage.getItem(clientHandleKey);
-  }
-
   static async getHighEntropyValues(): Promise<JavaScriptHighEntropy | undefined> {
     try {
       if (!navigator.userAgentData) {
@@ -187,10 +191,6 @@ export class WebAuthnService {
     } catch (e) {
       return;
     }
-  }
-
-  static setClientHandle(clientHandle: string) {
-    localStorage.setItem(clientHandleKey, clientHandle);
   }
 
   public abortOngoingOperation(): AbortController {

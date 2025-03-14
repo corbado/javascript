@@ -1,6 +1,7 @@
 import React from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
+import useShared from '../../hooks/useShared';
 import { PasskeySuccessIcon } from '../shared/icons/PasskeySuccessIcon';
 import { PrimaryButton } from '../shared/PrimaryButton';
 
@@ -11,6 +12,7 @@ type Props = {
 
 const AppendSuccessScreen = ({ aaguidName }: Props) => {
   const { config } = useAppendProcess();
+  const { getConnectService } = useShared();
 
   const [completing, setCompleting] = React.useState(false);
 
@@ -40,7 +42,7 @@ const AppendSuccessScreen = ({ aaguidName }: Props) => {
             }
 
             setCompleting(true);
-            void config.onComplete('complete');
+            void config.onComplete('complete', getConnectService().encodeClientState());
           }}
         >
           Continue

@@ -90,10 +90,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         getConnectService().setInvitation(invitationToken);
       }
 
-      const na = url.searchParams.get('not_authenticated');
-      if (na === '1') {
-        getConnectService().handleNa();
-      }
+      getConnectService().enrichClientState(config.clientState);
 
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
@@ -180,7 +177,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(res.val));
+      await config.onComplete(connectLoginFinishToComplete(res.val), getConnectService().encodeClientState());
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -226,7 +223,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(res.val));
+      await config.onComplete(connectLoginFinishToComplete(res.val), getConnectService().encodeClientState());
     } catch {
       void getConnectService().recordEventLoginErrorUntyped();
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

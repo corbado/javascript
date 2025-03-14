@@ -52,7 +52,7 @@ export const LoginPasskeyReLoginScreen = () => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val), getConnectService().encodeClientState());
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

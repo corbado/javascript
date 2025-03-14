@@ -76,7 +76,7 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
     log.debug('error (credential-exists)');
 
     await getConnectService().recordEventAppendCredentialExistsError();
-    void config.onComplete('complete-noop');
+    void config.onComplete('complete-noop', getConnectService().encodeClientState());
   }, [getConnectService, config]);
 
   const contextValue = useMemo<AppendProcessContextProps>(

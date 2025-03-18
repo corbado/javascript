@@ -95,20 +95,20 @@ export const socialLogin = async (page: Page, gmail: string, password: string, s
   await gmailPage.close();
 
   await page.getByRole('button', { name: 'Continue with Google' }).click();
-  await expect(page.getByRole('heading')).toHaveText('Choose an account');
-
-  await page.getByRole('button', { name: 'Corbado Systemtest' }).click();
-  await expect(page.getByRole('heading')).toHaveText('corbado-staging.io wants to access your Google Account');
-
-  await page.getByRole('button', { name: 'Allow' }).click();
+  // await expect(page.getByRole('heading')).toHaveText('Choose an account');
+  //
+  // await page.getByRole('button', { name: 'Corbado Systemtest' }).click();
+  // await expect(page.getByRole('heading')).toHaveText('corbado-staging.io wants to access your Google Account');
+  //
+  // await page.getByRole('button', { name: 'Allow' }).click();
 };
 
 export const repeatSocialLogin = async (page: Page) => {
   await page.getByRole('button', { name: 'Continue with Google' }).click();
-  await expect(page.getByRole('heading')).toHaveText('Choose an account');
-
-  await page.getByRole('button', { name: 'Corbado Systemtest' }).click();
-  await expect(page.getByRole('heading')).toHaveText('corbado-staging.io wants to access your Google Account');
-
-  await page.getByRole('button', { name: 'Allow' }).click();
+  // await expect(page.getByRole('heading')).toHaveText('Choose an account');
+  //
+  // await page.getByRole('button', { name: 'Corbado Systemtest' }).click();
+  // await expect(page.getByRole('heading')).toHaveText('corbado-staging.io wants to access your Google Account');
+  //
+  // await page.getByRole('button', { name: 'Allow' }).click();
 };

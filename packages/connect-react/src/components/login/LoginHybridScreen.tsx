@@ -31,7 +31,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(res.val));
+      await config.onComplete(connectLoginFinishToComplete(res.val), getConnectService().encodeClientState());
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

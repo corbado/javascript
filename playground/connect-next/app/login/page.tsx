@@ -1,55 +1,13 @@
-'use client';
+import LoginComponent from '@/app/login/LoginComponent';
+import { cookies } from 'next/headers';
 
-import { useRouter } from 'next/navigation';
-import { CorbadoConnectLogin } from '@corbado/connect-react';
-import { useState } from 'react';
-import ConventionalLogin from '@/app/login/ConventionalLogin';
-import { postPasskeyLogin, postPasskeyLoginNew } from '@/app/login/actions';
+export type Props = {
+  clientState: string | undefined;
+};
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [conventionalLoginVisible, setConventionalLoginVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [fallbackErrorMessage, setFallbackErrorMessage] = useState('');
+  const clientState = cookies().get('cbo_client_state');
+  console.log('clientState', clientState);
 
-  console.log('conventionalLoginVisible', conventionalLoginVisible);
-
-  return (
-    <div className='w-full flex justify-center'>
-      <div className='w-96 my-4 mx-4'>
-        <div className='login-area'>
-          {conventionalLoginVisible ? (
-            <ConventionalLogin
-              initialEmail={email}
-              initialError={fallbackErrorMessage}
-            />
-          ) : null}
-          <div className='component'>
-            <CorbadoConnectLogin
-              onFallback={(identifier: string, message: string) => {
-                setEmail(identifier);
-                setConventionalLoginVisible(true);
-                setFallbackErrorMessage(message);
-                console.log('onFallback', identifier);
-              }}
-              onFallbackCustom={(identifier: string, code: string, _: string) => {
-                setEmail(identifier);
-                setConventionalLoginVisible(true);
-                setFallbackErrorMessage(code);
-                console.log('onFallbackCustom', identifier, code);
-              }}
-              onError={(error: string) => console.log('error', error)}
-              onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-              onComplete={async (signedPasskeyData: string) => {
-                await postPasskeyLoginNew(signedPasskeyData);
-                router.push('/post-login');
-              }}
-              onSignupClick={() => router.push('/signup')}
-              onHelpClick={() => alert('help requested')}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <LoginComponent clientState={clientState?.value} />;
 }

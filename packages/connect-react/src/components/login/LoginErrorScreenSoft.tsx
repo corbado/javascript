@@ -51,7 +51,7 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(resFinish.val));
+      await config.onComplete(connectLoginFinishToComplete(resFinish.val), getConnectService().encodeClientState());
       setLoading(false);
     } catch {
       handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

@@ -2,8 +2,8 @@ import { test as base } from '@playwright/test';
 
 import { BaseModel } from '../models/BaseModel';
 import { CDPSessionManager } from '../utils/CDPSessionManager';
-import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 import { NetworkRequestBlocker } from '../utils/NetworkRequestBlocker';
+import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
 export const test = base.extend<{ model: BaseModel }>({
   model: async ({ page }, use) => {

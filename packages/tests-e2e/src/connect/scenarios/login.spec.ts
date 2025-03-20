@@ -158,7 +158,7 @@ test.describe('login component (without user)', () => {
     await model.loadLogin();
     await model.expectScreen(ScreenNames.InitLogin);
 
-    await model.login.submitEmail('unknown-email@corbado.com', false);
+    await model.login.submitEmail('integration-test+unknown@corbado.com', false);
     await model.expectError(ErrorTexts.UnknownEmail);
   });
 
@@ -167,7 +167,7 @@ test.describe('login component (without user)', () => {
 
     await model.loadLogin();
     // It seems that the InitLogin page is now cached so that email needs to be submitted before reaching the InitLoginFallback screen.
-    await model.login.submitEmail('dummy-email@corbado.com', false);
+    await model.login.submitEmail('integration-test+dummy@corbado.com', false);
     await model.expectScreen(ScreenNames.InitLoginFallback);
   });
 

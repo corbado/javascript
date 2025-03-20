@@ -43,7 +43,7 @@ test.describe('login-init', () => {
   test('bad user input: non-existing email', async ({ model }) => {
     await model.load(projectId, true, 'login-init');
 
-    await model.loginInit.fillEmailUsername('user-does-not-exist@corbado.com');
+    await model.loginInit.fillEmailUsername('integration-test+notexist@corbado.com');
     await model.loginInit.submitPrimary();
     await model.loginInit.expectTextError("Couldn't find your account.");
   });

@@ -68,7 +68,8 @@ test.describe('social logins', () => {
     );
   });
 
-  test('signup with socials should be possible (account does not exist)', async ({ model }) => {
+  // Reason for skip: https://www.notion.so/Issues-related-to-email-and-social-login-in-tests-javascript-complete-1bceeb954aa280148c34d10aac8c2117
+  test.skip('signup with socials should be possible (account does not exist)', async ({ model }) => {
     await model.load(projectId, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';

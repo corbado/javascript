@@ -1,3 +1,9 @@
+## 3.0.2
+
+### Patch changes
+
+- Patch dependency vulnerabilities (mainly webauthn-json dev dependencies).
+
 ## 3.0.1
 
 ### Patch changes

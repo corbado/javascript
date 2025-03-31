@@ -20,8 +20,5 @@ module.exports = merge(common, {
   externals: {
     '@corbado/web-core': '@corbado/web-core',
     react: 'react',
-    i18next: 'i18next',
-    'i18next-browser-languagedetector': 'i18next-browser-languagedetector',
-    'react-i18next': 'react-i18next',
   },
 });

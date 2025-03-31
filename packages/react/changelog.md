@@ -4,7 +4,6 @@
 
 - Fix a bug where passkey-append aborts in rare cases when users create a passkey right after signup.
 
-
 ## 3.0.0
 
 ### Major changes

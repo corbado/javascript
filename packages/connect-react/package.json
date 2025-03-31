@@ -32,10 +32,7 @@
   },
   "dependencies": {
     "@corbado/web-core": "^3.0.1",
-    "date-fns": "^3.6.0",
-    "i18next": "23.5.1",
-    "i18next-browser-languagedetector": "7.1.0",
-    "react-i18next": "13.2.2"
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@corbado/types": "^3.0.1",

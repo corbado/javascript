@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 import { ConnectTokenType } from '@corbado/types';
 
 export async function getCorbadoToken(tokenType: ConnectTokenType) {
-  const identifier = cookies().get('identifier');
+  const cookieStore = await cookies();
+  const identifier = cookieStore.get('identifier');
   if (!identifier) {
     return null;
   }

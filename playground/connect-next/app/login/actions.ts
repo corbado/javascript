@@ -36,8 +36,9 @@ export async function postPasskeyLogin(session: string) {
 
   const email = response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
   if (email) {
-    cookies().set('displayName', email);
-    cookies().set('identifier', username);
+    const cookieStore = await cookies();
+    cookieStore.set('displayName', email);
+    cookieStore.set('identifier', username);
   }
 
   return;
@@ -64,7 +65,8 @@ export async function postPasskeyLoginNew(signedPasskeyData: string, clientState
   await postPasskeyLogin(out.session);
 
   // update client side state
-  cookies().set({ name: 'cbo_client_state', value: clientState, httpOnly: true });
+  const cookieStore = await cookies();
+  cookieStore.set({ name: 'cbo_client_state', value: clientState, httpOnly: true });
 }
 
 function createSecretHash(username: string, clientId: string, clientSecret: string) {
@@ -80,7 +82,8 @@ export async function startConventionalLogin(email: string, password: string) {
       throw new Error('Email and password are required.');
     }
 
-    cookies().set('displayName', email);
+    const cookieStore = await cookies();
+    cookieStore.set('displayName', email);
 
     const client = new CognitoIdentityProviderClient({
       region: process.env.AWS_REGION!,
@@ -113,14 +116,14 @@ export async function startConventionalLogin(email: string, password: string) {
       const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
       const username = decoded.username;
       if (email) {
-        cookies().set('identifier', username);
+        cookieStore.set('identifier', username);
       }
 
       return { success: true };
     }
 
     if (response.Session && response.ChallengeName === 'SOFTWARE_TOKEN_MFA') {
-      cookies().set('mfa_session', response.Session);
+      cookieStore.set('mfa_session', response.Session);
 
       return { success: true, screen: 'MFA_SOFTWARE_TOKEN' };
     }

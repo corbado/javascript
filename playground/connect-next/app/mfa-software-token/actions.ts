@@ -18,8 +18,9 @@ function createSecretHash(username: string, clientId: string, clientSecret: stri
 
 export async function startMFASoftwareToken(totp: string) {
   try {
-    const session = cookies().get('mfa_session');
-    const displayName = cookies().get('displayName');
+    const cookieStore = await cookies();
+    const session = cookieStore.get('mfa_session');
+    const displayName = cookieStore.get('displayName');
 
     if (!totp || !session || !displayName) {
       throw new Error('Missing required fields.');
@@ -75,7 +76,8 @@ export async function startMFASoftwareToken(totp: string) {
 }
 
 export async function generateTOTP() {
-  const secretCode = cookies().get('secretCode');
+  const cookieStore = await cookies();
+  const secretCode = cookieStore.get('secretCode');
   if (!secretCode) {
     return {
       success: false,

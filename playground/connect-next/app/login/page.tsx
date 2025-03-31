@@ -5,8 +5,9 @@ export type Props = {
   clientState: string | undefined;
 };
 
-export default function LoginPage() {
-  const clientState = cookies().get('cbo_client_state');
+export default async function LoginPage() {
+  const cookieStore = await cookies();
+  const clientState = cookieStore.get('cbo_client_state');
   console.log('clientState', clientState);
 
   return <LoginComponent clientState={clientState?.value} />;

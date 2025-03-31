@@ -3,12 +3,13 @@
 import { cookies } from 'next/headers';
 
 export async function getAppendToken() {
-  const displayName = cookies().get('displayName');
+  const cookieStore = await cookies();
+  const displayName = cookieStore.get('displayName');
   if (!displayName) {
     return null;
   }
 
-  const identifier = cookies().get('identifier');
+  const identifier = cookieStore.get('identifier');
   if (!identifier) {
     return null;
   }

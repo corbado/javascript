@@ -25,9 +25,10 @@ export const createAccount = async (email: string, phone: string, password: stri
   // of course this is not secure, but it's just a demo ;)
 
   const randomUsername = generateRandomString(10);
+  const cookieStore = await cookies();
 
-  cookies().set('displayName', email);
-  cookies().set('identifier', randomUsername);
+  cookieStore.set('displayName', email);
+  cookieStore.set('identifier', randomUsername);
 
   // create client that loads profile from ~/.aws/credentials or environment variables
   const client = new CognitoIdentityProviderClient({
@@ -91,7 +92,7 @@ export const createAccount = async (email: string, phone: string, password: stri
   const associateSoftwareTokenRes = await client.send(associateSoftwareTokenCommand);
   console.log('associateSoftwareTokenRes', associateSoftwareTokenRes);
 
-  cookies().set('secretCode', associateSoftwareTokenRes.SecretCode!);
+  cookieStore.set('secretCode', associateSoftwareTokenRes.SecretCode!);
 
   const { otp } = TOTP.generate(associateSoftwareTokenRes.SecretCode!);
   console.log('otp', otp);

@@ -11,6 +11,9 @@ module.exports = merge(common, {
   },
   devtool: 'source-map',
   mode: 'production',
+  optimization: {
+    minimize: false,
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.FE_LIBRARY_VERSION': JSON.stringify(pkg.version),

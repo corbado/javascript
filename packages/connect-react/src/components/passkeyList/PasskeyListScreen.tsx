@@ -1,7 +1,6 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { ConnectError, Passkey } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
-import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -96,7 +95,7 @@ const PasskeyListScreen = () => {
 
     const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
     if (deletePasskeyRes.err) {
-      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete);
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete, deletePasskeyRes.val);
     }
 
     await getPasskeyList(config, true);
@@ -120,7 +119,7 @@ const PasskeyListScreen = () => {
     const loadedMs = Date.now();
     const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, undefined, true);
     if (startAppendRes.err) {
-      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator);
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator, startAppendRes.val);
     }
 
     if (!startAppendRes.val.attestationOptions) {
@@ -133,15 +132,15 @@ const PasskeyListScreen = () => {
 
     const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
     if (res.err) {
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(PasskeyListSituationCode.ClientPasskeyOperationCancelled);
+      if (res.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(PasskeyListSituationCode.ClientPasskeyOperationCancelled, res.val);
       }
 
-      if (res.val instanceof ExcludeCredentialsMatchError) {
-        return handleSituation(PasskeyListSituationCode.ClientExcludeCredentialsMatch);
+      if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
+        return handleSituation(PasskeyListSituationCode.ClientExcludeCredentialsMatch, res.val);
       }
 
-      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator);
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
     }
 
     log.debug('get passkey list');
@@ -164,7 +163,7 @@ const PasskeyListScreen = () => {
 
     const passkeyList = await getConnectService().manageList(listTokenRes, triggerSignalAllAccepted);
     if (passkeyList.err) {
-      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
+      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad, passkeyList.val);
     }
 
     console.log('passkeyList', passkeyList.val.passkeys);

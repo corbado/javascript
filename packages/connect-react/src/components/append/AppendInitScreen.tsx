@@ -1,4 +1,4 @@
-import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import { ConnectError, ConnectErrorType } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -80,11 +80,11 @@ const AppendInitScreen = () => {
 
       const res = await getConnectService().appendInit(ac);
       if (res.err) {
-        if (res.val.ignore) {
+        if (res.val.type === ConnectErrorType.Cancel) {
           return;
         }
 
-        return handleSituation(AppendSituationCode.CboApiNotAvailablePreAuthenticator);
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePreAuthenticator, res.val);
       }
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
@@ -107,11 +107,11 @@ const AppendInitScreen = () => {
 
       const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, ac);
       if (startAppendRes.err) {
-        if (startAppendRes.val.ignore) {
+        if (startAppendRes.val.type === ConnectErrorType.Cancel) {
           return;
         }
 
-        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator, startAppendRes.val);
       }
 
       if (startAppendRes.val.attestationOptions === '') {
@@ -162,19 +162,19 @@ const AppendInitScreen = () => {
 
       const res = await getConnectService().completeAppend(attestationOptions);
       if (res.err) {
-        if (res.val instanceof ExcludeCredentialsMatchError) {
-          return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
+        if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
+          return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);
         }
 
-        if (res.val instanceof PasskeyChallengeCancelledError) {
+        if (res.val.type === ConnectErrorType.Cancel) {
           if (showErrorIfCancelled) {
-            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
+            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled, res.val);
           } else {
-            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelledSilent);
+            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelledSilent, res.val);
           }
         }
 
-        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
+        return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
       }
 
       setAppendLoading(false);
@@ -186,7 +186,7 @@ const AppendInitScreen = () => {
     [config, getConnectService, appendLoading, skipping],
   );
 
-  const handleSituation = async (situationCode: AppendSituationCode) => {
+  const handleSituation = async (situationCode: AppendSituationCode, error?: ConnectError) => {
     log.debug(`situation: ${situationCode}`);
 
     const message = getAppendErrorMessage(situationCode);
@@ -198,20 +198,20 @@ const AppendInitScreen = () => {
       case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
-        void handleErrorHard(situationCode, false);
+        void handleErrorHard(situationCode, false, error);
 
         statefulLoader.current.finishWithError();
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
-        void handleErrorSoft(situationCode, true, true);
+        void handleErrorSoft(situationCode, true, true, error);
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelledSilent:
-        void handleErrorSoft(situationCode, true, false);
+        void handleErrorSoft(situationCode, true, false, error);
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
-        void handleCredentialExistsError();
+        void handleCredentialExistsError(error);
         setAppendLoading(false);
         break;
       case AppendSituationCode.DeniedByPartialRollout:

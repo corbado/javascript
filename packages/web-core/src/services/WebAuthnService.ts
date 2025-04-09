@@ -25,15 +25,8 @@ export class WebAuthnService {
 
   async createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     try {
-      const abortController = this.abortOngoingOperation();
-      const challenge = JSON.parse(serializedChallenge);
-      challenge.signal = abortController.signal;
-      this.#abortController = abortController;
-
-      const signedChallenge = await create(challenge);
-      const serializedResponse = JSON.stringify(signedChallenge);
-
-      return Ok(serializedResponse);
+      const res = await this.createPasskeyRaw(serializedChallenge);
+      return Ok(res);
     } catch (e) {
       if (e instanceof DOMException) {
         return Err(CorbadoError.fromDOMException(e));
@@ -43,28 +36,24 @@ export class WebAuthnService {
     }
   }
 
+  async createPasskeyRaw(serializedChallenge: string): Promise<string> {
+    const abortController = this.abortOngoingOperation();
+    const challenge = JSON.parse(serializedChallenge);
+    challenge.signal = abortController.signal;
+    this.#abortController = abortController;
+
+    const signedChallenge = await create(challenge);
+    return JSON.stringify(signedChallenge);
+  }
+
   async login(
     serializedChallenge: string,
     conditional: boolean,
     onConditionalLoginStart?: (ac: AbortController) => void,
   ): Promise<Result<string, CorbadoError>> {
     try {
-      const abortController = this.abortOngoingOperation();
-
-      const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
-
-      challenge.signal = abortController.signal;
-      this.#abortController = abortController;
-      onConditionalLoginStart?.(abortController);
-
-      if (conditional) {
-        challenge.mediation = 'conditional';
-      }
-
-      const signedChallenge = await get(challenge);
-      const serializedResponse = JSON.stringify(signedChallenge);
-
-      return Ok(serializedResponse);
+      const res = await this.loginRaw(serializedChallenge, conditional, onConditionalLoginStart);
+      return Ok(res);
     } catch (e) {
       if (e instanceof DOMException) {
         return Err(CorbadoError.fromDOMException(e));
@@ -72,6 +61,27 @@ export class WebAuthnService {
         return Err(CorbadoError.fromUnknownFrontendError(e));
       }
     }
+  }
+
+  async loginRaw(
+    serializedChallenge: string,
+    conditional: boolean,
+    onConditionalLoginStart?: (ac: AbortController) => void,
+  ): Promise<string> {
+    const abortController = this.abortOngoingOperation();
+
+    const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
+
+    challenge.signal = abortController.signal;
+    this.#abortController = abortController;
+    onConditionalLoginStart?.(abortController);
+
+    if (conditional) {
+      challenge.mediation = 'conditional';
+    }
+
+    const signedChallenge = await get(challenge);
+    return JSON.stringify(signedChallenge);
   }
 
   async getClientInformation(maybeClientHandle: ClientStateEntry<string> | undefined): Promise<ClientInformation> {

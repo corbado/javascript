@@ -1,4 +1,5 @@
-import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
 
@@ -25,15 +26,15 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     setErrorMessage(undefined);
     const res = await getConnectService().completeAppend(attestationOptions);
     if (res.err) {
-      if (res.val instanceof ExcludeCredentialsMatchError) {
-        return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch);
+      if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
+        return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);
       }
 
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled);
+      if (res.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled, res.val);
       }
 
-      return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator);
+      return handleSituation(AppendSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
     }
 
     setLoading(false);
@@ -43,7 +44,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
     });
   };
 
-  const handleSituation = (situationCode: AppendSituationCode) => {
+  const handleSituation = (situationCode: AppendSituationCode, error?: ConnectError) => {
     log.debug(`situation: ${situationCode}`);
 
     const message = getAppendErrorMessage(situationCode);
@@ -55,14 +56,14 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
       case AppendSituationCode.CtApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePreAuthenticator:
       case AppendSituationCode.CboApiNotAvailablePostAuthenticator:
-        void handleErrorHard(situationCode, false);
+        void handleErrorHard(situationCode, false, error);
         break;
       case AppendSituationCode.ClientPasskeyOperationCancelled:
         setLoading(false);
-        void handleErrorSoft(situationCode, true, true);
+        void handleErrorSoft(situationCode, true, true, error);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
-        void handleCredentialExistsError();
+        void handleCredentialExistsError(error);
         break;
       case AppendSituationCode.ExplicitSkipByUser:
         void handleSkip(situationCode, true);

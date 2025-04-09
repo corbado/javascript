@@ -1,5 +1,6 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import type { Passkey } from '@corbado/web-core';
+import type { ConnectError, Passkey } from '@corbado/web-core';
+import { ConnectErrorType } from '@corbado/web-core';
 import { ExcludeCredentialsMatchError, PasskeyChallengeCancelledError } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useEffect, useRef, useState } from 'react';
@@ -60,11 +61,11 @@ const PasskeyListScreen = () => {
       const res = await getConnectService().manageInit(ac);
       log.debug(res.val);
       if (res.err) {
-        if (res.val.ignore) {
+        if (res.val.type === ConnectErrorType.Cancel) {
           return;
         }
 
-        return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad);
+        return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad, res.val);
       }
 
       // we use the manageAllowed flag to determine if appending a passkey is allowed
@@ -172,7 +173,7 @@ const PasskeyListScreen = () => {
     statefulLoader.current.finish();
   };
 
-  const handleSituation = (situationCode: PasskeyListSituationCode) => {
+  const handleSituation = (situationCode: PasskeyListSituationCode, error?: ConnectError) => {
     const messageCode = `situation: ${situationCode}`;
     log.debug(messageCode);
 
@@ -180,7 +181,7 @@ const PasskeyListScreen = () => {
     switch (situationCode) {
       case PasskeyListSituationCode.ClientExcludeCredentialsMatch:
         setAppendLoading(false);
-        void getConnectService().recordEventAppendCredentialExistsError();
+        void getConnectService().recordEventAppendCredentialExistsError(`${messageCode} ${error?.track()}`);
         show(<AlreadyExistingModal hide={hide} />);
         break;
       case PasskeyListSituationCode.CboApiPasskeysNotSupportedLight:
@@ -199,7 +200,7 @@ const PasskeyListScreen = () => {
           setErrorMessage(message);
         }
 
-        void getConnectService().recordEventManageErrorUnexpected(messageCode);
+        void getConnectService().recordEventManageErrorUnexpected(`${messageCode} ${error?.track()}`);
         break;
       case PasskeyListSituationCode.CtApiNotAvailablePreDelete:
       case PasskeyListSituationCode.CboApiNotAvailableDuringDelete:
@@ -208,7 +209,7 @@ const PasskeyListScreen = () => {
           setErrorMessage(message);
         }
 
-        void getConnectService().recordEventManageErrorUnexpected(messageCode);
+        void getConnectService().recordEventManageErrorUnexpected(`${messageCode} ${error?.track()}`);
         break;
       case PasskeyListSituationCode.CtApiNotAvailablePreAuthenticator:
       case PasskeyListSituationCode.CboApiNotAvailablePreAuthenticator:
@@ -220,7 +221,7 @@ const PasskeyListScreen = () => {
           setErrorMessage(message);
         }
 
-        void getConnectService().recordEventManageErrorUnexpected(messageCode);
+        void getConnectService().recordEventManageErrorUnexpected(`${messageCode} ${error?.track()}`);
     }
   };
 

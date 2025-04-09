@@ -4,6 +4,7 @@ import { createContext } from 'react';
 import type { Flags } from '../types/flags';
 import { AppendScreenType } from '../types/screenTypes';
 import type { AppendSituationCode } from '../types/situations';
+import { ConnectError } from '@corbado/web-core';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <ProcessContext/>');
@@ -14,9 +15,14 @@ export interface AppendProcessContextProps {
   currentScreenOptions: any;
   config: CorbadoConnectAppendConfig;
   navigateToScreen: (s: AppendScreenType, options?: any) => void;
-  handleErrorSoft: (situation: AppendSituationCode, expected: boolean, showError: boolean) => Promise<void>;
-  handleErrorHard: (situation: AppendSituationCode, expected: boolean) => Promise<void>;
-  handleCredentialExistsError: () => Promise<void>;
+  handleErrorSoft: (
+    situation: AppendSituationCode,
+    expected: boolean,
+    showError: boolean,
+    error?: ConnectError,
+  ) => Promise<void>;
+  handleErrorHard: (situation: AppendSituationCode, expected: boolean, error?: ConnectError) => Promise<void>;
+  handleCredentialExistsError: (error?: ConnectError) => Promise<void>;
   handleSkip: (situation: AppendSituationCode, explicit?: boolean) => Promise<void>;
   onReadMoreClick: () => Promise<void>;
   flags: Flags | undefined;

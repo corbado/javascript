@@ -1,4 +1,5 @@
-import { PasskeyChallengeCancelledError } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType } from '@corbado/web-core';
 import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useCallback, useState } from 'react';
@@ -23,11 +24,11 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     setLoading(true);
     const res = await getConnectService().loginContinue(resStart);
     if (res.err) {
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled);
+      if (res.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, res.val);
       }
 
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
     }
 
     try {
@@ -37,8 +38,8 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     }
   }, [getConnectService, config, navigateToScreen, currentIdentifier, loading]);
 
-  const handleSituation = (situationCode: LoginSituationCode) => {
-    const messageCode = `situation: ${situationCode}`;
+  const handleSituation = (situationCode: LoginSituationCode, error?: ConnectError) => {
+    const messageCode = `situation: ${situationCode} ${error?.track()}`;
     log.debug(messageCode);
 
     const identifier = currentIdentifier;

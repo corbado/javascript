@@ -1,4 +1,4 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import { ConnectErrorType, PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
 import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import React, { useEffect, useRef, useState } from 'react';
@@ -41,7 +41,7 @@ const InitScreen = () => {
       statefulLoader.current.start();
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
-        if (res.val.ignore) {
+        if (res.val.type === ConnectErrorType.Cancel) {
           return;
         }
 
@@ -75,7 +75,7 @@ const InitScreen = () => {
         ac,
       );
       if (resStart.err) {
-        if (resStart.val.ignore) {
+        if (resStart.val.type === ConnectErrorType.Cancel) {
           return;
         }
 

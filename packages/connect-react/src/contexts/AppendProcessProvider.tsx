@@ -1,4 +1,5 @@
 import type { AppendStatus, CorbadoConnectAppendConfig } from '@corbado/types';
+import type { ConnectError } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -9,7 +10,6 @@ import type { AppendScreenType } from '../types/screenTypes';
 import type { AppendSituationCode } from '../types/situations';
 import type { AppendProcessContextProps } from './AppendProcessContext';
 import AppendProcessContext from './AppendProcessContext';
-import type { ConnectError } from '@corbado/web-core';
 
 type Props = {
   config: CorbadoConnectAppendConfig;

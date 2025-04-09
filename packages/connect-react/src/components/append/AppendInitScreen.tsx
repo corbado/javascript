@@ -1,4 +1,5 @@
-import { ConnectError, ConnectErrorType } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 

@@ -1,4 +1,5 @@
-import { ConnectError, ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useState } from 'react';
 

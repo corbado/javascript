@@ -1,10 +1,10 @@
 import type { CorbadoConnectAppendConfig } from '@corbado/types';
+import type { ConnectError } from '@corbado/web-core';
 import { createContext } from 'react';
 
 import type { Flags } from '../types/flags';
 import { AppendScreenType } from '../types/screenTypes';
 import type { AppendSituationCode } from '../types/situations';
-import { ConnectError } from '@corbado/web-core';
 
 const missingImplementation = (): never => {
   throw new Error('Please make sure that your components are wrapped inside <ProcessContext/>');

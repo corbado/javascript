@@ -1,4 +1,5 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import type { ConnectLoginFinishRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import type { FC } from 'react';
@@ -94,12 +95,12 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
-        if (res.val.ignore) {
+        if (res.val.type === ConnectErrorType.Cancel) {
           return;
         }
 
         statefulLoader.current.finishWithError();
-        return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+        return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator, res.val);
       }
 
       // we load flags from backend first, then we override them with the ones that are specified in the component's config
@@ -154,16 +155,16 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     if (res.err) {
       // if a user cancel during CUI, she can try again
-      if (res.val.ignore || res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled);
+      if (res.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled, res.val);
       }
 
       // cuiStarted === true indicates that user has passed the authenticator
       if (cuiStarted) {
-        return handleSituation(LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator);
+        return handleSituation(LoginSituationCode.CboApiNotAvailablePostConditionalAuthenticator, res.val);
       }
 
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator, res.val);
     }
 
     if (res.val.fallbackOperationError) {
@@ -173,7 +174,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         message: res.val.fallbackOperationError.error?.message ?? null,
       };
 
-      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
     }
 
     try {
@@ -194,7 +195,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
     if (resStart.err) {
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator, resStart.val);
     }
 
     if (resStart.val.isCDA) {
@@ -209,17 +210,21 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         message: resStart.val.fallbackOperationError.error?.message ?? null,
       };
 
-      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
     }
 
     const res = await getConnectService().loginContinue(resStart.val);
     if (res.err) {
       setIdentifierBasedLoading(false);
-      if (res.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, resStart.val.assertionOptions);
+      if (res.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(
+          LoginSituationCode.ClientPasskeyOperationCancelled,
+          res.val,
+          resStart.val.assertionOptions,
+        );
       }
 
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
     }
 
     try {
@@ -241,8 +246,8 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     fallback(identifier, null);
   };
 
-  const handleSituation = (situationCode: LoginSituationCode, data?: unknown) => {
-    const messageCode = `situation: ${situationCode}`;
+  const handleSituation = (situationCode: LoginSituationCode, error?: ConnectError, data?: unknown) => {
+    const messageCode = `situation: ${situationCode} ${error?.track()}`;
     log.debug(messageCode);
 
     const message = getLoginErrorMessage(situationCode);

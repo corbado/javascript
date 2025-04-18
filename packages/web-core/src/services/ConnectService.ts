@@ -1,5 +1,11 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import type { AxiosHeaders, AxiosInstance, HeadersDefaults, RawAxiosRequestHeaders } from 'axios';
+import type {
+  AxiosHeaders,
+  AxiosInstance,
+  HeadersDefaults,
+  InternalAxiosRequestConfig,
+  RawAxiosRequestHeaders,
+} from 'axios';
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import log from 'loglevel';
 import type { Result } from 'ts-results';
@@ -28,12 +34,18 @@ import { ConnectInvitation } from '../models/connect/connectInvitation';
 import { ConnectProcess } from '../models/connect/connectProcess';
 import type { ConnectAppendInitData, ConnectLoginInitData, ConnectManageInitData } from '../models/connect/login';
 import type { PasskeyLoginSource } from '../utils';
-import { CorbadoError } from '../utils';
+import { ConnectError, ConnectErrorType } from '../utils';
 import type { LastLogin } from './ClientStateService';
 import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  metadata?: {
+    startTime?: number;
+  };
+}
 
 export class ConnectService {
   #connectApi: CorbadoConnectApi = new CorbadoConnectApi();
@@ -81,11 +93,32 @@ export class ConnectService {
       headers: processId ? { ...headers, 'x-corbado-process-id': processId } : headers,
     });
 
-    // We transform AxiosErrors into CorbadoErrors using axios interceptors.
+    out.interceptors.request.use(
+      (config: CustomAxiosRequestConfig): CustomAxiosRequestConfig | Promise<CustomAxiosRequestConfig> => {
+        config.metadata = config.metadata || {};
+        config.metadata.startTime = Date.now();
+        return config;
+      },
+      error => {
+        log.debug('axios request config error', error);
+        return Promise.reject(error);
+      },
+    );
+
+    // We transform AxiosErrors into ConnectErrors using axios interceptors.
     out.interceptors.response.use(
       response => response,
       (error: AxiosError) => {
-        const e = CorbadoError.fromConnectAxiosError(error);
+        const endTime = Date.now(); // Or performance.now()
+        let durationMs = 0;
+        const config = error.config as CustomAxiosRequestConfig | undefined; // Cast config
+        const startTime = config?.metadata?.startTime;
+
+        if (startTime) {
+          durationMs = endTime - startTime;
+        }
+
+        const e = ConnectError.fromConnectAxiosError(error, durationMs);
         log.debug('axios error', error, e);
         return Promise.reject(e);
       },
@@ -109,21 +142,19 @@ export class ConnectService {
     this.#connectApi = new CorbadoConnectApi(config, frontendApiUrl, axiosInstance);
   }
 
-  async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, CorbadoError>> {
+  async wrapWithErr<T>(callback: () => Promise<AxiosResponse<T>>): Promise<Result<T, ConnectError>> {
+    const started = Date.now();
     try {
       const r = await callback();
 
       return Ok(r.data);
     } catch (e) {
-      if (e instanceof CorbadoError) {
-        return Err(e);
-      }
-
-      return Err(CorbadoError.fromUnknownFrontendError(e));
+      const runtime = Date.now() - started;
+      return Err(ConnectError.fromFrontendError(e, runtime));
     }
   }
 
-  async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, CorbadoError>> {
+  async loginInit(abortController: AbortController): Promise<Result<ConnectLoginInitData, ConnectError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     const maybeLoginData = existingProcess?.getValidLoginData();
     if (
@@ -203,7 +234,7 @@ export class ConnectService {
     return Ok(loginData);
   }
 
-  async #getExistingProcess(generator: () => Promise<Result<unknown, CorbadoError>>): Promise<ConnectProcess | null> {
+  async #getExistingProcess(generator: () => Promise<Result<unknown, ConnectError>>): Promise<ConnectProcess | null> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess) {
       log.debug('process found');
@@ -226,10 +257,10 @@ export class ConnectService {
     loadedMs: number,
     connectToken?: string,
     ac?: AbortController,
-  ): Promise<Result<ConnectLoginStartRsp, CorbadoError>> {
+  ): Promise<Result<ConnectLoginStartRsp, ConnectError>> {
     const existingProcess = await this.loginInit(ac ?? new AbortController());
     if (existingProcess.err) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     let identifierHintAvailable = false;
@@ -271,8 +302,8 @@ export class ConnectService {
     return res;
   }
 
-  async loginContinue(start: ConnectLoginStartRsp): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
-    const res = await this.#webAuthnService.login(start.assertionOptions, false);
+  async loginContinue(start: ConnectLoginStartRsp): Promise<Result<ConnectLoginFinishRsp, ConnectError>> {
+    const res = await this.#webAuthnLogin(start.assertionOptions, false);
     if (res.err) {
       this.clearLastLogin();
       return res;
@@ -286,19 +317,19 @@ export class ConnectService {
     postWebAuthn: () => void,
     onLoginEnd: () => void,
     loadedMs: number,
-  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+  ): Promise<Result<ConnectLoginFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     if (!existingProcess.loginData || existingProcess.loginData?.conditionalUIChallenge === null) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     const challenge = existingProcess.loginData?.conditionalUIChallenge;
 
-    const res = await this.#webAuthnService.login(challenge, true, preWebAuthn);
+    const res = await this.#webAuthnLogin(challenge, true, preWebAuthn);
     if (res.err) {
       return res;
     }
@@ -310,7 +341,7 @@ export class ConnectService {
     return loginFinishResp;
   }
 
-  async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, CorbadoError>> {
+  async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, ConnectError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess) {
       log.debug('process exists, preparing api clients');
@@ -370,10 +401,10 @@ export class ConnectService {
     return Ok(appendData);
   }
 
-  async append(appendTokenValue: string, loadedMs: number): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
+  async append(appendTokenValue: string, loadedMs: number): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     const resStart = await this.wrapWithErr(() =>
@@ -383,7 +414,7 @@ export class ConnectService {
       return resStart;
     }
 
-    const platformRes = await this.#webAuthnService.createPasskey(resStart.val.attestationOptions);
+    const platformRes = await this.#webAuthnCreatePasskey(resStart.val.attestationOptions);
     if (platformRes.err) {
       return platformRes;
     }
@@ -396,10 +427,10 @@ export class ConnectService {
     loadedMs: number,
     abortController?: AbortController,
     initiatedByUser?: boolean,
-  ): Promise<Result<ConnectAppendStartRsp, CorbadoError>> {
+  ): Promise<Result<ConnectAppendStartRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     return this.wrapWithErr(() =>
@@ -410,13 +441,13 @@ export class ConnectService {
     );
   }
 
-  async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, CorbadoError>> {
+  async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
-    const res = await this.#webAuthnService.createPasskey(attestationOptions);
+    const res = await this.#webAuthnCreatePasskey(attestationOptions);
     if (res.err) {
       return res;
     }
@@ -440,10 +471,10 @@ export class ConnectService {
     assertionResponse: string,
     isConditionalUI: boolean,
     loadedMs?: number,
-  ): Promise<Result<ConnectLoginFinishRsp, CorbadoError>> {
+  ): Promise<Result<ConnectLoginFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.loginInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     const res = await this.wrapWithErr(() =>
@@ -462,7 +493,7 @@ export class ConnectService {
     return res;
   }
 
-  async manageInit(abortController: AbortController): Promise<Result<ConnectManageInitData, CorbadoError>> {
+  async manageInit(abortController: AbortController): Promise<Result<ConnectManageInitData, ConnectError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess) {
       log.debug('process exists, preparing api clients');
@@ -523,10 +554,10 @@ export class ConnectService {
   async manageList(
     passkeyListToken: string,
     triggerSignalAllAccepted: boolean,
-  ): Promise<Result<ConnectManageListRsp, CorbadoError>> {
+  ): Promise<Result<ConnectManageListRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.manageInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     const req: ConnectManageListReq = {
@@ -554,10 +585,10 @@ export class ConnectService {
   async manageDelete(
     passkeyDeleteToken: string,
     credentialID: string,
-  ): Promise<Result<ConnectManageDeleteRsp, CorbadoError>> {
+  ): Promise<Result<ConnectManageDeleteRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.manageInit(new AbortController()));
     if (!existingProcess) {
-      return Err(CorbadoError.missingInit());
+      return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     const req: ConnectManageDeleteReq = {
@@ -617,8 +648,8 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.UserAppendAfterLoginErrorBlacklisted);
   }
 
-  recordEventAppendCredentialExistsError() {
-    return this.#recordEvent(PasskeyEventType.AppendCredentialExists);
+  recordEventAppendCredentialExistsError(messageCode: string) {
+    return this.#recordEvent(PasskeyEventType.AppendCredentialExists, messageCode);
   }
 
   recordEventAppendError() {
@@ -718,5 +749,31 @@ export class ConnectService {
     } as T;
 
     return { req, flags };
+  }
+
+  async #webAuthnLogin(
+    serializedChallenge: string,
+    isConditional: boolean,
+    onConditionalLoginStart?: (ac: AbortController) => void,
+  ): Promise<Result<string, ConnectError>> {
+    const started = Date.now();
+    try {
+      const res = await this.#webAuthnService.loginRaw(serializedChallenge, isConditional, onConditionalLoginStart);
+      return Ok(res);
+    } catch (e) {
+      const runtime = Date.now() - started;
+      return Err(ConnectError.fromFrontendError(e, runtime));
+    }
+  }
+
+  async #webAuthnCreatePasskey(serializedChallenge: string): Promise<Result<string, ConnectError>> {
+    const started = Date.now();
+    try {
+      const res = await this.#webAuthnService.createPasskeyRaw(serializedChallenge);
+      return Ok(res);
+    } catch (e) {
+      const runtime = Date.now() - started;
+      return Err(ConnectError.fromFrontendError(e, runtime));
+    }
   }
 }

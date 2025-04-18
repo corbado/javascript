@@ -1,4 +1,5 @@
-import { PasskeyChallengeCancelledError, PasskeyLoginSource } from '@corbado/web-core';
+import type { ConnectError } from '@corbado/web-core';
+import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
 import React, { useState } from 'react';
 
@@ -28,7 +29,7 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
     setLoading(true);
     const resStart = await getConnectService().loginStart(currentIdentifier, PasskeyLoginSource.ErrorSoft, loadedMs);
     if (resStart.err) {
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePreAuthenticator, resStart.val);
     }
 
     if (resStart.val.assertionOptions.length === 0) {
@@ -38,16 +39,20 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
         message: resStart.val.fallbackOperationError.error?.message ?? null,
       };
 
-      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, data);
+      return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
     }
 
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
-      if (resFinish.val instanceof PasskeyChallengeCancelledError) {
-        return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, resStart.val.assertionOptions);
+      if (resFinish.val.type === ConnectErrorType.Cancel) {
+        return handleSituation(
+          LoginSituationCode.ClientPasskeyOperationCancelled,
+          resFinish.val,
+          resStart.val.assertionOptions,
+        );
       }
 
-      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
+      return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator, resFinish.val);
     }
 
     try {
@@ -58,8 +63,8 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
     }
   };
 
-  const handleSituation = (situationCode: LoginSituationCode, data?: unknown) => {
-    const messageCode = `situation: ${situationCode}`;
+  const handleSituation = (situationCode: LoginSituationCode, error?: ConnectError, data?: unknown) => {
+    const messageCode = `situation: ${situationCode} ${error?.track()}`;
     log.debug(messageCode);
 
     const identifier = currentIdentifier;

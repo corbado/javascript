@@ -83,28 +83,6 @@ export class CorbadoError extends Error {
     return NonRecoverableError.unhandledBackendError(errorResp.type);
   }
 
-  static fromConnectAxiosError(error: AxiosError): RecoverableError | NonRecoverableError {
-    log.debug('axios error', error);
-
-    if (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK') {
-      return new ConnectRequestTimedOut();
-    }
-
-    if (error.name === 'CanceledError') {
-      return CorbadoError.ignore();
-    }
-
-    if (!error.response || !error.response.data) {
-      return NonRecoverableError.unhandledBackendError('no_data_in_response');
-    }
-
-    const errorRespRaw = error.response.data as ErrorRsp;
-    log.debug('errorRespRaw', errorRespRaw.error.type);
-    const errorResp = errorRespRaw.error;
-
-    return NonRecoverableError.unhandledBackendError(errorResp.type);
-  }
-
   static fromDOMException(e: DOMException): CorbadoError {
     log.debug('e', e.name, e.message);
     switch (e.name) {

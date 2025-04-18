@@ -1,4 +1,5 @@
 import type { AppendStatus, CorbadoConnectAppendConfig } from '@corbado/types';
+import type { ConnectError } from '@corbado/web-core';
 import log from 'loglevel';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -27,11 +28,11 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   }, []);
 
   const handleErrorSoft = useCallback(
-    async (situationCode: AppendSituationCode, expected: boolean, showError: boolean) => {
+    async (situationCode: AppendSituationCode, expected: boolean, showError: boolean, error?: ConnectError) => {
       if (expected) {
         await getConnectService().recordEventAppendError();
       } else {
-        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode}`);
+        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode} ${error?.track()}`);
       }
 
       if (showError) {
@@ -42,11 +43,11 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   );
 
   const handleErrorHard = useCallback(
-    async (situationCode: AppendSituationCode, expected: boolean) => {
+    async (situationCode: AppendSituationCode, expected: boolean, error?: ConnectError) => {
       if (expected) {
         await getConnectService().recordEventAppendError();
       } else {
-        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode}`);
+        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode} ${error?.track()}`);
       }
 
       config.onError?.(situationCode.toString());
@@ -72,12 +73,15 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
     await getConnectService().recordEventAppendLearnMore();
   }, [getConnectService, config]);
 
-  const handleCredentialExistsError = useCallback(async () => {
-    log.debug('error (credential-exists)');
+  const handleCredentialExistsError = useCallback(
+    async (error?: ConnectError) => {
+      log.debug('error (credential-exists)');
 
-    await getConnectService().recordEventAppendCredentialExistsError();
-    void config.onComplete('complete-noop', getConnectService().encodeClientState());
-  }, [getConnectService, config]);
+      await getConnectService().recordEventAppendCredentialExistsError(error?.track() ?? '');
+      void config.onComplete('complete-noop', getConnectService().encodeClientState());
+    },
+    [getConnectService, config],
+  );
 
   const contextValue = useMemo<AppendProcessContextProps>(
     () => ({

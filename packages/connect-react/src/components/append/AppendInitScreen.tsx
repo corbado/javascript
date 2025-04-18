@@ -134,7 +134,8 @@ const AppendInitScreen = () => {
       setAttestationOptions(startAppendRes.val.attestationOptions);
       statefulLoader.current.finish();
 
-      if (startAppendRes.val.autoAppend) {
+      log.debug('startAppendRes', startAppendRes, flags);
+      if (startAppendRes.val.autoAppend || flags.hasSupportForAutomaticAppend()) {
         await handleSubmit(startAppendRes.val.attestationOptions, false);
       }
     };

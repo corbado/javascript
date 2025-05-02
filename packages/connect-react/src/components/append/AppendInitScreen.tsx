@@ -154,7 +154,6 @@ const AppendInitScreen = () => {
 
   const handleSubmit = useCallback(
     async (attestationOptions: string, showErrorIfCancelled: boolean) => {
-      console.log('handleSubmit', attestationOptions);
       if (appendLoading || skipping) {
         return;
       }

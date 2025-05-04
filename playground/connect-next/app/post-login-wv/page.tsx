@@ -1,6 +1,6 @@
 'use client';
 import { CorbadoConnectAppend } from '@corbado/connect-react';
-import { getCorbadoToken, postPasskeyAppend } from '@/app/(auth-required)/post-login-wv/actions';
+import { getCorbadoToken, postPasskeyAppend } from '@/app/post-login-wv/actions';
 import { AppendStatus } from '@corbado/types';
 
 export default function PostLoginPage() {

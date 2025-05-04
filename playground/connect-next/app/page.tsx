@@ -1,8 +1,6 @@
 'use client';
-export const runtime = 'edge';
 
 import Link from 'next/link';
-import { hello, hello2 } from '@/app/actions';
 
 export default function Home() {
   return (

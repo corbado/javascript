@@ -1,76 +1,122 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import PasswordForm from '@/app/login/PasswordForm';
+import { confirmSignIn, signIn } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { startConventionalLogin } from './actions';
+import ConfirmOTP from '@/components/ConfirmOTP';
+import { cookies } from 'next/headers';
+import { TOTP } from 'totp-generator';
+import { autoFillTOTP } from '@/app/login/actions';
 
-export type Props = {
-  initialEmail: string;
-  initialError: string;
+type Props = {
+  initialUserProvidedIdentifier: string;
 };
 
-export default function ConventionalLogin({ initialEmail, initialError }: Props) {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(initialError);
-  const [email, setEmail] = useState(initialEmail);
+enum State {
+  ProvidePassword,
+  ProvideSMSCode,
+  ProvideTOTPCode,
+}
+
+export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
+  const [state, setState] = useState(State.ProvidePassword);
   const router = useRouter();
 
-  const onSubmit = async () => {
-    setError('');
-    const res = await startConventionalLogin(email, password);
-    console.log(res);
+  const handleConventionalLogin = async (username: string, password: string): Promise<string | undefined> => {
+    try {
+      const result = await signIn({
+        username,
+        password,
+      });
 
-    if (!res.success) {
-      setError(res.message ?? 'An unknown error occurred. Please try again later.');
+      switch (result.nextStep.signInStep) {
+        case 'CONFIRM_SIGN_IN_WITH_SMS_CODE':
+          setState(State.ProvideSMSCode);
+          break;
 
-      return;
-    }
+        case 'CONFIRM_SIGN_IN_WITH_TOTP_CODE':
+          setState(State.ProvideTOTPCode);
+          break;
 
-    if (res.screen === 'MFA_SOFTWARE_TOKEN') {
-      router.push('/mfa-software-token');
-    } else {
-      router.push('/post-login');
+        case 'DONE':
+          router.push('/post-login');
+
+          break;
+
+        default:
+          console.error('Unexpected next step', result.nextStep);
+          break;
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        return e.message;
+      }
+
+      return 'An error occurred';
     }
   };
 
+  const handleConfirmCode = async (code: string): Promise<string | undefined> => {
+    try {
+      const res = await confirmSignIn({
+        challengeResponse: code,
+      });
+
+      if (res.isSignedIn) {
+        router.push('/post-login');
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        return e.message;
+      }
+
+      return 'An error occurred';
+    }
+  };
+
+  let headline, sub: string;
+  let content: React.ReactNode;
+  switch (state) {
+    case State.ProvidePassword:
+      headline = 'Login';
+      sub = 'Use your email to log into you Example Corp account.';
+      content = (
+        <PasswordForm
+          onClick={handleConventionalLogin}
+          initialUserProvidedIdentifier={initialUserProvidedIdentifier}
+        />
+      );
+
+      break;
+    case State.ProvideSMSCode:
+      headline = 'Check your phone';
+      sub = 'We have sent an SMS to your phone.';
+      content = <ConfirmOTP onSubmit={handleConfirmCode} />;
+
+      break;
+    case State.ProvideTOTPCode:
+      headline = 'Check your authenticator';
+      sub = 'Please enter the code from your authenticator app.';
+      content = (
+        <ConfirmOTP
+          onSubmit={handleConfirmCode}
+          onAutoFill={autoFillTOTP}
+        />
+      );
+
+      break;
+    default:
+      throw new Error(`Invalid state: ${state}`);
+  }
+
   return (
-    <div
-      id='conventional-login'
-      className='flex flex-col space-y-2'
-    >
-      <div className='mb-2 font-bold text-xl'>Login</div>
-      {error && <div className='w-full bg-red-200 border border-red-600 text-red-600 p-2'>{error}</div>}
-      <input
-        type='text'
-        className='input-field  w-full'
-        id='conventional-login-email'
-        placeholder='Email'
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <input
-        type='password'
-        className='input-field w-full'
-        id='conventional-login-password'
-        placeholder='Password'
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <div>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-          onClick={onSubmit}
-        >
-          Login
-        </button>
+    <>
+      <div className='flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-8'>
+        <h3 className='text-xl font-semibold'>{headline}</h3>
+        <p className='text-sm text-gray-500'>{sub}</p>
       </div>
-      <div className='signup-area mt-4 flex flex-col items-center'>
-        <Link
-          href='/signup'
-          className='underline'
-        >
-          Signup for an account
-        </Link>
-      </div>
-    </div>
+      <div className='login-area bg-gray-50 px-4 py-8 sm:px-8'>{content}</div>
+    </>
   );
-}
+};
+
+export default ConventionalLogin;

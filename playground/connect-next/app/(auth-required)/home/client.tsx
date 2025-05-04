@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { signOut } from 'aws-amplify/auth';
 
 type Props = {
   maybeSecretCode?: string;
@@ -8,6 +9,11 @@ type Props = {
 
 export default function Home({ maybeSecretCode }: Props) {
   const router = useRouter();
+
+  const logout = async () => {
+    await signOut();
+    router.push('/login');
+  };
 
   return (
     <>
@@ -27,9 +33,7 @@ export default function Home({ maybeSecretCode }: Props) {
               </button>
               <button
                 className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-4 rounded w-full'
-                onClick={async () => {
-                  window.location.replace(`/login`);
-                }}
+                onClick={logout}
               >
                 Logout
               </button>

@@ -2,19 +2,23 @@
 
 import { cookies } from 'next/headers';
 import { ConnectTokenType } from '@corbado/types';
+import { verifyToken } from '@/app/utils';
 
 export async function getCorbadoToken(tokenType: ConnectTokenType) {
   const cookieStore = await cookies();
-  const identifier = cookieStore.get('identifier');
-  if (!identifier) {
+  const token = cookieStore.get('token');
+  if (!token || !token.value) {
     return null;
   }
+
+  const decoded = await verifyToken(token.value);
+  console.log('validatedToken', token.value, decoded);
 
   // call backend API to get token
   const payload = {
     type: tokenType,
     data: {
-      identifier: identifier.value,
+      identifier: decoded.username,
     },
   };
 

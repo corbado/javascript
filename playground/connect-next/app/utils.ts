@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
+import { GetUserCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 
 const jwksUrl = `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_COGNITO_USER_POOL_ID}/.well-known/jwks.json`;
 const client = jwksClient({ jwksUri: jwksUrl });
@@ -31,4 +32,22 @@ export const verifyToken = async (token: string): Promise<DecodedToken> => {
       resolve(typed);
     });
   });
+};
+
+export const getUserEmail = async (token: string): Promise<string | undefined> => {
+  const client = new CognitoIdentityProviderClient({
+    region: process.env.AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    },
+  });
+
+  const command = new GetUserCommand({
+    AccessToken: token,
+  });
+
+  const response = await client.send(command);
+
+  return response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
 };

@@ -1,27 +1,30 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { getUserEmail, verifyToken } from '@/app/utils';
 
 export async function getAppendToken() {
   const cookieStore = await cookies();
-  const displayName = cookieStore.get('displayName');
-  if (!displayName) {
+  const token = cookieStore.get('token');
+  if (!token || !token.value) {
     return null;
   }
 
-  const identifier = cookieStore.get('identifier');
-  if (!identifier) {
+  const decoded = await verifyToken(token.value);
+  const email = await getUserEmail(token.value);
+  if (!email) {
     return null;
   }
 
-  console.log(displayName, identifier);
+  const identifier = decoded.username;
+  console.log(email, identifier);
 
   // call backend API to get token
   const payload = {
     type: 'passkey-append',
     data: {
-      displayName: displayName.value,
-      identifier: identifier.value,
+      displayName: email,
+      identifier: identifier,
     },
   };
 
@@ -41,12 +44,4 @@ export async function getAppendToken() {
   const out = await response.json();
 
   return out.secret;
-}
-
-export async function hello() {
-  return 'Hello, World!';
-}
-
-export async function hello2() {
-  return 'Hello, World2!';
 }

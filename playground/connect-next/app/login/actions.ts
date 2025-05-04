@@ -1,45 +1,18 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import {
-  AdminGetUserCommand,
-  CognitoIdentityProviderClient,
-  InitiateAuthCommand,
-} from '@aws-sdk/client-cognito-identity-provider';
+import { CognitoIdentityProviderClient, InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
 import crypto from 'crypto';
-import { TokenWrapper, verifyToken } from '@/app/utils';
+import { TokenWrapper, verifyToken } from '@/app/utils'; // Here we validate the JWT token (validation is too simple, don't use this in production)
 
 // Here we validate the JWT token (validation is too simple, don't use this in production)
 // Then we extract the cognitoID and retrieve the user's email from the user pool
 // Both values will then be set as a cookie
 export async function postPasskeyLogin(session: string) {
-  console.log('postPasskeyLogin', session);
+  const cookieStore = await cookies();
   const tokenWrapper = JSON.parse(session) as TokenWrapper;
-  const decoded = await verifyToken(tokenWrapper.AccessToken);
-  const username = decoded.username;
-
-  // create client that loads profile from ~/.aws/credentials or environment variables
-  const client = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION!,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-  });
-
-  const command = new AdminGetUserCommand({
-    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
-    Username: username,
-  });
-
-  const response = await client.send(command);
-
-  const email = response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
-  if (email) {
-    const cookieStore = await cookies();
-    cookieStore.set('displayName', email);
-    cookieStore.set('identifier', username);
-  }
+  await verifyToken(tokenWrapper.AccessToken);
+  cookieStore.set('token', tokenWrapper.AccessToken);
 
   return;
 }
@@ -83,8 +56,6 @@ export async function startConventionalLogin(email: string, password: string) {
     }
 
     const cookieStore = await cookies();
-    cookieStore.set('displayName', email);
-
     const client = new CognitoIdentityProviderClient({
       region: process.env.AWS_REGION!,
       credentials: {
@@ -113,11 +84,8 @@ export async function startConventionalLogin(email: string, password: string) {
     if (response.AuthenticationResult?.AccessToken) {
       // no MFA has been set up yet
 
-      const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
-      const username = decoded.username;
-      if (email) {
-        cookieStore.set('identifier', username);
-      }
+      await verifyToken(response.AuthenticationResult.AccessToken);
+      cookieStore.set({ name: 'token', value: response.AuthenticationResult.AccessToken, httpOnly: true });
 
       return { success: true };
     }

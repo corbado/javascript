@@ -1,18 +1,26 @@
 'use client';
 
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { setIdToken } from './actions';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 export default function Page() {
+  return (
+    <Suspense>
+      <Redirecting />
+    </Suspense>
+  );
+}
+
+function Redirecting() {
   const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+  const redirectUrl = searchParams.get('redirectUrl');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const init = async () => {
-      const token = searchParams.get('token');
-      const redirectUrl = searchParams.get('redirectUrl');
       if (!token || !redirectUrl) {
         return;
       }

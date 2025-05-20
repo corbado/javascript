@@ -39,6 +39,7 @@ import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
 import { CorbadoError, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
 import { ClientStateService } from './ClientStateService';
+import { TelemetryService } from './TelemetryService';
 import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
@@ -54,12 +55,25 @@ export class ProcessService {
   readonly #isPreviewMode: boolean;
   readonly #frontendApiUrlSuffix: string;
 
-  constructor(projectId: string, timeout: number = 30 * 1000, isPreviewMode: boolean, frontendApiUrlSuffix: string) {
+  constructor(
+    projectId: string,
+    timeout: number = 30 * 1000,
+    isPreviewMode: boolean,
+    frontendApiUrlSuffix: string,
+    telemetryDisabled?: boolean,
+    telemetryDebugMode?: boolean,
+  ) {
     this.#projectId = projectId;
     this.#timeout = timeout;
     this.#isPreviewMode = isPreviewMode;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
     this.#webAuthnService = new WebAuthnService();
+
+    TelemetryService.init({
+      projectId: projectId,
+      isEnabled: !telemetryDisabled,
+      debugMode: telemetryDebugMode,
+    });
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -101,6 +115,13 @@ export class ProcessService {
       console.log('process has error', res.val);
       return this.#initNewAuthProcess(abortController);
     }
+
+    const isDev = res.val.common.environment === 'dev';
+    if (!isDev) {
+      TelemetryService.getInstance().disableTelemetry();
+    }
+
+    TelemetryService.getInstance().logPackageMetadata();
 
     const block = res.val.blockBody.block;
 

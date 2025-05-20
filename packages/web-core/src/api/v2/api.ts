@@ -2104,6 +2104,12 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'hideBadge': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessCommon
+     */
+    'environment': string;
 }
 /**
  * tbd.

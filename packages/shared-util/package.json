@@ -7,7 +7,8 @@
   "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run build:types && npm run build:bundles",
+    "build": "npm run clean && tsc -b",
+    "build:dev": "npm run build",
     "build:types": "tsc",
     "build:bundles": "esbuild src/index.ts --bundle --platform=node --target=node16 --outfile=dist/index.js && esbuild src/index.ts --bundle --platform=browser --target=es2018 --outfile=dist/index.browser.js && esbuild src/index.ts --bundle --format=esm --platform=node --target=node16 --outfile=dist/index.mjs",
     "clean": "rimraf dist",
@@ -25,7 +26,8 @@
   "devDependencies": {
     "typescript": "^5.0.0",
     "rimraf": "^5.0.0",
-    "esbuild": "^0.20.0"
+    "esbuild": "^0.20.0",
+    "@corbado/types": "^3.0.1"
   },
   "engines": {
     "node": ">=16.0.0"

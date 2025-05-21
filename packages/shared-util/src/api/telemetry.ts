@@ -5,7 +5,7 @@ const BASE_PATH = 'https://telemetry.cloud.corbado.io/v1/';
 const ENDPOINT = 'telemetryEvents';
 const TIMEOUT = 500; // milliseconds
 
-export default async function sendEvent({
+export async function sendEvent({
   type,
   payload,
   sdkVersion,

@@ -1,5 +1,4 @@
-import { sendEvent } from '@corbado/shared-util';
-import { TelemetryEventType } from '@corbado/types';
+import { sendEvent, TelemetryEventType } from '@corbado/shared-util';
 import { useCallback, useContext, useRef } from 'react';
 
 import { TelemetryContext } from '../contexts/TelemetryContext';

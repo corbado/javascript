@@ -40,8 +40,7 @@
     "detectincognitojs": "^1.3.7",
     "loglevel": "^1.8.1",
     "rxjs": "^7.8.1",
-    "ts-results": "^3.3.0",
-    "@corbado/shared-util": "0.1.0"
+    "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "@corbado/types": "^3.0.1",

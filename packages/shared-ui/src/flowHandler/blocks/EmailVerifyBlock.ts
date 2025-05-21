@@ -87,6 +87,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       frontendApiUrl: '',
       appName: '',
       hideBadge: false,
+      environment: '',
     };
 
     return new EmailVerifyBlock(

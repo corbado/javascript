@@ -3,21 +3,24 @@ import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, LoadingSpinner, Text } from '../../../components';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 import { EmailLinkError } from './EmailLinkError';
 
 export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `${block.authType}.email-verify.email-link-verification`,
   });
+  const { logMethodCalled } = useTelemetry();
 
   useEffect(() => {
     const abortController = new AbortController();
+    logMethodCalled('validateEmailLink', 'EmailLinkVerification');
     void block.validateEmailLink(abortController);
 
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [block, logMethodCalled]);
 
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);

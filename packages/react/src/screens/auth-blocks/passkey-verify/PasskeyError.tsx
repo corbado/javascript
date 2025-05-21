@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Divider, Header, PrimaryButton, SecondaryButton, Text, UserInfo } from '../../../components';
 import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface PasskeyErrorProps {
   block: PasskeyVerifyBlock;
@@ -15,6 +16,9 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-error`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<string>(block.data.identifierValue);
@@ -34,8 +38,13 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
 
     if (block.data.preferredFallbackOnError) {
       setChangingBlock(true);
+
+      logMethodCalled('fallback', 'PasskeyVerifyError');
+
       await block.data.preferredFallbackOnError.action();
     } else {
+      logMethodCalled('passkeyLogin', 'PasskeyVerifyError');
+
       await block.passkeyLogin();
     }
 
@@ -68,12 +77,18 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
 
   async function userInfoChange() {
     setLoading(true);
+
+    logMethodCalled('confirmAbort', 'PasskeyVerifyError');
+
     await block.confirmAbort();
     setLoading(false);
   }
 
   async function secondaryAction() {
     setLoading(true);
+
+    logMethodCalled('passkeyLogin', 'PasskeyVerifyError');
+
     await block.passkeyLogin();
     setLoading(false);
   }

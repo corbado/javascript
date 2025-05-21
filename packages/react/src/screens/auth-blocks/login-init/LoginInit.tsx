@@ -7,9 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { Header, SecondaryButton, SocialLoginButtons, SubHeader, Text } from '../../../components';
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
+  const { logMethodCalled } = useTelemetry();
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
   const [showLastIdentifier, setShowLastIdentifier] = useState<boolean>(!!block.data.lastIdentifier);
@@ -42,6 +44,7 @@ export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; 
   useEffect(() => {
     void block.startConditionalUIOnPageLoad().then(result => {
       if (result) {
+        logMethodCalled('conditionalUIOnPageLoad', 'loginInit');
         log.debug('CUI: page load');
         void block
           .continueWithConditionalUI({ onAuthenticatorCompleted: () => setLoading(true) })
@@ -54,6 +57,7 @@ export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; 
         log.debug('CUI: first click');
         setOnComponentClick(() => {
           return () => {
+            logMethodCalled('conditionalUIOnFirstUserInteraction', 'loginInit');
             log.debug('calling continueWithConditionalUI');
             void block
               .continueWithConditionalUI({ onAuthenticatorCompleted: () => setLoading(true) })
@@ -72,11 +76,15 @@ export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; 
 
   const startSocialLogin = (providerType: SocialProviderType) => {
     setSocialLoadingInProgress(true);
+
+    logMethodCalled('startSocialLogin', 'loginInit');
     void block.startSocialVerify(providerType);
   };
 
   // user explicitly discards the last identifier offered to him => we will clear if from localstorage
   const discardOfferedLastIdentifier = () => {
+    logMethodCalled('discardOfferedLastIdentifier', 'loginInit');
+
     block.discardOfferedLastIdentifier();
     setShowLastIdentifier(false);
   };
@@ -126,7 +134,10 @@ export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; 
           <SecondaryButton
             colorVariant='link'
             disabled={loading}
-            onClick={() => block.switchToSignup()}
+            onClick={() => {
+              logMethodCalled('switchToSignup', 'loginInit');
+              block.switchToSignup();
+            }}
           >
             {flowChangeButtonText}
           </SecondaryButton>

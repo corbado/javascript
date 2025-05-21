@@ -9,9 +9,11 @@ import { OtpInputGroup } from '../../../components/ui/input/OtpInputGroup';
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { UserInfo } from '../../../components/ui/UserInfo';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.phone-verify.phone-otp` });
+  const { logMethodCalled } = useTelemetry();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const timer = useRef<NodeJS.Timeout>();
@@ -84,28 +86,30 @@ export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
       }
 
       setLoading(true);
+      logMethodCalled('validateCode', 'PhoneOtp');
       void block.validateCode(otp);
     },
-    [block],
+    [block, logMethodCalled],
   );
 
-  async function resendCode() {
+  const resendCode = useCallback(async () => {
     setLoading(true);
+    logMethodCalled('resendCode', 'PhoneOtp');
     await block.resendCode();
     startTimer();
-  }
+  }, [block, logMethodCalled]);
 
-  async function phoneChange() {
+  const phoneChange = useCallback(async () => {
     if (block.authType === AuthType.Login) {
       setLoading(true);
+      logMethodCalled('confirmAbort', 'PhoneOtp');
       await block.confirmAbort();
       setLoading(false);
     }
 
+    logMethodCalled('showEditPhone', 'PhoneOtp');
     block.showEditPhone();
-
-    return;
-  }
+  }, [block, logMethodCalled]);
 
   return (
     <div className='cb-phone-otp-block'>

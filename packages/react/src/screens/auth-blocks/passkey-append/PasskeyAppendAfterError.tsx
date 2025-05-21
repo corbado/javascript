@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next';
 
 import { Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
 import { PasskeyAppendAfterHybridIcon } from '../../../components/ui/icons/PasskeyAppendAfterHybridIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PasskeyAppendAfterError = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.passkey-append-after-error`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -19,10 +23,14 @@ export const PasskeyAppendAfterError = ({ block }: { block: PasskeyAppendBlock }
   const handleContinue = useCallback(async () => {
     setLoading(true);
 
+    logMethodCalled('passkeyAppend', 'PasskeyAppendAfterError');
+
     await block.passkeyAppend();
   }, [block]);
 
   const handleSkip = useCallback(() => {
+    logMethodCalled('skipPasskeyAppend', 'PasskeyAppendAfterError');
+
     void block.skipPasskeyAppend();
   }, [block]);
 

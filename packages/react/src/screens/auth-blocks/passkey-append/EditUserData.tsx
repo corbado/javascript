@@ -8,6 +8,7 @@ import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton'
 import InputField from '../../../components/ui/input/InputField';
 import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { Header } from '../../../components/ui/typography/Header';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface EditUserDataProps {
   block: PasskeyAppendBlock;
@@ -17,6 +18,9 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.edit-user-data`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [passkeyUserHandle, setPasskeyUserHandle] = useState<string>(block.data.userHandle);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,12 +64,15 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
 
       switch (block.data.userHandleType) {
         case LoginIdentifierType.Email:
+          logMethodCalled('updateEmail', 'EditUserData');
           error = await block.updateEmail(passkeyUserHandle);
           break;
         case LoginIdentifierType.Phone:
+          logMethodCalled('updatePhone', 'EditUserData');
           error = await block.updatePhone(passkeyUserHandle);
           break;
         case LoginIdentifierType.Username:
+          logMethodCalled('updateUsername', 'EditUserData');
           error = await block.updateUsername(passkeyUserHandle);
           break;
         default:
@@ -108,6 +115,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         onClick={e => {
           const noChange = passkeyUserHandle === block.data.userHandle;
           if (noChange) {
+            logMethodCalled('showPasskeyAppend', 'EditUserData');
             block.showPasskeyAppend();
             return;
           }
@@ -119,7 +127,10 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
       </PrimaryButton>
       <SecondaryButton
         className='cb-edit-data-section-back-button'
-        onClick={() => block.showPasskeyAppend()}
+        onClick={() => {
+          logMethodCalled('showPasskeyAppend', 'EditUserData');
+          block.showPasskeyAppend();
+        }}
       >
         {secondaryButtonText}
       </SecondaryButton>

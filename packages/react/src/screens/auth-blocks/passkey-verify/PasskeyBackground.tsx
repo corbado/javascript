@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { LoadingSpinner, SecondaryButton, Text } from '../../../components';
 import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface PasskeyBackgroundProps {
   block: PasskeyVerifyBlock;
@@ -15,6 +16,9 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-background`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
   const passkeyLoginStarted = useRef(false);
 
@@ -27,6 +31,8 @@ export const PasskeyBackground: FC<PasskeyBackgroundProps> = ({ block }) => {
     if (passkeyLoginStarted.current) {
       return;
     }
+
+    logMethodCalled('passkeyLogin', 'PasskeyVerify');
 
     passkeyLoginStarted.current = true;
 

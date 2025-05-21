@@ -12,9 +12,11 @@ import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
 import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { Text } from '../../../components/ui/typography/Text';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
+  const { logMethodCalled } = useTelemetry();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
@@ -56,6 +58,7 @@ export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock
     (e: FormEvent) => {
       e.preventDefault();
       setLoading(true);
+      logMethodCalled('updateUserData', 'SignupInit');
 
       const identifiers: LoginIdentifiers = {
         email: emailRef.current?.value,
@@ -66,7 +69,7 @@ export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock
       const fullName = fullNameRef.current?.value;
       void block.updateUserData(identifiers, fullName);
     },
-    [block, phoneInput, setLoading],
+    [block, phoneInput, setLoading, logMethodCalled],
   );
 
   const attacheRef = (
@@ -90,6 +93,7 @@ export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock
 
   const startSocialLogin = (providerType: SocialProviderType) => {
     setSocialLoadingInProgress(true);
+    logMethodCalled('startSocialVerify', 'SignupInit');
     void block.startSocialVerify(providerType);
   };
 
@@ -183,7 +187,10 @@ export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock
         <SecondaryButton
           colorVariant='link'
           disabled={loading}
-          onClick={() => block.switchToLogin()}
+          onClick={() => {
+            logMethodCalled('switchToLogin', 'SignupInit');
+            block.switchToLogin();
+          }}
         >
           {flowChangeButtonText}
         </SecondaryButton>

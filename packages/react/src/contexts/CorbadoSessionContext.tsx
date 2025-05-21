@@ -20,9 +20,6 @@ export interface CorbadoSessionContextProps {
   deletePasskey: (id: string) => Promise<Result<void, PasskeyDeleteError>>;
   getFullUser: (abortController?: AbortController) => Promise<Result<CorbadoUser, CorbadoError>>;
   globalError: NonRecoverableError | undefined;
-  // Telemetry configuration
-  telemetryDisabled?: boolean;
-  telemetryDebugModeEnabled?: boolean;
 }
 
 export const initialContext: CorbadoSessionContextProps = {

@@ -7,6 +7,7 @@ import { Divider, Header, PrimaryButton, SecondaryButton, Text, UserInfo } from 
 import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface PasskeyErrorProps {
   block: PasskeyVerifyBlock;
@@ -16,6 +17,9 @@ export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-error-light`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<string>(block.data.identifierValue);
@@ -31,6 +35,8 @@ export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
 
   const passkeyLogin = useCallback(async () => {
     setLoading(true);
+
+    logMethodCalled('passkeyLogin', 'PasskeyVerifyErrorLight');
 
     await block.passkeyLogin();
 

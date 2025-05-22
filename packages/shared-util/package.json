@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-util",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,9 +8,6 @@
     "access": "public"
   },
   "exports": {
-    ".": {
-      "require": "./dist/index.js"
-    },
     "./bundle": "./dist/bundle/index.js"
   },
   "scripts": {

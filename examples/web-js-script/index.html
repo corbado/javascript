@@ -53,15 +53,15 @@
       projectId: projectID,
     });
 
-    sendEvent({
-      type: TelemetryEventType.EXAMPLE_APPLICATION_OPENED,
+    CorbadoSharedUtil.sendEvent({
+      type: CorbadoSharedUtil.TelemetryEventType.EXAMPLE_APPLICATION_OPENED,
       payload: {
         exampleName: 'corbado/javascript/examples/web-js-script',
       },
       sdkVersion: '3.1.0',
       sdkName: 'Javascript SDK',
       identifier: projectID,
-    })
+    });
 
     insertHeader(Corbado.isAuthenticated, Corbado.user);
     insertGuide(Corbado.isAuthenticated);

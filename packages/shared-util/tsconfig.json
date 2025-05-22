@@ -1,16 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
     "declaration": true,
+    "jsx": "react",
     "outDir": "./dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "rootDir": "./src",
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

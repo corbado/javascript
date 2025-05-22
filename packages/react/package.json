@@ -1,6 +1,6 @@
 {
   "name": "@corbado/react",
-  "version": "3.1.0",
+  "version": "3.0.4",
   "description": "This package provides all the functionalities and UI components needed by developers when integration Corbado's Authentication management system in their react application",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -50,5 +50,5 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "gitHead": "a619d2f6de179f7bcde9385c509905a36bec453b"
+  "gitHead": "c4c3ea12679f60f395ce56f05f2c028ca36fb4ee"
 }

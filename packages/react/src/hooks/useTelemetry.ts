@@ -69,7 +69,7 @@ export function useTelemetry() {
 
       void sendEvent({
         type: TelemetryEventType.PACKAGE_METADATA,
-        payload,
+        ...(Object.keys(payload).length > 0 && { payload }),
         sdkVersion: SDK_VERSION,
         sdkName: SDK_NAME,
         identifier: projectId,

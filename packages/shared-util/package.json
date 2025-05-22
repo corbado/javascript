@@ -1,10 +1,8 @@
 {
   "name": "@corbado/shared-util",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-util",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "build": "npm run clean && tsc -b && npm run build:bundles",
     "build:dev": "npm run build",
     "build:types": "tsc",
-    "build:bundles": "esbuild src/index.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/index.js && esbuild src/index.ts --bundle --platform=browser --target=es2018 --format=esm --outfile=dist/index.browser.js && esbuild src/index.ts --bundle --format=esm --platform=node --target=node16 --outfile=dist/index.mjs && esbuild src/index.ts --bundle --format=iife --global-name=CorbadoSharedUtil --platform=browser --target=es2018 --outfile=dist/corbado-shared-util.js --define:process.env.NODE_ENV='\"production\"'",
+    "build:bundles": "node esbuild.config.js",
     "clean": "rimraf dist",
     "prebuild": "npm run clean"
   },

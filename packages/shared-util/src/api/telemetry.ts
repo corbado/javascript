@@ -1,5 +1,5 @@
-import type { TelemetryEventType } from '@corbado/types';
-import { TelemetryEventRequest } from '@corbado/types';
+import type { TelemetryEventType } from '../types/telemetry';
+import { TelemetryEventRequest } from '../types/telemetry';
 
 const BASE_PATH = 'https://telemetry.cloud.corbado.io/v1/';
 const ENDPOINT = 'telemetryEvents';

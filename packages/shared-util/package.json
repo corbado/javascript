@@ -26,8 +26,7 @@
   "devDependencies": {
     "typescript": "^5.0.0",
     "rimraf": "^5.0.0",
-    "esbuild": "^0.20.0",
-    "@corbado/types": "^3.0.1"
+    "esbuild": "^0.20.0"
   },
   "engines": {
     "node": ">=16.0.0"

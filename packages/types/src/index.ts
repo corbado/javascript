@@ -6,4 +6,3 @@ export * from './component';
 export * from './theme';
 
 export * from './connect';
-export * from './telemetry';

@@ -1,2 +1,2 @@
 export { sendEvent } from './api/telemetry';
-export { TelemetryEventRequest, TelemetryEventType } from '@corbado/types';
+export { TelemetryEventRequest, TelemetryEventType } from './types/telemetry';

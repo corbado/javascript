@@ -26,13 +26,13 @@ export const PasskeyAppendAfterError = ({ block }: { block: PasskeyAppendBlock }
     logMethodCalled('passkeyAppend', 'PasskeyAppendAfterError');
 
     await block.passkeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   const handleSkip = useCallback(() => {
     logMethodCalled('skipPasskeyAppend', 'PasskeyAppendAfterError');
 
     void block.skipPasskeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

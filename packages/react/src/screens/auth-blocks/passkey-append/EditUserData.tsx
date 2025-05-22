@@ -85,7 +85,7 @@ export const EditUserData: FC<EditUserDataProps> = ({ block }) => {
         return;
       }
     },
-    [block, passkeyUserHandle],
+    [block, passkeyUserHandle, logMethodCalled],
   );
 
   return (

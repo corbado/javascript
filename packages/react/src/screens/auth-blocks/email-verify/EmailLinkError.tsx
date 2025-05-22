@@ -4,17 +4,11 @@ import { useTranslation } from 'react-i18next';
 
 import { Header, Text } from '../../../components';
 import { ExclamationIcon } from '../../../components/ui/icons/ExclamationIcon';
-import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export function EmailLinkError({ block }: { block: EmailVerifyBlock }) {
   const { t } = useTranslation('translation', {
     keyPrefix: `${block.authType}.email-verify.email-link-error`,
   });
-  const { logMethodCalled } = useTelemetry();
-
-  useEffect(() => {
-    logMethodCalled('emailLinkError', 'EmailLinkError');
-  }, [logMethodCalled]);
 
   const subheaderText = useMemo(() => t('subheader'), [t]);
   const bodyText = useMemo(() => t('body'), [t]);

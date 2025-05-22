@@ -49,7 +49,7 @@ export const PasskeyError: FC<PasskeyErrorProps> = ({ block }) => {
     }
 
     setLoading(false);
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     return () => {

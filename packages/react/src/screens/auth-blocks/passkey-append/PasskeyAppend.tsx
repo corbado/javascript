@@ -50,7 +50,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
     setLoading(true);
     logMethodCalled('appendPasskey', 'PasskeyAppend');
     void block.passkeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     if (block.data.userHandleType !== 'phone') {

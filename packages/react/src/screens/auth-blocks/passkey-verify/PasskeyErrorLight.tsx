@@ -41,7 +41,7 @@ export const PasskeyErrorLight: FC<PasskeyErrorProps> = ({ block }) => {
     await block.passkeyLogin();
 
     setLoading(false);
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     return () => {

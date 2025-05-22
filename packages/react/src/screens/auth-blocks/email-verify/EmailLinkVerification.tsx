@@ -20,7 +20,7 @@ export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) =>
     return () => {
       abortController.abort();
     };
-  }, [block, logMethodCalled]);
+  }, []);
 
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);

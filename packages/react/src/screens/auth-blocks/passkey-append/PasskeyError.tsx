@@ -43,7 +43,7 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
     }
 
     setLoading(false);
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     return () => {

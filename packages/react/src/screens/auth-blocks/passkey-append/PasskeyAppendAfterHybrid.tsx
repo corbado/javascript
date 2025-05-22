@@ -27,13 +27,13 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendBlock 
     logMethodCalled('passkeyAppend', 'PasskeyAppendAfterHybrid');
 
     await block.passkeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   const handleSkip = useCallback(() => {
     logMethodCalled('skipPasskeyAppend', 'PasskeyAppendAfterHybrid');
 
     void block.skipPasskeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

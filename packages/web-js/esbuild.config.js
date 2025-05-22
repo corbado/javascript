@@ -16,6 +16,7 @@ esbuild
     },
     alias: {
       '@corbado/shared-ui': '../shared-ui/src',
+      '@corbado/shared-util': '../shared-util/src',
     },
     define,
   })

@@ -35,12 +35,12 @@
   },
   "dependencies": {
     "@corbado/react": "^3.1.0",
-    "@corbado/web-core": "^3.0.5",
+    "@corbado/web-core": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@corbado/types": "^3.0.2",
+    "@corbado/types": "^3.0.1",
     "@types/react": "^18.2.0",
     "typescript": "^5.2.2"
   },

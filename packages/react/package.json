@@ -33,7 +33,7 @@
   "dependencies": {
     "@corbado/shared-ui": "^3.0.6",
     "@corbado/shared-util": "^1.0.0",
-    "@corbado/web-core": "^3.0.5",
+    "@corbado/web-core": "^3.1.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "libphonenumber-js": "^1.10.59",
@@ -41,7 +41,7 @@
     "react-phone-number-input": "^3.3.9"
   },
   "devDependencies": {
-    "@corbado/types": "^3.0.2",
+    "@corbado/types": "^3.0.1",
     "@types/react": "^18.2.0",
     "ts-results": "^3.3.0",
     "typescript": "^5.2.2"

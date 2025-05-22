@@ -32,7 +32,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
-    "@corbado/types": "^3.0.2",
+    "@corbado/types": "^3.0.1",
     "@types/ua-parser-js": "^0.7.39",
     "css-loader": "^6.8.1",
     "i18next": "23.5.1",
@@ -44,7 +44,7 @@
     "**/*.json"
   ],
   "dependencies": {
-    "@corbado/web-core": "^3.0.5",
+    "@corbado/web-core": "^3.1.0",
     "rxjs": "^7.8.1",
     "ua-parser-js": "^1.0.37"
   },

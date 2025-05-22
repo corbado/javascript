@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-util",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,9 +24,9 @@
   "author": "Corbado",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "esbuild": "^0.20.0",
     "rimraf": "^5.0.0",
-    "esbuild": "^0.20.0"
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=16.0.0"

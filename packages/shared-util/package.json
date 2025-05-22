@@ -6,6 +6,9 @@
   "module": "dist/index.mjs",
   "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npm run clean && tsc -b",
     "build:dev": "npm run build",

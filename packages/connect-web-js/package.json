@@ -1,6 +1,6 @@
 {
   "name": "@corbado/connect-web-js",
-  "version": "0.7.4",
+  "version": "0.7.3",
   "description": "This package provides a set of components to integrate passkeys into an existing authentication system",
   "author": "Martin Kellner <martin.kellner@corbado.com>",
   "homepage": "https://github.com/corbado/javascript#readme",

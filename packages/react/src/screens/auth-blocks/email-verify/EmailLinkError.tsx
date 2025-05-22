@@ -1,5 +1,5 @@
 import type { EmailVerifyBlock } from '@corbado/shared-ui';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, Text } from '../../../components';

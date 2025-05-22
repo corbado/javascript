@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import type { TelemetryConfig } from './TelemetryContext';
 import { TelemetryContext } from './TelemetryContext';
@@ -9,6 +9,10 @@ interface TelemetryProviderProps {
   telemetryConfig: TelemetryConfig;
 }
 
-export function TelemetryProvider({ children, telemetryConfig }: TelemetryProviderProps) {
-  return <TelemetryContext.Provider value={{ telemetryConfig }}>{children}</TelemetryContext.Provider>;
+export function TelemetryProvider({ children, telemetryConfig: initialConfig }: TelemetryProviderProps) {
+  const [telemetryConfig, setTelemetryConfig] = useState(initialConfig);
+
+  return (
+    <TelemetryContext.Provider value={{ telemetryConfig, setTelemetryConfig }}>{children}</TelemetryContext.Provider>
+  );
 }

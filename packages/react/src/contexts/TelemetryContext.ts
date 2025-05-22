@@ -8,6 +8,7 @@ export interface TelemetryConfig {
 
 interface TelemetryContextType {
   telemetryConfig: TelemetryConfig;
+  setTelemetryConfig: (config: TelemetryConfig | ((prev: TelemetryConfig) => TelemetryConfig)) => void;
 }
 
 export const TelemetryContext = createContext<TelemetryContextType | null>(null);

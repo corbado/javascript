@@ -5,6 +5,7 @@ import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useCorbado } from '../hooks/useCorbado';
+import { useTelemetry } from '../hooks/useTelemetry';
 import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 
@@ -25,6 +26,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const { corbadoApp } = useCorbado();
   const [currentScreen, setCurrentScreen] = useState<ScreenWithBlock>();
   const [initState, setInitState] = useState<InitState>(InitState.Initializing);
+  const { disableTelemetry } = useTelemetry();
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {

@@ -20,19 +20,17 @@ export function useTelemetry() {
     throw new Error('useTelemetry must be used within a TelemetryProvider');
   }
 
-  const { telemetryConfig } = context;
-
+  const { telemetryConfig, setTelemetryConfig } = context;
   const { projectId, disabled, mode } = telemetryConfig;
   const packageMetadataSent = useRef(false);
-  const isEnabledRef = useRef(!disabled);
 
   const disableTelemetry = useCallback(() => {
-    isEnabledRef.current = false;
-  }, []);
+    setTelemetryConfig(prev => ({ ...prev, disabled: true }));
+  }, [setTelemetryConfig]);
 
   const logMethodCalled = useCallback(
     (methodName: string, screenName?: string) => {
-      if (!isEnabledRef.current) {
+      if (disabled) {
         return;
       }
 
@@ -50,12 +48,12 @@ export function useTelemetry() {
         debugMode: mode === 'debug',
       });
     },
-    [projectId, mode],
+    [projectId, mode, disabled],
   );
 
   const logPackageMetadata = useCallback(
     ({ isDevMode, isPreviewMode }: { isDevMode?: boolean; isPreviewMode?: boolean }) => {
-      if (!isEnabledRef.current || packageMetadataSent.current) {
+      if (disabled || packageMetadataSent.current) {
         return;
       }
 
@@ -78,7 +76,7 @@ export function useTelemetry() {
 
       packageMetadataSent.current = true;
     },
-    [projectId, mode],
+    [projectId, mode, disabled],
   );
 
   return {

@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-util",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,13 +8,19 @@
     "access": "public"
   },
   "exports": {
-    "default": "./dist/index.js"
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "browser": "./dist/index.browser.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./bundle": "./dist/corbado-shared-util.js"
   },
   "scripts": {
-    "build": "npm run clean && tsc -b",
+    "build": "npm run clean && tsc -b && npm run build:bundles",
     "build:dev": "npm run build",
     "build:types": "tsc",
-    "build:bundles": "esbuild src/index.ts --bundle --platform=node --target=node16 --outfile=dist/index.js && esbuild src/index.ts --bundle --platform=browser --target=es2018 --outfile=dist/index.browser.js && esbuild src/index.ts --bundle --format=esm --platform=node --target=node16 --outfile=dist/index.mjs",
+    "build:bundles": "esbuild src/index.ts --bundle --platform=node --target=node16 --format=cjs --outfile=dist/index.js && esbuild src/index.ts --bundle --platform=browser --target=es2018 --format=esm --outfile=dist/index.browser.js && esbuild src/index.ts --bundle --format=esm --platform=node --target=node16 --outfile=dist/index.mjs && esbuild src/index.ts --bundle --format=iife --global-name=CorbadoSharedUtil --platform=browser --target=es2018 --outfile=dist/corbado-shared-util.js --define:process.env.NODE_ENV='\"production\"'",
     "clean": "rimraf dist",
     "prebuild": "npm run clean"
   },

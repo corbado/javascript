@@ -41,11 +41,6 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   useEffect(() => {
     void init();
 
-    telemetry.init({
-      isDevMode: corbadoAppParams.isDevMode,
-      isPreviewMode: corbadoAppParams.isPreviewMode,
-    });
-
     const userSub = corbadoApp.sessionService.userChanges.subscribe(value => {
       setUser(value);
     });

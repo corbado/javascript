@@ -23,13 +23,6 @@ export function useTelemetry() {
   const { telemetryConfig, setTelemetryConfig } = context;
   const { projectId, disabled, mode } = telemetryConfig;
   const packageMetadataSent = useRef(false);
-  const isDevMode = useRef<boolean | undefined>();
-  const isPreviewMode = useRef<boolean | undefined>();
-
-  const init = useCallback((props: { isDevMode?: boolean; isPreviewMode?: boolean }) => {
-    isDevMode.current = props.isDevMode;
-    isPreviewMode.current = props.isPreviewMode;
-  }, []);
 
   const disableTelemetry = useCallback(() => {
     setTelemetryConfig(prev => ({ ...prev, disabled: true }));
@@ -63,12 +56,29 @@ export function useTelemetry() {
       return;
     }
 
-    const payload: Record<string, boolean> = {};
-    if (isDevMode.current !== undefined) {
-      payload.isDevMode = isDevMode.current;
+    const payload: Record<string, unknown> = {};
+
+    if (telemetryConfig.hasCustomerSupportEmail !== undefined) {
+      payload.hasCustomerSupportEmail = telemetryConfig.hasCustomerSupportEmail;
     }
-    if (isPreviewMode.current !== undefined) {
-      payload.isPreviewMode = isPreviewMode.current;
+    if (telemetryConfig.darkMode !== undefined) {
+      payload.darkMode = telemetryConfig.darkMode;
+    }
+    if (telemetryConfig.isAutoDetectLanguageEnabled !== undefined) {
+      payload.isAutoDetectLanguageEnabled = telemetryConfig.isAutoDetectLanguageEnabled;
+    }
+    if (telemetryConfig.defaultLanguage !== undefined) {
+      payload.defaultLanguage = telemetryConfig.defaultLanguage;
+    }
+    if (telemetryConfig.isDevMode !== undefined) {
+      payload.isDevMode = telemetryConfig.isDevMode;
+    }
+    if (telemetryConfig.isPreviewMode !== undefined) {
+      payload.isPreviewMode = telemetryConfig.isPreviewMode;
+    }
+
+    if (telemetryConfig.isDefaultTheme !== undefined) {
+      payload.isDefaultTheme = telemetryConfig.isDefaultTheme;
     }
 
     void sendEvent({
@@ -81,10 +91,9 @@ export function useTelemetry() {
     });
 
     packageMetadataSent.current = true;
-  }, [projectId, mode, disabled]);
+  }, [projectId, mode, disabled, telemetryConfig]);
 
   return {
-    init,
     disableTelemetry,
     logMethodCalled,
     logPackageMetadata,

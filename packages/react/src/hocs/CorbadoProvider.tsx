@@ -35,6 +35,7 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
   isDevMode,
   projectId,
   telemetry,
+  isPreviewMode,
   ...corbadoAppParams
 }) => {
   const [darkModeState, setDarkModeState] = React.useState<BehaviorSubject<boolean> | undefined>();
@@ -50,8 +51,23 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
     return removeTheme;
   }, [darkMode, theme]);
 
+  console.log(theme);
+
   return (
-    <TelemetryProvider telemetryConfig={{ ...telemetry, projectId }}>
+    <TelemetryProvider
+      telemetryConfig={{
+        ...telemetry,
+        projectId,
+        isPreviewMode,
+        isDevMode,
+        hasCustomerSupportEmail: Boolean(customerSupportEmail),
+        hasCustomTranslations: Boolean(customTranslations),
+        isAutoDetectLanguageEnabled: autoDetectLanguage,
+        defaultLanguage,
+        isDefaultTheme: theme === undefined,
+        darkMode,
+      }}
+    >
       <CorbadoSessionProvider
         corbadoAppInstance={corbadoAppInstance}
         corbadoAppParams={{

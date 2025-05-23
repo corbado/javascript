@@ -4,6 +4,14 @@ export interface TelemetryConfig {
   projectId: string;
   disabled?: boolean;
   mode?: 'debug' | 'production';
+  isDefaultTheme?: boolean;
+  hasCustomerSupportEmail?: boolean;
+  darkMode?: 'on' | 'off' | 'auto';
+  isAutoDetectLanguageEnabled?: boolean;
+  defaultLanguage?: string;
+  hasCustomTranslations?: boolean;
+  isDevMode?: boolean;
+  isPreviewMode?: boolean;
 }
 
 interface TelemetryContextType {

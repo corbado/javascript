@@ -41,7 +41,7 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   useEffect(() => {
     void init();
 
-    telemetry.logPackageMetadata({
+    telemetry.init({
       isDevMode: corbadoAppParams.isDevMode,
       isPreviewMode: corbadoAppParams.isPreviewMode,
     });

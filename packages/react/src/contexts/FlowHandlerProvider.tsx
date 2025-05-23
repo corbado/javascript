@@ -26,13 +26,20 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const { corbadoApp } = useCorbado();
   const [currentScreen, setCurrentScreen] = useState<ScreenWithBlock>();
   const [initState, setInitState] = useState<InitState>(InitState.Initializing);
-  const { disableTelemetry } = useTelemetry();
+  const { disableTelemetry, logPackageMetadata } = useTelemetry();
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
     const flowHandler = new ProcessHandler(i18n, corbadoApp, onLoggedIn, handleNavigationEvents);
 
     onFlowChangeCbId.current = flowHandler.onScreenChange(value => {
+      if (onFlowChangeCbId.current === 0) {
+        if (value.block.common.environment !== 'dev') {
+          disableTelemetry();
+        } else {
+          logPackageMetadata();
+        }
+      }
       setCurrentScreen(value);
     });
 

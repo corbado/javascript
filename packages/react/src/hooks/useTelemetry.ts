@@ -23,6 +23,13 @@ export function useTelemetry() {
   const { telemetryConfig, setTelemetryConfig } = context;
   const { projectId, disabled, mode } = telemetryConfig;
   const packageMetadataSent = useRef(false);
+  const isDevMode = useRef<boolean | undefined>();
+  const isPreviewMode = useRef<boolean | undefined>();
+
+  const init = useCallback((props: { isDevMode?: boolean; isPreviewMode?: boolean }) => {
+    isDevMode.current = props.isDevMode;
+    isPreviewMode.current = props.isPreviewMode;
+  }, []);
 
   const disableTelemetry = useCallback(() => {
     setTelemetryConfig(prev => ({ ...prev, disabled: true }));
@@ -51,35 +58,33 @@ export function useTelemetry() {
     [projectId, mode, disabled],
   );
 
-  const logPackageMetadata = useCallback(
-    ({ isDevMode, isPreviewMode }: { isDevMode?: boolean; isPreviewMode?: boolean }) => {
-      if (disabled || packageMetadataSent.current) {
-        return;
-      }
+  const logPackageMetadata = useCallback(() => {
+    if (disabled || packageMetadataSent.current) {
+      return;
+    }
 
-      const payload: Record<string, boolean> = {};
-      if (isDevMode !== undefined) {
-        payload.isDevMode = isDevMode;
-      }
-      if (isPreviewMode !== undefined) {
-        payload.isPreviewMode = isPreviewMode;
-      }
+    const payload: Record<string, boolean> = {};
+    if (isDevMode.current !== undefined) {
+      payload.isDevMode = isDevMode.current;
+    }
+    if (isPreviewMode.current !== undefined) {
+      payload.isPreviewMode = isPreviewMode.current;
+    }
 
-      void sendEvent({
-        type: TelemetryEventType.PACKAGE_METADATA,
-        ...(Object.keys(payload).length > 0 && { payload }),
-        sdkVersion: SDK_VERSION,
-        sdkName: SDK_NAME,
-        identifier: projectId,
-        debugMode: mode === 'debug',
-      });
+    void sendEvent({
+      type: TelemetryEventType.PACKAGE_METADATA,
+      ...(Object.keys(payload).length > 0 && { payload }),
+      sdkVersion: SDK_VERSION,
+      sdkName: SDK_NAME,
+      identifier: projectId,
+      debugMode: mode === 'debug',
+    });
 
-      packageMetadataSent.current = true;
-    },
-    [projectId, mode, disabled],
-  );
+    packageMetadataSent.current = true;
+  }, [projectId, mode, disabled]);
 
   return {
+    init,
     disableTelemetry,
     logMethodCalled,
     logPackageMetadata,

@@ -26,7 +26,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
   const { corbadoApp } = useCorbado();
   const [currentScreen, setCurrentScreen] = useState<ScreenWithBlock>();
   const [initState, setInitState] = useState<InitState>(InitState.Initializing);
-  const { disableTelemetry, logPackageMetadata } = useTelemetry();
+  const { disableTelemetry, logComponentMounted } = useTelemetry();
   const onFlowChangeCbId = useRef<number>(0);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const FlowHandlerProvider: FC<PropsWithChildren<Props>> = ({
         if (value.block.common.environment !== 'dev') {
           disableTelemetry();
         } else {
-          logPackageMetadata();
+          logComponentMounted();
         }
       }
       setCurrentScreen(value);

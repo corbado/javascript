@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@corbado/shared-ui": "^3.1.0",
-    "@corbado/shared-util": "^1.0.9",
+    "@corbado/shared-util": "^1.0.10",
     "@corbado/web-core": "^3.1.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",

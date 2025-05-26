@@ -51,7 +51,7 @@ export function useTelemetry() {
     [projectId, isDebugMode, disabled],
   );
 
-  const logPackageMetadata = useCallback(() => {
+  const logComponentMounted = useCallback(() => {
     if (disabled || packageMetadataSent.current) {
       return;
     }
@@ -82,7 +82,7 @@ export function useTelemetry() {
     }
 
     void sendEvent({
-      type: TelemetryEventType.PACKAGE_METADATA,
+      type: TelemetryEventType.COMPONENT_MOUNTED,
       ...(Object.keys(payload).length > 0 && { payload }),
       sdkVersion: SDK_VERSION,
       sdkName: SDK_NAME,
@@ -96,6 +96,6 @@ export function useTelemetry() {
   return {
     disableTelemetry,
     logMethodCalled,
-    logPackageMetadata,
+    logComponentMounted,
   };
 }

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@corbado/react": "^2.12.0-alpha.0",
-    "@corbado/shared-util": "^1.0.9",
+    "@corbado/shared-util": "^1.0.10",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",

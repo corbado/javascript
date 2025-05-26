@@ -1,6 +1,6 @@
 {
   "name": "@corbado/shared-util",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Shared utilities for Corbado packages",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

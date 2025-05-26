@@ -51,8 +51,6 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
     return removeTheme;
   }, [darkMode, theme]);
 
-  console.log(theme);
-
   return (
     <TelemetryProvider
       telemetryConfig={{

@@ -20,7 +20,7 @@ import { insertDemo } from './components/demo';
     payload: {
       exampleName: 'corbado/javascript/examples/web-js',
     },
-    sdkVersion: '3.1.0',
+    sdkVersion: '3.1.1',
     sdkName: 'React SDK',
     identifier: import.meta.env.VITE_CORBADO_PROJECT_ID,
   });

@@ -17,7 +17,7 @@ function App() {
       payload: {
         exampleName: 'corbado/javascript/examples/react',
       },
-      sdkVersion: '3.1.0',
+      sdkVersion: '3.1.1',
       sdkName: 'React SDK',
       identifier: import.meta.env.VITE_CORBADO_PROJECT_ID,
     });

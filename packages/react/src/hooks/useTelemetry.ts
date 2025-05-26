@@ -3,7 +3,7 @@ import { useCallback, useContext, useRef } from 'react';
 
 import { TelemetryContext } from '../contexts/TelemetryContext';
 
-const SDK_VERSION = '3.1.0';
+const SDK_VERSION = '3.1.1';
 const SDK_NAME = 'React SDK';
 
 // The useTelemetry hook manages the collection of telemetry events and

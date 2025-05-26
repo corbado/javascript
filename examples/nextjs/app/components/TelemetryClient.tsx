@@ -14,7 +14,7 @@ export function TelemetryClient() {
       payload: {
         exampleName: 'corbado/javascript/examples/nextjs',
       },
-      sdkVersion: '3.1.0',
+      sdkVersion: '3.1.1',
       sdkName: 'React SDK',
       identifier: process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID!,
     });

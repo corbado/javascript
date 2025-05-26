@@ -21,7 +21,7 @@ export function useTelemetry() {
   }
 
   const { telemetryConfig, setTelemetryConfig } = context;
-  const { projectId, disabled, mode } = telemetryConfig;
+  const { projectId, disabled, isDebugMode } = telemetryConfig;
   const packageMetadataSent = useRef(false);
 
   const disableTelemetry = useCallback(() => {
@@ -45,10 +45,10 @@ export function useTelemetry() {
         sdkVersion: SDK_VERSION,
         sdkName: SDK_NAME,
         identifier: projectId,
-        debugMode: mode === 'debug',
+        debugMode: isDebugMode,
       });
     },
-    [projectId, mode, disabled],
+    [projectId, isDebugMode, disabled],
   );
 
   const logPackageMetadata = useCallback(() => {
@@ -87,11 +87,11 @@ export function useTelemetry() {
       sdkVersion: SDK_VERSION,
       sdkName: SDK_NAME,
       identifier: projectId,
-      debugMode: mode === 'debug',
+      debugMode: isDebugMode,
     });
 
     packageMetadataSent.current = true;
-  }, [projectId, mode, disabled, telemetryConfig]);
+  }, [projectId, isDebugMode, disabled, telemetryConfig]);
 
   return {
     disableTelemetry,

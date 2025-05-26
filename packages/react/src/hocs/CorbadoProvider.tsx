@@ -13,10 +13,12 @@ import { TelemetryProvider } from '../contexts/TelemetryProvider';
 import { ThemeProvider } from '../contexts/ThemeProvider';
 import { handleDynamicLocaleSetup } from '../i18n';
 
-export interface TelemetryConfig {
-  disabled?: boolean;
-  mode?: 'debug';
-}
+export type TelemetryConfig =
+  | false
+  | {
+      debug?: boolean;
+      disabled?: boolean;
+    };
 
 export interface CorbadoProviderProps extends PropsWithChildren<CorbadoConfig> {
   corbadoAppInstance?: CorbadoApp;
@@ -54,8 +56,9 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
   return (
     <TelemetryProvider
       telemetryConfig={{
-        ...telemetry,
         projectId,
+        disabled: telemetry === false || telemetry?.disabled === true,
+        isDebugMode: telemetry && telemetry.debug,
         isPreviewMode,
         isDevMode,
         hasCustomerSupportEmail: Boolean(customerSupportEmail),

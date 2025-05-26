@@ -19,6 +19,7 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
           darkMode={darkMode ? 'on' : 'off'}
           isDevMode={true}
           frontendApiUrlSuffix={import.meta.env.REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX}
+          telemetry={{ debug: true }}
         >
           <WrappedComponent {...(props as T)} />
         </CorbadoProvider>

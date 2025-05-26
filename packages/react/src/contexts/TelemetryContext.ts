@@ -3,7 +3,7 @@ import { createContext } from 'react';
 export interface TelemetryConfig {
   projectId: string;
   disabled?: boolean;
-  mode?: 'debug' | 'production';
+  isDebugMode?: boolean;
   isDefaultTheme?: boolean;
   hasCustomerSupportEmail?: boolean;
   darkMode?: 'on' | 'off' | 'auto';

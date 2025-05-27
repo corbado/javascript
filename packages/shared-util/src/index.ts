@@ -1,2 +1,2 @@
-export { sendEvent } from './api/telemetry';
+export { sendEvent } from './telemetry';
 export { TelemetryEventRequest, TelemetryEventType } from './types/telemetry';

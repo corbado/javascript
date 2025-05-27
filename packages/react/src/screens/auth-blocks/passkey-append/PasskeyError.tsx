@@ -8,11 +8,15 @@ import { Divider } from '../../../components/ui/Divider';
 import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.passkey-error`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
 
@@ -31,13 +35,15 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
 
     if (block.data.preferredFallbackOnError) {
       setChangingBlock(true);
+      logMethodCalled('fallback', 'PasskeyError');
       await block.data.preferredFallbackOnError.action();
     } else {
+      logMethodCalled('passkeyAppend', 'PasskeyError');
       await block.passkeyAppend();
     }
 
     setLoading(false);
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     return () => {
@@ -61,6 +67,8 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
 
   async function secondaryAction() {
     setLoading(true);
+    logMethodCalled('passkeyAppend', 'PasskeyError');
+
     await block.passkeyAppend();
     setLoading(false);
   }
@@ -107,6 +115,9 @@ export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
           disabled={changingBlock}
           onClick={() => {
             setChangingBlock(true);
+
+            logMethodCalled('skipPasskeyAppend', 'PasskeyError');
+
             void block.skipPasskeyAppend();
           }}
         >

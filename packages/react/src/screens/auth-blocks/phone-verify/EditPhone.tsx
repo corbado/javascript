@@ -7,6 +7,7 @@ import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
 import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton';
 import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { Header } from '../../../components/ui/typography/Header';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface EditPhoneProps {
   block: PhoneVerifyBlock;
@@ -14,6 +15,7 @@ export interface EditPhoneProps {
 
 export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.phone-verify.edit-phone` });
+  const { logMethodCalled } = useTelemetry();
   const [phone, setPhone] = useState<string>(block.data.phone);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +33,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
     async (e: FormEvent) => {
       e.preventDefault();
       setLoading(true);
+      logMethodCalled('updatePhone', 'EditPhone');
 
       const error = await block.updatePhone(phone);
 
@@ -40,7 +43,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
         return;
       }
     },
-    [block, phone],
+    [block, phone, logMethodCalled],
   );
 
   return (
@@ -64,6 +67,7 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
         onClick={e => {
           const noChange = phone === block.data.phone;
           if (noChange) {
+            logMethodCalled('showPhoneOtpScreen', 'EditPhone');
             block.showPhoneOtpScreen();
             return;
           }
@@ -75,7 +79,10 @@ export const EditPhone: FC<EditPhoneProps> = ({ block }) => {
       </PrimaryButton>
       <SecondaryButton
         className='cb-edit-data-section-back-button'
-        onClick={() => block.showPhoneOtpScreen()}
+        onClick={() => {
+          logMethodCalled('showPhoneOtpScreen', 'EditPhone');
+          block.showPhoneOtpScreen();
+        }}
       >
         {secondaryButtonText}
       </SecondaryButton>

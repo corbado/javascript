@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 
 import { Header, InputField, PrimaryButton, SecondaryButton } from '../../../components';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;
@@ -11,6 +12,7 @@ export interface EditEmailProps {
 
 export const EditEmail: FC<EditEmailProps> = ({ block }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.edit-email` });
+  const { logMethodCalled } = useTelemetry();
   const [email, setEmail] = useState<string>(block.data.email);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +33,7 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
     async (e: FormEvent) => {
       e.preventDefault();
       setLoading(true);
+      logMethodCalled('updateEmail', 'EditEmail');
 
       const error = await block.updateEmail(email);
 
@@ -40,7 +43,7 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
         return;
       }
     },
-    [block, email],
+    [block, email, logMethodCalled],
   );
 
   return (
@@ -66,6 +69,7 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
         onClick={e => {
           const noChange = email === block.data.email;
           if (noChange) {
+            logMethodCalled('showEmailVerificationScreen', 'EditEmail');
             block.showEmailVerificationScreen();
             return;
           }
@@ -77,7 +81,10 @@ export const EditEmail: FC<EditEmailProps> = ({ block }) => {
       </PrimaryButton>
       <SecondaryButton
         className='cb-edit-data-section-back-button'
-        onClick={() => block.showEmailVerificationScreen()}
+        onClick={() => {
+          logMethodCalled('showEmailVerificationScreen', 'EditEmail');
+          block.showEmailVerificationScreen();
+        }}
       >
         {secondaryButtonText}
       </SecondaryButton>

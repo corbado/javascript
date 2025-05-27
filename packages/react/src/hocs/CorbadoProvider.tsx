@@ -9,11 +9,20 @@ import React, { useEffect } from 'react';
 
 import { CorbadoSessionProvider } from '../contexts/CorbadoSessionProvider';
 import ErrorHandlingProvider from '../contexts/ErrorHandlingProvider';
+import { TelemetryProvider } from '../contexts/TelemetryProvider';
 import { ThemeProvider } from '../contexts/ThemeProvider';
 import { handleDynamicLocaleSetup } from '../i18n';
 
+export type TelemetryConfig =
+  | false
+  | {
+      debug?: boolean;
+      disabled?: boolean;
+    };
+
 export interface CorbadoProviderProps extends PropsWithChildren<CorbadoConfig> {
   corbadoAppInstance?: CorbadoApp;
+  telemetry?: TelemetryConfig;
 }
 
 const CorbadoProvider: FC<CorbadoProviderProps> = ({
@@ -26,6 +35,9 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
   corbadoAppInstance,
   customerSupportEmail,
   isDevMode,
+  projectId,
+  telemetry,
+  isPreviewMode,
   ...corbadoAppParams
 }) => {
   const [darkModeState, setDarkModeState] = React.useState<BehaviorSubject<boolean> | undefined>();
@@ -42,22 +54,41 @@ const CorbadoProvider: FC<CorbadoProviderProps> = ({
   }, [darkMode, theme]);
 
   return (
-    <CorbadoSessionProvider
-      corbadoAppInstance={corbadoAppInstance}
-      corbadoAppParams={corbadoAppParams}
+    <TelemetryProvider
+      telemetryConfig={{
+        projectId,
+        disabled: telemetry === false || telemetry?.disabled === true,
+        isDebugMode: telemetry && telemetry.debug,
+        isPreviewMode,
+        isDevMode,
+        hasCustomerSupportEmail: Boolean(customerSupportEmail),
+        hasCustomTranslations: Boolean(customTranslations),
+        isAutoDetectLanguageEnabled: autoDetectLanguage,
+        defaultLanguage,
+        isDefaultTheme: theme === undefined,
+        darkMode,
+      }}
     >
-      <ErrorHandlingProvider
-        customerSupportEmail={customerSupportEmail ?? ''}
-        isDevMode={isDevMode ?? false}
+      <CorbadoSessionProvider
+        corbadoAppInstance={corbadoAppInstance}
+        corbadoAppParams={{
+          ...corbadoAppParams,
+          projectId,
+        }}
       >
-        <ThemeProvider
-          theme={theme}
-          darkModeSubject={darkModeState}
+        <ErrorHandlingProvider
+          customerSupportEmail={customerSupportEmail ?? ''}
+          isDevMode={isDevMode ?? false}
         >
-          {children}
-        </ThemeProvider>
-      </ErrorHandlingProvider>
-    </CorbadoSessionProvider>
+          <ThemeProvider
+            theme={theme}
+            darkModeSubject={darkModeState}
+          >
+            {children}
+          </ThemeProvider>
+        </ErrorHandlingProvider>
+      </CorbadoSessionProvider>
+    </TelemetryProvider>
   );
 };
 export default CorbadoProvider;

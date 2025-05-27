@@ -11,14 +11,15 @@ function withCorbadoProvider<T extends JSX.IntrinsicAttributes>(WrappedComponent
     return (
       <div key={`${projectId}-${darkMode}`}>
         <CorbadoProvider
-          projectId={projectId ?? process.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp ?? ''}
+          projectId={projectId ?? import.meta.env.REACT_APP_CORBADO_PROJECT_ID_EmailOtp ?? ''}
           customTranslations={{
             fr: frenchTranslations,
             en: englishTranslations,
           }}
           darkMode={darkMode ? 'on' : 'off'}
           isDevMode={true}
-          frontendApiUrlSuffix={process.env.REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX}
+          frontendApiUrlSuffix={import.meta.env.REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX}
+          telemetry={{ debug: true }}
         >
           <WrappedComponent {...(props as T)} />
         </CorbadoProvider>

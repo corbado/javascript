@@ -10,9 +10,11 @@ import { OtpInputGroup } from '../../../components/ui/input/OtpInputGroup';
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { UserInfo } from '../../../components/ui/UserInfo';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });
+  const { logMethodCalled } = useTelemetry();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const timer = useRef<NodeJS.Timeout>();
@@ -89,29 +91,31 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
       }
 
       setLoading(true);
+      logMethodCalled('validateCode', 'EmailOtp');
       void block.validateCode(otp);
     },
-    [block],
+    [block, logMethodCalled],
   );
 
-  async function resendCode() {
+  const resendCode = useCallback(async () => {
     setLoading(true);
+    logMethodCalled('resendEmail', 'EmailOtp');
     await block.resendEmail();
     startTimer();
     setLoading(false);
-  }
+  }, [block, logMethodCalled]);
 
-  async function emailChange() {
+  const emailChange = useCallback(async () => {
     if (block.authType === AuthType.Login) {
       setLoading(true);
+      logMethodCalled('confirmAbort', 'EmailOtp');
       await block.confirmAbort();
       setLoading(false);
     }
 
+    logMethodCalled('showEditEmail', 'EmailOtp');
     block.showEditEmail();
-
-    return;
-  }
+  }, [block, logMethodCalled]);
 
   return (
     <div className='cb-email-block'>

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+
+    "noEmit": true,
+
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts"]
+}

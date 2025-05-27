@@ -2,8 +2,8 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import SettingsContext from '../contexts/SettingsContext';
 
 const dropdownItems = [
-  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!, label: 'Manual Testing' },
-  { id: process.env.REACT_APP_CORBADO_PROJECT_ID_LocalDevelopment!, label: 'Local Development' },
+  { id: import.meta.env.VITE_CORBADO_PROJECT_ID_ManualTesting!, label: 'Manual Testing' },
+  { id: import.meta.env.VITE_CORBADO_PROJECT_ID_LocalDevelopment!, label: 'Local Development' },
 ];
 
 const Dropdown = () => {

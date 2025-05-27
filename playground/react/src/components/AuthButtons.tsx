@@ -4,7 +4,7 @@ import SettingsContext from '../contexts/SettingsContext';
 export const AuthButtons = () => {
   const navigate = useNavigate();
   const { updateProjectId } = useContext(SettingsContext);
-  const projectId = process.env.REACT_APP_CORBADO_PROJECT_ID_ManualTesting!;
+  const projectId = import.meta.env.VITE_CORBADO_PROJECT_ID_ManualTesting!;
 
   const navigateTo = (projectId: string, component: string) => {
     updateProjectId(projectId);

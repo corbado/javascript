@@ -1,23 +1,19 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    /* bump the lib/target for Node scripts */
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "ESNext",
-    "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    /* keep module the same */
+    "module": "ESNext",
     "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+
+    /* Don’t emit */
     "noEmit": true,
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    /* extra lint rule for side-effect imports in your config files */
     "noUncheckedSideEffectImports": true
   },
   "include": ["vite.config.ts"]

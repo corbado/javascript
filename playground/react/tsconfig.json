@@ -1,22 +1,18 @@
 {
   "compilerOptions": {
-    /* Target & modules */
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "bundler",
 
-    /* JSX */
     "jsx": "react-jsx",
     "useDefineForClassFields": true,
 
-    /* Strictness & linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
 
-    /* Helpers for DOM and JSON imports */
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "resolveJsonModule": true,
     "isolatedModules": true,

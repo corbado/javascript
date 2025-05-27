@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "composite": true,
-    "noEmit": false,
+    "noEmit": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

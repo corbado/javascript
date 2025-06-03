@@ -2,12 +2,7 @@ import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
 import { password, ScreenNames } from '../utils/Constants';
-import {
-  loadBeforePasskeyAppend,
-  setupNetworkBlocker,
-  setupUser,
-  setupVirtualAuthenticator,
-} from './hooks';
+import { loadBeforePasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('append component', () => {
   setupVirtualAuthenticator(test);

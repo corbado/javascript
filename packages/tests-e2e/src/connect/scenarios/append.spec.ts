@@ -2,16 +2,22 @@ import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
 import { password, ScreenNames } from '../utils/Constants';
-import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
+import {
+  loadBeforePasskeyAppend,
+  setupNetworkBlocker,
+  setupUser,
+  setupVirtualAuthenticator,
+} from './hooks';
 
 test.describe('append component', () => {
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
   setupUser(test, true, false);
-  loadPasskeyAppend(test);
+  loadBeforePasskeyAppend(test);
 
   test('successful passkey append on login', async ({ model }) => {
-    await model.append.appendPasskey(true);
+    // await model.append.appendPasskey(true);
+    await model.mfa.autoAppendPasskey(true);
     await model.expectScreen(ScreenNames.PasskeyAppended);
 
     await model.append.confirmAppended();
@@ -19,13 +25,15 @@ test.describe('append component', () => {
   });
 
   test('failed passkey append on login', async ({ model }) => {
-    await model.append.appendPasskey(false);
+    // await model.append.appendPasskey(false);
+    await model.mfa.autoAppendPasskey(false);
   });
 
   test('Corbado FAPI unavailable after authentication', async ({ model }) => {
     await model.blocker.blockCorbadoFAPIFinishEndpoint();
 
-    await model.append.appendPasskey(true);
+    // await model.append.appendPasskey(true);
+    await model.mfa.autoAppendPasskey(true);
     await model.expectScreen(ScreenNames.Home);
   });
 });

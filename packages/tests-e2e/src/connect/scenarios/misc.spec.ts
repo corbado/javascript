@@ -1,7 +1,7 @@
 import { test } from '../fixtures/BaseTest';
 import { ScreenNames, WebhookTypes } from '../utils/Constants';
 import {
-  loadPasskeyAppend,
+  loadBeforePasskeyAppend,
   loadPasskeyList,
   setupNetworkBlocker,
   setupUser,
@@ -34,11 +34,12 @@ test.describe.serial('webhook tests', () => {
     setupVirtualAuthenticator(test);
     setupNetworkBlocker(test);
     setupUser(test, true, false);
-    loadPasskeyAppend(test);
+    loadBeforePasskeyAppend(test);
     setupWebhooks(test, [WebhookTypes.Create]);
 
     test('successful passkey append on login (+ webhook)', async ({ model }) => {
-      await model.append.appendPasskey(true);
+      // await model.append.appendPasskey(true);
+      await model.mfa.autoAppendPasskey(true);
       await model.expectScreen(ScreenNames.PasskeyAppended);
 
       await model.append.confirmAppended();

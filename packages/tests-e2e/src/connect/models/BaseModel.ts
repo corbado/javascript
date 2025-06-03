@@ -70,7 +70,6 @@ export class BaseModel {
         await this.expectScreen(ScreenNames.PasskeyAppended);
         await this.append.confirmAppended();
       } else {
-        // todo: figure out how to wait until continue button no longer has loading sign
         await this.signup.autoAppendPasskey(false);
         await this.expectScreen(ScreenNames.PasskeyAppend);
         await this.append.skipAppend();

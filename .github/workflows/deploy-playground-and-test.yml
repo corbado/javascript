@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -103,7 +103,7 @@ jobs:
   test:
     needs: deploy
     timeout-minutes: 60
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout code

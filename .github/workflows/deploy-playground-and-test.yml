@@ -103,7 +103,7 @@ jobs:
   test:
     needs: deploy
     timeout-minutes: 60
-    runs-on: macos-15
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -141,10 +141,8 @@ jobs:
         run: |
           cd packages/tests-e2e
           npm install
-#          brew update
-#          brew install libxml2
-#          sudo apt-get update
-#          sudo apt-get install -y libxml2-utils
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
 
       - uses: actions/cache@v3
         id: playwright-cache

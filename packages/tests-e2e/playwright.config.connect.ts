@@ -44,6 +44,7 @@ export default defineConfig({
     timeout: operationTimeout, // default: 5000ms
   },
   use: {
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 15.3.2) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/129.0.6668.29 Safari/537.36',
     actionTimeout: operationTimeout, // default: none
     navigationTimeout: operationTimeout, // default: none
     baseURL: process.env.PLAYWRIGHT_TEST_URL,

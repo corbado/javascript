@@ -32,14 +32,14 @@ export class BaseModel {
     this.page = page;
     this.authenticator = authenticator;
     this.blocker = blocker;
-    this.signup = new SignupModel(page, authenticator);
     this.login = new LoginModel(page, authenticator);
     this.append = new AppendModel(page, authenticator);
+    this.signup = new SignupModel(page, this.append);
+    this.mfa = new MFAModel(page, this.append);
     this.home = new HomeModel(page);
     this.passkeyList = new PasskeyListModel(page, authenticator);
     this.webhook = new WebhookModel(page);
     this.storage = new StorageModel(page);
-    this.mfa = new MFAModel(page, authenticator);
   }
 
   loadSignup() {
@@ -64,19 +64,16 @@ export class BaseModel {
 
   async createUser(invited: boolean, append: boolean) {
     this.email = await this.signup.autofillCredentials();
+    await this.signup.submit(invited, append);
+    this.mfa.registerTokenUsed();
     if (invited) {
       if (append) {
-        await this.signup.autoAppendPasskey(true);
         await this.expectScreen(ScreenNames.PasskeyAppended);
         await this.append.confirmAppended();
       } else {
-        await this.signup.autoAppendPasskey(false);
         await this.expectScreen(ScreenNames.PasskeyAppend);
         await this.append.skipAppend();
       }
-    } else {
-      await this.signup.submit();
     }
-    this.mfa.registerTokenUsed();
   }
 }

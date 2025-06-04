@@ -38,8 +38,7 @@ test.describe.serial('webhook tests', () => {
     setupWebhooks(test, [WebhookTypes.Create]);
 
     test('successful passkey append on login (+ webhook)', async ({ model }) => {
-      // await model.append.appendPasskey(true);
-      await model.mfa.autoAppendPasskey(true);
+      await model.mfa.submit(true, true);
       await model.expectScreen(ScreenNames.PasskeyAppended);
 
       await model.append.confirmAppended();

@@ -15,7 +15,7 @@ test.describe('login component (without invitation token)', () => {
     await model.expectScreen(ScreenNames.MFA);
 
     await model.mfa.autofillTOTP();
-    await model.mfa.submit();
+    await model.mfa.submit(false, false);
     await model.expectScreen(ScreenNames.Home);
   });
 });
@@ -35,9 +35,7 @@ test.describe('login component (with invitation token, without passkeys)', () =>
     await model.expectScreen(ScreenNames.MFA);
 
     await model.mfa.autofillTOTP();
-    // await model.mfa.submit();
-    // await model.expectScreen(ScreenNames.PasskeyAppend);
-    await model.mfa.autoAppendPasskey(false);
+    await model.mfa.submit(true, false);
 
     await model.append.skipAppend();
     await model.expectScreen(ScreenNames.Home);

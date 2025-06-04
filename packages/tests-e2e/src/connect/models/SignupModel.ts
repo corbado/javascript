@@ -4,7 +4,7 @@ import type { AppendModel } from './AppendModel';
 
 export class SignupModel {
   page: Page;
-  append: AppendModel
+  append: AppendModel;
 
   constructor(page: Page, append: AppendModel) {
     this.page = page;

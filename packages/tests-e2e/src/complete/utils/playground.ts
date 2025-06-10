@@ -41,19 +41,15 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
   const port = await getPort();
 
   const playgroundDir = getPlaygroundDir();
-  const server = spawn(
-    'npm',
-    getPlaygroundArgs(port),
-    {
-      cwd: playgroundDir,
-      env: {
-        ...process.env,
-        VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
-      },
-      stdio: 'inherit',
-      shell: true,
-    }
-  );
+  const server = spawn('npm', getPlaygroundArgs(port), {
+    cwd: playgroundDir,
+    env: {
+      ...process.env,
+      VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
+    },
+    stdio: 'inherit',
+    shell: true,
+  });
   const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });
   if (!ok) {
     server.kill();

@@ -1,4 +1,5 @@
-import { ChildProcess, spawn } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
 
 import getPort from 'get-port';
 import path from 'path';
@@ -12,9 +13,9 @@ function getPlaygroundDir(): string {
     case 'react':
       return path.resolve(__dirname, '../../../../../playground/react');
     case 'web-js':
-      return path.resolve(__dirname, '../../playground/web-js');
+      return path.resolve(__dirname, '../../../../../playground/web-js');
     case 'web-js-script':
-      return path.resolve(__dirname, '../../playground/web-js-script');
+      return path.resolve(__dirname, '../../../../../playground/web-js-script');
     default:
       throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
   }
@@ -25,9 +26,9 @@ function getPlaygroundArgs(port: number): string[] {
     case 'react':
       return ['run', 'build-and-preview', '--', '--port', port.toString()];
     case 'web-js':
-      return ['run', 'build-and-preview'];
+      return ['run', 'build-and-preview', '--', '-l', port.toString()];
     case 'web-js-script':
-      return ['run', 'build-and-preview'];
+      return ['run', 'build-and-preview', '--', '-l', port.toString()];
     default:
       throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
   }

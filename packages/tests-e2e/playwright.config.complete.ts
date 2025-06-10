@@ -99,4 +99,5 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   //   timeout: 15 * 1000,
   // },
+  globalSetup: 'src/complete/utils/playground.ts',
 });

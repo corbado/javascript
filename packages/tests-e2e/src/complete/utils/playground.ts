@@ -62,3 +62,27 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
 export function killPlaygroundNew(server: ChildProcess) {
   server.kill();
 }
+
+export default async function installPlaygroundDeps() {
+  const playgroundDir = getPlaygroundDir();
+
+  const installProcess = spawn('npm', ['install'], {
+    cwd: playgroundDir,
+    stdio: 'inherit',
+    shell: true,
+  });
+
+  await new Promise<void>((resolve, reject) => {
+    installProcess.on('close', (code: number) => {
+      if (code === 0) {
+        console.log(`[Global Setup] Dependencies installed successfully in ${playgroundDir}.`);
+        resolve();
+      } else {
+        reject(new Error(`[Global Setup] npm install failed in ${playgroundDir} with code ${code}`));
+      }
+    });
+    installProcess.on('error', (err: Error) => {
+      reject(new Error(`[Global Setup] Failed to start npm install process: ${err.message}`));
+    });
+  });
+}

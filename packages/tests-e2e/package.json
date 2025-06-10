@@ -24,9 +24,11 @@
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "@types/node": "^20.10.5",
+    "get-port": "^5.1.1",
     "ngrok": "^5.0.0-beta.2",
     "node-2fa": "^2.0.3",
-    "playwright-slack-report": "^1.1.72"
+    "playwright-slack-report": "^1.1.72",
+    "wait-port": "^1.1.0"
   },
   "dependencies": {
     "dotenv": "^16.4.5"

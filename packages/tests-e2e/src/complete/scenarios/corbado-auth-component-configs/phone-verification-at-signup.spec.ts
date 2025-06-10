@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import { OtpCodeType } from '../../models/corbado-auth-blocks/PhoneVerifyBlockModel';
 import { SignupInitBlockModel } from '../../models/corbado-auth-blocks/SignupInitBlockModel';
@@ -8,9 +10,12 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('tests that focus on these identifiers: phone (verification at signup)', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -20,14 +25,18 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
         IdentifierVerification.PhoneOtp,
       ]),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('signup with passkey (happy path)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const identifier = SignupInitBlockModel.generateRandomPhone();
     await model.signupInit.fillPhone(identifier);
@@ -44,7 +53,7 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
   });
 
   test('signup with passkey (one passkey retry)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const identifier = SignupInitBlockModel.generateRandomPhone();
     await model.signupInit.fillPhone(identifier);
@@ -60,7 +69,7 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
   });
 
   test('signup with explicit fallback', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const identifier = SignupInitBlockModel.generateRandomPhone();
     await model.signupInit.fillPhone(identifier);
@@ -72,7 +81,7 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
     await model.logout();
 
     // no passkey is available => we expect an phoneVerify block
-    await model.load(projectId, undefined, 'login-init');
+    await model.load(projectId, port, undefined, 'login-init');
     await model.loginInit.fillPhone(identifier);
     await model.loginInit.submitPrimary();
     await model.phoneVerify.fillOtpCode(OtpCodeType.Correct);
@@ -84,7 +93,7 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
   // during signup, the fallback is initiated automatically (user does not have to click on the fallback button)
   // during login, we don't ask the user to append a passkey
   test('signup with fallback (passkeys not available)', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const identifier = SignupInitBlockModel.generateRandomPhone();
     await model.signupInit.fillPhone(identifier);
@@ -95,7 +104,7 @@ test.describe('tests that focus on these identifiers: phone (verification at sig
     await model.logout();
 
     // no passkey is available => we expect an phoneVerify block
-    await model.load(projectId, undefined, 'login-init');
+    await model.load(projectId, port, undefined, 'login-init');
     await model.loginInit.fillPhone(identifier);
     await model.loginInit.submitPrimary();
     await model.phoneVerify.fillOtpCode(OtpCodeType.Correct);

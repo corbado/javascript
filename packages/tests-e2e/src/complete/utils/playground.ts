@@ -1,0 +1,67 @@
+import { ChildProcess, spawn } from 'node:child_process';
+
+import getPort from 'get-port';
+import path from 'path';
+import waitPort from 'wait-port';
+
+type PlaygroundType = 'react' | 'web-js' | 'web-js-script';
+const PLAYGROUND_TYPE: PlaygroundType = (process.env.PLAYGROUND_TYPE as PlaygroundType) || 'react';
+
+function getPlaygroundDir(): string {
+  switch (PLAYGROUND_TYPE) {
+    case 'react':
+      return path.resolve(__dirname, '../../../../../playground/react');
+    case 'web-js':
+      return path.resolve(__dirname, '../../playground/web-js');
+    case 'web-js-script':
+      return path.resolve(__dirname, '../../playground/web-js-script');
+    default:
+      throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
+  }
+}
+
+function getPlaygroundArgs(port: number): string[] {
+  switch (PLAYGROUND_TYPE) {
+    case 'react':
+      return ['run', 'build-and-preview', '--', '--port', port.toString()];
+    case 'web-js':
+      return ['run', 'build-and-preview'];
+    case 'web-js-script':
+      return ['run', 'build-and-preview'];
+    default:
+      throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
+  }
+}
+
+export async function spawnPlaygroundNew(projectId: string): Promise<{
+  server: ChildProcess;
+  port: number;
+}> {
+  const port = await getPort();
+
+  const playgroundDir = getPlaygroundDir();
+  const server = spawn(
+    'npm',
+    getPlaygroundArgs(port),
+    {
+      cwd: playgroundDir,
+      env: {
+        ...process.env,
+        VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
+      },
+      stdio: 'inherit',
+      shell: true,
+    }
+  );
+  const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });
+  if (!ok) {
+    server.kill();
+    throw new Error(`Server never came up on port ${port}`);
+  }
+
+  return { server, port };
+}
+
+export function killPlaygroundNew(server: ChildProcess) {
+  server.kill();
+}

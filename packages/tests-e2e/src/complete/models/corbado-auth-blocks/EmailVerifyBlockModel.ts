@@ -27,8 +27,8 @@ export class EmailVerifyBlockModel {
     }
   }
 
-  async clickEmailLink(projectID: string, email: string, authType: AuthType, type: LinkType) {
-    const link = await this.#generateEmailLink(projectID, email, authType, type);
+  async clickEmailLink(projectID: string, port: number, email: string, authType: AuthType, type: LinkType) {
+    const link = await this.#generateEmailLink(projectID, port, email, authType, type);
     await this.page.goto(link);
   }
 
@@ -64,7 +64,7 @@ export class EmailVerifyBlockModel {
     ).toBeVisible();
   }
 
-  async #generateEmailLink(projectID: string, email: string, authType: AuthType, linkType: LinkType) {
+  async #generateEmailLink(projectID: string, port: number, email: string, authType: AuthType, linkType: LinkType) {
     const key = `cbo_auth_process-${projectID}`;
     const cboAuthProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboAuthProcessRaw) {
@@ -89,6 +89,6 @@ export class EmailVerifyBlockModel {
 
     const serializedBlock = btoa(JSON.stringify(urlBlock));
 
-    return `${process.env.PLAYWRIGHT_TEST_URL}/${projectID}/auth?corbadoEmailLinkID=${serializedBlock}&corbadoToken=${linkType}`;
+    return `http://localhost:${port.toString()}/${projectID}/auth?corbadoEmailLinkID=${serializedBlock}&corbadoToken=${linkType}`;
   }
 }

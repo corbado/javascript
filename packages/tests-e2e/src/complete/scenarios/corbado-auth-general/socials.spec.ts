@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import {
   IdentifierEnforceVerification,
@@ -15,9 +17,12 @@ import {
   makeSocialProvider,
   setComponentConfig,
 } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('social logins', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   // Google social login requires longer timeout
   test.describe.configure({ timeout: socialTotalTimeout });
@@ -42,14 +47,18 @@ test.describe('social logins', () => {
         makeSocialProvider(SocialProviderType.Google),
       ],
     );
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterEach(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('socials should be rendered on UI component if they are activated', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     // by default the signup screen is loaded
     await model.expectScreen(ScreenNames.InitSignup);
@@ -70,7 +79,7 @@ test.describe('social logins', () => {
 
   // Reason for skip: https://www.notion.so/Issues-related-to-email-and-social-login-in-tests-javascript-complete-1bceeb954aa280148c34d10aac8c2117
   test.skip('signup with socials should be possible (account does not exist)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -81,7 +90,7 @@ test.describe('social logins', () => {
   });
 
   test.skip('signup with social should be possible (account exists, social has been linked)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -93,7 +102,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     await model.signupInit.resubmitSocialGoogle();
     // TODO: should successfully log in, but gets redirected to login-init instead.
@@ -104,7 +113,7 @@ test.describe('social logins', () => {
   test.skip('signup with social should not be possible (account exists, social has not been linked)', async ({
     model,
   }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -116,7 +125,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     await model.signupInit.submitSocialGoogle(email, password, secret);
     await model.expectScreen(ScreenNames.InitLogin);
@@ -124,7 +133,7 @@ test.describe('social logins', () => {
 
   test.skip('login with social should be possible (account does not exist)', async ({ model }) => {
     // redirects to passkey append screen
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -135,7 +144,7 @@ test.describe('social logins', () => {
   });
 
   test.skip('login with social should be possible (account exists, social has been linked)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -147,7 +156,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.signupInit.resubmitSocialGoogle();
     await model.expectScreen(ScreenNames.End);
@@ -157,7 +166,7 @@ test.describe('social logins', () => {
   test.skip('login with social should not be possible (account exists, social has not been linked)', async ({
     model,
   }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = process.env.PLAYWRIGHT_GOOGLE_EMAIL ?? '';
     const password = process.env.PLAYWRIGHT_GOOGLE_PASSWORD ?? '';
@@ -169,7 +178,7 @@ test.describe('social logins', () => {
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.signupInit.submitSocialGoogle(email, password, secret);
     // TODO: should redirect to login-init screen, but gets successfully logged in insteaad.

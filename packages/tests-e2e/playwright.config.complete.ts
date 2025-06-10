@@ -13,6 +13,27 @@ if (process.env.CI) {
   dotenv.config({ path: path.resolve(__dirname, '.env.complete.local'), override: true });
 }
 
+// type PlaygroundType = 'react' | 'web-js' | 'web-js-script';
+//
+// const PLAYGROUND_TYPE: PlaygroundType =
+//   (process.env.PLAYGROUND_TYPE as PlaygroundType) || 'react';
+//
+// let webServerCommand: string;
+//
+// switch (PLAYGROUND_TYPE) {
+//   case 'react':
+//     webServerCommand = 'cd ../../playground/react && npm i && npm run build && npm run preview';
+//     break;
+//   case 'web-js':
+//     webServerCommand = 'npm run serve:web-js-playground';
+//     break;
+//   case 'web-js-script':
+//     webServerCommand = 'npm run serve:web-js-script-playground';
+//     break;
+//   default:
+//     throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
+// }
+
 export default defineConfig({
   testDir: './src/complete',
   // fullyParallel: true,
@@ -53,7 +74,7 @@ export default defineConfig({
   use: {
     actionTimeout: operationTimeout, // default: none
     navigationTimeout: operationTimeout, // default: none
-    baseURL: process.env.PLAYWRIGHT_TEST_URL,
+    // baseURL: process.env.PLAYWRIGHT_TEST_URL,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
@@ -72,4 +93,10 @@ export default defineConfig({
       testMatch: ['scenarios/passkey-list-general/*.ts'],
     },
   ],
+  // webServer: {
+  //   command: webServerCommand,
+  //   url: 'http://localhost:4173',
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 15 * 1000,
+  // },
 });

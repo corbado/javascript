@@ -8,9 +8,9 @@ import waitPort from 'wait-port';
 type PlaygroundType = 'react' | 'web-js' | 'web-js-script';
 const PLAYGROUND_TYPE: PlaygroundType = (process.env.PLAYGROUND_TYPE as PlaygroundType) || 'react';
 
-function getRootDir(): string {
-  return path.resolve(__dirname, '../../../../..');
-}
+// function getRootDir(): string {
+//   return path.resolve(__dirname, '../../../../..');
+// }
 
 function getPlaygroundDir(): string {
   switch (PLAYGROUND_TYPE) {

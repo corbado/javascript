@@ -79,8 +79,6 @@ jobs:
       - name: Run Complete tests for react
         run: |
           cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.react.playground.corbado.io"
           set +e
           npx playwright test --config=playwright.config.complete.ts
           EXIT_CODE=$?
@@ -125,8 +123,6 @@ jobs:
       - name: Run Complete tests for web-js
         run: |
           cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js.playground.corbado.io"
           set +e
           npx playwright test --config=playwright.config.complete.ts
           EXIT_CODE=$?
@@ -171,8 +167,6 @@ jobs:
       - name: Run Complete tests for web-js-script
         run: |
           cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.web-js-script.playground.corbado.io"
           set +e
           npx playwright test --config=playwright.config.complete.ts
           EXIT_CODE=$?

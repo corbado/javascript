@@ -128,7 +128,7 @@ jobs:
             ${{ runner.os }}-
 
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: Install Dependencies
+        name: Install root dependencies
         run: |
           npm i
           npm install lerna
@@ -151,7 +151,7 @@ jobs:
           cd packages/tests-e2e
           npm list
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           cd packages/tests-e2e
           npm install

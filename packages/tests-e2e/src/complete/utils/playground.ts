@@ -51,7 +51,7 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
       ...process.env,
       VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
     },
-    stdio: 'inherit',
+    stdio: 'ignore',
     shell: true,
   });
   const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });

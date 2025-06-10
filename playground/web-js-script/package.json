@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-and-preview": "cd ../.. && npm run build:bundler:local && cd playground/web-js-script && npx serve --single"
+    "build-and-preview": "npx serve --single"
   },
   "keywords": [],
   "author": "",

@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Cache node modules
-        id: cache-npm-deploy
+        id: cache-npm
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm-deploy.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: Install Dependencies
         run: |
           npm i
@@ -113,7 +113,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Cache node modules
-        id: cache-npm-test
+        id: cache-npm
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
@@ -127,7 +127,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm-test.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: Install Dependencies
         run: |
           npm i
@@ -145,7 +145,7 @@ jobs:
         run: echo "::set-output name=version::$(yarn why --json @playwright/test | grep -h 'workspace:.' | jq --raw-output '.children[].locator' | sed -e 's/@playwright\/test@.*://')"
 
       - name: Cache node modules
-        id: cache-npm
+        id: cache-npm-test
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
@@ -158,7 +158,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.cache-npm-test.outputs.cache-hit != 'true' }}
         name: List the state of node modules
         continue-on-error: true
         run: |

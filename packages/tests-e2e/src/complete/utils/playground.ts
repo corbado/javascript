@@ -68,27 +68,27 @@ export function killPlaygroundNew(server: ChildProcess) {
 }
 
 export default async function installPlaygroundDeps() {
-  const rootDir = getRootDir();
-
-  const lernaBuildProcess = spawn('npm', ['run', 'build'], {
-    cwd: rootDir,
-    stdio: 'inherit',
-    shell: true,
-  });
-
-  await new Promise<void>((resolve, reject) => {
-    lernaBuildProcess.on('close', (code: number) => {
-      if (code === 0) {
-        console.log(`[Global Setup] 'lerna run build' completed successfully.`);
-        resolve();
-      } else {
-        reject(new Error(`[Global Setup] 'lerna run build' failed with code ${code}`));
-      }
-    });
-    lernaBuildProcess.on('error', (err: Error) => {
-      reject(new Error(`[Global Setup] Failed to start 'lerna run build' process: ${err.message}`));
-    });
-  });
+  // const rootDir = getRootDir();
+  //
+  // const lernaBuildProcess = spawn('npm', ['run', 'build'], {
+  //   cwd: rootDir,
+  //   stdio: 'inherit',
+  //   shell: true,
+  // });
+  //
+  // await new Promise<void>((resolve, reject) => {
+  //   lernaBuildProcess.on('close', (code: number) => {
+  //     if (code === 0) {
+  //       console.log(`[Global Setup] 'lerna run build' completed successfully.`);
+  //       resolve();
+  //     } else {
+  //       reject(new Error(`[Global Setup] 'lerna run build' failed with code ${code}`));
+  //     }
+  //   });
+  //   lernaBuildProcess.on('error', (err: Error) => {
+  //     reject(new Error(`[Global Setup] Failed to start 'lerna run build' process: ${err.message}`));
+  //   });
+  // });
 
   const playgroundDir = getPlaygroundDir();
 

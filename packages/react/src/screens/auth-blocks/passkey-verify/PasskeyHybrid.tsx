@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Divider, Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
 import PasskeyHybridIcon from '../../../components/ui/icons/PasskeyHybridIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export interface PasskeyHybridProps {
   block: PasskeyVerifyBlock;
@@ -14,6 +15,7 @@ export const PasskeyHybrid: FC<PasskeyHybridProps> = ({ block }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `login.passkey-verify.passkey-hybrid`,
   });
+  const { logMethodCalled } = useTelemetry();
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
 
@@ -27,11 +29,10 @@ export const PasskeyHybrid: FC<PasskeyHybridProps> = ({ block }) => {
 
   const passkeyLogin = useCallback(async () => {
     setLoading(true);
-
+    logMethodCalled('passkeyLogin', 'PasskeyHybrid');
     await block.passkeyLogin();
-
     setLoading(false);
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     return () => {
@@ -86,6 +87,7 @@ export const PasskeyHybrid: FC<PasskeyHybridProps> = ({ block }) => {
           disabled={changingBlock}
           onClick={() => {
             setChangingBlock(true);
+            logMethodCalled('fallback', 'PasskeyHybrid');
             return void fallback.action();
           }}
         >

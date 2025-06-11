@@ -12,11 +12,15 @@ import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { SecureIcon } from '../../../components/ui/icons/SecureIcon';
 import { Text } from '../../../components/ui/typography/Text';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.passkey-append`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [passkeyUserHandle, setPasskeyUserHandle] = useState(block.data.userHandle);
   const [loading, setLoading] = useState<boolean>(false);
   const [changingBlock, setChangingBlock] = useState<boolean>(false);
@@ -44,8 +48,9 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
 
   const appendPasskey = useCallback(() => {
     setLoading(true);
+    logMethodCalled('appendPasskey', 'PasskeyAppend');
     void block.passkeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     if (block.data.userHandleType !== 'phone') {
@@ -116,7 +121,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
           <EditIcon
             className='cb-pk-append-user-info-section-edit-icon'
             color='primary'
-            onClick={() => block.showEditUserData()}
+            onClick={() => {
+              logMethodCalled('showEditUserData', 'PasskeyAppend');
+              block.showEditUserData();
+            }}
           />
         )}
       </div>
@@ -158,6 +166,7 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
               <SecondaryButton
                 key={fallback.label}
                 onClick={() => {
+                  logMethodCalled('fallback', 'PasskeyAppend');
                   setChangingBlock(true);
                   return void fallback.action();
                 }}
@@ -172,7 +181,10 @@ export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
       {block.data.canBeSkipped && (
         <div className='cb-pk-append-skip-button-section'>
           <SecondaryButton
-            onClick={() => void block.skipPasskeyAppend()}
+            onClick={() => {
+              logMethodCalled('skipPasskeyAppend', 'PasskeyAppend');
+              void block.skipPasskeyAppend();
+            }}
             disabled={loading}
           >
             {skipButtonText}

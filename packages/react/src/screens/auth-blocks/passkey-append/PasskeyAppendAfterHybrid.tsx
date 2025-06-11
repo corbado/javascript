@@ -5,11 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
 import { LockIcon } from '../../../components/ui/icons/LockIcon';
 import { PasskeyAppendAfterHybridIcon } from '../../../components/ui/icons/PasskeyAppendAfterHybridIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-append.passkey-append-after-hybrid`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -20,12 +24,16 @@ export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendBlock 
   const handleContinue = useCallback(async () => {
     setLoading(true);
 
+    logMethodCalled('passkeyAppend', 'PasskeyAppendAfterHybrid');
+
     await block.passkeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   const handleSkip = useCallback(() => {
+    logMethodCalled('skipPasskeyAppend', 'PasskeyAppendAfterHybrid');
+
     void block.skipPasskeyAppend();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

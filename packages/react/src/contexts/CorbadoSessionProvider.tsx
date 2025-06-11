@@ -5,6 +5,7 @@ import type { FC, PropsWithChildren } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';
 
+import { useTelemetry } from '../hooks/useTelemetry';
 import { CorbadoSessionContext } from './CorbadoSessionContext';
 
 type CorbadoSessionProviderParams = PropsWithChildren<{
@@ -23,6 +24,8 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
   const [user, setUser] = useState<SessionUser | undefined>();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [sessionToken, setSessionToken] = useState<string | undefined>();
+
+  const telemetry = useTelemetry();
 
   const init = async () => {
     setLoading(true);
@@ -59,31 +62,36 @@ export const CorbadoSessionProvider: FC<CorbadoSessionProviderParams> = ({
 
   const getPasskeys = useCallback(
     (abortController?: AbortController) => {
+      telemetry.logMethodCalled('getPasskeys');
       return corbadoApp.sessionService.passkeyList(abortController ?? new AbortController());
     },
-    [corbadoApp],
+    [corbadoApp, telemetry],
   );
 
   const appendPasskey = useCallback(() => {
+    telemetry.logMethodCalled('appendPasskey');
     return corbadoApp.sessionService.appendPasskey();
-  }, [corbadoApp]);
+  }, [corbadoApp, telemetry]);
 
   const logout = useCallback(() => {
+    telemetry.logMethodCalled('logout');
     return corbadoApp.sessionService.logout();
-  }, [corbadoApp]);
+  }, [corbadoApp, telemetry]);
 
   const deletePasskey = useCallback(
     (id: string) => {
+      telemetry.logMethodCalled('deletePasskey');
       return corbadoApp.sessionService.passkeyDelete(id);
     },
-    [corbadoApp],
+    [corbadoApp, telemetry],
   );
 
   const getFullUser = useCallback(
     (abortController?: AbortController) => {
+      telemetry.logMethodCalled('getFullUser');
       return corbadoApp?.sessionService.getFullUser(abortController ?? new AbortController());
     },
-    [corbadoApp],
+    [corbadoApp, telemetry],
   );
 
   return (

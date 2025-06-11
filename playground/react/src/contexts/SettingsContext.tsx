@@ -1,4 +1,4 @@
-import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, type FC, type PropsWithChildren } from 'react';
 
 const defaultState = {
   darkMode: false,

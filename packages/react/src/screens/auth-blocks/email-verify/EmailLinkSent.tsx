@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { EmailLinks, Header, PrimaryButton, Text, UserInfo } from '../../../components';
 import { EmailIcon } from '../../../components/ui/icons/EmailIcon';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 import { EmailLinkSuccess } from './EmailLinkSuccess';
 
 // we poll for a maximum of 10 minutes (120 * 5000ms = 10min)
@@ -14,6 +15,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `${block.authType}.email-verify.email-link-sent`,
   });
+  const { logMethodCalled } = useTelemetry();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [completedOnOtherDevice, setCompletedOnOtherDevice] = useState(false);
@@ -94,6 +96,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
     }
 
     pollingTimer.current = setTimeout(() => {
+      logMethodCalled('getVerificationStatus', 'EmailLinkSent');
       block
         .getVerificationStatus()
         .then(res => {
@@ -117,7 +120,7 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
 
   const resendEmail = async () => {
     setLoading(true);
-
+    logMethodCalled('resendEmail', 'EmailLinkSent');
     await block.resendEmail();
 
     startResendTimer();
@@ -131,10 +134,12 @@ export const EmailLinkSent = ({ block }: { block: EmailVerifyBlock }) => {
   async function emailChange() {
     if (block.authType === AuthType.Login) {
       setLoading(true);
+      logMethodCalled('confirmAbort', 'EmailLinkSent');
       await block.confirmAbort();
       setLoading(false);
     }
 
+    logMethodCalled('showEditEmail', 'EmailLinkSent');
     block.showEditEmail();
 
     return;

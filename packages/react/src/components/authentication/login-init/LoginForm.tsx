@@ -3,6 +3,7 @@ import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useTelemetry } from '../../../hooks/useTelemetry';
 import type { InputFieldProps } from '../../ui';
 import { InputField, PhoneInputField, PrimaryButton } from '../../ui';
 
@@ -22,6 +23,8 @@ export const LoginForm: FC<LoginFormProps> = ({
   initialAutoFocus,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
+
+  const { logMethodCalled } = useTelemetry();
 
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);
   const [usePhone, setUsePhone] = useState<boolean>(
@@ -128,6 +131,8 @@ export const LoginForm: FC<LoginFormProps> = ({
     (e: FormEvent) => {
       e.preventDefault();
       setLoading(true);
+
+      logMethodCalled('loginStart', 'loginInit');
 
       if (usePhone) {
         void block.start(phoneInput, true);

@@ -4,10 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import RightIntroSection from './ui/right-intro-section';
+import { TelemetryClient } from './components/TelemetryClient';
 
 export default function Page() {
   return (
     <main className='flex min-h-screen flex-col p-6'>
+      <TelemetryClient />
       <div className='flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52'>
         <Image
           src='/corbado-logo.svg'

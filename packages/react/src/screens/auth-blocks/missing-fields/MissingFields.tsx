@@ -8,9 +8,13 @@ import InputField from '../../../components/ui/input/InputField';
 import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const MissingFields = ({ block }: { block: MissingFieldsBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.missing-fields` });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const [username, setUsername] = useState<TextFieldWithError | null>(null);
@@ -35,6 +39,9 @@ export const MissingFields = ({ block }: { block: MissingFieldsBlock }) => {
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
+
+      logMethodCalled('updateUserData', 'MissingFields');
+
       setLoading(true);
 
       const identifiers: LoginIdentifiers = {

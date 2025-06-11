@@ -1,0 +1,44 @@
+{
+  "name": "@corbado/shared-util",
+  "version": "1.0.11",
+  "description": "Shared utilities for Corbado packages",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "webpack --config webpack.config.js && npm run build:bundles",
+    "build:dev": "npm run clean && tsc -b",
+    "build:bundles": "node esbuild.config.js",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "corbado",
+    "utilities"
+  ],
+  "author": "Corbado",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "babel-loader": "^9.1.3",
+    "rimraf": "^5.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.0.0",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.10.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "gitHead": "c4c3ea12679f60f395ce56f05f2c028ca36fb4ee"
+}

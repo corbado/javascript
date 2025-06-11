@@ -1,3 +1,4 @@
+import type { TelemetryConfig } from '@corbado/react';
 import { CorbadoAuth, Login, PasskeyList, SignUp, User } from '@corbado/react';
 import type { CorbadoAuthConfig, CorbadoLoginConfig, CorbadoSignUpConfig } from '@corbado/types';
 import type { FC } from 'react';
@@ -10,6 +11,7 @@ import { mountComponent, unmountComponent } from '../ui/mountComponent';
 export class Corbado {
   #corbadoAppState?: CorbadoAppState;
   #componentInstances: Map<HTMLElement, Root> = new Map();
+  #telemetryConfig?: TelemetryConfig;
 
   get user() {
     return this.#getCorbadoAppState().user;
@@ -35,11 +37,12 @@ export class Corbado {
     return this.#getCorbadoAppState().authStateChanges;
   }
 
-  async load(options: CorbadoConfig) {
+  async load(options: CorbadoConfig, telemetry?: TelemetryConfig) {
     const corbadoAppState = new CorbadoAppState(options);
     await corbadoAppState.init();
 
     this.#corbadoAppState = corbadoAppState;
+    this.#telemetryConfig = telemetry;
   }
 
   mountAuthUI(element: HTMLElement, options: CorbadoAuthConfig) {
@@ -114,7 +117,7 @@ export class Corbado {
 
     this.#unmountComponent(element);
 
-    const root = mountComponent(this.#corbadoAppState, element, Component, componentOptions);
+    const root = mountComponent(this.#corbadoAppState, element, Component, componentOptions, this.#telemetryConfig);
 
     this.#componentInstances.set(element, root);
   };

@@ -4,6 +4,7 @@
     "paths": {
       "@corbado/web-core": ["../web-core/src"],
       "@corbado/shared-ui": ["../shared-ui/src"],
+      "@corbado/shared-util": ["../shared-util/src"],
       "@corbado/react": ["../react/src"]
     }
   }

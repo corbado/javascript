@@ -1600,6 +1600,7 @@ components:
         - appName
         - frontendApiUrl
         - hideBadge
+        - environment
       properties:
         appName:
           type: string
@@ -1607,6 +1608,8 @@ components:
           type: string
         hideBadge:
           type: boolean
+        environment:
+          type: string
 
     shortSessionCookieConfig:
       type: object

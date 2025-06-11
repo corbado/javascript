@@ -6,11 +6,15 @@ import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
 import { PasskeyAppendedIcon } from '../../../components/ui/icons/PasskeyAppendedIcon';
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
+import { useTelemetry } from '../../../hooks/useTelemetry';
 
 export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: `signup.passkey-appended.passkey-appended`,
   });
+
+  const { logMethodCalled } = useTelemetry();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const headerText = useMemo(() => t('header'), [t]);
@@ -20,8 +24,11 @@ export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
 
   const handleContinue = useCallback(() => {
     setLoading(true);
+
+    logMethodCalled('continue', 'PasskeyAppended');
+
     return void block.continue();
-  }, [block]);
+  }, [block, logMethodCalled]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

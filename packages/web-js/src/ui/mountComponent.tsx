@@ -1,4 +1,4 @@
-import type { CorbadoProviderProps } from '@corbado/react';
+import type { CorbadoProviderProps, TelemetryConfig } from '@corbado/react';
 import { CorbadoProvider } from '@corbado/react';
 import type { FC } from 'react';
 import React from 'react';
@@ -13,6 +13,7 @@ export function mountComponent<T extends Record<string, any>>(
   element: HTMLElement,
   Component: FC<T>,
   componentOptions: T,
+  telemetry?: TelemetryConfig,
 ) {
   const ComponentWithContext: FC<{ providerProps: CorbadoProviderProps; componentProps: T }> = ({
     providerProps,
@@ -28,6 +29,7 @@ export function mountComponent<T extends Record<string, any>>(
   const root = createRoot(element);
   const corbadoProviderProps: CorbadoProviderProps = {
     corbadoAppInstance: corbadoAppState.corbadoApp,
+    telemetry,
     ...corbadoAppState.corbadoAppProps,
   };
   root.render(

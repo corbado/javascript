@@ -73,6 +73,7 @@
     ></script>
     <script src="./assets/prism.js"></script>
     <script src="https://unpkg.com/@corbado/web-js@2/dist/bundle/index.js"></script>
+    <script src="https://unpkg.com/@corbado/shared-util@1/dist/bundle/index.js"></script>
 
     <script type="module">
       import { insertHeader, insertGuide, insertDemo } from './components/index.js';
@@ -83,6 +84,16 @@
 
       await Corbado.load({
         projectId: projectID,
+      });
+
+      CorbadoSharedUtil.sendEvent({
+        type: CorbadoSharedUtil.TelemetryEventType.EXAMPLE_APPLICATION_OPENED,
+        payload: {
+          exampleName: 'corbado/javascript/examples/web-js-script',
+        },
+        sdkVersion: '3.1.1',
+        sdkName: 'React SDK',
+        identifier: projectID,
       });
 
       insertHeader(Corbado.isAuthenticated, Corbado.user);

@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
   const body = (await req.json()) as Payload;
 
   const { idToken, connectTokenType } = body;
+  console.log('creating connectTokenType', connectTokenType);
 
   try {
     const { displayName, identifier } = await verifyAmplifyTokenExternal(idToken);

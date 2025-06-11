@@ -19,6 +19,29 @@ export async function POST(req: NextRequest) {
       identifier: identifier,
     });
 
+    const simulateError = process.env.SIMULATE_ERROR;
+    if (simulateError && displayName.endsWith('@corbado.com')) {
+      console.warn('Simulating error for testing purposes');
+
+      switch (simulateError) {
+        case 'error_response':
+          return new Response(JSON.stringify({ error: 'Simulated error' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        case 'invalid_token':
+          return new Response(JSON.stringify({ token: 'invalid_token' }), {
+            status: 201,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        case 'empty_token':
+          return new Response(JSON.stringify({ token: '' }), {
+            status: 201,
+            headers: { 'Content-Type': 'application/json' },
+          });
+      }
+    }
+
     return new Response(JSON.stringify({ token: connectToken }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },

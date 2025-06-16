@@ -1,4 +1,4 @@
-name: Deploy Playground Apps to Vercel and Test on React
+name: Deploy Playground Apps to Vercel
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

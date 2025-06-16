@@ -18,17 +18,22 @@ jobs:
         include:
           - testType: complete
             configFile: playwright.config.complete.ts
-            extraEnv: |
-              PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
-              PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
-              PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
-              PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
           - testType: connect
             configFile: playwright.config.connect.ts
-            extraEnv: |
-              BACKEND_API_BASIC_AUTH: ${{ secrets.BACKEND_API_BASIC_AUTH }}
-              PLAYWRIGHT_CONNECT_PROJECT_ID: ${{ secrets.PLAYWRIGHT_CONNECT_PROJECT_ID }}
-              PLAYWRIGHT_NGROK_AUTH_TOKEN: ${{ secrets.PLAYWRIGHT_NGROK_AUTH_TOKEN }}
+    env:
+      PLAYWRIGHT_NUM_CORES:       4
+      PLAYWRIGHT_JWT_TOKEN:       ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
+      PLAYWRIGHT_GOOGLE_EMAIL:    ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
+      PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
+      PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
+
+      BACKEND_API_BASIC_AUTH:     ${{ secrets.BACKEND_API_BASIC_AUTH }}
+      PLAYWRIGHT_CONNECT_PROJECT_ID: ${{ secrets.PLAYWRIGHT_CONNECT_PROJECT_ID }}
+      PLAYWRIGHT_NGROK_AUTH_TOKEN:   ${{ secrets.PLAYWRIGHT_NGROK_AUTH_TOKEN }}
+
+      GITHUB_RUN_ID:              ${{ github.run_id }}
+      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+      GITHUB_BRANCH_NAME:         ${{ github.ref_name }}
 
     steps:
       - name: Checkout code
@@ -109,12 +114,6 @@ jobs:
 
       - name: Run ${{ matrix.testType }} tests for react
         working-directory: packages/tests-e2e
-        env: |
-          PLAYWRIGHT_NUM_CORES: 4
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-          GITHUB_BRANCH_NAME: ${{ github.ref_name }}
-          ${{ matrix.extraEnv }}
         run: |
           npx playwright test --config=${{ matrix.configFile }}
 

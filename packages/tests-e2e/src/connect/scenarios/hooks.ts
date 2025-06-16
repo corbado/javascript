@@ -57,9 +57,10 @@ export function loadInvitationToken(
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
   >,
+  getPort: () => number,
 ) {
   test.beforeEach(async ({ model }) => {
-    await model.storage.loadInvitationToken();
+    await model.storage.loadInvitationToken(getPort());
   });
 }
 
@@ -68,14 +69,15 @@ export function setupUser(
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
   >,
+  getPort: () => number,
   invited = true,
   append = true,
 ) {
   test.beforeEach(async ({ model }) => {
     if (invited) {
-      await model.storage.loadInvitationToken();
+      await model.storage.loadInvitationToken(getPort());
     }
-    await model.loadSignup();
+    await model.loadSignup(getPort());
     await model.expectScreen(ScreenNames.InitSignup);
     await model.createUser(invited, append);
     await model.expectScreen(ScreenNames.Home);

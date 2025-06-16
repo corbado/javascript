@@ -1,11 +1,25 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
 import { ErrorTexts, password, ScreenNames } from '../utils/Constants';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 import { loadInvitationToken, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('login component (without invitation token)', () => {
-  setupUser(test, false);
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
+  setupUser(test, () => port, false);
 
   test('successful login with credentials', async ({ model }) => {
     await model.home.logout();
@@ -21,8 +35,19 @@ test.describe('login component (without invitation token)', () => {
 });
 
 test.describe('login component (with invitation token, without passkeys)', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
-  setupUser(test, true, false);
+  setupUser(test, () => port, true, false);
 
   test('successful login with credentials', async ({ model }) => {
     await model.home.logout();
@@ -44,9 +69,20 @@ test.describe('login component (with invitation token, without passkeys)', () =>
 });
 
 test.describe('login component (with invitation token, with passkeys)', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  setupUser(test, true, true);
+  setupUser(test, () => port, true, true);
 
   test('successful login with passkey', async ({ model }) => {
     await model.home.logout();
@@ -117,7 +153,7 @@ test.describe('login component (with invitation token, with passkeys)', () => {
     await model.passkeyList.deletePasskey(0);
     await model.passkeyList.expectPasskeys(0);
 
-    await model.loadHome();
+    await model.loadHome(port);
     await model.expectScreen(ScreenNames.Home);
 
     await model.login.submitConditionalUI(async () => {
@@ -142,12 +178,23 @@ test.describe('login component (with invitation token, with passkeys)', () => {
 });
 
 test.describe('login component (without user)', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  loadInvitationToken(test);
+  loadInvitationToken(test, () => port);
 
   test('attempt login with incomplete credentials', async ({ model }) => {
-    await model.loadLogin();
+    await model.loadLogin(port);
     await model.expectScreen(ScreenNames.InitLogin);
 
     await model.login.submitEmail('', false);
@@ -155,7 +202,7 @@ test.describe('login component (without user)', () => {
   });
 
   test('attempt login with unknown credentials', async ({ model }) => {
-    await model.loadLogin();
+    await model.loadLogin(port);
     await model.expectScreen(ScreenNames.InitLogin);
 
     await model.login.submitEmail('integration-test+unknown@corbado.com', false);
@@ -165,7 +212,7 @@ test.describe('login component (without user)', () => {
   test('Corbado FAPI unavailable', async ({ model }) => {
     await model.blocker.blockCorbadoFAPI();
 
-    await model.loadLogin();
+    await model.loadLogin(port);
     // It seems that the InitLogin page is now cached so that email needs to be submitted before reaching the InitLoginFallback screen.
     await model.login.submitEmail('integration-test+dummy@corbado.com', false);
     await model.expectScreen(ScreenNames.InitLoginFallback);
@@ -176,7 +223,7 @@ test.describe('login component (without user)', () => {
     await model.storage.checkInvitationToken();
     const processId = await model.storage.getProcessID();
 
-    await model.loadLogin();
+    await model.loadLogin(port);
     await model.expectScreen(ScreenNames.InitLogin);
     await model.storage.checkInvitationToken();
     await model.storage.checkProcessID(processId);
@@ -188,7 +235,7 @@ test.describe('login component (without user)', () => {
 
     await model.storage.setLoginLifetime(Math.floor(Date.now() / 1000) - 1);
     await model.storage.deleteInvitationToken();
-    await model.loadLogin();
+    await model.loadLogin(port);
     await model.expectScreen(ScreenNames.InitLoginFallback);
   });
 });

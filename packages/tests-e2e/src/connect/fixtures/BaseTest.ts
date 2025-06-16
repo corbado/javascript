@@ -5,7 +5,9 @@ import { CDPSessionManager } from '../utils/CDPSessionManager';
 import { NetworkRequestBlocker } from '../utils/NetworkRequestBlocker';
 import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
-export const test = base.extend<{ model: BaseModel }>({
+export const test = base.extend<{
+  model: BaseModel;
+}>({
   model: async ({ page }, use) => {
     const cdpManager = new CDPSessionManager();
     await cdpManager.initialize(page);

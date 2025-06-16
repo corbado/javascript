@@ -46,7 +46,7 @@ export default defineConfig({
   use: {
     actionTimeout: operationTimeout, // default: none
     navigationTimeout: operationTimeout, // default: none
-    baseURL: process.env.PLAYWRIGHT_TEST_URL,
+    // baseURL: process.env.PLAYWRIGHT_TEST_URL,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',

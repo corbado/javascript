@@ -5,17 +5,20 @@ import getPort from 'get-port';
 import path from 'path';
 import waitPort from 'wait-port';
 
-type PlaygroundType = 'react' | 'web-js' | 'web-js-script';
-const PLAYGROUND_TYPE: PlaygroundType = (process.env.PLAYGROUND_TYPE as PlaygroundType) || 'react';
+type PlaygroundType = 'connect-next' | 'connect-web-js';
+const PLAYGROUND_TYPE: PlaygroundType = (process.env.PLAYGROUND_TYPE as PlaygroundType) || 'connect-next';
+
+export type PlaygroundInfo = {
+  server: ChildProcess;
+  port: number;
+};
 
 function getPlaygroundDir(): string {
   switch (PLAYGROUND_TYPE) {
-    case 'react':
-      return path.resolve(__dirname, '../../../../../playground/react');
-    case 'web-js':
-      return path.resolve(__dirname, '../../../../../playground/web-js');
-    case 'web-js-script':
-      return path.resolve(__dirname, '../../../../../playground/web-js-script');
+    case 'connect-next':
+      return path.resolve(__dirname, '../../../../../playground/connect-next');
+    case 'connect-web-js':
+      return path.resolve(__dirname, '../../../../../playground/connect-web-js');
     default:
       throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
   }
@@ -23,21 +26,16 @@ function getPlaygroundDir(): string {
 
 function getPlaygroundArgs(port: number): string[] {
   switch (PLAYGROUND_TYPE) {
-    case 'react':
-      return ['run', 'build-and-preview', '--', '--port', port.toString()];
-    case 'web-js':
-      return ['run', 'build-and-preview', '--', '-l', port.toString()];
-    case 'web-js-script':
-      return ['run', 'build-and-preview', '--', '-l', port.toString()];
+    case 'connect-next':
+      return ['run', 'build-and-start', '--', '--port', port.toString()];
+    case 'connect-web-js':
+      throw new Error(`Unimplemented: ${PLAYGROUND_TYPE}`);
     default:
       throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
   }
 }
 
-export async function spawnPlaygroundNew(projectId: string): Promise<{
-  server: ChildProcess;
-  port: number;
-}> {
+export async function spawnPlaygroundNew(): Promise<PlaygroundInfo> {
   const port = await getPort();
 
   const playgroundDir = getPlaygroundDir();
@@ -45,7 +43,6 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
     cwd: playgroundDir,
     env: {
       ...process.env,
-      VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
     },
     stdio: 'ignore',
     shell: true,

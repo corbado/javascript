@@ -1,11 +1,25 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { expect, test } from '../fixtures/BaseTest';
 import { ErrorTexts, ScreenNames } from '../utils/Constants';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 import { loadPasskeyList, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('passkey-list component', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  setupUser(test, true, false);
+  setupUser(test, () => port, true, false);
   loadPasskeyList(test);
 
   test('list, delete, create passkey', async ({ model }) => {
@@ -82,9 +96,20 @@ test.describe('passkey-list component', () => {
 });
 
 test.describe('skip passkey-list component', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  setupUser(test, true, true);
+  setupUser(test, () => port, true, true);
 
   test('Connect Token endpoint unavailable', async ({ model }) => {
     await model.blocker.blockCorbadoConnectTokenEndpoint();
@@ -106,7 +131,7 @@ test.describe('skip passkey-list component', () => {
     await model.home.gotoPasskeyList();
     await model.expectScreen(ScreenNames.PasskeyList);
     await model.passkeyList.expectPasskeys(1);
-    await model.loadHome();
+    await model.loadHome(port);
     await model.expectScreen(ScreenNames.Home);
     expect(await model.storage.getManageLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
 

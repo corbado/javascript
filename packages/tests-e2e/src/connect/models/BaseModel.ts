@@ -42,16 +42,16 @@ export class BaseModel {
     this.mfa = new MFAModel(page);
   }
 
-  loadSignup() {
-    return this.page.goto('/signup');
+  loadSignup(port: number) {
+    return this.page.goto(`http://localhost:${port.toString()}/signup`);
   }
 
-  loadLogin() {
-    return this.page.goto('/login');
+  loadLogin(port: number) {
+    return this.page.goto(`http://localhost:${port.toString()}/login`);
   }
 
-  loadHome() {
-    return this.page.goto('/home');
+  loadHome(port: number) {
+    return this.page.goto(`http://localhost:${port.toString()}/home`);
   }
 
   expectScreen(screenName: ScreenNames) {

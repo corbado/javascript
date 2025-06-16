@@ -1,13 +1,27 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { expect } from '@playwright/test';
 
 import { test } from '../fixtures/BaseTest';
 import { password, ScreenNames } from '../utils/Constants';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 import { loadPasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
 test.describe('append component', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  setupUser(test, true, false);
+  setupUser(test, () => port, true, false);
   loadPasskeyAppend(test);
 
   test('successful passkey append on login', async ({ model }) => {
@@ -31,9 +45,20 @@ test.describe('append component', () => {
 });
 
 test.describe('skip append component', () => {
+  let server: ChildProcess;
+  let port: number;
+
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
+  });
+
+  test.afterAll(() => {
+    killPlaygroundNew(server);
+  });
+
   setupVirtualAuthenticator(test);
   setupNetworkBlocker(test);
-  setupUser(test, true, false);
+  setupUser(test, () => port, true, false);
 
   test('Corbado FAPI unavailable', async ({ model }) => {
     await model.home.logout();

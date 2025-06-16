@@ -1,5 +1,8 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../fixtures/BaseTest';
 import { ScreenNames, WebhookTypes } from '../utils/Constants';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 import {
   loadPasskeyAppend,
   loadPasskeyList,
@@ -11,9 +14,20 @@ import {
 
 test.describe.serial('webhook tests', () => {
   test.describe('login component (webhook)', () => {
+    let server: ChildProcess;
+    let port: number;
+
+    test.beforeAll(async () => {
+      ({ server, port } = await spawnPlaygroundNew());
+    });
+
+    test.afterAll(() => {
+      killPlaygroundNew(server);
+    });
+
     setupVirtualAuthenticator(test);
     setupNetworkBlocker(test);
-    setupUser(test, true, true);
+    setupUser(test, () => port, true, true);
     setupWebhooks(test, [WebhookTypes.Login]);
 
     test('successful login with passkey (+ webhook)', async ({ model }) => {
@@ -31,9 +45,20 @@ test.describe.serial('webhook tests', () => {
   });
 
   test.describe('append component (webhook)', () => {
+    let server: ChildProcess;
+    let port: number;
+
+    test.beforeAll(async () => {
+      ({ server, port } = await spawnPlaygroundNew());
+    });
+
+    test.afterAll(() => {
+      killPlaygroundNew(server);
+    });
+
     setupVirtualAuthenticator(test);
     setupNetworkBlocker(test);
-    setupUser(test, true, false);
+    setupUser(test, () => port, true, false);
     loadPasskeyAppend(test);
     setupWebhooks(test, [WebhookTypes.Create]);
 
@@ -49,9 +74,20 @@ test.describe.serial('webhook tests', () => {
   });
 
   test.describe('passkey-list component (webhook)', () => {
+    let server: ChildProcess;
+    let port: number;
+
+    test.beforeAll(async () => {
+      ({ server, port } = await spawnPlaygroundNew());
+    });
+
+    test.afterAll(() => {
+      killPlaygroundNew(server);
+    });
+
     setupVirtualAuthenticator(test);
     setupNetworkBlocker(test);
-    setupUser(test, true, false);
+    setupUser(test, () => port, true, false);
     loadPasskeyList(test);
     setupWebhooks(test, [WebhookTypes.Create, WebhookTypes.Delete]);
 

@@ -87,13 +87,16 @@ export class WebhookModel {
       throw new Error('PLAYWRIGHT_CONNECT_PROJECT_ID not set');
     }
 
-    const deleteRes = await fetch(`${process.env.CORBADO_BACKEND_API_URL}/v2/webhookEndpoints/${this.webhookEndpointID}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
-        'Content-Type': 'application/json',
+    const deleteRes = await fetch(
+      `${process.env.CORBADO_BACKEND_API_URL}/v2/webhookEndpoints/${this.webhookEndpointID}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     expect(deleteRes.ok).toBeTruthy();
 
     this.webhookServer.close();

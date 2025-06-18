@@ -44,7 +44,7 @@ export async function spawnPlaygroundNew(): Promise<PlaygroundInfo> {
     env: {
       ...process.env,
     },
-    stdio: 'inherit',
+    stdio: 'ignore',
     shell: true,
   });
   const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });

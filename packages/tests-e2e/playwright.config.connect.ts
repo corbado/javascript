@@ -71,4 +71,5 @@ export default defineConfig({
       testMatch: ['scenarios/misc.spec.ts'],
     },
   ],
+  globalSetup: 'src/connect/utils/Playground.ts',
 });

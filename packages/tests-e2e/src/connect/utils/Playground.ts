@@ -43,7 +43,6 @@ export async function spawnPlaygroundNew(): Promise<PlaygroundInfo> {
     cwd: playgroundDir,
     env: {
       ...process.env,
-      NEXT_PRIVATE_DISABLE_CACHE: '1',
     },
     stdio: 'inherit',
     shell: true,

@@ -27,7 +27,7 @@ function getPlaygroundDir(): string {
 function getPlaygroundArgs(port: number): string[] {
   switch (PLAYGROUND_TYPE) {
     case 'connect-next':
-      return ['run', 'build-and-start', '--', '--port', port.toString()];
+      return ['run', 'start', '--', '--port', port.toString()];
     case 'connect-web-js':
       throw new Error(`Unimplemented: ${PLAYGROUND_TYPE}`);
     default:
@@ -74,7 +74,22 @@ export default async function installPlaygroundDeps() {
     installProcess.on('close', (code: number) => {
       if (code === 0) {
         console.log(`[Global Setup] Dependencies installed successfully in ${playgroundDir}.`);
-        resolve();
+        const buildProcess = spawn('npm', ['run', 'build'], {
+          cwd: playgroundDir,
+          stdio: 'inherit',
+          shell: true,
+        });
+        buildProcess.on('close', (buildCode: number) => {
+          if (buildCode === 0) {
+            console.log(`[Global Setup] Playground built successfully in ${playgroundDir}.`);
+            resolve();
+          } else {
+            reject(new Error(`[Global Setup] npm run build-and-preview failed in ${playgroundDir} with code ${buildCode}`));
+          }
+        });
+        buildProcess.on('error', (err: Error) => {
+          reject(new Error(`[Global Setup] Failed to start build process: ${err.message}`));
+        });
       } else {
         reject(new Error(`[Global Setup] npm install failed in ${playgroundDir} with code ${code}`));
       }

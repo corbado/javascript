@@ -37,8 +37,8 @@ jobs:
       AWS_COGNITO_CLIENT_ID:   ${{ secrets.AWS_COGNITO_CLIENT_ID }}
       AWS_COGNITO_CLIENT_SECRET:   ${{ secrets.AWS_COGNITO_CLIENT_SECRET }}
       AWS_REGION:   ${{ secrets.AWS_REGION }}
-      AWS_ACCESS_KEY_ID:   ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY:   ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID:   ${{ secrets.AWS_ACCESS_KEY_ID_CONNECT_PLAYGROUND }}
+      AWS_SECRET_ACCESS_KEY:   ${{ secrets.AWS_SECRET_ACCESS_KEY_CONNECT_PLAYGROUND }}
 
       GITHUB_RUN_ID:              ${{ github.run_id }}
       SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}

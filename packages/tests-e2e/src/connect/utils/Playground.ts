@@ -83,7 +83,9 @@ export default async function installPlaygroundDeps() {
             console.log(`[Global Setup] Playground built successfully in ${playgroundDir}.`);
             resolve();
           } else {
-            reject(new Error(`[Global Setup] npm run build-and-preview failed in ${playgroundDir} with code ${buildCode}`));
+            reject(
+              new Error(`[Global Setup] npm run build-and-preview failed in ${playgroundDir} with code ${buildCode}`),
+            );
           }
         });
         buildProcess.on('error', (err: Error) => {

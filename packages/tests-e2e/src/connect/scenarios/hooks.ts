@@ -83,7 +83,7 @@ export function setupUser(
 }
 
 // assumes that setupUser(test, true, false) has been called right before
-export function loadPasskeyAppend(
+export function loadBeforePasskeyAppend(
   test: TestType<
     PlaywrightTestArgs & PlaywrightTestOptions & { model: BaseModel },
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
@@ -100,8 +100,8 @@ export function loadPasskeyAppend(
     await model.expectScreen(ScreenNames.MFA);
 
     await model.mfa.autofillTOTP();
-    await model.mfa.submit();
-    await model.expectScreen(ScreenNames.PasskeyAppend);
+    // await model.mfa.submit();
+    // await model.expectScreen(ScreenNames.PasskeyAppend);
   });
 }
 

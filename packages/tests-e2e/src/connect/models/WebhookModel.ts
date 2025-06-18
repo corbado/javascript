@@ -55,10 +55,10 @@ export class WebhookModel {
       addr: port,
       authtoken: process.env.PLAYWRIGHT_NGROK_AUTH_TOKEN,
     });
-    const createRes = await fetch(`${process.env.BACKEND_API_URL}/v2/webhookEndpoints`, {
+    const createRes = await fetch(`${process.env.CORBADO_BACKEND_API_URL}/v2/webhookEndpoints`, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${process.env.BACKEND_API_BASIC_AUTH}`,
+        Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -87,10 +87,10 @@ export class WebhookModel {
       throw new Error('PLAYWRIGHT_CONNECT_PROJECT_ID not set');
     }
 
-    const deleteRes = await fetch(`${process.env.BACKEND_API_URL}/v2/webhookEndpoints/${this.webhookEndpointID}`, {
+    const deleteRes = await fetch(`${process.env.CORBADO_BACKEND_API_URL}/v2/webhookEndpoints/${this.webhookEndpointID}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Basic ${process.env.BACKEND_API_BASIC_AUTH}`,
+        Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
         'Content-Type': 'application/json',
       },
     });

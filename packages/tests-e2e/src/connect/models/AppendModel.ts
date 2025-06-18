@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
-import { ErrorTexts } from '../utils/Constants';
-import { expectError } from '../utils/ExpectScreen';
+import { ErrorTexts, ScreenNames } from '../utils/Constants';
+import { expectError, expectScreen } from '../utils/ExpectScreen';
 import type { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
 export class AppendModel {
@@ -21,6 +21,17 @@ export class AppendModel {
       return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, () =>
         expectError(this.page, ErrorTexts.CancelledPasskey),
       );
+    }
+  }
+
+  autoAppendPasskey(complete: boolean, operationTrigger: () => Promise<void>) {
+    if (complete) {
+      return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
+    } else {
+      return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, async () => {
+        await expectScreen(this.page, ScreenNames.PasskeyAppend);
+        await this.page.waitForSelector('.button-loading-container', { state: 'detached' });
+      });
     }
   }
 

@@ -1,12 +1,16 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
+import type { AppendModel } from './AppendModel';
+
 export class MFAModel {
   page: Page;
+  append: AppendModel;
   timestamp: number;
 
-  constructor(page: Page) {
+  constructor(page: Page, append: AppendModel) {
     this.page = page;
+    this.append = append;
     this.timestamp = Date.now();
   }
 
@@ -21,7 +25,12 @@ export class MFAModel {
     this.registerTokenUsed();
   }
 
-  submit() {
-    return this.page.getByRole('button', { name: 'Submit' }).click();
+  submit(invited: boolean, autoAppend: boolean) {
+    if (invited) {
+      const operationTrigger = () => this.page.getByRole('button', { name: 'Submit' }).click();
+      return this.append.autoAppendPasskey(autoAppend, operationTrigger);
+    } else {
+      return this.page.getByRole('button', { name: 'Submit' }).click();
+    }
   }
 }

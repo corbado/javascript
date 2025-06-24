@@ -22,6 +22,8 @@ jobs:
             configFile: playwright.config.connect.ts
     env:
       PLAYWRIGHT_NUM_CORES:       4
+      PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
+
       PLAYWRIGHT_JWT_TOKEN:       ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
       PLAYWRIGHT_GOOGLE_EMAIL:    ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
       PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}

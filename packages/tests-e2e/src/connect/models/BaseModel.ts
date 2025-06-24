@@ -43,15 +43,15 @@ export class BaseModel {
   }
 
   loadSignup(port: number) {
-    return this.page.goto(`http://localhost:${port.toString()}/signup`);
+    return this.page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/signup`);
   }
 
   loadLogin(port: number) {
-    return this.page.goto(`http://localhost:${port.toString()}/login`);
+    return this.page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login`);
   }
 
   loadHome(port: number) {
-    return this.page.goto(`http://localhost:${port.toString()}/home`);
+    return this.page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/home`);
   }
 
   expectScreen(screenName: ScreenNames) {

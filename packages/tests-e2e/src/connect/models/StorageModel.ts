@@ -12,7 +12,7 @@ export class StorageModel {
   }
 
   async loadInvitationToken(port: number) {
-    await this.page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await this.page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
     await expectScreen(this.page, ScreenNames.InitLogin);
   }
 

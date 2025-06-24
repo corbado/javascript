@@ -101,6 +101,7 @@ jobs:
           fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
           PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
           PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
@@ -145,6 +146,7 @@ jobs:
           fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
           PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
           PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
@@ -189,6 +191,7 @@ jobs:
           fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
           PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
           PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
           PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
@@ -235,6 +238,7 @@ jobs:
           fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
+          PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
           NEXT_PUBLIC_CORBADO_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_CORBADO_PROJECT_ID }}
           NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX: ${{ secrets.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX }}
           CORBADO_BACKEND_API_URL: ${{ secrets.CORBADO_BACKEND_API_URL }}

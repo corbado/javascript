@@ -93,11 +93,5 @@ export default defineConfig({
       testMatch: ['scenarios/passkey-list-general/*.ts'],
     },
   ],
-  // webServer: {
-  //   command: webServerCommand,
-  //   url: 'http://localhost:4173',
-  //   reuseExistingServer: !process.env.CI,
-  //   timeout: 15 * 1000,
-  // },
   globalSetup: 'src/complete/utils/playground.ts',
 });

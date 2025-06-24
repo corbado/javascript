@@ -46,7 +46,7 @@ export class WebhookModel {
         }
       });
       this.webhookServer.listen(port, () => {
-        console.log(`Webhook server running at http://localhost:${port}`);
+        console.log(`Webhook server running at ${process.env.PLAYWRIGHT_TEST_URL}:${port}`);
         resolve(this.webhookServer);
       });
     });

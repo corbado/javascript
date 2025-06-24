@@ -39,7 +39,7 @@ test.describe('passkey-list component', () => {
   test('Connect Token endpoint unavailable during passkey creation', async ({ model }) => {
     await model.passkeyList.expectPasskeys(0);
 
-    await model.blocker.blockCorbadoConnectTokenEndpoint();
+    await model.blocker.blockCorbadoConnectTokenEndpoint(port);
 
     await model.page.getByRole('button', { name: 'Add a passkey' }).click();
     await model.expectError(ErrorTexts.PasskeyCreateFail);
@@ -75,7 +75,7 @@ test.describe('passkey-list component', () => {
     await model.passkeyList.createPasskey(true);
     await model.passkeyList.expectPasskeys(1);
 
-    await model.blocker.blockCorbadoConnectTokenEndpoint();
+    await model.blocker.blockCorbadoConnectTokenEndpoint(port);
 
     await model.passkeyList.deletePasskey(0);
     await model.expectError(ErrorTexts.PasskeyDeleteFail);
@@ -112,7 +112,7 @@ test.describe('skip passkey-list component', () => {
   setupUser(test, () => port, true, true);
 
   test('Connect Token endpoint unavailable', async ({ model }) => {
-    await model.blocker.blockCorbadoConnectTokenEndpoint();
+    await model.blocker.blockCorbadoConnectTokenEndpoint(port);
 
     await model.home.gotoPasskeyList();
     await model.expectScreen(ScreenNames.PasskeyList);

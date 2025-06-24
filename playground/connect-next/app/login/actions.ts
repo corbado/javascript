@@ -50,6 +50,13 @@ export async function postPasskeyLoginNew(signedPasskeyData: string, clientState
     signedPasskeyData: signedPasskeyData,
   });
 
+  console.log('url: ', url);
+  console.log('auth: ', `${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`);
+
+  console.log('Calling postPasskeyLoginNew with:');
+  console.log('signedPasskeyData:', signedPasskeyData);
+  console.log('clientState:', clientState);
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -60,7 +67,16 @@ export async function postPasskeyLoginNew(signedPasskeyData: string, clientState
     body: body,
   });
 
-  const out = await response.json();
+  const clonedResponse = response.clone();
+  let out: any;
+  try {
+    out = await response.json();
+  } catch (err) {
+    const text = await clonedResponse.text(); // Get raw HTML or empty string
+    console.error('Failed to parse JSON. Raw response:', text.slice(0, 300));
+    throw new Error('Invalid JSON response from backend');
+  }
+  console.log(out);
 
   await postPasskeyLogin(out.session);
 

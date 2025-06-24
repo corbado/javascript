@@ -25,10 +25,10 @@ export class NetworkRequestBlocker {
     });
   }
 
-  blockCorbadoConnectTokenEndpoint() {
+  blockCorbadoConnectTokenEndpoint(port: number) {
     // This is sufficient, as the connectTokens endpoint is called from /passkey-list handler
     return this.#cdpClient.send('Network.setBlockedURLs', {
-      urls: ['*.playground.corbado.io/passkey-list'],
+      urls: [`localhost:${port.toString()}/passkey-list`],
     });
   }
 }

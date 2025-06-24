@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=local webpack-dev-server --open --mode development",
     "build": "cross-env NODE_ENV=vercel webpack --mode production",
-    "build-and-preview": "cross-env NODE_ENV=vercel webpack --mode production && npx serve dist --single"
+    "serve": "npx serve dist --single"
   },
   "keywords": [],
   "author": "",

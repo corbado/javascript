@@ -21,14 +21,27 @@ function getPlaygroundDir(): string {
   }
 }
 
-function getPlaygroundArgs(port: number): string[] {
+function getPlaygroundBuildArgs(): string[] | null {
   switch (PLAYGROUND_TYPE) {
     case 'react':
-      return ['run', 'build-and-preview', '--', '--port', port.toString()];
+      return ['run', 'build'];
     case 'web-js':
-      return ['run', 'build-and-preview', '--', '-l', port.toString()];
+      return ['run', 'build'];
     case 'web-js-script':
-      return ['run', 'build-and-preview', '--', '-l', port.toString()];
+      return null;
+    default:
+      throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
+  }
+}
+
+function getPlaygroundStartArgs(port: number): string[] {
+  switch (PLAYGROUND_TYPE) {
+    case 'react':
+      return ['run', 'preview', '--', '--port', port.toString()];
+    case 'web-js':
+      return ['run', 'serve', '--', '-l', port.toString()];
+    case 'web-js-script':
+      return ['run', 'serve', '--', '-l', port.toString()];
     default:
       throw new Error(`Unknown PLAYGROUND_TYPE: ${PLAYGROUND_TYPE}`);
   }
@@ -41,7 +54,7 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
   const port = await getPort();
 
   const playgroundDir = getPlaygroundDir();
-  const server = spawn('npm', getPlaygroundArgs(port), {
+  const server = spawn('npm', getPlaygroundStartArgs(port), {
     cwd: playgroundDir,
     env: {
       ...process.env,
@@ -76,7 +89,29 @@ export default async function installPlaygroundDeps() {
     installProcess.on('close', (code: number) => {
       if (code === 0) {
         console.log(`[Global Setup] Dependencies installed successfully in ${playgroundDir}.`);
-        resolve();
+        const buildCommand = getPlaygroundBuildArgs();
+        if (!buildCommand) {
+          console.log(`[Global Setup] No build step required for ${PLAYGROUND_TYPE}.`);
+          return resolve();
+        }
+        const buildProcess = spawn('npm', buildCommand, {
+          cwd: playgroundDir,
+          stdio: 'inherit',
+          shell: true,
+        });
+        buildProcess.on('close', (buildCode: number) => {
+          if (buildCode === 0) {
+            console.log(`[Global Setup] Playground built successfully in ${playgroundDir}.`);
+            resolve();
+          } else {
+            reject(
+              new Error(`[Global Setup] npm run build failed in ${playgroundDir} with code ${buildCode}`),
+            );
+          }
+        });
+        buildProcess.on('error', (err: Error) => {
+          reject(new Error(`[Global Setup] Failed to start build process: ${err.message}`));
+        });
       } else {
         reject(new Error(`[Global Setup] npm install failed in ${playgroundDir} with code ${code}`));
       }

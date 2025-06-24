@@ -93,12 +93,7 @@ jobs:
       - name: Run Complete tests for react
         run: |
           cd packages/tests-e2e
-          set +e
           npx playwright test --config=playwright.config.complete.ts
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "COMPLETE_REACT_FAILED=true" >> $GITHUB_ENV
-          fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
@@ -138,12 +133,7 @@ jobs:
       - name: Run Complete tests for web-js
         run: |
           cd packages/tests-e2e
-          set +e
           npx playwright test --config=playwright.config.complete.ts
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "COMPLETE_WEBJS_FAILED=true" >> $GITHUB_ENV
-          fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
@@ -183,12 +173,7 @@ jobs:
       - name: Run Complete tests for web-js-script
         run: |
           cd packages/tests-e2e
-          set +e
           npx playwright test --config=playwright.config.complete.ts
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "COMPLETE_WEBJSSCRIPT_FAILED=true" >> $GITHUB_ENV
-          fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}
@@ -228,14 +213,7 @@ jobs:
       - name: Run Connect tests for react
         run: |
           cd packages/tests-e2e
-          BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')
-          export PLAYWRIGHT_TEST_URL="https://$BRANCH_NAME.connect-next.playground.corbado.io"
-          set +e
           npx playwright test --config=playwright.config.connect.ts
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "CONNECT_REACT_FAILED=true" >> $GITHUB_ENV
-          fi
         env:
           PLAYWRIGHT_NUM_CORES: 4
           PLAYWRIGHT_TEST_URL:        ${{ secrets.PLAYWRIGHT_TEST_URL }}

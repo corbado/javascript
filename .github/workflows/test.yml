@@ -120,8 +120,10 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           TIMESTAMP=$(date +%s000)
-          echo "LOG_STREAM_NAME=javascript-$TIMESTAMP" >> $GITHUB_ENV
-          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "javascript-$TIMESTAMP"
+          RANDOM_SUFFIX=$(head /dev/urandom | tr -dc a-z0-9 | head -c 6)
+          LOG_STREAM_NAME="javascript-${TIMESTAMP}-${RANDOM_SUFFIX}"
+          echo "LOG_STREAM_NAME=$LOG_STREAM_NAME" >> $GITHUB_ENV
+          aws logs create-log-stream --log-group-name "test-results-board" --log-stream-name "$LOG_STREAM_NAME"
 
       - name: Run ${{ matrix.testType }} tests for react
         working-directory: packages/tests-e2e

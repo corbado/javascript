@@ -4,46 +4,24 @@ This package currently contains all the end-to-end tests for testing the React p
 
 ## Running Tests Locally
 
-This package is intended to test the local Playground React deployment connected to the staging backend deployment.
+Playground is locally run within Playwright for both Complete and Connect tests. For reference look at `utils/playground.ts`.
 
-### Setup
+This means that tests can simply be run with a single command. The command depends on whether you want to run it headless or with UI.
 
-Copy the contents of .env.example into .env.local.
-For `PLAYWRIGHT_JWT_TOKEN` environment variable, request the JWT token from Martin or Stefan.
-For `PLAYWRIGHT_MICROSOFT_EMAIL` and `PLAYWRIGHT_MICROSOFT_PASSWORD` environment variables, request the credentials from Anders or Martin. You can also create your own Microsoft account for testing.
-
-Make sure that the local Playground React deployment is configured to connect to the staging frontend API endpoints in `playground/react/.env`.
+### Headless
 
 ```
-REACT_APP_CORBADO_FRONTEND_API_URL_SUFFIX=frontendapi.cloud.corbado-staging.io
+cd packages/tests-e2e
+npm run e2e:complete
+npm run e2e:connect
 ```
-
-Run the Playground React project locally.
-
-```console
-$ cd playground/react
-$ npm start
-```
-
-Now Playwright is ready to test the local Playground deployment.
 
 ### With UI
 
-```console
-$ cd packages/tests-e2e
-$ npx playwright test --config=playwright.config.complete.ts --ui --project=nightly
 ```
-
-### From CLI
-
-```console
-npx playwright test --config=playwright.config.complete.ts --project=nightly
-```
-
-Alternatively, you can do:
-
-```console
-npm run e2e:ui:nightly
+cd packages/tests-e2e
+npm run e2e:complete:ui
+npm run e2e:connect:ui
 ```
 
 ## Generating JWT Token

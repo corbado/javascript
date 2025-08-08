@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import Home from '@/app/home/client';
+import Home from '@/app/(auth-required)/home/client';
 
 export default async function Page() {
   const cookieStore = await cookies();

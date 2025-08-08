@@ -113,8 +113,6 @@ const InitScreen = () => {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePostAuthenticator);
     }
 
-    console.log('loginContinue', res.val);
-
     try {
       await config.onComplete(res.val.session);
     } catch {

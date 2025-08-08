@@ -15,7 +15,7 @@ export const expectScreen = async (page: Page, screenName: ScreenNames): Promise
       return;
 
     case ScreenNames.InitLoginFallback:
-      await expect(page.locator('div.font-bold.text-xl')).toHaveText('Login');
+      await expect(page.locator('h3.text-xl')).toHaveText('Login');
       return;
 
     case ScreenNames.InitLoginOneTap:

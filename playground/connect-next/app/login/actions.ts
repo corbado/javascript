@@ -1,157 +1,26 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import {
-  AdminGetUserCommand,
-  CognitoIdentityProviderClient,
-  InitiateAuthCommand,
-} from '@aws-sdk/client-cognito-identity-provider';
-import crypto from 'crypto';
-import { TokenWrapper, verifyToken } from '@/app/utils';
+import { TOTP } from 'totp-generator';
 
-// Here we validate the JWT token (validation is too simple, don't use this in production)
-// Then we extract the cognitoID and retrieve the user's email from the user pool
-// Both values will then be set as a cookie
-export async function postPasskeyLogin(session: string) {
-  console.log('postPasskeyLogin', session);
-  const tokenWrapper = JSON.parse(session) as TokenWrapper;
-  const decoded = await verifyToken(tokenWrapper.AccessToken);
-  const username = decoded.username;
-
-  // create client that loads profile from ~/.aws/credentials or environment variables
-  const client = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION!,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-  });
-
-  const command = new AdminGetUserCommand({
-    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID!,
-    Username: username,
-  });
-
-  const response = await client.send(command);
-
-  const email = response.UserAttributes?.find(attr => attr.Name === 'email')?.Value;
-  if (email) {
-    const cookieStore = await cookies();
-    cookieStore.set('displayName', email);
-    cookieStore.set('identifier', username);
-  }
-
-  return;
-}
-
-export async function postPasskeyLoginNew(signedPasskeyData: string, clientState: string) {
-  const url = `${process.env.CORBADO_BACKEND_API_URL}/v2/passkey/postLogin`;
-  const body = JSON.stringify({
-    signedPasskeyData: signedPasskeyData,
-  });
-
-  console.log('url: ', url);
-  console.log('auth: ', `${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`);
-
-  console.log('Calling postPasskeyLoginNew with:');
-  console.log('signedPasskeyData:', signedPasskeyData);
-  console.log('clientState:', clientState);
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-cache',
-    body: body,
-  });
-
-  const clonedResponse = response.clone();
-  let out: any;
-  try {
-    out = await response.json();
-  } catch (err) {
-    const text = await clonedResponse.text(); // Get raw HTML or empty string
-    console.error('Failed to parse JSON. Raw response:', text.slice(0, 300));
-    throw new Error('Invalid JSON response from backend');
-  }
-  console.log(out);
-
-  await postPasskeyLogin(out.session);
-
-  // update client side state
+export async function postPasskeyLogin(clientState: string) {
   const cookieStore = await cookies();
-  cookieStore.set({ name: 'cbo_client_state', value: clientState, httpOnly: true });
+  cookieStore.set({
+    name: 'cbo_client_state',
+    value: clientState,
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+  });
 }
 
-function createSecretHash(username: string, clientId: string, clientSecret: string) {
-  return crypto
-    .createHmac('sha256', clientSecret)
-    .update(username + clientId)
-    .digest('base64');
-}
-
-export async function startConventionalLogin(email: string, password: string) {
-  try {
-    if (!email || !password) {
-      throw new Error('Email and password are required.');
-    }
-
-    const cookieStore = await cookies();
-    cookieStore.set('displayName', email);
-
-    const client = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      },
-    });
-
-    const command = new InitiateAuthCommand({
-      AuthFlow: 'USER_PASSWORD_AUTH',
-      ClientId: process.env.AWS_COGNITO_CLIENT_ID!,
-      AuthParameters: {
-        USERNAME: email,
-        PASSWORD: password,
-        SECRET_HASH: createSecretHash(
-          email,
-          process.env.AWS_COGNITO_CLIENT_ID!,
-          process.env.AWS_COGNITO_CLIENT_SECRET!,
-        ),
-      },
-    });
-
-    const response = await client.send(command);
-    console.log(response);
-
-    if (response.AuthenticationResult?.AccessToken) {
-      // no MFA has been set up yet
-
-      const decoded = await verifyToken(response.AuthenticationResult.AccessToken);
-      const username = decoded.username;
-      if (email) {
-        cookieStore.set('identifier', username);
-      }
-
-      return { success: true };
-    }
-
-    if (response.Session && response.ChallengeName === 'SOFTWARE_TOKEN_MFA') {
-      cookieStore.set('mfa_session', response.Session);
-
-      return { success: true, screen: 'MFA_SOFTWARE_TOKEN' };
-    }
-
-    return { success: false, message: 'An error occurred. Please try again later.' };
-  } catch (err) {
-    if (err instanceof Error) {
-      if (err.name === 'NotAuthorizedException') return { success: false, message: 'Incorrect username or password.' };
-
-      return { success: false, message: err.message };
-    }
-
-    return { success: false, message: 'An error occurred. Please try again later.' };
+export async function autoFillTOTP() {
+  const cookieStore = await cookies();
+  const maybeSecretCode = cookieStore.get('secretCode');
+  if (!maybeSecretCode) {
+    return;
   }
+
+  const { otp } = TOTP.generate(maybeSecretCode.value);
+
+  return otp;
 }

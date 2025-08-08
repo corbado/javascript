@@ -1,11 +1,12 @@
 'use client';
 
-export const runtime = 'edge';
+import { TOTP } from 'totp-generator';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createAccount } from './actions';
-import { generateRandomString } from '@/utils/random';
+import { generateRandomString } from '@/lib/random';
+import { signUp, signIn, setUpTOTP, verifyTOTPSetup, updateMFAPreference } from 'aws-amplify/auth';
+import { setTOTPSecretCode } from '@/app/signup/actions';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -13,8 +14,43 @@ export default function SignupPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
-  const signUp = async (email: string, phone: string, password: string) => {
-    await createAccount(email, phone, password);
+  const onClickSignUp = async (email: string, phone: string, password: string) => {
+    const username = generateRandomString(10);
+
+    try {
+      const resSignUp = await signUp({
+        username: username,
+        password,
+        options: {
+          userAttributes: {
+            email: email,
+            phone_number: phone,
+          },
+        },
+      });
+
+      console.log(resSignUp);
+
+      const resLogin = await signIn({ username, password });
+      console.log(resLogin);
+
+      const setupRes = await setUpTOTP();
+      console.log('setupRes', setupRes);
+
+      await setTOTPSecretCode(setupRes.sharedSecret);
+
+      const { otp } = TOTP.generate(setupRes.sharedSecret);
+      console.log('otp', otp);
+
+      await verifyTOTPSetup({ code: otp });
+      await updateMFAPreference({
+        totp: 'PREFERRED',
+      });
+
+      router.push('/post-login');
+    } catch (err) {
+      console.error('Error during signup:', err);
+    }
   };
 
   return (
@@ -64,7 +100,7 @@ export default function SignupPage() {
             <button
               className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
               onClick={async () => {
-                await signUp(email, phone, password);
+                await onClickSignUp(email, phone, password);
                 router.push('/post-login');
               }}
             >

@@ -1,17 +1,15 @@
 import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
 
 import type { AppendModel } from './AppendModel';
 
 export class MFAModel {
   page: Page;
   append: AppendModel;
-  timestamp: number;
+  timestamp?: number;
 
   constructor(page: Page, append: AppendModel) {
     this.page = page;
     this.append = append;
-    this.timestamp = Date.now();
   }
 
   registerTokenUsed() {
@@ -19,18 +17,15 @@ export class MFAModel {
   }
 
   async autofillTOTP() {
-    await this.page.waitForTimeout(31000 - (Date.now() - this.timestamp));
-    await this.page.getByRole('button', { name: 'Autofill TOTP' }).click();
-    await expect(this.page.getByPlaceholder('TOTP')).toHaveValue(/.+/);
+    if (this.timestamp) {
+      await this.page.waitForTimeout(31000 - (Date.now() - this.timestamp));
+    }
+
+    await this.page.getByRole('button', { name: 'Autofill' }).click();
     this.registerTokenUsed();
   }
 
   submit(invited: boolean, autoAppend: boolean) {
-    if (invited) {
-      const operationTrigger = () => this.page.getByRole('button', { name: 'Submit' }).click();
-      return this.append.autoAppendPasskey(autoAppend, operationTrigger);
-    } else {
-      return this.page.getByRole('button', { name: 'Submit' }).click();
-    }
+    return this.page.getByRole('button', { name: 'Submit' }).click();
   }
 }

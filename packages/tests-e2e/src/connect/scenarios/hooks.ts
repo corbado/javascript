@@ -16,7 +16,7 @@ export function setupVirtualAuthenticator(
     PlaywrightWorkerArgs & PlaywrightWorkerOptions
   >,
 ) {
-  test.beforeEach(async ({ model }) => {
+  test.beforeEach(async ({ model, page }) => {
     await model.authenticator.addWebAuthn();
   });
 
@@ -100,10 +100,6 @@ export function loadBeforePasskeyAppend(
 
     await model.login.submitFallbackCredentials(model.email, password, true);
     await model.expectScreen(ScreenNames.MFA);
-
-    await model.mfa.autofillTOTP();
-    // await model.mfa.submit();
-    // await model.expectScreen(ScreenNames.PasskeyAppend);
   });
 }
 

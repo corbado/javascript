@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import PasswordForm from '@/app/login/PasswordForm';
 import { confirmSignIn, signIn } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation';
 import ConfirmOTP from '@/components/ConfirmOTP';
-import { cookies } from 'next/headers';
-import { TOTP } from 'totp-generator';
-import { autoFillTOTP } from '@/app/login/actions';
+import PasswordForm from './PasswordForm';
 
 type Props = {
   initialUserProvidedIdentifier: string;
@@ -38,7 +35,7 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
           break;
 
         case 'DONE':
-          router.push('/post-login');
+          await navigatePostLogin();
 
           break;
 
@@ -55,6 +52,10 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
     }
   };
 
+  const navigatePostLogin = async () => {
+    await router.push('/post-login');
+  };
+
   const handleConfirmCode = async (code: string): Promise<string | undefined> => {
     try {
       const res = await confirmSignIn({
@@ -62,7 +63,7 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
       });
 
       if (res.isSignedIn) {
-        router.push('/post-login');
+        await navigatePostLogin();
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -96,12 +97,7 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
     case State.ProvideTOTPCode:
       headline = 'Check your authenticator';
       sub = 'Please enter the code from your authenticator app.';
-      content = (
-        <ConfirmOTP
-          onSubmit={handleConfirmCode}
-          onAutoFill={autoFillTOTP}
-        />
-      );
+      content = <ConfirmOTP onSubmit={handleConfirmCode} />;
 
       break;
     default:

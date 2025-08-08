@@ -16,12 +16,7 @@ export class SignupModel {
     return await this.page.getByPlaceholder('Email').inputValue();
   }
 
-  submit(invited: boolean, autoAppend: boolean) {
-    if (invited) {
-      const operationTrigger = () => this.page.getByRole('button', { name: 'Sign up' }).click();
-      return this.append.autoAppendPasskey(autoAppend, operationTrigger);
-    } else {
-      return this.page.getByRole('button', { name: 'Sign up' }).click();
-    }
+  submit() {
+    return this.page.getByRole('button', { name: 'Sign up' }).click();
   }
 }

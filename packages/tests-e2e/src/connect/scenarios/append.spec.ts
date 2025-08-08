@@ -25,10 +25,13 @@ test.describe('append component', () => {
   loadBeforePasskeyAppend(test);
 
   test('successful passkey append on login', async ({ model }) => {
-    await model.mfa.submit(true, true);
-    await model.expectScreen(ScreenNames.PasskeyAppended);
+    await model.authenticator.runWithComplete(async () => {
+      await model.mfa.autofillTOTP();
+      model.append.autoAppendPasskey();
+      await model.expectScreen(ScreenNames.PasskeyAppended);
+      await model.append.confirmAppended();
+    });
 
-    await model.append.confirmAppended();
     await model.expectScreen(ScreenNames.Home);
   });
 

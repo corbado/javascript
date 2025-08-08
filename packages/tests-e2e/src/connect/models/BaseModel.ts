@@ -64,7 +64,7 @@ export class BaseModel {
 
   async createUser(invited: boolean, append: boolean) {
     this.email = await this.signup.autofillCredentials();
-    await this.signup.submit(invited, append);
+    await this.signup.submit();
     this.mfa.registerTokenUsed();
     if (invited) {
       if (append) {

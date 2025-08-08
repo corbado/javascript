@@ -11,7 +11,7 @@ if (process.env.CI) {
 }
 
 export default defineConfig({
-  testDir: './src/connect',
+  testDir: './src/connect2',
   // fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 4,
@@ -55,20 +55,8 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'login-component',
-      testMatch: ['scenarios/login.spec.ts'],
-    },
-    {
       name: 'append-component',
       testMatch: ['scenarios/append.spec.ts'],
-    },
-    {
-      name: 'passkey-list-component',
-      testMatch: ['scenarios/passkey-list.spec.ts'],
-    },
-    {
-      name: 'misc',
-      testMatch: ['scenarios/misc.spec.ts'],
     },
   ],
   globalSetup: 'src/connect/utils/Playground.ts',

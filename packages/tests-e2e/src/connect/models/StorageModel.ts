@@ -35,7 +35,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     expect(cboConnectProcess.id).not.toBeNull();
@@ -51,7 +51,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     return cboConnectProcess.loginData.expiresAt;
@@ -61,7 +61,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.loginData.expiresAt = newLifetime;
@@ -75,7 +75,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     return cboConnectProcess.appendData.expiresAt;
@@ -85,7 +85,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.appendData.expiresAt = newLifetime;
@@ -99,7 +99,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     return cboConnectProcess.manageData.expiresAt;
@@ -109,7 +109,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     cboConnectProcess.manageData.expiresAt = newLifetime;
@@ -123,7 +123,7 @@ export class StorageModel {
     const key = `cbo_connect_process-${process.env.PLAYWRIGHT_CONNECT_PROJECT_ID}`;
     const cboConnectProcessRaw = await this.page.evaluate(k => localStorage.getItem(k), key);
     if (!cboConnectProcessRaw) {
-      throw new Error('cbo_connect_process not found in local storage');
+      throw new Error(`cbo_connect_process not found in local storage ${key}`);
     }
     const cboConnectProcess = JSON.parse(cboConnectProcessRaw);
     expect(cboConnectProcess.loginData).toBeNull();

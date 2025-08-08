@@ -1,15 +1,15 @@
 import type { CDPSession, Page } from '@playwright/test';
 
-import type { CDPSessionManager } from './CDPSessionManager';
-import { operationTimeout } from './Constants';
-
 export class VirtualAuthenticator {
   #cdpClient: CDPSession;
   #authenticatorId = '';
 
-  async init(page: Page, passkeysSupported = true) {
-    this.#cdpClient = await page.context().newCDPSession(page);
-    await this.addWebAuthn(passkeysSupported);
+  static async init(page: Page, passkeysSupported = true): Promise<VirtualAuthenticator> {
+    const authenticator = new VirtualAuthenticator();
+    authenticator.#cdpClient = await page.context().newCDPSession(page);
+    await authenticator.addWebAuthn(passkeysSupported);
+
+    return authenticator;
   }
 
   async addWebAuthn(passkeySupported = true) {
@@ -32,52 +32,12 @@ export class VirtualAuthenticator {
     this.#authenticatorId = result.authenticatorId;
   }
 
-  removeWebAuthn() {
-    return this.#cdpClient.send('WebAuthn.removeVirtualAuthenticator', {
-      authenticatorId: this.#authenticatorId,
-    });
-  }
-
-  async startAndCompletePasskeyOperation(
-    operationTrigger: () => Promise<void>,
-    postOperationCheck: (() => Promise<void>) | null = null,
-  ) {
-    let postOperationPromise: Promise<void>;
-    if (postOperationCheck === null) {
-      postOperationPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
-        this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
-      });
-    } else {
-      postOperationPromise = postOperationCheck();
-    }
-
-    const wait = new Promise<void>(resolve => setTimeout(resolve, operationTimeout));
-    await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
-
-    await operationTrigger();
-
-    await Promise.race([postOperationPromise, wait.then(() => Promise.reject('Passkey input timeout'))]);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
-  }
-
-  async startAndCancelPasskeyOperation(operationTrigger: () => Promise<void>, postOperationCheck: () => Promise<void>) {
-    await this.#setWebAuthnUserVerified(this.#authenticatorId, false);
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
-
-    await operationTrigger();
-
-    await postOperationCheck();
-    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
-  }
-
   async runWithComplete(cb: () => Promise<void>) {
     const postOperationPromise = new Promise<void>(resolve => {
       this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
       this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
-    const wait = new Promise<void>(resolve => setTimeout(resolve, operationTimeout));
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 5000));
 
     await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
@@ -86,6 +46,16 @@ export class VirtualAuthenticator {
 
     await Promise.race([postOperationPromise, wait.then(() => Promise.reject('Passkey input timeout'))]);
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
+  }
+
+  async modeCancel() {
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, false);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
+  }
+
+  async modeComplete() {
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
   }
 
   async runWithCancel(cb: () => Promise<void>) {

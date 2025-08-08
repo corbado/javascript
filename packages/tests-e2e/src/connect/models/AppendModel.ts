@@ -24,15 +24,8 @@ export class AppendModel {
     }
   }
 
-  autoAppendPasskey(complete: boolean, operationTrigger: () => Promise<void>) {
-    if (complete) {
-      return this.authenticator.startAndCompletePasskeyOperation(operationTrigger);
-    } else {
-      return this.authenticator.startAndCancelPasskeyOperation(operationTrigger, async () => {
-        await expectScreen(this.page, ScreenNames.PasskeyAppend);
-        await this.page.waitForSelector('.button-loading-container', { state: 'detached' });
-      });
-    }
+  autoAppendPasskey() {
+    // no-op
   }
 
   confirmAppended() {

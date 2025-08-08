@@ -1,0 +1,102 @@
+name: Deploy Playground Apps to Vercel
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  BRANCH_NAME_RAW: ${{ github.head_ref || github.ref_name }}
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: |
+            ~/.npm
+            ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}-force-1
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: Install Dependencies
+        run: |
+          npm i
+          npm install lerna
+          npm install vercel@33.2.0
+          npm list
+
+      - name: Check ESLint Errors
+        run: npm run lint
+
+      - name: Check Prettier Formatting
+        run: npm run prettier:check
+
+      - name: Build SDKs
+        run: |
+          npm run build
+          npm run build:bundler:local
+
+      - name: Normalize branch name
+        run: |
+          echo "BRANCH_NAME=$(echo $BRANCH_NAME_RAW | tr '/_' '-')" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Deploy react playground to Vercel
+        run: |
+          npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_REACT_PLAYGROUND }}
+
+      - name: Deploy connect next playground to Vercel
+        run: |
+          npx vercel link --yes --project connect-next-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.connect-next.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CONNECT_NEXT_PLAYGROUND }}
+
+      - name: Deploy web-js playground to Vercel
+        run: |
+          npx vercel link --yes --project web-js-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_PLAYGROUND }}
+
+      - name: Deploy web-js-script playground to Vercel
+        run: |
+          npx vercel link --yes --project web-js-script-playground --scope corbado -t $VERCEL_TOKEN
+          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel build -t $VERCEL_TOKEN
+          url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
+          npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.web-js-script.playground.corbado.io
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB_JS_SCRIPT_PLAYGROUND }}
+

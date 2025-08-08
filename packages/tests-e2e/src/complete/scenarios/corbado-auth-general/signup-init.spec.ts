@@ -1,10 +1,15 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import { SignupInitBlockModel } from '../../models/corbado-auth-blocks/SignupInitBlockModel';
 import { IdentifierEnforceVerification, IdentifierType, IdentifierVerification } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('signup-init', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -14,14 +19,18 @@ test.describe('signup-init', () => {
       makeIdentifier(IdentifierType.Phone, IdentifierEnforceVerification.None, true, [IdentifierVerification.PhoneOtp]),
       makeIdentifier(IdentifierType.Username, IdentifierEnforceVerification.None, true, []),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('bad user input: all fields empty', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     await model.signupInit.fillEmail('');
     await model.signupInit.fillPhone('');
@@ -34,7 +43,7 @@ test.describe('signup-init', () => {
   });
 
   test('bad user input: invalid fields (simple)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     await model.signupInit.fillEmail('asdf@asdf');
     await model.signupInit.fillPhone('1234');
@@ -47,7 +56,7 @@ test.describe('signup-init', () => {
   });
 
   test('bad user input: duplicate fields', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
     const phone = SignupInitBlockModel.generateRandomPhone();
@@ -60,7 +69,7 @@ test.describe('signup-init', () => {
     await model.passkeyAppend.startPasskeyOperation(true);
 
     await model.logout();
-    await model.load(projectId, undefined, 'signup-init');
+    await model.load(projectId, port, undefined, 'signup-init');
 
     await model.signupInit.fillEmail(email);
     await model.signupInit.fillPhone(phone);

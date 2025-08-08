@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { expect, test } from '../../fixtures/CorbadoAuth';
 import { LinkType } from '../../models/corbado-auth-blocks/EmailVerifyBlockModel';
 import { SignupInitBlockModel } from '../../models/corbado-auth-blocks/SignupInitBlockModel';
@@ -9,9 +11,12 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('email-verify block should obfuscate email addresses if they have not been provided by the user during login', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -22,14 +27,18 @@ test.describe('email-verify block should obfuscate email addresses if they have 
       ]),
       makeIdentifier(IdentifierType.Username, IdentifierEnforceVerification.None, true, []),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('email is obfuscated during login if the login is started with username', async ({ model, page }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
     const username = SignupInitBlockModel.generateRandomUsername();
@@ -38,18 +47,18 @@ test.describe('email-verify block should obfuscate email addresses if they have 
     await model.signupInit.submitPrimary();
     await model.expectScreen(ScreenNames.EmailLinkSentSignup);
 
-    await model.emailVerify.clickEmailLink(projectId, email, AuthType.Login, LinkType.Correct);
+    await model.emailVerify.clickEmailLink(projectId, port, email, AuthType.Login, LinkType.Correct);
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, false, 'login-init');
+    await model.load(projectId, port, false, 'login-init');
     await model.loginInit.fillEmailUsername(username);
     await model.loginInit.submitPrimary();
 
     await model.expectScreen(ScreenNames.EmailLinkSentLogin);
     await expect(page.getByText(email)).toHaveCount(0);
 
-    await model.load(projectId, false, 'login-init');
+    await model.load(projectId, port, false, 'login-init');
     await model.loginInit.fillEmailUsername(email);
     await model.loginInit.submitPrimary();
 

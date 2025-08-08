@@ -21,14 +21,14 @@ export class PasskeyListModel {
     this.virtualAuthenticator = virtualAuthenticator;
   }
 
-  async load(projectId: string, passkeySupport?: boolean) {
+  async load(projectId: string, port: number, passkeySupport?: boolean) {
     this.projectId = projectId;
 
     if (passkeySupport !== undefined) {
       await this.virtualAuthenticator.addWebAuthn(passkeySupport);
     }
 
-    const url = `/${this.projectId}/auth#signup-init`;
+    const url = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth#signup-init`;
     await this.page.goto(url);
     await this.page.waitForSelector('.cb-container-body');
 

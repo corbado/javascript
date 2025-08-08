@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import {
   IdentifierEnforceVerification,
@@ -6,10 +8,13 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 // Here we test everything on LoginInit screen
 test.describe('login-init', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -17,14 +22,18 @@ test.describe('login-init', () => {
     await setComponentConfig(projectId, [
       makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.None, true, [IdentifierVerification.EmailOtp]),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('bad user input: empty email', async ({ model }) => {
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.loginInit.fillEmailUsername('');
     await model.loginInit.submitPrimary();
@@ -33,7 +42,7 @@ test.describe('login-init', () => {
 
   // TODO: fix and enable
   test.skip('bad user input: invalid email', async ({ model }) => {
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.loginInit.fillEmailUsername('a@a');
     await model.loginInit.submitPrimary();
@@ -41,7 +50,7 @@ test.describe('login-init', () => {
   });
 
   test('bad user input: non-existing email', async ({ model }) => {
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.loginInit.fillEmailUsername('integration-test+notexist@corbado.com');
     await model.loginInit.submitPrimary();
@@ -53,7 +62,7 @@ test.describe('login-init', () => {
   // TODO: bad user input: non-existing phone
 
   test('switch to signup', async ({ model }) => {
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.expectScreen(ScreenNames.InitLogin);
     await model.loginInit.navigateToSignup();
@@ -63,7 +72,7 @@ test.describe('login-init', () => {
   // after a signup with passkey a passkey button should be shown
   // the button should disappear after when one explicitly switches the identifier
   test('passkey button should be shown', async ({ model }) => {
-    await model.load(projectId, true);
+    await model.load(projectId, port, true);
 
     await model.defaultSignupWithPasskey();
 
@@ -71,7 +80,7 @@ test.describe('login-init', () => {
     await model.expectScreen(ScreenNames.InitLogin);
     await model.loginInit.expectPasskeyButton(true);
 
-    await model.load(projectId);
+    await model.load(projectId, port);
     await model.loginInit.expectPasskeyButton(true);
 
     await model.passkeyVerify.performAutomaticPasskeyVerification(() => model.loginInit.submitPasskeyButton());
@@ -86,10 +95,10 @@ test.describe('login-init', () => {
 
   // after a signup without passkey no passkey button should be shown
   test('passkey button should not be shown', async ({ model }) => {
-    await model.load(projectId, true);
+    await model.load(projectId, port, true);
 
     await model.defaultSignupWithFallback();
-    await model.load(projectId, undefined, 'login-init');
+    await model.load(projectId, port, undefined, 'login-init');
 
     // after a signup with passkey a passkey button should be shown => we use it to login
     await model.expectScreen(ScreenNames.InitLogin);

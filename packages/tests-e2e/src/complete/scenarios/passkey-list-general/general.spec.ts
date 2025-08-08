@@ -1,9 +1,14 @@
+import type { ChildProcess } from 'node:child_process';
+
+import { passkeyListTest } from '../../fixtures/PasskeyList';
 import { IdentifierEnforceVerification, IdentifierType, IdentifierVerification } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
-import { passkeyListTest } from '../../fixtures/PasskeyList';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 passkeyListTest.describe('passkey list - general', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   passkeyListTest.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -13,14 +18,18 @@ passkeyListTest.describe('passkey list - general', () => {
         IdentifierVerification.EmailOtp,
       ]),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   passkeyListTest.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   passkeyListTest('passkey list allows adding and deleting passkeys (passkeys are supported)', async ({ model }) => {
-    await model.load(projectId, true);
+    await model.load(projectId, port, true);
 
     await model.expectPasskeys(0);
     await model.appendNewPasskey(true);
@@ -31,7 +40,7 @@ passkeyListTest.describe('passkey list - general', () => {
 
   // currently it seems impossible to test for duplicate passkeys with virtual authenticator
   passkeyListTest('passkey list error handling (cancel, duplicate passkeys)', async ({ model }) => {
-    await model.load(projectId, true);
+    await model.load(projectId, port, true);
 
     await model.expectPasskeys(0);
     await model.appendNewPasskey(false);

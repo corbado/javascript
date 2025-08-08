@@ -11,3 +11,153 @@ html {
   font-family: Verdana, Helvetica, sans-serif;
   font-size: 14px;
 }
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.cb-connect-custom-style {
+  --cb-color-outline: #dcdcdc;
+  --cb-color-primary: #253544;
+  --cb-color-secondary: #929aa1;
+  --cb-color-tertiary: #666;
+  --cb-color-on-primary: #fff;
+  --cb-border-radius: 5px;
+  --cb-color-surface: var(--color-gray-50);
+  --cb-color-primary-container: #eef2f3;
+  --cb-color-on-primary-container: #253544;
+  --cb-color-secondary-container: #ecf4e7;
+  --cb-color-on-secondary-container: #80b816;
+  --cb-font-family-primary: var(
+    --default-font-family,
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji'
+  );
+  --cb-font-family-secondary: var(
+    --default-font-family,
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji'
+  );
+
+  --cb-color-error-container: #ffd6da;
+  --cb-color-on-error-container: #cf0000;
+
+  .cb-tag {
+    border-radius: 20px;
+  }
+
+  .cb-primary-button,
+  .cb-outline-button {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .cb-input {
+    font-size: 12px;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.5rem;
+    max-width: none;
+  }
+
+  .cb-passkey-list-item {
+    border: none;
+    border-bottom: 1px solid var(--cb-color-outline);
+    border-radius: 0;
+  }
+
+  .cb-passkey-list-empty,
+  .cb-passkey-list-loader-container {
+    border-bottom: 1px solid var(--cb-color-outline);
+  }
+
+  .cb-modal-cta {
+    justify-content: start;
+  }
+
+  .cb-modal-cta > button {
+    width: fit-content;
+  }
+
+  .cb-passkey-button-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .cb-connect-append-border {
+    padding: 0;
+  }
+
+  .cb-connect-append-icon svg {
+    margin: auto;
+  }
+}

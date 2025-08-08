@@ -8,10 +8,14 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
+import type { ChildProcess } from 'node:child_process';
 
 // Here we test everything on LoginInit screen
 test.describe('general email-verify functionalities', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -19,14 +23,18 @@ test.describe('general email-verify functionalities', () => {
     await setComponentConfig(projectId, [
       makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.None, true, [IdentifierVerification.EmailOtp]),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('signup with fallback (one retry)', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email);
@@ -41,7 +49,7 @@ test.describe('general email-verify functionalities', () => {
   });
 
   test('signup with fallback + identifier change', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email1 = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email1);
@@ -58,7 +66,7 @@ test.describe('general email-verify functionalities', () => {
     await model.logout();
 
     // only login with email2 should be possible
-    await model.load(projectId, false, 'login-init');
+    await model.load(projectId, port, false, 'login-init');
     await model.loginInit.fillEmailUsername(email1);
     await model.loginInit.submitPrimary();
     await model.loginInit.expectTextError("Couldn't find your account.");
@@ -69,7 +77,7 @@ test.describe('general email-verify functionalities', () => {
   });
 
   test('signup with fallback + identifier change (abort + continue with email 1)', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email1 = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email1);
@@ -86,7 +94,7 @@ test.describe('general email-verify functionalities', () => {
     await model.logout();
 
     // only login with email1 should be possible
-    await model.load(projectId, false, 'login-init');
+    await model.load(projectId, port, false, 'login-init');
     await model.loginInit.fillEmailUsername(email2);
     await model.loginInit.submitPrimary();
     await model.loginInit.expectTextError("Couldn't find your account.");
@@ -100,7 +108,7 @@ test.describe('general email-verify functionalities', () => {
   // then we start a new process and signup with email 2
   // during verification we try to switch back to email 1 => this must fail
   test('signup with fallback + identifier change (email already exists)', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email1 = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email1);
@@ -109,7 +117,7 @@ test.describe('general email-verify functionalities', () => {
     await model.expectScreen(ScreenNames.End);
     await model.logout();
 
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email2 = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email2);
@@ -123,7 +131,7 @@ test.describe('general email-verify functionalities', () => {
 
   // TODO: fix
   test.skip('signup with explicit fallback (too many wrong codes)', async ({ model }) => {
-    await model.load(projectId, false, 'signup-init');
+    await model.load(projectId, port, false, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
     await model.signupInit.fillEmail(email);

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.get_login_creds"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.corbado.connect.example",
+      "sha256_cert_fingerprints": [
+        "F8:90:4E:9A:99:01:71:75:25:38:D5:36:16:2D:B3:65:EB:41:51:D4:53:9A:72:BC:4B:56:C5:16:43:62:E2:C0"
+      ]
+    }
+  }
+]

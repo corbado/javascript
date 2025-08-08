@@ -1,73 +1,109 @@
-import { expect } from '@playwright/test';
+import type { ChildProcess } from 'node:child_process';
 
-import { test } from '../fixtures/BaseTest';
-import { password, ScreenNames } from '../utils/Constants';
-import { loadBeforePasskeyAppend, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
+import { expect, test } from '@playwright/test';
 
-test.describe('append component', () => {
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  setupUser(test, true, false);
-  loadBeforePasskeyAppend(test);
+import { LoginPage, LoginStatus } from '../models/LoginPage';
+import { ProfileStatus } from '../models/ProfilePage';
+import { AuthenticatorApp } from '../utils/AuthenticatorApp';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
+import { TestDataFactory } from '../utils/TestDataFactory';
+import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
 
-  test('successful passkey append on login', async ({ model }) => {
-    await model.mfa.submit(true, true);
-    await model.expectScreen(ScreenNames.PasskeyAppended);
+test.describe('append flows', () => {
+  let server: ChildProcess;
+  let port: number;
 
-    await model.append.confirmAppended();
-    await model.expectScreen(ScreenNames.Home);
+  test.beforeAll(async () => {
+    ({ server, port } = await spawnPlaygroundNew());
   });
 
-  test('failed passkey append on login', async ({ model }) => {
-    await model.mfa.submit(true, false);
+  test.afterAll(() => {
+    killPlaygroundNew(server);
   });
 
-  test('Corbado FAPI unavailable after authentication', async ({ model }) => {
-    await model.blocker.blockCorbadoFAPIFinishEndpoint();
+  test('testAppendAfterSignUp', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
 
-    await model.mfa.submit(true, true);
-    await model.expectScreen(ScreenNames.Home);
+    const email = TestDataFactory.generateEmail();
+
+    await virtualAuthenticator.modeCancel();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.continueWithCancel(true);
+    await postLoginPage.continueWithCancel(false);
+    expect(
+      await postLoginPage.awaitErrorMessage('You have cancelled setting up your passkey. Please try again.'),
+    ).toBeTruthy();
+
+    await virtualAuthenticator.modeComplete();
+    const profilePage = await postLoginPage.continue(false);
+    expect(await profilePage.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
+    expect(await profilePage.getPasskeyCount()).toBe(1);
+    const loginPage2 = await profilePage.logout();
+
+    expect(await loginPage2.awaitState(LoginStatus.PasskeyOneTap)).toBeTruthy();
+    const postLoginPage4 = await loginPage2.loginWithOneTap();
+    expect(await profilePage.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
+    await postLoginPage4.appendPasskey();
+    await postLoginPage4.awaitErrorMessage('No passkey created');
+    expect(await profilePage.getPasskeyCount()).toBe(1);
   });
-});
 
-test.describe('skip append component', () => {
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  setupUser(test, true, false);
+  test('testAppendAfterSignUpSkipped', async ({ page }) => {
+    test.setTimeout(120000); // 120 seconds
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
 
-  test('Corbado FAPI unavailable', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLogin);
+    const email = TestDataFactory.generateEmail();
 
-    await model.login.submitEmail(model.email, false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
+    // First attempt to create passkey is cancelled, user skips, then sets up TOTP and logs in later
+    await virtualAuthenticator.modeCancel();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const mfaPage = await postLoginPage.skipAfterSignup();
 
-    await model.blocker.blockCorbadoFAPI();
+    // Confirm TOTP to end on profile
+    const authenticator = new AuthenticatorApp();
+    const [sharedKey, profilePage] = await mfaPage.setupAndConfirmTOTPReturnProfile(authenticator);
 
-    await model.login.submitFallbackCredentials(model.email, password, true);
-    await model.expectScreen(ScreenNames.MFA);
+    // Initially no passkeys
+    expect(await profilePage.getPasskeyCount()).toBe(0);
 
-    await model.mfa.autofillTOTP();
-    await model.mfa.submit(false, false);
+    const loginPage2 = await profilePage.logout();
+    await virtualAuthenticator.modeCancel();
+    expect(await loginPage2.awaitState(LoginStatus.PasskeyTextField)).toBeTruthy();
+    await loginPage2.loginWithIdentifierAndPasswordIdentifierFirst(email, TestDataFactory.password);
+    expect(await loginPage2.awaitState(LoginStatus.FallbackSecondTOTP)).toBeTruthy();
 
-    await model.expectScreen(ScreenNames.Home);
-  });
+    // MFA page appears, confirm with next code
+    const codeFirst = await authenticator.getCode(sharedKey);
+    const postLoginPage2 = await loginPage2.completeLoginWithTOTP(codeFirst!);
+    const profilePage2 = await postLoginPage2.skip();
 
-  test('expired append lifetime leads to skipped append screen', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLogin);
+    await virtualAuthenticator.modeComplete();
+    expect(await profilePage2.awaitState(ProfileStatus.ListEmpty)).toBeTruthy();
+    await profilePage2.appendPasskey();
+    expect(await profilePage2.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
+    const loginPage3 = await profilePage2.logout();
 
-    await model.login.submitEmail(model.email, false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-    expect(await model.storage.getAppendLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
+    expect(await loginPage3.awaitState(LoginStatus.PasskeyOneTap)).toBeTruthy();
+    const profilePage3 = await loginPage3.loginWithOneTap();
+    expect(await profilePage3.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
+    expect(await profilePage3.getPasskeyCount()).toBe(1);
+    await profilePage3.deletePasskeyByIndex(0, true);
+    expect(await profilePage3.awaitState(ProfileStatus.ListEmpty)).toBeTruthy();
 
-    await model.storage.setAppendLifetime(Math.floor(Date.now() / 1000) - 1);
-    await model.storage.deleteInvitationToken();
-    await model.login.submitFallbackCredentials(model.email, password, true);
-    await model.expectScreen(ScreenNames.MFA);
-
-    await model.mfa.autofillTOTP();
-    await model.mfa.submit(false, false);
-    await model.expectScreen(ScreenNames.Home);
+    await virtualAuthenticator.modeCancel();
+    const loginPage4 = await profilePage3.logout();
+    expect(await loginPage4.awaitState(LoginStatus.PasskeyTextField)).toBeTruthy();
+    await virtualAuthenticator.modeComplete();
+    await loginPage4.loginWithIdentifierAndPasswordIdentifierFirst(email, TestDataFactory.password);
+    expect(await loginPage4.awaitState(LoginStatus.FallbackSecondTOTP)).toBeTruthy();
+    const codeSecond = await authenticator.getCode(sharedKey);
+    const postLoginPage3 = await loginPage4.completeLoginWithTOTP(codeSecond!);
+    await postLoginPage3.awaitPage();
   });
 });

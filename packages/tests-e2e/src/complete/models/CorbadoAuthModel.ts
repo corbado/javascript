@@ -34,10 +34,10 @@ export class CorbadoAuthModel {
     this.phoneVerify = new PhoneVerifyBlockModel(page);
   }
 
-  async load(projectId: string, passkeySupport?: boolean, hashCode?: string) {
+  async load(projectId: string, port: number, passkeySupport?: boolean, hashCode?: string) {
     this.projectId = projectId;
 
-    let url = `/${this.projectId}/auth`;
+    let url = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth`;
     if (hashCode) {
       url += `#${hashCode}`;
     }

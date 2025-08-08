@@ -34,7 +34,7 @@ export const createProjectNew = async () => {
     body: JSON.stringify({
       name,
       allowStaticChallenges: true,
-      webauthnRPID: process.env.CI ? 'playground.corbado.io' : 'localhost',
+      webauthnRPID: process.env.CI ? 'localhost' : 'localhost',
     }),
   });
   expect(createRes.ok).toBeTruthy();

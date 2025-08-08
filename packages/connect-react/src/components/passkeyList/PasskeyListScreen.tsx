@@ -166,7 +166,6 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringInitialLoad, passkeyList.val);
     }
 
-    console.log('passkeyList', passkeyList.val.passkeys);
     setPasskeyListToken(listTokenRes);
     setPasskeyList(passkeyList.val.passkeys);
     statefulLoader.current.finish();

@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import { SignupInitBlockModel } from '../../models/corbado-auth-blocks/SignupInitBlockModel';
 import {
@@ -7,9 +9,12 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('routing', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -17,26 +22,30 @@ test.describe('routing', () => {
     await setComponentConfig(projectId, [
       makeIdentifier(IdentifierType.Email, IdentifierEnforceVerification.None, true, [IdentifierVerification.EmailOtp]),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('initial routing should happen depending on the hashCode (signup-init)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     await model.expectScreen(ScreenNames.InitSignup);
   });
 
   test('initial routing should happen depending on the hashCode (login-init)', async ({ model }) => {
-    await model.load(projectId, true, 'login-init');
+    await model.load(projectId, port, true, 'login-init');
 
     await model.expectScreen(ScreenNames.InitLogin);
   });
 
   test('initial routing should happen depending on local storage', async ({ model }) => {
-    await model.load(projectId, true);
+    await model.load(projectId, port, true);
 
     // by default the signup screen is loaded
     await model.expectScreen(ScreenNames.InitSignup);

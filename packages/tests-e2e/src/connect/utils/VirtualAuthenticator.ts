@@ -1,14 +1,15 @@
-import type { CDPSession } from '@playwright/test';
-
-import type { CDPSessionManager } from './CDPSessionManager';
-import { operationTimeout } from './Constants';
+import type { CDPSession, Page } from '@playwright/test';
 
 export class VirtualAuthenticator {
   #cdpClient: CDPSession;
   #authenticatorId = '';
 
-  constructor(cdpManager: CDPSessionManager) {
-    this.#cdpClient = cdpManager.getClient();
+  static async init(page: Page, passkeysSupported = true): Promise<VirtualAuthenticator> {
+    const authenticator = new VirtualAuthenticator();
+    authenticator.#cdpClient = await page.context().newCDPSession(page);
+    await authenticator.addWebAuthn(passkeysSupported);
+
+    return authenticator;
   }
 
   async addWebAuthn(passkeySupported = true) {
@@ -31,43 +32,38 @@ export class VirtualAuthenticator {
     this.#authenticatorId = result.authenticatorId;
   }
 
-  removeWebAuthn() {
-    return this.#cdpClient.send('WebAuthn.removeVirtualAuthenticator', {
-      authenticatorId: this.#authenticatorId,
+  async runWithComplete(cb: () => Promise<void>) {
+    const postOperationPromise = new Promise<void>(resolve => {
+      this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
+      this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
     });
-  }
+    const wait = new Promise<void>(resolve => setTimeout(resolve, 5000));
 
-  async startAndCompletePasskeyOperation(
-    operationTrigger: () => Promise<void>,
-    postOperationCheck: (() => Promise<void>) | null = null,
-  ) {
-    let postOperationPromise: Promise<void>;
-    if (postOperationCheck === null) {
-      postOperationPromise = new Promise<void>(resolve => {
-        this.#cdpClient?.on('WebAuthn.credentialAdded', () => resolve());
-        this.#cdpClient?.on('WebAuthn.credentialAsserted', () => resolve());
-      });
-    } else {
-      postOperationPromise = postOperationCheck();
-    }
-
-    const wait = new Promise<void>(resolve => setTimeout(resolve, operationTimeout));
     await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
 
-    await operationTrigger();
+    await cb();
 
     await Promise.race([postOperationPromise, wait.then(() => Promise.reject('Passkey input timeout'))]);
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
   }
 
-  async startAndCancelPasskeyOperation(operationTrigger: () => Promise<void>, postOperationCheck: () => Promise<void>) {
+  async modeCancel() {
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, false);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
+  }
+
+  async modeComplete() {
+    await this.#setWebAuthnUserVerified(this.#authenticatorId, true);
+    await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
+  }
+
+  async runWithCancel(cb: () => Promise<void>) {
     await this.#setWebAuthnUserVerified(this.#authenticatorId, false);
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, true);
 
-    await operationTrigger();
+    await cb();
 
-    await postOperationCheck();
     await this.#setWebAuthnAutomaticPresenceSimulation(this.#authenticatorId, false);
   }
 
@@ -84,7 +80,7 @@ export class VirtualAuthenticator {
         credential: {
           credentialId: '', // 'WZuSfPDeCfXUMqO3vcVZ6ZYY0w2W4NpLcLzTjMl4qns=',
           isResidentCredential: true,
-          rpId: 'connect-next.playground.corbado.io',
+          rpId: 'localhost',
           privateKey:
             'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgz/eSahk8R0fk3Jjpcbd1LPc2gGKyzEG23UFIbFTqSbyhRANCAAQ4a8dJ559cf0cZcg0U7k5oCofmtOzuqXDSwzP8LLhv0InronrySiaWAGuWFpVsbNyOnWSd6VZJU8wiFKSMiDWN',
           userHandle: '', // 'TDBlaFVpNnRNQg==',

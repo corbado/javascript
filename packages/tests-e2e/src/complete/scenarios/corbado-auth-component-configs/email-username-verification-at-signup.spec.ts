@@ -1,3 +1,5 @@
+import type { ChildProcess } from 'node:child_process';
+
 import { test } from '../../fixtures/CorbadoAuth';
 import { OtpCodeType } from '../../models/corbado-auth-blocks/EmailVerifyBlockModel';
 import { SignupInitBlockModel } from '../../models/corbado-auth-blocks/SignupInitBlockModel';
@@ -8,9 +10,12 @@ import {
   ScreenNames,
 } from '../../utils/constants';
 import { createProjectNew, deleteProjectNew, makeIdentifier, setComponentConfig } from '../../utils/developerpanel';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../../utils/playground';
 
 test.describe('tests that focus on these identifiers: email (verification at signup) + username', () => {
   let projectId: string;
+  let server: ChildProcess;
+  let port: number;
 
   test.beforeAll(async () => {
     projectId = await createProjectNew();
@@ -21,14 +26,18 @@ test.describe('tests that focus on these identifiers: email (verification at sig
       ]),
       makeIdentifier(IdentifierType.Username, IdentifierEnforceVerification.None, true, []),
     ]);
+
+    ({ server, port } = await spawnPlaygroundNew(projectId));
   });
 
   test.afterAll(async () => {
     await deleteProjectNew(projectId);
+
+    killPlaygroundNew(server);
   });
 
   test('signup with passkey (happy path)', async ({ model }) => {
-    await model.load(projectId, true, 'signup-init');
+    await model.load(projectId, port, true, 'signup-init');
 
     const email = SignupInitBlockModel.generateRandomEmail();
     const username = SignupInitBlockModel.generateRandomUsername();

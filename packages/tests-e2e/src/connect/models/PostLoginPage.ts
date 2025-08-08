@@ -13,13 +13,20 @@ export class PostLoginPage extends BasePage {
     return this.waitForHeading('Simplify Your Login');
   }
 
-  static async awaitPage(page: Page): Promise<PostLoginPage> {
-    const postLoginPage = new PostLoginPage(page);
-    if (!(await postLoginPage.visible())) {
+  autoSkipAfterSignup(): MFAPage {
+    return new MFAPage(this.page);
+  }
+
+  autoSkip(): ProfilePage {
+    return new ProfilePage(this.page);
+  }
+
+  async awaitPage(): Promise<PostLoginPage> {
+    if (!(await this.visible())) {
       throw new Error('Post login page not visible');
     }
 
-    return postLoginPage;
+    return this;
   }
 
   async awaitErrorMessage(text: string): Promise<boolean> {
@@ -34,26 +41,24 @@ export class PostLoginPage extends BasePage {
     await this.expectText('Passkey Created Successfully');
     await this.clickButton('Continue');
 
-    return ProfilePage.awaitPage(this.page);
+    return new ProfilePage(this.page);
   }
 
-  async continueWithCancel(expectAutoAppend: boolean): Promise<PostLoginPage> {
+  async continueWithCancel(expectAutoAppend: boolean): Promise<void> {
     if (!expectAutoAppend) {
       await this.clickButton('Continue');
     }
-
-    return PostLoginPage.awaitPage(this.page);
   }
 
   async skip(): Promise<ProfilePage> {
-    await this.clickButton('Skip');
+    await this.clickText('Skip');
 
     return new ProfilePage(this.page);
   }
 
   async skipAfterSignup(): Promise<MFAPage> {
-    await this.clickButton('Skip');
+    await this.clickText('Skip');
 
-    return new MFAPage(this.page);
+    return new MFAPage(this.page).awaitPage();
   }
 }

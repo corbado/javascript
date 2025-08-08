@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
 
+import { BasePage } from './BasePage';
 import { LoginPage } from './LoginPage';
 import { PostLoginPage } from './PostLoginPage';
-import { BasePage } from './BasePage';
 
 export class SignupPage extends BasePage {
   private readonly page: Page;
@@ -37,6 +37,6 @@ export class SignupPage extends BasePage {
     await this.page.getByPlaceholder('Password').fill(password);
     await this.page.getByRole('button', { name: 'Sign up' }).click();
 
-    return PostLoginPage.awaitPage(this.page);
+    return new PostLoginPage(this.page);
   }
 }

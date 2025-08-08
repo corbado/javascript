@@ -6,6 +6,7 @@ import PasswordForm from './PasswordForm';
 
 type Props = {
   initialUserProvidedIdentifier: string;
+  initialError: string;
 };
 
 enum State {
@@ -14,7 +15,7 @@ enum State {
   ProvideTOTPCode,
 }
 
-export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
+export const ConventionalLogin = ({ initialUserProvidedIdentifier, initialError }: Props) => {
   const [state, setState] = useState(State.ProvidePassword);
   const router = useRouter();
 
@@ -84,6 +85,7 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier }: Props) => {
         <PasswordForm
           onClick={handleConventionalLogin}
           initialUserProvidedIdentifier={initialUserProvidedIdentifier}
+          initialError={initialError}
         />
       );
 

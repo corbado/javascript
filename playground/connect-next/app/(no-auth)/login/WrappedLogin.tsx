@@ -56,7 +56,12 @@ const WrappedLogin = ({ clientState }: Props) => {
   return (
     <div className='flex min-h-screen w-full items-center justify-center bg-gray-50'>
       <div className='z-10 w-full max-w-sm overflow-hidden rounded-2xl border border-gray-100 shadow-xl m-4'>
-        {conventionalLoginVisible ? <ConventionalLogin initialUserProvidedIdentifier={email} /> : null}
+        {conventionalLoginVisible ? (
+          <ConventionalLogin
+            initialUserProvidedIdentifier={email}
+            initialError={fallbackErrorMessage}
+          />
+        ) : null}
         {!conventionalLoginVisible ? (
           <>
             <div className='flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-8'>

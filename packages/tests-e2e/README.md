@@ -56,3 +56,11 @@ echo  $JWT
 The first segment of the script contains all the information that must be extracted from the backend deployment.
 
 As evident in the script, the token is valid for around 34 days. The token is intended to be renewed monthly using this script. For rewnewal, it is not necessary to extract all the information in the first segment.
+
+## Authoring rules (connect2)
+
+- Knowledge about page structure lives in `/models` only. Scenarios call model methods, not raw selectors.
+- All passkey authenticator interactions flow through `VirtualAuthenticator`.
+- All TOTP authenticator interactions flow through `AuthenticatorApp`.
+- Scenarios set up app state via navigation helpers and avoid duplicating UI logic.
+- Prefer explicit `awaitPage/visible` checks when changing screens.

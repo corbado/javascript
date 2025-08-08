@@ -7,6 +7,7 @@ export enum ProfileStatus {
   ListEmpty,
   ListWithInitialError,
   ListWithPasskeys,
+  ListWithoutPasskeySupport,
 }
 
 export class ProfilePage extends BasePage {
@@ -17,11 +18,12 @@ export class ProfilePage extends BasePage {
     this.page = page;
   }
 
-  static async awaitPage(page: Page): Promise<ProfilePage> {
-    const profilePage = new ProfilePage(page);
-    await profilePage.visible();
+  async awaitPage(): Promise<ProfilePage> {
+    if (!(await this.visible())) {
+      throw new Error('Profile page not visible');
+    }
 
-    return profilePage;
+    return this;
   }
 
   visible(): Promise<boolean> {
@@ -38,16 +40,28 @@ export class ProfilePage extends BasePage {
     return this.clickButton('Add a passkey');
   }
 
-  async deletePasskeyByIndex(index: string, complete: boolean) {}
+  async deletePasskeyByIndex(index: number, complete: boolean) {
+    const item = this.page.locator('div.cb-passkey-list-item-delete-icon').nth(index);
+    await item.click();
+    if (complete) {
+      await this.page.locator('.cb-modal').getByRole('button', { name: 'Delete' }).click();
+    } else {
+      await this.page.locator('.cb-modal').getByRole('button', { name: 'Cancel' }).click();
+    }
+  }
 
   async awaitState(status: ProfileStatus): Promise<boolean> {
     switch (status) {
       case ProfileStatus.ListEmpty:
-        return this.waitForButton('No passkeys');
+        return this.waitForText('There is currently no passkey saved for this account.');
       case ProfileStatus.ListWithInitialError:
-        return this.waitForText('Error loading passkeys');
+        return this.waitForText('We were unable to show you your list of passkeys due to an error. Try again later.');
       case ProfileStatus.ListWithPasskeys:
         return this.waitBySelector('div.cb-passkey-list-item-delete-icon');
+      case ProfileStatus.ListWithoutPasskeySupport: {
+        const appendAllowed = await this.waitForText('Add a passkey');
+        return !appendAllowed;
+      }
     }
   }
 

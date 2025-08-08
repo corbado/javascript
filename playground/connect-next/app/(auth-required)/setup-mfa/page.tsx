@@ -117,13 +117,7 @@ export default function Page() {
 
   const navigateForward = () => {
     const searchParams = new URLSearchParams(window.location.search);
-    const postSignup = searchParams.get('post-signup');
-
-    if (postSignup) {
-      router.push('/post-login');
-    } else {
-      router.push('/profile');
-    }
+    router.push('/profile');
   };
 
   const updatePhoneNumber = async () => {

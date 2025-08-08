@@ -1,13 +1,15 @@
 import type { ChildProcess } from 'node:child_process';
 
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-import { test } from '../fixtures/BaseTest';
-import { ErrorTexts, password, ScreenNames } from '../utils/Constants';
+import { LoginPage, LoginStatus } from '../models/LoginPage';
+import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
+import { TestDataFactory } from '../utils/TestDataFactory';
+import { ProfileStatus } from '../models/ProfilePage';
+import { AuthenticatorApp } from '../utils/AuthenticatorApp';
 import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
-import { loadInvitationToken, setupNetworkBlocker, setupUser, setupVirtualAuthenticator } from './hooks';
 
-test.describe('login component (without invitation token)', () => {
+test.describe('login flows', () => {
   let server: ChildProcess;
   let port: number;
 
@@ -19,222 +21,125 @@ test.describe('login component (without invitation token)', () => {
     killPlaygroundNew(server);
   });
 
-  setupUser(test, () => port, false);
+  test('testLoginWithTextField', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
+    await virtualAuthenticator.modeComplete();
 
-  test('successful login with credentials', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginFallback);
+    const email = TestDataFactory.generateEmail();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const profilePage = await postLoginPage.continue(true);
+    await profilePage.awaitPage();
 
-    await model.login.submitFallbackCredentials(model.email, password);
-    await model.expectScreen(ScreenNames.MFA);
+    await virtualAuthenticator.modeCancel();
+    const loginPage2 = await profilePage.logout();
 
-    await model.mfa.autofillTOTP();
-    await model.expectScreen(ScreenNames.Home);
-  });
-});
+    await loginPage2.switchAccount();
 
-test.describe('login component (with invitation token, without passkeys)', () => {
-  let server: ChildProcess;
-  let port: number;
+    await virtualAuthenticator.modeComplete();
+    const profilePage2 = await loginPage2.loginWithIdentifier(email);
+    await profilePage2.awaitPage();
 
-  test.beforeAll(async () => {
-    ({ server, port } = await spawnPlaygroundNew());
-  });
-
-  test.afterAll(() => {
-    killPlaygroundNew(server);
+    expect(await profilePage2.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
   });
 
-  setupVirtualAuthenticator(test);
-  setupUser(test, () => port, true, false);
+  test('testLoginWithOneTap', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
+    await virtualAuthenticator.modeComplete();
 
-  test('successful login with credentials', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLogin);
+    const email = TestDataFactory.generateEmail();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const profilePage = await postLoginPage.continue(true);
+    await profilePage.awaitPage();
+    const loginPage2 = await profilePage.logout();
 
-    await model.login.submitEmail(model.email, false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
+    // cancel first one-tap
+    await virtualAuthenticator.modeCancel();
+    await loginPage2.loginWithOneTapAndCancel();
 
-    await model.login.submitFallbackCredentials(model.email, password, true);
-    await model.expectScreen(ScreenNames.MFA);
+    // then succeed
+    await virtualAuthenticator.modeComplete();
+    const profilePage2 = await loginPage2.loginWithOneTap();
+    await profilePage2.awaitPage();
 
-    await model.authenticator.runWithCancel(async () => {
-      await model.mfa.autofillTOTP();
-      await model.append.skipAppend();
-    });
-
-    await model.expectScreen(ScreenNames.Home);
-  });
-});
-
-test.describe('login component (with invitation token, with passkeys)', () => {
-  let server: ChildProcess;
-  let port: number;
-
-  test.beforeAll(async () => {
-    ({ server, port } = await spawnPlaygroundNew());
+    expect(await profilePage2.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
   });
 
-  test.afterAll(() => {
-    killPlaygroundNew(server);
+  test('testLoginWithCUI', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
+    await virtualAuthenticator.modeComplete();
+
+    const email = TestDataFactory.generateEmail();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const profilePage = await postLoginPage.continue(true);
+    await profilePage.awaitPage();
+
+    const loginPage2 = await profilePage.logout();
+    await loginPage2.switchAccount();
+    await loginPage2.loginWithCUI().awaitPage();
   });
 
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  setupUser(test, () => port, true, true);
+  test('testLoginErrorStates', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    await VirtualAuthenticator.init(page);
+    const nonExistingEmail = 'integration-test+0000000000@corbado.com';
 
-  test('successful login with passkey', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.login.removePasskeyButton();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, true);
-    await model.expectScreen(ScreenNames.Home);
+    expect(await loginPage.awaitState(LoginStatus.PasskeyTextField)).toBeTruthy();
+    await loginPage.loginWithIdentifierButNoSuccess(nonExistingEmail);
+    expect(await loginPage.awaitState(LoginStatus.PasskeyTextField)).toBeTruthy();
+    expect(loginPage.awaitErrorMessage('There is no account registered to that email address.')).toBeTruthy();
   });
 
-  test('successful login with passkey (conditional UI)', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
+  test('testLoginErrorStatesGradualRollout', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
+    await virtualAuthenticator.modeComplete();
 
-    await model.login.submitConditionalUI(async () => {
-      await model.login.removePasskeyButton();
-    });
-    await model.expectScreen(ScreenNames.Home);
+    const email = TestDataFactory.generateEmail();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const mfaPage = await postLoginPage.autoSkipAfterSignup().awaitPage();
+
+    const authenticator = new AuthenticatorApp();
+    const [sharedKey, profilePage] = await mfaPage.setupAndConfirmTOTPReturnProfile(authenticator);
+    await profilePage.awaitPage();
+    expect(await profilePage.awaitState(ProfileStatus.ListWithoutPasskeySupport)).toBeTruthy();
+
+    const loginPage2 = await profilePage.logout();
+    expect(await loginPage2.awaitState(LoginStatus.FallbackFirst)).toBeTruthy();
+    await loginPage2.loginWithIdentifierAndPassword(email, TestDataFactory.password);
+    expect(await loginPage2.awaitState(LoginStatus.FallbackSecondTOTP)).toBeTruthy();
+    const codeFirst = await authenticator.getCode(sharedKey);
+    const postLoginPage2 = await loginPage2.completeLoginWithTOTP(codeFirst!);
+    await postLoginPage2.autoSkip().awaitPage();
   });
 
-  test('successful login with passkey (one-tap)', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
+  test('testLoginErrorStatesPasskeyDeletedServerSide', async ({ page }) => {
+    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    const loginPage = new LoginPage(page);
+    const signupPage = await loginPage.navigateToSignup();
+    const virtualAuthenticator = await VirtualAuthenticator.init(page);
+    await virtualAuthenticator.modeComplete();
 
-    await model.login.submitPasskeyButton(true);
-    await model.expectScreen(ScreenNames.Home);
-  });
+    const email = TestDataFactory.generateEmail();
+    const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    const profilePage = await postLoginPage.continue(true);
+    await profilePage.awaitPage();
+    expect(await profilePage.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();
+    await profilePage.deletePasskeyByIndex(0, true);
+    const loginPage2 = await profilePage.logout();
 
-  test('attempt login with repeated failed passkey input', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.login.submitPasskeyButton(false);
-    await model.login.repeatedlyFailPasskeyInput();
-  });
-
-  test('Corbado FAPI unavailable after authentication', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.blocker.blockCorbadoFAPIFinishEndpoint();
-
-    await model.login.submitPasskeyButton(true);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-  });
-
-  test('passkey signature validation fails', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.authenticator.clearCredentials();
-    await model.authenticator.addDummyCredential();
-
-    await model.login.submitConditionalUI(async () => {
-      await model.login.removePasskeyButton();
-    });
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-    await model.expectError(ErrorTexts.PasskeySignatureValidationFail);
-  });
-
-  test('attempt login with server-side deleted passkey', async ({ model }) => {
-    await model.home.gotoPasskeyList();
-    await model.expectScreen(ScreenNames.PasskeyList);
-
-    await model.passkeyList.expectPasskeys(1);
-    await model.passkeyList.deletePasskey(0);
-    await model.passkeyList.expectPasskeys(0);
-
-    await model.loadHome(port);
-    await model.expectScreen(ScreenNames.Home);
-
-    await model.login.submitConditionalUI(async () => {
-      await model.home.logout();
-    });
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-    await model.expectError(ErrorTexts.DeletedPasskeyUsed);
-  });
-
-  // TODO: unskip when loginData reset feature is fixed
-  test.skip('successful login deletes loginData', async ({ model }) => {
-    await model.home.logout();
-    await model.expectScreen(ScreenNames.InitLoginOneTap);
-
-    await model.login.removePasskeyButton();
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail(model.email, true);
-    await model.expectScreen(ScreenNames.Home);
-    await model.storage.checkLoginDataDeleted();
-  });
-});
-
-test.describe('login component (without user)', () => {
-  let server: ChildProcess;
-  let port: number;
-
-  test.beforeAll(async () => {
-    ({ server, port } = await spawnPlaygroundNew());
-  });
-
-  test.afterAll(() => {
-    killPlaygroundNew(server);
-  });
-
-  setupVirtualAuthenticator(test);
-  setupNetworkBlocker(test);
-  loadInvitationToken(test, () => port);
-
-  test('attempt login with incomplete credentials', async ({ model }) => {
-    await model.loadLogin(port);
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail('', false);
-    await model.expectError(ErrorTexts.EmptyEmail);
-  });
-
-  test('attempt login with unknown credentials', async ({ model }) => {
-    await model.loadLogin(port);
-    await model.expectScreen(ScreenNames.InitLogin);
-
-    await model.login.submitEmail('integration-test+unknown@corbado.com', false);
-    await model.expectError(ErrorTexts.UnknownEmail);
-  });
-
-  test('Corbado FAPI unavailable', async ({ model }) => {
-    await model.blocker.blockCorbadoFAPI();
-
-    await model.loadLogin(port);
-    // It seems that the InitLogin page is now cached so that email needs to be submitted before reaching the InitLoginFallback screen.
-    await model.login.submitEmail('integration-test+dummy@corbado.com', false);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
-  });
-
-  test('invitation token and process id persists after page refresh', async ({ model }) => {
-    await model.expectScreen(ScreenNames.InitLogin);
-    await model.storage.checkInvitationToken();
-    const processId = await model.storage.getProcessID();
-
-    await model.loadLogin(port);
-    await model.expectScreen(ScreenNames.InitLogin);
-    await model.storage.checkInvitationToken();
-    await model.storage.checkProcessID(processId);
-  });
-
-  test('expired login lifetime leads to fallback screen', async ({ model }) => {
-    await model.expectScreen(ScreenNames.InitLogin);
-    expect(await model.storage.getLoginLifetime()).toBeGreaterThan(Math.floor(Date.now() / 1000));
-
-    await model.storage.setLoginLifetime(Math.floor(Date.now() / 1000) - 1);
-    await model.storage.deleteInvitationToken();
-    await model.loadLogin(port);
-    await model.expectScreen(ScreenNames.InitLoginFallback);
+    await loginPage2.awaitErrorMessage('You previously deleted this passkey. Use your password to log in instead.');
+    expect(await loginPage2.awaitState(LoginStatus.FallbackFirst)).toBeTruthy();
   });
 });

@@ -5,9 +5,9 @@ import { expect, test } from '@playwright/test';
 import { LoginPage, LoginStatus } from '../models/LoginPage';
 import { ProfileStatus } from '../models/ProfilePage';
 import { AuthenticatorApp } from '../utils/AuthenticatorApp';
+import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 import { TestDataFactory } from '../utils/TestDataFactory';
 import { VirtualAuthenticator } from '../utils/VirtualAuthenticator';
-import { killPlaygroundNew, spawnPlaygroundNew } from '../utils/Playground';
 
 test.describe('append flows', () => {
   let server: ChildProcess;

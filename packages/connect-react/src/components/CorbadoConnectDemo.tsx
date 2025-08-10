@@ -39,6 +39,9 @@ const getListOfPasskeys = () => {
         iconLight: 'https://cdn.cloud.corbado.io/aaguidIcons/01020304-0506-0708-0102-030405060708/light.png',
         name: 'Passkey',
       },
+      createdMs: 1735689600000,
+      lastUsedMs: 1735689600000,
+      tags: [],
     },
     {
       aaguidDetails: {
@@ -58,6 +61,9 @@ const getListOfPasskeys = () => {
       sourceOS: 'macOS',
       status: 'active',
       transport: ['nfc', 'usb'],
+      createdMs: 1735689600000,
+      lastUsedMs: 1735689600000,
+      tags: [],
     },
     {
       aaguidDetails: {
@@ -77,6 +83,9 @@ const getListOfPasskeys = () => {
       sourceOS: 'macOS',
       status: 'active',
       transport: ['hybrid', 'internal'],
+      createdMs: 1735689600000,
+      lastUsedMs: 1735689600000,
+      tags: [],
     },
   ];
 

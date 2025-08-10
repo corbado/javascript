@@ -201,6 +201,10 @@ export class ConnectService {
       ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
     }
 
+    if (res.val.newClientState) {
+      ClientStateService.enrichFromURL(this.#projectId, res.val.newClientState);
+    }
+
     flags.addItemsObject(res.val.flags);
 
     const loginData: ConnectLoginInitData = {
@@ -366,6 +370,10 @@ export class ConnectService {
     // if the backend decides that a new client handle is needed, we store it in local storage
     if (res.val.newClientEnvHandle) {
       ClientStateService.setClientEnvHandle(this.#projectId, res.val.newClientEnvHandle);
+    }
+
+    if (res.val.newClientState) {
+      ClientStateService.enrichFromURL(this.#projectId, res.val.newClientState);
     }
 
     flags.addItemsObject(res.val.flags);

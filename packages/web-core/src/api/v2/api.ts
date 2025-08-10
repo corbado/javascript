@@ -252,6 +252,12 @@ export interface ClientInformation {
      * @memberof ClientInformation
      */
     'clientEnvHandleMeta'?: ClientStateMeta;
+    /**
+     * 
+     * @type {NativeMeta}
+     * @memberof ClientInformation
+     */
+    'nativeMeta'?: NativeMeta;
 }
 /**
  * 
@@ -275,7 +281,8 @@ export interface ClientStateMeta {
 
 export const ClientStateMetaSourceEnum = {
     Ls: 'ls',
-    Url: 'url'
+    Url: 'url',
+    Native: 'native'
 } as const;
 
 export type ClientStateMetaSourceEnum = typeof ClientStateMetaSourceEnum[keyof typeof ClientStateMetaSourceEnum];
@@ -373,6 +380,12 @@ export interface ConnectAppendInitRsp {
      * @memberof ConnectAppendInitRsp
      */
     'flags': { [key: string]: string; };
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitRsp
+     */
+    'newClientState'?: string;
 }
 /**
  * 
@@ -502,7 +515,7 @@ export interface ConnectLoginFinishRsp {
      * @type {PasskeyOperation}
      * @memberof ConnectLoginFinishRsp
      */
-    'passkeyOperation': PasskeyOperation;
+    'passkeyOperation'?: PasskeyOperation;
     /**
      * 
      * @type {string}
@@ -565,6 +578,12 @@ export interface ConnectLoginInitRsp {
      * @memberof ConnectLoginInitRsp
      */
     'newClientEnvHandle'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectLoginInitRsp
+     */
+    'newClientState'?: string;
     /**
      * 
      * @type {number}
@@ -673,6 +692,12 @@ export interface ConnectLoginStartRsp {
      * @memberof ConnectLoginStartRsp
      */
     'fallbackOperationError': FallbackOperationError;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectLoginStartRsp
+     */
+    'preferImmediatelyAvailable'?: boolean;
 }
 /**
  * 
@@ -1089,7 +1114,8 @@ export interface GeneralBlockPasskeyAppend {
 export const GeneralBlockPasskeyAppendVariantEnum = {
     Default: 'default',
     AfterHybrid: 'after-hybrid',
-    AfterError: 'after-error'
+    AfterError: 'after-error',
+    AfterNoCredential: 'after-no-credential'
 } as const;
 
 export type GeneralBlockPasskeyAppendVariantEnum = typeof GeneralBlockPasskeyAppendVariantEnum[keyof typeof GeneralBlockPasskeyAppendVariantEnum];
@@ -1797,6 +1823,94 @@ export interface MeUpdateReq {
 /**
  * 
  * @export
+ * @interface NativeMeta
+ */
+export interface NativeMeta {
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'platform': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'platformVersion': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'version'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'displayName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'build'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'deviceOwnerAuth'?: NativeMetaDeviceOwnerAuthEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NativeMeta
+     */
+    'isBluetoothAvailable'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NativeMeta
+     */
+    'isBluetoothOn'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NativeMeta
+     */
+    'isGooglePlayServices'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NativeMeta
+     */
+    'isDeviceSecure'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'error'?: string;
+}
+
+export const NativeMetaDeviceOwnerAuthEnum = {
+    None: 'none',
+    Code: 'code',
+    Biometrics: 'biometrics'
+} as const;
+
+export type NativeMetaDeviceOwnerAuthEnum = typeof NativeMetaDeviceOwnerAuthEnum[keyof typeof NativeMetaDeviceOwnerAuthEnum];
+
+/**
+ * 
+ * @export
  * @interface Paging
  */
 export interface Paging {
@@ -1903,6 +2017,24 @@ export interface Passkey {
      * @memberof Passkey
      */
     'aaguidDetails': AaguidDetails;
+    /**
+     * Unix timestamp of when the passkey was created (in milliseconds)
+     * @type {number}
+     * @memberof Passkey
+     */
+    'createdMs': number;
+    /**
+     * Unix timestamp of when the passkey was last used (in milliseconds)
+     * @type {number}
+     * @memberof Passkey
+     */
+    'lastUsedMs': number;
+    /**
+     * Tags attached to a passkey (e.g. synced or hybrid)
+     * @type {Array<string>}
+     * @memberof Passkey
+     */
+    'tags': Array<string>;
 }
 
 export const PasskeyTransportEnum = {
@@ -1960,14 +2092,19 @@ export const PasskeyEventType = {
     LoginErrorUntyped: 'login-error-untyped',
     LoginErrorUnexpected: 'login-error-unexpected',
     LoginOneTapSwitch: 'login-one-tap-switch',
+    LoginNoCredentials: 'login-no-credentials',
     UserAppendAfterCrossPlatformBlacklisted: 'user-append-after-cross-platform-blacklisted',
     UserAppendAfterLoginErrorBlacklisted: 'user-append-after-login-error-blacklisted',
     AppendCredentialExists: 'append-credential-exists',
     AppendExplicitAbort: 'append-explicit-abort',
     AppendError: 'append-error',
     AppendErrorUnexpected: 'append-error-unexpected',
+    AppendLearnMore: 'append-learn-more',
     ManageErrorUnexpected: 'manage-error-unexpected',
-    AppendLearnMore: 'append-learn-more'
+    ManageError: 'manage-error',
+    ManageLearnMore: 'manage-learn-more',
+    ManageCredentialExists: 'manage-credential-exists',
+    LocalUnlock: 'local-unlock'
 } as const;
 
 export type PasskeyEventType = typeof PasskeyEventType[keyof typeof PasskeyEventType];
@@ -2557,7 +2694,8 @@ export type VerificationMethod = typeof VerificationMethod[keyof typeof Verifica
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * tbd
+         * Skips the current authentication block.
+         * @summary Skip authentication block
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2594,6 +2732,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * Creates a new user generated complete event.
+         * @summary Create authentication event
          * @param {EventCreateReq} eventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2635,7 +2774,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Updates the user\'s identifier information.
+         * @summary Update identifier
          * @param {IdentifierUpdateReq} identifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2677,7 +2817,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the identifier verification process.
+         * @summary Finish identifier verification
          * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2719,7 +2860,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initiates the identifier verification process.
+         * @summary Start identifier verification
          * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2761,7 +2903,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Retrieves the current status of identifier verification.
+         * @summary Retrieve identifier verification status
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2797,7 +2940,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initializes a new login process.
+         * @summary Initialize login
          * @param {LoginInitReq} loginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2839,7 +2983,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the process of appending a new passkey.
+         * @summary Finish passkey append
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2881,7 +3026,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Starts the process of appending a new passkey.
+         * @summary Start passkey append
          * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2923,7 +3069,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the passkey login process.
+         * @summary Finish passkey login
          * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2965,7 +3112,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initiates the passkey login process.
+         * @summary Start passkey login
          * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3007,7 +3155,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the passkey mediation process.
+         * @summary Finish passkey mediation
          * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3049,7 +3198,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the current authentication process.
+         * @summary Complete authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3085,7 +3235,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Retrieves the current authentication process state.
+         * @summary Retrieve authentication process
          * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3126,7 +3277,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initializes a new authentication process.
+         * @summary Initialize authentication process
          * @param {ProcessInitReq} processInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3168,7 +3320,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Resets the current authentication process.
+         * @summary Reset authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3204,7 +3357,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initializes a new user signup process.
+         * @summary Initialize signup
          * @param {SignupInitReq} signupInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3246,7 +3400,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Handles the callback from social authentication providers.
+         * @summary Social verification callback
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3282,7 +3437,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Completes the social authentication verification process.
+         * @summary Finish social verification
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3324,7 +3480,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * tbd
+         * Initiates the social authentication verification process.
+         * @summary Start social verification
          * @param {SocialVerifyStartReq} socialVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3376,7 +3533,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * tbd
+         * Skips the current authentication block.
+         * @summary Skip authentication block
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3386,6 +3544,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * Creates a new user generated complete event.
+         * @summary Create authentication event
          * @param {EventCreateReq} eventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3395,7 +3554,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Updates the user\'s identifier information.
+         * @summary Update identifier
          * @param {IdentifierUpdateReq} identifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3405,7 +3565,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the identifier verification process.
+         * @summary Finish identifier verification
          * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3415,7 +3576,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initiates the identifier verification process.
+         * @summary Start identifier verification
          * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3425,7 +3587,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Retrieves the current status of identifier verification.
+         * @summary Retrieve identifier verification status
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3434,7 +3597,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initializes a new login process.
+         * @summary Initialize login
          * @param {LoginInitReq} loginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3444,7 +3608,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the process of appending a new passkey.
+         * @summary Finish passkey append
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3454,7 +3619,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Starts the process of appending a new passkey.
+         * @summary Start passkey append
          * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3464,7 +3630,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the passkey login process.
+         * @summary Finish passkey login
          * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3474,7 +3641,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initiates the passkey login process.
+         * @summary Start passkey login
          * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3484,7 +3652,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the passkey mediation process.
+         * @summary Finish passkey mediation
          * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3494,7 +3663,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the current authentication process.
+         * @summary Complete authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3503,7 +3673,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Retrieves the current authentication process state.
+         * @summary Retrieve authentication process
          * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3513,7 +3684,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initializes a new authentication process.
+         * @summary Initialize authentication process
          * @param {ProcessInitReq} processInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3523,7 +3695,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Resets the current authentication process.
+         * @summary Reset authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3532,7 +3705,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initializes a new user signup process.
+         * @summary Initialize signup
          * @param {SignupInitReq} signupInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3542,7 +3716,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Handles the callback from social authentication providers.
+         * @summary Social verification callback
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3551,7 +3726,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Completes the social authentication verification process.
+         * @summary Finish social verification
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3561,7 +3737,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * tbd
+         * Initiates the social authentication verification process.
+         * @summary Start social verification
          * @param {SocialVerifyStartReq} socialVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3581,7 +3758,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * tbd
+         * Skips the current authentication block.
+         * @summary Skip authentication block
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3590,6 +3768,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * Creates a new user generated complete event.
+         * @summary Create authentication event
          * @param {EventCreateReq} eventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3598,7 +3777,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.eventCreate(eventCreateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Updates the user\'s identifier information.
+         * @summary Update identifier
          * @param {IdentifierUpdateReq} identifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3607,7 +3787,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.identifierUpdate(identifierUpdateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the identifier verification process.
+         * @summary Finish identifier verification
          * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3616,7 +3797,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.identifierVerifyFinish(identifierVerifyFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initiates the identifier verification process.
+         * @summary Start identifier verification
          * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3625,7 +3807,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.identifierVerifyStart(identifierVerifyStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Retrieves the current status of identifier verification.
+         * @summary Retrieve identifier verification status
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3633,7 +3816,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.identifierVerifyStatus(options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initializes a new login process.
+         * @summary Initialize login
          * @param {LoginInitReq} loginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3642,7 +3826,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.loginInit(loginInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the process of appending a new passkey.
+         * @summary Finish passkey append
          * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3651,7 +3836,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.passkeyAppendFinish(passkeyAppendFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Starts the process of appending a new passkey.
+         * @summary Start passkey append
          * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3660,7 +3846,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.passkeyAppendStart(passkeyAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the passkey login process.
+         * @summary Finish passkey login
          * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3669,7 +3856,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.passkeyLoginFinish(passkeyLoginFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initiates the passkey login process.
+         * @summary Start passkey login
          * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3678,7 +3866,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.passkeyLoginStart(passkeyLoginStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the passkey mediation process.
+         * @summary Finish passkey mediation
          * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3687,7 +3876,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.passkeyMediationFinish(passkeyMediationFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the current authentication process.
+         * @summary Complete authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3695,7 +3885,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.processComplete(options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Retrieves the current authentication process state.
+         * @summary Retrieve authentication process
          * @param {BlockType} [preferredBlock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3704,7 +3895,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.processGet(preferredBlock, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initializes a new authentication process.
+         * @summary Initialize authentication process
          * @param {ProcessInitReq} processInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3713,7 +3905,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.processInit(processInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Resets the current authentication process.
+         * @summary Reset authentication process
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3721,7 +3914,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.processReset(options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initializes a new user signup process.
+         * @summary Initialize signup
          * @param {SignupInitReq} signupInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3730,7 +3924,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.signupInit(signupInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Handles the callback from social authentication providers.
+         * @summary Social verification callback
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -3738,7 +3933,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.socialVerifyCallback(options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Completes the social authentication verification process.
+         * @summary Finish social verification
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3747,7 +3943,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.socialVerifyFinish(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * tbd
+         * Initiates the social authentication verification process.
+         * @summary Start social verification
          * @param {SocialVerifyStartReq} socialVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3766,7 +3963,8 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export class AuthApi extends BaseAPI {
     /**
-     * tbd
+     * Skips the current authentication block.
+     * @summary Skip authentication block
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3777,6 +3975,7 @@ export class AuthApi extends BaseAPI {
 
     /**
      * Creates a new user generated complete event.
+     * @summary Create authentication event
      * @param {EventCreateReq} eventCreateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3787,7 +3986,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Updates the user\'s identifier information.
+     * @summary Update identifier
      * @param {IdentifierUpdateReq} identifierUpdateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3798,7 +3998,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the identifier verification process.
+     * @summary Finish identifier verification
      * @param {IdentifierVerifyFinishReq} identifierVerifyFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3809,7 +4010,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initiates the identifier verification process.
+     * @summary Start identifier verification
      * @param {IdentifierVerifyStartReq} identifierVerifyStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3820,7 +4022,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Retrieves the current status of identifier verification.
+     * @summary Retrieve identifier verification status
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3830,7 +4033,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initializes a new login process.
+     * @summary Initialize login
      * @param {LoginInitReq} loginInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3841,7 +4045,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the process of appending a new passkey.
+     * @summary Finish passkey append
      * @param {PasskeyAppendFinishReq} passkeyAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3852,7 +4057,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Starts the process of appending a new passkey.
+     * @summary Start passkey append
      * @param {PasskeyAppendStartReq} passkeyAppendStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3863,7 +4069,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the passkey login process.
+     * @summary Finish passkey login
      * @param {PasskeyLoginFinishReq} passkeyLoginFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3874,7 +4081,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initiates the passkey login process.
+     * @summary Start passkey login
      * @param {PasskeyLoginStartReq} passkeyLoginStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3885,7 +4093,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the passkey mediation process.
+     * @summary Finish passkey mediation
      * @param {PasskeyMediationFinishReq} passkeyMediationFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3896,7 +4105,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the current authentication process.
+     * @summary Complete authentication process
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3906,7 +4116,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Retrieves the current authentication process state.
+     * @summary Retrieve authentication process
      * @param {BlockType} [preferredBlock] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3917,7 +4128,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initializes a new authentication process.
+     * @summary Initialize authentication process
      * @param {ProcessInitReq} processInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3928,7 +4140,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Resets the current authentication process.
+     * @summary Reset authentication process
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3938,7 +4151,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initializes a new user signup process.
+     * @summary Initialize signup
      * @param {SignupInitReq} signupInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3949,7 +4163,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Handles the callback from social authentication providers.
+     * @summary Social verification callback
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -3959,7 +4174,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Completes the social authentication verification process.
+     * @summary Finish social verification
      * @param {object} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3970,7 +4186,8 @@ export class AuthApi extends BaseAPI {
     }
 
     /**
-     * tbd
+     * Initiates the social authentication verification process.
+     * @summary Start social verification
      * @param {SocialVerifyStartReq} socialVerifyStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3990,7 +4207,8 @@ export class AuthApi extends BaseAPI {
 export const ConfigsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * tbd
+         * Retrieves the session configuration settings.
+         * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4026,7 +4244,8 @@ export const ConfigsApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Gets configs needed by the UserDetails component
+         * Retrieves user details configuration needed by the UserDetails component.
+         * @summary Retrieve user details configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4072,7 +4291,8 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ConfigsApiAxiosParamCreator(configuration)
     return {
         /**
-         * tbd
+         * Retrieves the session configuration settings.
+         * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4081,7 +4301,8 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Gets configs needed by the UserDetails component
+         * Retrieves user details configuration needed by the UserDetails component.
+         * @summary Retrieve user details configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4100,7 +4321,8 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = ConfigsApiFp(configuration)
     return {
         /**
-         * tbd
+         * Retrieves the session configuration settings.
+         * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4108,7 +4330,8 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getSessionConfig(options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets configs needed by the UserDetails component
+         * Retrieves user details configuration needed by the UserDetails component.
+         * @summary Retrieve user details configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -4126,7 +4349,8 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
  */
 export class ConfigsApi extends BaseAPI {
     /**
-     * tbd
+     * Retrieves the session configuration settings.
+     * @summary Retrieve session configuration
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConfigsApi
@@ -4136,7 +4360,8 @@ export class ConfigsApi extends BaseAPI {
     }
 
     /**
-     * Gets configs needed by the UserDetails component
+     * Retrieves user details configuration needed by the UserDetails component.
+     * @summary Retrieve user details configuration
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConfigsApi
@@ -4155,7 +4380,8 @@ export class ConfigsApi extends BaseAPI {
 export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Finishes an initialized connect passkey append process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Finish connect append
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4197,7 +4423,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Initializes a connect process for passkey append.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey append.
+         * @summary Initialize connect append
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4239,7 +4466,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Starts an initialized connect passkey append process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Start connect append
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4281,7 +4509,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Creates a new user generated connect event.
+         * Creates a new user generated [Corbado Connect](https://docs.corbado.com/corbado-connect) event.
+         * @summary Create connect event
          * @param {ConnectEventCreateReq} connectEventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4323,7 +4552,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Finishes an initialized connect login process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4365,7 +4595,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Initializes a connect process for login.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for login.
+         * @summary Initialize connect login
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4407,7 +4638,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Starts an initialized connect login process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Start connect login
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4449,7 +4681,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Deletes a passkey for a user identified by a connect token
+         * Deletes a passkey for a user identified by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary Delete connect passkey
          * @param {ConnectManageDeleteReq} connectManageDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4491,7 +4724,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Initializes a connect process for passkey management.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey management.
+         * @summary Initialize connect management
          * @param {ConnectManageInitReq} connectManageInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4533,7 +4767,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Lists all passkeys for a user identifier by a connect token.
+         * Lists all passkeys for a user identifier by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary List connect passkeys
          * @param {ConnectManageListReq} connectManageListReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4575,7 +4810,8 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Remove process state for a connect process.
+         * Remove process state for a [Corbado Connect](https://docs.corbado.com/corbado-connect) process.
+         * @summary Clear connect process
          * @param {ConnectProcessClearReq} connectProcessClearReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4627,7 +4863,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = CorbadoConnectApiAxiosParamCreator(configuration)
     return {
         /**
-         * Finishes an initialized connect passkey append process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Finish connect append
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4637,7 +4874,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Initializes a connect process for passkey append.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey append.
+         * @summary Initialize connect append
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4647,7 +4885,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Starts an initialized connect passkey append process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Start connect append
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4657,7 +4896,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Creates a new user generated connect event.
+         * Creates a new user generated [Corbado Connect](https://docs.corbado.com/corbado-connect) event.
+         * @summary Create connect event
          * @param {ConnectEventCreateReq} connectEventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4667,7 +4907,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Finishes an initialized connect login process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4677,7 +4918,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Initializes a connect process for login.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for login.
+         * @summary Initialize connect login
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4687,7 +4929,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Starts an initialized connect login process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Start connect login
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4697,7 +4940,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Deletes a passkey for a user identified by a connect token
+         * Deletes a passkey for a user identified by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary Delete connect passkey
          * @param {ConnectManageDeleteReq} connectManageDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4707,7 +4951,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Initializes a connect process for passkey management.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey management.
+         * @summary Initialize connect management
          * @param {ConnectManageInitReq} connectManageInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4717,7 +4962,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Lists all passkeys for a user identifier by a connect token.
+         * Lists all passkeys for a user identifier by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary List connect passkeys
          * @param {ConnectManageListReq} connectManageListReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4727,7 +4973,8 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Remove process state for a connect process.
+         * Remove process state for a [Corbado Connect](https://docs.corbado.com/corbado-connect) process.
+         * @summary Clear connect process
          * @param {ConnectProcessClearReq} connectProcessClearReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4747,7 +4994,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
     const localVarFp = CorbadoConnectApiFp(configuration)
     return {
         /**
-         * Finishes an initialized connect passkey append process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Finish connect append
          * @param {ConnectAppendFinishReq} connectAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4756,7 +5004,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectAppendFinish(connectAppendFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Initializes a connect process for passkey append.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey append.
+         * @summary Initialize connect append
          * @param {ConnectAppendInitReq} connectAppendInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4765,7 +5014,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectAppendInit(connectAppendInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Starts an initialized connect passkey append process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+         * @summary Start connect append
          * @param {ConnectAppendStartReq} connectAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4774,7 +5024,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectAppendStart(connectAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Creates a new user generated connect event.
+         * Creates a new user generated [Corbado Connect](https://docs.corbado.com/corbado-connect) event.
+         * @summary Create connect event
          * @param {ConnectEventCreateReq} connectEventCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4783,7 +5034,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectEventCreate(connectEventCreateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Finishes an initialized connect login process.
+         * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4792,7 +5044,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectLoginFinish(connectLoginFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Initializes a connect process for login.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for login.
+         * @summary Initialize connect login
          * @param {ConnectLoginInitReq} connectLoginInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4801,7 +5054,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectLoginInit(connectLoginInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Starts an initialized connect login process.
+         * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+         * @summary Start connect login
          * @param {ConnectLoginStartReq} connectLoginStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4810,7 +5064,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectLoginStart(connectLoginStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Deletes a passkey for a user identified by a connect token
+         * Deletes a passkey for a user identified by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary Delete connect passkey
          * @param {ConnectManageDeleteReq} connectManageDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4819,7 +5074,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectManageDelete(connectManageDeleteReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Initializes a connect process for passkey management.
+         * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey management.
+         * @summary Initialize connect management
          * @param {ConnectManageInitReq} connectManageInitReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4828,7 +5084,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectManageInit(connectManageInitReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Lists all passkeys for a user identifier by a connect token.
+         * Lists all passkeys for a user identifier by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+         * @summary List connect passkeys
          * @param {ConnectManageListReq} connectManageListReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4837,7 +5094,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectManageList(connectManageListReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Remove process state for a connect process.
+         * Remove process state for a [Corbado Connect](https://docs.corbado.com/corbado-connect) process.
+         * @summary Clear connect process
          * @param {ConnectProcessClearReq} connectProcessClearReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4856,7 +5114,8 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
  */
 export class CorbadoConnectApi extends BaseAPI {
     /**
-     * Finishes an initialized connect passkey append process.
+     * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+     * @summary Finish connect append
      * @param {ConnectAppendFinishReq} connectAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4867,7 +5126,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Initializes a connect process for passkey append.
+     * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey append.
+     * @summary Initialize connect append
      * @param {ConnectAppendInitReq} connectAppendInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4878,7 +5138,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Starts an initialized connect passkey append process.
+     * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) passkey append process.
+     * @summary Start connect append
      * @param {ConnectAppendStartReq} connectAppendStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4889,7 +5150,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Creates a new user generated connect event.
+     * Creates a new user generated [Corbado Connect](https://docs.corbado.com/corbado-connect) event.
+     * @summary Create connect event
      * @param {ConnectEventCreateReq} connectEventCreateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4900,7 +5162,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Finishes an initialized connect login process.
+     * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+     * @summary Finish connect login
      * @param {ConnectLoginFinishReq} connectLoginFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4911,7 +5174,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Initializes a connect process for login.
+     * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for login.
+     * @summary Initialize connect login
      * @param {ConnectLoginInitReq} connectLoginInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4922,7 +5186,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Starts an initialized connect login process.
+     * Starts an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
+     * @summary Start connect login
      * @param {ConnectLoginStartReq} connectLoginStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4933,7 +5198,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Deletes a passkey for a user identified by a connect token
+     * Deletes a passkey for a user identified by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+     * @summary Delete connect passkey
      * @param {ConnectManageDeleteReq} connectManageDeleteReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4944,7 +5210,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Initializes a connect process for passkey management.
+     * Initializes a [Corbado Connect](https://docs.corbado.com/corbado-connect) process for passkey management.
+     * @summary Initialize connect management
      * @param {ConnectManageInitReq} connectManageInitReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4955,7 +5222,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Lists all passkeys for a user identifier by a connect token.
+     * Lists all passkeys for a user identifier by a [Corbado Connect](https://docs.corbado.com/corbado-connect) token.
+     * @summary List connect passkeys
      * @param {ConnectManageListReq} connectManageListReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4966,7 +5234,8 @@ export class CorbadoConnectApi extends BaseAPI {
     }
 
     /**
-     * Remove process state for a connect process.
+     * Remove process state for a [Corbado Connect](https://docs.corbado.com/corbado-connect) process.
+     * @summary Clear connect process
      * @param {ConnectProcessClearReq} connectProcessClearReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4986,7 +5255,8 @@ export class CorbadoConnectApi extends BaseAPI {
 export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Deletes current user
+         * Deletes currently logged in user. 
+         * @summary Delete current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5022,7 +5292,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Gets current user
+         * Retrieves data of currently logged in user including their [login identifiers](/api-reference/backend-api/loginidentifiers/create-a-login-identifier-for-a-user) and [social logins](/api-reference/backend-api/users/create-a-social-login-for-a-user). 
+         * @summary Retrieve current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5058,7 +5329,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Creates an identifier
+         * Creates a login identifier for the currently logged in user. 
+         * @summary Create login identifier
          * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5100,7 +5372,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Deletes an identifier
+         * Deletes a login identifier for the currently logged in user. 
+         * @summary Delete login identifier
          * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5142,7 +5415,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
+         * Updates a login identifier for the currently logged in user. 
+         * @summary Update login identifier
          * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5184,7 +5458,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Verifies challenge
+         * Finishes login identifer verification of currently logged in user. 
+         * @summary Finish login identifier verification
          * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5226,7 +5501,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Creates challenge (only email otp and phone otp supported for now)
+         * Starts login identifer verification of currently logged in user. 
+         * @summary Start login identifier verification
          * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5268,7 +5544,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Finishes passkey append for current user
+         * Finishes passkey append for currently logged in user. 
+         * @summary Finish passkey append
          * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5310,7 +5587,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Starts passkey append for current user
+         * Starts passkey append for currently logged in user. 
+         * @summary Start passkey append
          * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5352,8 +5630,9 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Delete current user\'s passkeys
-         * @param {string} credentialID Credential ID from passkeys
+         * Deletes a passkey for the currently logged in user. 
+         * @summary Delete user passkey
+         * @param {string} credentialID Unique identifier of the passkey.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5392,7 +5671,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Gets current user\'s passkeys
+         * Returns a list of passkeys for the currently logged in user. 
+         * @summary List all user passkeys
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5428,7 +5708,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Performs session logout
+         * Performs session logout of currently logged in user.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Logout user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5464,7 +5745,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Performs session refresh
+         * Performs session refresh of currently logged in user. Issues a new session-token if session is still valid.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Refresh user session
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5500,7 +5782,8 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Updates current user
+         * Updates data of currently logged in user. 
+         * @summary Update current User
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5552,7 +5835,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
     return {
         /**
-         * Deletes current user
+         * Deletes currently logged in user. 
+         * @summary Delete current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5561,7 +5845,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Gets current user
+         * Retrieves data of currently logged in user including their [login identifiers](/api-reference/backend-api/loginidentifiers/create-a-login-identifier-for-a-user) and [social logins](/api-reference/backend-api/users/create-a-social-login-for-a-user). 
+         * @summary Retrieve current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5570,7 +5855,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Creates an identifier
+         * Creates a login identifier for the currently logged in user. 
+         * @summary Create login identifier
          * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5580,7 +5866,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Deletes an identifier
+         * Deletes a login identifier for the currently logged in user. 
+         * @summary Delete login identifier
          * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5590,7 +5877,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
+         * Updates a login identifier for the currently logged in user. 
+         * @summary Update login identifier
          * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5600,7 +5888,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Verifies challenge
+         * Finishes login identifer verification of currently logged in user. 
+         * @summary Finish login identifier verification
          * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5610,7 +5899,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Creates challenge (only email otp and phone otp supported for now)
+         * Starts login identifer verification of currently logged in user. 
+         * @summary Start login identifier verification
          * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5620,7 +5910,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Finishes passkey append for current user
+         * Finishes passkey append for currently logged in user. 
+         * @summary Finish passkey append
          * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5630,7 +5921,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Starts passkey append for current user
+         * Starts passkey append for currently logged in user. 
+         * @summary Start passkey append
          * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5640,8 +5932,9 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Delete current user\'s passkeys
-         * @param {string} credentialID Credential ID from passkeys
+         * Deletes a passkey for the currently logged in user. 
+         * @summary Delete user passkey
+         * @param {string} credentialID Unique identifier of the passkey.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5650,7 +5943,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Gets current user\'s passkeys
+         * Returns a list of passkeys for the currently logged in user. 
+         * @summary List all user passkeys
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5659,7 +5953,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Performs session logout
+         * Performs session logout of currently logged in user.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Logout user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5668,7 +5963,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Performs session refresh
+         * Performs session refresh of currently logged in user. Issues a new session-token if session is still valid.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Refresh user session
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5677,7 +5973,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Updates current user
+         * Updates data of currently logged in user. 
+         * @summary Update current User
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5697,7 +5994,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = UsersApiFp(configuration)
     return {
         /**
-         * Deletes current user
+         * Deletes currently logged in user. 
+         * @summary Delete current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5705,7 +6003,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserDelete(options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets current user
+         * Retrieves data of currently logged in user including their [login identifiers](/api-reference/backend-api/loginidentifiers/create-a-login-identifier-for-a-user) and [social logins](/api-reference/backend-api/users/create-a-social-login-for-a-user). 
+         * @summary Retrieve current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5713,7 +6012,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Creates an identifier
+         * Creates a login identifier for the currently logged in user. 
+         * @summary Create login identifier
          * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5722,7 +6022,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserIdentifierCreate(meIdentifierCreateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Deletes an identifier
+         * Deletes a login identifier for the currently logged in user. 
+         * @summary Delete login identifier
          * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5731,7 +6032,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserIdentifierDelete(meIdentifierDeleteReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Modifies an identifier (only permitted for username; identifierID will change)
+         * Updates a login identifier for the currently logged in user. 
+         * @summary Update login identifier
          * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5740,7 +6042,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserIdentifierUpdate(meIdentifierUpdateReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Verifies challenge
+         * Finishes login identifer verification of currently logged in user. 
+         * @summary Finish login identifier verification
          * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5749,7 +6052,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserIdentifierVerifyFinish(meIdentifierVerifyFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Creates challenge (only email otp and phone otp supported for now)
+         * Starts login identifer verification of currently logged in user. 
+         * @summary Start login identifier verification
          * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5758,7 +6062,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserIdentifierVerifyStart(meIdentifierVerifyStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Finishes passkey append for current user
+         * Finishes passkey append for currently logged in user. 
+         * @summary Finish passkey append
          * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5767,7 +6072,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserPasskeyAppendFinish(mePasskeysAppendFinishReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Starts passkey append for current user
+         * Starts passkey append for currently logged in user. 
+         * @summary Start passkey append
          * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5776,8 +6082,9 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserPasskeyAppendStart(mePasskeysAppendStartReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * Delete current user\'s passkeys
-         * @param {string} credentialID Credential ID from passkeys
+         * Deletes a passkey for the currently logged in user. 
+         * @summary Delete user passkey
+         * @param {string} credentialID Unique identifier of the passkey.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5785,7 +6092,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserPasskeyDelete(credentialID, options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets current user\'s passkeys
+         * Returns a list of passkeys for the currently logged in user. 
+         * @summary List all user passkeys
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5793,7 +6101,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserPasskeyGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Performs session logout
+         * Performs session logout of currently logged in user.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Logout user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5801,7 +6110,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserSessionLogout(options).then((request) => request(axios, basePath));
         },
         /**
-         * Performs session refresh
+         * Performs session refresh of currently logged in user. Issues a new session-token if session is still valid.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+         * @summary Refresh user session
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5809,7 +6119,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
             return localVarFp.currentUserSessionRefresh(options).then((request) => request(axios, basePath));
         },
         /**
-         * Updates current user
+         * Updates data of currently logged in user. 
+         * @summary Update current User
          * @param {MeUpdateReq} meUpdateReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5828,7 +6139,8 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  */
 export class UsersApi extends BaseAPI {
     /**
-     * Deletes current user
+     * Deletes currently logged in user. 
+     * @summary Delete current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5838,7 +6150,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Gets current user
+     * Retrieves data of currently logged in user including their [login identifiers](/api-reference/backend-api/loginidentifiers/create-a-login-identifier-for-a-user) and [social logins](/api-reference/backend-api/users/create-a-social-login-for-a-user). 
+     * @summary Retrieve current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5848,7 +6161,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Creates an identifier
+     * Creates a login identifier for the currently logged in user. 
+     * @summary Create login identifier
      * @param {MeIdentifierCreateReq} meIdentifierCreateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5859,7 +6173,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Deletes an identifier
+     * Deletes a login identifier for the currently logged in user. 
+     * @summary Delete login identifier
      * @param {MeIdentifierDeleteReq} meIdentifierDeleteReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5870,7 +6185,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Modifies an identifier (only permitted for username; identifierID will change)
+     * Updates a login identifier for the currently logged in user. 
+     * @summary Update login identifier
      * @param {MeIdentifierUpdateReq} meIdentifierUpdateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5881,7 +6197,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Verifies challenge
+     * Finishes login identifer verification of currently logged in user. 
+     * @summary Finish login identifier verification
      * @param {MeIdentifierVerifyFinishReq} meIdentifierVerifyFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5892,7 +6209,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Creates challenge (only email otp and phone otp supported for now)
+     * Starts login identifer verification of currently logged in user. 
+     * @summary Start login identifier verification
      * @param {MeIdentifierVerifyStartReq} meIdentifierVerifyStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5903,7 +6221,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Finishes passkey append for current user
+     * Finishes passkey append for currently logged in user. 
+     * @summary Finish passkey append
      * @param {MePasskeysAppendFinishReq} mePasskeysAppendFinishReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5914,7 +6233,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Starts passkey append for current user
+     * Starts passkey append for currently logged in user. 
+     * @summary Start passkey append
      * @param {MePasskeysAppendStartReq} mePasskeysAppendStartReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5925,8 +6245,9 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Delete current user\'s passkeys
-     * @param {string} credentialID Credential ID from passkeys
+     * Deletes a passkey for the currently logged in user. 
+     * @summary Delete user passkey
+     * @param {string} credentialID Unique identifier of the passkey.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5936,7 +6257,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Gets current user\'s passkeys
+     * Returns a list of passkeys for the currently logged in user. 
+     * @summary List all user passkeys
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5946,7 +6268,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Performs session logout
+     * Performs session logout of currently logged in user.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+     * @summary Logout user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5956,7 +6279,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Performs session refresh
+     * Performs session refresh of currently logged in user. Issues a new session-token if session is still valid.  Manage users sessions in the [Developer Panel](https://app.corbado.com/users/sessions) or consult the [Documentation](https://docs.corbado.com/corbado-complete/sessions/overview) for more details. 
+     * @summary Refresh user session
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
@@ -5966,7 +6290,8 @@ export class UsersApi extends BaseAPI {
     }
 
     /**
-     * Updates current user
+     * Updates data of currently logged in user. 
+     * @summary Update current User
      * @param {MeUpdateReq} meUpdateReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

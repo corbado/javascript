@@ -45,6 +45,7 @@ export type CorbadoConnectConfig = {
   frontendApiUrlSuffix?: string;
   isDebug?: boolean;
   enableHighlight?: boolean;
+  customDomain?: string;
 };
 
 export type CorbadoConnectDemoConfig = {

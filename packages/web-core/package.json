@@ -1,6 +1,6 @@
 {
   "name": "@corbado/web-core",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "This package contains core functionalities which are exported by all the SDKs and UI packages of our JavaScript library",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -43,7 +43,7 @@
     "ts-results": "^3.3.0"
   },
   "devDependencies": {
-    "@corbado/types": "^3.0.1",
+    "@corbado/types": "^3.0.2",
     "@types/web-bluetooth": "^0.0.20",
     "user-agent-data-types": "^0.4.2"
   },

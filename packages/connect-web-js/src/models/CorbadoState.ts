@@ -10,6 +10,7 @@ export class CorbadoState {
       connectConfig.projectId,
       connectConfig.frontendApiUrlSuffix ?? 'frontendapi.corbado.io',
       connectConfig.isDebug ?? false,
+      connectConfig.customDomain,
     );
 
     this.#connectConfig = connectConfig;

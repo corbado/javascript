@@ -20,6 +20,7 @@ export const SharedProvider: FC<PropsWithChildren<Props>> = ({ children, connect
         config.projectId,
         config.frontendApiUrlSuffix ?? 'frontendapi.corbado.io',
         config.isDebug ?? false,
+        config.customDomain,
       ),
   );
 

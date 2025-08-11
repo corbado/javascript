@@ -55,12 +55,14 @@ export class ConnectService {
   #projectId: string;
   #timeout: number;
   readonly #frontendApiUrlSuffix: string;
+  readonly #customDomain: string | undefined;
   #visitorId: string;
 
-  constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean) {
+  constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean, customDomain?: string) {
     this.#projectId = projectId;
     this.#timeout = 10 * 1000;
     this.#frontendApiUrlSuffix = frontendApiUrlSuffix;
+    this.#customDomain = customDomain;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
 
@@ -129,7 +131,9 @@ export class ConnectService {
 
   #setApisV2(process?: ConnectProcess): void {
     let frontendApiUrl = this.#getDefaultFrontendApiUrl();
-    if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
+    if (this.#customDomain && this.#customDomain.length > 0) {
+      frontendApiUrl = this.#customDomain;
+    } else if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
       frontendApiUrl = process.frontendApiUrl;
     }
 

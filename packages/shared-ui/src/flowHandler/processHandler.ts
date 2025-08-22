@@ -198,7 +198,6 @@ export class ProcessHandler {
       this.#errorTranslator,
       emailVerifyFromUrl.data,
       emailVerifyFromUrl.authType,
-      emailVerifyFromUrl.isNewDevice,
       emailVerifyFromUrl.token,
     ) as Block<unknown>;
 

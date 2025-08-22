@@ -1408,12 +1408,6 @@ export interface IdentifierVerifyFinishReq {
      * @memberof IdentifierVerifyFinishReq
      */
     'verificationType': VerificationMethod;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof IdentifierVerifyFinishReq
-     */
-    'isNewDevice': boolean;
 }
 
 
@@ -2247,6 +2241,25 @@ export interface ProcessCommon {
      * @memberof ProcessCommon
      */
     'environment': string;
+}
+/**
+ * 
+ * @export
+ * @interface ProcessConfigRsp
+ */
+export interface ProcessConfigRsp {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProcessConfigRsp
+     */
+    'useServerSideProcessId': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProcessConfigRsp
+     */
+    'frontendApiUrl': string;
 }
 /**
  * tbd.
@@ -4207,6 +4220,43 @@ export class AuthApi extends BaseAPI {
 export const ConfigsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Retrieves the process configuration settings.
+         * @summary Retrieve process configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcessConfig: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/process-config`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Retrieves the session configuration settings.
          * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
@@ -4291,6 +4341,16 @@ export const ConfigsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ConfigsApiAxiosParamCreator(configuration)
     return {
         /**
+         * Retrieves the process configuration settings.
+         * @summary Retrieve process configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getProcessConfig(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProcessConfigRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getProcessConfig(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Retrieves the session configuration settings.
          * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
@@ -4321,6 +4381,15 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = ConfigsApiFp(configuration)
     return {
         /**
+         * Retrieves the process configuration settings.
+         * @summary Retrieve process configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcessConfig(options?: any): AxiosPromise<ProcessConfigRsp> {
+            return localVarFp.getProcessConfig(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Retrieves the session configuration settings.
          * @summary Retrieve session configuration
          * @param {*} [options] Override http request option.
@@ -4348,6 +4417,17 @@ export const ConfigsApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class ConfigsApi extends BaseAPI {
+    /**
+     * Retrieves the process configuration settings.
+     * @summary Retrieve process configuration
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ConfigsApi
+     */
+    public getProcessConfig(options?: AxiosRequestConfig) {
+        return ConfigsApiFp(this.configuration).getProcessConfig(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Retrieves the session configuration settings.
      * @summary Retrieve session configuration

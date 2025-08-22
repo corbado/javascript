@@ -33,6 +33,21 @@ tags:
     description: All API calls that are related to a connect process
 
 paths:
+  /v2/process-config:
+    get:
+      summary: Retrieve process configuration
+      description: Retrieves the process configuration settings.
+      operationId: GetProcessConfig
+      tags:
+        - Configs
+      responses:
+        "200":
+          description: Process configuration settings.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/processConfigRsp"
+
   /v2/session-config:
     get:
       summary: Retrieve session configuration
@@ -1169,7 +1184,6 @@ components:
         - code
         - identifierType
         - verificationType
-        - isNewDevice
       properties:
         code:
           type: string
@@ -1177,8 +1191,6 @@ components:
           $ref: "#/components/schemas/loginIdentifierType"
         verificationType:
           $ref: "#/components/schemas/verificationMethod"
-        isNewDevice:
-          type: boolean
 
     socialVerifyStartReq:
       type: object
@@ -1206,6 +1218,17 @@ components:
         identifierType:
           $ref: "#/components/schemas/loginIdentifierType"
         value:
+          type: string
+
+    processConfigRsp:
+      type: object
+      required:
+        - useServerSideProcessId
+        - frontendApiUrl
+      properties:
+        useServerSideProcessId:
+          type: boolean
+        frontendApiUrl:
           type: string
 
     sessionConfigRsp:

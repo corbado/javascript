@@ -34,6 +34,7 @@ import {
   SocialDataStatusEnum,
   VerificationMethod,
 } from '../api/v2';
+import type { TempAuthProcess } from '../models/authProcess';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
@@ -143,10 +144,8 @@ export class ProcessService {
     }
 
     try {
-      const maybeProcess = AuthProcess.loadFromStorage(this.#projectId);
-      const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token, maybeProcess);
-
-      this.#setApisV2(emailVerifyFromUrl.process);
+      const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token);
+      this.#setApisV2ByTempProcess(emailVerifyFromUrl.process);
 
       return Ok(emailVerifyFromUrl);
     } catch (e) {
@@ -154,7 +153,7 @@ export class ProcessService {
     }
   }
 
-  #createAxiosInstanceV2(processId: string): AxiosInstance {
+  #createAxiosInstanceV2(processId: string, tempProcessId: string): AxiosInstance {
     const corbadoVersion = {
       name: 'web-core',
       sdkVersion: packageVersion,
@@ -167,11 +166,17 @@ export class ProcessService {
     };
 
     headers['X-Corbado-Flags'] = this.#buildCorbadoFlags();
+    if (processId) {
+      headers['x-corbado-process-id'] = processId;
+    }
+    if (tempProcessId) {
+      headers['x-corbado-temp-process-id'] = tempProcessId;
+    }
 
     const out = axios.create({
       timeout: this.#timeout,
       withCredentials: true,
-      headers: processId ? { ...headers, 'x-corbado-process-id': processId } : headers,
+      headers: headers,
     });
 
     // We transform AxiosErrors into CorbadoErrors using axios interceptors.
@@ -218,7 +223,20 @@ export class ProcessService {
       apiKey: this.#projectId,
       basePath: frontendApiUrl,
     });
-    const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '');
+    const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '', '');
+
+    this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
+  }
+
+  #setApisV2ByTempProcess(tempProcess: TempAuthProcess): void {
+    const frontendApiUrl = tempProcess.frontendApiUrl;
+    const config = new Configuration({
+      apiKey: tempProcess.projectId,
+      basePath: frontendApiUrl,
+    });
+
+    console.log(`Setting up API with temp process: ${tempProcess.id} for project: ${tempProcess.projectId}`);
+    const axiosInstance = this.#createAxiosInstanceV2('', tempProcess.id);
 
     this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
   }
@@ -377,7 +395,6 @@ export class ProcessService {
         verificationType: 'email-otp',
         identifierType: 'email',
         code: code,
-        isNewDevice: false,
       }),
     );
   }
@@ -394,13 +411,11 @@ export class ProcessService {
   finishEmailLinkVerification(
     abortController: AbortController,
     code: string,
-    isNewDevice: boolean,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     const req = {
       verificationType: VerificationMethod.EmailLink,
       identifierType: LoginIdentifierType.Email,
       code: code,
-      isNewDevice: isNewDevice,
     };
 
     return this.wrapWithErr(() => this.#authApi.identifierVerifyFinish(req, { signal: abortController.signal }));
@@ -452,7 +467,6 @@ export class ProcessService {
         verificationType: 'phone-otp',
         identifierType: 'phone',
         code: code,
-        isNewDevice: false,
       }),
     );
   }

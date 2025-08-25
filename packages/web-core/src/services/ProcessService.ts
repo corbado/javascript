@@ -21,6 +21,7 @@ import type {
   GeneralBlockSignupInit,
   LoginIdentifier,
   PasskeyOperation,
+  ProcessConfigRsp,
   ProcessInitReq,
   ProcessInitRsp,
   ProcessResponse,
@@ -29,6 +30,7 @@ import type {
 import {
   AuthApi,
   BlockType,
+  ConfigsApi,
   LoginIdentifierType,
   PasskeyEventType,
   SocialDataStatusEnum,
@@ -48,6 +50,7 @@ const lastIdentifierKey = 'cbo_last_identifier';
 
 export class ProcessService {
   #authApi: AuthApi = new AuthApi();
+  #configApi: ConfigsApi = new ConfigsApi();
   #webAuthnService: WebAuthnService;
 
   readonly #projectId: string;
@@ -87,6 +90,12 @@ export class ProcessService {
     // we check if there is a process in local storage, if not we have to create a new one
     const process = AuthProcess.loadFromStorage(this.#projectId);
     if (!process) {
+      const processConfig = await this.#processConfig();
+      if (processConfig.err) {
+        return processConfig;
+      }
+
+      this.#setApisV2Config(processConfig.val);
       console.log('process is missing');
       return this.#initNewAuthProcess(abortController, frontendPreferredBlockType);
     }
@@ -195,7 +204,6 @@ export class ProcessService {
     abortController: AbortController,
     frontendPreferredBlockType?: BlockType,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
-    console.log('initNewAuthProcess');
     const res = await this.#initAuthProcess(abortController, frontendPreferredBlockType);
     if (res.err) {
       return res;
@@ -213,6 +221,18 @@ export class ProcessService {
     return Ok(res.val.processResponse);
   }
 
+  #setApisV2Config(config: ProcessConfigRsp): void {
+    const frontendApiUrl = config.frontendApiUrl;
+    const apiConfig = new Configuration({
+      apiKey: this.#projectId,
+      basePath: frontendApiUrl,
+    });
+    const axiosInstance = this.#createAxiosInstanceV2('', '');
+
+    this.#authApi = new AuthApi(apiConfig, frontendApiUrl, axiosInstance);
+    this.#configApi = new ConfigsApi(apiConfig, frontendApiUrl, axiosInstance);
+  }
+
   #setApisV2(process?: AuthProcess): void {
     let frontendApiUrl = this.#getDefaultFrontendApiUrl();
     if (process?.frontendApiUrl && process?.frontendApiUrl.length > 0) {
@@ -226,6 +246,7 @@ export class ProcessService {
     const axiosInstance = this.#createAxiosInstanceV2(process?.id ?? '', '');
 
     this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
+    this.#configApi = new ConfigsApi(config, frontendApiUrl, axiosInstance);
   }
 
   #setApisV2ByTempProcess(tempProcess: TempAuthProcess): void {
@@ -235,10 +256,10 @@ export class ProcessService {
       basePath: frontendApiUrl,
     });
 
-    console.log(`Setting up API with temp process: ${tempProcess.id} for project: ${tempProcess.projectId}`);
     const axiosInstance = this.#createAxiosInstanceV2('', tempProcess.id);
 
     this.#authApi = new AuthApi(config, frontendApiUrl, axiosInstance);
+    this.#configApi = new ConfigsApi(config, frontendApiUrl, axiosInstance);
   }
 
   async #initAuthProcess(
@@ -275,6 +296,10 @@ export class ProcessService {
 
       return Err(CorbadoError.fromUnknownFrontendError(e));
     }
+  }
+
+  async #processConfig(): Promise<Result<ProcessConfigRsp, CorbadoError>> {
+    return this.wrapWithErr(() => this.#configApi.getProcessConfig());
   }
 
   async #processInit(

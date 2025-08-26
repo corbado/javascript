@@ -14,6 +14,9 @@ module.exports = merge(common, {
   optimization: {
     minimize: false,
   },
+  externals: {
+    axios: 'axios',
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.FE_LIBRARY_VERSION': JSON.stringify(pkg.version),

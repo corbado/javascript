@@ -1,3 +1,9 @@
+## 3.3.0
+
+### Minor changes
+- Support server-side session mode
+- Support TempIds for emailLinks and socialLogins
+
 ## 3.0.2
 
 ### Patch changes

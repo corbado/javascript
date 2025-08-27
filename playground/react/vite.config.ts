@@ -9,7 +9,9 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
   },
   server: {
+    host: true,
     port: 3000,
+    allowedHosts: ['app.wos-community.com', 'host.docker.internal'],
   },
   build: {
     outDir: 'build',

@@ -81,7 +81,7 @@ export class EmailVerifyBlockModel {
       },
       authType: authType,
       process: {
-        id: cboAuthProcess.id,
+        tempId: cboAuthProcess.id,
         expires: cboAuthProcess.expires,
         frontendApiUrl: cboAuthProcess.frontendApiUrl,
       },

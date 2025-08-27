@@ -32,6 +32,7 @@ test.describe('network blocking flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
 
@@ -78,6 +79,7 @@ test.describe('network blocking flows', () => {
     await networkBlocker.appendStart();
     const loginPage2 = await profilePage.logout();
     await loginPage2.loginWithIdentifierAndPasswordIdentifierFirst(email, TestDataFactory.password);
+    expect(await loginPage2.awaitState(LoginStatus.FallbackSecondTOTP)).toBeTruthy();
     const codeFirst = await authenticator.getCode(sharedKey);
     const postLoginPage2 = await loginPage2.completeLoginWithTOTP(codeFirst!);
     await postLoginPage2.autoSkip().awaitPage();
@@ -85,6 +87,7 @@ test.describe('network blocking flows', () => {
     await networkBlocker.appendFinish();
     const loginPage3 = await profilePage.logout();
     await loginPage3.loginWithIdentifierAndPasswordIdentifierFirst(email, TestDataFactory.password);
+    expect(await loginPage2.awaitState(LoginStatus.FallbackSecondTOTP)).toBeTruthy();
     const codeSecond = await authenticator.getCode(sharedKey);
     const postLoginPage3 = await loginPage3.completeLoginWithTOTP(codeSecond!);
     await postLoginPage3.autoSkip().awaitPage();
@@ -100,6 +103,7 @@ test.describe('network blocking flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
     expect(await profilePage.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();

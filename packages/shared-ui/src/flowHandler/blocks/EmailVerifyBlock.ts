@@ -19,7 +19,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
   readonly type = BlockTypes.EmailVerify;
   readonly initialScreen;
   readonly authType: AuthType;
-  readonly isNewDevice: boolean;
   readonly emailLinkToken?: string;
 
   constructor(
@@ -30,7 +29,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     data: GeneralBlockVerifyIdentifier,
     authType: AuthType,
     fromEmailVerifyFromUrl: boolean,
-    isNewDevice: boolean,
     emailLinkToken?: string,
   ) {
     super(app, flowHandler, common, errorTranslator);
@@ -51,7 +49,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     }
 
     this.authType = authType;
-    this.isNewDevice = isNewDevice;
     this.emailLinkToken = emailLinkToken;
 
     this.data = {
@@ -71,7 +68,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     data: GeneralBlockVerifyIdentifier,
     authType: AuthType,
   ): EmailVerifyBlock {
-    return new EmailVerifyBlock(app, flowHandler, common, translator, data, authType, false, false);
+    return new EmailVerifyBlock(app, flowHandler, common, translator, data, authType, false);
   }
 
   static fromUrl(
@@ -80,7 +77,6 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
     translator: ErrorTranslator,
     data: GeneralBlockVerifyIdentifier,
     authType: AuthType,
-    isNewDevice: boolean,
     emailLinkToken: string,
   ): EmailVerifyBlock {
     const emptyCommon: ProcessCommon = {
@@ -90,17 +86,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       environment: '',
     };
 
-    return new EmailVerifyBlock(
-      app,
-      flowHandler,
-      emptyCommon,
-      translator,
-      data,
-      authType,
-      true,
-      isNewDevice,
-      emailLinkToken,
-    );
+    return new EmailVerifyBlock(app, flowHandler, emptyCommon, translator, data, authType, true, emailLinkToken);
   }
 
   showEditEmail() {
@@ -163,11 +149,7 @@ export class EmailVerifyBlock extends Block<BlockDataEmailVerify> {
       throw new Error('Email link token is missing');
     }
 
-    const res = await this.app.authProcessService.finishEmailLinkVerification(
-      abortController,
-      this.emailLinkToken,
-      this.isNewDevice,
-    );
+    const res = await this.app.authProcessService.finishEmailLinkVerification(abortController, this.emailLinkToken);
 
     this.updateProcess(res);
 

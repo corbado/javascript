@@ -19,7 +19,7 @@ Since, this is an internal package, it is not needed to be installed separately.
 ## 📄 Documentation & Support
 
 For support and questions please visit our [Slack channel](https://join.slack.com/t/corbado/shared_invite/zt-1b7867yz8-V~Xr~ngmSGbt7IA~g16ZsQ).
-For more detailed information and advanced configuration options, please visit our [Documentation Page](https://docs.corbado.com/overview/welcome).
+For more detailed information and advanced configuration options, please visit our [Docs](https://docs.corbado.com/overview/welcome).
 
 ---
 

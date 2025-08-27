@@ -1,7 +1,6 @@
 import type { GeneralBlockVerifyIdentifier, VerificationMethod } from '../api';
-import { BlockType } from '../api';
-import { AuthType } from '../api';
-import { AuthProcess } from './authProcess';
+import { AuthType, BlockType } from '../api';
+import { TempAuthProcess } from './authProcess';
 
 type EmailVerifyFromUrlData = {
   blockData: {
@@ -12,7 +11,7 @@ type EmailVerifyFromUrlData = {
   };
   authType: number;
   process: {
-    id: string;
+    tempId: string;
     projectId: string;
     expires: number;
     frontendApiUrl: string;
@@ -22,26 +21,17 @@ type EmailVerifyFromUrlData = {
 export class EmailVerifyFromUrl {
   data: GeneralBlockVerifyIdentifier;
   token: string;
-  isNewDevice: boolean;
-  process: AuthProcess;
+  process: TempAuthProcess;
   authType: AuthType;
 
-  constructor(
-    data: GeneralBlockVerifyIdentifier,
-    token: string,
-    isNewDevice: boolean,
-    process: AuthProcess,
-    authType: AuthType,
-  ) {
+  constructor(data: GeneralBlockVerifyIdentifier, token: string, process: TempAuthProcess, authType: AuthType) {
     this.data = data;
     this.token = token;
-    this.isNewDevice = isNewDevice;
     this.process = process;
     this.authType = authType;
   }
 
-  static fromURL(encodedProcess: string, token: string, existingProcess: AuthProcess | undefined): EmailVerifyFromUrl {
-    console.log('maybeProcess', encodedProcess, existingProcess);
+  static fromURL(encodedProcess: string, token: string): EmailVerifyFromUrl {
     const decoded = JSON.parse(atob(encodedProcess)) as EmailVerifyFromUrlData;
     const process = decoded.process;
 
@@ -54,7 +44,6 @@ export class EmailVerifyFromUrl {
       blockType: BlockType.EmailVerify,
     };
 
-    const isNewDevice = existingProcess?.id !== process.id;
     let authType: AuthType;
     if (decoded.authType === 0) {
       authType = AuthType.Login;
@@ -62,8 +51,13 @@ export class EmailVerifyFromUrl {
       authType = AuthType.Signup;
     }
 
-    const authProcess = new AuthProcess(process.id, process.projectId, process.expires, process.frontendApiUrl);
+    const tempAuthProcess = new TempAuthProcess(
+      process.tempId,
+      process.projectId,
+      process.expires,
+      process.frontendApiUrl,
+    );
 
-    return new EmailVerifyFromUrl(data, token, isNewDevice, authProcess, authType);
+    return new EmailVerifyFromUrl(data, token, tempAuthProcess, authType);
   }
 }

@@ -63,6 +63,7 @@ test.describe('append flows', () => {
     // First attempt to create passkey is cancelled, user skips, then sets up TOTP and logs in later
     await virtualAuthenticator.modeCancel();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const mfaPage = await postLoginPage.skipAfterSignup();
 
     // Confirm TOTP to end on profile

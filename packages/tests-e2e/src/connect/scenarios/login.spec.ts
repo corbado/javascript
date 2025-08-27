@@ -30,6 +30,7 @@ test.describe('login flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
 
@@ -54,6 +55,7 @@ test.describe('login flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
     const loginPage2 = await profilePage.logout();
@@ -79,6 +81,7 @@ test.describe('login flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
 
@@ -133,6 +136,7 @@ test.describe('login flows', () => {
 
     const email = TestDataFactory.generateEmail();
     const postLoginPage = await signupPage.submit(email, TestDataFactory.phoneNumber, TestDataFactory.password);
+    await postLoginPage.awaitPage();
     const profilePage = await postLoginPage.continue(true);
     await profilePage.awaitPage();
     expect(await profilePage.awaitState(ProfileStatus.ListWithPasskeys)).toBeTruthy();

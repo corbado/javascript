@@ -515,7 +515,7 @@ export interface ConnectLoginFinishRsp {
      * @type {PasskeyOperation}
      * @memberof ConnectLoginFinishRsp
      */
-    'passkeyOperation'?: PasskeyOperation;
+    'passkeyOperation': PasskeyOperation;
     /**
      * 
      * @type {string}
@@ -1902,6 +1902,31 @@ export const NativeMetaDeviceOwnerAuthEnum = {
 
 export type NativeMetaDeviceOwnerAuthEnum = typeof NativeMetaDeviceOwnerAuthEnum[keyof typeof NativeMetaDeviceOwnerAuthEnum];
 
+/**
+ * 
+ * @export
+ * @interface OidcUserInfoRsp
+ */
+export interface OidcUserInfoRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof OidcUserInfoRsp
+     */
+    'sub': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OidcUserInfoRsp
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OidcUserInfoRsp
+     */
+    'email_verified'?: boolean;
+}
 /**
  * 
  * @export
@@ -5323,6 +5348,112 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectProcessClear(connectProcessClearReq: ConnectProcessClearReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectProcessClear(connectProcessClearReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * OIDCApi - axios parameter creator
+ * @export
+ */
+export const OIDCApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Retrieves user information in accordance with the OpenID Connect (OIDC) standard.
+         * @summary OIDC user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        oIDCUserInfoGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v2/oidc/userInfo`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * OIDCApi - functional programming interface
+ * @export
+ */
+export const OIDCApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = OIDCApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Retrieves user information in accordance with the OpenID Connect (OIDC) standard.
+         * @summary OIDC user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async oIDCUserInfoGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OidcUserInfoRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.oIDCUserInfoGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * OIDCApi - factory interface
+ * @export
+ */
+export const OIDCApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = OIDCApiFp(configuration)
+    return {
+        /**
+         * Retrieves user information in accordance with the OpenID Connect (OIDC) standard.
+         * @summary OIDC user info
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        oIDCUserInfoGet(options?: any): AxiosPromise<OidcUserInfoRsp> {
+            return localVarFp.oIDCUserInfoGet(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * OIDCApi - object-oriented interface
+ * @export
+ * @class OIDCApi
+ * @extends {BaseAPI}
+ */
+export class OIDCApi extends BaseAPI {
+    /**
+     * Retrieves user information in accordance with the OpenID Connect (OIDC) standard.
+     * @summary OIDC user info
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OIDCApi
+     */
+    public oIDCUserInfoGet(options?: AxiosRequestConfig) {
+        return OIDCApiFp(this.configuration).oIDCUserInfoGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

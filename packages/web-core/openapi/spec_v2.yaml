@@ -31,6 +31,8 @@ tags:
     description: All API calls to manage users
   - name: CorbadoConnect
     description: All API calls that are related to a connect process
+  - name: OIDC
+    description: All API calls that are related to OpenID Connect
 
 paths:
   /v2/process-config:
@@ -933,6 +935,24 @@ paths:
         "404":
           description: No process was found for the token
 
+  /v2/oidc/userInfo:
+    get:
+      summary: OIDC user info
+      description: Retrieves user information in accordance with the OpenID Connect (OIDC) standard.
+      operationId: OIDCUserInfoGet
+      tags:
+        - OIDC
+      responses:
+        "200":
+          description: User information as per OIDC standard.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/oidcUserInfoRsp"
+        "401":
+          description: Unauthorized - Invalid or missing token
+
+
 components:
   ###################################################################
   # Security schemes                                                #
@@ -1392,6 +1412,7 @@ components:
       required:
         - session
         - signedPasskeyData
+        - passkeyOperation
       properties:
         passkeyOperation:
           $ref: "#/components/schemas/passkeyOperation"
@@ -1680,6 +1701,18 @@ components:
       properties:
         processId:
           type: string
+
+    oidcUserInfoRsp:
+      type: object
+      required:
+        - sub
+      properties:
+        sub:
+          type: string
+        email:
+          type: string
+        email_verified:
+          type: boolean
 
     aaguidDetails:
       type: object

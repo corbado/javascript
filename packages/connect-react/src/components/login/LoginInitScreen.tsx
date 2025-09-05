@@ -178,7 +178,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(res.val), getConnectService().encodeClientState());
+      await config.onComplete(
+        connectLoginFinishToComplete(res.val),
+        getConnectService().encodeClientState(),
+        res.val.passkeyOperation.identifierValue,
+      );
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
@@ -228,7 +232,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(res.val), getConnectService().encodeClientState());
+      await config.onComplete(
+        connectLoginFinishToComplete(res.val),
+        getConnectService().encodeClientState(),
+        res.val.passkeyOperation.identifierValue,
+      );
     } catch {
       void getConnectService().recordEventLoginErrorUntyped();
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

@@ -9,7 +9,7 @@ import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorSoft from './base/LoginErrorSoft';
 import type { CboApiFallbackOperationError } from './LoginInitScreen';
-import { connectLoginFinishToComplete } from './LoginInitScreen';
+import { connectLoginFinishToComplete, connectLoginFinishToWebauthnId } from './LoginInitScreen';
 
 type Props = {
   previousAssertionOptions: string;
@@ -59,7 +59,7 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
       await config.onComplete(
         connectLoginFinishToComplete(resFinish.val),
         getConnectService().encodeClientState(),
-        resFinish.val.passkeyOperation.identifierValue,
+        connectLoginFinishToWebauthnId(resFinish.val),
       );
       setLoading(false);
     } catch {

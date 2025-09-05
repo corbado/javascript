@@ -8,7 +8,11 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginErrorHard from './base/LoginErrorHard';
-import { type CboApiFallbackOperationError, connectLoginFinishToComplete } from './LoginInitScreen';
+import {
+  type CboApiFallbackOperationError,
+  connectLoginFinishToComplete,
+  connectLoginFinishToWebauthnId,
+} from './LoginInitScreen';
 
 type Props = {
   previousAssertionOptions: string;
@@ -64,7 +68,7 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
       await config.onComplete(
         connectLoginFinishToComplete(resFinish.val),
         getConnectService().encodeClientState(),
-        resFinish.val.passkeyOperation.identifierValue,
+        connectLoginFinishToWebauthnId(resFinish.val),
       );
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

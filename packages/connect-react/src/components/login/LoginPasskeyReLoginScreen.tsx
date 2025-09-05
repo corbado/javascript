@@ -8,7 +8,11 @@ import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
 import LoginOneTap from './base/LoginOneTap';
-import { type CboApiFallbackOperationError, connectLoginFinishToComplete } from './LoginInitScreen';
+import {
+  type CboApiFallbackOperationError,
+  connectLoginFinishToComplete,
+  connectLoginFinishToWebauthnId,
+} from './LoginInitScreen';
 
 export const LoginPasskeyReLoginScreen = () => {
   const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs, fallback } = useLoginProcess();
@@ -56,7 +60,7 @@ export const LoginPasskeyReLoginScreen = () => {
       await config.onComplete(
         connectLoginFinishToComplete(resFinish.val),
         getConnectService().encodeClientState(),
-        resFinish.val.passkeyOperation.identifierValue,
+        connectLoginFinishToWebauthnId(resFinish.val),
       );
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);

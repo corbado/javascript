@@ -1,5 +1,5 @@
 import type { ConnectError } from '@corbado/web-core';
-import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
+import { base64decode, ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import type { ConnectLoginFinishRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
 import type { FC } from 'react';
@@ -37,6 +37,13 @@ export const connectLoginFinishToComplete = (v: ConnectLoginFinishRsp): string =
   }
 
   return v.signedPasskeyData;
+};
+
+export const connectLoginFinishToWebauthnId = (v: ConnectLoginFinishRsp): string => {
+  const parts = v.signedPasskeyData.split('.');
+  const base64decoded = JSON.parse(base64decode(parts[1]));
+
+  return base64decoded['webauthnId'];
 };
 
 const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
@@ -181,7 +188,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       await config.onComplete(
         connectLoginFinishToComplete(res.val),
         getConnectService().encodeClientState(),
-        res.val.passkeyOperation.identifierValue,
+        connectLoginFinishToWebauthnId(res.val),
       );
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
@@ -235,7 +242,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       await config.onComplete(
         connectLoginFinishToComplete(res.val),
         getConnectService().encodeClientState(),
-        res.val.passkeyOperation.identifierValue,
+        connectLoginFinishToWebauthnId(res.val),
       );
     } catch {
       void getConnectService().recordEventLoginErrorUntyped();

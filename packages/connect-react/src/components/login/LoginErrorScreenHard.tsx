@@ -61,7 +61,11 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
     setLoading(false);
 
     try {
-      await config.onComplete(connectLoginFinishToComplete(resFinish.val), getConnectService().encodeClientState());
+      await config.onComplete(
+        connectLoginFinishToComplete(resFinish.val),
+        getConnectService().encodeClientState(),
+        resFinish.val.passkeyOperation.identifierValue,
+      );
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }

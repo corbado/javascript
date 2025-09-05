@@ -82,7 +82,8 @@ const WrappedLogin = ({ clientState }: Props) => {
                 }}
                 onError={(error: string) => console.log('error', error)}
                 onLoaded={(msg: string) => console.log('component has loaded: ' + msg)}
-                onComplete={async (signedPasskeyData: string, newClientState: string) => {
+                onComplete={async (signedPasskeyData: string, newClientState: string, webauthnId: string) => {
+                  console.log('webauthnId', webauthnId);
                   await postPasskeyLoginNew(signedPasskeyData, newClientState);
                 }}
                 onSignupClick={() => router.push('/')}

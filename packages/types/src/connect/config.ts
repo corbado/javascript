@@ -2,6 +2,7 @@ export type CorbadoConnectLoginConfig = {
   onFallback(identifier: string, errorMessage: string): void;
   onFallbackSilent?(identifier: string): void;
   onFallbackCustom?(identifier: string, code: string, payload: string): void;
+  onUnknownUser?(identifier: string): void;
   onError?(error: string): void;
   onLoaded?(message: string, isFallBackTriggered: boolean): void;
   onComplete(signedPasskeyData: string, clientState: string, webauthnId: string): Promise<void>;

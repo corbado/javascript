@@ -18,6 +18,7 @@ export type CboApiFallbackOperationError = {
   initFallback: boolean;
   identifierFallback: string;
   message: string | null;
+  code?: string;
 };
 
 export enum LoginInitState {
@@ -179,6 +180,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         initFallback: res.val.fallbackOperationError.initFallback,
         identifierFallback: res.val.fallbackOperationError.identifier ?? '',
         message: res.val.fallbackOperationError.error?.message ?? null,
+        code: res.val.fallbackOperationError.error?.code,
       };
 
       return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
@@ -219,6 +221,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         initFallback: resStart.val.fallbackOperationError.initFallback,
         identifierFallback: resStart.val.fallbackOperationError.identifier ?? '',
         message: resStart.val.fallbackOperationError.error?.message ?? null,
+        code: resStart.val.fallbackOperationError.error?.code,
       };
 
       return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
@@ -304,6 +307,10 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         break;
       case LoginSituationCode.CboApiFallbackOperationError: {
         const typed = data as CboApiFallbackOperationError;
+
+        if (config.onUnknownUser && typed.code && typed.code === 'user_not_found') {
+          return config.onUnknownUser(typed.identifierFallback);
+        }
 
         if (typed.initFallback) {
           return automaticFallback(typed.identifierFallback, typed.message);

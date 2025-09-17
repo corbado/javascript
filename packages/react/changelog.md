@@ -1,3 +1,10 @@
+## 3.4.0
+
+### Minor changes
+
+- Deactivate WebAuthn Signal API
+
+
 ## 3.3.0
 
 ### Minor changes

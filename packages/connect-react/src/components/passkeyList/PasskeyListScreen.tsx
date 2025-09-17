@@ -98,7 +98,7 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete, deletePasskeyRes.val);
     }
 
-    await getPasskeyList(config, true);
+    await getPasskeyList(config);
     hide();
   };
 

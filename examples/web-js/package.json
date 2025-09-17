@@ -9,14 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@corbado/types": "^2.8.0",
     "@corbado/shared-util": "^1.0.10",
+    "@corbado/types": "^2.8.0",
     "@types/prismjs": "^1.26.3",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^7.1.5"
   },
   "dependencies": {
     "@corbado/web-js": "^2.12.0-alpha.0",

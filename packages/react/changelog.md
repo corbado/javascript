@@ -4,7 +4,6 @@
 
 - Deactivate WebAuthn Signal API
 
-
 ## 3.3.0
 
 ### Minor changes

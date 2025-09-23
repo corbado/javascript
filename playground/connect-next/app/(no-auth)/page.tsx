@@ -14,7 +14,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSignup = async (e: FormEvent<HTMLButtonElement>) => {
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = generateRandomString(10);
 
@@ -58,7 +58,10 @@ export default function SignupPage() {
           <h3 className='text-xl font-semibold'>Sign Up</h3>
           <p className='text-sm text-gray-500'>Create an account with your email, phone and password</p>
         </div>
-        <form className='flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-8'>
+        <form
+          className='flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-8'
+          onSubmit={handleSignup}
+        >
           <div>
             <label
               htmlFor='email'
@@ -71,7 +74,7 @@ export default function SignupPage() {
               name='email'
               type='email'
               placeholder='Email'
-              autoComplete='email'
+              autoComplete='username'
               required
               className='mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm'
               value={email}
@@ -90,6 +93,7 @@ export default function SignupPage() {
               name='password'
               type='password'
               placeholder='Password'
+              autoComplete='new-password'
               required
               className='mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm'
               value={password}
@@ -118,7 +122,7 @@ export default function SignupPage() {
           </div>
           {message && <div className='text-center text-red-700'>{message}</div>}
           <Button
-            onClick={handleSignup}
+            type='submit'
             className='w-full'
             size='lg'
           >

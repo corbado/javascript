@@ -2,7 +2,7 @@
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
 import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
-import { create, get } from '@corbado/webauthn-json';
+import { get } from '@corbado/webauthn-json';
 import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
@@ -39,10 +39,19 @@ export class WebAuthnService {
   async createPasskeyRaw(serializedChallenge: string): Promise<string> {
     const abortController = this.abortOngoingOperation();
     const challenge = JSON.parse(serializedChallenge);
-    challenge.signal = abortController.signal;
     this.#abortController = abortController;
 
-    const signedChallenge = await create(challenge);
+    console.log('createPasskeyRaw challenge', challenge);
+
+    const publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(challenge.publicKey);
+    console.log('createPasskeyRaw publicKey', publicKey);
+    const credential = (await navigator.credentials.create({
+      publicKey,
+      signal: abortController.signal,
+      mediation: challenge.mediation,
+    } as any)) as PublicKeyCredential;
+    const signedChallenge = credential.toJSON();
+
     return JSON.stringify(signedChallenge);
   }
 

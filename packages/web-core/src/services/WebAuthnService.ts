@@ -245,13 +245,35 @@ export class WebAuthnService {
 
     try {
       // @ts-ignore
-      await PublicKeyCredential.signalAllAcceptedCredentials({
+      const p1 = PublicKeyCredential.signalAllAcceptedCredentials({
         rpId: rpId,
         userId: userId,
         allAcceptedCredentialIds: credentialIds,
       });
+
+      const p2 = new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after 2000ms`)), 2000));
+
+      await Promise.race([p1, p2]);
     } catch (e) {
       log.debug('Error calling signalAllAcceptedCredentials', e);
+      return;
+    }
+  }
+
+  static async signalUnknownCredential(rpId: string, credentialId: string): Promise<void> {
+    // @ts-ignore
+    if (!window.PublicKeyCredential || !window.PublicKeyCredential.signalUnknownCredential) {
+      return undefined;
+    }
+
+    try {
+      // @ts-ignore
+      await PublicKeyCredential.signalUnknownCredential({
+        rpId: rpId,
+        credentialId: credentialId,
+      });
+    } catch (e) {
+      log.debug('Error calling signalUnknownCredential', e);
       return;
     }
   }

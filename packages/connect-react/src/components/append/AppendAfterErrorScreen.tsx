@@ -24,7 +24,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
 
     setLoading(true);
     setErrorMessage(undefined);
-    const res = await getConnectService().completeAppend(attestationOptions);
+    const res = await getConnectService().completeAppend(attestationOptions, 'manual');
     if (res.err) {
       if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
         return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);

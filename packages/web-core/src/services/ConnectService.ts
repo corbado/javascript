@@ -38,6 +38,7 @@ import { ConnectError, ConnectErrorType } from '../utils';
 import type { LastLogin } from './ClientStateService';
 import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
+import { AppendCompletionType } from '../models/connect/append';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
@@ -434,20 +435,21 @@ export class ConnectService {
 
   async completeAppend(
     attestationOptions: string,
-    conditional = false,
+    completionType: AppendCompletionType,
   ): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
       return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
+    const conditional = completionType === 'conditional';
     const res = await this.#webAuthnCreatePasskey(attestationOptions, conditional);
     if (res.err) {
       return res;
     }
 
     const finishRes = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
+      this.#connectApi.connectAppendFinish({ attestationResponse: res.val, completionType }),
     );
     if (finishRes.ok) {
       const latestLogin = finishRes.val.passkeyOperation as LastLogin;

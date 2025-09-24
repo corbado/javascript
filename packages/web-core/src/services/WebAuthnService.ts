@@ -57,19 +57,27 @@ export class WebAuthnService {
       throw new Error('No publicKey in assertionOptions');
     }
 
-    let mediation: CredentialMediationRequirement | undefined;
+    let credential: PublicKeyCredential;
     if (conditional) {
-      mediation = 'conditional';
+      const p1 = await navigator.credentials.create({
+        publicKey,
+        signal: abortController.signal,
+        mediation: 'conditional',
+      } as never);
+      const p2 = new Promise<null>(resolve => setTimeout(() => resolve(null), 5000));
+
+      const result = await Promise.race([p1, p2]);
+      if (!result) {
+        throw new Error('Timeout after 5000ms');
+      }
+
+      credential = result as PublicKeyCredential;
+    } else {
+      credential = (await navigator.credentials.create({
+        publicKey,
+        signal: abortController.signal,
+      } as never)) as PublicKeyCredential;
     }
-
-    const options = {
-      publicKey,
-      signal: abortController.signal,
-      mediation,
-    } as never;
-
-    console.log('create options', options);
-    const credential = (await navigator.credentials.create(options)) as PublicKeyCredential;
 
     return {
       response: JSON.stringify(credential.toJSON()),

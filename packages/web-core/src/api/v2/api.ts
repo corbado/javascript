@@ -54,6 +54,22 @@ export interface AaguidDetails {
  * @enum {string}
  */
 
+export const AppendCompletionType = {
+    Auto: 'auto',
+    Conditional: 'conditional',
+    Manual: 'manual',
+    ManualRetry: 'manual-retry'
+} as const;
+
+export type AppendCompletionType = typeof AppendCompletionType[keyof typeof AppendCompletionType];
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
 export const AuthType = {
     Signup: 'signup',
     Login: 'login'
@@ -299,7 +315,15 @@ export interface ConnectAppendFinishReq {
      * @memberof ConnectAppendFinishReq
      */
     'attestationResponse': string;
+    /**
+     * 
+     * @type {AppendCompletionType}
+     * @memberof ConnectAppendFinishReq
+     */
+    'completionType': AppendCompletionType;
 }
+
+
 /**
  * 
  * @export

@@ -1507,9 +1507,12 @@ components:
       type: object
       required:
         - attestationResponse
+        - completionType
       properties:
         attestationResponse:
           type: string
+        completionType:
+          $ref: "#/components/schemas/appendCompletionType"
 
     connectAppendFinishRsp:
       type: object
@@ -2375,6 +2378,10 @@ components:
           type: string
         error:
           $ref: "#/components/schemas/requestError"
+
+    appendCompletionType:
+      type: string
+      enum: ["auto", "conditional", "manual", "manual-retry"]
 
   responses:
     "200":

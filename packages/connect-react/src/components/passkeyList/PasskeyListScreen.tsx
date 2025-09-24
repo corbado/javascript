@@ -130,7 +130,7 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 
-    const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions);
+    const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions, 'manual');
     if (res.err) {
       if (res.val.type === ConnectErrorType.Cancel) {
         return handleSituation(PasskeyListSituationCode.ClientPasskeyOperationCancelled, res.val);

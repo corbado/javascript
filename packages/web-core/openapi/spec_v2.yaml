@@ -1486,6 +1486,7 @@ components:
         - variant
         - isRestrictedBrowser
         - autoAppend
+        - conditionalAppend
       properties:
         attestationOptions:
           type: string
@@ -1498,6 +1499,8 @@ components:
         isRestrictedBrowser:
           type: boolean
         autoAppend:
+          type: boolean
+        conditionalAppend:
           type: boolean
 
     connectAppendFinishReq:

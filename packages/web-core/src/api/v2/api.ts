@@ -442,6 +442,12 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'autoAppend': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectAppendStartRsp
+     */
+    'conditionalAppend': boolean;
 }
 
 export const ConnectAppendStartRspVariantEnum = {

@@ -1,9 +1,7 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
-import type { CredentialRequestOptionsJSON } from '@corbado/webauthn-json';
-import { get } from '@corbado/webauthn-json';
-import type { CredentialCreationOptionsJSON } from '@corbado/webauthn-json/src/webauthn-json/basic/json';
+import { parseCreationOptionsFromJSON, parseRequestOptionsFromJSON } from '@corbado/webauthn-json/browser-ponyfill';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
@@ -15,6 +13,11 @@ import { CorbadoError } from '../utils';
 import type { ClientStateEntry } from './ClientStateService';
 import { ClientStateService } from './ClientStateService';
 
+export type ResponseWithMessage = {
+  response: string;
+  message?: string;
+};
+
 /**
  * AuthenticatorService handles all interactions with webAuthn platform authenticators.
  * Currently, this includes the creation of passkeys and the login with existing passkeys.
@@ -25,8 +28,8 @@ export class WebAuthnService {
 
   async createPasskey(serializedChallenge: string): Promise<Result<string, CorbadoError>> {
     try {
-      const res = await this.createPasskeyRaw(serializedChallenge);
-      return Ok(res);
+      const res = await this.createPasskeyRaw(serializedChallenge, false);
+      return Ok(res.response);
     } catch (e) {
       if (e instanceof DOMException) {
         return Err(CorbadoError.fromDOMException(e));
@@ -36,23 +39,42 @@ export class WebAuthnService {
     }
   }
 
-  async createPasskeyRaw(serializedChallenge: string): Promise<string> {
+  async createPasskeyRaw(attestationOptions: string, conditional: boolean): Promise<ResponseWithMessage> {
+    let message;
     const abortController = this.abortOngoingOperation();
-    const challenge = JSON.parse(serializedChallenge);
+    const attestationOptionsJSON = JSON.parse(attestationOptions);
     this.#abortController = abortController;
 
-    console.log('createPasskeyRaw challenge', challenge);
+    let publicKey: PublicKeyCredentialCreationOptions | undefined;
+    if (PublicKeyCredential.parseCreationOptionsFromJSON) {
+      publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(attestationOptionsJSON.publicKey);
+    } else {
+      message = 'parseCreationOptionsFromJSON not available';
+      publicKey = parseCreationOptionsFromJSON(attestationOptionsJSON).publicKey;
+    }
 
-    const publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(challenge.publicKey);
-    console.log('createPasskeyRaw publicKey', publicKey);
-    const credential = (await navigator.credentials.create({
+    if (!publicKey) {
+      throw new Error('No publicKey in assertionOptions');
+    }
+
+    let mediation: CredentialMediationRequirement | undefined;
+    if (conditional) {
+      mediation = 'conditional';
+    }
+
+    const options = {
       publicKey,
       signal: abortController.signal,
-      mediation: challenge.mediation,
-    } as any)) as PublicKeyCredential;
-    const signedChallenge = credential.toJSON();
+      mediation,
+    } as never;
 
-    return JSON.stringify(signedChallenge);
+    console.log('create options', options);
+    const credential = (await navigator.credentials.create(options)) as PublicKeyCredential;
+
+    return {
+      response: JSON.stringify(credential.toJSON()),
+      message,
+    };
   }
 
   async login(
@@ -62,7 +84,7 @@ export class WebAuthnService {
   ): Promise<Result<string, CorbadoError>> {
     try {
       const res = await this.loginRaw(serializedChallenge, conditional, onConditionalLoginStart);
-      return Ok(res);
+      return Ok(res.response);
     } catch (e) {
       if (e instanceof DOMException) {
         return Err(CorbadoError.fromDOMException(e));
@@ -73,24 +95,43 @@ export class WebAuthnService {
   }
 
   async loginRaw(
-    serializedChallenge: string,
+    assertionOptions: string,
     conditional: boolean,
     onConditionalLoginStart?: (ac: AbortController) => void,
-  ): Promise<string> {
+  ): Promise<ResponseWithMessage> {
+    let message: string | undefined;
     const abortController = this.abortOngoingOperation();
-
-    const challenge: CredentialRequestOptionsJSON = JSON.parse(serializedChallenge);
-
-    challenge.signal = abortController.signal;
+    const assertionOptionsJSON = JSON.parse(assertionOptions);
     this.#abortController = abortController;
     onConditionalLoginStart?.(abortController);
 
-    if (conditional) {
-      challenge.mediation = 'conditional';
+    let publicKey: PublicKeyCredentialRequestOptions | undefined;
+    if (PublicKeyCredential.parseRequestOptionsFromJSON) {
+      publicKey = PublicKeyCredential.parseRequestOptionsFromJSON(assertionOptionsJSON.publicKey);
+    } else {
+      publicKey = parseRequestOptionsFromJSON(assertionOptionsJSON).publicKey;
+      message = 'parseRequestOptionsFromJSON not available';
     }
 
-    const signedChallenge = await get(challenge);
-    return JSON.stringify(signedChallenge);
+    if (!publicKey) {
+      throw new Error('No publicKey in assertionOptions');
+    }
+
+    let mediation: CredentialMediationRequirement | undefined;
+    if (conditional) {
+      mediation = 'conditional';
+    }
+
+    const credential = (await navigator.credentials.get({
+      publicKey,
+      mediation,
+      signal: abortController.signal,
+    })) as PublicKeyCredential;
+
+    return {
+      response: JSON.stringify(credential.toJSON()),
+      message,
+    };
   }
 
   async getClientInformation(maybeClientHandle: ClientStateEntry<string> | undefined): Promise<ClientInformation> {
@@ -135,12 +176,12 @@ export class WebAuthnService {
   }
 
   static async doesBrowserSupportPasskeys(): Promise<boolean | undefined> {
-    if (!window.PublicKeyCredential) {
+    if (!PublicKeyCredential) {
       return undefined;
     }
 
     try {
-      return await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     } catch (e) {
       log.debug('Error checking passkey availability', e);
       return;
@@ -148,12 +189,12 @@ export class WebAuthnService {
   }
 
   static async doesBrowserSupportConditionalUI(): Promise<boolean | undefined> {
-    if (!window.PublicKeyCredential) {
+    if (!PublicKeyCredential) {
       return undefined;
     }
 
     try {
-      return await window.PublicKeyCredential.isConditionalMediationAvailable();
+      return await PublicKeyCredential.isConditionalMediationAvailable();
     } catch (e) {
       log.debug('Error checking conditional UI availability', e);
       return;
@@ -221,7 +262,7 @@ export class WebAuthnService {
   }
 
   static async getClientCapabilities(): Promise<ClientCapabilities | undefined> {
-    if (!window.PublicKeyCredential) {
+    if (!PublicKeyCredential) {
       log.debug('PublicKeyCredential is not supported on this browser');
       return;
     }
@@ -229,7 +270,7 @@ export class WebAuthnService {
     try {
       // We will ignore the type check as getClientCapabilities does not exist in the stable authn version and types
       // @ts-ignore
-      return await window.PublicKeyCredential.getClientCapabilities();
+      return await PublicKeyCredential.getClientCapabilities();
     } catch (e) {
       log.debug('Error using getClientCapabilities: ', e);
       return;
@@ -237,18 +278,18 @@ export class WebAuthnService {
   }
 
   static challengeFromAttestationOptions(attestationOptions: string): string {
-    const typed: CredentialCreationOptionsJSON = JSON.parse(attestationOptions);
+    const typed = JSON.parse(attestationOptions);
     return typed.publicKey.challenge;
   }
 
   static challengeFromAssertionOptions(assertionOptions: string): string | undefined {
-    const typed: CredentialRequestOptionsJSON = JSON.parse(assertionOptions);
+    const typed = JSON.parse(assertionOptions);
     return typed.publicKey?.challenge;
   }
 
   static async signalAllAcceptedCredentials(rpId: string, userId: string, credentialIds: string[]): Promise<void> {
     // @ts-ignore
-    if (!window.PublicKeyCredential || !window.PublicKeyCredential.signalAllAcceptedCredentials) {
+    if (!PublicKeyCredential || !PublicKeyCredential.signalAllAcceptedCredentials) {
       return undefined;
     }
 
@@ -271,7 +312,7 @@ export class WebAuthnService {
 
   static async signalUnknownCredential(rpId: string, credentialId: string): Promise<void> {
     // @ts-ignore
-    if (!window.PublicKeyCredential || !window.PublicKeyCredential.signalUnknownCredential) {
+    if (!PublicKeyCredential || !PublicKeyCredential.signalUnknownCredential) {
       return undefined;
     }
 

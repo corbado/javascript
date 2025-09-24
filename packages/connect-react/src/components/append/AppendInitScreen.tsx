@@ -132,10 +132,21 @@ const AppendInitScreen = () => {
       }
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
-      statefulLoader.current.finish();
-
       log.debug('startAppendRes', startAppendRes, flags);
+
+      if (startAppendRes.val.conditionalAppend) {
+        console.log('starting conditional-append');
+        const handledByConditionalCreate = await handleConditionalCreate(startAppendRes.val.attestationOptions);
+        if (handledByConditionalCreate) {
+          statefulLoader.current.finish();
+          return;
+        }
+        console.log('finished conditional-append');
+      }
+
+      statefulLoader.current.finish();
       if (startAppendRes.val.autoAppend || flags.hasSupportForAutomaticAppend()) {
+        console.log('starting auto-append');
         await handleSubmit(startAppendRes.val.attestationOptions, false);
       }
     };
@@ -184,7 +195,25 @@ const AppendInitScreen = () => {
         aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
       });
     },
-    [config, getConnectService, appendLoading, skipping],
+    [getConnectService, appendLoading, skipping],
+  );
+
+  const handleConditionalCreate = useCallback(
+    async (attestationOptions: string) => {
+      const res = await getConnectService().completeAppend(attestationOptions, true);
+      if (res.err) {
+        await handleSituation(AppendSituationCode.ClientPasskeyOperationErrorSilent, res.val);
+        return false;
+      }
+
+      navigateToScreen(AppendScreenType.Success, {
+        aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
+        aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
+      });
+
+      return true;
+    },
+    [getConnectService],
   );
 
   const handleSituation = async (situationCode: AppendSituationCode, error?: ConnectError) => {
@@ -221,6 +250,10 @@ const AppendInitScreen = () => {
         break;
       case AppendSituationCode.ExplicitSkipByUser:
         await handleSkip(situationCode, true);
+        break;
+      case AppendSituationCode.ClientPasskeyOperationErrorSilent:
+        void handleErrorSoft(situationCode, false, false, error);
+        setAppendLoading(false);
         break;
     }
   };

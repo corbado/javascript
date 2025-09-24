@@ -37,7 +37,14 @@ export default function SignupPage() {
       console.log(resLogin);
       router.push('/post-login?post-signup=true');
     } catch (err) {
-      console.error('Error during signup:', err);
+      if (err instanceof Error) {
+        if (err.name === 'UserAlreadyAuthenticatedException') {
+          router.push('/profile');
+          return;
+        }
+      }
+
+      console.error('Unhandled error during signup:', err);
     }
   };
 

@@ -59,17 +59,14 @@ export class WebAuthnService {
 
     let credential: PublicKeyCredential;
     if (conditional) {
-      const p1 = await navigator.credentials.create({
-        publicKey,
-        signal: abortController.signal,
-        mediation: 'conditional',
-      } as never);
-      const p2 = new Promise<null>(resolve => setTimeout(() => resolve(null), 5000));
-
-      const result = await Promise.race([p1, p2]);
-      if (!result) {
-        throw new Error('Timeout after 5000ms');
-      }
+      const result = await WebAuthnService.raceWithTimeout(
+        navigator.credentials.create({
+          publicKey,
+          signal: abortController.signal,
+          mediation: 'conditional',
+        } as never),
+        5000,
+      );
 
       credential = result as PublicKeyCredential;
     } else {
@@ -309,9 +306,7 @@ export class WebAuthnService {
         allAcceptedCredentialIds: credentialIds,
       });
 
-      const p2 = new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after 2000ms`)), 2000));
-
-      await Promise.race([p1, p2]);
+      await WebAuthnService.raceWithTimeout(p1, 2000);
     } catch (e) {
       log.debug('Error calling signalAllAcceptedCredentials', e);
       return;
@@ -334,5 +329,13 @@ export class WebAuthnService {
       log.debug('Error calling signalUnknownCredential', e);
       return;
     }
+  }
+
+  static async raceWithTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`timeout of ${ms}ms reached`)), ms),
+    );
+
+    return Promise.race<T>([p, timeout]);
   }
 }

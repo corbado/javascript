@@ -29,6 +29,7 @@ import type {
   ConnectManageListRsp,
 } from '../api/v2';
 import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
+import type { AppendCompletionType } from '../models/connect/append';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectInvitation } from '../models/connect/connectInvitation';
 import { ConnectProcess } from '../models/connect/connectProcess';
@@ -38,7 +39,6 @@ import { ConnectError, ConnectErrorType } from '../utils';
 import type { LastLogin } from './ClientStateService';
 import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
-import { AppendCompletionType } from '../models/connect/append';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 

@@ -1,5 +1,6 @@
 import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
+import type { AppendCompletionType } from '@corbado/web-core/dist/models/connect/append';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -12,7 +13,6 @@ import { StatefulLoader } from '../../utils/statefulLoader';
 import AppendBenefits from './append-init/AppendBenetifs';
 import AppendInitLoaded2 from './append-init/AppendInitLoaded2';
 import AppendInitLoading from './append-init/AppendInitLoading';
-import { AppendCompletionType } from '@corbado/web-core/dist/models/connect/append';
 
 export enum AppendInitState {
   SilentLoading,

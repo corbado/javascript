@@ -136,13 +136,14 @@ const AppendInitScreen = () => {
       log.debug('startAppendRes', startAppendRes, flags);
 
       if (startAppendRes.val.conditionalAppend) {
-        console.log('starting conditional-append');
+        log.debug('starting conditional create');
         const handledByConditionalCreate = await handleConditionalCreate(startAppendRes.val.attestationOptions);
+        log.debug('handledByConditionalCreate', handledByConditionalCreate);
+
         if (handledByConditionalCreate) {
           statefulLoader.current.finish();
           return;
         }
-        console.log('finished conditional-append');
       }
 
       statefulLoader.current.finish();

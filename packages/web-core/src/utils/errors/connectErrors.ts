@@ -8,6 +8,7 @@ export enum ConnectErrorType {
   InvalidState,
   SecurityError,
   ExcludeCredentialsMatch,
+  RaceTimeout,
 }
 
 export class ConnectError {

@@ -205,7 +205,8 @@ const AppendInitScreen = () => {
       const res = await getConnectService().completeAppend(attestationOptions, 'conditional');
       if (res.err) {
         await handleSituation(AppendSituationCode.ClientPasskeyOperationErrorSilent, res.val);
-        return false;
+
+        return res.val.type === ConnectErrorType.RaceTimeout;
       }
 
       navigateToScreen(AppendScreenType.Success, {

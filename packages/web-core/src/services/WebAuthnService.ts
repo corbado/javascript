@@ -1,7 +1,7 @@
 /// <reference types="web-bluetooth" />
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
-import { parseCreationOptionsFromJSON, parseRequestOptionsFromJSON } from '@corbado/webauthn-json/browser-ponyfill';
+import { create, get } from '@corbado/webauthn-json';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
@@ -9,7 +9,7 @@ import type { Result } from 'ts-results';
 import { Err, Ok } from 'ts-results';
 
 import type { ClientInformation, ClientStateMeta, JavaScriptHighEntropy } from '../api/v2';
-import { CorbadoError } from '../utils';
+import { ConnectError, ConnectErrorType, CorbadoError } from '../utils';
 import type { ClientStateEntry } from './ClientStateService';
 import { ClientStateService } from './ClientStateService';
 
@@ -40,23 +40,20 @@ export class WebAuthnService {
   }
 
   async createPasskeyRaw(attestationOptions: string, conditional: boolean): Promise<ResponseWithMessage> {
-    let message;
     const abortController = this.abortOngoingOperation();
     const attestationOptionsJSON = JSON.parse(attestationOptions);
     this.#abortController = abortController;
 
-    let publicKey: PublicKeyCredentialCreationOptions | undefined;
-    if (PublicKeyCredential.parseCreationOptionsFromJSON) {
-      publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(attestationOptionsJSON.publicKey);
-    } else {
-      message = 'parseCreationOptionsFromJSON not available';
-      publicKey = parseCreationOptionsFromJSON(attestationOptionsJSON).publicKey;
+    if (!PublicKeyCredential.parseCreationOptionsFromJSON) {
+      attestationOptionsJSON.signal = abortController.signal;
+      const signedChallenge = await create(attestationOptionsJSON);
+      return {
+        response: JSON.stringify(signedChallenge),
+        message: 'parseCreationOptionsFromJSON not available',
+      };
     }
 
-    if (!publicKey) {
-      throw new Error('No publicKey in assertionOptions');
-    }
-
+    const publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(attestationOptionsJSON.publicKey);
     let credential: PublicKeyCredential;
     if (conditional) {
       const result = await WebAuthnService.raceWithTimeout(
@@ -78,7 +75,7 @@ export class WebAuthnService {
 
     return {
       response: JSON.stringify(credential.toJSON()),
-      message,
+      message: '',
     };
   }
 
@@ -104,24 +101,19 @@ export class WebAuthnService {
     conditional: boolean,
     onConditionalLoginStart?: (ac: AbortController) => void,
   ): Promise<ResponseWithMessage> {
-    let message: string | undefined;
     const abortController = this.abortOngoingOperation();
     const assertionOptionsJSON = JSON.parse(assertionOptions);
     this.#abortController = abortController;
     onConditionalLoginStart?.(abortController);
-
-    let publicKey: PublicKeyCredentialRequestOptions | undefined;
-    if (PublicKeyCredential.parseRequestOptionsFromJSON) {
-      publicKey = PublicKeyCredential.parseRequestOptionsFromJSON(assertionOptionsJSON.publicKey);
-    } else {
-      publicKey = parseRequestOptionsFromJSON(assertionOptionsJSON).publicKey;
-      message = 'parseRequestOptionsFromJSON not available';
+    if (!PublicKeyCredential.parseRequestOptionsFromJSON) {
+      const signedChallenge = await get(assertionOptionsJSON);
+      return {
+        response: JSON.stringify(signedChallenge),
+        message: 'parseRequestOptionsFromJSON not available',
+      };
     }
 
-    if (!publicKey) {
-      throw new Error('No publicKey in assertionOptions');
-    }
-
+    const publicKey = PublicKeyCredential.parseRequestOptionsFromJSON(assertionOptionsJSON.publicKey);
     let mediation: CredentialMediationRequirement | undefined;
     if (conditional) {
       mediation = 'conditional';
@@ -135,7 +127,7 @@ export class WebAuthnService {
 
     return {
       response: JSON.stringify(credential.toJSON()),
-      message,
+      message: '',
     };
   }
 
@@ -333,7 +325,7 @@ export class WebAuthnService {
 
   static async raceWithTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
     const timeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`timeout of ${ms}ms reached`)), ms),
+      setTimeout(() => reject(new ConnectError(ConnectErrorType.RaceTimeout, `timeout of ${ms}ms reached`)), ms),
     );
 
     return Promise.race<T>([p, timeout]);

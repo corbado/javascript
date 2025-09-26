@@ -35,7 +35,7 @@ export const PasswordForm = ({ onClick, initialUserProvidedIdentifier, initialEr
           name='email'
           type='email'
           placeholder='user@acme.com'
-          autoComplete='email'
+          autoComplete='username'
           required
           className='mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm'
           value={username}
@@ -53,6 +53,7 @@ export const PasswordForm = ({ onClick, initialUserProvidedIdentifier, initialEr
           id='password'
           name='password'
           type='password'
+          autoComplete='current-password'
           required
           className='mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm'
           value={password}

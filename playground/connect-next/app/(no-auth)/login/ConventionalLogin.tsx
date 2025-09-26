@@ -46,6 +46,10 @@ export const ConventionalLogin = ({ initialUserProvidedIdentifier, initialError 
       }
     } catch (e) {
       if (e instanceof Error) {
+        if (e.name === 'UserAlreadyAuthenticatedException') {
+          router.push('/profile');
+        }
+
         return e.message;
       }
 

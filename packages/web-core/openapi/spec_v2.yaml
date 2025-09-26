@@ -1486,6 +1486,7 @@ components:
         - variant
         - isRestrictedBrowser
         - autoAppend
+        - conditionalAppend
       properties:
         attestationOptions:
           type: string
@@ -1499,14 +1500,19 @@ components:
           type: boolean
         autoAppend:
           type: boolean
+        conditionalAppend:
+          type: boolean
 
     connectAppendFinishReq:
       type: object
       required:
         - attestationResponse
+        - completionType
       properties:
         attestationResponse:
           type: string
+        completionType:
+          $ref: "#/components/schemas/appendCompletionType"
 
     connectAppendFinishRsp:
       type: object
@@ -2372,6 +2378,10 @@ components:
           type: string
         error:
           $ref: "#/components/schemas/requestError"
+
+    appendCompletionType:
+      type: string
+      enum: ["auto", "conditional", "manual", "manual-retry"]
 
   responses:
     "200":

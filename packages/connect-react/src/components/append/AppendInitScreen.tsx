@@ -1,5 +1,6 @@
 import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
+import type { AppendCompletionType } from '@corbado/web-core/dist/models/connect/append';
 import log from 'loglevel';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -132,11 +133,23 @@ const AppendInitScreen = () => {
       }
 
       setAttestationOptions(startAppendRes.val.attestationOptions);
-      statefulLoader.current.finish();
-
       log.debug('startAppendRes', startAppendRes, flags);
+
+      if (startAppendRes.val.conditionalAppend) {
+        log.debug('starting conditional create');
+        const handledByConditionalCreate = await handleConditionalCreate(startAppendRes.val.attestationOptions);
+        log.debug('handledByConditionalCreate', handledByConditionalCreate);
+
+        if (handledByConditionalCreate) {
+          statefulLoader.current.finish();
+          return;
+        }
+      }
+
+      statefulLoader.current.finish();
       if (startAppendRes.val.autoAppend || flags.hasSupportForAutomaticAppend()) {
-        await handleSubmit(startAppendRes.val.attestationOptions, false);
+        console.log('starting auto-append');
+        await handleSubmit(startAppendRes.val.attestationOptions, 'auto');
       }
     };
 
@@ -153,7 +166,7 @@ const AppendInitScreen = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    async (attestationOptions: string, showErrorIfCancelled: boolean) => {
+    async (attestationOptions: string, completionType: AppendCompletionType) => {
       if (appendLoading || skipping) {
         return;
       }
@@ -161,17 +174,17 @@ const AppendInitScreen = () => {
       setAppendLoading(true);
       setErrorMessage(undefined);
 
-      const res = await getConnectService().completeAppend(attestationOptions);
+      const res = await getConnectService().completeAppend(attestationOptions, completionType);
       if (res.err) {
         if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
           return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);
         }
 
         if (res.val.type === ConnectErrorType.Cancel) {
-          if (showErrorIfCancelled) {
-            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled, res.val);
-          } else {
+          if (completionType === 'auto') {
             return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelledSilent, res.val);
+          } else {
+            return handleSituation(AppendSituationCode.ClientPasskeyOperationCancelled, res.val);
           }
         }
 
@@ -184,7 +197,26 @@ const AppendInitScreen = () => {
         aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
       });
     },
-    [config, getConnectService, appendLoading, skipping],
+    [getConnectService, appendLoading, skipping],
+  );
+
+  const handleConditionalCreate = useCallback(
+    async (attestationOptions: string) => {
+      const res = await getConnectService().completeAppend(attestationOptions, 'conditional');
+      if (res.err) {
+        await handleSituation(AppendSituationCode.ClientPasskeyOperationErrorSilent, res.val);
+
+        return res.val.type === ConnectErrorType.RaceTimeout;
+      }
+
+      navigateToScreen(AppendScreenType.Success, {
+        aaguidName: res.val.passkeyOperation.aaguidDetails?.name,
+        aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
+      });
+
+      return true;
+    },
+    [getConnectService],
   );
 
   const handleSituation = async (situationCode: AppendSituationCode, error?: ConnectError) => {
@@ -222,6 +254,10 @@ const AppendInitScreen = () => {
       case AppendSituationCode.ExplicitSkipByUser:
         await handleSkip(situationCode, true);
         break;
+      case AppendSituationCode.ClientPasskeyOperationErrorSilent:
+        void handleErrorSoft(situationCode, false, false, error);
+        setAppendLoading(false);
+        break;
     }
   };
 
@@ -250,7 +286,14 @@ const AppendInitScreen = () => {
             void onReadMoreClick();
             setAppendInitState(AppendInitState.ShowBenefits);
           }}
-          handleSubmit={() => void handleSubmit(attestationOptions, true)}
+          handleSubmit={() => {
+            let completionType: AppendCompletionType = 'manual';
+            if (errorMessage) {
+              completionType = 'manual-retry';
+            }
+
+            void handleSubmit(attestationOptions, completionType);
+          }}
           handleSkip={() => onSkip()}
         />
       );

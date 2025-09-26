@@ -29,6 +29,7 @@ import type {
   ConnectManageListRsp,
 } from '../api/v2';
 import { CorbadoConnectApi, PasskeyEventType } from '../api/v2';
+import type { AppendCompletionType } from '../models/connect/append';
 import { ConnectFlags } from '../models/connect/connectFlags';
 import { ConnectInvitation } from '../models/connect/connectInvitation';
 import { ConnectProcess } from '../models/connect/connectProcess';
@@ -413,27 +414,6 @@ export class ConnectService {
     return Ok(appendData);
   }
 
-  async append(appendTokenValue: string, loadedMs: number): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
-    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
-    if (!existingProcess) {
-      return Err(new ConnectError(ConnectErrorType.MissingInit));
-    }
-
-    const resStart = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendStart({ appendTokenValue: appendTokenValue, loadedMs }),
-    );
-    if (resStart.err) {
-      return resStart;
-    }
-
-    const platformRes = await this.#webAuthnCreatePasskey(resStart.val.attestationOptions);
-    if (platformRes.err) {
-      return platformRes;
-    }
-
-    return this.wrapWithErr(() => this.#connectApi.connectAppendFinish({ attestationResponse: platformRes.val }));
-  }
-
   async startAppend(
     appendTokenValue: string,
     loadedMs: number,
@@ -453,19 +433,23 @@ export class ConnectService {
     );
   }
 
-  async completeAppend(attestationOptions: string): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
+  async completeAppend(
+    attestationOptions: string,
+    completionType: AppendCompletionType,
+  ): Promise<Result<ConnectAppendFinishRsp, ConnectError>> {
     const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
     if (!existingProcess) {
       return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
-    const res = await this.#webAuthnCreatePasskey(attestationOptions);
+    const conditional = completionType === 'conditional';
+    const res = await this.#webAuthnCreatePasskey(attestationOptions, conditional);
     if (res.err) {
       return res;
     }
 
     const finishRes = await this.wrapWithErr(() =>
-      this.#connectApi.connectAppendFinish({ attestationResponse: res.val }),
+      this.#connectApi.connectAppendFinish({ attestationResponse: res.val, completionType }),
     );
     if (finishRes.ok) {
       const latestLogin = finishRes.val.passkeyOperation as LastLogin;
@@ -771,18 +755,29 @@ export class ConnectService {
     const started = Date.now();
     try {
       const res = await this.#webAuthnService.loginRaw(serializedChallenge, isConditional, onConditionalLoginStart);
-      return Ok(res);
+      if (res.message) {
+        void this.recordEventLoginErrorUnexpected(res.message);
+      }
+
+      return Ok(res.response);
     } catch (e) {
       const runtime = Date.now() - started;
       return Err(ConnectError.fromFrontendError(e, runtime));
     }
   }
 
-  async #webAuthnCreatePasskey(serializedChallenge: string): Promise<Result<string, ConnectError>> {
+  async #webAuthnCreatePasskey(
+    serializedChallenge: string,
+    conditional: boolean,
+  ): Promise<Result<string, ConnectError>> {
     const started = Date.now();
     try {
-      const res = await this.#webAuthnService.createPasskeyRaw(serializedChallenge);
-      return Ok(res);
+      const res = await this.#webAuthnService.createPasskeyRaw(serializedChallenge, conditional);
+      if (res.message) {
+        void this.recordEventAppendErrorUnexpected(res.message);
+      }
+
+      return Ok(res.response);
     } catch (e) {
       const runtime = Date.now() - started;
       return Err(ConnectError.fromFrontendError(e, runtime));

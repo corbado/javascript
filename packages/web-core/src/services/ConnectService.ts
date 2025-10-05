@@ -181,7 +181,7 @@ export class ConnectService {
 
     const { req, flags } = await this.#getInitReq();
     const res = await this.wrapWithErr(() =>
-      this.#connectApi.connectLoginInit(req, { signal: abortController.signal, timeout: 5 * 1000 }),
+      this.#connectApi.connectLoginInit(req, { signal: abortController.signal, timeout: 10 * 1000 }),
     );
 
     if (res.err) {

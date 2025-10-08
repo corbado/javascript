@@ -2,6 +2,7 @@
 /// <reference types="user-agent-data-types" /> <- add this line
 import type { ClientCapabilities } from '@corbado/types';
 import { create, get } from '@corbado/webauthn-json';
+import { createResponseToJSON, getResponseToJSON } from '@corbado/webauthn-json/extended';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { detectIncognito } from 'detectincognitojs';
 import log from 'loglevel';
@@ -73,10 +74,17 @@ export class WebAuthnService {
       } as never)) as PublicKeyCredential;
     }
 
-    return {
-      response: JSON.stringify(credential.toJSON()),
-      message: '',
-    };
+    try {
+      return {
+        response: JSON.stringify(credential.toJSON()),
+        message: '',
+      };
+    } catch (e) {
+      return {
+        response: JSON.stringify(createResponseToJSON(credential)),
+        message: 'toJSON() not available on PublicKeyCredential',
+      };
+    }
   }
 
   async login(
@@ -125,10 +133,17 @@ export class WebAuthnService {
       signal: abortController.signal,
     })) as PublicKeyCredential;
 
-    return {
-      response: JSON.stringify(credential.toJSON()),
-      message: '',
-    };
+    try {
+      return {
+        response: JSON.stringify(credential.toJSON()),
+        message: '',
+      };
+    } catch (e) {
+      return {
+        response: JSON.stringify(getResponseToJSON(credential)),
+        message: 'toJSON() not available on PublicKeyCredential',
+      };
+    }
   }
 
   async getClientInformation(maybeClientHandle: ClientStateEntry<string> | undefined): Promise<ClientInformation> {

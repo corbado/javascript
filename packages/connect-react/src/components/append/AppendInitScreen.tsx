@@ -244,7 +244,7 @@ const AppendInitScreen = () => {
         setAppendLoading(false);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
-        void handleCredentialExistsError(error);
+        void handleCredentialExistsError(attestationOptions, error);
         setAppendLoading(false);
         break;
       case AppendSituationCode.DeniedByPartialRollout:

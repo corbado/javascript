@@ -644,8 +644,13 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.UserAppendAfterLoginErrorBlacklisted);
   }
 
-  recordEventAppendCredentialExistsError(messageCode: string) {
-    return this.#recordEvent(PasskeyEventType.AppendCredentialExists, messageCode);
+  recordEventAppendCredentialExistsError(messageCode: string, attestationOptions: string) {
+    let challenge;
+    if (attestationOptions) {
+      challenge = WebAuthnService.challengeFromAttestationOptions(attestationOptions);
+    }
+
+    return this.#recordEvent(PasskeyEventType.AppendCredentialExists, messageCode, challenge);
   }
 
   recordEventAppendError() {

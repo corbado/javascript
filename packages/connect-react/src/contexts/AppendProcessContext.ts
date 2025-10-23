@@ -22,7 +22,7 @@ export interface AppendProcessContextProps {
     error?: ConnectError,
   ) => Promise<void>;
   handleErrorHard: (situation: AppendSituationCode, expected: boolean, error?: ConnectError) => Promise<void>;
-  handleCredentialExistsError: (error?: ConnectError) => Promise<void>;
+  handleCredentialExistsError: (attestationOptions: string, error?: ConnectError) => Promise<void>;
   handleSkip: (situation: AppendSituationCode, explicit?: boolean) => Promise<void>;
   onReadMoreClick: () => Promise<void>;
   flags: Flags | undefined;

@@ -137,7 +137,11 @@ const PasskeyListScreen = () => {
       }
 
       if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
-        return handleSituation(PasskeyListSituationCode.ClientExcludeCredentialsMatch, res.val);
+        return handleSituation(
+          PasskeyListSituationCode.ClientExcludeCredentialsMatch,
+          res.val,
+          startAppendRes.val.attestationOptions,
+        );
       }
 
       return handleSituation(PasskeyListSituationCode.CboApiNotAvailablePostAuthenticator, res.val);
@@ -171,7 +175,11 @@ const PasskeyListScreen = () => {
     statefulLoader.current.finish();
   };
 
-  const handleSituation = (situationCode: PasskeyListSituationCode, error?: ConnectError) => {
+  const handleSituation = (
+    situationCode: PasskeyListSituationCode,
+    error?: ConnectError,
+    attestationOptions?: string,
+  ) => {
     const messageCode = `situation: ${situationCode}`;
     log.debug(messageCode);
 
@@ -179,7 +187,10 @@ const PasskeyListScreen = () => {
     switch (situationCode) {
       case PasskeyListSituationCode.ClientExcludeCredentialsMatch:
         setAppendLoading(false);
-        void getConnectService().recordEventAppendCredentialExistsError(`${messageCode} ${error?.track()}`);
+        void getConnectService().recordEventAppendCredentialExistsError(
+          attestationOptions ?? '',
+          `${messageCode} ${error?.track()}`,
+        );
         show(<AlreadyExistingModal hide={hide} />);
         break;
       case PasskeyListSituationCode.CboApiPasskeysNotSupportedLight:

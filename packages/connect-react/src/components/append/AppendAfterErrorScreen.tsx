@@ -63,7 +63,7 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
         void handleErrorSoft(situationCode, true, true, error);
         break;
       case AppendSituationCode.ClientExcludeCredentialsMatch:
-        void handleCredentialExistsError(error);
+        void handleCredentialExistsError(attestationOptions, error);
         break;
       case AppendSituationCode.ExplicitSkipByUser:
         void handleSkip(situationCode, true);

@@ -74,10 +74,10 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
   }, [getConnectService, config]);
 
   const handleCredentialExistsError = useCallback(
-    async (error?: ConnectError) => {
+    async (attestationOptions: string, error?: ConnectError) => {
       log.debug('error (credential-exists)');
 
-      await getConnectService().recordEventAppendCredentialExistsError(error?.track() ?? '');
+      await getConnectService().recordEventAppendCredentialExistsError(error?.track() ?? '', attestationOptions);
       void config.onComplete('complete-noop', getConnectService().encodeClientState());
     },
     [getConnectService, config],

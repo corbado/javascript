@@ -22,7 +22,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "devDependencies": {
-    "@playwright/test": "^1.47.0",
+    "@playwright/test": "^1.56.1",
     "@types/node": "^20.10.5",
     "get-port": "^5.1.1",
     "ngrok": "^5.0.0-beta.2",

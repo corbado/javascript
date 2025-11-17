@@ -88,9 +88,14 @@ export interface PassKeyList {
 export interface ClientCapabilities {
   conditionalCreate: boolean;
   conditionalMediation: boolean;
+  conditionalGet: boolean;
   hybridTransport: boolean;
   passkeyPlatformAuthenticator: boolean;
   userVerifyingPlatformAuthenticator: boolean;
+  relatedOrigins: boolean;
+  signalAllAcceptedCredentials: boolean;
+  signalCurrentUserDetails: boolean;
+  signalUnknownCredential: boolean;
 }
 
 export const PasskeyCeremonyType = {

@@ -67,6 +67,126 @@ export type AppendCompletionType = typeof AppendCompletionType[keyof typeof Appe
 /**
  * 
  * @export
+ * @interface AppleAppSiteAssociationRsp
+ */
+export interface AppleAppSiteAssociationRsp {
+    /**
+     * 
+     * @type {AppleAppSiteAssociationRspApplinks}
+     * @memberof AppleAppSiteAssociationRsp
+     */
+    'applinks': AppleAppSiteAssociationRspApplinks;
+    /**
+     * 
+     * @type {AppleAppSiteAssociationRspWebcredentials}
+     * @memberof AppleAppSiteAssociationRsp
+     */
+    'webcredentials': AppleAppSiteAssociationRspWebcredentials;
+    /**
+     * 
+     * @type {AppleAppSiteAssociationRspWebcredentials}
+     * @memberof AppleAppSiteAssociationRsp
+     */
+    'appclips': AppleAppSiteAssociationRspWebcredentials;
+}
+/**
+ * 
+ * @export
+ * @interface AppleAppSiteAssociationRspApplinks
+ */
+export interface AppleAppSiteAssociationRspApplinks {
+    /**
+     * 
+     * @type {Array<AppleAppSiteAssociationRspApplinksDetailsInner>}
+     * @memberof AppleAppSiteAssociationRspApplinks
+     */
+    'details': Array<AppleAppSiteAssociationRspApplinksDetailsInner>;
+}
+/**
+ * 
+ * @export
+ * @interface AppleAppSiteAssociationRspApplinksDetailsInner
+ */
+export interface AppleAppSiteAssociationRspApplinksDetailsInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof AppleAppSiteAssociationRspApplinksDetailsInner
+     */
+    'appID': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AppleAppSiteAssociationRspApplinksDetailsInner
+     */
+    'paths': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface AppleAppSiteAssociationRspWebcredentials
+ */
+export interface AppleAppSiteAssociationRspWebcredentials {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AppleAppSiteAssociationRspWebcredentials
+     */
+    'apps': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface AssetLink
+ */
+export interface AssetLink {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AssetLink
+     */
+    'relation': Array<string>;
+    /**
+     * 
+     * @type {AssetLinkTarget}
+     * @memberof AssetLink
+     */
+    'target': AssetLinkTarget;
+}
+/**
+ * 
+ * @export
+ * @interface AssetLinkTarget
+ */
+export interface AssetLinkTarget {
+    /**
+     * 
+     * @type {string}
+     * @memberof AssetLinkTarget
+     */
+    'namespace': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AssetLinkTarget
+     */
+    'package_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AssetLinkTarget
+     */
+    'site'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AssetLinkTarget
+     */
+    'sha256_cert_fingerprints'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -176,6 +296,12 @@ export interface ClientCapabilities {
      * @type {boolean}
      * @memberof ClientCapabilities
      */
+    'conditionalGet'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
     'hybridTransport'?: boolean;
     /**
      * 
@@ -189,6 +315,30 @@ export interface ClientCapabilities {
      * @memberof ClientCapabilities
      */
     'userVerifyingPlatformAuthenticator'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'relatedOrigins'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'signalAllAcceptedCredentials'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'signalCurrentUserDetails'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     */
+    'signalUnknownCredential'?: boolean;
 }
 /**
  * 
@@ -321,6 +471,12 @@ export interface ConnectAppendFinishReq {
      * @memberof ConnectAppendFinishReq
      */
     'completionType': AppendCompletionType;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendFinishReq
+     */
+    'customData'?: { [key: string]: string; };
 }
 
 
@@ -361,6 +517,12 @@ export interface ConnectAppendInitReq {
      * @memberof ConnectAppendInitReq
      */
     'invitationToken'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendInitReq
+     */
+    'situation'?: string;
 }
 /**
  * 
@@ -435,6 +597,12 @@ export interface ConnectAppendStartReq {
      * @memberof ConnectAppendStartReq
      */
     'loadedMs': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectAppendStartReq
+     */
+    'situation'?: string;
 }
 /**
  * 
@@ -472,6 +640,18 @@ export interface ConnectAppendStartRsp {
      * @memberof ConnectAppendStartRsp
      */
     'conditionalAppend': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectAppendStartRsp
+     */
+    'expiresMs': number;
+    /**
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ConnectAppendStartRsp
+     */
+    'customData'?: { [key: string]: string; };
 }
 
 export const ConnectAppendStartRspVariantEnum = {
@@ -545,7 +725,7 @@ export interface ConnectLoginFinishRsp {
      * @type {PasskeyOperation}
      * @memberof ConnectLoginFinishRsp
      */
-    'passkeyOperation': PasskeyOperation;
+    'passkeyOperation'?: PasskeyOperation;
     /**
      * 
      * @type {string}
@@ -841,7 +1021,22 @@ export interface ConnectManageListReq {
      * @memberof ConnectManageListReq
      */
     'connectToken': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectManageListReq
+     */
+    'mode'?: ConnectManageListReqModeEnum;
 }
+
+export const ConnectManageListReqModeEnum = {
+    Default: 'default',
+    PostDelete: 'post-delete',
+    PostAppend: 'post-append'
+} as const;
+
+export type ConnectManageListReqModeEnum = typeof ConnectManageListReqModeEnum[keyof typeof ConnectManageListReqModeEnum];
+
 /**
  * 
  * @export
@@ -866,6 +1061,12 @@ export interface ConnectManageListRsp {
      * @memberof ConnectManageListRsp
      */
     'userID': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectManageListRsp
+     */
+    'signalAllAcceptedCredentials': boolean;
 }
 /**
  * 
@@ -914,6 +1115,99 @@ export const ContinueOnOtherDeviceReasonEnum = {
 
 export type ContinueOnOtherDeviceReasonEnum = typeof ContinueOnOtherDeviceReasonEnum[keyof typeof ContinueOnOtherDeviceReasonEnum];
 
+/**
+ * 
+ * @export
+ * @interface ErrorRsp
+ */
+export interface ErrorRsp {
+    /**
+     * HTTP status code of operation
+     * @type {number}
+     * @memberof ErrorRsp
+     */
+    'httpStatusCode': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ErrorRsp
+     */
+    'message': string;
+    /**
+     * 
+     * @type {RequestData}
+     * @memberof ErrorRsp
+     */
+    'requestData': RequestData;
+    /**
+     * Runtime in seconds for this request
+     * @type {number}
+     * @memberof ErrorRsp
+     */
+    'runtime': number;
+    /**
+     * 
+     * @type {object}
+     * @memberof ErrorRsp
+     */
+    'data'?: object;
+    /**
+     * 
+     * @type {ErrorRspAllOfError}
+     * @memberof ErrorRsp
+     */
+    'error': ErrorRspAllOfError;
+}
+/**
+ * 
+ * @export
+ * @interface ErrorRspAllOfError
+ */
+export interface ErrorRspAllOfError {
+    /**
+     * Type of error
+     * @type {string}
+     * @memberof ErrorRspAllOfError
+     */
+    'type': string;
+    /**
+     * Details of error
+     * @type {string}
+     * @memberof ErrorRspAllOfError
+     */
+    'details'?: string;
+    /**
+     * Validation errors per field
+     * @type {Array<ErrorRspAllOfErrorValidation>}
+     * @memberof ErrorRspAllOfError
+     */
+    'validation'?: Array<ErrorRspAllOfErrorValidation>;
+    /**
+     * Additional links to help understand the error
+     * @type {Array<string>}
+     * @memberof ErrorRspAllOfError
+     */
+    'links': Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface ErrorRspAllOfErrorValidation
+ */
+export interface ErrorRspAllOfErrorValidation {
+    /**
+     * 
+     * @type {string}
+     * @memberof ErrorRspAllOfErrorValidation
+     */
+    'field': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ErrorRspAllOfErrorValidation
+     */
+    'message': string;
+}
 /**
  * 
  * @export
@@ -1488,6 +1782,49 @@ export interface JavaScriptHighEntropy {
     'mobile': boolean;
 }
 /**
+ * JSON Web Key
+ * @export
+ * @interface Jwk
+ */
+export interface Jwk {
+    /**
+     * The specific cryptographic algorithm used with the key
+     * @type {string}
+     * @memberof Jwk
+     */
+    'alg': string;
+    /**
+     * The family of cryptographic algorithms used with the key
+     * @type {string}
+     * @memberof Jwk
+     */
+    'kty': string;
+    /**
+     * How the key was meant to be used; sig represents the signature
+     * @type {string}
+     * @memberof Jwk
+     */
+    'use': string;
+    /**
+     * The modulus for the RSA public key
+     * @type {string}
+     * @memberof Jwk
+     */
+    'n': string;
+    /**
+     * The exponent for the RSA public key
+     * @type {string}
+     * @memberof Jwk
+     */
+    'e': string;
+    /**
+     * The unique identifier for the key
+     * @type {string}
+     * @memberof Jwk
+     */
+    'kid': string;
+}
+/**
  * 
  * @export
  * @interface LoginIdentifier
@@ -1922,6 +2259,36 @@ export interface NativeMeta {
      * @memberof NativeMeta
      */
     'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'brand'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'model'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NativeMeta
+     */
+    'locale'?: string;
+    /**
+     * 
+     * @type {NativeMetaScreen}
+     * @memberof NativeMeta
+     */
+    'screen'?: NativeMetaScreen;
+    /**
+     * 
+     * @type {number}
+     * @memberof NativeMeta
+     */
+    'sdkInitTimeMs'?: number;
 }
 
 export const NativeMetaDeviceOwnerAuthEnum = {
@@ -1932,6 +2299,31 @@ export const NativeMetaDeviceOwnerAuthEnum = {
 
 export type NativeMetaDeviceOwnerAuthEnum = typeof NativeMetaDeviceOwnerAuthEnum[keyof typeof NativeMetaDeviceOwnerAuthEnum];
 
+/**
+ * 
+ * @export
+ * @interface NativeMetaScreen
+ */
+export interface NativeMetaScreen {
+    /**
+     * 
+     * @type {number}
+     * @memberof NativeMetaScreen
+     */
+    'widthPoints': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NativeMetaScreen
+     */
+    'heightPoints': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NativeMetaScreen
+     */
+    'scale': number;
+}
 /**
  * 
  * @export
@@ -2754,6 +3146,19 @@ export const VerificationMethod = {
 export type VerificationMethod = typeof VerificationMethod[keyof typeof VerificationMethod];
 
 
+/**
+ * 
+ * @export
+ * @interface WellKnownJWKSListRsp
+ */
+export interface WellKnownJWKSListRsp {
+    /**
+     * 
+     * @type {Array<Jwk>}
+     * @memberof WellKnownJWKSListRsp
+     */
+    'keys': Array<Jwk>;
+}
 
 /**
  * AuthApi - axios parameter creator
@@ -6540,6 +6945,227 @@ export class UsersApi extends BaseAPI {
      */
     public currentUserUpdate(meUpdateReq: MeUpdateReq, options?: AxiosRequestConfig) {
         return UsersApiFp(this.configuration).currentUserUpdate(meUpdateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * WellKnownApi - axios parameter creator
+ * @export
+ */
+export const WellKnownApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Provides apple app site association
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        appleAppSiteAssociation: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/.well-known/apple-app-site-association`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Provides asset links for android devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        assetLinks: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/.well-known/assetlinks.json`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Retrieves well-known JWKS for Project ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        wellKnownJWKSList: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/.well-known/jwks`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * WellKnownApi - functional programming interface
+ * @export
+ */
+export const WellKnownApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = WellKnownApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Provides apple app site association
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async appleAppSiteAssociation(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AppleAppSiteAssociationRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.appleAppSiteAssociation(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Provides asset links for android devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async assetLinks(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AssetLink>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.assetLinks(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Retrieves well-known JWKS for Project ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async wellKnownJWKSList(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WellKnownJWKSListRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.wellKnownJWKSList(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * WellKnownApi - factory interface
+ * @export
+ */
+export const WellKnownApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = WellKnownApiFp(configuration)
+    return {
+        /**
+         * Provides apple app site association
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        appleAppSiteAssociation(options?: any): AxiosPromise<AppleAppSiteAssociationRsp> {
+            return localVarFp.appleAppSiteAssociation(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Provides asset links for android devices
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        assetLinks(options?: any): AxiosPromise<Array<AssetLink>> {
+            return localVarFp.assetLinks(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves well-known JWKS for Project ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        wellKnownJWKSList(options?: any): AxiosPromise<WellKnownJWKSListRsp> {
+            return localVarFp.wellKnownJWKSList(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * WellKnownApi - object-oriented interface
+ * @export
+ * @class WellKnownApi
+ * @extends {BaseAPI}
+ */
+export class WellKnownApi extends BaseAPI {
+    /**
+     * Provides apple app site association
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WellKnownApi
+     */
+    public appleAppSiteAssociation(options?: AxiosRequestConfig) {
+        return WellKnownApiFp(this.configuration).appleAppSiteAssociation(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Provides asset links for android devices
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WellKnownApi
+     */
+    public assetLinks(options?: AxiosRequestConfig) {
+        return WellKnownApiFp(this.configuration).assetLinks(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves well-known JWKS for Project ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WellKnownApi
+     */
+    public wellKnownJWKSList(options?: AxiosRequestConfig) {
+        return WellKnownApiFp(this.configuration).wellKnownJWKSList(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

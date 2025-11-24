@@ -1,0 +1,21 @@
+name: Dependabot high/critical alert issues
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  issues: write
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: read
+
+jobs:
+  dependabot-security:
+    uses: corbado/ci-templates/.github/workflows/dependabot-security.yml@main
+    secrets:
+      repo-token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      auto-merge: false
+      team_mention: "@Dopeamin / @snacker81"

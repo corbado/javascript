@@ -24,7 +24,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     setLoading(true);
     const res = await getConnectService().loginContinue(resStart);
     if (res.err) {
-      if (res.val.type === ConnectErrorType.Cancel) {
+      if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {
         return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, res.val);
       }
 

@@ -9,6 +9,7 @@ export enum ConnectErrorType {
   SecurityError,
   ExcludeCredentialsMatch,
   RaceTimeout,
+  Untyped,
 }
 
 export class ConnectError {
@@ -68,7 +69,7 @@ export class ConnectError {
         case 'InvalidStateError':
           return new ConnectError(ConnectErrorType.ExcludeCredentialsMatch, e.message, runtime);
         default:
-          return new ConnectError(ConnectErrorType.InvalidState, e.message, runtime);
+          return new ConnectError(ConnectErrorType.Untyped, e.message, runtime);
       }
     }
 
@@ -77,9 +78,9 @@ export class ConnectError {
         return new ConnectError(ConnectErrorType.Cancel, e.message);
       }
 
-      return new ConnectError(ConnectErrorType.InvalidState, e.message);
+      return new ConnectError(ConnectErrorType.Untyped, e.message);
     }
 
-    return new ConnectError(ConnectErrorType.InvalidState, `unknown ${e}`);
+    return new ConnectError(ConnectErrorType.Untyped, `unknown ${e}`);
   }
 }

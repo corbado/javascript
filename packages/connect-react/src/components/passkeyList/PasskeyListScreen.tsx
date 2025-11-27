@@ -188,8 +188,8 @@ const PasskeyListScreen = () => {
       case PasskeyListSituationCode.ClientExcludeCredentialsMatch:
         setAppendLoading(false);
         void getConnectService().recordEventAppendCredentialExistsError(
-          attestationOptions ?? '',
           `${messageCode} ${error?.track()}`,
+          attestationOptions ?? '',
         );
         show(<AlreadyExistingModal hide={hide} />);
         break;

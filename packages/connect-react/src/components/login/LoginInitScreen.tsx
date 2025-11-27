@@ -103,7 +103,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
       const res = await getConnectService().loginInit(ac);
       if (res.err) {
-        if (res.val.type === ConnectErrorType.Cancel) {
+        if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {
           return;
         }
 
@@ -163,7 +163,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     if (res.err) {
       // if a user cancel during CUI, she can try again
-      if (res.val.type === ConnectErrorType.Cancel) {
+      if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {
         return handleSituation(LoginSituationCode.ClientPasskeyConditionalOperationCancelled, res.val);
       }
 
@@ -230,7 +230,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     const res = await getConnectService().loginContinue(resStart.val);
     if (res.err) {
       setIdentifierBasedLoading(false);
-      if (res.val.type === ConnectErrorType.Cancel) {
+      if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {
         return handleSituation(
           LoginSituationCode.ClientPasskeyOperationCancelled,
           res.val,

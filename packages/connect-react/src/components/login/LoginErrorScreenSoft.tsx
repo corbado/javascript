@@ -44,7 +44,7 @@ const LoginErrorScreenSoft = ({ previousAssertionOptions }: Props) => {
 
     const resFinish = await getConnectService().loginContinue(resStart.val);
     if (resFinish.err) {
-      if (resFinish.val.type === ConnectErrorType.Cancel) {
+      if (resFinish.val.type === ConnectErrorType.Cancel || resFinish.val.type === ConnectErrorType.Untyped) {
         return handleSituation(
           LoginSituationCode.ClientPasskeyOperationCancelled,
           resFinish.val,

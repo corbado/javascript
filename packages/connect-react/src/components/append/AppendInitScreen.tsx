@@ -80,7 +80,7 @@ const AppendInitScreen = () => {
         getConnectService().setInvitation(invitationToken);
       }
 
-      const res = await getConnectService().appendInit(ac);
+      const res = await getConnectService().appendInit(ac, config.situation);
       if (res.err) {
         if (res.val.type === ConnectErrorType.Cancel) {
           return;
@@ -107,7 +107,13 @@ const AppendInitScreen = () => {
         return handleSituation(AppendSituationCode.CtApiNotAvailablePreAuthenticator);
       }
 
-      const startAppendRes = await getConnectService().startAppend(appendToken, loadedMs, ac);
+      const startAppendRes = await getConnectService().startAppend(
+        appendToken,
+        loadedMs,
+        ac,
+        undefined,
+        config.situation,
+      );
       if (startAppendRes.err) {
         if (startAppendRes.val.type === ConnectErrorType.Cancel) {
           return;

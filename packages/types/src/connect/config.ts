@@ -26,6 +26,7 @@ export type CorbadoConnectAppendConfig = {
   onError?(error: string): void;
   onSkip(status: AppendStatus): Promise<void>;
   onComplete(status: AppendStatus, clientState: string): Promise<void>;
+  situation?: string;
 };
 
 export type AppendStatus = 'skip-implicit' | 'skip-explicit' | 'complete' | 'complete-noop';

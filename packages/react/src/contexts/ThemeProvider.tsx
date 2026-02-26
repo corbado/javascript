@@ -1,4 +1,4 @@
-import type { BehaviorSubject } from '@corbado/shared-ui';
+import type { BehaviorSubject } from '../shared-ui';
 import type { CustomThemes } from '@corbado/types';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useState } from 'react';

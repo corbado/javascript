@@ -1,4 +1,4 @@
-import { updateSvgColors, updateSvgFillColor, updateSvgStrokeColor } from '@corbado/shared-ui';
+import { updateSvgColors, updateSvgFillColor, updateSvgStrokeColor } from '../shared-ui';
 import type { RefObject } from 'react';
 import { useEffect, useState } from 'react';
 

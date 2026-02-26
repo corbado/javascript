@@ -1,3 +1,5 @@
+'use client';
+
 import { useContext, useState } from 'react';
 import Dropdown from './Dropdown';
 import SettingsContext from '../contexts/SettingsContext';

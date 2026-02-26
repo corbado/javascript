@@ -1,4 +1,4 @@
-import circleExclamationSrc from '@corbado/shared-ui/assets/circle-exclamation.svg';
+import circleExclamationSrc from '../../../shared-ui/assets/circle-exclamation.svg';
 import React, { memo, useRef } from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';

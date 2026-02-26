@@ -1,4 +1,4 @@
-import passkeyAppendedSrc from '@corbado/shared-ui/assets/passkey-appended.svg';
+import passkeyAppendedSrc from '../../../shared-ui/assets/passkey-appended.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

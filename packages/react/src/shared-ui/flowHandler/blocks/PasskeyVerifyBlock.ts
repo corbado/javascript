@@ -1,0 +1,166 @@
+import type {
+  AuthType,
+  BlockBody,
+  CorbadoApp,
+  GeneralBlockPasskeyVerify,
+  GeneralBlockVerifyIdentifier,
+  ProcessCommon,
+} from '@corbado/web-core';
+import { BlockType, GeneralBlockPasskeyVerifyLoginHintEnum, VerificationMethod } from '@corbado/web-core';
+
+import type { CorbadoTracker, PasskeyOperationLogin } from '@corbado/observe';
+import type { PasskeyLoginStart } from '@corbado/observe';
+import { BlockTypes, ScreenNames } from '../constants';
+import type { ErrorTranslator } from '../errorTranslator';
+import type { ProcessHandler } from '../processHandler';
+import type { BlockDataPasskeyVerify, PasskeyFallback } from '../types';
+import { Block } from './Block';
+
+export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
+  readonly data: BlockDataPasskeyVerify;
+  readonly type = BlockTypes.PasskeyVerify;
+  readonly initialScreen: ScreenNames = ScreenNames.PasskeyBackground;
+  readonly authType: AuthType;
+
+  #passkeyAborted = false;
+  #passkeyLoginOp: PasskeyOperationLogin | undefined;
+
+  constructor(
+    app: CorbadoApp,
+    flowHandler: ProcessHandler,
+    common: ProcessCommon,
+    errorTranslator: ErrorTranslator,
+    blockBody: BlockBody,
+    observeTracker?: CorbadoTracker,
+  ) {
+    super(app, flowHandler, common, errorTranslator, observeTracker);
+    const data = blockBody.data as GeneralBlockPasskeyVerify;
+
+    this.authType = blockBody.authType;
+    if (data.loginHint === GeneralBlockPasskeyVerifyLoginHintEnum.Cda) {
+      this.initialScreen = ScreenNames.PasskeyHybrid;
+    } else {
+      this.initialScreen = ScreenNames.PasskeyBackground;
+    }
+
+    this.data = {
+      availableFallbacks: [],
+      identifierValue: data.identifierValue,
+    };
+  }
+
+  init() {
+    this.data.availableFallbacks = this.alternatives
+      .filter(a => a.type === BlockTypes.PhoneVerify || a.type === BlockType.EmailVerify)
+      .map(alternative => {
+        const typed = alternative.data as GeneralBlockVerifyIdentifier;
+        let result: PasskeyFallback | undefined = undefined;
+
+        if (!this.data.identifierValue) {
+          this.data.identifierValue = typed.identifier;
+        }
+
+        switch (alternative.type) {
+          case BlockType.EmailVerify: {
+            if (typed.verificationMethod === VerificationMethod.EmailOtp) {
+              result = { label: 'button_switchToAlternate.emailOtp', action: () => this.initFallbackEmailOtp() };
+            } else {
+              result = { label: 'button_switchToAlternate.emailLink', action: () => this.initFallbackEmailLink() };
+            }
+
+            this.data.preferredFallbackOnError = result;
+            return result;
+          }
+          case BlockType.PhoneVerify:
+            result = { label: 'button_switchToAlternate.phone', action: () => this.initFallbackSmsOtp() };
+
+            if (this.data.preferredFallbackOnError === undefined) {
+              this.data.preferredFallbackOnError = result;
+            }
+
+            return result;
+          default:
+            throw new Error('Invalid block type');
+        }
+      });
+  }
+
+  getFormattedPhoneNumber = () => Block.getFormattedPhoneNumber(this.data.identifierValue);
+
+  async passkeyLogin() {
+    this.#passkeyAborted = false;
+
+    this.#passkeyLoginOp = this.observeTracker?.passkeyLoginStart({
+      explicitSpecType: 'passkey-identifier',
+      conditional: false,
+      assertionOptions: '',
+    } as PasskeyLoginStart);
+
+    const res = await this.app.authProcessService.loginWithPasskey((data) => {
+      this.#passkeyLoginOp?.submitted({ assertionResponse: data.assertionResponse });
+    });
+
+    if (res.err) {
+      if (this.#passkeyAborted) {
+        return;
+      }
+
+      if (res.val.ignore) {
+        this.#passkeyLoginOp?.clientError({ error: res.val });
+      } else {
+        this.#passkeyLoginOp?.serverErrorUnknown(res.val);
+      }
+
+      if (this.flowHandler.currentScreenName === ScreenNames.PasskeyBackground) {
+        this.updateScreen(ScreenNames.PasskeyErrorLight);
+      } else {
+        this.updateScreen(ScreenNames.PasskeyError);
+      }
+
+      return;
+    }
+
+    this.#passkeyLoginOp?.finished({});
+    this.updateProcess(res);
+
+    return;
+  }
+
+  async initFallbackEmailOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
+    this.cancelPasskeyOperation();
+
+    const newBlock = await this.app.authProcessService.startEmailCodeVerification();
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  async initFallbackSmsOtp(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
+    this.cancelPasskeyOperation();
+
+    const newBlock = await this.app.authProcessService.startPhoneOtpVerification();
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  async initFallbackEmailLink(): Promise<void> {
+    await this.app.authProcessService.recordEventLoginExplicitAbort();
+    this.cancelPasskeyOperation();
+
+    const newBlock = await this.app.authProcessService.startEmailLinkVerification();
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  // cancels the current passkey operation (if one has been started)
+  // this should be called if a user leaves the passkey verify block without completing the passkey operation
+  // (otherwise the operation will continue in the background and a passkey popup might occur much later when the user no longer expects it)
+  cancelPasskeyOperation() {
+    this.#passkeyAborted = true;
+    return this.app.authProcessService.dispose();
+  }
+}

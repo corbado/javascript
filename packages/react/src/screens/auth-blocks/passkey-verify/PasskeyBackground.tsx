@@ -1,4 +1,4 @@
-import { getPlatformType, type PasskeyVerifyBlock } from '@corbado/shared-ui';
+import { getPlatformType, type PasskeyVerifyBlock } from '../../../shared-ui';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

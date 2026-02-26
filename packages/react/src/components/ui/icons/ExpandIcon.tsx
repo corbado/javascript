@@ -1,4 +1,4 @@
-import expandIconSrc from '@corbado/shared-ui/assets/expand.svg';
+import expandIconSrc from '../../../shared-ui/assets/expand.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

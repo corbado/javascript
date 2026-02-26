@@ -1,10 +1,24 @@
+'use client';
+
 import { useContext, useEffect, useRef, useState } from 'react';
 import SettingsContext from '../contexts/SettingsContext';
 
 const dropdownItems = [
-  { id: import.meta.env.VITE_CORBADO_PROJECT_ID_ManualTesting!, label: 'Manual Testing' },
-  { id: import.meta.env.VITE_CORBADO_PROJECT_ID_LocalDevelopment!, label: 'Local Development' },
-];
+  {
+    id:
+      process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting ||
+      process.env.VITE_CORBADO_PROJECT_ID_ManualTesting ||
+      'pro-1',
+    label: 'Manual Testing',
+  },
+  {
+    id:
+      process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_LocalDevelopment ||
+      process.env.VITE_CORBADO_PROJECT_ID_LocalDevelopment ||
+      'pro-1',
+    label: 'Local Development',
+  },
+].filter((item, index, all) => item.id && all.findIndex(x => x.id === item.id) === index);
 
 const Dropdown = () => {
   const { projectId } = useContext(SettingsContext);
@@ -30,10 +44,12 @@ const Dropdown = () => {
   const toggleDropdown = () => setIsVisible(!isVisible);
 
   return (
-    <div className='dropdown'>
+    <div
+      className='dropdown'
+      ref={dropdownRef}
+    >
       <button
         className='dropbtn'
-        ref={el => el && dropdownRef}
         onClick={toggleDropdown}
       >
         Change Verification Method

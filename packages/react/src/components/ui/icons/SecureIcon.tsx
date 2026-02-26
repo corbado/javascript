@@ -1,4 +1,4 @@
-import secureIconSrc from '@corbado/shared-ui/assets/secure-icon.svg';
+import secureIconSrc from '../../../shared-ui/assets/secure-icon.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

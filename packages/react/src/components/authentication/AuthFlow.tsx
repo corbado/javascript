@@ -8,8 +8,8 @@ import type {
   PasskeyVerifyBlock,
   PhoneVerifyBlock,
   SignupInitBlock,
-} from '@corbado/shared-ui';
-import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
+} from '../../shared-ui';
+import { BlockTypes, InitState, ScreenNames } from '../../shared-ui';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
 

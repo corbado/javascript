@@ -1,4 +1,4 @@
-import { InitState } from '@corbado/shared-ui';
+import { InitState } from '../../shared-ui';
 import type { FC } from 'react';
 import React from 'react';
 

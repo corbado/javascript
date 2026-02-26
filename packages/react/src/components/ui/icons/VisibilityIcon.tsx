@@ -1,4 +1,4 @@
-import visibilityIconSrc from '@corbado/shared-ui/assets/visibility.svg';
+import visibilityIconSrc from '../../../shared-ui/assets/visibility.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

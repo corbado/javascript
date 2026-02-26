@@ -10,6 +10,7 @@ const expectationByScreenName = {
   [ScreenNames.PasskeyAppend2]: { selector: '.cb-pk-append-header', expected: 'Set up passkey for easier login' },
   [ScreenNames.PasskeyAppended]: { selector: '.cb-header', expected: 'Success!' },
   [ScreenNames.PasskeyError]: { selector: '.cb-header', expected: 'Something went wrong...' },
+  [ScreenNames.PasskeyErrorSoft]: { selector: '.cb-header', expected: "Use your passkey to confirm it's really you" },
   [ScreenNames.EmailOtpSignup]: { selector: '.cb-header', expected: 'Enter code to create account' },
   [ScreenNames.EmailOtpLogin]: { selector: '.cb-header', expected: 'Enter code to log in' },
   [ScreenNames.EmailOtpPostLogin]: { selector: '.cb-header', expected: 'Your email is not verified yet' },

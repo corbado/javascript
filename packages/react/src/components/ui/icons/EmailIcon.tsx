@@ -1,4 +1,4 @@
-import emailIconSrc from '@corbado/shared-ui/assets/email.svg';
+import emailIconSrc from '../../../shared-ui/assets/email.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

@@ -92,6 +92,10 @@ export default defineConfig({
       name: 'passkey-list-general',
       testMatch: ['scenarios/passkey-list-general/*.ts'],
     },
+    {
+      name: 'observe',
+      testMatch: ['scenarios/observe/*.ts'],
+    },
   ],
   globalSetup: 'src/complete/utils/playground.ts',
 });

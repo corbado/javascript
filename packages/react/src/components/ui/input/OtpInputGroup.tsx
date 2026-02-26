@@ -1,4 +1,4 @@
-import { notANumberRegex, numberRegex } from '@corbado/shared-ui';
+import { notANumberRegex, numberRegex } from '../../../shared-ui';
 import type { FC } from 'react';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 

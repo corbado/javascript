@@ -1,4 +1,4 @@
-import deleteSrc from '@corbado/shared-ui/assets/delete.svg';
+import deleteSrc from '../../../shared-ui/assets/delete.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

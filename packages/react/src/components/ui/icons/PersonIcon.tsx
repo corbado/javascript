@@ -1,4 +1,4 @@
-import personIconSrc from '@corbado/shared-ui/assets/person.svg';
+import personIconSrc from '../../../shared-ui/assets/person.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

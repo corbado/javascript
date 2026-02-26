@@ -1,0 +1,74 @@
+<svg
+    viewBox='0 0 39 38'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+>
+    <g>
+        <path
+            d='M14.752 24.832C15.909 25.6502 17.5909 26.4684 19.6931 26.4684C21.7954 26.4684 23.4772 25.6502 24.6343 24.832'
+            stroke-width='2'
+            stroke-miterlimit='10'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            data-stroke=""
+        />
+        <path
+            d='M28.1025 11.7422V15.0149'
+            stroke-width='2'
+            stroke-miterlimit='10'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            data-stroke=""
+        />
+        <path
+            d='M11.2842 11.7422V15.0149'
+            stroke-width='2'
+            stroke-miterlimit='10'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            data-stroke=""
+        />
+        <path
+            d='M19.6935 11.7422V18.2876C19.6935 19.1909 18.9401 19.924 18.0117 19.924'
+            stroke-width='2'
+            stroke-miterlimit='10'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            data-stroke=""
+        />
+        <g>
+            <path
+                d='M37.9999 9.18182V4.27273C37.9999 2.46455 36.4947 1 34.6363 1H29.5908'
+                stroke-width='2'
+                stroke-miterlimit='10'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                data-stroke=""
+            />
+            <path
+                d='M9.40909 1H4.36364C2.50523 1 1 2.46455 1 4.27273V9.18182'
+                stroke-width='2'
+                stroke-miterlimit='10'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                data-stroke=""
+            />
+            <path
+                d='M29.5908 36.9982H34.6363C36.4947 36.9982 37.9999 35.5337 37.9999 33.7255V28.8164'
+                stroke-width='2'
+                stroke-miterlimit='10'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                data-stroke=""
+            />
+            <path
+                d='M1 28.8164V33.7255C1 35.5337 2.50523 36.9982 4.36364 36.9982H9.40909'
+                stroke-width='2'
+                stroke-miterlimit='10'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                data-stroke=""
+            />
+        </g>
+    </g>
+</svg>

@@ -1,4 +1,4 @@
-import outlookSrc from '@corbado/shared-ui/assets/outlook.svg';
+import outlookSrc from '../../../shared-ui/assets/outlook.svg';
 import type { FC } from 'react';
 import React from 'react';
 

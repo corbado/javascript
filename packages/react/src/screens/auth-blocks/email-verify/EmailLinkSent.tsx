@@ -1,4 +1,4 @@
-import { AuthType, type EmailVerifyBlock } from '@corbado/shared-ui';
+import { AuthType, type EmailVerifyBlock } from '../../../shared-ui';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 

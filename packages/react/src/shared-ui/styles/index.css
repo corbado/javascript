@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+/* Note: The order of the imports is important. CSS specificity is based on the order of the rules in the CSS file. The last rule defined will take precedence over the previous ones. So, if you want to override a rule, make sure to import the overriding CSS file after the original one. */
+@import './variables.css';
+@import './typography.css';
+@import './common.css';
+@import './buttons.css';
+@import './inputs.css';
+@import './user.css';
+@import './corbado-auth.css';
+@import './passkey-list.css';
+@import './themes/emerald-funk.css';

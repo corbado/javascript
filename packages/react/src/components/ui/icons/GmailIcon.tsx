@@ -1,4 +1,4 @@
-import gmailSrc from '@corbado/shared-ui/assets/gmail.svg';
+import gmailSrc from '../../../shared-ui/assets/gmail.svg';
 import type { FC } from 'react';
 import React from 'react';
 

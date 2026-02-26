@@ -1,4 +1,4 @@
-import type { SocialLogin } from '@corbado/shared-ui';
+import type { SocialLogin } from '../../shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { TFunction } from 'i18next';
 import type { FC, ReactNode } from 'react';

@@ -1,4 +1,4 @@
-import cancelSrc from '@corbado/shared-ui/assets/cancel.svg';
+import cancelSrc from '../../../shared-ui/assets/cancel.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

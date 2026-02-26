@@ -1,4 +1,4 @@
-import deviceIconSrc from '@corbado/shared-ui/assets/device-icon.svg';
+import deviceIconSrc from '../../../shared-ui/assets/device-icon.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

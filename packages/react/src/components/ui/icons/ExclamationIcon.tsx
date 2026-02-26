@@ -1,4 +1,4 @@
-import exclamationSrc from '@corbado/shared-ui/assets/exclamation.svg';
+import exclamationSrc from '../../../shared-ui/assets/exclamation.svg';
 import React, { memo, useRef } from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';

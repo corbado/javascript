@@ -1,9 +1,11 @@
+'use client';
+
 import { PasskeyList, useCorbado, User } from '@corbado/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
 
 export const AuthDetails = () => {
-  const navigate = useNavigate();
-  const { projectId } = useParams();
+  const router = useRouter();
+  const params = useParams<{ projectId: string }>();
   const { logout } = useCorbado();
 
   return (
@@ -14,8 +16,7 @@ export const AuthDetails = () => {
         <button
           onClick={async () => {
             await logout();
-
-            navigate(`/${projectId}/auth`);
+            router.push(`/${String(params?.projectId || 'pro-1')}/auth`);
           }}
         >
           Logout

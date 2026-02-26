@@ -1,4 +1,4 @@
-import editSrc from '@corbado/shared-ui/assets/edit.svg';
+import editSrc from '../../../shared-ui/assets/edit.svg';
 import type { FC } from 'react';
 import React, { useRef } from 'react';
 

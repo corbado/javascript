@@ -1,4 +1,4 @@
-import type { PasskeyAppendedBlock } from '@corbado/shared-ui';
+import type { PasskeyAppendedBlock } from '../../../shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

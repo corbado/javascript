@@ -1,4 +1,4 @@
-import yahooSrc from '@corbado/shared-ui/assets/yahoo.svg';
+import yahooSrc from '../../../shared-ui/assets/yahoo.svg';
 import type { FC } from 'react';
 import React from 'react';
 

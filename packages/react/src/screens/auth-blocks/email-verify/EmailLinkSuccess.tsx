@@ -1,4 +1,4 @@
-import type { ContinueOnOtherEnvBlock, EmailVerifyBlock } from '@corbado/shared-ui';
+import type { ContinueOnOtherEnvBlock, EmailVerifyBlock } from '../../../shared-ui';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

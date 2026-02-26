@@ -1,5 +1,5 @@
-import type { ScreenWithBlock } from '@corbado/shared-ui';
-import { InitState } from '@corbado/shared-ui';
+import type { ScreenWithBlock } from '../shared-ui';
+import { InitState } from '../shared-ui';
 import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {

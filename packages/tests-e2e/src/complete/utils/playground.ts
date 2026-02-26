@@ -37,7 +37,7 @@ function getPlaygroundBuildArgs(): string[] | null {
 function getPlaygroundStartArgs(port: number): string[] {
   switch (PLAYGROUND_TYPE) {
     case 'react':
-      return ['run', 'preview', '--', '--port', port.toString()];
+      return ['run', 'preview', '--', '-p', port.toString()];
     case 'web-js':
       return ['run', 'serve', '--', '-l', port.toString()];
     case 'web-js-script':
@@ -47,11 +47,21 @@ function getPlaygroundStartArgs(port: number): string[] {
   }
 }
 
-export async function spawnPlaygroundNew(projectId: string): Promise<{
+export async function spawnPlaygroundNew(
+  projectId: string,
+  options: { fixedPort?: number } = {},
+): Promise<{
   server: ChildProcess;
   port: number;
 }> {
-  const port = await getPort();
+  let port = await getPort();
+  if (options.fixedPort !== undefined) {
+    const resolved = await getPort({ port: options.fixedPort });
+    if (resolved !== options.fixedPort) {
+      throw new Error(`Requested fixed port ${options.fixedPort} is not available (resolved ${resolved}).`);
+    }
+    port = options.fixedPort;
+  }
 
   const playgroundDir = getPlaygroundDir();
   const server = spawn('npm', getPlaygroundStartArgs(port), {
@@ -59,6 +69,7 @@ export async function spawnPlaygroundNew(projectId: string): Promise<{
     env: {
       ...process.env,
       VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
+      NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting: projectId,
     },
     stdio: 'ignore',
     shell: true,

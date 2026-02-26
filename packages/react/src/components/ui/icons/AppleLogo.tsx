@@ -1,4 +1,4 @@
-import appleSrc from '@corbado/shared-ui/assets/apple.svg';
+import appleSrc from '../../../shared-ui/assets/apple.svg';
 import type { FC } from 'react';
 import React, { useRef } from 'react';
 

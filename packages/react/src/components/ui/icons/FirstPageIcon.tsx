@@ -1,4 +1,4 @@
-import firstPageSrc from '@corbado/shared-ui/assets/first-page.svg';
+import firstPageSrc from '../../../shared-ui/assets/first-page.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

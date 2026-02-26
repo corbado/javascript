@@ -1,4 +1,4 @@
-import type { PhoneVerifyBlock } from '@corbado/shared-ui';
+import type { PhoneVerifyBlock } from '../../../shared-ui';
 import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

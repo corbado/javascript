@@ -1,4 +1,4 @@
-import logoSrc from '@corbado/shared-ui/assets/logo.svg';
+import logoSrc from '../../../shared-ui/assets/logo.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

@@ -1,4 +1,4 @@
-import rightIconSrc from '@corbado/shared-ui/assets/right-arrow.svg';
+import rightIconSrc from '../../../shared-ui/assets/right-arrow.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

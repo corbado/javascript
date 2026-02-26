@@ -1,4 +1,4 @@
-import { CorbadoThemes } from '@corbado/shared-ui';
+import { CorbadoThemes } from './shared-ui';
 import type { CorbadoAuthConfig } from '@corbado/types';
 
 import CorbadoProvider, { type CorbadoProviderProps, TelemetryConfig } from './hocs/CorbadoProvider';

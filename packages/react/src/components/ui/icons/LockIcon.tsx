@@ -1,4 +1,4 @@
-import lockIconSrc from '@corbado/shared-ui/assets/lock.svg';
+import lockIconSrc from '../../../shared-ui/assets/lock.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

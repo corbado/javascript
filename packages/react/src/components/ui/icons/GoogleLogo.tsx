@@ -1,4 +1,4 @@
-import googleSrc from '@corbado/shared-ui/assets/google.svg';
+import googleSrc from '../../../shared-ui/assets/google.svg';
 import type { FC } from 'react';
 import React from 'react';
 

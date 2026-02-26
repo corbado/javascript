@@ -1,4 +1,4 @@
-import type { BlockTypes } from '@corbado/shared-ui';
+import type { BlockTypes } from '../../shared-ui';
 import type { CorbadoAuthConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';

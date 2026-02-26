@@ -1,8 +1,8 @@
-import { PlatformType } from '@corbado/shared-ui';
-import faceIdAndroid from '@corbado/shared-ui/assets/face-id-android.svg';
-import faceIdApple from '@corbado/shared-ui/assets/face-id-apple.svg';
-import faceIdDefault from '@corbado/shared-ui/assets/face-id-default.svg';
-import faceIdWindows from '@corbado/shared-ui/assets/face-id-windows.svg';
+import { PlatformType } from '../../../shared-ui';
+import faceIdAndroid from '../../../shared-ui/assets/face-id-android.svg';
+import faceIdApple from '../../../shared-ui/assets/face-id-apple.svg';
+import faceIdDefault from '../../../shared-ui/assets/face-id-default.svg';
+import faceIdWindows from '../../../shared-ui/assets/face-id-windows.svg';
 import type { FC } from 'react';
 import React, { memo, useRef } from 'react';
 

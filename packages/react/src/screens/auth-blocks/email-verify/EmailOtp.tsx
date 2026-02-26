@@ -1,5 +1,5 @@
-import type { EmailVerifyBlock } from '@corbado/shared-ui';
-import { AuthType } from '@corbado/shared-ui';
+import type { EmailVerifyBlock } from '../../../shared-ui';
+import { AuthType } from '../../../shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -86,6 +86,10 @@ export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const handleOtpChange = useCallback(
     (userOtp: string[]) => {
       const otp = userOtp.join('');
+      if (otp.length > 0) {
+        block.notifyOTPStarted();
+      }
+
       if (otp.length !== 6) {
         return;
       }

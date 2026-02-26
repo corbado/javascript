@@ -1,4 +1,4 @@
-import phoneIconSrc from '@corbado/shared-ui/assets/phone.svg';
+import phoneIconSrc from '../../../shared-ui/assets/phone.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';

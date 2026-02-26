@@ -16,7 +16,7 @@ export class LoginInitBlockModel {
   }
 
   async fillEmailUsername(value: string) {
-    const elem = this.page.getByRole('textbox');
+    const elem = this.page.getByRole('textbox', { name: /email/i });
     await elem.click();
     await elem.fill(value);
   }
@@ -36,11 +36,15 @@ export class LoginInitBlockModel {
   }
 
   async submitPrimary() {
-    await this.page.getByRole('button', { name: 'Continue' }).click();
+    await this.page.getByRole('button', { name: 'Continue', exact: true }).click();
   }
 
   async submitSocialGoogle(email: string, password: string, secret: string) {
     await socialLogin(this.page, email, password, secret);
+  }
+
+  submitSocialLocal() {
+    return this.page.getByRole('button', { name: /custom/i }).click();
   }
 
   submitPasskeyButton() {
@@ -65,7 +69,7 @@ export class LoginInitBlockModel {
 
   async expectSocialButton(...type: SocialProviderType[]) {
     for (const t of type) {
-      await expect(this.page.getByTitle(`Continue with ${t}`)).toBeVisible();
+      await expect(this.page.getByRole('button', { name: `Continue with ${t}` })).toBeVisible();
     }
   }
 }

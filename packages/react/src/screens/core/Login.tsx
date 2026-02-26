@@ -1,4 +1,4 @@
-import { AuthType } from '@corbado/shared-ui';
+import { AuthType } from '../../shared-ui';
 import type { CorbadoLoginConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';

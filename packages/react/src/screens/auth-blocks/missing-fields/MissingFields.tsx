@@ -1,4 +1,4 @@
-import type { LoginIdentifiers, MissingFieldsBlock, TextFieldWithError } from '@corbado/shared-ui';
+import type { LoginIdentifiers, MissingFieldsBlock, TextFieldWithError } from '../../../shared-ui';
 import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,14 +1,14 @@
 # Observe integration into complete
 
-- [ ]  merge shared-ui package into react packge
-- [ ]  integrate observe login and signup flows
-- [ ]  manual testing using local react demo
-- [ ]  validate all login methods locally (manual testing)
+- [ ] merge shared-ui package into react packge
+- [ ] integrate observe login and signup flows
+- [ ] manual testing using local react demo
+- [ ] validate all login methods locally (manual testing)
 
 ## 2 Login methods testing
 
 | **type**                                           | **scenario**                                                                       | preconditions                                    | **status** |
-|----------------------------------------------------|------------------------------------------------------------------------------------|--------------------------------------------------|------------|
+| -------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ | ---------- |
 | passkey-cui                                        | successful                                                                         | confirmed_user_with_pk                           |            |
 |                                                    | successful after cancelled                                                         | confirmed_user_with_pk                           |            |
 |                                                    | successful after pk_deleted                                                        | confirmed_user_with_server_deleted_pk            |            |
@@ -43,7 +43,7 @@
 ## 3 Enrollment testing
 
 | **type** | **scenario**                                  | preconditions                         | **status** |
-|----------|-----------------------------------------------|---------------------------------------|------------|
+| -------- | --------------------------------------------- | ------------------------------------- | ---------- |
 | passkey  | successful (conditional)                      | -                                     |            |
 |          | successful (auto)                             | -                                     |            |
 |          | successful (manual)                           | -                                     |            |

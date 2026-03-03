@@ -139,7 +139,7 @@ test.describe('observe: passkey-button', () => {
     await preparePasskeyButtonState(email, model);
 
     await model.loginInit.removePasskeyButton();
-    
+
     await model.loginInit.fillEmailUsername(email);
     await model.loginInit.submitPrimary();
     await model.expectScreen(ScreenNames.End);

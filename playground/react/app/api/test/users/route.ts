@@ -1,5 +1,9 @@
 import { NextRequest } from 'next/server';
-import { createUserWithPrecondition, listSessionUsers, removeUser } from '../../../../src/server/test-tools/users-service';
+import {
+  createUserWithPrecondition,
+  listSessionUsers,
+  removeUser,
+} from '../../../../src/server/test-tools/users-service';
 import type { PreconditionType } from '../../../../src/tools/types';
 
 export const runtime = 'nodejs';

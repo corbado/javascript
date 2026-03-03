@@ -27,7 +27,10 @@ export function TestSidebar() {
     <aside className='test-sidebar'>
       <h3>Tooling</h3>
       <div className='test-tabs'>
-        <div role='tablist' className='test-row'>
+        <div
+          role='tablist'
+          className='test-row'
+        >
           <button
             data-testid='tooling-tab-users'
             role='tab'

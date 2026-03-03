@@ -5,4 +5,3 @@ export function getObserveProjectId(): string {
   }
   return projectId;
 }
-

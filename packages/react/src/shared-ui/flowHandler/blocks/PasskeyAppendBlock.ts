@@ -123,7 +123,7 @@ export class PasskeyAppendBlock extends Block<BlockDataPasskeyAppend> {
       attestationOptions: '',
     } as PasskeyEnrollmentStarted);
 
-    const res = await this.app.authProcessService.appendPasskey((data) => {
+    const res = await this.app.authProcessService.appendPasskey(data => {
       this.#enrollmentOp?.submitted({
         conditional: false,
         auto: this.data.autoSubmit,

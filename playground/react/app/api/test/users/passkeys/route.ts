@@ -28,10 +28,7 @@ export async function PATCH(req: NextRequest) {
     attestationResponse: string;
   };
   if (!body.userID || !body.processID || !body.trackingID || !body.attestationResponse) {
-    return Response.json(
-      { error: 'userID, processID, trackingID and attestationResponse required' },
-      { status: 400 },
-    );
+    return Response.json({ error: 'userID, processID, trackingID and attestationResponse required' }, { status: 400 });
   }
 
   await finishPasskeyForUser(body.userID, body.processID, body.trackingID, body.attestationResponse);

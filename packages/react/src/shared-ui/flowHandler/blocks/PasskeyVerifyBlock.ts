@@ -96,7 +96,7 @@ export class PasskeyVerifyBlock extends Block<BlockDataPasskeyVerify> {
       assertionOptions: '',
     } as PasskeyLoginStart);
 
-    const res = await this.app.authProcessService.loginWithPasskey((data) => {
+    const res = await this.app.authProcessService.loginWithPasskey(data => {
       this.#passkeyLoginOp?.submitted({ assertionResponse: data.assertionResponse });
     });
 

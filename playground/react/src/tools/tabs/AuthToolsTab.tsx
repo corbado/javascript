@@ -101,7 +101,10 @@ export function AuthToolsTab({ mockAuthenticator, mockOidc, users }: AuthToolsTa
           ))}
       </select>
 
-      <button data-testid='tooling-auth-apply' onClick={() => mockAuthenticator.updateMockBehavior()}>
+      <button
+        data-testid='tooling-auth-apply'
+        onClick={() => mockAuthenticator.updateMockBehavior()}
+      >
         Apply authenticator settings
       </button>
 
@@ -138,7 +141,10 @@ export function AuthToolsTab({ mockAuthenticator, mockOidc, users }: AuthToolsTa
           <option value='error'>error</option>
           <option value='navigate_back'>navigate_back</option>
         </select>
-        <button data-testid='tooling-social-clear' onClick={() => mockOidc.clearUser()}>
+        <button
+          data-testid='tooling-social-clear'
+          onClick={() => mockOidc.clearUser()}
+        >
           Clear
         </button>
       </div>

@@ -1,7 +1,7 @@
+import type { CorbadoTracker } from '@corbado/observe';
 import type { AuthType, ContinueOnOtherDevice, CorbadoApp, ProcessCommon } from '@corbado/web-core';
 import { ContinueOnOtherDeviceReasonEnum } from '@corbado/web-core';
 
-import type { CorbadoTracker } from '@corbado/observe';
 import { BlockTypes, ContinueOnOtherEnvReasons, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';

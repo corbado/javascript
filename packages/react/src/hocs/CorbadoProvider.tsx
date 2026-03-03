@@ -1,13 +1,10 @@
 import '../i18n';
 
-import type { BehaviorSubject } from '../shared-ui';
-import { handleTheming } from '../shared-ui';
+import { init as initObserve } from '@corbado/observe';
 import type { CorbadoConfig } from '@corbado/types';
 import type { CorbadoApp } from '@corbado/web-core';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useEffect, useMemo } from 'react';
-
-import { init as initObserve } from '@corbado/observe';
 
 import { CorbadoSessionProvider } from '../contexts/CorbadoSessionProvider';
 import ErrorHandlingProvider from '../contexts/ErrorHandlingProvider';
@@ -15,6 +12,8 @@ import { ObserveContext } from '../contexts/ObserveContext';
 import { TelemetryProvider } from '../contexts/TelemetryProvider';
 import { ThemeProvider } from '../contexts/ThemeProvider';
 import { handleDynamicLocaleSetup } from '../i18n';
+import type { BehaviorSubject } from '../shared-ui';
+import { handleTheming } from '../shared-ui';
 
 export type TelemetryConfig =
   | false

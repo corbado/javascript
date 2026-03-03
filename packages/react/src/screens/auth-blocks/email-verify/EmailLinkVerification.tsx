@@ -1,9 +1,9 @@
-import type { EmailVerifyBlock } from '../../../shared-ui';
 import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, LoadingSpinner, Text } from '../../../components';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { EmailVerifyBlock } from '../../../shared-ui';
 import { EmailLinkError } from './EmailLinkError';
 
 export const EmailLinkVerification = ({ block }: { block: EmailVerifyBlock }) => {

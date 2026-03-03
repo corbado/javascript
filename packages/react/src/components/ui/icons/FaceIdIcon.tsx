@@ -1,12 +1,12 @@
+import type { FC } from 'react';
+import React, { memo, useRef } from 'react';
+
+import { ColorType, useIconWithTheme } from '../../../hooks/useIconWithTheme';
 import { PlatformType } from '../../../shared-ui';
 import faceIdAndroid from '../../../shared-ui/assets/face-id-android.svg';
 import faceIdApple from '../../../shared-ui/assets/face-id-apple.svg';
 import faceIdDefault from '../../../shared-ui/assets/face-id-default.svg';
 import faceIdWindows from '../../../shared-ui/assets/face-id-windows.svg';
-import type { FC } from 'react';
-import React, { memo, useRef } from 'react';
-
-import { ColorType, useIconWithTheme } from '../../../hooks/useIconWithTheme';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

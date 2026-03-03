@@ -1,5 +1,3 @@
-import type { EmailVerifyBlock } from '../../../shared-ui';
-import { AuthType } from '../../../shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -11,6 +9,8 @@ import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { UserInfo } from '../../../components/ui/UserInfo';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { EmailVerifyBlock } from '../../../shared-ui';
+import { AuthType } from '../../../shared-ui';
 
 export const EmailOtp = ({ block }: { block: EmailVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.email-verify.email-otp` });

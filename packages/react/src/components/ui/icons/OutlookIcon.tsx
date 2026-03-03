@@ -1,7 +1,7 @@
-import outlookSrc from '../../../shared-ui/assets/outlook.svg';
 import type { FC } from 'react';
 import React from 'react';
 
+import outlookSrc from '../../../shared-ui/assets/outlook.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -1,10 +1,10 @@
-import type { EmailVerifyBlock } from '../../../shared-ui';
 import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, InputField, PrimaryButton, SecondaryButton } from '../../../components';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { EmailVerifyBlock } from '../../../shared-ui';
 
 export interface EditEmailProps {
   block: EmailVerifyBlock;

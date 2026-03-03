@@ -1,3 +1,4 @@
+import type { CorbadoTracker, PasskeyEnrollmentStarted, PasskeyOperationEnrollment } from '@corbado/observe';
 import type { BlockBody, CorbadoApp, GeneralBlockPasskeyAppend, ProcessCommon } from '@corbado/web-core';
 import {
   AuthType,
@@ -7,7 +8,6 @@ import {
   VerificationMethod,
 } from '@corbado/web-core';
 
-import type { CorbadoTracker, PasskeyEnrollmentStarted, PasskeyOperationEnrollment } from '@corbado/observe';
 import { BlockTypes, createLoginIdentifierType, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';

@@ -1,7 +1,7 @@
-import circleExclamationSrc from '../../../shared-ui/assets/circle-exclamation.svg';
 import React, { memo, useRef } from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import circleExclamationSrc from '../../../shared-ui/assets/circle-exclamation.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

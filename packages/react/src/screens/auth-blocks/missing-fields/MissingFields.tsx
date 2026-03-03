@@ -1,4 +1,3 @@
-import type { LoginIdentifiers, MissingFieldsBlock, TextFieldWithError } from '../../../shared-ui';
 import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginIdentifiers, MissingFieldsBlock, TextFieldWithError } from '../../../shared-ui';
 
 export const MissingFields = ({ block }: { block: MissingFieldsBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.missing-fields` });

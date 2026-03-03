@@ -1,7 +1,7 @@
-import yahooSrc from '../../../shared-ui/assets/yahoo.svg';
 import type { FC } from 'react';
 import React from 'react';
 
+import yahooSrc from '../../../shared-ui/assets/yahoo.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

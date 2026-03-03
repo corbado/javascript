@@ -1,10 +1,10 @@
-import type { LoginInitBlock, TextFieldWithError } from '../../../shared-ui';
 import type { FC, FormEvent } from 'react';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ObserveContext } from '../../../contexts/ObserveContext';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginInitBlock, TextFieldWithError } from '../../../shared-ui';
 import type { InputFieldProps } from '../../ui';
 import { InputField, PhoneInputField, PrimaryButton } from '../../ui';
 

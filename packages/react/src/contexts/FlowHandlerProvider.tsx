@@ -1,11 +1,11 @@
-import type { AuthType, BlockTypes, ScreenWithBlock } from '../shared-ui';
-import { InitState, ProcessHandler } from '../shared-ui';
 import i18n from 'i18next';
 import type { FC, PropsWithChildren } from 'react';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useCorbado } from '../hooks/useCorbado';
 import { useTelemetry } from '../hooks/useTelemetry';
+import type { AuthType, BlockTypes, ScreenWithBlock } from '../shared-ui';
+import { InitState, ProcessHandler } from '../shared-ui';
 import type { FlowHandlerContextProps } from './FlowHandlerContext';
 import FlowHandlerContext from './FlowHandlerContext';
 import { ObserveContext } from './ObserveContext';

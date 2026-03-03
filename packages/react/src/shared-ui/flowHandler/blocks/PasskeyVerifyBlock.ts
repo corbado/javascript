@@ -1,3 +1,5 @@
+import type { CorbadoTracker, PasskeyOperationLogin } from '@corbado/observe';
+import type { PasskeyLoginStart } from '@corbado/observe';
 import type {
   AuthType,
   BlockBody,
@@ -8,8 +10,6 @@ import type {
 } from '@corbado/web-core';
 import { BlockType, GeneralBlockPasskeyVerifyLoginHintEnum, VerificationMethod } from '@corbado/web-core';
 
-import type { CorbadoTracker, PasskeyOperationLogin } from '@corbado/observe';
-import type { PasskeyLoginStart } from '@corbado/observe';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';

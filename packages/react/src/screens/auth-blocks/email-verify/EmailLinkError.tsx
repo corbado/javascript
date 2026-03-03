@@ -1,9 +1,9 @@
-import type { EmailVerifyBlock } from '../../../shared-ui';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, Text } from '../../../components';
 import { ExclamationIcon } from '../../../components/ui/icons/ExclamationIcon';
+import type { EmailVerifyBlock } from '../../../shared-ui';
 
 export function EmailLinkError({ block }: { block: EmailVerifyBlock }) {
   const { t } = useTranslation('translation', {

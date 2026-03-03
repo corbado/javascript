@@ -1,10 +1,10 @@
-import type { BlockTypes } from '../../shared-ui';
 import type { CorbadoAuthConfig } from '@corbado/types';
 import type { FC } from 'react';
 import React from 'react';
 
 import { AuthFlow } from '../../components';
 import FlowHandlerProvider from '../../contexts/FlowHandlerProvider';
+import type { BlockTypes } from '../../shared-ui';
 
 const CorbadoAuth: FC<CorbadoAuthConfig> = ({
   onLoggedIn,

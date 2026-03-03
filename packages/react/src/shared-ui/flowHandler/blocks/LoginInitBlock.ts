@@ -14,12 +14,12 @@ import type {
 import { AuthType, BlockType, PasskeyChallengeCancelledError, SocialDataStatusEnum } from '@corbado/web-core';
 import log from 'loglevel';
 
+import { providersToSocialLoginMethods } from '../../utils/observe';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';
 import type { BlockDataLoginInit } from '../types';
 import { Block } from './Block';
-import { providersToSocialLoginMethods } from '../../utils/observe';
 
 export class LoginInitBlock extends Block<BlockDataLoginInit> {
   readonly data: BlockDataLoginInit;

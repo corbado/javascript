@@ -1,9 +1,9 @@
-import type { SocialLogin } from '../../shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { TFunction } from 'i18next';
 import type { FC, ReactNode } from 'react';
 import React, { useEffect } from 'react';
 
+import type { SocialLogin } from '../../shared-ui';
 import { IconButton } from './buttons/IconButton';
 import { Divider } from './Divider';
 import GithubIcon from './icons/GithubLogo';

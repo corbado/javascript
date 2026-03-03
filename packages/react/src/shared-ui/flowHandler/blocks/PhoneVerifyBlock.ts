@@ -1,7 +1,7 @@
+import type { CorbadoTracker } from '@corbado/observe';
 import type { AuthType, BlockBody, CorbadoApp, ProcessCommon } from '@corbado/web-core';
 import type { GeneralBlockVerifyIdentifier } from '@corbado/web-core/dist/api/v2';
 
-import type { CorbadoTracker } from '@corbado/observe';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';

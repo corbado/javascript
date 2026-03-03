@@ -1,7 +1,7 @@
-import gmailSrc from '../../../shared-ui/assets/gmail.svg';
 import type { FC } from 'react';
 import React from 'react';
 
+import gmailSrc from '../../../shared-ui/assets/gmail.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

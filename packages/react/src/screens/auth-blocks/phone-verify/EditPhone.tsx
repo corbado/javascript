@@ -1,4 +1,3 @@
-import type { PhoneVerifyBlock } from '../../../shared-ui';
 import type { FC, FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +7,7 @@ import { SecondaryButton } from '../../../components/ui/buttons/SecondaryButton'
 import { PhoneInputField } from '../../../components/ui/input/PhoneInputField';
 import { Header } from '../../../components/ui/typography/Header';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PhoneVerifyBlock } from '../../../shared-ui';
 
 export interface EditPhoneProps {
   block: PhoneVerifyBlock;

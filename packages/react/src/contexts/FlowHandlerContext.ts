@@ -1,6 +1,7 @@
+import { createContext } from 'react';
+
 import type { ScreenWithBlock } from '../shared-ui';
 import { InitState } from '../shared-ui';
-import { createContext } from 'react';
 
 export interface FlowHandlerContextProps {
   currentScreen: ScreenWithBlock | undefined;

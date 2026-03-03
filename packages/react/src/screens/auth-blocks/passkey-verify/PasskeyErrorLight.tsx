@@ -1,4 +1,3 @@
-import { getPlatformType, type PasskeyVerifyBlock } from '../../../shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +7,7 @@ import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import { getPlatformType, type PasskeyVerifyBlock } from '../../../shared-ui';
 
 export interface PasskeyErrorProps {
   block: PasskeyVerifyBlock;

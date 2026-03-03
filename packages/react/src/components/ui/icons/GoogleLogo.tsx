@@ -1,7 +1,7 @@
-import googleSrc from '../../../shared-ui/assets/google.svg';
 import type { FC } from 'react';
 import React from 'react';
 
+import googleSrc from '../../../shared-ui/assets/google.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -1,8 +1,8 @@
-import appleSrc from '../../../shared-ui/assets/apple.svg';
 import type { FC } from 'react';
 import React, { useRef } from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import appleSrc from '../../../shared-ui/assets/apple.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -1,7 +1,7 @@
-import { notANumberRegex, numberRegex } from '../../../shared-ui';
 import type { FC } from 'react';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
+import { notANumberRegex, numberRegex } from '../../../shared-ui';
 import ErrorMessage from '../errors/ErrorMessage';
 import { OtpInput } from './OtpInput';
 

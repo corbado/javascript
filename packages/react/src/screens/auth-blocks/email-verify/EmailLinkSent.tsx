@@ -1,10 +1,10 @@
-import { AuthType, type EmailVerifyBlock } from '../../../shared-ui';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { EmailLinks, Header, PrimaryButton, Text, UserInfo } from '../../../components';
 import { EmailIcon } from '../../../components/ui/icons/EmailIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import { AuthType, type EmailVerifyBlock } from '../../../shared-ui';
 import { EmailLinkSuccess } from './EmailLinkSuccess';
 
 // we poll for a maximum of 10 minutes (120 * 5000ms = 10min)

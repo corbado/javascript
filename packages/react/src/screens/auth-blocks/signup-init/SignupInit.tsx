@@ -1,4 +1,3 @@
-import type { LoginIdentifiers, SignupInitBlock } from '../../../shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { FormEvent, MutableRefObject } from 'react';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +13,7 @@ import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { Text } from '../../../components/ui/typography/Text';
 import { ObserveContext } from '../../../contexts/ObserveContext';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginIdentifiers, SignupInitBlock } from '../../../shared-ui';
 
 export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });

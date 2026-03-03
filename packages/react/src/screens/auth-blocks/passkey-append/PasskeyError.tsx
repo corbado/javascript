@@ -1,4 +1,3 @@
-import { type PasskeyAppendBlock } from '../../../shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +8,7 @@ import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon'
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import { type PasskeyAppendBlock } from '../../../shared-ui';
 
 export const PasskeyError = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {

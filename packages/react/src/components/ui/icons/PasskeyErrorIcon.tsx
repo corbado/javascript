@@ -1,9 +1,9 @@
-import passkeyErrorSrc from '../../../shared-ui/assets/passkey-error.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import passkeyErrorSrc from '../../../shared-ui/assets/passkey-error.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

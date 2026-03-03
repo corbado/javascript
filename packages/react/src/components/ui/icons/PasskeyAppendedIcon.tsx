@@ -1,9 +1,9 @@
-import passkeyAppendedSrc from '../../../shared-ui/assets/passkey-appended.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import passkeyAppendedSrc from '../../../shared-ui/assets/passkey-appended.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

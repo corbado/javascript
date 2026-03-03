@@ -1,3 +1,4 @@
+import type { CorbadoTracker, EmailLinkOperation, EmailOTPOperation } from '@corbado/observe';
 import type {
   AuthType,
   CorbadoApp,
@@ -8,7 +9,6 @@ import type {
 import type { Result } from 'ts-results';
 import { Ok } from 'ts-results';
 
-import type { CorbadoTracker, EmailLinkOperation, EmailOTPOperation } from '@corbado/observe';
 import { BlockTypes, ScreenNames } from '../constants';
 import type { ErrorTranslator } from '../errorTranslator';
 import type { ProcessHandler } from '../processHandler';

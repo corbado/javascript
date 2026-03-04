@@ -3,39 +3,47 @@ import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import type { MockOidcBehavior, MockOidcUser } from '../../tools/types';
 
-const dbDir = path.join(process.cwd(), '.data');
-mkdirSync(dbDir, { recursive: true });
-const dbPath = path.join(dbDir, 'tooling.sqlite');
+let _db: DatabaseSync | null = null;
 
-const db = new DatabaseSync(dbPath);
+function getDb(): DatabaseSync {
+  if (_db) return _db;
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS mock_oidc_users (
-    id TEXT PRIMARY KEY,
-    dev_session_id TEXT NOT NULL,
-    email TEXT NOT NULL,
-    behavior TEXT NOT NULL DEFAULT 'success',
-    created_at INTEGER NOT NULL
-  );
-`);
+  const dbDir = path.join(process.cwd(), '.data');
+  mkdirSync(dbDir, { recursive: true });
+  const dbPath = path.join(dbDir, 'tooling.sqlite');
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS mock_oidc_auth_codes (
-    code TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    dev_session_id TEXT NOT NULL,
-    created_at INTEGER NOT NULL
-  );
-`);
+  _db = new DatabaseSync(dbPath);
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS session_users (
-    dev_session_id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    created_at INTEGER NOT NULL,
-    PRIMARY KEY (dev_session_id, user_id)
-  );
-`);
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS mock_oidc_users (
+      id TEXT PRIMARY KEY,
+      dev_session_id TEXT NOT NULL,
+      email TEXT NOT NULL,
+      behavior TEXT NOT NULL DEFAULT 'success',
+      created_at INTEGER NOT NULL
+    );
+  `);
+
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS mock_oidc_auth_codes (
+      code TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      dev_session_id TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+  `);
+
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS session_users (
+      dev_session_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      PRIMARY KEY (dev_session_id, user_id)
+    );
+  `);
+
+  return _db;
+}
 
 function toUser(row: Record<string, unknown>): MockOidcUser {
   return {
@@ -48,7 +56,7 @@ function toUser(row: Record<string, unknown>): MockOidcUser {
 
 export const OidcDb = {
   listUsers(devSessionId: string): MockOidcUser[] {
-    const stmt = db.prepare(
+    const stmt = getDb().prepare(
       `SELECT id, dev_session_id, email, behavior
        FROM mock_oidc_users
        WHERE dev_session_id = ?
@@ -58,14 +66,14 @@ export const OidcDb = {
   },
 
   setSingleUser(devSessionId: string, email: string): MockOidcUser {
-    db.prepare(`DELETE FROM mock_oidc_users WHERE dev_session_id = ?`).run(devSessionId);
+    getDb().prepare(`DELETE FROM mock_oidc_users WHERE dev_session_id = ?`).run(devSessionId);
     const user: MockOidcUser = {
       id: crypto.randomUUID(),
       devSessionId,
       email,
       behavior: 'success',
     };
-    db.prepare(
+    getDb().prepare(
       `INSERT INTO mock_oidc_users (id, dev_session_id, email, behavior, created_at)
        VALUES (?, ?, ?, ?, ?)`,
     ).run(user.id, devSessionId, email, user.behavior, Date.now());
@@ -73,12 +81,12 @@ export const OidcDb = {
   },
 
   updateBehavior(id: string, behavior: MockOidcBehavior): MockOidcUser | null {
-    db.prepare(`UPDATE mock_oidc_users SET behavior = ? WHERE id = ?`).run(behavior, id);
+    getDb().prepare(`UPDATE mock_oidc_users SET behavior = ? WHERE id = ?`).run(behavior, id);
     return this.getUserById(id);
   },
 
   getUserById(id: string): MockOidcUser | null {
-    const row = db
+    const row = getDb()
       .prepare(
         `SELECT id, dev_session_id, email, behavior
          FROM mock_oidc_users
@@ -90,19 +98,19 @@ export const OidcDb = {
   },
 
   clearUsers(devSessionId: string) {
-    db.prepare(`DELETE FROM mock_oidc_users WHERE dev_session_id = ?`).run(devSessionId);
-    db.prepare(`DELETE FROM mock_oidc_auth_codes WHERE dev_session_id = ?`).run(devSessionId);
+    getDb().prepare(`DELETE FROM mock_oidc_users WHERE dev_session_id = ?`).run(devSessionId);
+    getDb().prepare(`DELETE FROM mock_oidc_auth_codes WHERE dev_session_id = ?`).run(devSessionId);
   },
 
   storeAuthCode(code: string, userId: string, devSessionId: string) {
-    db.prepare(
+    getDb().prepare(
       `INSERT INTO mock_oidc_auth_codes (code, user_id, dev_session_id, created_at)
        VALUES (?, ?, ?, ?)`,
     ).run(code, userId, devSessionId, Date.now());
   },
 
   getAuthCode(code: string): { code: string; userId: string; sessionId: string } | null {
-    const row = db
+    const row = getDb()
       .prepare(
         `SELECT code, user_id, dev_session_id
          FROM mock_oidc_auth_codes
@@ -121,18 +129,18 @@ export const OidcDb = {
   },
 
   deleteAuthCode(code: string) {
-    db.prepare(`DELETE FROM mock_oidc_auth_codes WHERE code = ?`).run(code);
+    getDb().prepare(`DELETE FROM mock_oidc_auth_codes WHERE code = ?`).run(code);
   },
 
   addSessionUser(devSessionId: string, userId: string) {
-    db.prepare(
+    getDb().prepare(
       `INSERT OR IGNORE INTO session_users (dev_session_id, user_id, created_at)
        VALUES (?, ?, ?)`,
     ).run(devSessionId, userId, Date.now());
   },
 
   listSessionUsers(devSessionId: string): string[] {
-    const rows = db
+    const rows = getDb()
       .prepare(
         `SELECT user_id
          FROM session_users
@@ -144,10 +152,10 @@ export const OidcDb = {
   },
 
   removeSessionUser(devSessionId: string, userId: string) {
-    db.prepare(`DELETE FROM session_users WHERE dev_session_id = ? AND user_id = ?`).run(devSessionId, userId);
+    getDb().prepare(`DELETE FROM session_users WHERE dev_session_id = ? AND user_id = ?`).run(devSessionId, userId);
   },
 
   clearSessionUsers(devSessionId: string) {
-    db.prepare(`DELETE FROM session_users WHERE dev_session_id = ?`).run(devSessionId);
+    getDb().prepare(`DELETE FROM session_users WHERE dev_session_id = ?`).run(devSessionId);
   },
 };

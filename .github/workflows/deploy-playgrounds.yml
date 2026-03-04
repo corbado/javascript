@@ -65,7 +65,7 @@ jobs:
       - name: Deploy react playground to Vercel
         run: |
           npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
-          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
           npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io

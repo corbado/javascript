@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
-import { CompletedError } from '../../screens/auth-blocks/completed/CompletedError';
 import { EditEmail } from '../../screens/auth-blocks/email-verify/EditEmail';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLinkSuccess';

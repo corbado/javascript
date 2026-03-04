@@ -382,7 +382,9 @@
       "body_withCustomerSupport": "Please refresh the page and if the problem persists, contact support at {{customerSupportEmail}}.",
       "body_noCustomerSupport": "Please refresh the page and if the problem persists, contact support.",
       "button": "Refresh page"
-    }
+    },
+    "sso_required_for_domain": "This email domain requires SSO login",
+    "sso_user_cannot_create_passkey": "SSO users cannot create passkeys"
   },
   "passkey-list": {
     "title": "PASSKEYS",

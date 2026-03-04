@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import useErrorHandling from '../../hooks/useErrorHandling';
 import useFlowHandler from '../../hooks/useFlowHandler';
+import { CompletedError } from '../../screens/auth-blocks/completed/CompletedError';
 import { EditEmail } from '../../screens/auth-blocks/email-verify/EditEmail';
 import { EmailLinkSent } from '../../screens/auth-blocks/email-verify/EmailLinkSent';
 import { EmailLinkSuccess } from '../../screens/auth-blocks/email-verify/EmailLinkSuccess';
@@ -22,7 +23,6 @@ import { PasskeyErrorLight } from '../../screens/auth-blocks/passkey-verify/Pass
 import { PasskeyHybrid } from '../../screens/auth-blocks/passkey-verify/PasskeyHybrid';
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
-import { CompletedError } from '../../screens/auth-blocks/completed/CompletedError';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import type {
   CompletedBlock,

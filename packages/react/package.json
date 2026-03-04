@@ -31,7 +31,7 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/observe": "next",
+    "@corbado/observe": "^0.0.1-next.4",
     "@corbado/shared-util": "^1.0.12",
     "@corbado/web-core": "^3.6.0",
     "i18next": "23.5.1",

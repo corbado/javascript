@@ -15,7 +15,6 @@ esbuild
       '.svg': 'dataurl',
     },
     alias: {
-      '@corbado/shared-ui': '../shared-ui/src',
       '@corbado/shared-util': '../shared-util/src',
     },
     define,

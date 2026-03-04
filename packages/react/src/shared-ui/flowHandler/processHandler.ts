@@ -25,8 +25,8 @@ import {
   SignupInitBlock,
 } from './blocks';
 import { CompletedBlock } from './blocks/CompletedBlock';
-import type { BlockTypes, ScreenNames } from './constants';
-import { initScreenBlocks } from './constants';
+import type { BlockTypes } from './constants';
+import { initScreenBlocks, ScreenNames } from './constants';
 import { ErrorTranslator } from './errorTranslator';
 import { ProcessHistoryHandler } from './processHistoryHandler';
 import type { ScreenWithBlock } from './types';
@@ -288,9 +288,24 @@ export class ProcessHandler {
   }
 
   #updatePrimaryBlock = (newPrimaryBlock: Block<unknown>) => {
-    // if process has been completed, we don't want to update the screen anymore
     if (newPrimaryBlock instanceof CompletedBlock) {
+      if (newPrimaryBlock.error) {
+        this.#currentBlock = newPrimaryBlock;
+        this.#currentScreen = ScreenNames.CompletedError;
+
+        this.#onScreenChangeCallbacks.forEach(cb =>
+          cb({
+            screen: this.#currentScreen,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            block: this.#currentBlock!,
+          }),
+        );
+
+        return;
+      }
+
       this.onProcessCompleted(newPrimaryBlock.data);
+
       return;
     }
 

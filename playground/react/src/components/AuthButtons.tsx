@@ -7,10 +7,7 @@ import SettingsContext from '../contexts/SettingsContext';
 export const AuthButtons = () => {
   const router = useRouter();
   const { updateProjectId } = useContext(SettingsContext);
-  const projectId =
-    process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting ||
-    process.env.VITE_CORBADO_PROJECT_ID_ManualTesting ||
-    'pro-1';
+  const projectId = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1';
 
   const navigateTo = (projectId: string, component: string) => {
     updateProjectId(projectId);

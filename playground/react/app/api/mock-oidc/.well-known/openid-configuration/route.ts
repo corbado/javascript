@@ -1,8 +1,10 @@
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  // const issuer = `${req.nextUrl.origin}/api/mock-oidc`;
-  const issuer = 'http://host.docker.internal:3000/api/mock-oidc';
+  let issuer = `${req.nextUrl.origin}/api/mock-oidc`;
+  if (process.env.CORBADO_OIDC_MOCK_EXPLICIT_ISSUER) {
+    issuer = process.env.CORBADO_OIDC_MOCK_EXPLICIT_ISSUER;
+  }
 
   return Response.json({
     issuer,

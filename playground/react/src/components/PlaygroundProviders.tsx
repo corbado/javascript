@@ -4,8 +4,6 @@ import { CorbadoProvider } from '@corbado/react';
 import type { PropsWithChildren } from 'react';
 import { useContext, useEffect } from 'react';
 import SettingsContext, { SettingsProvider } from '../contexts/SettingsContext';
-import englishTranslations from '../translations/en';
-import frenchTranslations from '../translations/fr';
 
 function CorbadoProviderWrapper({ children }: PropsWithChildren) {
   const { darkMode, projectId } = useContext(SettingsContext);
@@ -24,21 +22,10 @@ function CorbadoProviderWrapper({ children }: PropsWithChildren) {
   return (
     <div key={`${projectId}-${darkMode}`}>
       <CorbadoProvider
-        projectId={
-          projectId ||
-          process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting ||
-          process.env.VITE_CORBADO_PROJECT_ID_ManualTesting ||
-          'pro-1'
-        }
-        // customTranslations={{
-        //   fr: frenchTranslations,
-        //   en: englishTranslations,
-        // }}
+        projectId={projectId || process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1'}
         darkMode={darkMode ? 'on' : 'off'}
         isDevMode={true}
-        frontendApiUrlSuffix={
-          process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX || process.env.VITE_CORBADO_FRONTEND_API_URL_SUFFIX
-        }
+        frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}
         telemetry={{ debug: true }}
         observeEnabled={true}
       >

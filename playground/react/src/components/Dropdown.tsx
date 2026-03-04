@@ -5,17 +5,11 @@ import SettingsContext from '../contexts/SettingsContext';
 
 const dropdownItems = [
   {
-    id:
-      process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting ||
-      process.env.VITE_CORBADO_PROJECT_ID_ManualTesting ||
-      'pro-1',
+    id: process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1',
     label: 'Manual Testing',
   },
   {
-    id:
-      process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_LocalDevelopment ||
-      process.env.VITE_CORBADO_PROJECT_ID_LocalDevelopment ||
-      'pro-1',
+    id: process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_LocalDevelopment || 'pro-1',
     label: 'Local Development',
   },
 ].filter((item, index, all) => item.id && all.findIndex(x => x.id === item.id) === index);

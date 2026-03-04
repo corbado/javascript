@@ -28,11 +28,7 @@ const setProjectIdInLocalStorage = (projectId: string) => {
 
 const getProjectIdFromURL = () => {
   if (typeof window === 'undefined') {
-    return (
-      process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting ||
-      process.env.VITE_CORBADO_PROJECT_ID_ManualTesting ||
-      'pro-1'
-    );
+    return process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1';
   }
 
   const projectIdFromURL = window.location.pathname.split('/')[1];

@@ -59,7 +59,6 @@ export enum ScreenNames {
   EditEmail = 'edit-email',
   EditPhone = 'edit-phone',
   ContinueOnOtherEnv = 'continue-on-other-device',
-  CompletedError = 'completed-error',
 }
 
 export enum BlockTypes {

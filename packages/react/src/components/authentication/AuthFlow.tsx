@@ -25,7 +25,6 @@ import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
 import type {
-  CompletedBlock,
   ContinueOnOtherEnvBlock,
   EmailVerifyBlock,
   LoginInitBlock,
@@ -146,12 +145,7 @@ export const AuthFlow: FC<Props> = ({ initialAutoFocus }) => {
       case BlockTypes.PasskeyAppended:
         return <PasskeyAppended block={currentScreen.block as PasskeyAppendedBlock} />;
       case BlockTypes.Completed:
-        switch (currentScreen.screen) {
-          case ScreenNames.CompletedError:
-            return <CompletedError block={currentScreen.block as CompletedBlock} />;
-          default:
-            return null;
-        }
+        return null;
       case BlockTypes.ContinueOnOtherEnv:
         return <EmailLinkSuccess block={currentScreen.block as ContinueOnOtherEnvBlock} />;
       case BlockTypes.MissingFields:

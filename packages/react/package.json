@@ -45,6 +45,7 @@
   "devDependencies": {
     "@corbado/types": "^3.2.0",
     "@types/react": "^18.2.0",
+    "@types/ua-parser-js": "^0.7.39",
     "css-loader": "^6.8.1",
     "style-loader": "^3.3.3",
     "ts-results": "^3.3.0",

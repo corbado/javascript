@@ -1,14 +1,17 @@
+'use client';
+
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import SettingsContext from '../contexts/SettingsContext';
+
 export const AuthButtons = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { updateProjectId } = useContext(SettingsContext);
-  const projectId = import.meta.env.VITE_CORBADO_PROJECT_ID_ManualTesting!;
+  const projectId = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1';
 
   const navigateTo = (projectId: string, component: string) => {
     updateProjectId(projectId);
-    navigate(`/${projectId}/${component}`);
+    router.push(`/${projectId}/${component}`);
   };
 
   return (

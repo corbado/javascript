@@ -20,6 +20,8 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
       - name: Cache node modules
         id: cache-npm
@@ -41,7 +43,7 @@ jobs:
         run: |
           npm i
           npm install lerna
-          npm install vercel@33.2.0
+          npm install vercel@50.26.1
           npm list
 
       - name: Check ESLint Errors
@@ -63,7 +65,7 @@ jobs:
       - name: Deploy react playground to Vercel
         run: |
           npx vercel link --yes --project react-playground --scope corbado -t $VERCEL_TOKEN
-          npx vercel pull -t $VERCEL_TOKEN
+          npx vercel pull --environment=preview -t $VERCEL_TOKEN
           npx vercel build -t $VERCEL_TOKEN
           url="$(npx vercel deploy --prebuilt -t ${{ secrets.VERCEL_TOKEN }})"
           npx vercel alias -S corbado -t ${{ secrets.VERCEL_TOKEN }} "$url" $BRANCH_NAME.react.playground.corbado.io

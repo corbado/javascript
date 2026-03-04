@@ -1,10 +1,10 @@
-import type { ContinueOnOtherEnvBlock, EmailVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, Text } from '../../../components/ui';
 import { EmailLinkSuccessIcon } from '../../../components/ui/icons/EmailLinkSuccess';
+import type { ContinueOnOtherEnvBlock, EmailVerifyBlock } from '../../../shared-ui';
 
 export interface EmailLinkSuccessProps {
   block: EmailVerifyBlock | ContinueOnOtherEnvBlock;

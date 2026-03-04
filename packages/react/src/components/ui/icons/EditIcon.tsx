@@ -1,8 +1,8 @@
-import editSrc from '@corbado/shared-ui/assets/edit.svg';
 import type { FC } from 'react';
 import React, { useRef } from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import editSrc from '../../../shared-ui/assets/edit.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

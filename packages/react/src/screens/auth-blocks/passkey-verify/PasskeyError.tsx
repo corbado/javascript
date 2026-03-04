@@ -1,4 +1,3 @@
-import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +6,7 @@ import { Divider, Header, PrimaryButton, SecondaryButton, Text, UserInfo } from 
 import { PasskeyErrorIcon } from '../../../components/ui/icons/PasskeyErrorIcon';
 import { PersonIcon } from '../../../components/ui/icons/PersonIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PasskeyVerifyBlock } from '../../../shared-ui';
 
 export interface PasskeyErrorProps {
   block: PasskeyVerifyBlock;

@@ -1,7 +1,6 @@
-import type { LoginIdentifiers, SignupInitBlock } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import type { FormEvent, MutableRefObject } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PrimaryButton } from '../../../components/ui/buttons/PrimaryButton';
@@ -12,11 +11,14 @@ import { SocialLoginButtons } from '../../../components/ui/SocialLoginButtons';
 import { Header } from '../../../components/ui/typography/Header';
 import { SubHeader } from '../../../components/ui/typography/SubHeader';
 import { Text } from '../../../components/ui/typography/Text';
+import { ObserveContext } from '../../../contexts/ObserveContext';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginIdentifiers, SignupInitBlock } from '../../../shared-ui';
 
 export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `signup.signup-init.signup-init` });
   const { logMethodCalled } = useTelemetry();
+  const { tracker } = useContext(ObserveContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [socialLoadingInProgress, setSocialLoadingInProgress] = useState<boolean | undefined>(undefined);
@@ -42,6 +44,19 @@ export const SignupInit = ({ block, initialAutoFocus }: { block: SignupInitBlock
       socialAbort.abort();
     };
   }, [block]);
+
+  useEffect(() => {
+    if (!tracker || !emailRef.current) {
+      return;
+    }
+
+    const op = tracker.provideIdentifierStartable(emailRef.current);
+    block.setProvideIdentifierOp(op);
+
+    return () => {
+      block.destroyProvideIdentifierOp();
+    };
+  }, [tracker, block]);
 
   const headerText = useMemo(() => t('header'), [t]);
   const subheaderText = useMemo(() => t('subheader'), [t]);

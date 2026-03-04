@@ -1,8 +1,8 @@
-import { LoginIdentifierType, type LoginInitBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { LoginIdentifierType, type LoginInitBlock } from '../../../shared-ui';
 import { LoadingSpinner, SecondaryButton, Text } from '../../ui';
 import { PasskeyDefaultIcon } from '../../ui/icons/PasskeyDefaultIcon';
 import { RightIcon } from '../../ui/icons/RightIcon';
@@ -44,7 +44,7 @@ export const LastIdentifier: FC<LastIdentifierProps> = ({
     }
 
     block
-      .start(lastIdentifier.value, lastIdentifier.type === LoginIdentifierType.Phone)
+      .start(lastIdentifier.value, lastIdentifier.type === LoginIdentifierType.Phone, true)
       .finally(() => setLoading(false));
   };
 

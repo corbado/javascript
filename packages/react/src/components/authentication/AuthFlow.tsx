@@ -1,15 +1,3 @@
-import type {
-  ContinueOnOtherEnvBlock,
-  EmailVerifyBlock,
-  LoginInitBlock,
-  MissingFieldsBlock,
-  PasskeyAppendBlock,
-  PasskeyAppendedBlock,
-  PasskeyVerifyBlock,
-  PhoneVerifyBlock,
-  SignupInitBlock,
-} from '@corbado/shared-ui';
-import { BlockTypes, InitState, ScreenNames } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -35,6 +23,18 @@ import { PasskeyHybrid } from '../../screens/auth-blocks/passkey-verify/PasskeyH
 import { EditPhone } from '../../screens/auth-blocks/phone-verify/EditPhone';
 import { PhoneOtp } from '../../screens/auth-blocks/phone-verify/PhoneOtp';
 import { SignupInit } from '../../screens/auth-blocks/signup-init/SignupInit';
+import type {
+  ContinueOnOtherEnvBlock,
+  EmailVerifyBlock,
+  LoginInitBlock,
+  MissingFieldsBlock,
+  PasskeyAppendBlock,
+  PasskeyAppendedBlock,
+  PasskeyVerifyBlock,
+  PhoneVerifyBlock,
+  SignupInitBlock,
+} from '../../shared-ui';
+import { BlockTypes, InitState, ScreenNames } from '../../shared-ui';
 import { ComponentUnavailableError } from '../ui/errors/ComponentUnavailable';
 import ErrorPopup from '../ui/errors/ErrorPopup';
 import { FreemiumBadge } from '../ui/FreemiumBadge';

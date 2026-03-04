@@ -1,9 +1,10 @@
-import type { LoginInitBlock, TextFieldWithError } from '@corbado/shared-ui';
 import type { FC, FormEvent } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ObserveContext } from '../../../contexts/ObserveContext';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginInitBlock, TextFieldWithError } from '../../../shared-ui';
 import type { InputFieldProps } from '../../ui';
 import { InputField, PhoneInputField, PrimaryButton } from '../../ui';
 
@@ -25,6 +26,7 @@ export const LoginForm: FC<LoginFormProps> = ({
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
 
   const { logMethodCalled } = useTelemetry();
+  const { tracker } = useContext(ObserveContext);
 
   const [textField, setTextField] = useState<TextFieldWithError | null>(null);
   const [usePhone, setUsePhone] = useState<boolean>(
@@ -51,6 +53,19 @@ export const LoginForm: FC<LoginFormProps> = ({
     }
     textFieldRef.current.value = block.data.loginIdentifier ? block.data.loginIdentifier : '';
   }, [block]);
+
+  useEffect(() => {
+    if (!tracker || !textFieldRef.current) {
+      return;
+    }
+
+    const op = tracker.provideIdentifierStartable(textFieldRef.current);
+    block.setProvideIdentifierOp(op);
+
+    return () => {
+      block.destroyProvideIdentifierOp();
+    };
+  }, [tracker, block]);
 
   const submitButtonText = useMemo(() => t('button_submit'), [t]);
   const IdentifierInputField = useMemo(() => {
@@ -135,9 +150,9 @@ export const LoginForm: FC<LoginFormProps> = ({
       logMethodCalled('loginStart', 'loginInit');
 
       if (usePhone) {
-        void block.start(phoneInput, true);
+        void block.start(phoneInput, true, false);
       } else {
-        void block.start(textFieldRef.current?.value ?? '', false);
+        void block.start(textFieldRef.current?.value ?? '', false, false);
       }
     },
     [block, usePhone, phoneInput],

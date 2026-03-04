@@ -9,14 +9,8 @@ module.exports = merge(common, {
   },
   devtool: 'source-map',
   mode: 'production',
-  resolve: {
-    alias: {
-      '@corbado/shared-ui/assets': path.resolve(__dirname, '../../node_modules/@corbado/shared-ui/dist/assets'),
-    },
-  },
   externals: {
     '@corbado/web-core': '@corbado/web-core',
-    '@corbado/shared-ui': '@corbado/shared-ui',
     '@corbado/shared-util': '@corbado/shared-util',
     react: 'react',
     i18next: 'i18next',
@@ -28,6 +22,15 @@ module.exports = merge(common, {
       {
         test: /\.svg$/,
         type: 'asset/inline',
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.json$/,
+        type: 'json',
+        include: /i18n/,
       },
     ],
   },

@@ -1,9 +1,9 @@
-import emailLinkSuccessSrc from '@corbado/shared-ui/assets/email-link-success.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import emailLinkSuccessSrc from '../../../shared-ui/assets/email-link-success.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

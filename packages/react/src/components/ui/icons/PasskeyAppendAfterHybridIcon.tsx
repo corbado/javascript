@@ -1,9 +1,9 @@
-import passkeyAppendAfterHybridSrc from '@corbado/shared-ui/assets/passkey-append-after-hybrid.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import passkeyAppendAfterHybridSrc from '../../../shared-ui/assets/passkey-append-after-hybrid.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

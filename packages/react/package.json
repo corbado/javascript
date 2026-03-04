@@ -31,18 +31,23 @@
     "url": "https://github.com/corbado/javascript/issues"
   },
   "dependencies": {
-    "@corbado/shared-ui": "^3.6.0",
+    "@corbado/observe": "^0.0.1-next.4",
     "@corbado/shared-util": "^1.0.12",
     "@corbado/web-core": "^3.6.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "libphonenumber-js": "^1.10.59",
     "react-i18next": "13.2.2",
-    "react-phone-number-input": "^3.3.9"
+    "react-phone-number-input": "^3.3.9",
+    "rxjs": "^7.8.1",
+    "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
     "@corbado/types": "^3.2.0",
     "@types/react": "^18.2.0",
+    "@types/ua-parser-js": "^0.7.39",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
     "ts-results": "^3.3.0",
     "typescript": "^5.2.2"
   },

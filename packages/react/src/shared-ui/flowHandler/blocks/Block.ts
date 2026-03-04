@@ -1,0 +1,114 @@
+import type { CorbadoTracker } from '@corbado/observe';
+import type { AuthType, CorbadoApp, ProcessCommon } from '@corbado/web-core';
+import { CorbadoError } from '@corbado/web-core';
+import type { ProcessResponse, RequestError } from '@corbado/web-core/dist/api/v2';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import type { Result } from 'ts-results';
+
+import type { BlockTypes, ScreenNames } from '../constants';
+import type { ErrorTranslator } from '../errorTranslator';
+import type { ProcessHandler } from '../processHandler';
+
+export abstract class Block<A> {
+  abstract readonly data: A;
+  abstract readonly type: BlockTypes;
+  abstract readonly initialScreen: ScreenNames;
+  abstract readonly authType: AuthType;
+
+  protected readonly app: CorbadoApp;
+  protected readonly observeTracker: CorbadoTracker | undefined;
+  readonly flowHandler: ProcessHandler;
+  readonly errorTranslator: ErrorTranslator;
+  readonly common: ProcessCommon;
+  alternatives: Block<unknown>[] = [];
+  error?: CorbadoError;
+
+  constructor(
+    app: CorbadoApp,
+    flowHandler: ProcessHandler,
+    common: ProcessCommon,
+    errorTranslator: ErrorTranslator,
+    observeTracker?: CorbadoTracker,
+  ) {
+    this.flowHandler = flowHandler;
+    this.app = app;
+    this.common = common;
+    this.errorTranslator = errorTranslator;
+    this.observeTracker = observeTracker;
+  }
+
+  protected updateScreen(newScreen: ScreenNames) {
+    this.flowHandler.updateScreen(newScreen);
+
+    return;
+  }
+
+  protected updateProcess(processUpdateRes: Result<ProcessResponse, CorbadoError>) {
+    if (processUpdateRes.err && processUpdateRes.val.ignore) {
+      return;
+    }
+
+    if (processUpdateRes.err) {
+      this.flowHandler.handleError(processUpdateRes.val);
+      return;
+    }
+
+    this.flowHandler.handleProcessUpdateBackend(processUpdateRes.val);
+    return;
+  }
+
+  protected updateProcessFrontend(newPrimaryBlock: Block<unknown>, newAlternatives: Block<unknown>[] = []) {
+    this.flowHandler.handleProcessUpdateFrontend(newPrimaryBlock, newAlternatives);
+
+    return;
+  }
+
+  protected static getFormattedPhoneNumber(raw: string) {
+    // for obscured phone numbers, parsePhoneNumber will throw an error
+    try {
+      const parsedPhoneNumber = parsePhoneNumber(raw);
+      if (parsedPhoneNumber) {
+        return parsedPhoneNumber.formatInternational();
+      }
+
+      return raw;
+    } catch (e) {
+      return raw;
+    }
+  }
+
+  setAlternatives(alternatives: Block<unknown>[]) {
+    this.alternatives = alternatives;
+  }
+
+  setError(error: RequestError) {
+    const corbadoError = new CorbadoError(true, false);
+    const maybeTranslation = this.errorTranslator.translate(error);
+    if (maybeTranslation) {
+      corbadoError.translatedMessage = maybeTranslation;
+    } else {
+      corbadoError.message = error.message;
+    }
+
+    this.error = corbadoError;
+  }
+
+  init() {
+    return;
+  }
+
+  async confirmAbort(): Promise<void> {
+    this.observeTracker?.loginReset({});
+
+    const newBlock = await this.app.authProcessService.resetAuthProcess();
+    this.updateProcess(newBlock);
+
+    return;
+  }
+
+  cancelAbort(originalBlock: Block<unknown>) {
+    this.updateProcessFrontend(originalBlock, originalBlock.alternatives);
+
+    return;
+  }
+}

@@ -1,5 +1,3 @@
-import type { PhoneVerifyBlock } from '@corbado/shared-ui';
-import { AuthType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -10,6 +8,8 @@ import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { UserInfo } from '../../../components/ui/UserInfo';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PhoneVerifyBlock } from '../../../shared-ui';
+import { AuthType } from '../../../shared-ui';
 
 export const PhoneOtp = ({ block }: { block: PhoneVerifyBlock }) => {
   const { t } = useTranslation('translation', { keyPrefix: `${block.authType}.phone-verify.phone-otp` });

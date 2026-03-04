@@ -1,4 +1,3 @@
-import type { PasskeyAppendBlock } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +5,7 @@ import { Header, PrimaryButton, SecondaryButton, Text } from '../../../component
 import { LockIcon } from '../../../components/ui/icons/LockIcon';
 import { PasskeyAppendAfterHybridIcon } from '../../../components/ui/icons/PasskeyAppendAfterHybridIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PasskeyAppendBlock } from '../../../shared-ui';
 
 export const PasskeyAppendAfterHybrid = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {

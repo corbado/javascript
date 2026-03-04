@@ -1,5 +1,3 @@
-import type { PasskeyAppendBlock } from '@corbado/shared-ui';
-import { getPlatformType } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +11,8 @@ import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { SecureIcon } from '../../../components/ui/icons/SecureIcon';
 import { Text } from '../../../components/ui/typography/Text';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PasskeyAppendBlock } from '../../../shared-ui';
+import { getPlatformType } from '../../../shared-ui';
 
 export const PasskeyAppend = ({ block }: { block: PasskeyAppendBlock }) => {
   const { t } = useTranslation('translation', {

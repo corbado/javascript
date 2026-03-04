@@ -1,13 +1,13 @@
-import { PlatformType } from '@corbado/shared-ui';
-import fingerprintAndroid from '@corbado/shared-ui/assets/fingerprint-android.svg';
-import fingerprintApple from '@corbado/shared-ui/assets/fingerprint-apple.svg';
-import fingerprintDefault from '@corbado/shared-ui/assets/fingerprint-default.svg';
-import fingerprintWindows from '@corbado/shared-ui/assets/fingerprint-windows.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { ColorType, useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import { PlatformType } from '../../../shared-ui';
+import fingerprintAndroid from '../../../shared-ui/assets/fingerprint-android.svg';
+import fingerprintApple from '../../../shared-ui/assets/fingerprint-apple.svg';
+import fingerprintDefault from '../../../shared-ui/assets/fingerprint-default.svg';
+import fingerprintWindows from '../../../shared-ui/assets/fingerprint-windows.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -1,4 +1,3 @@
-import type { PasskeyVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Divider, Header, PrimaryButton, SecondaryButton, Text } from '../../../components';
 import PasskeyHybridIcon from '../../../components/ui/icons/PasskeyHybridIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PasskeyVerifyBlock } from '../../../shared-ui';
 
 export interface PasskeyHybridProps {
   block: PasskeyVerifyBlock;

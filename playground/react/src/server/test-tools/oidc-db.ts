@@ -73,10 +73,12 @@ export const OidcDb = {
       email,
       behavior: 'success',
     };
-    getDb().prepare(
-      `INSERT INTO mock_oidc_users (id, dev_session_id, email, behavior, created_at)
+    getDb()
+      .prepare(
+        `INSERT INTO mock_oidc_users (id, dev_session_id, email, behavior, created_at)
        VALUES (?, ?, ?, ?, ?)`,
-    ).run(user.id, devSessionId, email, user.behavior, Date.now());
+      )
+      .run(user.id, devSessionId, email, user.behavior, Date.now());
     return user;
   },
 
@@ -103,10 +105,12 @@ export const OidcDb = {
   },
 
   storeAuthCode(code: string, userId: string, devSessionId: string) {
-    getDb().prepare(
-      `INSERT INTO mock_oidc_auth_codes (code, user_id, dev_session_id, created_at)
+    getDb()
+      .prepare(
+        `INSERT INTO mock_oidc_auth_codes (code, user_id, dev_session_id, created_at)
        VALUES (?, ?, ?, ?)`,
-    ).run(code, userId, devSessionId, Date.now());
+      )
+      .run(code, userId, devSessionId, Date.now());
   },
 
   getAuthCode(code: string): { code: string; userId: string; sessionId: string } | null {
@@ -133,10 +137,12 @@ export const OidcDb = {
   },
 
   addSessionUser(devSessionId: string, userId: string) {
-    getDb().prepare(
-      `INSERT OR IGNORE INTO session_users (dev_session_id, user_id, created_at)
+    getDb()
+      .prepare(
+        `INSERT OR IGNORE INTO session_users (dev_session_id, user_id, created_at)
        VALUES (?, ?, ?)`,
-    ).run(devSessionId, userId, Date.now());
+      )
+      .run(devSessionId, userId, Date.now());
   },
 
   listSessionUsers(devSessionId: string): string[] {

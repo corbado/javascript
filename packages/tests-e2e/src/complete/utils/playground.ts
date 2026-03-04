@@ -68,8 +68,7 @@ export async function spawnPlaygroundNew(
     cwd: playgroundDir,
     env: {
       ...process.env,
-      VITE_CORBADO_PROJECT_ID_ManualTesting: projectId,
-      NEXT_PUBLIC_CORBADO_PROJECT_ID_ManualTesting: projectId,
+      NEXT_PUBLIC_CORBADO_PROJECT_ID: projectId,
     },
     stdio: 'ignore',
     shell: true,

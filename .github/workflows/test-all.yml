@@ -34,13 +34,13 @@ jobs:
     env:
       # ── Shared (hardcoded) ──
       PLAYWRIGHT_NUM_CORES: 4
+      DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH: ${{ secrets.DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH }}
 
       # ── "complete" environment secrets (empty on connect runners) ──
       PLAYWRIGHT_JWT_TOKEN: ${{ secrets.PLAYWRIGHT_JWT_TOKEN }}
       PLAYWRIGHT_GOOGLE_EMAIL: ${{ secrets.PLAYWRIGHT_GOOGLE_EMAIL }}
       PLAYWRIGHT_GOOGLE_PASSWORD: ${{ secrets.PLAYWRIGHT_GOOGLE_PASSWORD }}
       PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
-      DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH: ${{ secrets.DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH }}
 
       # ── "connect" environment secrets (empty on complete runners) ──
       # Env var names must match what the playground apps read from process.env,

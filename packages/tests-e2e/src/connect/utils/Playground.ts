@@ -45,7 +45,7 @@ export async function spawnPlaygroundNew(): Promise<PlaygroundInfo> {
       ...process.env,
     },
     stdio: 'ignore',
-    shell: true,
+    shell: process.platform === 'win32',
   });
   const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });
   if (!ok) {
@@ -66,7 +66,7 @@ export default async function installPlaygroundDeps() {
   const installProcess = spawn('npm', ['install'], {
     cwd: playgroundDir,
     stdio: 'inherit',
-    shell: true,
+    shell: process.platform === 'win32',
   });
 
   await new Promise<void>((resolve, reject) => {
@@ -76,7 +76,7 @@ export default async function installPlaygroundDeps() {
         const buildProcess = spawn('npm', ['run', 'build'], {
           cwd: playgroundDir,
           stdio: 'inherit',
-          shell: true,
+          shell: process.platform === 'win32',
         });
         buildProcess.on('close', (buildCode: number) => {
           if (buildCode === 0) {

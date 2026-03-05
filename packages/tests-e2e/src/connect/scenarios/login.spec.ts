@@ -22,7 +22,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginWithTextField', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -47,7 +47,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginWithOneTap', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -73,7 +73,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginWithCUI', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -91,7 +91,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginErrorStates', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     await VirtualAuthenticator.init(page);
     const nonExistingEmail = 'integration-test+0000000000@corbado.com';
@@ -103,7 +103,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginErrorStatesGradualRollout', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login`);
+    await page.goto(`http://localhost:${port.toString()}/login`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -128,7 +128,7 @@ test.describe('login flows', () => {
   });
 
   test('testLoginErrorStatesPasskeyDeletedServerSide', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);

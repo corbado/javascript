@@ -99,7 +99,7 @@ export class ObserveAuthModel {
     initialSidebarActions?: InitialSidebarActions,
   ): Promise<InitialSidebarResult> {
     this.projectId = projectId;
-    const url1 = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}`;
+    const url1 = `http://localhost:${port.toString()}`;
     await this.page.goto(url1);
 
     const initialSidebarResult: InitialSidebarResult = {
@@ -133,7 +133,7 @@ export class ObserveAuthModel {
       this.#bootstrapInstalled = true;
     }
 
-    let url2 = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth`;
+    let url2 = `http://localhost:${port.toString()}/${this.projectId}/auth`;
     if (hashCode) {
       url2 += `#${hashCode}`;
     }

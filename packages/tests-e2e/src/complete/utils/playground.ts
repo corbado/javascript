@@ -71,7 +71,7 @@ export async function spawnPlaygroundNew(
       NEXT_PUBLIC_CORBADO_PROJECT_ID: projectId,
     },
     stdio: 'ignore',
-    shell: true,
+    shell: process.platform === 'win32',
   });
   const ok = await waitPort({ host: 'localhost', port, timeout: 15_000, output: 'silent' });
   if (!ok) {
@@ -92,7 +92,7 @@ export default async function installPlaygroundDeps() {
   const installProcess = spawn('npm', ['install'], {
     cwd: playgroundDir,
     stdio: 'inherit',
-    shell: true,
+    shell: process.platform === 'win32',
   });
 
   await new Promise<void>((resolve, reject) => {
@@ -107,7 +107,7 @@ export default async function installPlaygroundDeps() {
         const buildProcess = spawn('npm', buildCommand, {
           cwd: playgroundDir,
           stdio: 'inherit',
-          shell: true,
+          shell: process.platform === 'win32',
         });
         buildProcess.on('close', (buildCode: number) => {
           if (buildCode === 0) {

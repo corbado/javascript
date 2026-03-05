@@ -23,18 +23,6 @@ export const AuthButtons = () => {
       >
         Auth Page (with complete auth component)
       </button>
-      <button
-        className='primary-auth-button'
-        onClick={() => navigateTo(projectId, 'signup')}
-      >
-        SignUp Page
-      </button>
-      <button
-        className='primary-auth-button'
-        onClick={() => navigateTo(projectId, 'login#login-init')}
-      >
-        Login Page
-      </button>
     </div>
   );
 };

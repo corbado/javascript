@@ -37,12 +37,11 @@ test.describe('observe: identifier-passkey', () => {
     }
   });
 
-  test('successful (confirmed_user_with_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init');
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
-    await tooling.setPasskeyLoginWithIdentifier('complete');
-    await tooling.applyAuthenticatorSettings();
+  test('successful (confirmed_user_with_pk)', async ({ model }) => {
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      createInitialUser: 'confirmed_user_with_pk',
+    });
 
     await startIdentifierPasskeyLogin(email, model);
     await model.expectScreen(ScreenNames.End);
@@ -50,10 +49,10 @@ test.describe('observe: identifier-passkey', () => {
 
   test('successful after cancelled (confirmed_user_with_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init');
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
-    await tooling.setPasskeyLoginWithIdentifier('cancel');
-    await tooling.applyAuthenticatorSettings();
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
+    });
 
     await startIdentifierPasskeyLogin(email, model);
     await expect(model.page.getByRole('button', { name: 'Continue with email' })).toBeVisible();
@@ -66,15 +65,15 @@ test.describe('observe: identifier-passkey', () => {
 
   test('successful after cancelled (2x) (confirmed_user_with_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init');
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
-    await tooling.setPasskeyLoginWithIdentifier('cancel');
-    await tooling.applyAuthenticatorSettings();
+    const {email} =await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
+    });
 
     await startIdentifierPasskeyLogin(email, model);
-    await expect(model.page.getByRole('button', { name: 'Continue with email' })).toBeVisible();
+    await model.expectScreen(ScreenNames.PasskeyErrorSoft);
     await retryPasskeyOnVerifyScreen(model);
-    await expect(model.page.getByRole('button', { name: 'Continue with email' })).toBeVisible();
+    await model.expectScreen(ScreenNames.PasskeyError);
 
     await tooling.setPasskeyLoginWithIdentifier('complete');
     await tooling.applyAuthenticatorSettings();
@@ -82,23 +81,21 @@ test.describe('observe: identifier-passkey', () => {
     await model.expectScreen(ScreenNames.End);
   });
 
-  test('incomplete after cancelled (confirmed_user_with_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init');
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
-    await tooling.setPasskeyLoginWithIdentifier('cancel');
-    await tooling.applyAuthenticatorSettings();
+  test('incomplete after cancelled (confirmed_user_with_pk)', async ({ model }) => {
+    const {email} = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
+    });
 
     await startIdentifierPasskeyLogin(email, model);
     await expect(model.page.getByRole('button', { name: 'Continue with email' })).toBeVisible();
   });
 
-  test('incomplete after cancelled (2x) (confirmed_user_with_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init');
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
-    await tooling.setPasskeyLoginWithIdentifier('cancel');
-    await tooling.applyAuthenticatorSettings();
+  test('incomplete after cancelled (2x) (confirmed_user_with_pk)', async ({ model }) => {
+    const {email} = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
+    });
 
     await startIdentifierPasskeyLogin(email, model);
     await expect(model.page.getByRole('button', { name: 'Continue with email' })).toBeVisible();

@@ -22,48 +22,41 @@ test.describe('observe: passkey-cui', () => {
     }
   });
 
-  test('successful (confirmed_user_with_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
+  test('successful (confirmed_user_with_pk)', async ({ model }) => {
     await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'complete' },
-      create: { action: 'complete' },
+      setLoginWithIdentifier: 'complete',
+      setLoginWithoutIdentifier: 'complete',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    await tooling.createUser('confirmed_user_with_pk');
-    await page.reload();
 
+    await model.expectScreen(ScreenNames.InitLogin);
     await model.expectScreen(ScreenNames.End);
   });
 
   test('successful after cancelled (confirmed_user_with_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
     await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'cancel' },
-      create: { action: 'complete' },
+      setLoginWithoutIdentifier: 'complete',
+      setLoginWithIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    await tooling.createUser('confirmed_user_with_pk');
-
-    await page.reload();
     await model.expectScreen(ScreenNames.InitLogin);
 
     await tooling.setPasskeyLoginWithoutIdentifier('complete');
     await tooling.applyAuthenticatorSettings();
     await page.reload();
+
     await model.expectScreen(ScreenNames.End);
   });
 
   test('successful after pk_deleted (confirmed_user_with_server_deleted_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'complete' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithoutIdentifier: 'complete',
+      setLoginWithIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_server_deleted_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_server_deleted_pk');
 
-    await page.reload();
     await model.expectScreen(ScreenNames.InitLogin);
     await model.expectError(
       'The provided passkey is no longer valid. Please enter your identifier (e.g. email) manually.',
@@ -75,14 +68,10 @@ test.describe('observe: passkey-cui', () => {
   });
 
   test('incomplete after pk_deleted (confirmed_user_with_server_deleted_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-
     await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'complete' },
-      create: { action: 'complete' },
+      setLoginWithoutIdentifier: 'complete',
+      createInitialUser: 'confirmed_user_with_server_deleted_pk',
     });
-    await tooling.createUser('confirmed_user_with_server_deleted_pk');
 
     await page.reload();
     await model.expectScreen(ScreenNames.InitLogin);
@@ -92,14 +81,10 @@ test.describe('observe: passkey-cui', () => {
   });
 
   test('incomplete after cancelled (confirmed_user_with_pk)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-
     await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'cancel' },
-      create: { action: 'complete' },
+      setLoginWithoutIdentifier: 'cancel',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    await tooling.createUser('confirmed_user_with_pk');
 
     await page.reload();
     await model.expectScreen(ScreenNames.InitLogin);

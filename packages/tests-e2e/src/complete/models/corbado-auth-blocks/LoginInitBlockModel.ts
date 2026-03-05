@@ -16,7 +16,7 @@ export class LoginInitBlockModel {
   }
 
   async fillEmailUsername(value: string) {
-    const elem = this.page.getByRole('textbox');
+    const elem = this.page.locator('.cb-container').getByRole('textbox').first();
     await elem.click();
     await elem.fill(value);
   }

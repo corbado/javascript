@@ -45,14 +45,11 @@ test.describe('observe: passkey-button', () => {
     }
   });
 
-  test('successful identifier-passkey (passkey-button)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+  test('successful identifier-passkey (passkey-button)', async ({ model }) => {
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await preparePasskeyButtonState(email, model);
 
     await model.loginInit.submitPasskeyButton();
@@ -61,12 +58,11 @@ test.describe('observe: passkey-button', () => {
 
   test('successful identifier-passkey (passkey-button, 1 cancel)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await preparePasskeyButtonState(email, model);
 
     await tooling.setPasskeyLoginWithIdentifier('cancel');
@@ -82,12 +78,11 @@ test.describe('observe: passkey-button', () => {
 
   test('successful identifier-passkey (passkey-button, 2 cancel)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await preparePasskeyButtonState(email, model);
 
     await tooling.setPasskeyLoginWithIdentifier('cancel');
@@ -106,12 +101,11 @@ test.describe('observe: passkey-button', () => {
 
   test('successful identifier-email_otp (passkey-button)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await preparePasskeyButtonState(email, model);
 
     await tooling.setPasskeyLoginWithIdentifier('cancel');
@@ -128,14 +122,12 @@ test.describe('observe: passkey-button', () => {
     await model.expectScreen(ScreenNames.End);
   });
 
-  test('successfull identifier-passkey (declined passkey-button)', async ({ model, page }) => {
-    const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'complete', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+  test('successfull identifier-passkey (declined passkey-button)', async ({ model }) => {
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'complete',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await preparePasskeyButtonState(email, model);
 
     await model.loginInit.removePasskeyButton();

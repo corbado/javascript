@@ -171,7 +171,6 @@ No protection rules (no required reviewers, no branch restrictions).
 - `AWS_SECRET_ACCESS_KEY` — renamed to `CLOUDWATCH_AWS_SECRET_ACCESS_KEY`
 - `AWS_ACCESS_KEY_ID_CONNECT_PLAYGROUND` — renamed to `COGNITO_AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY_CONNECT_PLAYGROUND` — renamed to `COGNITO_AWS_SECRET_ACCESS_KEY`
-- `SLACK_BOT_USER_OAUTH_TOKEN` — no longer used (Slack reporter is disabled)
 - `PLAYWRIGHT_TEST_URL` — now hardcoded in `.env.*.ci` files
 - All per-test-type secrets that have been moved into their respective environments
 

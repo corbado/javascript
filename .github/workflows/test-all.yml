@@ -152,7 +152,7 @@ jobs:
 
       - name: Create CloudWatch log stream
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDWATCH_AWS_ACCESS_KEY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ vars.CLOUDWATCH_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDWATCH_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
@@ -184,7 +184,7 @@ jobs:
       - name: Send results to CloudWatch
         if: always()
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDWATCH_AWS_ACCESS_KEY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ vars.CLOUDWATCH_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDWATCH_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |

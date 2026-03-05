@@ -45,7 +45,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY:   ${{ secrets.AWS_SECRET_ACCESS_KEY_CONNECT_PLAYGROUND }}
 
       GITHUB_RUN_ID:              ${{ github.run_id }}
-      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
       GITHUB_BRANCH_NAME:         ${{ github.ref_name }}
 
     steps:

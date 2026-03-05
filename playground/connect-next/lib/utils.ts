@@ -78,7 +78,7 @@ export const getCorbadoConnectToken = async (connectTokenType: string, connectTo
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
+      Authorization: `Basic ${process.env.DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH}`,
       'Content-Type': 'application/json',
     },
     cache: 'no-cache',

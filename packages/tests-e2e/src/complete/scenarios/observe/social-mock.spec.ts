@@ -46,7 +46,7 @@ test.describe('observe: social-mock', () => {
 
   test('successful (confirmed_user_without_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       createInitialUser: 'confirmed_user_without_pk',
     });
     await configureSocialMock(tooling, email, 'success');
@@ -59,7 +59,7 @@ test.describe('observe: social-mock', () => {
 
   test('successful after cancelled (confirmed_user_without_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       createInitialUser: 'confirmed_user_without_pk',
     });
     await configureSocialMock(tooling, email, 'cancel');
@@ -78,7 +78,7 @@ test.describe('observe: social-mock', () => {
 
   test('successful after back (confirmed_user_without_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       createInitialUser: 'confirmed_user_without_pk',
     });
     await configureSocialMock(tooling, email, 'navigate_back');
@@ -96,7 +96,7 @@ test.describe('observe: social-mock', () => {
 
   test('incomplete after cancelled (confirmed_user_without_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       createInitialUser: 'confirmed_user_without_pk',
     });
     await configureSocialMock(tooling, email, 'cancel');
@@ -107,7 +107,7 @@ test.describe('observe: social-mock', () => {
 
   test('successful with social-mock, same identifier after cancelled passkey', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       setLoginWithIdentifier: 'cancel',
       createInitialUser: 'confirmed_user_with_pk',
     });
@@ -127,7 +127,7 @@ test.describe('observe: social-mock', () => {
     page,
   }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       createInitialUser: 'confirmed_user_without_pk',
     });
     await configureSocialMock(tooling, email, 'success');

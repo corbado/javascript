@@ -65,7 +65,7 @@ test.describe('observe: identifier-passkey', () => {
 
   test('successful after cancelled (2x) (confirmed_user_with_pk)', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    const {email} =await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       setLoginWithIdentifier: 'cancel',
       createInitialUser: 'confirmed_user_with_pk',
     });
@@ -82,7 +82,7 @@ test.describe('observe: identifier-passkey', () => {
   });
 
   test('incomplete after cancelled (confirmed_user_with_pk)', async ({ model }) => {
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       setLoginWithIdentifier: 'cancel',
       createInitialUser: 'confirmed_user_with_pk',
     });
@@ -92,7 +92,7 @@ test.describe('observe: identifier-passkey', () => {
   });
 
   test('incomplete after cancelled (2x) (confirmed_user_with_pk)', async ({ model }) => {
-    const {email} = await model.load(projectId, port, 'login-init', {
+    const { email } = await model.load(projectId, port, 'login-init', {
       setLoginWithIdentifier: 'cancel',
       createInitialUser: 'confirmed_user_with_pk',
     });

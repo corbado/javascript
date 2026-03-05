@@ -4,17 +4,32 @@ End-to-end tests for the Corbado JavaScript SDK, using Playwright.
 
 ## Overview
 
+### Playground applications
+
+Each SDK has a corresponding **playground application** in `playground/`:
+
+| Playground                 | SDK                            | Framework      |
+| -------------------------- | ------------------------------ | -------------- |
+| `playground/react`         | `@corbado/react`               | Vite + React   |
+| `playground/web-js`        | `@corbado/web-js`              | Vite (vanilla) |
+| `playground/web-js-script` | `@corbado/web-js` (script tag) | Vite (vanilla) |
+| `playground/connect-next`  | `@corbado/connect-react`       | Next.js        |
+
+Playgrounds serve two purposes:
+
+1. **Manual testing** — each playground can be started locally (`npm run dev`) and is deployed automatically to Vercel on every push. This gives a quick way to verify SDK behaviour in a real browser without writing tests.
+2. **Automated testing** — Playwright tests run _on top of_ these playgrounds. The `globalSetup` in each test suite installs dependencies, builds the playground, and spawns it on a random port before tests start. No manual playground setup is needed.
+
+### Test suites
+
+Because multiple playgrounds can expose the same SDK surface, a single Playwright suite can be **reused across different playground apps**. For example, the three Complete playgrounds (`react`, `web-js`, `web-js-script`) all render the same auth UI component, so they share the same test suite — only the playground that gets spawned changes.
+
 There are two test suites:
 
-- **Complete** — tests the full Corbado auth UI component (signup, login, passkey list, social login, observe). Runs against a local Vite/React playground.
-- **Connect** — tests the Corbado Connect passkey integration (login, append, network blocking). Runs against a local Next.js playground that talks to AWS Cognito.
+- **Complete** — tests the full Corbado auth UI component (signup, login, passkey list, social login, observe). By default runs against the React playground; in the nightly workflow it also runs against `web-js` and `web-js-script`.
+- **Connect** — tests the Corbado Connect passkey integration (login, append, network blocking). Runs against the Next.js playground that talks to AWS Cognito.
 
-Each suite has its own Playwright config (`playwright.config.complete.ts` / `playwright.config.connect.ts`), env files, and `globalSetup` that automatically:
-1. Installs playground dependencies
-2. Builds the playground
-3. Spawns it on a random port before tests start
-
-No manual playground setup is needed.
+Each suite has its own Playwright config (`playwright.config.complete.ts` / `playwright.config.connect.ts`) and env files.
 
 ## Running locally
 
@@ -48,60 +63,10 @@ npm run e2e:connect:ui
 
 ### Workflows
 
-| Workflow | Trigger | What it does |
-|---|---|---|
-| `test.yml` | PR + push to develop | Runs Complete and Connect tests for **react** platform only (matrix) |
+| Workflow       | Trigger                            | What it does                                                                                              |
+| -------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `test.yml`     | PR + push to develop               | Runs Complete and Connect tests for **react** platform only (matrix)                                      |
 | `test-all.yml` | Nightly schedule (3x/day) + manual | Runs Complete tests for **react, web-js, web-js-script** + Connect tests for **react** (matrix, parallel) |
-
-### How test-all.yml works
-
-The workflow uses a GitHub Actions **matrix strategy** to run 4 test combinations in parallel on separate runners:
-
-| testType | platform | configFile |
-|---|---|---|
-| complete | react | playwright.config.complete.ts |
-| complete | web-js | playwright.config.complete.ts |
-| complete | web-js-script | playwright.config.complete.ts |
-| connect | react | playwright.config.connect.ts |
-
-Env vars are **scoped by test type** using **GitHub Environments**:
-- Each matrix entry runs with `environment: ${{ matrix.testType }}`, so `secrets.X` resolves from the matching environment
-- Complete-only secrets (JWT, Google OAuth) live in the `complete` environment — empty on connect runners
-- Connect-only secrets (Cognito, NEXT_PUBLIC_*) live in the `connect` environment — empty on complete runners
-- CloudWatch logging uses **repo-level** `CLOUDWATCH_AWS_*` credentials via step-level env override, so they never conflict with the Connect Cognito AWS credentials
-
-After each test run, results are uploaded as artifacts and sent to AWS CloudWatch via `scripts/cloudwatch-log.sh`.
-
-## Environment variables
-
-### Complete tests
-
-```bash
-#!/bin/bash
-
-PRIVATE_KEY_PATH="private.pem"
-KID="pki-..."
-ISS="https://auth.corbado-dev.com"
-USER_ID="usr-..."
-USER_NAME="systemtest"
-USER_EMAIL="anders.choi+systemtest@corbado.com"
-
-NOW=$( date +%s )
-IAT=${NOW}
-EXP=$((${NOW} +  3000000)) # after around 34 days
-NBF=$((${NOW} -  10)) # 10 seconds ago
-HEADER_RAW='{"alg":"RS256","kid":"'"${KID}"'","typ":"JWT"}'
-HEADER=$( echo  -n "${HEADER_RAW}" |  openssl base64 |  tr  -d '=' |  tr '/+' '_-' |  tr  -d '\n' )
-PAYLOAD_RAW='{"iss":"'"${ISS}"'","sub":"'"${USER_ID}"'","exp":'"${EXP}"',"nbf":'"${NBF}"',"iat":'"${IAT}"',"name":"'"${USER_NAME}"'","orig":"'"${USER_EMAIL}"'","email":"'"${USER_EMAIL}"'","version":2}'
-PAYLOAD=$( echo  -n "${PAYLOAD_RAW}" |  openssl base64 |  tr  -d '=' |  tr '/+' '_-' |  tr  -d '\n' )
-HEADER_PAYLOAD="${HEADER}.${PAYLOAD}"
-SIGNATURE=$( openssl dgst -sha256  -sign ${PRIVATE_KEY_PATH} <(echo  -n "${HEADER_PAYLOAD}") |  openssl base64 |  tr  -d '=' |  tr '/+' '_-' |  tr  -d '\n' )
-JWT="${HEADER_PAYLOAD}.${SIGNATURE}"
-
-echo  $JWT
-```
-
-The first segment contains all values that must be extracted from the backend deployment. The token is valid for ~34 days and should be renewed monthly.
 
 ## Authoring rules (connect)
 

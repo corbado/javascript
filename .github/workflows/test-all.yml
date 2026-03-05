@@ -54,31 +54,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.COGNITO_AWS_SECRET_ACCESS_KEY }}
 
     steps:
-      - name: Debug secret availability
-        run: |
-          check() { if [ -n "$2" ]; then echo "$1: SET (${#2} chars)"; else echo "$1: EMPTY"; fi; }
-          echo "=== Environment: ${{ matrix.testType }} / ${{ matrix.platform }} ==="
-          echo "--- Complete secrets ---"
-          check "PLAYWRIGHT_JWT_TOKEN" "$PLAYWRIGHT_JWT_TOKEN"
-          check "PLAYWRIGHT_GOOGLE_EMAIL" "$PLAYWRIGHT_GOOGLE_EMAIL"
-          check "PLAYWRIGHT_GOOGLE_PASSWORD" "$PLAYWRIGHT_GOOGLE_PASSWORD"
-          check "PLAYWRIGHT_GOOGLE_TOTP_SECRET" "$PLAYWRIGHT_GOOGLE_TOTP_SECRET"
-          check "DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH" "$DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH"
-          echo "--- Connect secrets ---"
-          check "NEXT_PUBLIC_CORBADO_PROJECT_ID" "$NEXT_PUBLIC_CORBADO_PROJECT_ID"
-          check "NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX" "$NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX"
-          check "NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID" "$NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID"
-          check "NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID" "$NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID"
-          check "CORBADO_BACKEND_API_URL" "$CORBADO_BACKEND_API_URL"
-          check "CORBADO_BACKEND_API_BASIC_AUTH" "$CORBADO_BACKEND_API_BASIC_AUTH"
-          check "PLAYWRIGHT_NGROK_AUTH_TOKEN" "$PLAYWRIGHT_NGROK_AUTH_TOKEN"
-          check "AWS_COGNITO_USER_POOL_ID" "$AWS_COGNITO_USER_POOL_ID"
-          check "AWS_COGNITO_CLIENT_ID" "$AWS_COGNITO_CLIENT_ID"
-          check "AWS_COGNITO_CLIENT_SECRET" "$AWS_COGNITO_CLIENT_SECRET"
-          check "AWS_REGION" "$AWS_REGION"
-          check "AWS_ACCESS_KEY_ID" "$AWS_ACCESS_KEY_ID"
-          check "AWS_SECRET_ACCESS_KEY" "$AWS_SECRET_ACCESS_KEY"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -150,11 +125,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDWATCH_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          check() { if [ -n "$2" ]; then echo "$1: SET (${#2} chars)"; else echo "$1: EMPTY"; fi; }
-          echo "=== CloudWatch step env (step-level overrides) ==="
-          check "AWS_ACCESS_KEY_ID" "$AWS_ACCESS_KEY_ID"
-          check "AWS_SECRET_ACCESS_KEY" "$AWS_SECRET_ACCESS_KEY"
-          check "AWS_REGION" "$AWS_REGION"
           TIMESTAMP=$(date +%s000)
           RANDOM_SUFFIX=$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 6)
           LOG_STREAM_NAME="javascript-${TIMESTAMP}-${RANDOM_SUFFIX}"

@@ -1,6 +1,6 @@
 {
   "name": "@corbado/react",
-  "version": "3.6.0",
+  "version": "3.7.0-alpha.0",
   "description": "This package provides all the functionalities and UI components needed by developers when integration Corbado's Authentication management system in their react application",
   "author": "Abdullah Shahbaz <abdullah_ghani@live.com>",
   "homepage": "https://github.com/corbado/javascript#readme",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@corbado/observe": "^0.0.1-next.4",
     "@corbado/shared-util": "^1.0.12",
-    "@corbado/web-core": "^3.6.0",
+    "@corbado/web-core": "^3.7.0-alpha.0",
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "libphonenumber-js": "^1.10.59",

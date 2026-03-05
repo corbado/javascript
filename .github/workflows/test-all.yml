@@ -156,6 +156,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDWATCH_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
+          check() { if [ -n "$2" ]; then echo "$1: SET (${#2} chars)"; else echo "$1: EMPTY"; fi; }
+          echo "=== CloudWatch step env (step-level overrides) ==="
+          check "AWS_ACCESS_KEY_ID" "$AWS_ACCESS_KEY_ID"
+          check "AWS_SECRET_ACCESS_KEY" "$AWS_SECRET_ACCESS_KEY"
+          check "AWS_REGION" "$AWS_REGION"
           TIMESTAMP=$(date +%s000)
           RANDOM_SUFFIX=$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 6)
           LOG_STREAM_NAME="javascript-${TIMESTAMP}-${RANDOM_SUFFIX}"

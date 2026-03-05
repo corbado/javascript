@@ -66,6 +66,7 @@ export default defineConfig({
     // ],
     ['html'],
     ['junit', { outputFile: 'test-results/results.xml' }],
+    ['./src/complete/utils/log-reporter.ts'],
   ],
   timeout: totalTimeout, // default: 30000ms
   expect: {
@@ -92,10 +93,14 @@ export default defineConfig({
       name: 'passkey-list-general',
       testMatch: ['scenarios/passkey-list-general/*.ts'],
     },
-    {
-      name: 'observe',
-      testMatch: ['scenarios/observe/*.ts'],
-    },
+    ...(!process.env.CI
+      ? [
+          {
+            name: 'observe',
+            testMatch: ['scenarios/observe/*.ts'],
+          },
+        ]
+      : []),
   ],
   globalSetup: 'src/complete/utils/playground.ts',
 });

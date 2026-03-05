@@ -30,4 +30,4 @@ packages/tests-e2e/.env.connect.local
 
 # scripts
 scripts/*.sh
-.env*.local
+!scripts/cloudwatch-log.sh

@@ -9,6 +9,7 @@ import { PhoneVerifyBlockModel } from './corbado-auth-blocks/PhoneVerifyBlockMod
 import { SignupInitBlockModel } from './corbado-auth-blocks/SignupInitBlockModel';
 import { PasskeyAppendBlockModel } from './observe-block-overwrites/PasskeyAppendBlockModel';
 import { PasskeyVerifyBlockModel } from './observe-block-overwrites/PasskeyVerifyBlockModel';
+import { PreconditionType, ToolingSidebarModel } from './ToolingSidebarModel';
 
 type ObserveMockAuthState = {
   enabled: boolean;
@@ -19,6 +20,17 @@ type ObserveMockAuthState = {
   create: {
     action: 'complete' | 'cancel' | 'error' | 'not-started';
   };
+};
+
+type InitialSidebarActions = {
+  setLoginWithIdentifier?: 'complete' | 'cancel' | 'error' | 'not-started';
+  setLoginWithoutIdentifier?: 'complete' | 'cancel' | 'error' | 'not-started';
+  setCreateAction?: 'complete' | 'cancel' | 'error' | 'not-started';
+  createInitialUser?: PreconditionType;
+};
+
+type InitialSidebarResult = {
+  email: string;
 };
 
 const defaultObserveMockAuthState: ObserveMockAuthState = {
@@ -80,20 +92,56 @@ export class ObserveAuthModel {
     this.passkeyVerify = new PasskeyVerifyBlockModel(page);
   }
 
-  async load(projectId: string, port: number, hashCode?: string, initialMockAuthState?: ObserveMockAuthState) {
+  async load(
+    projectId: string,
+    port: number,
+    hashCode?: string,
+    initialSidebarActions?: InitialSidebarActions,
+  ): Promise<InitialSidebarResult> {
     this.projectId = projectId;
+    const url1 = `http://localhost:${port.toString()}`;
+    await this.page.goto(url1);
+
+    const initialSidebarResult: InitialSidebarResult = {
+      email: '',
+    };
+
+    const initialMockAuthState = defaultObserveMockAuthState;
+    if (initialSidebarActions) {
+      if (initialSidebarActions.setLoginWithIdentifier) {
+        initialMockAuthState.login.withIdentifier = initialSidebarActions.setLoginWithIdentifier;
+        initialMockAuthState.enabled = true;
+      }
+      if (initialSidebarActions.setLoginWithoutIdentifier) {
+        initialMockAuthState.login.withoutIdentifier = initialSidebarActions.setLoginWithoutIdentifier;
+        initialMockAuthState.enabled = true;
+      }
+      if (initialSidebarActions.setCreateAction) {
+        initialMockAuthState.create.action = initialSidebarActions.setCreateAction;
+        initialMockAuthState.enabled = true;
+      }
+    }
+
+    if (initialSidebarActions?.createInitialUser) {
+      const tooling = new ToolingSidebarModel(this.page);
+      const { email } = await tooling.createUser(initialSidebarActions.createInitialUser);
+      initialSidebarResult.email = email;
+    }
+
     if (!this.#bootstrapInstalled) {
-      await this.page.addInitScript(observeInitScript, initialMockAuthState ?? defaultObserveMockAuthState);
+      await this.page.addInitScript(observeInitScript, initialMockAuthState);
       this.#bootstrapInstalled = true;
     }
 
-    let url = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth`;
+    let url2 = `http://localhost:${port.toString()}/${this.projectId}/auth`;
     if (hashCode) {
-      url += `#${hashCode}`;
+      url2 += `#${hashCode}`;
     }
 
-    await this.page.goto(url);
+    await this.page.goto(url2);
     await this.page.waitForSelector('.cb-container-body');
+
+    return initialSidebarResult;
   }
 
   async logout() {

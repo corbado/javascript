@@ -7,7 +7,7 @@ import SettingsContext from '../contexts/SettingsContext';
 export const AuthButtons = () => {
   const router = useRouter();
   const { updateProjectId } = useContext(SettingsContext);
-  const projectId = process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1';
+  const projectId = process.env.NEXT_PUBLIC_DEFAULT_CORBADO_PROJECT_ID || 'pro-1';
 
   const navigateTo = (projectId: string, component: string) => {
     updateProjectId(projectId);
@@ -22,18 +22,6 @@ export const AuthButtons = () => {
         onClick={() => navigateTo(projectId, 'auth')}
       >
         Auth Page (with complete auth component)
-      </button>
-      <button
-        className='primary-auth-button'
-        onClick={() => navigateTo(projectId, 'signup')}
-      >
-        SignUp Page
-      </button>
-      <button
-        className='primary-auth-button'
-        onClick={() => navigateTo(projectId, 'login#login-init')}
-      >
-        Login Page
       </button>
     </div>
   );

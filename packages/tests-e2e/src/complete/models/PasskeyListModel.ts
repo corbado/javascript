@@ -28,7 +28,7 @@ export class PasskeyListModel {
       await this.virtualAuthenticator.addWebAuthn(passkeySupport);
     }
 
-    const url = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth#signup-init`;
+    const url = `http://localhost:${port.toString()}/${this.projectId}/auth#signup-init`;
     await this.page.goto(url);
     await this.page.waitForSelector('.cb-container-body');
 

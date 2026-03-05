@@ -24,12 +24,11 @@ test.describe('observe: reset-flow', () => {
 
   test('successful with passkey-cui, same identifier after cancelled passkey', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'cancel', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
 
     await model.loginInit.fillEmailUsername(email);
     await model.loginInit.submitPrimary();
@@ -38,18 +37,19 @@ test.describe('observe: reset-flow', () => {
     await tooling.setPasskeyLoginWithoutIdentifier('complete');
     await tooling.applyAuthenticatorSettings();
 
+    await page.waitForTimeout(1000);
     await model.passkeyVerify.resetToLoginStart();
+    await page.waitForTimeout(1000);
     await model.expectScreen(ScreenNames.End);
   });
 
   test('successful with passkey-cui, different identifier after cancelled passkey', async ({ model, page }) => {
     const tooling = new ToolingSidebarModel(page);
-    await model.load(projectId, port, 'login-init', {
-      enabled: true,
-      login: { withIdentifier: 'cancel', withoutIdentifier: 'not-started' },
-      create: { action: 'complete' },
+    const { email } = await model.load(projectId, port, 'login-init', {
+      setLoginWithIdentifier: 'cancel',
+      setLoginWithoutIdentifier: 'not-started',
+      createInitialUser: 'confirmed_user_with_pk',
     });
-    const { email } = await tooling.createUser('confirmed_user_with_pk');
     await model.loginInit.fillEmailUsername(email);
     await model.loginInit.submitPrimary();
     await model.expectScreen(ScreenNames.PasskeyErrorSoft);

@@ -1,11 +1,11 @@
 const BAPI_BASE_URL = process.env.CORBADO_BACKEND_API_URL;
-const BAPI_BASIC_AUTH = process.env.CORBADO_BACKEND_API_BASIC_AUTH;
+const BAPI_BASIC_AUTH = process.env.DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH;
 function assertEnv() {
   if (!BAPI_BASE_URL) {
     throw new Error('CORBADO_BACKEND_API_URL is not configured');
   }
   if (!BAPI_BASIC_AUTH) {
-    throw new Error('CORBADO_BACKEND_API_BASIC_AUTH is not configured');
+    throw new Error('DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH is not configured');
   }
 }
 

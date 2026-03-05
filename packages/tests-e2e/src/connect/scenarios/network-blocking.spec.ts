@@ -23,7 +23,7 @@ test.describe('network blocking flows', () => {
   });
 
   test('testLoginErrorStatesNetworkBlocking', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -59,7 +59,7 @@ test.describe('network blocking flows', () => {
   });
 
   test('testAppendErrorStatesPasskeyAppendBlocked', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -94,7 +94,7 @@ test.describe('network blocking flows', () => {
   });
 
   test('testManageErrorStatesNetworkBlocking', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);

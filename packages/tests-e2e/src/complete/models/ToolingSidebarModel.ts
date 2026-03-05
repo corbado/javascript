@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-type PreconditionType =
+export type PreconditionType =
   | 'confirmed_user_with_pk'
   | 'confirmed_user_with_server_deleted_pk'
   | 'confirmed_user_with_social_google_ok'

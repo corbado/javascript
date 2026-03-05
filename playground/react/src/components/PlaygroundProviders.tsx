@@ -22,7 +22,7 @@ function CorbadoProviderWrapper({ children }: PropsWithChildren) {
   return (
     <div key={`${projectId}-${darkMode}`}>
       <CorbadoProvider
-        projectId={projectId || process.env.NEXT_PUBLIC_CORBADO_PROJECT_ID || 'pro-1'}
+        projectId={projectId || process.env.NEXT_PUBLIC_DEFAULT_CORBADO_PROJECT_ID || 'pro-1'}
         darkMode={darkMode ? 'on' : 'off'}
         isDevMode={true}
         frontendApiUrlSuffix={process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}

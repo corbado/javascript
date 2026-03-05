@@ -78,7 +78,7 @@ export function makeIdentifier(
 }
 
 export function makeSocialProvider(providerType: SocialProviderType): SocialProvider {
-  const redirectURI = `https://shared.${process.env.FRONTEND_API_URL_SUFFIX}/v2/auth/social/verify/callback`;
+  const redirectURI = `https://shared.${process.env.NEXT_PUBLIC_CORBADO_FRONTEND_API_URL_SUFFIX}/v2/auth/social/verify/callback`;
   let scopes: string[] = [];
   switch (providerType) {
     case SocialProviderType.Microsoft:

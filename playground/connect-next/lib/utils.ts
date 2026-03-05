@@ -12,6 +12,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+console.log('user pool id', process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID);
 const verifier = CognitoJwtVerifier.create({
   userPoolId: process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID!,
   tokenUse: 'id',

@@ -43,8 +43,6 @@ jobs:
       PLAYWRIGHT_GOOGLE_TOTP_SECRET: ${{ secrets.PLAYWRIGHT_GOOGLE_TOTP_SECRET }}
 
       # ── "connect" environment secrets (empty on complete runners) ──
-      # Env var names must match what the playground apps read from process.env,
-      # but the secret names use DEFAULT_ prefix for clarity.
       NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID: ${{ secrets.AWS_COGNITO_USER_POOL_ID }}
       NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID: ${{ vars.NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID }}
       PLAYWRIGHT_NGROK_AUTH_TOKEN: ${{ secrets.PLAYWRIGHT_NGROK_AUTH_TOKEN }}

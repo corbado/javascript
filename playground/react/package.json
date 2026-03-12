@@ -14,7 +14,7 @@
     "@corbado/react": "*",
     "jose": "^6.1.0",
     "libphonenumber-js": "^1.10.59",
-    "next": "^16.1.6 ",
+    "next": "^15.5.10 ",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-phone-number-input": "^3.3.9",

@@ -29,10 +29,11 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
 
   const handleErrorSoft = useCallback(
     async (situationCode: AppendSituationCode, expected: boolean, showError: boolean, error?: ConnectError) => {
+      const messageCode = `situation: ${situationCode} ${error?.track()}`;
       if (expected) {
-        await getConnectService().recordEventAppendError();
+        await getConnectService().recordEventAppendError(messageCode);
       } else {
-        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode} ${error?.track()}`);
+        await getConnectService().recordEventAppendErrorUnexpected(messageCode);
       }
 
       if (showError) {
@@ -44,10 +45,11 @@ export const AppendProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
 
   const handleErrorHard = useCallback(
     async (situationCode: AppendSituationCode, expected: boolean, error?: ConnectError) => {
+      const messageCode = `situation: ${situationCode} ${error?.track()}`;
       if (expected) {
-        await getConnectService().recordEventAppendError();
+        await getConnectService().recordEventAppendError(messageCode);
       } else {
-        await getConnectService().recordEventAppendErrorUnexpected(`situation: ${situationCode} ${error?.track()}`);
+        await getConnectService().recordEventAppendErrorUnexpected(messageCode);
       }
 
       config.onError?.(situationCode.toString());

@@ -1,4 +1,3 @@
-import { CorbadoThemes } from '@corbado/shared-ui';
 import type { CorbadoAuthConfig } from '@corbado/types';
 
 import CorbadoProvider, { type CorbadoProviderProps, TelemetryConfig } from './hocs/CorbadoProvider';
@@ -8,6 +7,7 @@ import Login from './screens/core/Login';
 import PasskeyList from './screens/core/PasskeyList';
 import SignUp from './screens/core/SignUp';
 import { User } from './screens/core/User';
+import { CorbadoThemes } from './shared-ui';
 
 export {
   CorbadoProvider,

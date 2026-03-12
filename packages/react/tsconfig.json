@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "composite": true,
-    "noEmit": false
+    "noEmit": false,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"]
 }

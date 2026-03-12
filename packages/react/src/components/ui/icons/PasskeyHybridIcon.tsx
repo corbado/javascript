@@ -1,9 +1,9 @@
-import passkeyHybridSrc from '@corbado/shared-ui/assets/passkey-hybrid.svg';
-import passkeyHybridDarkSrc from '@corbado/shared-ui/assets/passkey-hybrid-dark.svg';
 import type { FC } from 'react';
 import React from 'react';
 
 import useTheme from '../../../hooks/useTheme';
+import passkeyHybridSrc from '../../../shared-ui/assets/passkey-hybrid.svg';
+import passkeyHybridDarkSrc from '../../../shared-ui/assets/passkey-hybrid-dark.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -1,9 +1,9 @@
-import secureIconSrc from '@corbado/shared-ui/assets/secure-icon.svg';
 import type { FC } from 'react';
 import { memo, useRef } from 'react';
 import React from 'react';
 
 import { useIconWithTheme } from '../../../hooks/useIconWithTheme';
+import secureIconSrc from '../../../shared-ui/assets/secure-icon.svg';
 import type { IconProps } from './Icon';
 import { Icon } from './Icon';
 

@@ -5,6 +5,7 @@ export enum ScreenNames {
   PasskeyAppend2,
   PasskeyAppended,
   PasskeyError,
+  PasskeyErrorSoft,
   EmailOtpSignup,
   EmailOtpLogin,
   EmailOtpPostLogin,

@@ -75,6 +75,7 @@ export class WebAuthnService {
     }
 
     try {
+      console.log('credential', credential);
       return {
         response: JSON.stringify(credential.toJSON()),
         message: '',

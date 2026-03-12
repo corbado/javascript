@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 build
+.data
+.next
+next-env.d.ts
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +26,6 @@ build
 *.njsproj
 *.sln
 *.sw?
+
+.env.production
+.env

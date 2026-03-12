@@ -1,4 +1,3 @@
-import type { PasskeyAppendedBlock } from '@corbado/shared-ui';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +6,7 @@ import { PasskeyAppendedIcon } from '../../../components/ui/icons/PasskeyAppende
 import { Header } from '../../../components/ui/typography/Header';
 import { Text } from '../../../components/ui/typography/Text';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { PasskeyAppendedBlock } from '../../../shared-ui';
 
 export const PasskeyAppended = ({ block }: { block: PasskeyAppendedBlock }) => {
   const { t } = useTranslation('translation', {

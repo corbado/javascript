@@ -1,8 +1,8 @@
-import { InitState } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React from 'react';
 
 import useFlowHandler from '../../hooks/useFlowHandler';
+import { InitState } from '../../shared-ui';
 
 export const FreemiumBadge: FC = () => {
   const { initState } = useFlowHandler();

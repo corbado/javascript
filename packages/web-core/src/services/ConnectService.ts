@@ -350,7 +350,10 @@ export class ConnectService {
     return loginFinishResp;
   }
 
-  async appendInit(abortController: AbortController): Promise<Result<ConnectAppendInitData, ConnectError>> {
+  async appendInit(
+    abortController: AbortController,
+    situation?: string,
+  ): Promise<Result<ConnectAppendInitData, ConnectError>> {
     const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
     if (existingProcess) {
       log.debug('process exists, preparing api clients');
@@ -363,7 +366,10 @@ export class ConnectService {
       }
     }
 
-    const { req, flags } = await this.#getInitReq();
+    const { req, flags } = await this.#getInitReq<ConnectAppendInitReq>();
+    if (situation) {
+      req.situation = situation;
+    }
     const res = await this.wrapWithErr(() =>
       this.#connectApi.connectAppendInit(req, { signal: abortController.signal }),
     );
@@ -419,15 +425,16 @@ export class ConnectService {
     loadedMs: number,
     abortController?: AbortController,
     initiatedByUser?: boolean,
+    situation?: string,
   ): Promise<Result<ConnectAppendStartRsp, ConnectError>> {
-    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController()));
+    const existingProcess = await this.#getExistingProcess(() => this.appendInit(new AbortController(), situation));
     if (!existingProcess) {
       return Err(new ConnectError(ConnectErrorType.MissingInit));
     }
 
     return this.wrapWithErr(() =>
       this.#connectApi.connectAppendStart(
-        { appendTokenValue: appendTokenValue, forcePasskeyAppend: initiatedByUser, loadedMs },
+        { appendTokenValue, forcePasskeyAppend: initiatedByUser, loadedMs, situation },
         abortController && { signal: abortController.signal },
       ),
     );
@@ -653,8 +660,8 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.AppendCredentialExists, messageCode, challenge);
   }
 
-  recordEventAppendError() {
-    return this.#recordEvent(PasskeyEventType.AppendError);
+  recordEventAppendError(messageCode?: string) {
+    return this.#recordEvent(PasskeyEventType.AppendError, messageCode);
   }
 
   recordEventLoginErrorUnexpected(messageCode: string) {

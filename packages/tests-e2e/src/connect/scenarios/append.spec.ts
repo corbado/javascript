@@ -22,7 +22,7 @@ test.describe('append flows', () => {
   });
 
   test('testAppendAfterSignUp', async ({ page }) => {
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);
@@ -53,7 +53,7 @@ test.describe('append flows', () => {
 
   test('testAppendAfterSignUpSkipped', async ({ page }) => {
     test.setTimeout(120000); // 120 seconds
-    await page.goto(`${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/login?invitationToken=inv-token-correct`);
+    await page.goto(`http://localhost:${port.toString()}/login?invitationToken=inv-token-correct`);
     const loginPage = new LoginPage(page);
     const signupPage = await loginPage.navigateToSignup();
     const virtualAuthenticator = await VirtualAuthenticator.init(page);

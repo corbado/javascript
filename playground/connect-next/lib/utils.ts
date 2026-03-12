@@ -78,34 +78,7 @@ export const getCorbadoConnectToken = async (connectTokenType: string, connectTo
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-cache',
-    body: body,
-  });
-
-  const out = await response.json();
-
-  return out.secret;
-};
-
-export const getCorbadoConnectTokenExternal = async (
-  connectTokenType: string,
-  connectTokenData: any,
-): Promise<string> => {
-  const payload = {
-    type: connectTokenType,
-    data: connectTokenData,
-  };
-
-  const body = JSON.stringify(payload);
-
-  const url = `${process.env.CORBADO_BACKEND_API_URL_EXTERNAL}/v2/connectTokens`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${process.env.CORBADO_BACKEND_API_BASIC_AUTH_EXTERNAL}`,
+      Authorization: `Basic ${process.env.DEFAULT_CORBADO_BACKEND_API_BASIC_AUTH}`,
       'Content-Type': 'application/json',
     },
     cache: 'no-cache',

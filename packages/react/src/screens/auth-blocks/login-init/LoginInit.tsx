@@ -1,13 +1,13 @@
-import type { LoginInitBlock } from '@corbado/shared-ui';
 import type { SocialProviderType } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Header, SecondaryButton, SocialLoginButtons, SubHeader, Text } from '../../../components';
 import { LastIdentifier } from '../../../components/authentication/login-init/LastIdentifier';
 import { LoginForm } from '../../../components/authentication/login-init/LoginForm';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import type { LoginInitBlock } from '../../../shared-ui';
 
 export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; initialAutoFocus: boolean }) => {
   const { t } = useTranslation('translation', { keyPrefix: `login.login-init.login-init` });
@@ -17,6 +17,16 @@ export const LoginInit = ({ block, initialAutoFocus }: { block: LoginInitBlock; 
   const [showLastIdentifier, setShowLastIdentifier] = useState<boolean>(!!block.data.lastIdentifier);
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const [onComponentClick, setOnComponentClick] = useState<() => void>(() => {});
+  const onPageLoadCalled = useRef(false);
+
+  useEffect(() => {
+    if (onPageLoadCalled.current) {
+      return;
+    }
+
+    onPageLoadCalled.current = true;
+    block.onPageLoad();
+  }, []);
 
   useEffect(() => {
     setLoading(false);

@@ -1,4 +1,3 @@
-import { getPlatformType, type PasskeyVerifyBlock } from '@corbado/shared-ui';
 import type { FC } from 'react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +6,7 @@ import { LoadingSpinner, SecondaryButton, Text } from '../../../components';
 import { FaceIdIcon } from '../../../components/ui/icons/FaceIdIcon';
 import { FingerPrintIcon } from '../../../components/ui/icons/FingerPrintIcon';
 import { useTelemetry } from '../../../hooks/useTelemetry';
+import { getPlatformType, type PasskeyVerifyBlock } from '../../../shared-ui';
 
 export interface PasskeyBackgroundProps {
   block: PasskeyVerifyBlock;

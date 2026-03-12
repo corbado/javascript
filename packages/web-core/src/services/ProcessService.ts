@@ -536,10 +536,13 @@ export class ProcessService {
     return this.wrapWithErr(() => this.#authApi.socialVerifyFinish({}, { signal: abortController.signal }));
   }
 
-  async appendPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
+  async appendPasskey(
+    onCeremonyData?: (data: { attestationOptions: string; attestationResponse: string }) => void,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyAppend();
     if (respStart.err || respStart.val.blockBody.error) {
       await this.recordEventAppendError();
+
       return respStart;
     }
 
@@ -547,8 +550,11 @@ export class ProcessService {
     const signedChallenge = await this.#webAuthnService.createPasskey(typed.challenge);
     if (signedChallenge.err) {
       await this.recordEventAppendError(typed.challenge);
+
       return signedChallenge;
     }
+
+    onCeremonyData?.({ attestationOptions: typed.challenge, attestationResponse: signedChallenge.val });
 
     const respFinish = await this.finishPasskeyAppend(signedChallenge.val);
     if (respFinish.err) {
@@ -560,7 +566,9 @@ export class ProcessService {
 
   // perform a passkey login
   // if the procedure fails, clear the last identifier
-  async loginWithPasskey(): Promise<Result<ProcessResponse, CorbadoError>> {
+  async loginWithPasskey(
+    onCeremonyData?: (data: { assertionOptions: string; assertionResponse: string }) => void,
+  ): Promise<Result<ProcessResponse, CorbadoError>> {
     const respStart = await this.startPasskeyLogin();
     if (respStart.err) {
       await this.recordEventLoginError();
@@ -584,6 +592,8 @@ export class ProcessService {
       return signedChallenge;
     }
 
+    onCeremonyData?.({ assertionOptions: typed.challenge, assertionResponse: signedChallenge.val });
+
     const respFinish = await this.finishPasskeyLogin(signedChallenge.val);
     if (respFinish.err) {
       await this.recordEventLoginError(typed.challenge);
@@ -603,7 +613,7 @@ export class ProcessService {
 
   async loginWithPasskeyChallenge(
     challenge: string,
-    onAuthenticatorCompleted?: () => void,
+    onAuthenticatorCompleted?: (data: { assertionOptions: string; assertionResponse: string }) => void,
   ): Promise<Result<ProcessResponse, CorbadoError>> {
     const signedChallenge = await this.#webAuthnService.login(challenge, true);
     if (signedChallenge.err) {
@@ -614,7 +624,7 @@ export class ProcessService {
       return signedChallenge;
     }
 
-    onAuthenticatorCompleted?.();
+    onAuthenticatorCompleted?.({ assertionOptions: challenge, assertionResponse: signedChallenge.val });
 
     const respFinish = await this.finishPasskeyMediation(signedChallenge.val);
     if (respFinish.err) {

@@ -37,7 +37,7 @@ export class CorbadoAuthModel {
   async load(projectId: string, port: number, passkeySupport?: boolean, hashCode?: string) {
     this.projectId = projectId;
 
-    let url = `${process.env.PLAYWRIGHT_TEST_URL}:${port.toString()}/${this.projectId}/auth`;
+    let url = `http://localhost:${port.toString()}/${this.projectId}/auth`;
     if (hashCode) {
       url += `#${hashCode}`;
     }

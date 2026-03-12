@@ -660,8 +660,8 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.AppendCredentialExists, messageCode, challenge);
   }
 
-  recordEventAppendError() {
-    return this.#recordEvent(PasskeyEventType.AppendError);
+  recordEventAppendError(messageCode?: string) {
+    return this.#recordEvent(PasskeyEventType.AppendError, messageCode);
   }
 
   recordEventLoginErrorUnexpected(messageCode: string) {

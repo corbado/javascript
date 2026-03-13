@@ -3,7 +3,7 @@ import { CheckCircleIcon, XCircleIcon, UserCircleIcon, EnvelopeIcon, PhoneIcon }
 import createNodeSDK from '@/app/utils/createNodeSDK';
 
 export default async function CurrentUser() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionTokenCookie = cookieStore.get('cbo_session_token');
   const sdk = createNodeSDK();
   const currentSessionUser = await sdk.sessions().getCurrentUser(sessionTokenCookie?.value ?? '');

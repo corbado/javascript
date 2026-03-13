@@ -5,7 +5,7 @@ import AuthForm from './auth-form';
 import Image from 'next/image';
 
 export default async function RightIntroSection() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionTokenCookie = cookieStore.get('cbo_session_token');
   const sessionToken = sessionTokenCookie?.value;
   const isSessionValid = await validateSession(sessionToken);

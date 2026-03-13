@@ -1,8 +1,8 @@
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
 
-export default function SessionDetails() {
-  const cookieStore = cookies();
+export default async function SessionDetails() {
+  const cookieStore = await cookies();
   const sessionTokenCookie = cookieStore.get('cbo_session_token');
 
   const decodedSessionToken = jwtDecode(sessionTokenCookie?.value ?? '');

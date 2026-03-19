@@ -30,10 +30,15 @@ export class AuthenticatorApp {
     const wrapped = this.#existing.get(secret);
     if (!wrapped) return null;
 
-    const now = Date.now();
-    if (now < wrapped.nextBoundary) {
-      await new Promise(resolve => setTimeout(resolve, wrapped.nextBoundary - now));
+    const safetyMargin = 2_000;
+    let now = Date.now();
+
+    // If the stored boundary is already in the past, recalculate from now
+    if (now >= wrapped.nextBoundary) {
+      wrapped.nextBoundary = this.#calculateNextBoundary(now, 30_000);
     }
+
+    await new Promise(resolve => setTimeout(resolve, wrapped.nextBoundary - now + safetyMargin));
 
     const then = Date.now();
     const result = generateToken(secret);

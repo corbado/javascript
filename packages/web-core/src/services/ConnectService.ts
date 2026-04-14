@@ -18,6 +18,8 @@ import type {
   ConnectAppendInitReq,
   ConnectAppendStartRsp,
   ConnectEventCreateReq,
+  ConnectEventLow,
+  ConnectEventLowCreateReq,
   ConnectLoginFinishRsp,
   ConnectLoginInitReq,
   ConnectLoginStartReqSourceEnum,
@@ -48,6 +50,19 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   };
 }
 
+type LowEventPayload = Pick<ConnectEventLow, 'eventType' | 'timestamp' | 'durationMs'>;
+
+type QueuedLowEvent = LowEventPayload & {
+  processId: string;
+  frontendApiUrl: string;
+};
+
+type QueuedLowEventGroup = {
+  processId: string;
+  frontendApiUrl: string;
+  queuedItems: QueuedLowEvent[];
+};
+
 export class ConnectService {
   #connectApi: CorbadoConnectApi = new CorbadoConnectApi();
   #webAuthnService: WebAuthnService;
@@ -58,6 +73,8 @@ export class ConnectService {
   readonly #frontendApiUrlSuffix: string;
   readonly #customDomain: string | undefined;
   #visitorId: string;
+  #lowEventQueue: QueuedLowEvent[];
+  #lowEventFlushPromise: Promise<void> | null;
 
   constructor(projectId: string, frontendApiUrlSuffix: string, isDebug: boolean, customDomain?: string) {
     this.#projectId = projectId;
@@ -66,6 +83,8 @@ export class ConnectService {
     this.#customDomain = customDomain;
     this.#webAuthnService = new WebAuthnService();
     this.#visitorId = '';
+    this.#lowEventQueue = [];
+    this.#lowEventFlushPromise = null;
 
     // Initializes the API instances with no authentication token.
     // Authentication tokens are set in the SessionService.
@@ -128,6 +147,16 @@ export class ConnectService {
     );
 
     return out;
+  }
+
+  #createConnectApi(frontendApiUrl: string, processId: string): CorbadoConnectApi {
+    const config = new Configuration({
+      apiKey: this.#projectId,
+      basePath: frontendApiUrl,
+    });
+    const axiosInstance = this.#createAxiosInstanceV2(processId);
+
+    return new CorbadoConnectApi(config, frontendApiUrl, axiosInstance);
   }
 
   #setApisV2(process?: ConnectProcess): void {
@@ -470,6 +499,69 @@ export class ConnectService {
     this.#webAuthnService.abortOngoingOperation();
   }
 
+  enqueueLowEvent(event: LowEventPayload) {
+    const existingProcess = ConnectProcess.loadFromStorage(this.#projectId);
+    if (!existingProcess) {
+      log.debug('No process found to enqueue low event.');
+      return;
+    }
+
+    this.#lowEventQueue.push({
+      ...event,
+      processId: existingProcess.id,
+      frontendApiUrl: this.#getFrontendApiUrl(existingProcess),
+    });
+  }
+
+  async flushLowEvents(): Promise<void> {
+    if (this.#lowEventFlushPromise) {
+      await this.#lowEventFlushPromise;
+    }
+
+    const groups = this.#takeQueuedLowEventGroups();
+    if (groups.length === 0) {
+      return;
+    }
+
+    const flushPromise = (async () => {
+      const failedItems: QueuedLowEvent[] = [];
+
+      for (const group of groups) {
+        try {
+          await this.#sendQueuedLowEventGroup(group);
+        } catch (error) {
+          log.debug('failed to flush low events', error);
+          failedItems.push(...group.queuedItems);
+        }
+      }
+
+      if (failedItems.length > 0) {
+        this.#lowEventQueue = failedItems.concat(this.#lowEventQueue);
+      }
+    })();
+
+    this.#lowEventFlushPromise = flushPromise;
+
+    try {
+      await flushPromise;
+    } finally {
+      if (this.#lowEventFlushPromise === flushPromise) {
+        this.#lowEventFlushPromise = null;
+      }
+    }
+  }
+
+  flushLowEventsKeepalive() {
+    const groups = this.#takeQueuedLowEventGroups();
+    if (groups.length === 0) {
+      return;
+    }
+
+    for (const group of groups) {
+      void this.#sendQueuedLowEventGroupKeepalive(group);
+    }
+  }
+
   async #loginFinish(
     assertionResponse: string,
     isConditionalUI: boolean,
@@ -705,6 +797,91 @@ export class ConnectService {
     };
 
     return this.wrapWithErr(() => this.#connectApi.connectEventCreate(req));
+  }
+
+  #takeQueuedLowEventGroups(): QueuedLowEventGroup[] {
+    if (this.#lowEventQueue.length === 0) {
+      return [];
+    }
+
+    const queuedItems = this.#lowEventQueue;
+    this.#lowEventQueue = [];
+
+    const groups = new Map<string, QueuedLowEventGroup>();
+    for (const item of queuedItems) {
+      const key = `${item.frontendApiUrl}::${item.processId}`;
+      const existingGroup = groups.get(key);
+      if (existingGroup) {
+        existingGroup.queuedItems.push(item);
+        continue;
+      }
+
+      groups.set(key, {
+        processId: item.processId,
+        frontendApiUrl: item.frontendApiUrl,
+        queuedItems: [item],
+      });
+    }
+
+    return Array.from(groups.values());
+  }
+
+  async #sendQueuedLowEventGroup(group: QueuedLowEventGroup): Promise<void> {
+    const api = this.#createConnectApi(group.frontendApiUrl, group.processId);
+    const req: ConnectEventLowCreateReq = {
+      items: group.queuedItems.map(({ eventType, timestamp, durationMs }) => ({
+        eventType,
+        timestamp,
+        durationMs,
+      })),
+    };
+
+    await api.connectEventLowCreate(req);
+  }
+
+  async #sendQueuedLowEventGroupKeepalive(group: QueuedLowEventGroup): Promise<void> {
+    const response = await fetch(this.#getConnectEventLowUrl(group.frontendApiUrl), {
+      method: 'POST',
+      keepalive: true,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Corbado-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+        'X-Corbado-ProjectID': this.#projectId,
+        'X-Corbado-SDK': JSON.stringify({
+          name: 'web-core',
+          sdkVersion: packageVersion,
+        }),
+        'x-corbado-process-id': group.processId,
+      },
+      body: JSON.stringify({
+        items: group.queuedItems.map(({ eventType, timestamp, durationMs }) => ({
+          eventType,
+          timestamp,
+          durationMs,
+        })),
+      } as ConnectEventLowCreateReq),
+    });
+
+    if (!response.ok) {
+      throw new Error(`flushLowEventsKeepalive failed with status ${response.status}`);
+    }
+  }
+
+  #getConnectEventLowUrl(frontendApiUrl: string): string {
+    return `${frontendApiUrl.replace(/\/+$/, '')}/v2/connect/eventsLow`;
+  }
+
+  #getFrontendApiUrl(process?: Pick<ConnectProcess, 'frontendApiUrl'>): string {
+    if (this.#customDomain && this.#customDomain.length > 0) {
+      return this.#customDomain;
+    }
+
+    if (process?.frontendApiUrl && process.frontendApiUrl.length > 0) {
+      return process.frontendApiUrl;
+    }
+
+    return this.#getDefaultFrontendApiUrl();
   }
 
   #getDefaultFrontendApiUrl() {

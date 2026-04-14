@@ -687,6 +687,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/processResponse"
 
+  /v2/sso/saml2/start:
+    post:
+      summary: Start SAML2 SSO login
+      description: Starts a SAML2 SSO login by forwarding the request to Backend API v2.
+      operationId: SsoSaml2Start
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ssoSaml2StartReq"
+      responses:
+        "200":
+          description: Contains the IdP redirect URL and relay state.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ssoSaml2StartRsp"
+
+  /v2/sso/saml2/finish:
+    post:
+      summary: Finish SAML2 SSO login
+      description: Completes SAML2 SSO login with IdP form POST data and redirects the user.
+      operationId: SsoSaml2Finish
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ssoSaml2FinishReq"
+      responses:
+        "302":
+          description: Redirect to the target URL after successful login.
+        default:
+          $ref: "#/components/responses/error"
+
   /v2/auth/events:
     post:
       summary: Create authentication event
@@ -913,6 +953,22 @@ paths:
       responses:
         "204":
           description: tbd
+
+  /v2/connect/eventsLow:
+    post:
+      operationId: ConnectEventLowCreate
+      tags:
+        - CorbadoConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/connectEventLowCreateReq"
+      responses:
+        "204":
+          description: tbd
+
 
   /v2/connect/process/clear:
     post:
@@ -1280,6 +1336,33 @@ components:
     socialVerifyFinishReq:
       type: object
 
+    ssoSaml2StartReq:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+
+    ssoSaml2StartRsp:
+      type: object
+      required:
+        - idpRedirectURL
+      properties:
+        idpRedirectURL:
+          type: string
+
+    ssoSaml2FinishReq:
+      type: object
+      required:
+        - SAMLResponse
+        - RelayState
+      properties:
+        SAMLResponse:
+          type: string
+        RelayState:
+          type: string
+
     identifierUpdateReq:
       type: object
       required:
@@ -1351,6 +1434,7 @@ components:
         shortSession:
           type: string
           deprecated: true
+          x-deprecated-reason: 'Old code'
         sessionToken:
           type: string
 
@@ -1689,6 +1773,31 @@ components:
         challenge:
           type: string
 
+    connectEventLowCreateReq:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/connectEventLow"
+
+    connectEventLow:
+      type: object
+      required:
+        - eventType
+        - timestamp
+      properties:
+        eventType:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+        durationMs:
+          type: integer
+          format: int64
+
     passkey:
       type: object
       required:
@@ -1860,6 +1969,7 @@ components:
     shortSessionCookieConfig:
       type: object
       deprecated: true
+      x-deprecated-reason: 'Old code'
       required:
         - domain
         - secure
@@ -2155,6 +2265,7 @@ components:
         longSession:
           type: string
           deprecated: true
+          x-deprecated-reason: 'Old code'
           description: This is only set if the project environment is set to 'dev'. If set the UI components will set the longSession in local storage because the cookie dropping will not work in Safari for example ("third-party cookie").
         refreshToken:
           type: string
@@ -2162,6 +2273,7 @@ components:
         shortSession:
           type: string
           deprecated: true
+          x-deprecated-reason: 'Old code'
         sessionToken:
           type: string
         passkeyOperation:

@@ -128,7 +128,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
         return navigateToScreen(LoginScreenType.PasskeyReLogin);
       } else if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
-        void startConditionalUI(res.val.conditionalUIChallenge);
+        void startConditionalUI(res.val.conditionalUIChallenge, flags);
       }
 
       statefulLoader.current.finish();
@@ -143,9 +143,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     };
   }, [getConnectService]);
 
-  const startConditionalUI = async (challenge: string | null) => {
+  const startConditionalUI = async (challenge: string | null, resolvedFlags: Flags) => {
     if (!challenge) {
       return;
+    }
+
+    if (resolvedFlags.hasSupportForEventLow()) {
+      getConnectService().enqueueLowEvent({ eventType: 'cui-ready', timestamp: Date.now() });
     }
 
     let cuiStarted = false;
@@ -187,6 +191,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
+      await getConnectService().flushLowEvents();
       await config.onComplete(
         connectLoginFinishToComplete(res.val),
         getConnectService().encodeClientState(),
@@ -204,6 +209,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     setIdentifierBasedLoading(true);
     setCurrentIdentifier(identifier);
+    await getConnectService().flushLowEvents();
     config.onLoginStart?.();
 
     const resStart = await getConnectService().loginStart(identifier, PasskeyLoginSource.TextField, loadedMs);
@@ -242,6 +248,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
+      await getConnectService().flushLowEvents();
       await config.onComplete(
         connectLoginFinishToComplete(res.val),
         getConnectService().encodeClientState(),
@@ -328,6 +335,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
   // This is needed to enable multiple login instances on the same page however only one should have the autocomplete
   // Else the conditionalUI won't work
   const autoComplete = useMemo(() => (flags?.hasSupportForConditionalUI() ? 'username webauthn' : ''), [flags]);
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
 
   switch (loginInitState) {
     case LoginInitState.SilentLoading:
@@ -340,6 +348,7 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
           isLoading={cuiBasedLoading || identifierBasedLoading}
           error={error}
           autoComplete={autoComplete}
+          enableEventLow={enableEventLow}
           handleSubmit={() => void handleSubmit()}
           handleIdentifierUpdate={(v: string) => setIdentifier(v)}
         />

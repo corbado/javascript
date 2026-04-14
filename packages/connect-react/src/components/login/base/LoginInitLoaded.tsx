@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
+import useLoginInputEventLow from '../../../hooks/useLoginInputEventLow';
+import useShared from '../../../hooks/useShared';
 import InputField from '../../shared/InputField';
 import { LinkButton } from '../../shared/LinkButton';
 import { Notification } from '../../shared/Notification';
@@ -9,6 +11,7 @@ interface Props {
   isLoading: boolean;
   error: string | undefined;
   autoComplete: string;
+  enableEventLow?: boolean;
   onSignupClick?: () => void;
   handleSubmit: () => void;
   handleIdentifierUpdate: (v: string) => void;
@@ -19,9 +22,19 @@ const LoginInitLoaded = ({
   error,
   onSignupClick,
   autoComplete,
+  enableEventLow = false,
   handleSubmit,
   handleIdentifierUpdate,
 }: Props) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { getConnectService } = useShared();
+
+  useLoginInputEventLow({
+    inputRef,
+    connectService: getConnectService(),
+    enabled: enableEventLow,
+  });
+
   return (
     <>
       {error ? (
@@ -37,6 +50,7 @@ const LoginInitLoaded = ({
         autoComplete={autoComplete}
         autoFocus={true}
         placeholder=''
+        ref={inputRef}
         onChange={e => handleIdentifierUpdate(e.target.value)}
       />
       <PrimaryButton

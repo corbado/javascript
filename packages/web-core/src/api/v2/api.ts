@@ -692,6 +692,44 @@ export interface ConnectEventCreateReq {
 /**
  * 
  * @export
+ * @interface ConnectEventLow
+ */
+export interface ConnectEventLow {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectEventLow
+     */
+    'eventType': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectEventLow
+     */
+    'timestamp': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectEventLow
+     */
+    'durationMs'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectEventLowCreateReq
+ */
+export interface ConnectEventLowCreateReq {
+    /**
+     * 
+     * @type {Array<ConnectEventLow>}
+     * @memberof ConnectEventLowCreateReq
+     */
+    'items': Array<ConnectEventLow>;
+}
+/**
+ * 
+ * @export
  * @interface ConnectLoginFinishReq
  */
 export interface ConnectLoginFinishReq {
@@ -3115,6 +3153,32 @@ export interface SocialVerifyStartReq {
 /**
  * 
  * @export
+ * @interface SsoSaml2StartReq
+ */
+export interface SsoSaml2StartReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof SsoSaml2StartReq
+     */
+    'email': string;
+}
+/**
+ * 
+ * @export
+ * @interface SsoSaml2StartRsp
+ */
+export interface SsoSaml2StartRsp {
+    /**
+     * 
+     * @type {string}
+     * @memberof SsoSaml2StartRsp
+     */
+    'idpRedirectURL': string;
+}
+/**
+ * 
+ * @export
  * @interface UserDetailsConfigRsp
  */
 export interface UserDetailsConfigRsp {
@@ -3995,6 +4059,104 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Completes SAML2 SSO login with IdP form POST data and redirects the user.
+         * @summary Finish SAML2 SSO login
+         * @param {string} sAMLResponse 
+         * @param {string} relayState 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ssoSaml2Finish: async (sAMLResponse: string, relayState: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'sAMLResponse' is not null or undefined
+            assertParamExists('ssoSaml2Finish', 'sAMLResponse', sAMLResponse)
+            // verify required parameter 'relayState' is not null or undefined
+            assertParamExists('ssoSaml2Finish', 'relayState', relayState)
+            const localVarPath = `/v2/sso/saml2/finish`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new URLSearchParams();
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+            if (sAMLResponse !== undefined) { 
+                localVarFormParams.set('SAMLResponse', sAMLResponse as any);
+            }
+    
+            if (relayState !== undefined) { 
+                localVarFormParams.set('RelayState', relayState as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams.toString();
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Starts a SAML2 SSO login by forwarding the request to Backend API v2.
+         * @summary Start SAML2 SSO login
+         * @param {SsoSaml2StartReq} ssoSaml2StartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ssoSaml2Start: async (ssoSaml2StartReq: SsoSaml2StartReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ssoSaml2StartReq' is not null or undefined
+            assertParamExists('ssoSaml2Start', 'ssoSaml2StartReq', ssoSaml2StartReq)
+            const localVarPath = `/v2/sso/saml2/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ssoSaml2StartReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4220,6 +4382,29 @@ export const AuthApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.socialVerifyStart(socialVerifyStartReq, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * Completes SAML2 SSO login with IdP form POST data and redirects the user.
+         * @summary Finish SAML2 SSO login
+         * @param {string} sAMLResponse 
+         * @param {string} relayState 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async ssoSaml2Finish(sAMLResponse: string, relayState: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ErrorRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.ssoSaml2Finish(sAMLResponse, relayState, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Starts a SAML2 SSO login by forwarding the request to Backend API v2.
+         * @summary Start SAML2 SSO login
+         * @param {SsoSaml2StartReq} ssoSaml2StartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async ssoSaml2Start(ssoSaml2StartReq: SsoSaml2StartReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SsoSaml2StartRsp>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.ssoSaml2Start(ssoSaml2StartReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -4424,6 +4609,27 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         socialVerifyStart(socialVerifyStartReq: SocialVerifyStartReq, options?: any): AxiosPromise<ProcessResponse> {
             return localVarFp.socialVerifyStart(socialVerifyStartReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Completes SAML2 SSO login with IdP form POST data and redirects the user.
+         * @summary Finish SAML2 SSO login
+         * @param {string} sAMLResponse 
+         * @param {string} relayState 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ssoSaml2Finish(sAMLResponse: string, relayState: string, options?: any): AxiosPromise<ErrorRsp> {
+            return localVarFp.ssoSaml2Finish(sAMLResponse, relayState, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Starts a SAML2 SSO login by forwarding the request to Backend API v2.
+         * @summary Start SAML2 SSO login
+         * @param {SsoSaml2StartReq} ssoSaml2StartReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ssoSaml2Start(ssoSaml2StartReq: SsoSaml2StartReq, options?: any): AxiosPromise<SsoSaml2StartRsp> {
+            return localVarFp.ssoSaml2Start(ssoSaml2StartReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4668,6 +4874,31 @@ export class AuthApi extends BaseAPI {
      */
     public socialVerifyStart(socialVerifyStartReq: SocialVerifyStartReq, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).socialVerifyStart(socialVerifyStartReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Completes SAML2 SSO login with IdP form POST data and redirects the user.
+     * @summary Finish SAML2 SSO login
+     * @param {string} sAMLResponse 
+     * @param {string} relayState 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public ssoSaml2Finish(sAMLResponse: string, relayState: string, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).ssoSaml2Finish(sAMLResponse, relayState, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Starts a SAML2 SSO login by forwarding the request to Backend API v2.
+     * @summary Start SAML2 SSO login
+     * @param {SsoSaml2StartReq} ssoSaml2StartReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public ssoSaml2Start(ssoSaml2StartReq: SsoSaml2StartReq, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).ssoSaml2Start(ssoSaml2StartReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -5092,6 +5323,48 @@ export const CorbadoConnectApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
+         * 
+         * @param {ConnectEventLowCreateReq} connectEventLowCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectEventLowCreate: async (connectEventLowCreateReq: ConnectEventLowCreateReq, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectEventLowCreateReq' is not null or undefined
+            assertParamExists('connectEventLowCreate', 'connectEventLowCreateReq', connectEventLowCreateReq)
+            const localVarPath = `/v2/connect/eventsLow`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication projectID required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Corbado-ProjectID", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectEventLowCreateReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
          * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
@@ -5447,6 +5720,16 @@ export const CorbadoConnectApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * 
+         * @param {ConnectEventLowCreateReq} connectEventLowCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async connectEventLowCreate(connectEventLowCreateReq: ConnectEventLowCreateReq, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.connectEventLowCreate(connectEventLowCreateReq, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
          * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
@@ -5574,6 +5857,15 @@ export const CorbadoConnectApiFactory = function (configuration?: Configuration,
             return localVarFp.connectEventCreate(connectEventCreateReq, options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @param {ConnectEventLowCreateReq} connectEventLowCreateReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        connectEventLowCreate(connectEventLowCreateReq: ConnectEventLowCreateReq, options?: any): AxiosPromise<void> {
+            return localVarFp.connectEventLowCreate(connectEventLowCreateReq, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Finishes an initialized [Corbado Connect](https://docs.corbado.com/corbado-connect) login process.
          * @summary Finish connect login
          * @param {ConnectLoginFinishReq} connectLoginFinishReq 
@@ -5699,6 +5991,17 @@ export class CorbadoConnectApi extends BaseAPI {
      */
     public connectEventCreate(connectEventCreateReq: ConnectEventCreateReq, options?: AxiosRequestConfig) {
         return CorbadoConnectApiFp(this.configuration).connectEventCreate(connectEventCreateReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {ConnectEventLowCreateReq} connectEventLowCreateReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorbadoConnectApi
+     */
+    public connectEventLowCreate(connectEventLowCreateReq: ConnectEventLowCreateReq, options?: AxiosRequestConfig) {
+        return CorbadoConnectApiFp(this.configuration).connectEventLowCreate(connectEventLowCreateReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

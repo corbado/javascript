@@ -1,21 +1,23 @@
 import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import AppendAfterError from './append-init/AppendAfterError';
 
 const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: string }) => {
-  const { navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip } =
+  const { navigateToScreen, handleErrorSoft, handleErrorHard, handleCredentialExistsError, handleSkip, flags } =
     useAppendProcess();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [skipping, setSkipping] = useState(false);
   const { getConnectService } = useShared();
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
 
   const onSubmitClick = async () => {
     if (loading) {
@@ -24,7 +26,15 @@ const AppendAfterErrorScreen = ({ attestationOptions }: { attestationOptions: st
 
     setLoading(true);
     setErrorMessage(undefined);
-    const res = await getConnectService().completeAppend(attestationOptions, 'manual');
+    const res = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: enableEventLow,
+        startEventType: 'pa-start',
+        finishEventType: 'pa-finish',
+      },
+      () => getConnectService().completeAppend(attestationOptions, 'manual'),
+    );
     if (res.err) {
       if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
         return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);

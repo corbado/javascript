@@ -9,6 +9,7 @@ import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { getPasskeyListErrorMessage, PasskeyListSituationCode } from '../../types/situations';
 import { ConnectTokenType } from '../../types/tokens';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AlreadyExistingModal from './AlreadyExistingModal';
 import DeleteModal from './DeleteModal';
@@ -130,7 +131,15 @@ const PasskeyListScreen = () => {
       return handleSituation(PasskeyListSituationCode.CboApiPasskeysNotSupported);
     }
 
-    const res = await getConnectService().completeAppend(startAppendRes.val.attestationOptions, 'manual');
+    const res = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: true,
+        startEventType: 'pa-start',
+        finishEventType: 'pa-finish',
+      },
+      () => getConnectService().completeAppend(startAppendRes.val.attestationOptions, 'manual'),
+    );
     if (res.err) {
       if (res.val.type === ConnectErrorType.Cancel) {
         return handleSituation(PasskeyListSituationCode.ClientPasskeyOperationCancelled, res.val);

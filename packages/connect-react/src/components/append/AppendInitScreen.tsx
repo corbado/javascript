@@ -2,13 +2,14 @@ import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
 import type { AppendCompletionType } from '@corbado/web-core/dist/models/connect/append';
 import log from 'loglevel';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import useAppendProcess from '../../hooks/useAppendProcess';
 import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { AppendScreenType } from '../../types/screenTypes';
 import { AppendSituationCode, getAppendErrorMessage } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AppendBenefits from './append-init/AppendBenetifs';
 import AppendInitLoaded2 from './append-init/AppendInitLoaded2';
@@ -31,6 +32,7 @@ const AppendInitScreen = () => {
     handleCredentialExistsError,
     onReadMoreClick,
     setFlags,
+    flags,
   } = useAppendProcess();
   const { sharedConfig, getConnectService } = useShared();
   const [attestationOptions, setAttestationOptions] = useState('');
@@ -38,6 +40,7 @@ const AppendInitScreen = () => {
   const [appendLoading, setAppendLoading] = useState(false);
   const [appendInitState, setAppendInitState] = useState(AppendInitState.SilentLoading);
   const [skipping, setSkipping] = useState(false);
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
   const statefulLoader = useRef(
     new StatefulLoader(
       () => setAppendInitState(AppendInitState.Loading),
@@ -180,7 +183,15 @@ const AppendInitScreen = () => {
       setAppendLoading(true);
       setErrorMessage(undefined);
 
-      const res = await getConnectService().completeAppend(attestationOptions, completionType);
+      const res = await withLowEventWindow(
+        {
+          connectService: getConnectService(),
+          enabled: enableEventLow,
+          startEventType: 'pa-start',
+          finishEventType: 'pa-finish',
+        },
+        () => getConnectService().completeAppend(attestationOptions, completionType),
+      );
       if (res.err) {
         if (res.val.type === ConnectErrorType.ExcludeCredentialsMatch) {
           return handleSituation(AppendSituationCode.ClientExcludeCredentialsMatch, res.val);
@@ -203,12 +214,20 @@ const AppendInitScreen = () => {
         aaguidIcon: res.val.passkeyOperation.aaguidDetails?.iconLight,
       });
     },
-    [getConnectService, appendLoading, skipping],
+    [getConnectService, appendLoading, skipping, enableEventLow],
   );
 
   const handleConditionalCreate = useCallback(
     async (attestationOptions: string) => {
-      const res = await getConnectService().completeAppend(attestationOptions, 'conditional');
+      const res = await withLowEventWindow(
+        {
+          connectService: getConnectService(),
+          enabled: enableEventLow,
+          startEventType: 'pa-start',
+          finishEventType: 'pa-finish',
+        },
+        () => getConnectService().completeAppend(attestationOptions, 'conditional'),
+      );
       if (res.err) {
         await handleSituation(AppendSituationCode.ClientPasskeyOperationErrorSilent, res.val);
 
@@ -222,7 +241,7 @@ const AppendInitScreen = () => {
 
       return true;
     },
-    [getConnectService],
+    [getConnectService, enableEventLow],
   );
 
   const handleSituation = async (situationCode: AppendSituationCode, error?: ConnectError) => {

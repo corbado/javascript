@@ -1,12 +1,13 @@
 import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import LoginErrorHard from './base/LoginErrorHard';
 import {
   type CboApiFallbackOperationError,
@@ -19,10 +20,11 @@ type Props = {
 };
 
 const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
-  const { config, navigateToScreen, currentIdentifier, loadedMs, fallback } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, loadedMs, fallback, flags } = useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
   const [hardErrorCount, setHardErrorCount] = useState(1);
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
   // only for logging purposes
   const [assertionOptions, setAssertionOptions] = useState<string | undefined>(previousAssertionOptions);
 
@@ -49,7 +51,15 @@ const LoginErrorScreenHard = ({ previousAssertionOptions }: Props) => {
 
     setAssertionOptions(resStart.val.assertionOptions);
 
-    const resFinish = await getConnectService().loginContinue(resStart.val);
+    const resFinish = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: enableEventLow,
+        startEventType: 'pl-start',
+        finishEventType: 'pl-finish',
+      },
+      () => getConnectService().loginContinue(resStart.val),
+    );
     if (resFinish.err) {
       if (resFinish.val.type === ConnectErrorType.Cancel) {
         if (hardErrorCount >= 3) {

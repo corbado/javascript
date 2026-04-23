@@ -2,19 +2,21 @@ import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
 import type { ConnectLoginStartRsp } from '@corbado/web-core/dist/api/v2';
 import log from 'loglevel';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import LoginHybrid from './base/LoginHybrid';
 import { connectLoginFinishToComplete, connectLoginFinishToWebauthnId } from './LoginInitScreen';
 
 const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
-  const { config, navigateToScreen, currentIdentifier, fallback } = useLoginProcess();
+  const { config, navigateToScreen, currentIdentifier, fallback, flags } = useLoginProcess();
   const [loading, setLoading] = useState(false);
   const { getConnectService } = useShared();
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
 
   const handleSubmit = useCallback(async () => {
     if (loading) {
@@ -22,7 +24,15 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     }
 
     setLoading(true);
-    const res = await getConnectService().loginContinue(resStart);
+    const res = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: enableEventLow,
+        startEventType: 'pl-start',
+        finishEventType: 'pl-finish',
+      },
+      () => getConnectService().loginContinue(resStart),
+    );
     if (res.err) {
       if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {
         return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, res.val);
@@ -40,7 +50,7 @@ const LoginHybridScreen = (resStart: ConnectLoginStartRsp) => {
     } catch {
       return handleSituation(LoginSituationCode.CtApiNotAvailablePostAuthenticator);
     }
-  }, [getConnectService, config, navigateToScreen, currentIdentifier, loading]);
+  }, [getConnectService, config, navigateToScreen, currentIdentifier, loading, enableEventLow]);
 
   const handleSituation = (situationCode: LoginSituationCode, error?: ConnectError) => {
     const messageCode = `situation: ${situationCode} ${error?.track()}`;

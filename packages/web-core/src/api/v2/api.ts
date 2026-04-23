@@ -726,6 +726,25 @@ export interface ConnectEventLowCreateReq {
      * @memberof ConnectEventLowCreateReq
      */
     'items': Array<ConnectEventLow>;
+    /**
+     * 
+     * @type {ConnectEventLowMeta}
+     * @memberof ConnectEventLowCreateReq
+     */
+    'meta'?: ConnectEventLowMeta;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectEventLowMeta
+ */
+export interface ConnectEventLowMeta {
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectEventLowMeta
+     */
+    'sent': number;
 }
 /**
  * 

@@ -10,6 +10,7 @@ import useShared from '../../hooks/useShared';
 import { Flags } from '../../types/flags';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import LoginInitLoaded from './base/LoginInitLoaded';
 import LoginInitLoading from './base/LoginInitLoading';
@@ -126,7 +127,13 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       if (lastLogin) {
         log.debug('starting relogin UI');
         return navigateToScreen(LoginScreenType.PasskeyReLogin);
-      } else if (flags.hasSupportForConditionalUI()) {
+      }
+
+      if (flags.hasSupportForEventLow()) {
+        getConnectService().enqueueLowEvent({ eventType: 'li-ready', timestamp: Date.now() });
+      }
+
+      if (flags.hasSupportForConditionalUI()) {
         log.debug('starting conditional UI');
         void startConditionalUI(res.val.conditionalUIChallenge, flags);
       }
@@ -179,6 +186,11 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       return handleSituation(LoginSituationCode.CboApiNotAvailablePreConditionalAuthenticator, res.val);
     }
 
+    if (resolvedFlags.hasSupportForEventLow()) {
+      getConnectService().enqueueLowEvent({ eventType: 'cui-finish', timestamp: Date.now() });
+    }
+    await getConnectService().flushLowEvents();
+
     if (res.val.fallbackOperationError) {
       const data: CboApiFallbackOperationError = {
         initFallback: res.val.fallbackOperationError.initFallback,
@@ -191,7 +203,6 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
     }
 
     try {
-      await getConnectService().flushLowEvents();
       await config.onComplete(
         connectLoginFinishToComplete(res.val),
         getConnectService().encodeClientState(),
@@ -209,6 +220,9 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
 
     setIdentifierBasedLoading(true);
     setCurrentIdentifier(identifier);
+    if (enableEventLow) {
+      getConnectService().enqueueLowEvent({ eventType: 'li-finish', timestamp: Date.now() });
+    }
     await getConnectService().flushLowEvents();
     config.onLoginStart?.();
 
@@ -233,7 +247,15 @@ const LoginInitScreen: FC<Props> = ({ showFallback = false }) => {
       return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
     }
 
-    const res = await getConnectService().loginContinue(resStart.val);
+    const res = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: enableEventLow,
+        startEventType: 'pl-start',
+        finishEventType: 'pl-finish',
+      },
+      () => getConnectService().loginContinue(resStart.val),
+    );
     if (res.err) {
       setIdentifierBasedLoading(false);
       if (res.val.type === ConnectErrorType.Cancel || res.val.type === ConnectErrorType.Untyped) {

@@ -1,12 +1,13 @@
 import type { ConnectError } from '@corbado/web-core';
 import { ConnectErrorType, PasskeyLoginSource } from '@corbado/web-core';
 import log from 'loglevel';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import useLoginProcess from '../../hooks/useLoginProcess';
 import useShared from '../../hooks/useShared';
 import { LoginScreenType } from '../../types/screenTypes';
 import { getLoginErrorMessage, LoginSituationCode } from '../../types/situations';
+import { withLowEventWindow } from '../../utils/lowEventWindow';
 import LoginOneTap from './base/LoginOneTap';
 import {
   type CboApiFallbackOperationError,
@@ -15,9 +16,11 @@ import {
 } from './LoginInitScreen';
 
 export const LoginPasskeyReLoginScreen = () => {
-  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs, fallback } = useLoginProcess();
+  const { config, navigateToScreen, setCurrentIdentifier, currentIdentifier, loadedMs, fallback, flags } =
+    useLoginProcess();
   const { getConnectService } = useShared();
   const [loading, setLoading] = useState(false);
+  const enableEventLow = useMemo(() => flags?.hasSupportForEventLow() ?? false, [flags]);
 
   useEffect(() => {
     const lastLogin = getConnectService().getLastLogin();
@@ -47,7 +50,15 @@ export const LoginPasskeyReLoginScreen = () => {
       return handleSituation(LoginSituationCode.CboApiFallbackOperationError, undefined, data);
     }
 
-    const resFinish = await getConnectService().loginContinue(resStart.val);
+    const resFinish = await withLowEventWindow(
+      {
+        connectService: getConnectService(),
+        enabled: enableEventLow,
+        startEventType: 'pl-start',
+        finishEventType: 'pl-finish',
+      },
+      () => getConnectService().loginContinue(resStart.val),
+    );
     if (resFinish.err) {
       if (resFinish.val.type === ConnectErrorType.Cancel || resFinish.val.type === ConnectErrorType.Untyped) {
         return handleSituation(LoginSituationCode.ClientPasskeyOperationCancelled, resFinish.val);

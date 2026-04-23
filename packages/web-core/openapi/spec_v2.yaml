@@ -1782,6 +1782,17 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/connectEventLow"
+        meta:
+          $ref: "#/components/schemas/connectEventLowMeta"
+
+    connectEventLowMeta:
+      type: object
+      required:
+        - sent
+      properties:
+        sent:
+          type: integer
+          format: int64
 
     connectEventLow:
       type: object

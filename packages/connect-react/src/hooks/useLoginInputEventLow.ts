@@ -2,6 +2,9 @@ import type { ConnectService } from '@corbado/web-core';
 import type { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
 
+import { scanInputEnvSignals } from '../utils/inputEnvProbe';
+import { createViewportBatcher } from '../utils/viewportBatch';
+
 type Props = {
   inputRef: RefObject<HTMLInputElement>;
   connectService: ConnectService;
@@ -13,16 +16,8 @@ type InputBatch = {
   lastTimestamp: number;
 };
 
-const visualViewportBatchTimeoutMs = 150;
-
 const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => {
   const inputBatchRef = useRef<InputBatch | null>(null);
-  const viewportResizeActiveRef = useRef(false);
-  const viewportResizeStartTimestampRef = useRef<number | null>(null);
-  const viewportResizeEndTimeoutRef = useRef<number | null>(null);
-  const viewportScrollActiveRef = useRef(false);
-  const viewportScrollStartTimestampRef = useRef<number | null>(null);
-  const viewportScrollEndTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!enabled) {
@@ -35,6 +30,36 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
     }
 
     const isInputFocused = () => document.activeElement === input;
+
+    const resizeBatcher = createViewportBatcher(connectService, 'visualviewport-resize');
+    const scrollBatcher = createViewportBatcher(connectService, 'visualviewport-scroll');
+
+    const emittedSignals = new Set<string>();
+    let firstFocusHandled = false;
+    let mountProbeTimer: number | null = null;
+    let focusProbeTimer: number | null = null;
+
+    const runEnvProbe = () => {
+      const matches = scanInputEnvSignals();
+      const now = Date.now();
+      for (const eventType of matches) {
+        if (emittedSignals.has(eventType)) {
+          continue;
+        }
+
+        emittedSignals.add(eventType);
+        connectService.enqueueLowEvent({ eventType, timestamp: now });
+      }
+    };
+
+    const scheduleFocusProbe = () => {
+      if (firstFocusHandled) {
+        return;
+      }
+
+      firstFocusHandled = true;
+      focusProbeTimer = window.setTimeout(runEnvProbe, 250);
+    };
 
     const flushInputBatch = () => {
       const batch = inputBatchRef.current;
@@ -58,69 +83,14 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       });
     };
 
-    const flushViewportBatch = (
-      eventType: 'visualviewport-resize' | 'visualviewport-scroll',
-      activeRef: { current: boolean },
-      startTimestampRef: { current: number | null },
-      timeoutRef: { current: number | null },
-    ) => {
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-      }
-
-      const startTimestamp = startTimestampRef.current;
-      activeRef.current = false;
-      startTimestampRef.current = null;
-      timeoutRef.current = null;
-
-      if (startTimestamp === null) {
-        return;
-      }
-
-      connectService.enqueueLowEvent({
-        eventType,
-        timestamp: startTimestamp,
-        durationMs: Date.now() - startTimestamp,
-      });
-    };
-
-    const extendViewportBatch = (
-      eventType: 'visualviewport-resize' | 'visualviewport-scroll',
-      activeRef: { current: boolean },
-      startTimestampRef: { current: number | null },
-      timeoutRef: { current: number | null },
-    ) => {
-      if (!activeRef.current) {
-        activeRef.current = true;
-        startTimestampRef.current = Date.now();
-      }
-
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = window.setTimeout(() => {
-        flushViewportBatch(eventType, activeRef, startTimestampRef, timeoutRef);
-      }, visualViewportBatchTimeoutMs);
-    };
-
     const handleFocus = () => {
+      scheduleFocusProbe();
       enqueueNonInputEvent('focus');
     };
 
     const handleBlur = () => {
-      flushViewportBatch(
-        'visualviewport-resize',
-        viewportResizeActiveRef,
-        viewportResizeStartTimestampRef,
-        viewportResizeEndTimeoutRef,
-      );
-      flushViewportBatch(
-        'visualviewport-scroll',
-        viewportScrollActiveRef,
-        viewportScrollStartTimestampRef,
-        viewportScrollEndTimeoutRef,
-      );
+      resizeBatcher.flush();
+      scrollBatcher.flush();
       enqueueNonInputEvent('blur');
     };
 
@@ -180,7 +150,11 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
         return;
       }
 
-      enqueueNonInputEvent('document-visibilitychange');
+      const eventType =
+        document.visibilityState === 'hidden'
+          ? 'document-visibilitychange-hidden'
+          : 'document-visibilitychange-visible';
+      enqueueNonInputEvent(eventType);
     };
 
     const handleVisualViewportResize = () => {
@@ -188,12 +162,7 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
         return;
       }
 
-      extendViewportBatch(
-        'visualviewport-resize',
-        viewportResizeActiveRef,
-        viewportResizeStartTimestampRef,
-        viewportResizeEndTimeoutRef,
-      );
+      resizeBatcher.extend();
     };
 
     const handleVisualViewportScroll = () => {
@@ -201,28 +170,13 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
         return;
       }
 
-      extendViewportBatch(
-        'visualviewport-scroll',
-        viewportScrollActiveRef,
-        viewportScrollStartTimestampRef,
-        viewportScrollEndTimeoutRef,
-      );
+      scrollBatcher.extend();
     };
 
     const flushForTeardown = () => {
       flushInputBatch();
-      flushViewportBatch(
-        'visualviewport-resize',
-        viewportResizeActiveRef,
-        viewportResizeStartTimestampRef,
-        viewportResizeEndTimeoutRef,
-      );
-      flushViewportBatch(
-        'visualviewport-scroll',
-        viewportScrollActiveRef,
-        viewportScrollStartTimestampRef,
-        viewportScrollEndTimeoutRef,
-      );
+      resizeBatcher.flush();
+      scrollBatcher.flush();
       connectService.flushLowEventsKeepalive();
     };
 
@@ -245,7 +199,16 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       handleFocus();
     }
 
+    mountProbeTimer = window.setTimeout(runEnvProbe, 500);
+
     return () => {
+      if (mountProbeTimer !== null) {
+        window.clearTimeout(mountProbeTimer);
+      }
+      if (focusProbeTimer !== null) {
+        window.clearTimeout(focusProbeTimer);
+      }
+
       flushForTeardown();
 
       input.removeEventListener('focus', handleFocus);

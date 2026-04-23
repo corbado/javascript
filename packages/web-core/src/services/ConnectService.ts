@@ -44,6 +44,8 @@ import { WebAuthnService } from './WebAuthnService';
 
 const packageVersion = process.env.FE_LIBRARY_VERSION;
 
+const LOW_EVENT_FLUSH_MAX_WAIT_MS = 2000;
+
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   metadata?: {
     startTime?: number;
@@ -514,9 +516,7 @@ export class ConnectService {
   }
 
   async flushLowEvents(): Promise<void> {
-    if (this.#lowEventFlushPromise) {
-      await this.#lowEventFlushPromise;
-    }
+    await this.#awaitCapped(this.#lowEventFlushPromise);
 
     const groups = this.#takeQueuedLowEventGroups();
     if (groups.length === 0) {
@@ -524,31 +524,31 @@ export class ConnectService {
     }
 
     const flushPromise = (async () => {
-      const failedItems: QueuedLowEvent[] = [];
-
       for (const group of groups) {
         try {
           await this.#sendQueuedLowEventGroup(group);
         } catch (error) {
           log.debug('failed to flush low events', error);
-          failedItems.push(...group.queuedItems);
         }
-      }
-
-      if (failedItems.length > 0) {
-        this.#lowEventQueue = failedItems.concat(this.#lowEventQueue);
       }
     })();
 
     this.#lowEventFlushPromise = flushPromise;
-
-    try {
-      await flushPromise;
-    } finally {
+    void flushPromise.finally(() => {
       if (this.#lowEventFlushPromise === flushPromise) {
         this.#lowEventFlushPromise = null;
       }
+    });
+
+    await this.#awaitCapped(flushPromise);
+  }
+
+  async #awaitCapped(promise: Promise<unknown> | null): Promise<void> {
+    if (!promise) {
+      return;
     }
+
+    await Promise.race([promise, new Promise<void>(resolve => setTimeout(resolve, LOW_EVENT_FLUSH_MAX_WAIT_MS))]);
   }
 
   flushLowEventsKeepalive() {
@@ -834,12 +834,26 @@ export class ConnectService {
         timestamp,
         durationMs,
       })),
+      meta: {
+        sent: Date.now() + 1000,
+      },
     };
 
     await api.connectEventLowCreate(req);
   }
 
   async #sendQueuedLowEventGroupKeepalive(group: QueuedLowEventGroup): Promise<void> {
+    const body: ConnectEventLowCreateReq = {
+      items: group.queuedItems.map(({ eventType, timestamp, durationMs }) => ({
+        eventType,
+        timestamp,
+        durationMs,
+      })),
+      meta: {
+        sent: Date.now(),
+      },
+    };
+
     const response = await fetch(this.#getConnectEventLowUrl(group.frontendApiUrl), {
       method: 'POST',
       keepalive: true,
@@ -854,13 +868,7 @@ export class ConnectService {
         }),
         'x-corbado-process-id': group.processId,
       },
-      body: JSON.stringify({
-        items: group.queuedItems.map(({ eventType, timestamp, durationMs }) => ({
-          eventType,
-          timestamp,
-          durationMs,
-        })),
-      } as ConnectEventLowCreateReq),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

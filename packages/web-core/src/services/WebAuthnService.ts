@@ -74,8 +74,14 @@ export class WebAuthnService {
       } as never)) as PublicKeyCredential;
     }
 
+    if (WebAuthnService.isInjectedCredential(credential) || !credential.toJSON) {
+      return {
+        response: JSON.stringify(createResponseToJSON(credential)),
+        message: 'using fallback serializer (extension-injected credential)',
+      };
+    }
+
     try {
-      console.log('credential', credential);
       return {
         response: JSON.stringify(credential.toJSON()),
         message: '',
@@ -83,7 +89,7 @@ export class WebAuthnService {
     } catch (e) {
       return {
         response: JSON.stringify(createResponseToJSON(credential)),
-        message: 'toJSON() not available on PublicKeyCredential',
+        message: 'toJSON() threw on PublicKeyCredential',
       };
     }
   }
@@ -134,6 +140,13 @@ export class WebAuthnService {
       signal: abortController.signal,
     })) as PublicKeyCredential;
 
+    if (WebAuthnService.isInjectedCredential(credential) || !credential.toJSON) {
+      return {
+        response: JSON.stringify(getResponseToJSON(credential)),
+        message: 'using fallback serializer (extension-injected credential)',
+      };
+    }
+
     try {
       return {
         response: JSON.stringify(credential.toJSON()),
@@ -142,7 +155,7 @@ export class WebAuthnService {
     } catch (e) {
       return {
         response: JSON.stringify(getResponseToJSON(credential)),
-        message: 'toJSON() not available on PublicKeyCredential',
+        message: 'toJSON() threw on PublicKeyCredential',
       };
     }
   }
@@ -336,6 +349,14 @@ export class WebAuthnService {
     } catch (e) {
       log.debug('Error calling signalUnknownCredential', e);
       return;
+    }
+  }
+
+  static isInjectedCredential(credential: PublicKeyCredential): boolean {
+    try {
+      return credential.getClientExtensionResults !== PublicKeyCredential.prototype.getClientExtensionResults;
+    } catch (e) {
+      return true;
     }
   }
 

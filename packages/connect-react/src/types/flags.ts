@@ -12,6 +12,15 @@ export class Flags {
   addFlags(items: Record<string, string>) {
     for (const [name, value] of Object.entries(items)) {
       this.items[name] = value;
+
+      if (
+        name === keyConditionalUI &&
+        value === 'false' &&
+        this.items[keyEventLow] &&
+        this.items[keyEventLow] === 'true'
+      ) {
+        this.items[keyEventLow] = 'false';
+      }
     }
   }
 

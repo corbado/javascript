@@ -16,8 +16,11 @@ type InputBatch = {
   lastTimestamp: number;
 };
 
+const BIG_INPUT_DELTA_THRESHOLD = 3;
+
 const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => {
   const inputBatchRef = useRef<InputBatch | null>(null);
+  const previousLengthRef = useRef(0);
 
   useEffect(() => {
     if (!enabled) {
@@ -28,6 +31,8 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
     if (!input) {
       return;
     }
+
+    previousLengthRef.current = input.value.length;
 
     const isInputFocused = () => document.activeElement === input;
 
@@ -108,6 +113,21 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
 
     const handleInput = () => {
       const timestamp = Date.now();
+
+      const newLength = input.value.length;
+      const delta = newLength - previousLengthRef.current;
+      previousLengthRef.current = newLength;
+
+      if (delta >= BIG_INPUT_DELTA_THRESHOLD) {
+        connectService.enqueueLowEvent({ eventType: 'big-input-add', timestamp });
+        return;
+      }
+
+      if (delta <= -BIG_INPUT_DELTA_THRESHOLD) {
+        connectService.enqueueLowEvent({ eventType: 'big-input-rem', timestamp });
+        return;
+      }
+
       const currentBatch = inputBatchRef.current;
 
       if (!currentBatch) {

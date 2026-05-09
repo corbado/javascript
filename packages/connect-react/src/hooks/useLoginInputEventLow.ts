@@ -16,11 +16,21 @@ type InputBatch = {
   lastTimestamp: number;
 };
 
+type AutofillStreak = {
+  firstTimestamp: number;
+  lastTimestamp: number;
+};
+
 const BIG_INPUT_DELTA_THRESHOLD = 3;
+const AUTOFILL_STREAK_LENGTH = 5;
+const AUTOFILL_FAST_INTERVAL_MS = 80;
+const AUTOFILL_UNIFORM_SPREAD_MS = 25;
 
 const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => {
   const inputBatchRef = useRef<InputBatch | null>(null);
   const previousLengthRef = useRef(0);
+  const autofillTimestampsRef = useRef<number[]>([]);
+  const autofillStreakRef = useRef<AutofillStreak | null>(null);
 
   useEffect(() => {
     if (!enabled) {
@@ -33,6 +43,8 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
     }
 
     previousLengthRef.current = input.value.length;
+    autofillTimestampsRef.current = [];
+    autofillStreakRef.current = null;
 
     const isInputFocused = () => document.activeElement === input;
 
@@ -66,7 +78,27 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       focusProbeTimer = window.setTimeout(runEnvProbe, 250);
     };
 
+    const extendInputBatch = (timestamp: number) => {
+      const batch = inputBatchRef.current;
+      if (!batch) {
+        inputBatchRef.current = { firstTimestamp: timestamp, lastTimestamp: timestamp };
+        return;
+      }
+
+      batch.lastTimestamp = timestamp;
+    };
+
+    const drainAutofillRingToBatch = () => {
+      const ring = autofillTimestampsRef.current;
+      for (const ts of ring) {
+        extendInputBatch(ts);
+      }
+      ring.length = 0;
+    };
+
     const flushInputBatch = () => {
+      drainAutofillRingToBatch();
+
       const batch = inputBatchRef.current;
       if (!batch) {
         return;
@@ -80,8 +112,23 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       inputBatchRef.current = null;
     };
 
+    const flushAutofillStreak = () => {
+      const streak = autofillStreakRef.current;
+      if (!streak) {
+        return;
+      }
+
+      connectService.enqueueLowEvent({
+        eventType: 'big-input-add',
+        timestamp: streak.firstTimestamp,
+        durationMs: streak.lastTimestamp - streak.firstTimestamp,
+      });
+      autofillStreakRef.current = null;
+    };
+
     const enqueueNonInputEvent = (eventType: string) => {
       flushInputBatch();
+      flushAutofillStreak();
       connectService.enqueueLowEvent({
         eventType,
         timestamp: Date.now(),
@@ -111,6 +158,30 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       enqueueNonInputEvent('click');
     };
 
+    const detectAutofillStreak = (): boolean => {
+      const ring = autofillTimestampsRef.current;
+      if (ring.length < AUTOFILL_STREAK_LENGTH) {
+        return false;
+      }
+
+      let minInterval = Infinity;
+      let maxInterval = -Infinity;
+      for (let i = 1; i < ring.length; i++) {
+        const interval = ring[i] - ring[i - 1];
+        if (interval > AUTOFILL_FAST_INTERVAL_MS) {
+          return false;
+        }
+        if (interval < minInterval) {
+          minInterval = interval;
+        }
+        if (interval > maxInterval) {
+          maxInterval = interval;
+        }
+      }
+
+      return maxInterval - minInterval <= AUTOFILL_UNIFORM_SPREAD_MS;
+    };
+
     const handleInput = () => {
       const timestamp = Date.now();
 
@@ -119,26 +190,55 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
       previousLengthRef.current = newLength;
 
       if (delta >= BIG_INPUT_DELTA_THRESHOLD) {
+        drainAutofillRingToBatch();
+        flushAutofillStreak();
         connectService.enqueueLowEvent({ eventType: 'big-input-add', timestamp });
         return;
       }
 
       if (delta <= -BIG_INPUT_DELTA_THRESHOLD) {
+        drainAutofillRingToBatch();
+        flushAutofillStreak();
         connectService.enqueueLowEvent({ eventType: 'big-input-rem', timestamp });
         return;
       }
 
-      const currentBatch = inputBatchRef.current;
+      const activeStreak = autofillStreakRef.current;
+      if (activeStreak) {
+        if (delta === 1 && timestamp - activeStreak.lastTimestamp <= AUTOFILL_FAST_INTERVAL_MS) {
+          activeStreak.lastTimestamp = timestamp;
+          return;
+        }
 
-      if (!currentBatch) {
-        inputBatchRef.current = {
-          firstTimestamp: timestamp,
-          lastTimestamp: timestamp,
-        };
+        flushAutofillStreak();
+      }
+
+      if (delta !== 1) {
+        drainAutofillRingToBatch();
+        extendInputBatch(timestamp);
         return;
       }
 
-      currentBatch.lastTimestamp = timestamp;
+      const ring = autofillTimestampsRef.current;
+      ring.push(timestamp);
+      if (ring.length > AUTOFILL_STREAK_LENGTH) {
+        const graduated = ring.shift() as number;
+        extendInputBatch(graduated);
+      }
+
+      if (!detectAutofillStreak()) {
+        return;
+      }
+
+      const streakStart = ring[0];
+      const streakLast = ring[ring.length - 1];
+      ring.length = 0;
+
+      flushInputBatch();
+      autofillStreakRef.current = {
+        firstTimestamp: streakStart,
+        lastTimestamp: streakLast,
+      };
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
@@ -195,6 +295,7 @@ const useLoginInputEventLow = ({ inputRef, connectService, enabled }: Props) => 
 
     const flushForTeardown = () => {
       flushInputBatch();
+      flushAutofillStreak();
       resizeBatcher.flush();
       scrollBatcher.flush();
       connectService.flushLowEventsKeepalive();

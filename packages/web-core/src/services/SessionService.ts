@@ -21,6 +21,7 @@ import {
   AuthState,
   base64decode,
   CorbadoError,
+  NonRecoverableError,
   PasskeyAlreadyExistsError,
   type PasskeyDeleteError,
   PasskeysNotSupported,
@@ -100,16 +101,17 @@ export class SessionService {
     this.#sessionConfig = sessionConfig.val;
     this.#refreshToken = SessionService.#getRefreshToken();
     this.#sessionToken = SessionService.#getSessionToken();
+    this.#setApisV2(this.#refreshToken);
 
     // if the session is valid, we emit it
     if (this.#sessionToken && this.#sessionToken.isValidForXMoreSeconds(0)) {
       log.debug('emit session-token', this.#sessionToken);
       this.#onSessionTokenChange(this.#sessionToken);
     } else {
-      await this.#handleRefreshRequest();
+      // the session-token cookie may have expired while a valid refresh session still exists
+      // (HTTP-only cookie) => attempt one recovery refresh, the server decides
+      await this.#refresh();
     }
-
-    this.#setApisV2(this.#refreshToken);
 
     // init scheduled session refresh
     this.#refreshIntervalId = setInterval(() => {
@@ -456,9 +458,14 @@ export class SessionService {
 
       this.setSession(response.data.sessionToken, undefined);
     } catch (e) {
-      // if it's a network error, we should do a retry
-      // for all other errors, we should log out the user
       log.warn(e);
+
+      // transient network failure (e.g. wake from sleep before the network is back up):
+      // keep the session, the scheduled refresh retries => log out only on real backend rejections
+      if (!navigator.onLine || (e instanceof NonRecoverableError && e.message.includes('no_data_in_response'))) {
+        return;
+      }
+
       await this.logout();
     }
   }

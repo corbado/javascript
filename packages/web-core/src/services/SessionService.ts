@@ -257,7 +257,8 @@ export class SessionService {
     const sessionTokenModel = new SessionToken(sessionToken);
 
     this.#setSessionToken(sessionTokenModel);
-    this.#setApisV2(refreshToken ?? '');
+    // a refresh response carries no new refresh-token => keep the stored one (payload mode has no cookie fallback)
+    this.#setApisV2(refreshToken ?? this.#refreshToken ?? '');
 
     this.#onSessionTokenChange(sessionTokenModel);
     this.#setRefreshToken(refreshToken);

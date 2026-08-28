@@ -40,7 +40,12 @@ import type { TempAuthProcess } from '../models/authProcess';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
-import { CorbadoError, isSafeRedirectUrl, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
+import {
+  CorbadoError,
+  isSafeRedirectUrl,
+  PasskeyChallengeCancelledError,
+  skipPasskeyAppendAfterHybridKey,
+} from '../utils';
 import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
 

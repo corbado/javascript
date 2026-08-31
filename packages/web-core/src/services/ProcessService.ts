@@ -40,7 +40,12 @@ import type { TempAuthProcess } from '../models/authProcess';
 import { AuthProcess } from '../models/authProcess';
 import { EmailVerifyFromUrl } from '../models/emailVerifyFromUrl';
 import type { LastIdentifier } from '../models/lastIdentifier';
-import { CorbadoError, PasskeyChallengeCancelledError, skipPasskeyAppendAfterHybridKey } from '../utils';
+import {
+  CorbadoError,
+  isSafeRedirectUrl,
+  PasskeyChallengeCancelledError,
+  skipPasskeyAppendAfterHybridKey,
+} from '../utils';
 import { ClientStateService } from './ClientStateService';
 import { WebAuthnService } from './WebAuthnService';
 
@@ -154,6 +159,15 @@ export class ProcessService {
 
     try {
       const emailVerifyFromUrl = EmailVerifyFromUrl.fromURL(encodedProcess, token);
+
+      if (emailVerifyFromUrl.process.projectId !== this.#projectId) {
+        return Err(CorbadoError.invalidConfig());
+      }
+
+      if (!emailVerifyFromUrl.process.isValid()) {
+        return Err(CorbadoError.invalidConfig());
+      }
+
       this.#setApisV2ByTempProcess(emailVerifyFromUrl.process);
 
       return Ok(emailVerifyFromUrl);
@@ -250,9 +264,9 @@ export class ProcessService {
   }
 
   #setApisV2ByTempProcess(tempProcess: TempAuthProcess): void {
-    const frontendApiUrl = tempProcess.frontendApiUrl;
+    const frontendApiUrl = this.#getDefaultFrontendApiUrl();
     const config = new Configuration({
-      apiKey: tempProcess.projectId,
+      apiKey: this.#projectId,
       basePath: frontendApiUrl,
     });
 
@@ -524,6 +538,10 @@ export class ProcessService {
     }
 
     if (typed.socialData && typed.socialData.status === SocialDataStatusEnum.Started && typed.socialData.oauthUrl) {
+      if (!isSafeRedirectUrl(typed.socialData.oauthUrl)) {
+        return Err(CorbadoError.invalidConfig());
+      }
+
       window.location.href = typed.socialData.oauthUrl;
 
       return null;

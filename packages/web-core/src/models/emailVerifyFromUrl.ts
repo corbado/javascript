@@ -14,7 +14,6 @@ type EmailVerifyFromUrlData = {
     tempId: string;
     projectId: string;
     expires: number;
-    frontendApiUrl: string;
   };
 };
 
@@ -51,12 +50,7 @@ export class EmailVerifyFromUrl {
       authType = AuthType.Signup;
     }
 
-    const tempAuthProcess = new TempAuthProcess(
-      process.tempId,
-      process.projectId,
-      process.expires,
-      process.frontendApiUrl,
-    );
+    const tempAuthProcess = new TempAuthProcess(process.tempId, process.projectId, process.expires);
 
     return new EmailVerifyFromUrl(data, token, tempAuthProcess, authType);
   }

@@ -51,14 +51,12 @@ export class AuthProcess {
 export class TempAuthProcess {
   readonly id: string;
   readonly projectId: string;
-  readonly frontendApiUrl: string;
   readonly expiresAt: number;
 
-  constructor(id: string, projectId: string, expiresAt: number, frontendApiUrl: string) {
+  constructor(id: string, projectId: string, expiresAt: number) {
     this.id = id;
     this.projectId = projectId;
     this.expiresAt = expiresAt;
-    this.frontendApiUrl = frontendApiUrl;
   }
 
   isValid(): boolean {

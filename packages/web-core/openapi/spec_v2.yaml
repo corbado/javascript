@@ -1335,6 +1335,14 @@ components:
 
     socialVerifyFinishReq:
       type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: >-
+            One-time code delivered to the initiating browser via the social callback redirect. It binds the
+            finish to the browser that authenticated with the provider and is required to complete the login.
 
     ssoSaml2StartReq:
       type: object

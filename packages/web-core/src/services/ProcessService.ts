@@ -551,27 +551,7 @@ export class ProcessService {
   }
 
   finishSocialVerification(abortController: AbortController): Promise<Result<ProcessResponse, CorbadoError>> {
-    const code = this.#consumeSocialFinishCodeFromUrl();
-
-    return this.wrapWithErr(() => this.#authApi.socialVerifyFinish({ code }, { signal: abortController.signal }));
-  }
-
-  #consumeSocialFinishCodeFromUrl(): string {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('corbadoSocialCode') ?? '';
-
-      if (code) {
-        params.delete('corbadoSocialCode');
-        const query = params.toString();
-        const newUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
-        window.history.replaceState(window.history.state, '', newUrl);
-      }
-
-      return code;
-    } catch {
-      return '';
-    }
+    return this.wrapWithErr(() => this.#authApi.socialVerifyFinish({}, { signal: abortController.signal }));
   }
 
   async appendPasskey(

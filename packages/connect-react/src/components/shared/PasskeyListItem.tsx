@@ -17,7 +17,7 @@ export type Props = {
   lastUsed: string | Date;
   browser: string;
   os: 'Windows' | 'macOS' | 'Android' | 'iOS' | string;
-  isThisDevice?: boolean;
+  createdInCurrentBrowser?: boolean;
   isSynced?: boolean;
   isHybrid?: boolean;
   onDeleteClick?: () => void;
@@ -33,7 +33,7 @@ export const PasskeyListItem: FC<Props> = ({
   onDeleteClick,
   isSynced,
   isHybrid,
-  isThisDevice,
+  createdInCurrentBrowser,
 }) => {
   const getTags = () => {
     const tags = [];
@@ -46,8 +46,13 @@ export const PasskeyListItem: FC<Props> = ({
       tags.push({ text: 'Hybrid', icon: (className: string) => ShieldTickIcon({ className }) });
     }
 
-    if (isThisDevice) {
-      tags.push({ text: 'Seen on this device', icon: (className: string) => EyeIcon({ className }) });
+    if (createdInCurrentBrowser) {
+      tags.push({
+        text: 'Created in this browser',
+        title:
+          'This passkey was registered from this browser. It may be stored in a password manager or on another device; this does not confirm it is still available.',
+        icon: (className: string) => EyeIcon({ className }),
+      });
     }
 
     return tags;
@@ -71,10 +76,10 @@ export const PasskeyListItem: FC<Props> = ({
         <div className='cb-passkey-list-item-header'>
           <div className='cb-passkey-list-item-title'>{name}</div>
           <div className='cb-passkey-list-item-tags'>
-            {getTags().map(({ text, icon }) => (
+            {getTags().map(({ text, title, icon }) => (
               <Tag key={text}>
                 {icon('cb-passkey-list-item-tag-icon')}
-                <span>{text}</span>
+                <span title={title}>{text}</span>
               </Tag>
             ))}
           </div>

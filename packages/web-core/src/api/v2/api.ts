@@ -2492,6 +2492,12 @@ export interface Passkey {
      */
     'sourceBrowser': string;
     /**
+     * Whether this passkey\'s recorded creation environment matches the current browser handle. Omitted when no browser context is supplied. False means no matching creation record, not that the passkey is unavailable. This does not verify current authenticator availability.
+     * @type {boolean}
+     * @memberof Passkey
+     */
+    'createdInCurrentBrowser'?: boolean;
+    /**
      * Timestamp of when the passkey was last used in yyyy-MM-dd\'T\'HH:mm:ss format
      * @type {string}
      * @memberof Passkey

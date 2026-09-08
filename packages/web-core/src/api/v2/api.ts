@@ -2602,6 +2602,7 @@ export const PasskeyEventType = {
     ManageError: 'manage-error',
     ManageLearnMore: 'manage-learn-more',
     ManageCredentialExists: 'manage-credential-exists',
+    ManageDeleteExplicitAbort: 'manage-delete-explicit-abort',
     LocalUnlock: 'local-unlock'
 } as const;
 

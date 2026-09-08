@@ -768,6 +768,11 @@ export class ConnectService {
     return this.#recordEvent(PasskeyEventType.ManageErrorUnexpected, messageCode);
   }
 
+  // user opened the delete confirmation in the passkey list but did not confirm the deletion
+  recordEventManageDeleteExplicitAbort() {
+    return this.#recordEvent(PasskeyEventType.ManageDeleteExplicitAbort);
+  }
+
   recordEventAppendExplicitAbort(attestationOptions?: string) {
     let challenge;
     if (attestationOptions) {

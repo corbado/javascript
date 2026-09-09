@@ -2121,6 +2121,7 @@ components:
           manage-error,
           manage-learn-more,
           manage-credential-exists,
+          manage-delete-explicit-abort,
           local-unlock
         ]
 

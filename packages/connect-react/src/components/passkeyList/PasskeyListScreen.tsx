@@ -252,7 +252,11 @@ const PasskeyListScreen = () => {
           <DeleteModal
             passkey={passkey}
             onDeleteClick={onDeleteClick}
-            hide={hide}
+            hide={() => {
+              // closing the confirmation without deleting => track as aborted deletion
+              void getConnectService().recordEventManageDeleteExplicitAbort();
+              hide();
+            }}
           />,
         );
       }}

@@ -5,14 +5,14 @@ import { BaseModal } from '../shared/BaseModal';
 import { PasskeyListItem } from '../shared/PasskeyListItem';
 
 type Props = {
-  onDeleteClick: (id: string) => Promise<void>;
+  onDeleteClick: (passkey: Passkey) => Promise<void>;
   hide: () => void;
   passkey: Passkey;
 };
 
 const DeleteModal = ({ onDeleteClick, hide, passkey }: Props) => (
   <BaseModal
-    onPrimaryButton={() => onDeleteClick(passkey.id)}
+    onPrimaryButton={() => onDeleteClick(passkey)}
     onCloseButton={() => hide()}
     onSecondaryButton={() => hide()}
     headerText='Delete passkey'

@@ -1,5 +1,5 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
-import type { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren, RefObject } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import type { ManageScreenType } from '../types/screenTypes';
@@ -9,9 +9,15 @@ import ManageProcessContext from './ManageProcessContext';
 type Props = {
   config: CorbadoConnectPasskeyListConfig;
   initialScreenType: ManageScreenType;
+  containerRef?: RefObject<HTMLElement>;
 };
 
-export const ManageProcessProvider: FC<PropsWithChildren<Props>> = ({ children, initialScreenType, config }) => {
+export const ManageProcessProvider: FC<PropsWithChildren<Props>> = ({
+  children,
+  initialScreenType,
+  config,
+  containerRef,
+}) => {
   const [currentScreenType, setCurrentScreenType] = useState<ManageScreenType>(initialScreenType);
   const [passkeyListToken, setPasskeyListToken] = useState<string>('');
 
@@ -26,8 +32,9 @@ export const ManageProcessProvider: FC<PropsWithChildren<Props>> = ({ children, 
       passkeyListToken,
       setPasskeyListToken,
       config,
+      containerRef,
     }),
-    [currentScreenType, navigateToScreen, config, setPasskeyListToken, passkeyListToken],
+    [currentScreenType, navigateToScreen, config, containerRef, setPasskeyListToken, passkeyListToken],
   );
 
   return <ManageProcessContext.Provider value={contextValue}>{children}</ManageProcessContext.Provider>;

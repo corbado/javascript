@@ -19,3 +19,4 @@ export {
 };
 
 export type { CorbadoConnectProviderProps } from './components/CorbadoConnectProvider';
+export { CONNECT_PASSKEY_DELETE_EVENTS } from './utils/connectEvents';

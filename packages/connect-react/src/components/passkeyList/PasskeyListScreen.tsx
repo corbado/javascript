@@ -1,4 +1,4 @@
-import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
+import type { ConnectPasskeyDeleteEvent, CorbadoConnectPasskeyListConfig } from '@corbado/types';
 import type { ConnectError, Passkey } from '@corbado/web-core';
 import { ConnectErrorType } from '@corbado/web-core';
 import log from 'loglevel';
@@ -9,6 +9,7 @@ import useModal from '../../hooks/useModal';
 import useShared from '../../hooks/useShared';
 import { getPasskeyListErrorMessage, PasskeyListSituationCode } from '../../types/situations';
 import { ConnectTokenType } from '../../types/tokens';
+import { emitPasskeyDeleteEvent, toPasskeyDeleteDetail } from '../../utils/connectEvents';
 import { withLowEventWindow } from '../../utils/lowEventWindow';
 import { StatefulLoader } from '../../utils/statefulLoader';
 import AlreadyExistingModal from './AlreadyExistingModal';
@@ -18,7 +19,7 @@ import PasskeyAppendNotSupportedModal from './PasskeyAppendNotSupportedModal';
 import PasskeyList, { PasskeyListState } from './PasskeyList';
 
 const PasskeyListScreen = () => {
-  const { config } = useManageProcess();
+  const { config, containerRef } = useManageProcess();
   const { setPasskeyListToken, passkeyListToken } = useManageProcess();
   const { show, hide } = useModal();
   const { getConnectService } = useShared();
@@ -82,25 +83,41 @@ const PasskeyListScreen = () => {
     };
   }, [getConnectService]);
 
-  const onDeleteClick = async (credentialsId?: string) => {
+  const notifyPasskeyDelete = (event: ConnectPasskeyDeleteEvent) =>
+    emitPasskeyDeleteEvent(containerRef?.current, config.onPasskeyDelete, event);
+
+  const onDeleteClick = async (passkey: Passkey) => {
+    const credentialsId = passkey.id;
     if (!credentialsId) {
       return;
     }
+
+    const detail = toPasskeyDeleteDetail(passkey);
+    const onDeleteError = (situationCode: PasskeyListSituationCode, error?: ConnectError) => {
+      notifyPasskeyDelete({ type: 'error', passkey: detail, reason: PasskeyListSituationCode[situationCode] });
+
+      return handleSituation(situationCode, error);
+    };
 
     let deleteToken;
     try {
       deleteToken = await config.connectTokenProvider(ConnectTokenType.PasskeyDelete);
     } catch {
-      return handleSituation(PasskeyListSituationCode.CtApiNotAvailablePreDelete);
+      return onDeleteError(PasskeyListSituationCode.CtApiNotAvailablePreDelete);
     }
 
     const deletePasskeyRes = await getConnectService().manageDelete(deleteToken, credentialsId);
     if (deletePasskeyRes.err) {
-      return handleSituation(PasskeyListSituationCode.CboApiNotAvailableDuringDelete, deletePasskeyRes.val);
+      return onDeleteError(PasskeyListSituationCode.CboApiNotAvailableDuringDelete, deletePasskeyRes.val);
     }
+
+    const remainingPasskeys = passkeyList.filter(p => p.id !== credentialsId).length;
 
     await getPasskeyList(config, true);
     hide();
+
+    // the passkey is gone and the confirmation modal is closed => notify the host page
+    notifyPasskeyDelete({ type: 'success', passkey: detail, remainingPasskeys });
   };
 
   const onAppendClick = async () => {
@@ -248,6 +265,11 @@ const PasskeyListScreen = () => {
       passkeys={passkeyList}
       onDeleteClick={passkey => {
         setErrorMessage(null);
+
+        // the user clicked the delete icon => let the host page know before the confirmation modal opens
+        const detail = toPasskeyDeleteDetail(passkey);
+        notifyPasskeyDelete({ type: 'start', passkey: detail });
+
         show(
           <DeleteModal
             passkey={passkey}
@@ -256,6 +278,7 @@ const PasskeyListScreen = () => {
               // closing the confirmation without deleting => track as aborted deletion
               void getConnectService().recordEventManageDeleteExplicitAbort();
               hide();
+              notifyPasskeyDelete({ type: 'cancel', passkey: detail });
             }}
           />,
         );

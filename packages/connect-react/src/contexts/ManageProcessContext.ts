@@ -1,4 +1,5 @@
 import type { CorbadoConnectPasskeyListConfig } from '@corbado/types';
+import type { RefObject } from 'react';
 import { createContext } from 'react';
 
 import { ManageScreenType } from '../types/screenTypes';
@@ -11,6 +12,8 @@ export interface ManageProcessContextProps {
   currentScreenType: ManageScreenType;
   passkeyListToken: string;
   config: CorbadoConnectPasskeyListConfig;
+  /** Element the component is mounted in; DOM events for the host page are dispatched on it. */
+  containerRef?: RefObject<HTMLElement>;
   navigateToScreen: (s: ManageScreenType) => void;
   setPasskeyListToken: (t: string) => void;
 }
